@@ -2,6 +2,7 @@
 #define CONSTS_C
 
 // all keywords
+<<<<<<< HEAD
 #define C_KW_AUTO      "auto"
 #define C_KW_BREAK     "break"
 #define C_KW_CASE      "case"
@@ -73,5 +74,26 @@
 
 // symbols
 
+=======
+#define C_KEYWORD_AUTO ""
+#define C_KEYWORD_BREAK ""
+#define C_KEYWORD_CASE ""
+#define C_KEYWORD_CONST ""
+#define C_KEYWORD_CONTINUE ""
+#define C_KEYWORD_DEFAULT ""
+#define C_KEYWORD_DO ""
+
+
+// early types
+#define C_EARLYTYPE_VOID     "void"
+#define C_EARLYTYPE_CHAR     "char"
+#define C_EARLYTYPE_INT      "int"
+#define C_EARLYTYPE_LONG     "long"
+#define C_EARLYTYPE_FLOAT    "float"
+#define C_EARLYTYPE_DOUBLE   "double"
+
+#define C_EARLYTYPE_UNSIGNED "unsigned"
+#define C_EARLYTYPE_SIGNED   "signed"
+>>>>>>> 7c7dcb0a4ca6a2e74276280e0cd445b467bccefb
 
 #endif // CONSTS_C

@@ -17,6 +17,7 @@ class File
 
 	int patition_bytes;
 
+<<<<<<< HEAD
 	std::string filename;
 	std::string loaded_content;
 
@@ -26,6 +27,16 @@ protected:
 public:
 	File();
 	File(std::string&);
+=======
+	std::string loaded_content;
+
+protected:
+	virtual void load();
+
+public:
+	File();
+	File(std:string&);
+>>>>>>> 7c7dcb0a4ca6a2e74276280e0cd445b467bccefb
 
 	~File();
 

@@ -1,5 +1,6 @@
 #include "File.h"
 
+<<<<<<< HEAD
 using namespace flame_ide;
 
 //File::File()
@@ -23,3 +24,14 @@ using namespace flame_ide;
 //{
 //
 //}
+=======
+File::File()
+{
+	//ctor
+}
+
+File::~File()
+{
+	//dtor
+}
+>>>>>>> 7c7dcb0a4ca6a2e74276280e0cd445b467bccefb
