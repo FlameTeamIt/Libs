@@ -28,15 +28,9 @@
 #define C_KW_WHILE     "while"
 //#define C_KW_ ""
 
-<<<<<<< HEAD
 // other keywords
 #define C_KW_OTHER_ASM     "asm"
 #define C_KW_OTHER_FORTRAN "fortran"
-=======
-// other
-#define C_OTHER_ASM     "asm"
-#define C_OTHER_FORTRAN "fortran"
->>>>>>> 7c7dcb0a4ca6a2e74276280e0cd445b467bccefb
 
 // early types
 #define C_ETYPE_VOID     "void"
@@ -66,7 +60,6 @@
 #define C_PRE_PRAGMA  "#pragma"
 
 // operators and symbols
-<<<<<<< HEAD
 #define C_OP_INC          "++"
 #define C_OP_DEC          "--"
 #define C_OP_FUNCCALL_ON  "("
@@ -92,35 +85,5 @@
 #define C_OP_ ""
 #define C_OP_ ""
 #define C_OP_ ""
-
-
-// symbols
-
-=======
-#define C_OP_PROGBRON  "{"
-#define C_OP_PROGBROFF "}"
-
-#define C_OP_BRON      "("
-#define C_OP_BROFF     ")"
-
-#define C_OP_BRLE      "<"
-#define C_OP_BRMO      ">"
-#define C_OP_EQ        "=="
-#define C_OP_NEQ       "!="
-
-#define C_OP_AMPERSANT "&"
-#define C_OP_STAR      "*"
-#define C_OP_PERSENT   "%"
-#define C_OP_SLASH     "/"
-#define C_OP_DASH      "-" // hyphen
-#define C_OP_PLUS      "+"
-#defile C_OP_POINT     "."
-#define C_OP_ASSIGN    "="
-#define C_OP_QUOTE     "\'"
-#define C_OP_DQUOTE     "\""
-
-#define C_OP_PAPPEAL   "->"
-#define C_OP_APPEAL    C_OP_POINT
->>>>>>> 7c7dcb0a4ca6a2e74276280e0cd445b467bccefb
 
 #endif // CONSTS_C
