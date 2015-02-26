@@ -1,6 +1,7 @@
 #include "CodeParcer.h"
 
-#include <fstream>
+#include "../Store/File.h"
+
 #include <iostream>
 
 using namespace flame_ide;
@@ -8,27 +9,9 @@ using namespace flame_ide;
 std::string
 BasicCodeParcer::loadFile(std::string& code)
 {
-	std::string buffer(""), temp;
-	std::ifstream file(code.c_str());
-
-	if(file.is_open())
-	{
-		while(!file.eof())
-		{
-			file >> temp;
-			buffer += " ";
-			buffer += temp;
-		}
-
-		#ifdef DEBUG
-		std::cout << buffer << '\n';
-		#endif // DEBUG
-	}
-	else
-	{
-		std::cout << "Error to open file!\n";
-	}
-
+	
+	
+	std::string buffer;
 	return buffer;
 }
 
