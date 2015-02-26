@@ -41,7 +41,7 @@ CommandLine::~CommandLine()
 //}
 
 std::string
-CommandLine::getOutput(const std::string command)
+CommandLine::getOutput(const std::string& command)
 {
 	#ifdef DEBUG
 	std::cout << "CommandLine::getOutput(const std::string command)\n";

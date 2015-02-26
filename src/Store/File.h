@@ -18,6 +18,8 @@ class File
 	std::string content_string;
 //	std::list< std::string > content_list;
 	
+	void initialization();
+	
 	void load();
 	void loadAll();
 	void loadtWorlds();
@@ -28,6 +30,9 @@ public:
 	{
 		bool loadAll;
 		bool loadWords;
+		
+		bool loadToList;
+		bool LoadToString;
 		
 	} settings;
 

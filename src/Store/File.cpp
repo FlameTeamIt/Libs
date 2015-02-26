@@ -13,12 +13,7 @@ File::File()
 	#endif // DEBUG
 	
 	// default values
-	this->eof = false;
-	
-	this->settings.loadAll = true;
-	this->settings.loadWords = false;
-	
-	this->content_string = "";
+	this->initialization();
 }
 
 File::File(std::string& filename) : File()
@@ -31,6 +26,17 @@ File::~File()
 {}
 
 // private methods
+
+void File::initialization()
+{
+	this->eof = false;
+	
+	this->settings.loadAll = true;
+	this->settings.loadWords = false;
+	
+	this->content_string = "";
+}
+
 void
 File::load()
 {
@@ -81,3 +87,9 @@ File::loadAll()
 }
 
 // public methods
+
+std::string
+File::getLoaded()
+{
+	return this->content_string;
+}

@@ -14,7 +14,7 @@ public:
 	~CommandLine();
 
 //	std::string getOutput(std::string&);
-	static std::string getOutput(const std::string);
+	static std::string getOutput(const std::string&);
 
 	static std::string getOutput(char*);
 	static std::string getOutput(const char*);
