@@ -4,6 +4,8 @@
 #include <iostream>
 #endif // DEBUG
 
+#include <stdio.h>
+
 using namespace flame_ide;
 
 CommandLine::CommandLine()
