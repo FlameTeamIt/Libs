@@ -8,7 +8,7 @@ int main()
 {
 	std::string str_file("../src/main.cpp"), command("find ../src/ -type d");
 	char c_command[] = "find ../src/ -type d";
-	File file(str_file);
+	File file(str_file, true);
 	
 	CommandLine comands;
 

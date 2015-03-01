@@ -18,28 +18,6 @@ CommandLine::~CommandLine()
 	//dtor
 }
 
-//std::string
-//CommandLine::getOutput(std::string& command)
-//{
-//	FILE* pipe = popen(command.c_str(), "r");
-//
-//	if (!pipe)
-//		return "ERROR";
-//
-//	char buffer[32];
-//	std::string result = "";
-//
-//    while(!feof(pipe))
-//	{
-//		if(fgets(buffer, 32, pipe) != NULL)
-//			result += buffer;
-//    }
-//
-//    pclose(pipe);
-//
-//    return result;
-//}
-
 std::string
 CommandLine::getOutput(const std::string& command)
 {

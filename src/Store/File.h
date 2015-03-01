@@ -11,8 +11,6 @@ class File
 {
 	bool eof;
 
-//	int patition_bytes;
-
 	std::string filename;
 	
 	std::string content_string;
@@ -22,7 +20,7 @@ class File
 	
 	void load();
 	void loadAll();
-	void loadtWorlds();
+	void loadWorlds();
 	
 public:
 	
@@ -37,8 +35,8 @@ public:
 	} settings;
 
 	File();
-	File(std::string&);
-
+	File(std::string&, bool toLoad);
+	
 	~File();
 
 	void setToLoad(Settings&);

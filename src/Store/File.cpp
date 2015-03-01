@@ -2,9 +2,13 @@
 
 #include <fstream>
 
+#ifdef DEBUG
+#include <iostream>
+#endif
+
 using namespace flame_ide;
 
-// constructor & destructor
+// constructors & destructor
 
 File::File()
 {
@@ -16,11 +20,22 @@ File::File()
 	this->initialization();
 }
 
-File::File(std::string& filename) : File()
+File::File(std::string& filename, bool toLoad) : File()
 {
 	this->filename = filename;
-	this->load();
+	
+	switch(toLoad)
+	{
+	case 0:
+		// for save
+		break;
+		
+	default:
+		load();
+		break;
+	}
 }
+
 
 File::~File()
 {}
@@ -75,7 +90,7 @@ File::loadAll()
 		this->eof = true;
 
 		#ifdef DEBUG
-		std::cout << buffer << '\n';
+		std::cout << content_string << '\n';
 		#endif // DEBUG
 	}
 	#ifdef DEBUG

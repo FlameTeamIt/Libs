@@ -1,8 +1,13 @@
 Name := FlameIDE
 
 override CC := g++-4.8
+override TypeBuild := Debug
 
-Dirs := bin/ obj/ dep/
+BuildPath := $(TypeBuild)
+
+DepPath := $(BuildPath)/dep/
+ObjPath := $(BuildPath)/obj/ 
+BinPath := $(BuildPath)/bin/
 
 override Libs := 
 
@@ -37,19 +42,15 @@ Flag_Obj := -fPIC
 Flag_Lib := -shared
 
 
-Path := ./../$(Name)
+Path := ./src
 
 # список всех ресурсных файлов
 Sources := \
-	$(shell find $(Path) -name *.cpp)
-
-
-Headers := \
-	$(subst $(Path),$(Name),$(shell find $(Path) -name *.h))
+	$(subst ./,,$(shell find $(Path) -name *.cpp))
 
 # получаем имена объектных файлов
 Objects := \
-	$(addprefix obj/,$(notdir $(Sources:.cpp=.o)))
+	$(addprefix obj/,$(subst /,_,$(Sources:.cpp=.o)))
 	
 # получаем имена объектных файлов
 Dependences := \
@@ -57,22 +58,20 @@ Dependences := \
 
 
 Path_ALL := \
-	$(shell find $(Path) -type -d)
+	$(shell find $(Path) -type d)
 
 VPATH := $(Path_ALL)
 
 #--------------------
-all: .mkdirs .depends .compile .link
+all: #.mkdirs .depends .compile .link
+	@echo $(Objects)
+	@echo $(Sources)
 #--------------------
 .mkdirs:
 	@mkdir -p $(Dirs)
 #--------------------
 #
 # Для описания зависимостей от заголовков
-#
-# Хочу заюзать ключ компиляции -MD у GCC.
-# С помощью этого можно строить зависимости
-# от заголовков.
 #
 .depends: .mkdirs $(Dependences)
 
