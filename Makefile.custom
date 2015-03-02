@@ -1,13 +1,15 @@
 Name := FlameIDE
 
 override CC := g++-4.8
-override TypeBuild := Debug
+override TypeBuild := Release
 
 BuildPath := $(TypeBuild)
 
-DepPath := $(BuildPath)/dep/
-ObjPath := $(BuildPath)/obj/ 
-BinPath := $(BuildPath)/bin/
+DepPath := $(BuildPath)/dep
+ObjPath := $(BuildPath)/obj
+BinPath := $(BuildPath)/bin
+
+Dirs := $(DepPath) $(ObjPath) $(BinPath)
 
 override Libs := 
 
@@ -35,12 +37,19 @@ Defines :=
 
 override Flags_Debug := -g -O0 $(Warn_flags)
 override Flags_Release := -O2
+
+ifeq ($(TypeBuild),Release)
 override Flags := -std=c++11 -pipe $(Defines) $(Flags_Release)
+endif
 
-Flag_Obj := -fPIC
+ifeq ($(TypeBuild),Debug)
+override Flags := -std=c++11 -pipe $(Defines) $(Flags_Debug)
+endif
 
-Flag_Lib := -shared
 
+#Flag_Obj := -fPIC
+
+#Flag_Lib := -shared
 
 Path := ./src
 
@@ -48,24 +57,19 @@ Path := ./src
 Sources := \
 	$(subst ./,,$(shell find $(Path) -name *.cpp))
 
-# получаем имена объектных файлов
 Objects := \
-	$(addprefix obj/,$(subst /,_,$(Sources:.cpp=.o)))
+	$(addprefix $(ObjPath)/,$(subst /,_,$(Sources:.cpp=.o)))
 	
 # получаем имена объектных файлов
 Dependences := \
-	$(addprefix dep/,$(notdir $(Sources:.cpp=.d)))
+	$(addprefix $(DepPath)/,$(subst /,_,$(Sources:.cpp=.d)))
 
 
 Path_ALL := \
 	$(shell find $(Path) -type d)
 
-VPATH := $(Path_ALL)
-
 #--------------------
-all: #.mkdirs .depends .compile .link
-	@echo $(Objects)
-	@echo $(Sources)
+all: .mkdirs .depends .compile #.link
 #--------------------
 .mkdirs:
 	@mkdir -p $(Dirs)
@@ -75,10 +79,9 @@ all: #.mkdirs .depends .compile .link
 #
 .depends: .mkdirs $(Dependences)
 
-./dep/%.d : %.cpp
-	$(CC) $(Flags) $(Libs) -MM -c $< > $@
-
-include $(wildcard dep/*.d)
+$(DepPath)/%.d :  
+	$(CC) $(Flags) $(Libs) -MM -c $(subst _,/,$(notdir $(subst .d,.cpp,$@))) > $@
+include $(wildcard $(DepPath)/*.d)
 #--------------------	
 #
 # Для компиляции объектных файлов
@@ -86,8 +89,8 @@ include $(wildcard dep/*.d)
 .compile : .depends $(Objects)
 
 # $(Objects): obj/%.o : %.cpp # старый вариант; оставил для понимания происходящего
-./obj/%.o : %.cpp
-	$(CC) $(Flags) $(Flag_Obj) $(Libs) -c $< -o $@
+$(ObjPath)/%.o : 
+	$(CC) $(Flags) $(Flag_Obj) $(Libs) -c $(subst _,/,$(notdir $(subst .o,.cpp,$@))) -o $@
 
 #--------------------	
 #
