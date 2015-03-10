@@ -96,3 +96,4 @@ CommandLine::getOutput(const char* command)
 
     return result;
 }
+

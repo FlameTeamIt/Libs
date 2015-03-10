@@ -5,7 +5,9 @@
 
 #include "../Bus/MsgInterface.h"
 
-#include "../Store/File.h"
+
+#include "../Store/Array.h"
+#include "../Store/BasicFile.h"
 #include "../Store/Project.h"
 #include "../Store/Session.h"
 
@@ -16,12 +18,21 @@ using namespace flame_ide;
 
 Test::Test()
 {
-	//ctor
 }
 
 Test::~Test()
 {
-	//dtor
+}
+
+void
+Test::all()
+{
+#ifdef DEBUG
+	std::cout << "Test::all()\n";
+#endif
+	actions.all();
+	bus.all();
+	store.all();
 }
 
 // Actions
@@ -29,26 +40,37 @@ Test::~Test()
 void
 Test::Actions::all()
 {
+#ifdef DEBUG
+	std::cout << "Test::Actions::all()\n";
+#endif
 	
+	this->TCodeParcer();
+	this->TCommandLine();	
 }
 
 void
 Test::Actions::TCodeParcer()
 {
+#ifdef DEBUG
+	std::cout << "Test::Actions::TCodeParcer()\n";
+#endif
 	
 }
 
 void
 Test::Actions::TCommandLine()
 {
-	std::string str_file("../src/main.cpp"), command("find ../src/ -type d");
-	char c_command[] = "find ../src/ -type d";
-	CommandLine commands;
+#ifdef DEBUG
+	std::cout << "Test::Actions::TCommandLine()\n";
+#endif
+//	std::string str_file("../src/main.cpp"), command("find ../src/ -type d");
+//	char c_command[] = "find ../src/ -type d";
+//	CommandLine commands;
 	
-	std::cout << commands.getOutput("find ../src/ -type d") << "\n\n";
-	std::cout << commands.getOutput(std::string("find ../src/ -type d")) << "\n";
-	std::cout << commands.getOutput(command) << '\n';
-	std::cout << commands.getOutput(c_command) << '\n';
+//	std::cout << commands.getOutput("find ../src/ -type d") << "\n\n";
+//	std::cout << commands.getOutput(std::string("find ../src/ -type d")) << "\n";
+//	std::cout << commands.getOutput(command) << '\n';
+//	std::cout << commands.getOutput(c_command) << '\n';
 }
 
 // Bus
@@ -56,7 +78,7 @@ Test::Actions::TCommandLine()
 void
 Test::Bus::all()
 {
-	
+	this->TMsgInterface();
 }
 
 void
@@ -70,13 +92,31 @@ Test::Bus::TMsgInterface()
 void
 Test::Store::all()
 {
+	this->TArray();
+	
+	this->TFile();
+	this->TProject();
+	this->TSession();
+}
+
+void
+Test::Store::TArray()
+{
+	Array<int> array(32);
+	
+	for(unsigned int i = 0; i < array.getLength(); i++)
+	{
+		array[i] = (int)i;
+		
+		std::cout << array[i] << i << '\n';
+	}
+	
 	
 }
 
 void
 Test::Store::TFile()
 {
-	
 }
 
 void

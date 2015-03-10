@@ -1,7 +1,7 @@
 #ifndef SESSION_H
 #define SESSION_H
 
-#include "File.h"
+#include "BasicFile.h"
 #include "Project.h"
 
 #include <vector>

@@ -35,6 +35,8 @@ public:
 		
 		void all();
 		
+		void TArray();
+		
 		void TFile();
 		void TProject();
 		void TSession();
