@@ -63,14 +63,27 @@ Test::Actions::TCommandLine()
 #ifdef DEBUG
 	std::cout << "Test::Actions::TCommandLine()\n";
 #endif
+	
+	
 //	std::string str_file("../src/main.cpp"), command("find ../src/ -type d");
 //	char c_command[] = "find ../src/ -type d";
-//	CommandLine commands;
+	CommandLine commands;
 	
 //	std::cout << commands.getOutput("find ../src/ -type d") << "\n\n";
 //	std::cout << commands.getOutput(std::string("find ../src/ -type d")) << "\n";
 //	std::cout << commands.getOutput(command) << '\n';
 //	std::cout << commands.getOutput(c_command) << '\n';
+#define c_comm "ls -a"
+	
+	char str[] = c_comm;
+	std::string command(str);
+	
+	std::cout << commands.getOutput(str) << "\n";
+	std::cout << commands.getOutput(std::string(str)) << "\n";
+	std::cout << commands.getOutput(command) << '\n';
+	std::cout << commands.getOutput(c_comm) << '\n';
+	
+#undef c_comm
 }
 
 // Bus
@@ -94,7 +107,7 @@ Test::Store::all()
 {
 	this->TArray();
 	
-	this->TFile();
+	this->TBasicFile();
 	this->TProject();
 	this->TSession();
 }
@@ -108,15 +121,17 @@ Test::Store::TArray()
 	{
 		array[i] = (int)i;
 		
-		std::cout << array[i] << i << '\n';
+		std::cout << array[i] << ' ' << i << '\n';
 	}
-	
-	
 }
 
 void
-Test::Store::TFile()
+Test::Store::TBasicFile()
 {
+	BasicFile basic_file("test.txt");
+	std::string text("This is test file\n");
+	
+	basic_file.save(text);
 }
 
 void

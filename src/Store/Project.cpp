@@ -2,12 +2,18 @@
 
 using namespace flame_ide;
 
+// constructor & destructor
+
 Project::Project()
 {
-	//ctor
 }
 
 Project::~Project()
 {
-	//dtor
 }
+
+// private
+
+// public
+
+

@@ -35,16 +35,17 @@ using namespace flame_ide;
 
 BasicFile::BasicFile()
 {
-#ifdef DEBUG  
-
-#endif // DEBUG
-	
 	// default values
 	this->initialization();
 }
 
 BasicFile::BasicFile(std::string& filename)
 	: BasicFile()
+{
+	this->filename = filename;
+}
+
+BasicFile::BasicFile(const char *filename)
 {
 	this->filename = filename;
 }
@@ -58,6 +59,8 @@ BasicFile::~BasicFile()
 void
 BasicFile::initialization()
 {
+	eof = false;
+	error = 0;
 }
 
 // public methods
@@ -82,34 +85,58 @@ BasicFile::load()
 		}
 	}
 	
+	file.close();
+	
 	return out;
 }
 
 char*
 BasicFile::load_c()
 {
+	// пока алгоритм такой
+	// узнаем размер файла
+	// выделяем память на массив соотвествующего размера
+	// грузим, используя get_line()
 }
 
 void
-BasicFile::save(std::string &)
+BasicFile::save(std::string &text)
 {
+	std::ofstream file(filename.c_str());
+	
+	if(file.is_open())
+	{
+		file << text;
+	}
+	
+	file.close();
 	
 }
 
 void
-BasicFile::save_c(char *)
+BasicFile::save_c(char *text)
 {
+	std::ofstream file(filename.c_str());
+	
+	if(file.is_open())
+	{
+		file << text;
+	}
+	
+	file.close();
 	
 }
 
 unsigned int
 BasicFile::getSize(std::string &)
 {
+	// нужно погуглить
 	return 0;
 }
 
 unsigned int
 BasicFile::getSize(char *)
 {
+	// нужно погуглить
 	return 0;
 }

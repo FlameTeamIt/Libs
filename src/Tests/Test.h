@@ -37,7 +37,7 @@ public:
 		
 		void TArray();
 		
-		void TFile();
+		void TBasicFile();
 		void TProject();
 		void TSession();
 	} store;

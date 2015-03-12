@@ -21,21 +21,21 @@ CommandLine::~CommandLine()
 std::string
 CommandLine::getOutput(const std::string& command)
 {
-	#ifdef DEBUG
+#ifdef DEBUG
 	std::cout << "CommandLine::getOutput(const std::string command)\n";
-	#endif // DEBUG
+#endif // DEBUG
 
 	FILE* pipe = popen(command.c_str(), "r");
 
 	if (!pipe)
 		return "ERROR";
 
-	char buffer[32];
+	char buffer[256];
 	std::string result = "";
 
     while(!feof(pipe))
 	{
-		if(fgets(buffer, 32, pipe) != NULL)
+		if(fgets(buffer, 256, pipe) != NULL)
 			result += buffer;
     }
 
@@ -48,9 +48,9 @@ CommandLine::getOutput(const std::string& command)
 std::string
 CommandLine::getOutput(char* command)
 {
-	#ifdef DEBUG
+#ifdef DEBUG
 	std::cout << "CommandLine::getOutput(char* command)\n";
-	#endif // DEBUG
+#endif // DEBUG
 
 	FILE* pipe = popen(command, "r");
 
@@ -74,9 +74,9 @@ CommandLine::getOutput(char* command)
 std::string
 CommandLine::getOutput(const char* command)
 {
-	#ifdef DEBUG
+#ifdef DEBUG
 	std::cout << "CommandLine::getOutput(const char* command)\n";
-	#endif // DEBUG
+#endif // DEBUG
 
 	FILE* pipe = popen(command, "r");
 
@@ -96,4 +96,3 @@ CommandLine::getOutput(const char* command)
 
     return result;
 }
-

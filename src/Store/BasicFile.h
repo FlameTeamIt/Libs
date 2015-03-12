@@ -33,6 +33,7 @@ protected:
 public:
 	BasicFile();
 	BasicFile(std::string&);
+	BasicFile(const char*);
 	
 	~BasicFile();
 
