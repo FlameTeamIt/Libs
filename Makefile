@@ -83,8 +83,9 @@ all: .mkdirs .depends .compile #.link
 #
 .depends: .mkdirs $(Dependences)
 
+# честно говоря, такой вариант не очень нравится. Надо думать.
 $(DepPath)/%.d :  
-	$(CC) $(Flags) $(Libs) -MM -c $(subst _,/,$(notdir $(subst %.d,%.cpp,$@))) > $@
+	$(CC) $(Flags) $(Libs) -MM -c $(subst _,/,$(notdir $(subst .d,.cpp,$@))) > $@
 include $(wildcard $(DepPath)/*.d)
 #--------------------	
 #
