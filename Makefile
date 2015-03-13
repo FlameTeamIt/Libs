@@ -55,7 +55,11 @@ Path := ./src
 
 # список всех ресурсных файлов
 Sources := \
-	$(subst ./,,$(shell find $(Path) -name *.cpp))
+	$(subst ./,,$(shell find $(Path) -name *.cpp | grep -v Tests/ ))
+
+# файлы для модульного тестирования
+Sources_Test := \
+	$(subst ./,,$(shell find $(Path) -name *.cpp | grep Tests/ ))
 
 Objects := \
 	$(addprefix $(ObjPath)/,$(subst /,_,$(Sources:.cpp=.o)))
@@ -80,7 +84,7 @@ all: .mkdirs .depends .compile #.link
 .depends: .mkdirs $(Dependences)
 
 $(DepPath)/%.d :  
-	$(CC) $(Flags) $(Libs) -MM -c $(subst _,/,$(notdir $(subst .d,.cpp,$@))) > $@
+	$(CC) $(Flags) $(Libs) -MM -c $(subst _,/,$(notdir $(subst %.d,%.cpp,$@))) > $@
 include $(wildcard $(DepPath)/*.d)
 #--------------------	
 #
