@@ -9,7 +9,7 @@ DepPath := $(BuildPath)/dep
 ObjPath := $(BuildPath)/obj
 BinPath := $(BuildPath)/bin
 
-Dirs := $(DepPath) $(ObjPath) $(BinPath)
+Dirs := $(DepPath) $(ObjPath) $(BinPath) $(TypeBuild)
 
 override Libs := 
 
