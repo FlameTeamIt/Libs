@@ -31,6 +31,9 @@ protected:
 	virtual void initialization();
 	
 public:
+	
+	// constructor & destructor
+	
 	BasicFile();
 	BasicFile(std::string&);
 	BasicFile(const char*);
@@ -50,7 +53,7 @@ public:
 	static unsigned int getSize(std::string&);
 	static unsigned int getSize(char*);
 	
-	// 
+	// normal
 	
 	int getError();
 };

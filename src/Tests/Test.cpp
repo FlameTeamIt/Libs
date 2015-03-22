@@ -6,7 +6,7 @@
 #include "../Bus/MsgInterface.h"
 
 
-#include "../Store/Array.h"
+#include "../Others/Array.h"
 #include "../Store/BasicFile.h"
 #include "../Store/Project.h"
 #include "../Store/Session.h"
@@ -115,14 +115,34 @@ Test::Store::all()
 void
 Test::Store::TArray()
 {
-	Array<int> array(32);
+	Array<unsigned long> array(1);
+	
+	std::cout << "Size: " << array.getLength() << '\n';
+	for(unsigned int i = 0; i < array.getLength(); i++)
+	{
+		array[i] = i;
+	}
+	
+	array.setLength(65536*16*i);
+	
+	std::cout << "Size: " << array.getLength() << '\n';
 	
 	for(unsigned int i = 0; i < array.getLength(); i++)
 	{
-		array[i] = (int)i;
-		
-		std::cout << array[i] << ' ' << i << '\n';
+		array[i] = i;
 	}
+	std::cout << '\n';
+	
+	array.setLength(8);
+	
+	std::cout << "Size: " << array.getLength() << '\n';
+	std::cin.get();
+	for(unsigned int i = 0; i < array.getLength(); i++)
+	{
+		array[i] = i;
+	}
+	std::cout << '\n';
+	
 }
 
 void

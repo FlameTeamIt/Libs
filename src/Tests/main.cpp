@@ -1,5 +1,4 @@
-#include "Tests/Test.h"
-
+#include "Test.h"
 #include <vector>
 #include <iostream>
 using namespace flame_ide;

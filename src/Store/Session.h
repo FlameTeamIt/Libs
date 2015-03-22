@@ -13,10 +13,13 @@ class Session
 {
 	std::vector <Project> projets;
 
-	protected:
-	public:
-		Session();
-		~Session();
+public:
+	Session();
+	~Session();
+	
+	void
+	createNew();
+		
 };
 
 }
