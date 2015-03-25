@@ -1,7 +1,12 @@
 Name := FlameIDE
 
 override CC := g++-4.8
+
+ifdef BUILD
+override TypeBuild := $(BUILD)
+else
 override TypeBuild := Release
+endif
 
 BuildPath := $(TypeBuild)
 
@@ -13,7 +18,7 @@ Dirs := $(DepPath) $(ObjPath) $(BinPath) $(TypeBuild)
 
 override Libs := 
 
-override Warn_flags := 
+override Warn_flags :=
 # override Warn_flags := \
 # 			-Wall \
 # 			-Wextra \
@@ -55,7 +60,7 @@ Path := ./src
 
 # список всех ресурсных файлов
 Sources := \
-	$(subst ./,,$(shell find $(Path) -name *.cpp | grep -v Tests/ ))
+	$(subst ./,,$(shell find $(Path) -name *.cpp | grep -v Tests/ | grep -v Others/ ))
 
 # файлы для модульного тестирования
 Sources_Test := \
