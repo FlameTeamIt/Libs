@@ -6,27 +6,6 @@
 #include <iostream>
 //#endif
 
-struct Container
-{
-	char data;
-	Container *next;
-};
-
-class MiniList
-{
-	unsigned int length;
-	Container *head, *end;
-	
-public:
-	MiniList();
-	~MiniList();
-	
-	void push_back();
-	void pop_front();
-	
-	char* toArray();
-};
-
 // =======================================================
 
 using namespace flame_ide;
@@ -50,11 +29,20 @@ BasicFile::BasicFile(const char *filename)
 	this->filename = filename;
 }
 
-
 BasicFile::~BasicFile()
 {}
 
 // private methods
+
+// static
+
+std::string
+BasicFile::getPath(std::string &filename)
+{
+	// разделяем на куски путь + имя файла
+}
+
+// virtual
 
 void
 BasicFile::initialization()
@@ -64,6 +52,8 @@ BasicFile::initialization()
 }
 
 // public methods
+
+// virtual
 
 std::string
 BasicFile::load()
@@ -90,17 +80,8 @@ BasicFile::load()
 	return out;
 }
 
-char*
-BasicFile::load_c()
-{
-	// пока алгоритм такой
-	// узнаем размер файла
-	// выделяем память на массив соотвествующего размера
-	// грузим, используя get_line()
-}
-
 void
-BasicFile::save(std::string &text)
+BasicFile::save(const std::string &text)
 {
 	std::ofstream file(filename.c_str());
 	
@@ -113,30 +94,45 @@ BasicFile::save(std::string &text)
 	
 }
 
+// static
+
+unsigned int
+BasicFile::getSize(const std::string &)
+{
+	// нужно погуглить
+	return 0;
+}
+
+unsigned int
+BasicFile::getSize(const char *)
+{
+	// нужно погуглить
+	return 0;
+}
+
+// normal
+
 void
-BasicFile::save_c(char *text)
+BasicFile::setName(std::string &filename)
 {
-	std::ofstream file(filename.c_str());
-	
-	if(file.is_open())
-	{
-		file << text;
-	}
-	
-	file.close();
+	this->filename = filename;
 	
 }
 
-unsigned int
-BasicFile::getSize(std::string &)
+void
+BasicFile::setName(std::string &path, std::string &filename)
 {
-	// нужно погуглить
-	return 0;
+	
 }
 
-unsigned int
-BasicFile::getSize(char *)
+void
+BasicFile::setName(const char *&filename)
 {
-	// нужно погуглить
-	return 0;
+	
+}
+
+void
+BasicFile::setName(const char *&path, const char *&filename)
+{
+	
 }

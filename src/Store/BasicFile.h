@@ -18,7 +18,7 @@ struct FileLoadSettings
 	unsigned long partition_size;
 	
 };
-	
+
 class BasicFile
 {
 protected:
@@ -26,36 +26,73 @@ protected:
 	int error;
 	
 	std::string filename;
+	std::string path;
+	
 	std::string content_string;
-
+	
+	// static
+	
+	static std::string
+	getPath(std::string& filename);
+	
+	// virtual
+	
 	virtual void initialization();
+	
+	// normal
 	
 public:
 	
 	// constructor & destructor
 	
 	BasicFile();
-	BasicFile(std::string&);
-	BasicFile(const char*);
+	BasicFile(std::string& filename);
+	BasicFile(const char* filename);
 	
 	~BasicFile();
 
 	// virtuals
 	
-	virtual std::string load();
-	virtual char*       load_c();
+	virtual std::string
+	load();
 	
-	virtual void save  (std::string&);
-	virtual void save_c(char*);
+	virtual void
+	save(const std::string& text);
 	
 	// statics
 	
-	static unsigned int getSize(std::string&);
-	static unsigned int getSize(char*);
+	static unsigned int
+	getSize(const std::string& filename);
+	
+	static unsigned int
+	getSize(const char* filename);
 	
 	// normal
 	
-	int getError();
+	void
+	deleteFile();
+	
+	void
+	setName(std::string& filename);
+	
+	void
+	setName(std::string& path, std::string& filename);
+	
+	void
+	setName(const char*& filename);
+	
+	void
+	setName(const char*& path, const char*& filename);
+	
+	std::string
+	getName();
+	
+	char*
+	getName_c();
+	
+	int
+	getError();
+	
 };
 
 }
