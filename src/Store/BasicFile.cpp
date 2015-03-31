@@ -1,6 +1,7 @@
 #include "BasicFile.h"
 
 #include <fstream>
+#include <list>
 
 //#ifdef DEBUG
 #include <iostream>
@@ -25,6 +26,7 @@ BasicFile::BasicFile(std::string& filename)
 }
 
 BasicFile::BasicFile(const char *filename)
+	: BasicFile()
 {
 	this->filename = filename;
 }
@@ -32,14 +34,63 @@ BasicFile::BasicFile(const char *filename)
 BasicFile::~BasicFile()
 {}
 
-// private methods
+// protected methods
 
 // static
 
-std::string
-BasicFile::getPath(std::string &filename)
+bool
+BasicFile::parceFullFilename(const std::string &fullfilename,
+							 std::string &path,
+							 std::string &filename)
 {
 	// разделяем на куски путь + имя файла
+	std::string::const_iterator it_end_path;
+	bool is_find = false;
+	
+	for(std::string::const_iterator
+			it = fullfilename.begin(),
+			it_end = fullfilename.end();
+		it != it_end; ++it)
+	{
+		if(*it == '/')
+		{
+			it_end_path = it;
+			is_find = true;
+		}
+	}
+	it_end_path++;
+	
+	if(path.length())
+		path.clear();
+	
+	if(filename.length())
+		filename.clear();
+	
+	if(is_find)
+	{
+		// использовать лябды и std::bind
+		for(std::string::const_iterator
+				it = it_end_path,
+				it_end = fullfilename.end();
+			it != it_end; ++it)
+		{
+			filename += *it;
+		}
+		
+		for(std::string::const_iterator
+				it = fullfilename.begin(),
+				it_end = it_end_path;
+			it != it_end; ++it)
+		{
+			path += *it;
+		}
+		
+		return true;
+	}
+	
+	filename = fullfilename;
+	
+	return false;
 }
 
 // virtual
@@ -58,7 +109,7 @@ BasicFile::initialization()
 std::string
 BasicFile::load()
 {
-	// по умолчанию, грузим все
+	// по умолчанию, грузим все посимвольно
 	
 	std::ifstream file(this->filename.c_str());
 	std::string out("");
@@ -67,7 +118,7 @@ BasicFile::load()
 	{
 		char temp_char;
 		
-		while(!file)
+		while(!file.eof())
 		{
 			file.get(temp_char);
 			
@@ -91,48 +142,73 @@ BasicFile::save(const std::string &text)
 	}
 	
 	file.close();
-	
 }
 
 // static
 
-unsigned int
-BasicFile::getSize(const std::string &)
+unsigned long // std::ios::pos_type
+BasicFile::getSize(const std::string &filename)
 {
-	// нужно погуглить
-	return 0;
+	std::ifstream in(filename.c_str(), std::ifstream::ate | std::ifstream::binary);
+	return in.tellg();
 }
 
-unsigned int
-BasicFile::getSize(const char *)
+unsigned long // std::ios::pos_type
+BasicFile::getSize(const char *filename)
 {
-	// нужно погуглить
-	return 0;
+	std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+	return in.tellg();
 }
 
 // normal
 
 void
-BasicFile::setName(std::string &filename)
+BasicFile::setName(const std::string &filename)
 {
+	parceFullFilename(filename, this->path, this->filename);
+}
+
+void
+BasicFile::setName(const std::string &path, const std::string &filename)
+{
+	this->path = path;
 	this->filename = filename;
-	
 }
 
 void
-BasicFile::setName(std::string &path, std::string &filename)
+BasicFile::setName(const char *filename)
 {
-	
+	std::string fullfilename(filename);
+	parceFullFilename(fullfilename, this->path, this->filename);
 }
 
 void
-BasicFile::setName(const char *&filename)
+BasicFile::setName(const char *path, const char *filename)
 {
-	
+	this->path = path;
+	this->filename = filename;
 }
 
-void
-BasicFile::setName(const char *&path, const char *&filename)
+std::string
+BasicFile::getName()
 {
-	
+	return this->filename;
+}
+
+std::string
+BasicFile::getPath()
+{
+	return this->path;
+}
+
+std::string
+BasicFile::getFullName()
+{
+	return (this->path + this->filename);
+}
+
+int
+BasicFile::getError()
+{
+	return error;
 }

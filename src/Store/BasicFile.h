@@ -28,12 +28,12 @@ protected:
 	std::string filename;
 	std::string path;
 	
-	std::string content_string;
-	
 	// static
 	
-	static std::string
-	getPath(std::string& filename);
+	static bool
+	parceFullFilename(const std::string& fullfilename,
+					  std::string &path,
+					  std::string &filename);
 	
 	// virtual
 	
@@ -61,10 +61,10 @@ public:
 	
 	// statics
 	
-	static unsigned int
+	static unsigned long
 	getSize(const std::string& filename);
 	
-	static unsigned int
+	static unsigned long
 	getSize(const char* filename);
 	
 	// normal
@@ -73,22 +73,25 @@ public:
 	deleteFile();
 	
 	void
-	setName(std::string& filename);
+	setName(const std::string& filename);
 	
 	void
-	setName(std::string& path, std::string& filename);
+	setName(const std::string& path, const std::string& filename);
 	
 	void
-	setName(const char*& filename);
+	setName(const char* filename);
 	
 	void
-	setName(const char*& path, const char*& filename);
+	setName(const char* path, const char* filename);
 	
 	std::string
-	getName();
+	getFileName();
 	
-	char*
-	getName_c();
+	std::string
+	getPath();
+	
+	std::string
+	getFullName();
 	
 	int
 	getError();

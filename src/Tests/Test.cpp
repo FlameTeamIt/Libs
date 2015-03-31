@@ -123,11 +123,11 @@ Test::Store::TArray()
 		array[i] = i;
 	}
 	
-	array.setLength(65536*16*i);
+	array.setLength(65536*32);
 	
 	std::cout << "Size: " << array.getLength() << '\n';
 	
-	for(unsigned int i = 0; i < array.getLength(); i++)
+	for(unsigned int i = 0, size = array.getLength(); i < size; i++)
 	{
 		array[i] = i;
 	}
@@ -136,7 +136,6 @@ Test::Store::TArray()
 	array.setLength(8);
 	
 	std::cout << "Size: " << array.getLength() << '\n';
-	std::cin.get();
 	for(unsigned int i = 0; i < array.getLength(); i++)
 	{
 		array[i] = i;
@@ -152,6 +151,10 @@ Test::Store::TBasicFile()
 	std::string text("This is test file\n");
 	
 	basic_file.save(text);
+	
+	basic_file.setName(std::string("/usr/bin/qtcreator.txt"));
+	basic_file.setName(std::string("qtcreator.txt"));
+	
 }
 
 void
