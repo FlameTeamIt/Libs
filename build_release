@@ -10,6 +10,10 @@ case "$1" in
 "clean")
     make -j4 -f Makefile BUILD="$build_type" clean
     ;;
+
+"exec")
+    make -j4 -f Makefile BUILD="$build_type" exec_test
+    ;;
 esac
 exit
 

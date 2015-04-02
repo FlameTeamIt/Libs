@@ -1,0 +1,18 @@
+#!/bin/bash
+
+TypeBuild="Debug"
+case "$1" in
+"")
+    make -j4 -f Makefile BUILD=$TypeBuild
+    ;;
+
+"clean")
+    make -j4 -f Makefile BUILD=$TypeBuild clean
+    ;;
+
+"exec")
+    make -f Makefile BUILD=$TypeBuild exec_test
+    ;;
+esac
+exit
+
