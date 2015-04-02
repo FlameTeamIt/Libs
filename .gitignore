@@ -1,6 +1,9 @@
 FlameIDE*
 .codelite/*
+
 Debug/*
+Release/*
+
 flameide.*
 src/Others/BoostProcess/libs/*
 

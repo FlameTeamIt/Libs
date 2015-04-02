@@ -104,9 +104,9 @@ Array<T>::Array(Array<T> &array)
 	this->inc_arr = get_copy_array<T>(array.length, array.inc_arr);
 }
 template<typename T>
-Array<T>::Array(const size_t& length)
+Array<T>::Array(const size_t& array_length)
 {
-	this->length = length;
+	this->length = array_length;
 	this->initialised = true;
 	
 	inc_arr = get_new_array<T>(this->length);
