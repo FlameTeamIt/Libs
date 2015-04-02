@@ -19,16 +19,16 @@ BasicFile::BasicFile()
 	this->initialization();
 }
 
-BasicFile::BasicFile(std::string& filename)
+BasicFile::BasicFile(std::string& str_filename)
 	: BasicFile()
 {
-	this->filename = filename;
+	this->filename = str_filename;
 }
 
-BasicFile::BasicFile(const char *filename)
+BasicFile::BasicFile(const char *str_filename)
 	: BasicFile()
 {
-	this->filename = filename;
+	this->filename = str_filename;
 }
 
 BasicFile::~BasicFile()
@@ -40,8 +40,8 @@ BasicFile::~BasicFile()
 
 bool
 BasicFile::parceFullFilename(const std::string &fullfilename,
-							 std::string &path,
-							 std::string &filename)
+							 std::string &str_path,
+							 std::string &str_filename)
 {
 	// разделяем на куски путь + имя файла
 	std::string::const_iterator it_end_path;
@@ -60,11 +60,11 @@ BasicFile::parceFullFilename(const std::string &fullfilename,
 	}
 	it_end_path++;
 	
-	if(path.length())
-		path.clear();
+	if(str_path.length())
+		str_path.clear();
 	
-	if(filename.length())
-		filename.clear();
+	if(str_filename.length())
+		str_filename.clear();
 	
 	if(is_find)
 	{
@@ -74,7 +74,7 @@ BasicFile::parceFullFilename(const std::string &fullfilename,
 				it_end = fullfilename.end();
 			it != it_end; ++it)
 		{
-			filename += *it;
+			str_filename += *it;
 		}
 		
 		for(std::string::const_iterator
@@ -82,13 +82,13 @@ BasicFile::parceFullFilename(const std::string &fullfilename,
 				it_end = it_end_path;
 			it != it_end; ++it)
 		{
-			path += *it;
+			str_path += *it;
 		}
 		
 		return true;
 	}
 	
-	filename = fullfilename;
+	str_filename = fullfilename;
 	
 	return false;
 }
@@ -118,11 +118,13 @@ BasicFile::load()
 	{
 		char temp_char;
 		
+		file.get(temp_char);
+		
 		while(!file.eof())
 		{
-			file.get(temp_char);
-			
 			out += temp_char;
+			
+			file.get(temp_char);
 		}
 	}
 	
@@ -163,30 +165,47 @@ BasicFile::getSize(const char *filename)
 // normal
 
 void
-BasicFile::setName(const std::string &filename)
+BasicFile::remove()
 {
-	parceFullFilename(filename, this->path, this->filename);
+	std::string fullfilename = filename + path;
+	std::ifstream file(fullfilename.c_str());
+	
+	if(file.is_open())
+	{
+		file.close();
+		
+		std::remove(fullfilename.c_str());
+	}
+	
+	file.close();
+	
 }
 
 void
-BasicFile::setName(const std::string &path, const std::string &filename)
+BasicFile::setName(const std::string &str_filename)
 {
-	this->path = path;
-	this->filename = filename;
+	parceFullFilename(str_filename, this->path, this->filename);
 }
 
 void
-BasicFile::setName(const char *filename)
+BasicFile::setName(const std::string &str_path, const std::string &str_filename)
 {
-	std::string fullfilename(filename);
+	this->path = str_path;
+	this->filename = str_filename;
+}
+
+void
+BasicFile::setName(const char *str_filename)
+{
+	std::string fullfilename(str_filename);
 	parceFullFilename(fullfilename, this->path, this->filename);
 }
 
 void
-BasicFile::setName(const char *path, const char *filename)
+BasicFile::setName(const char *str_path, const char *str_filename)
 {
-	this->path = path;
-	this->filename = filename;
+	this->path = str_path;
+	this->filename = str_filename;
 }
 
 std::string

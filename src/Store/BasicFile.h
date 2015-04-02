@@ -32,8 +32,8 @@ protected:
 	
 	static bool
 	parceFullFilename(const std::string& fullfilename,
-					  std::string &path,
-					  std::string &filename);
+					  std::string &str_path,
+					  std::string &str_filename);
 	
 	// virtual
 	
@@ -46,8 +46,8 @@ public:
 	// constructor & destructor
 	
 	BasicFile();
-	BasicFile(std::string& filename);
-	BasicFile(const char* filename);
+	BasicFile(std::string& str_filename);
+	BasicFile(const char* str_filename);
 	
 	~BasicFile();
 
@@ -62,30 +62,30 @@ public:
 	// statics
 	
 	static unsigned long
-	getSize(const std::string& filename);
+	getSize(const std::string& str_filename);
 	
 	static unsigned long
-	getSize(const char* filename);
+	getSize(const char* str_filename);
 	
 	// normal
 	
 	void
-	deleteFile();
+	remove();
 	
 	void
-	setName(const std::string& filename);
+	setName(const std::string& str_filename);
 	
 	void
-	setName(const std::string& path, const std::string& filename);
+	setName(const std::string& str_path, const std::string& str_filename);
 	
 	void
-	setName(const char* filename);
+	setName(const char* str_filename);
 	
 	void
-	setName(const char* path, const char* filename);
+	setName(const char* str_path, const char* str_filename);
 	
 	std::string
-	getFileName();
+	getName();
 	
 	std::string
 	getPath();
