@@ -4,8 +4,8 @@
 // Пока не уверен, что нужно, но пусть пока будет
 
 #include <cstdlib>
-
 namespace flame_ide
+{ namespace templates
 {
 
 template<typename T>
@@ -16,10 +16,8 @@ class Array
 	size_t length;
 	bool initialised;
 	
-	// operators
-	
-	Array<T>& operator=(const Array<T>&); // не нужно присваивание
-	
+	Array<T>& operator=(const Array<T>&);
+protected:
 	// static
 	
 	template<typename Tt> static inline
@@ -42,10 +40,6 @@ class Array
 	Tt**
 	resize_array(const size_t& old_size, const size_t& new_size, Tt** array);
 	
-	// normal
-	
-	// избавился от функции измнения массива
-	
 public:
 	Array();
 	Array(Array<T>& array);
@@ -58,12 +52,11 @@ public:
 	
 	~Array();
 	
-	// virtual
-	
-	// normal
-	
 	void
 	setLength(const size_t& new_length);
+	
+	void
+	setCopy(const Array<T>& copying_array);
 	
 	size_t
 	getLength();
@@ -74,18 +67,19 @@ public:
 	T**
 	getCopyArray_c();
 	
+	T*
+	getPointer(const size_t& index);
+	
 	T&
 	at(const size_t& index);
-	
-	// operators
 	
 	T&
 	operator[](const size_t& index);
 };
 
-}
+}}
 
-using namespace flame_ide;
+using namespace flame_ide::templates;
 
 // constructors & distructor
 
@@ -126,12 +120,10 @@ Tt**
 Array<T>::get_new_array(const size_t& length)
 {
 	
-//	T** array = (T**)malloc(sizeof(T*) * length);
 	T** array = new T*[length];
 	
 	for(size_t i = 0; i < length; i++)
 	{
-//		array[i] = (T*)malloc(sizeof(T));
 		array[i] = new T;
 	}
 	
@@ -144,12 +136,10 @@ Tt**
 Array<T>::get_copy_array(const size_t& length, Tt** array)
 {
 	
-//	T** copy_array = std::malloc(sizeof(T*) * length);
 	T** copy_array = new T*[length];
 	
 	for(size_t i = 0; i < length; i++)
 	{
-//		copy_array[i] = (T*)malloc(sizeof(T));
 		copy_array[i] = new T;
 		copy_array[i][0] = array[i][0];
 	}
@@ -175,10 +165,8 @@ Array<T>::delete_array(const size_t& length, Tt** array)
 {
 	for(size_t i = 0; i < length; i++)
 	{
-//		free(array[i]);
 		delete array[i];
 	}
-//	free(array);
 	delete[] array;
 }
 
@@ -252,6 +240,11 @@ Array<T>::getCopyArray_c()
 		:
 			nullptr;	
 }
+
+template<typename T>
+T*
+Array<T>::getPointer(const size_t &index)
+{	return inc_arr[index];}
 
 // "защиты от дурака" нет, так что страдайте.
 template<typename T>

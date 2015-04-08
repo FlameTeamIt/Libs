@@ -5,14 +5,12 @@
 
 #include "../Bus/MsgInterface.h"
 
-
 #include "../Others/Array.h"
 #include "../Store/BasicFile.h"
 #include "../Store/Project.h"
 #include "../Store/Session.h"
 
 #include <iostream>
-
 
 using namespace flame_ide;
 
@@ -27,9 +25,8 @@ Test::~Test()
 void
 Test::all()
 {
-#ifdef DEBUG
 	std::cout << "Test::all()\n";
-#endif
+	
 	actions.all();
 	bus.all();
 	store.all();
@@ -40,9 +37,7 @@ Test::all()
 void
 Test::Actions::all()
 {
-#ifdef DEBUG
 	std::cout << "Test::Actions::all()\n";
-#endif
 	
 	this->TCodeParcer();
 	this->TCommandLine();	
@@ -51,28 +46,16 @@ Test::Actions::all()
 void
 Test::Actions::TCodeParcer()
 {
-#ifdef DEBUG
-	std::cout << "Test::Actions::TCodeParcer()\n";
-#endif
-	
+	std::cout << '\t' << "Test::Actions::TCodeParcer()\n";
 }
 
 void
 Test::Actions::TCommandLine()
 {
-#ifdef DEBUG
-	std::cout << "Test::Actions::TCommandLine()\n";
-#endif
+	std::cout << '\t' << "Test::Actions::TCommandLine()\n";
 	
-	
-//	std::string str_file("../src/main.cpp"), command("find ../src/ -type d");
-//	char c_command[] = "find ../src/ -type d";
 	CommandLine commands;
 	
-//	std::cout << commands.getOutput("find ../src/ -type d") << "\n\n";
-//	std::cout << commands.getOutput(std::string("find ../src/ -type d")) << "\n";
-//	std::cout << commands.getOutput(command) << '\n';
-//	std::cout << commands.getOutput(c_command) << '\n';
 #define c_comm "ls -a"
 	
 	char str[] = c_comm;
@@ -97,7 +80,7 @@ Test::Bus::all()
 void
 Test::Bus::TMsgInterface()
 {
-	
+	std::cout << '\t' << "Test::Bus::TMsgInterface()" << '\n';
 }
 
 // Store
@@ -118,6 +101,7 @@ Test::Store::TArray()
 	Array<unsigned long> array(1);
 	
 	std::cout << "Size: " << array.getLength() << '\n';
+	
 	for(unsigned int i = 0; i < array.getLength(); i++)
 	{
 		array[i] = i;
@@ -127,7 +111,7 @@ Test::Store::TArray()
 	
 	std::cout << "Size: " << array.getLength() << '\n';
 	
-	for(unsigned int i = 0, size = array.getLength(); i < size; i++)
+	for(unsigned long i = 0, size = array.getLength(); i < size; i++)
 	{
 		array[i] = i;
 	}
@@ -147,24 +131,38 @@ Test::Store::TArray()
 void
 Test::Store::TBasicFile()
 {
+	std::cout << '\t' << "Test::Store::TBasicFile()" << '\n';
+	
 	BasicFile basic_file("test.txt");
-	std::string text("This is test file\n");
+	std::string text("This is test file\n"), out_text;
 	
 	basic_file.save(text);
+	out_text = basic_file.load();
+	std::cout << out_text;// << '\n';
+	
+	basic_file.remove();
 	
 	basic_file.setName(std::string("/usr/bin/qtcreator.txt"));
+	std::cout << basic_file.getFullName() << " | "
+			  << basic_file.getPath() << " | "
+			  << basic_file.getName() << '\n';
+	
 	basic_file.setName(std::string("qtcreator.txt"));
+	std::cout << basic_file.getFullName() << " | "
+			  << basic_file.getPath() << " | "
+			  << basic_file.getName() << '\n';
 	
 }
 
 void
 Test::Store::TProject()
 {
+	std::cout << '\t' << "Test::Store::TProject()" << '\n';
 	
 }
 
 void
 Test::Store::TSession()
 {
-	
+	std::cout << '\t' << "Test::Store::TSession()" << '\n';
 }

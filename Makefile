@@ -1,6 +1,6 @@
 Name := FlameIDE
 
-override CC := g++-4.8
+override CC := g++-4.7
 
 ifdef BUILD
 override TypeBuild := $(BUILD)
@@ -13,48 +13,47 @@ BuildPath := $(TypeBuild)
 DepPath := $(BuildPath)/dep
 ObjPath := $(BuildPath)/obj
 BinPath := $(BuildPath)/bin
+LibPath := $(BuildPath)/lib
 
-Dirs := $(DepPath) $(ObjPath) $(BinPath) $(TypeBuild)
+Dirs := $(DepPath) $(ObjPath) $(BinPath) $(LibPath) $(TypeBuild)
 
-override Libs := 
+override Libs :=
 
-override Warn_flags :=
-# override Warn_flags := \
-# 			-Wall \
-# 			-Wextra \
-# 			-Wconversion \
-# 			-Werror \
-# 			-Winit-self \
-# 			-Wunreachable-code \
-# 			-Wformat=2 \
-# 			-Wswitch-default \
-# 			-Wtrigraphs \
-# 			-Wstrict-overflow=4 \
-# 			-Wfloat-equal \
-# 			-Wundef \
-# 			-Wshadow \
-# 			-Wcast-qual \
-# 			-Wcast-align \
-# 			-Wwrite-strings \
-# 			-Wlogical-op
-			
-Defines := 
+#override Warn_flags := -Wall -Wextra -Werror
+override Warn_flags := \
+			-Wall \
+			-Wextra \
+			-Wconversion \
+			-Werror \
+			-Winit-self \
+			-Wunreachable-code \
+			-Wformat=2 \
+			-Wswitch-default \
+			-Wtrigraphs \
+			-Wstrict-overflow=4 \
+			-Wfloat-equal \
+			-Wundef \
+			-Wshadow \
+			-Wcast-qual \
+			-Wcast-align \
+			-Wwrite-strings \
+			-Wlogical-op
+
+Defines_Debug := -DDEBUG=1
+Defines_Release :=
 
 override Flags_Debug := -g -O0 $(Warn_flags)
-override Flags_Release := -O2
+override Flags_Release := -O2 $(Warn_flags)
 
 ifeq ($(TypeBuild),Release)
-override Flags := -std=c++11 -pipe $(Defines) $(Flags_Release)
+override Defines := $(Defines_Release)
+override Flags := -std=c++11 -pipe $(Defines_Release) $(Flags_Release)
 endif
 
 ifeq ($(TypeBuild),Debug)
-override Flags := -std=c++11 -pipe $(Defines) $(Flags_Debug)
+override Defines := $(Defines_Debug)
+override Flags := -std=c++11 -pipe $(Defines_Debug) $(Flags_Debug)
 endif
-
-
-#Flag_Obj := -fPIC
-
-#Flag_Lib := -shared
 
 Path := ./src
 
@@ -62,23 +61,33 @@ Path := ./src
 Sources := \
 	$(subst ./,,$(shell find $(Path) -name *.cpp | grep -v Tests/ | grep -v Others/ ))
 
+
+# получаем имена объектных файлов
+Dependences := \
+	$(addprefix $(DepPath)/,$(subst /,_,$(Sources:.cpp=.d)))
+Flag_Deps := -MM -c
+
+
 # файлы для модульного тестирования
 Sources_Test := \
 	$(subst ./,,$(shell find $(Path) -name *.cpp | grep Tests/ ))
 
+
 Objects := \
 	$(addprefix $(ObjPath)/,$(subst /,_,$(Sources:.cpp=.o)))
-	
-# получаем имена объектных файлов
-Dependences := \
-	$(addprefix $(DepPath)/,$(subst /,_,$(Sources:.cpp=.d)))
+Flag_Obj := -fPIC
+Flag_Lib := -shared
 
+
+Target_lib := $(LibPath)/lib$(Name).so
+Target_lib_static := $(LibPath)/lib$(Name).a
+Target_bin_test := $(BinPath)/test_$(Name)
 
 Path_ALL := \
 	$(shell find $(Path) -type d)
 
 #--------------------
-all: .mkdirs .depends .compile #.link
+all: .mkdirs .depends .compile .link
 #--------------------
 .mkdirs:
 	@mkdir -p $(Dirs)
@@ -89,46 +98,45 @@ all: .mkdirs .depends .compile #.link
 .depends: .mkdirs $(Dependences)
 
 # честно говоря, такой вариант не очень нравится. Надо думать.
-$(DepPath)/%.d :  
-	$(CC) $(Flags) $(Libs) -MM -c $(subst _,/,$(notdir $(subst .d,.cpp,$@))) > $@
+$(DepPath)/%.d :
+	$(CC) $(Flags) $(Flag_Deps) $(Libs) $(subst _,/,$(notdir $(subst .d,.cpp,$@))) > $@
 include $(wildcard $(DepPath)/*.d)
-#--------------------	
+#--------------------
 #
 # Для компиляции объектных файлов
 #
 .compile : .depends $(Objects)
 
 # $(Objects): obj/%.o : %.cpp # старый вариант; оставил для понимания происходящего
-$(ObjPath)/%.o : 
+$(ObjPath)/%.o :
 	$(CC) $(Flags) $(Flag_Obj) $(Libs) -c $(subst _,/,$(notdir $(subst .o,.cpp,$@))) -o $@
 
-#--------------------	
+#--------------------
 #
 # Для сборки статичной и динамической библиотек
 #
-.link: .link_libs .link_test
+.link: .compile .link_libs .link_test
 
 .link_libs: \
-	./lib/$(Target_lib)
-# 	./lib/$(Target_lib_static)
+	$(Target_lib)
+# 	$(Target_lib_static)
 
 # видно с коммандной строки
-./lib/$(Target_lib): $(Objects)
-	$(CC) $(Flag_Lib) $(Flags) $(Libs) $(Objects) -o lib/$(Target_lib)
+$(Target_lib): $(Objects)
+	$(CC) $(Flag_Lib) $(Flags) $(Libs) $(Objects) -o $(Target_lib)
 
 # видно с коммандной строки
 # ./lib/$(Target_lib_static): $(Objects)
 # 	@ar rv lib/$(Target_lib_static) $(Objects)
 
-.link_test: .compile ./bin/$(Target_bin)
+.link_test: .compile $(Target_bin_test)
 
 # видно с коммандной строки
-./bin/$(Target_bin): .compile .link_libs
-	cd bin; $(CC) $(Flags) $(Defines) ../lib/$(Target_lib) ../$(Sources_Tests) -o $(Target_bin)
-	
-#--------------------	
-exec:
-	@cd ./bin; ./$(Target_bin)
+$(Target_bin_test): .compile .link_libs
+	$(CC) $(Flags) $(Defines) $(Target_lib) $(Sources_Test) -o $(Target_bin_test)
+#--------------------
+exec_test:
+	./$(Target_bin_test)
 #--------------------
 #
 # Для установки $(Name) как библиотеки
@@ -164,7 +172,7 @@ exec:
 # Это напоследок поиграться и поиздеваться над
 # своими мозгами.
 #
-.debianize:
+#.debianize:
 #--------------------
 .PHONY: clean
 	

@@ -1,12 +1,11 @@
 #include "Test.h"
 #include <vector>
 #include <iostream>
-using namespace flame_ide;
+//using namespace flame_ide;
 
 int main()
 {
-	
-	Test test;
+	flame_ide::Test test;
 	
 	test.all();
 		
