@@ -61,8 +61,8 @@ std::string ArgsParser::getString(const std::string & key)
     Arguments_t::iterator it=args.find(key);
     if (it==args.end())
     {
-        std::cout<<"ArgsParser::getString[WARNING:] No value for key '"<<key<<"'.\n"
-                 <<"ArgsParser::getString[SOLVED:] returning empty string.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] No value for key '"<<key<<"'.\n"
+                 <<__PRETTY_FUNCTION__<<"[SOLVED:] returning empty string.\n";
         return "";
     }
     return args[key];
@@ -72,8 +72,8 @@ int ArgsParser::getInt(const std::string & key)
     std::string tmp=getString(key);
     if (tmp=="")
     {
-        std::cout<<"ArgsParser::getInt[WARNING:] ArgsParser::getString returned empty string.\n"
-                <<"ArgsParser::getInt[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] ArgsParser::getString returned empty string.\n"
+                <<__PRETTY_FUNCTION__<<"[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
         return 0;
     }
     return std::stoi(tmp,NULL);
@@ -83,8 +83,8 @@ long ArgsParser::getLong(const std::string & key)
     std::string tmp=getString(key);
     if (tmp=="")
     {
-        std::cout<<"ArgsParser::getLong[WARNING:] ArgsParser::getString returned empty string.\n"
-        <<"ArgsParser::getLong[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] ArgsParser::getString returned empty string.\n"
+        <<__PRETTY_FUNCTION__<<"[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
         return 0;
     }
     return std::stol(tmp,NULL);
@@ -94,8 +94,8 @@ long long ArgsParser::getLongLong(const std::string & key)
     std::string tmp=getString(key);
     if (tmp=="")
     {
-        std::cout<<"ArgsParser::getLongLong[WARNING:] ArgsParser::getString returned empty string.\n"
-        <<"ArgsParser::getLongLong[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] ArgsParser::getString returned empty string.\n"
+        <<__PRETTY_FUNCTION__<<"[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
         return 0;
     }
     return std::stoll(tmp,NULL);
@@ -105,8 +105,8 @@ unsigned int ArgsParser::getUInt(const std::string & key)
     std::string tmp=getString(key);
     if (tmp=="")
     {
-        std::cout<<"ArgsParser::getUInt[WARNING:] ArgsParser::getString returned empty string.\n"
-        <<"ArgsParser::getUInt[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] ArgsParser::getString returned empty string.\n"
+        <<__PRETTY_FUNCTION__<<"[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
         return 0;
     }
     return (unsigned int)std::stoul(tmp,NULL);
@@ -116,8 +116,8 @@ unsigned long ArgsParser::getULong(const std::string & key)
     std::string tmp=getString(key);
     if (tmp=="")
     {
-        std::cout<<"ArgsParser::getULong[WARNING:] ArgsParser::getString returned empty string.\n"
-        <<"ArgsParser::getULong[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] ArgsParser::getString returned empty string.\n"
+        <<__PRETTY_FUNCTION__<<"[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
         return 0;
     }
     return std::stoul(tmp,NULL);
@@ -127,8 +127,8 @@ unsigned long long ArgsParser::getULongLong(const std::string & key)
     std::string tmp=getString(key);
     if (tmp=="")
     {
-        std::cout<<"ArgsParser::getULongLong[WARNING:] ArgsParser::getString returned empty string.\n"
-        <<"ArgsParser::getULongLong[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] ArgsParser::getString returned empty string.\n"
+        <<__PRETTY_FUNCTION__<<"[SOLVED:] Maybe no value for key '"<<key<<"', returning '0'.\n";
         return 0;
     }
     return std::stoull(tmp,NULL);
@@ -138,8 +138,8 @@ bool ArgsParser::getBool(const std::string & key)
     std::string tmp=getString(key);
     if (tmp=="")
     {
-        std::cout<<"ArgsParser::getBool[WARNING:] ArgsParser::getString returned empty string.\n"
-        <<"ArgsParser::getBool[SOLVED:] Maybe no value for key '"<<key<<"', returning false.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] ArgsParser::getString returned empty string.\n"
+        <<__PRETTY_FUNCTION__<<"[SOLVED:] Maybe no value for key '"<<key<<"', returning false.\n";
         return false;
     }
     return String2Bool(tmp);
@@ -149,8 +149,8 @@ float ArgsParser::getFloat(const std::string & key)
     std::string tmp=getString(key);
     if (tmp=="")
     {
-        std::cout<<"ArgsParser::getFloat[WARNING:] ArgsParser::getString returned empty string.\n"
-        <<"ArgsParser::getFloat[SOLVED:] Maybe no value for key '"<<key<<"', returning '0.0'.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] ArgsParser::getString returned empty string.\n"
+        <<__PRETTY_FUNCTION__<<"[SOLVED:] Maybe no value for key '"<<key<<"', returning '0.0'.\n";
         return 0;
     }
     return std::stof(tmp,NULL);
@@ -160,8 +160,8 @@ double ArgsParser::getDouble(const std::string & key)
     std::string tmp=getString(key);
     if (tmp=="")
     {
-        std::cout<<"ArgsParser::getDouble[WARNING:] ArgsParser::getString returned empty string.\n"
-        <<"ArgsParser::getDouble[SOLVED:] Maybe no value for key '"<<key<<"', returning '0.0'.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] ArgsParser::getString returned empty string.\n"
+        <<__PRETTY_FUNCTION__<<"[SOLVED:] Maybe no value for key '"<<key<<"', returning '0.0'.\n";
         return 0;
     }
     return std::stod(tmp,NULL);
@@ -171,8 +171,8 @@ long double ArgsParser::getLongDouble(const std::string & key)
     std::string tmp=getString(key);
     if (tmp=="")
     {
-        std::cout<<"ArgsParser::getLongDouble[WARNING:] ArgsParser::getString returned empty string.\n"
-        <<"ArgsParser::getLongDouble[SOLVED:] Maybe no value for key '"<<key<<"', returning '0.0'.\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] ArgsParser::getString returned empty string.\n"
+        <<__PRETTY_FUNCTION__<<"[SOLVED:] Maybe no value for key '"<<key<<"', returning '0.0'.\n";
         return 0;
     }
     return std::stold(tmp,NULL);
@@ -191,8 +191,8 @@ void ArgsParser::add(const std::string &key,const std::string value)
     Arguments_t::iterator it=args.find(key);
     if (it!=args.end())
     {
-        std::cout<<"ArgsParser::add[WARNING:] Dublicated key '"<<key<<"'.\n"
-                 <<"ArgsParser::add[SOLVED:] Replacing value '"<<it->second<<"' with '"<<value<<"\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] Dublicated key '"<<key<<"'.\n"
+                 <<__PRETTY_FUNCTION__<<"[SOLVED:] Replacing value '"<<it->second<<"' with '"<<value<<"\n";
         args.erase(it);
     }
     args[key]=value;
@@ -202,7 +202,7 @@ void ArgsParser::del(const std::string &key)
     Arguments_t::iterator it=args.find(key);
     if (it==args.end())
     {
-        std::cout<<"ArgsParser::del[WARNING:] No key '"<<key<<"'! Cannot delete nothing!\n";
+        std::cout<<__PRETTY_FUNCTION__<<"[WARNING:] No key '"<<key<<"'! Cannot delete nothing!\n";
         return;
     }
     args.erase(it);
