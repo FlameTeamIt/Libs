@@ -53,48 +53,32 @@ public:
 
 	// virtuals
 	
-	virtual std::string
-	load();
+	virtual std::string load();
 	
-	virtual void
-	save(const std::string& text);
+	virtual void save(const std::string& text);
 	
 	// statics
 	
-	static unsigned long
-	getSize(const std::string& str_filename);
-	
-	static unsigned long
-	getSize(const char* str_filename);
+	static unsigned long getSize(const std::string& str_filename);
+	static unsigned long getSize(const char* str_filename);
 	
 	// normal
 	
-	void
-	remove();
+	void remove();
 	
-	void
-	setName(const std::string& str_filename);
+	void setName(const std::string& str_filename);
+	void setName(const std::string& str_path, const std::string& str_filename);
 	
-	void
-	setName(const std::string& str_path, const std::string& str_filename);
+	void setName(const char* str_filename);
+	void setName(const char* str_path, const char* str_filename);
 	
-	void
-	setName(const char* str_filename);
+	std::string getName();
 	
-	void
-	setName(const char* str_path, const char* str_filename);
+	std::string getPath();
 	
-	std::string
-	getName();
+	std::string getFullName();
 	
-	std::string
-	getPath();
-	
-	std::string
-	getFullName();
-	
-	int
-	getError();
+	int getError();
 	
 };
 

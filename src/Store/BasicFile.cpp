@@ -123,7 +123,6 @@ BasicFile::load()
 		while(!file.eof())
 		{
 			out += temp_char;
-			
 			file.get(temp_char);
 		}
 	}
@@ -139,9 +138,7 @@ BasicFile::save(const std::string &text)
 	std::ofstream file(filename.c_str());
 	
 	if(file.is_open())
-	{
-		file << text;
-	}
+	{	file << text;}
 	
 	file.close();
 }

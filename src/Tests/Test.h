@@ -10,38 +10,45 @@ public:
 	Test();
 	~Test();
 	
-	struct Actions
+	struct Base
 	{
 		bool success;
+		unsigned int count_success_tests;
 		
+		virtual void all() = 0;
+	};
+	
+	struct Actions : Base
+	{
 		void all();
 		
-		void TCodeParcer();
-		void TCommandLine();
+		unsigned int TCodeParcer();
+		unsigned int TCommandLine();
 	} actions;
 	
-	struct Bus
+	struct Bus : Base
 	{
-		bool success;
-
 		void all();
 		
-		void TMsgInterface();
+		unsigned int TMsgInterface();
 	} bus;
 	
-	struct Store
+	struct Store : Base
+	{
+		void all();
+		
+		unsigned int TBasicFile();
+		unsigned int TProject();
+		unsigned int TSession();
+	} store;
+	
+	struct Others
 	{
 		bool success;
 		
-		void all();
 		
-		void TArray();
-		
-		void TBasicFile();
-		void TProject();
-		void TSession();
-	} store;
-	
+	} others;
+
 	void all();
 };
 	

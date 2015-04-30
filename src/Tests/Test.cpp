@@ -5,22 +5,23 @@
 
 #include "../Bus/MsgInterface.h"
 
-#include "../Others/Array.h"
 #include "../Store/BasicFile.h"
 #include "../Store/Project.h"
 #include "../Store/Session.h"
+
+#include "../Others/Templates/Array.h"
+#include "../Others/Templates/List.h"
+#include "../Others/JSON/JSON.h"
 
 #include <iostream>
 
 using namespace flame_ide;
 
 Test::Test()
-{
-}
+{}
 
 Test::~Test()
-{
-}
+{}
 
 void
 Test::all()
@@ -43,16 +44,16 @@ Test::Actions::all()
 	this->TCommandLine();	
 }
 
-void
+unsigned int
 Test::Actions::TCodeParcer()
 {
-	std::cout << '\t' << "Test::Actions::TCodeParcer()\n";
+	std::cout << "Test::Actions::TCodeParcer()\n";
 }
 
-void
+unsigned int
 Test::Actions::TCommandLine()
 {
-	std::cout << '\t' << "Test::Actions::TCommandLine()\n";
+	std::cout << "Test::Actions::TCommandLine()\n";
 	
 	CommandLine commands;
 	
@@ -74,10 +75,10 @@ Test::Actions::TCommandLine()
 void
 Test::Bus::all()
 {
-	this->TMsgInterface();
+	count_success_tests = this->TMsgInterface();
 }
 
-void
+unsigned int
 Test::Bus::TMsgInterface()
 {
 	std::cout << '\t' << "Test::Bus::TMsgInterface()" << '\n';
@@ -88,47 +89,12 @@ Test::Bus::TMsgInterface()
 void
 Test::Store::all()
 {
-	this->TArray();
-	
-	this->TBasicFile();
-	this->TProject();
-	this->TSession();
+	count_success_tests = this->TBasicFile()
+						  + this->TProject()
+						  + this->TSession();
 }
 
-void
-Test::Store::TArray()
-{
-	Array<unsigned long> array(1);
-	
-	std::cout << "Size: " << array.getLength() << '\n';
-	
-	for(unsigned int i = 0; i < array.getLength(); i++)
-	{
-		array[i] = i;
-	}
-	
-	array.setLength(65536*32);
-	
-	std::cout << "Size: " << array.getLength() << '\n';
-	
-	for(unsigned long i = 0, size = array.getLength(); i < size; i++)
-	{
-		array[i] = i;
-	}
-	std::cout << '\n';
-	
-	array.setLength(8);
-	
-	std::cout << "Size: " << array.getLength() << '\n';
-	for(unsigned int i = 0; i < array.getLength(); i++)
-	{
-		array[i] = i;
-	}
-	std::cout << '\n';
-	
-}
-
-void
+unsigned int
 Test::Store::TBasicFile()
 {
 	std::cout << '\t' << "Test::Store::TBasicFile()" << '\n';
@@ -152,16 +118,17 @@ Test::Store::TBasicFile()
 			  << basic_file.getPath() << " | "
 			  << basic_file.getName() << '\n';
 	
+	return 1;
 }
 
-void
+unsigned int
 Test::Store::TProject()
 {
 	std::cout << '\t' << "Test::Store::TProject()" << '\n';
 	
 }
 
-void
+unsigned int
 Test::Store::TSession()
 {
 	std::cout << '\t' << "Test::Store::TSession()" << '\n';

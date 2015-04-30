@@ -8,6 +8,10 @@ int main()
 	flame_ide::Test test;
 	
 	test.all();
-		
-    return 0;
+	
+	std::cout << "pos_type = "
+			  << sizeof(std::istream::pos_type)*8
+			  << '\n';
+	
+	return 0;
 }
