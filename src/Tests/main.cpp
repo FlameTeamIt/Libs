@@ -6,7 +6,6 @@
 int main()
 {
 	flame_ide::Test test;
-	
 	test.all();
 	
 	std::cout << "pos_type = "

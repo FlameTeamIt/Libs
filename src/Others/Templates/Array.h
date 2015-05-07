@@ -42,8 +42,8 @@ public:
 	T** getPCopy() const;
 	T*  getPointer(const size_t &index) const;
 	
-	T& at(const size_t &index) const;
-	T& operator[](const size_t &ndex) const;
+	inline T& at(const size_t &index) const noexcept;
+	inline T& operator[](const size_t &ndex) const noexcept;
 	
 	Array<T> &operator=(const Array<T>&);
 };
@@ -67,7 +67,7 @@ Array<T>::Array(const Array<T> &array)
 {
 	this->length = array.length;
 	this->initialised = true;
-	this->inc_arr = get_copy_array<T>(array.length, array.inc_arr);
+	this->inc_arr = array_get_copy<T>(array.length, array.inc_arr);
 }
 template<typename T>
 Array<T>::Array(const size_t& array_length)
@@ -75,14 +75,14 @@ Array<T>::Array(const size_t& array_length)
 	this->length = array_length;
 	this->initialised = true;
 	
-	inc_arr = get_new_array<T>(this->length);
+	inc_arr = array_get_new<T>(this->length);
 }
 
 template<typename T>
 Array<T>::~Array()
 {
 	if(initialised)
-	{	delete_array<T>(this->length, this->inc_arr);}
+	{	array_delete<T>(this->length, this->inc_arr);}
 }
 
 // public
@@ -98,7 +98,7 @@ Array<T>::clear()
 {
 	if(initialised)
 	{
-		delete_array<T>(this->length, this->inc_arr);
+		array_delete<T>(this->length, this->inc_arr);
 		this->initialised = false;
 	}
 }
@@ -108,9 +108,9 @@ void
 Array<T>::setLength(const size_t &new_length)
 {
 	if(!initialised)
-	{	inc_arr = get_new_array<T>(new_length);}
+	{	inc_arr = array_get_new<T>(new_length);}
 	else
-	{	inc_arr = resize_array<T>(this->length, new_length, this->inc_arr);}
+	{	inc_arr = array_resize<T>(this->length, new_length, this->inc_arr);}
 	
 	this->length = new_length;
 }
@@ -119,7 +119,7 @@ template<typename T>
 void
 Array<T>::setCopy(const Array<T> &copying_array)
 {
-	delete_array<T>(this->length, this->inc_arr);
+	array_delete<T>(this->length, this->inc_arr);
 	
 	this->length = copying_array.getLength();
 	this->inc_arr = copying_array.getPCopy();
@@ -144,7 +144,7 @@ Array<T>::getPCopy() const
 {
 	return
 		(initialised) 
-		?	get_copy_array<T>(this->length, this->inc_arr)
+		?	array_get_copy<T>(this->length, this->inc_arr)
 		:	nullptr;
 }
 
@@ -157,13 +157,13 @@ Array<T>::getPointer(const size_t &index) const
 // идиотская идея, т.к. доп действие. Зато типа защищено
 template<typename T>
 T&
-Array<T>::at(const size_t& index) const
+Array<T>::at(const size_t& index) const noexcept
 {	return inc_arr[index % this->length][0];}
 
 // "защита от дурака" х2
 template<typename T>
 T&
-Array<T>::operator [](const size_t& index) const
+Array<T>::operator [](const size_t& index) const noexcept
 {	return inc_arr[index % this->length][0];}
 
 template<typename T>
@@ -172,7 +172,7 @@ Array<T>::operator =(const Array<T> &arg)
 {
 	if(arg.initialised)
 	{
-		delete_array<T>(this->length, this->inc_arr);
+		array_delete<T>(this->length, this->inc_arr);
 		this->length = arg.length;
 		this->inc_arr = arg.getPCopy();
 	}

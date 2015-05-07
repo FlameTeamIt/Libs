@@ -28,9 +28,11 @@ Test::all()
 {
 	std::cout << "Test::all()\n";
 	
-	actions.all();
-	bus.all();
-	store.all();
+//	actions.all();
+//	bus.all();
+//	store.all();
+	
+	others.all();
 }
 
 // Actions
@@ -132,4 +134,19 @@ unsigned int
 Test::Store::TSession()
 {
 	std::cout << '\t' << "Test::Store::TSession()" << '\n';
+}
+
+// Others
+void
+Test::Others::all()
+{
+	this->count_success_tests = this->TList();
+}
+
+unsigned int
+Test::Others::TList()
+{
+	List<int> list(4);
+	
+	return 1;
 }

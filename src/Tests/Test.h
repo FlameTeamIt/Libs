@@ -42,10 +42,15 @@ public:
 		unsigned int TSession();
 	} store;
 	
-	struct Others
+	struct Others : Base
 	{
-		bool success;
+		void all();
 		
+		// тестирование
+		// JSON
+		// Templates -- Array & List
+		
+		unsigned int TList();
 		
 	} others;
 
