@@ -126,14 +126,13 @@ Test::Store::TBasicFile()
 unsigned int
 Test::Store::TProject()
 {
-	std::cout << '\t' << "Test::Store::TProject()" << '\n';
-	
+	std::cout << "Test::Store::TProject()" << '\n';
 }
 
 unsigned int
 Test::Store::TSession()
 {
-	std::cout << '\t' << "Test::Store::TSession()" << '\n';
+	std::cout << "Test::Store::TSession()" << '\n';
 }
 
 // Others

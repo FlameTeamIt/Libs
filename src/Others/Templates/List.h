@@ -14,12 +14,17 @@ template<typename T>
 class ListIterator
 {
 	mutable Container<T> *pointer;
+	bool is_reverse;
 public:
+	ListIterator();
+	ListIterator(Container<T> *container);
+	
 	T&   get();
-//	void set(const T &data);
 	
 	bool toNext();
 	bool toPrev();
+	
+	bool isReverse();
 	
 	ListIterator<T>& operator=(const ListIterator<T> &iterator) const;
 	
@@ -35,8 +40,8 @@ public:
 template<typename T>
 class List
 {
-public:
 	typedef Container<T> container;
+public:
 	typedef ListIterator<T> iterator;
 	
 private:
@@ -59,11 +64,15 @@ public:
 	void popBack();
 	void popFront();
 	
+	void insert(const iterator &pos, const T &elem);
+	void insert(const iterator &pos, const size_t &count, T *array);
+	
 	void erase(const iterator &pos);
 	void erase(const iterator &pos, const size_t &count);
 	
-	void insert(const iterator &pos, const T &elem);
-	void insert(const iterator &pos, const size_t &count, T *array);
+	void clear();
+	
+	size_t getSize();
 	
 	iterator begin() const; // head.next
 	iterator end() const; // tail
@@ -74,8 +83,6 @@ public:
 	
 	iterator first() const; // head.next
 	iterator last() const; // tail.prev
-	
-	void clear();
 	
 	// дополнительные функции -- преобразование к динамическому массиву.
 	
@@ -103,10 +110,23 @@ template<typename T>
 bool
 ListIterator<T>::toNext()
 {
-	if(pointer->pos_type != LAST)
+	switch (this->is_reverse)
 	{
-		pointer = pointer->next;
-		return true;
+	case true: // идем назад
+		if(pointer->pos_type != FIRST)
+		{
+			pointer = pointer->prev;
+			return true;
+		}
+		break;
+		
+	default:
+		if(pointer->pos_type != LAST)
+		{
+			pointer = pointer->next;
+			return true;
+		}
+		break;
 	}
 	
 	return false;
@@ -116,14 +136,32 @@ template<typename T>
 bool
 ListIterator<T>::toPrev()
 {
-	if(pointer->pos_type != FIRST)
+	switch (this->is_reverse)
 	{
-		pointer = pointer->prev;
-		return true;
+	case true: // идем вперед
+		if(pointer->pos_type != LAST)
+		{
+			pointer = pointer->next;
+			return true;
+		}
+		break;
+		
+	default:
+		if(pointer->pos_type != FIRST)
+		{
+			pointer = pointer->prev;
+			return true;
+		}
+		break;
 	}
 	
 	return false;
 }
+
+template<typename T>
+bool
+ListIterator<T>::isReverse()
+{ return this->is_reverse; }
 
 template<typename T>
 ListIterator<T>&
@@ -164,13 +202,74 @@ List<T>::List(size_t new_size)
 	: List()
 {
 	size = new_size;
-	list_insert_default<T>(&head, new_size);
+	list_insert_default<T>(&head, size);
+}
+
+template<typename T>
+void
+List<T>::pushBack(const T &data)
+{
+	list_insert_elem_before<T>(&tail, data);
+}
+
+template<typename T>
+void
+List<T>::pushFront(const T &data)
+{
+	
+}
+
+template<typename T>
+void
+List<T>::insert(const iterator &pos, const T &elem)
+{
+	
+}
+template<typename T>
+void
+List<T>::insert(const iterator &pos, const size_t &count, T *array)
+{
+	
+}
+
+template<typename T>
+void
+List<T>::popBack()
+{
+	
+}
+
+template<typename T>
+void
+List<T>::popFront()
+{
+	
+}
+
+template<typename T>
+void
+List<T>::erase(const iterator &pos)
+{
+	
+}
+template<typename T>
+void
+List<T>::erase(const iterator &pos, const size_t &count)
+{
+	
+}
+
+template<typename T>
+void
+List<T>::clear()
+{
+	list_erase_some_elements<T>(&head, &tail);
 }
 
 template<typename T>
 List<T>::~List()
 {
-	list_erase_some_elements<T>(&head, &tail);
+	clear();
 }
 
 #endif // LIST

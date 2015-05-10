@@ -42,6 +42,7 @@ struct Container
 	
 	Container();
 	Container(PosType position_type);
+	Container(T* init_data, PosType position_type);
 	Container(Container<T> *init_next, Container<T> *init_prev,
 			  T* init_data, PosType position_type);
 	
@@ -59,7 +60,10 @@ template<typename Tt> inline
 void list_insert_array(Container<Tt> *start_container, size_t count, Tt *array);
 
 template<typename Tt> inline
-void list_insert_elem_after(Container<Tt> *start_container, const Tt &element);
+void list_insert_elem_after(Container<Tt> *container, const Tt &element);
+
+template<typename Tt> inline
+void list_insert_elem_before(Container<Tt> *container, const Tt &element);
 
 template<typename Tt> inline
 void list_erase_elem(Container<Tt> *container);
@@ -70,6 +74,9 @@ void list_erase_some_elements(Container<Tt> *start_container, size_t count);
 template<typename Tt> inline
 void list_erase_some_elements(Container<Tt> *start_container,
 							  Container<Tt> *end_container);
+
+template<typename Tt> inline
+void list_link_containers(Container<Tt> *container1, Container<Tt> *container2);
 
 }}
 
@@ -175,17 +182,23 @@ Container<T>::Container(flame_ide::templates::PosType position_type)
 	inc_data = nullptr;
 	pos_type = position_type;
 }
+template<typename T>
+flame_ide::templates::
+Container<T>::Container(T *init_data, PosType position_type)
+	: Container(position_type)
+{
+	inc_data = init_data;
+}
 
 template<typename T>
 flame_ide::templates::
 Container<T>::Container(flame_ide::templates::Container<T> *init_next,
 						flame_ide::templates::Container<T> *init_prev,
 						T *init_data, flame_ide::templates::PosType position_type)
+	: Container(init_data, position_type)
 {
 	this->next = init_next;
 	this->prev = init_prev;
-	this->inc_data = init_data;
-	this->pos_type = position_type;
 }
 
 template<typename T>
@@ -276,19 +289,37 @@ list_insert_array(Container<Tt> *start_container, size_t count, Tt *array)
 	end_container->prev = run_pointer;
 }
 
+// добавление после указанного контейнера
 template<typename Tt>
 void
 flame_ide::templates::
-list_insert_elem_after(Container<Tt> *start_container, const Tt &element)
+list_insert_elem_after(Container<Tt> *container, const Tt &element)
 {
-	if(start_container->pos_type != LAST)
+	if(container->pos_type != LAST)
 	{
-		Container<Tt> *end_container = start_container->next;
-		Container<Tt> *new_elem = new Container<Tt>(end_container, start_container,
+		Container<Tt> *old_next_container = container->next;
+		Container<Tt> *new_elem = new Container<Tt>(old_next_container, container,
 													new Tt(element), CENTRAL);
 		
-		start_container->next = new_elem;
-		end_container->prev = new_elem;
+		container->next = new_elem;
+		old_next_container->prev = new_elem;
+	}
+}
+
+// добавление перед указанном контейнером
+template<typename Tt>
+void
+flame_ide::templates::
+list_insert_elem_before(Container<Tt> *container, const Tt &element)
+{
+	if(container->pos_type != FIRST)
+	{
+		Container<Tt> *old_prev_container = container->prev;
+		Container<Tt> *new_elem = new Container<Tt>(container, old_prev_container,
+													new Tt(element), CENTRAL);
+		
+		container->prev = new_elem;
+		old_prev_container->next = new_elem;
 	}
 }
 
@@ -349,6 +380,14 @@ list_erase_some_elements(Container<Tt> *start_container,
 	}
 }
 
+template<typename Tt>
+void
+flame_ide::templates::
+list_link_containers(Container<Tt> *container1, Container<Tt> *container2)
+{
+	container1->next = container2;
+	container2->prev = container1;
+}
 
 #endif // FUNCTIONS
 
