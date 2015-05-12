@@ -187,5 +187,11 @@ Test::Others::TList()
 	list.insert(list.begin(), arr[0]);
 	list.erase(list.begin()++);
 	
+	// проверка конструктора копирования
+	List<int> list1(list);
+	
+	// проверка оператора присваивания
+	list1 = list;
+	
 	return 1;
 }

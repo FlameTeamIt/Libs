@@ -26,7 +26,7 @@ public:
 	
 	bool isReverse();
 	
-	ListIterator<T> operator=(const ListIterator<T> &iterator);
+	const ListIterator<T>& operator=(const ListIterator<T> &iterator);
 	
 	bool operator==(const ListIterator<T> &iterator) const;
 	bool operator!=(const ListIterator<T> &iterator) const;
@@ -72,12 +72,18 @@ public:
 	
 	void pushBack(const T &data);
 	void pushFront(const T &data);
+
+	void pushBackArray(size_t count, const T *array);
+	void pushFrontArray(size_t count, const T *array);
+	
+	void insert(const ListIterator<T> &pos, const T &elem);
+	void insert(const ListIterator<T> &pos, const size_t &count, const T *array);
 	
 	void popBack();
 	void popFront();
 	
-	void insert(const ListIterator<T> &pos, const T &elem);
-	void insert(const ListIterator<T> &pos, const size_t &count, T *array);
+	void popBack(size_t count);
+	void popFront(size_t count);
 	
 	void erase(const ListIterator<T> &pos);
 	void erase(const ListIterator<T> &pos, const size_t &count);
@@ -98,9 +104,8 @@ public:
 	
 	// дополнительные функции -- преобразование к динамическому массиву.
 	
-	// и что на счет константности?
-	
 	T& operator[] (size_t index) const;
+	const List<T>& operator=(const List<T>& arg);
 	
 	// нужны дополнительные операторы -- присваивание, сравнение (?)
 };
@@ -183,7 +188,7 @@ ListIterator<T>::isReverse()
 { return this->is_reverse; }
 
 template<typename T>
-ListIterator<T>
+const ListIterator<T>&
 ListIterator<T>::operator=(const ListIterator<T> &iterator)
 {
 	pointer = iterator.pointer;
@@ -258,6 +263,15 @@ List<T>::List(size_t new_size)
 	
 	updateIterators();
 }
+template<typename T>
+List<T>::List(const List<T> &list)
+	: List()
+{
+	list_copy<T>(&(list.head), &(list.tail), // откуда
+				 &(this->head), &(this->tail)); // и куда
+	
+	this->size = list.size;
+}
 
 template<typename T>
 List<T>::~List()
@@ -295,6 +309,24 @@ List<T>::pushFront(const T &data)
 
 template<typename T>
 void
+List<T>::pushBackArray(size_t count, const T *array)
+{
+	list_insert_array_before<T>(&tail, count, array);
+	
+	size += count;
+}
+
+template<typename T>
+void
+List<T>::pushFrontArray(size_t count, const T *array)
+{
+	list_insert_array_after<T>(&head, count, array);
+	
+	size += count;
+}
+
+template<typename T>
+void
 List<T>::insert(const iterator &pos, const T &elem)
 {
 	list_insert_elem_after<T>(pos.pointer, elem);
@@ -304,9 +336,9 @@ List<T>::insert(const iterator &pos, const T &elem)
 }
 template<typename T>
 void
-List<T>::insert(const iterator &pos, const size_t &count, T *array)
+List<T>::insert(const iterator &pos, const size_t &count, const T *array)
 {
-	list_insert_array<T>(pos.pointer, count, array);
+	list_insert_array_after<T>(pos.pointer, count, array);
 	updateIterators();
 	
 	size += count;
@@ -316,49 +348,82 @@ template<typename T>
 void
 List<T>::popBack()
 {
+	if(!size) return;
+	
 	list_erase_elem<T>(tail.prev);
 	updateIterators();
 	
-	if(size) { size--; }
+	size--;
 }
 
 template<typename T>
 void
 List<T>::popFront()
 {
+	if(!size) return;
+	
 	list_erase_elem<T>(head.next);
 	updateIterators();
 	
-	if(size) { size--; }
+	size--;
+}
+
+template<typename T>
+void
+List<T>::popBack(size_t count)
+{
+	if(!size) return;
+	
+	// сложно - нужно искать элемент с конца.
+	// запилю отдельной функцией
+	(size > count)
+			? size -= list_erase_some_elements_end<T>(&tail, count)
+			: size = 0;
+}
+
+template<typename T>
+void
+List<T>::popFront(size_t count)
+{
+	if(!size) return;
+	
+	(size > count)
+			? size -= list_erase_some_elements<T>(&head, count)
+			: size = 0;
 }
 
 template<typename T>
 void
 List<T>::erase(const iterator &pos)
 {
-	list_erase_elem<T>(pos.pointer);
-	updateIterators();
+	if(!size) return;
 	
-	if(size) { size--; }
+	if(pos.pointer->next != nullptr
+		|| pos.pointer->prev != nullptr)
+	{
+		list_erase_elem<T>(pos.pointer);
+		updateIterators();
+		size--;
+	}
 }
 template<typename T>
 void
 List<T>::erase(const iterator &pos, const size_t &count)
 {
-	list_erase_some_elements<T>(pos.pointer, count);
-	updateIterators();
+	if(!size) return;
 	
-	(size > count) ? size -= count : size = 0;
+	(size > count)
+			? size -= list_erase_some_elements<T>(pos.pointer, count)
+			: size = 0;
+	updateIterators();
 }
 
 template<typename T>
 void
 List<T>::clear()
 {
-	list_erase_some_elements<T>(&head, &tail);
+	size -= list_erase_some_elements<T>(&head, &tail);
 	updateIterators();
-	
-	size = 0;
 }
 
 template<typename T>
@@ -422,6 +487,18 @@ T& List<T>::operator [](size_t index) const
 	{ run_pointer = run_pointer->next; }
 		
 	return *(run_pointer->inc_data);
+}
+
+template<typename T>
+const List<T>& List<T>::operator =(const List<T> &arg)
+{
+	if(this->size) this->clear();
+	
+	list_copy<T>(&(arg.head), &(arg.tail), // откуда
+				 &(this->head), &(this->tail)); // и куда
+	
+	this->size = arg.size;
+	return *this;
 }
 
 #endif // LIST
