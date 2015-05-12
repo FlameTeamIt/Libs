@@ -47,7 +47,7 @@ struct Container
 			  T* init_data, PosType position_type);
 	
 	// noexcept - гарантия отсуствия исключений
-	// нужно писать и в шапке перед реализацией
+	// нужно писать и в шапке перед реализациейб как и const
 	inline Container<T> & operator =(const Container<T> &Container);
 	inline bool operator ==(const Container<T> &container) const;
 	inline bool operator !=(const Container<T> &container) const;
@@ -56,27 +56,31 @@ struct Container
 template<typename Tt> inline
 void list_insert_default(Container<Tt> *start_container, size_t count);
 
-template<typename Tt> inline
+template<typename Tt> inline // нужна дополнительная проверка, возврат bool
 void list_insert_array(Container<Tt> *start_container, size_t count, Tt *array);
 
-template<typename Tt> inline
+template<typename Tt> inline // нужна дополнительная проверка, возврат bool
 void list_insert_elem_after(Container<Tt> *container, const Tt &element);
 
-template<typename Tt> inline
+template<typename Tt> inline // нужна дополнительная проверка, возврат bool
 void list_insert_elem_before(Container<Tt> *container, const Tt &element);
 
-template<typename Tt> inline
+template<typename Tt> inline // предлагаю возвращать bool
 void list_erase_elem(Container<Tt> *container);
 
-template<typename Tt> inline
+template<typename Tt> inline // предлагаю возвращать количество удаленных элементов
 void list_erase_some_elements(Container<Tt> *start_container, size_t count);
 
-template<typename Tt> inline
+template<typename Tt> inline // удаление между 2-мя элементами
 void list_erase_some_elements(Container<Tt> *start_container,
 							  Container<Tt> *end_container);
 
+template<typename Tt> inline // нужно подумать
+void list_copy(Container<Tt> *start_from, Container<Tt> *end_from,
+			   Container<Tt> *start_to, Container<Tt> *end_to);
+
 template<typename Tt> inline
-void list_link_containers(Container<Tt> *container1, Container<Tt> *container2);
+void list_link_containers(Container<Tt> *container_prev, Container<Tt> *container_next);
 
 }}
 
@@ -252,14 +256,13 @@ list_insert_default(Container<Tt> *start_container, size_t count)
 		new_elem->pos_type = CENTRAL;
 		new_elem->inc_data = new Tt;
 		
-		new_elem->prev = run_pointer;
 		run_pointer->next = new_elem;
+		new_elem->prev = run_pointer;
 		
 		run_pointer = run_pointer->next;
 	}
 	
 	run_pointer->next = end_container;
-	
 	end_container->prev = run_pointer;
 }
 
@@ -279,6 +282,7 @@ list_insert_array(Container<Tt> *start_container, size_t count, Tt *array)
 		new_elem->inc_data = new Tt(array[i]);
 		
 		new_elem->prev = run_pointer;
+
 		run_pointer->next = new_elem;
 		
 		run_pointer = run_pointer->next;
@@ -333,8 +337,7 @@ list_erase_elem(Container<Tt> *container)
 		Container<Tt> *prev_container = container->prev;
 		Container<Tt> *next_container = container->next;
 		
-		prev_container->next = next_container;
-		next_container->prev = prev_container;
+		list_link_containers<Tt>(prev_container, next_container);
 		
 		delete container->inc_data;
 		delete container;
@@ -349,7 +352,7 @@ list_erase_some_elements(Container<Tt> *start_container, size_t count)
 	Container<Tt> *end_container, *run_pointer = start_container;
 	count++;
 	
-	for(size_t i = 0; i < count; i++)
+	for(size_t i = 0; (i < count) && (run_pointer->next != nullptr); i++)
 	{
 		run_pointer = run_pointer->next;
 	}
@@ -375,18 +378,25 @@ list_erase_some_elements(Container<Tt> *start_container,
 	if(start_container->next != end_container
 	  && end_container->prev != start_container)
 	{
-		start_container->next = end_container;
-		end_container->prev = start_container;
+		list_link_containers<Tt>(start_container, end_container);
 	}
+}
+
+template<typename Tt> inline // только вот откуда куда копируем?
+void
+flame_ide::templates::
+list_copy(Container<Tt> *start_from, Container<Tt> *end_from,
+		  Container<Tt> *start_to, Container<Tt> *end_to)
+{
 }
 
 template<typename Tt>
 void
 flame_ide::templates::
-list_link_containers(Container<Tt> *container1, Container<Tt> *container2)
+list_link_containers(Container<Tt> *container_prev, Container<Tt> *container_next)
 {
-	container1->next = container2;
-	container2->prev = container1;
+	container_prev->next = container_next;
+	container_next->prev = container_prev;
 }
 
 #endif // FUNCTIONS

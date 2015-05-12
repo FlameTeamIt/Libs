@@ -9,6 +9,10 @@
 #include "ArgsParser.h"
 #include <iostream>
 
+#ifdef __linux__
+#include <algorithm>
+#endif
+
 ArgsParser::ArgsParser(){}
 ArgsParser::ArgsParser(const int argc, const char*argv[])
 {

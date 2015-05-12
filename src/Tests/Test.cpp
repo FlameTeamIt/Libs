@@ -50,6 +50,7 @@ unsigned int
 Test::Actions::TCodeParcer()
 {
 	std::cout << "Test::Actions::TCodeParcer()\n";
+	return 1;
 }
 
 unsigned int
@@ -69,6 +70,7 @@ Test::Actions::TCommandLine()
 	std::cout << commands.getOutput(command) << '\n';
 	std::cout << commands.getOutput(c_comm) << '\n';
 	
+	return 1;
 #undef c_comm
 }
 
@@ -84,6 +86,7 @@ unsigned int
 Test::Bus::TMsgInterface()
 {
 	std::cout << '\t' << "Test::Bus::TMsgInterface()" << '\n';
+	return 1;
 }
 
 // Store
@@ -127,12 +130,14 @@ unsigned int
 Test::Store::TProject()
 {
 	std::cout << "Test::Store::TProject()" << '\n';
+	return 1;
 }
 
 unsigned int
 Test::Store::TSession()
 {
 	std::cout << "Test::Store::TSession()" << '\n';
+	return 1;
 }
 
 // Others
@@ -145,7 +150,42 @@ Test::Others::all()
 unsigned int
 Test::Others::TList()
 {
-	List<int> list(4);
+	std::cout << "Test::Others::TList()" << '\n';
+	int arr[] = {5, 6};
+	
+	List<int> list(2);
+	
+	list[0] = 1;
+	list[1] = 2;
+	list[2] = 3;
+	
+	if(list[0] != 3 && list[1] != 2)
+	{ return 0; }
+	
+	// добавление по одному элементу в конец и в начало
+	list.pushFront(4);
+	list.pushBack(1);
+	
+	// удаление с конца и с начала по элементу
+	list.popBack();
+	list.popFront();
+	
+	// вставка и удаление массива
+	// в начало
+	list.insert((list.begin())--, 2, arr);
+	list.erase((list.begin())--, 2);
+	
+	// в середину
+	list.insert(list.begin(), 2, arr);
+	list.erase(list.begin(), 2);
+	
+	// в конец
+	list.insert((list.end())--, 2, arr);
+	list.erase((list.begin())++, 2);
+	
+	//добавление элемента в середину и его удаление
+	list.insert(list.begin(), arr[0]);
+	list.erase(list.begin()++);
 	
 	return 1;
 }
