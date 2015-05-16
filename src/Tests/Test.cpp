@@ -15,6 +15,11 @@
 
 #include <iostream>
 
+struct Kilobyte
+{
+	char data[1024];
+};
+
 using namespace flame_ide;
 
 Test::Test()
@@ -150,16 +155,16 @@ Test::Others::all()
 unsigned int
 Test::Others::TList()
 {
+	size_t start_count = 4; // начиная с 4-х элементов не течет. Что? (О_о)
 	std::cout << "Test::Others::TList()" << '\n';
 	int arr[] = {5, 6};
 	
-	List<int> list(2);
+	List<int> list(start_count);
 	
-	list[0] = 1;
-	list[1] = 2;
-	list[2] = 3;
+	for(size_t i = 0; i < start_count; i++)
+	{ list[i] = i+1; }
 	
-	if(list[0] != 3 && list[1] != 2)
+	if(list[0] != 1 && list[1] != 2)
 	{ return 0; }
 	
 	// добавление по одному элементу в конец и в начало
@@ -189,9 +194,21 @@ Test::Others::TList()
 	
 	// проверка конструктора копирования
 	List<int> list1(list);
+	list1.popBack(3);
 	
 	// проверка оператора присваивания
 	list1 = list;
+	list1.popFront(1);
+	
+	list1 = list;
+	
+	// добавление массива в конец и его удаление
+	list1.pushBackArray(2, arr);
+	list1.popBack(2);
+	
+	// добавление массива в начало и его удаление
+	list1.pushFrontArray(2, arr);
+	list1.popFront(2);
 	
 	return 1;
 }

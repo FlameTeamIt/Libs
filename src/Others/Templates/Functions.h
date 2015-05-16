@@ -2,6 +2,9 @@
 #define FUNCTIONS
 
 #include <cstdlib>
+#ifdef DEBUG
+#include <iostream>
+#endif
 
 namespace flame_ide
 {namespace templates
@@ -41,10 +44,13 @@ struct Container
 	T *inc_data;
 	
 	Container();
+	Container(const Container<T> &container);
 	Container(PosType position_type);
 	Container(T* init_data, PosType position_type);
 	Container(Container<T> *init_next, Container<T> *init_prev,
 			  T* init_data, PosType position_type);
+	
+	~Container();
 	
 	// noexcept - гарантия отсуствия исключений
 	// нужно писать и в шапке перед реализациейб как и const
@@ -172,6 +178,13 @@ Container<T>::Container()
 }
 template<typename T>
 flame_ide::templates::
+Container<T>::Container(const Container<T> &container) : Container()
+{
+	pos_type = container.pos_type;
+	inc_data = new T(*(container.inc_data));
+}
+template<typename T>
+flame_ide::templates::
 Container<T>::Container(flame_ide::templates::PosType position_type)
 {
 	switch (position_type)
@@ -185,8 +198,6 @@ Container<T>::Container(flame_ide::templates::PosType position_type)
 		break;
 		
 	default:
-		next = nullptr;
-		prev = nullptr;
 		break;
 	}
 	inc_data = nullptr;
@@ -199,7 +210,6 @@ Container<T>::Container(T *init_data, PosType position_type)
 {
 	inc_data = init_data;
 }
-
 template<typename T>
 flame_ide::templates::
 Container<T>::Container(flame_ide::templates::Container<T> *init_next,
@@ -212,13 +222,24 @@ Container<T>::Container(flame_ide::templates::Container<T> *init_next,
 }
 
 template<typename T>
+flame_ide::templates::
+Container<T>::~Container()
+{
+	if(inc_data != nullptr)
+	{ delete inc_data;}
+}
+
+template<typename T>
 const flame_ide::templates::Container<T> &
 flame_ide::templates::
 Container<T>::operator =(const flame_ide::templates::Container<T> &container)
 {
-	this->next = container.next;
-	this->prev = container.prev;
-	this->inc_data = container.inc_data;
+	if(inc_data != nullptr)
+	{
+		delete this->inc_data;
+	}
+	this->inc_data = new T(*(container.inc_data));
+	
 	this->pos_type = container.pos_type;
 	
 	return *this;
@@ -364,7 +385,6 @@ list_erase_elem(Container<Tt> *container)
 	
 	list_link_containers<Tt>(prev_container, next_container);
 	
-	delete container->inc_data;
 	delete container;
 }
 
@@ -413,8 +433,8 @@ list_erase_some_elements(Container<Tt> *start_container,
 	while(run_pointer != end_container)
 	{
 		run_pointer = run_pointer->next;
-		delete run_pointer->prev->inc_data;
 		delete run_pointer->prev;
+		
 		count_deleted++;
 	}
 	
@@ -437,8 +457,7 @@ list_copy(const Container<Tt> *start_from, const Container<Tt> *end_from,
 	
 	while(run_pointer_from != end_from)
 	{
-		Container<Tt> *new_elem = new Container<Tt>(CENTRAL);
-		new_elem->inc_data = new Tt(*(run_pointer_from->inc_data));
+		Container<Tt> *new_elem = new Container<Tt>(*run_pointer_from);
 		
 		list_link_containers<Tt>(run_pointer_to, new_elem);
 		
