@@ -1,5 +1,5 @@
-#ifndef FUNCTIONS
-#define FUNCTIONS
+#ifndef TEMPLATES_FUNCTIONS
+#define TEMPLATES_FUNCTIONS
 
 #include <cstdlib>
 #ifdef DEBUG
@@ -477,5 +477,5 @@ list_link_containers(Container<Tt> *container_prev, Container<Tt> *container_nex
 	container_next->prev = container_prev;
 }
 
-#endif // FUNCTIONS
+#endif // TEMPLATES_FUNCTIONS
 

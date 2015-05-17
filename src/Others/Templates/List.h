@@ -1,5 +1,5 @@
-#ifndef LIST
-#define LIST
+#ifndef TEMPLATES_LIST
+#define TEMPLATES_LIST
 
 #include "Functions.h"
 
@@ -545,5 +545,5 @@ List<T>::operator =(const List<T> &arg)
 	return *this;
 }
 
-#endif // LIST
+#endif // TEMPLATES_LIST
 

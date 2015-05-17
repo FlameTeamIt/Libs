@@ -1,5 +1,5 @@
-#ifndef ARRAY_H
-#define ARRAY_H
+#ifndef TEMPLATES_ARRAY_H
+#define TEMPLATES_ARRAY_H
 
 // Пока не уверен, что нужно, но пусть пока будет
 #include "Functions.h"
@@ -45,7 +45,7 @@ public:
 	inline T& at(const size_t &index) const noexcept;
 	inline T& operator[](const size_t &ndex) const noexcept;
 	
-	Array<T> &operator=(const Array<T>&);
+	const Array<T> &operator=(const Array<T>&);
 };
 
 }}
@@ -167,7 +167,7 @@ Array<T>::operator [](const size_t& index) const noexcept
 {	return inc_arr[index % this->length][0];}
 
 template<typename T>
-Array<T>&
+const Array<T>&
 Array<T>::operator =(const Array<T> &arg)
 {
 	if(arg.initialised)
@@ -176,6 +176,8 @@ Array<T>::operator =(const Array<T> &arg)
 		this->length = arg.length;
 		this->inc_arr = arg.getPCopy();
 	}
+	
+	return *this;
 }
 
-#endif // ARRAY_H
+#endif // TEMPLATES_ARRAY_H
