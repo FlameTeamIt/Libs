@@ -95,7 +95,8 @@ all: .mkdirs .depends .compile .link
 #
 # Для описания зависимостей от заголовков
 #
-.depends: .mkdirs $(Dependences)
+.depends: .mkdirs .make_depends
+.make_depends: $(Dependences)
 
 # честно говоря, такой вариант не очень нравится. Надо думать.
 $(DepPath)/%.d :
