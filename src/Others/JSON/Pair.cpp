@@ -1,39 +1,34 @@
-#include "Pair.h"
+#include "JSON.h"
 
-#include "Single.h"
+using namespace flame_ide::JSON;
 
-namespace flame_ide
-{
-
-JSON::
 Pair::Pair()
 {	data = nullptr;}
 
-JSON::
 Pair::~Pair()
 {
 	if(data != nullptr)
 	{	delete data;}
 }
 
-JSON::Pair&
-JSON::Pair::operator=(const JSON::Pair& pair)
+const Pair&
+Pair::operator=(const JSON::Pair& pair)
 {
 	Data* tmp = this->data;
 	
 	if(pair.data != nullptr)
 	{
-		switch (pair.data->getStatus())
+		switch (pair.data->getType())
 		{
-		case 1:   // single
+		case SINGLE:   // single
 			this->data = new JSON::Single(pair.data->getAsString());
 			break;
 			
-		case 10:  // array
+		case ARRAY:  // array
 			
 			break;
 			
-		case 100: // object
+		case OBJECT: // object
 			
 			break;
 			
@@ -48,6 +43,3 @@ JSON::Pair::operator=(const JSON::Pair& pair)
 		delete tmp;
 	}
 }
-
-}
-

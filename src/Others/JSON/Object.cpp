@@ -1,30 +1,24 @@
-#include "Object.h"
+#include "JSON.h"
 
-namespace flame_ide
-{
+using namespace flame_ide::JSON;
 
-JSON::
 Object::Object()
 	: JSON::Data(1, 0, 0)
 {}
 
-JSON::
 Object::Object(const templates::Array<Pair> &template_array)
 	: JSON::Object()
 {
 	this->arr = template_array;
 }
 
-JSON::
 Object::~Object() {}
 
 std::string 
-JSON::
 Object::getAsString()
 {	return std::string("{}");}
 
 void
-JSON::
 Object::setAsString(const std::string &json_object)
 {
 	// парсинг объекта
@@ -49,5 +43,4 @@ Object::setAsString(const std::string &json_object)
 		        
 		*/
 	}
-}
 }

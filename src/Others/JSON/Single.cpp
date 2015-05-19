@@ -1,31 +1,35 @@
-#include "Single.h"
+#include "JSON.h"
 
-namespace flame_ide
-{
+using namespace flame_ide::JSON;
 
-JSON::
 Single::Single()
 	: JSON::Data(0, 0, 1)
 {}
 
-JSON::
-Single::Single(const std::string& value)
-	: JSON::Single()
-{	this->str = value;}
-
-
-JSON::
-Single::~Single() {}
-
-std::string
-JSON::
-Single::getAsString()
-{	return this->str;}
-
-void
-JSON::
-Single::setAsString(const std::string &json_single)
-{	str = json_single;}
-
+Single::Single(const JSON::Single& single)
+	: JSON::Data(0, 0, 1)
+{
+	this->str_data = single.str_data;
 }
 
+Single::Single(const std::string& value)
+	: JSON::Single()
+{	this->str_data = value;}
+
+
+Single::~Single() {}
+
+const Single &
+Single::operator =(const JSON::Single &single)
+{
+	this->str_data = single.str_data;
+	return *this;
+}
+
+std::string
+Single::getAsString()
+{	return this->str_data;}
+
+void
+Single::setAsString(const std::string &json_single)
+{	str_data = json_single;}

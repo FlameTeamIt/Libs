@@ -1,7 +1,8 @@
-#include "Array.h"
+#include "JSON.h"
 
-namespace flame_ide
-{
+#include "../Templates/List.h"
+
+using namespace flame_ide;
 
 JSON::
 Array::Array()
@@ -26,7 +27,8 @@ void
 JSON::
 Array::setAsString(const std::string &json_array)
 {
-	// парсинг вектора
-}
-
+	unsigned int count_array_braces; // []
+	unsigned int count_object_braces; // {}
+	unsigned int count_string_braces; // "
+	templates::List<char> char_list;
 }
