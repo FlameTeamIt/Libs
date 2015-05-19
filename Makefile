@@ -59,8 +59,7 @@ Path := ./src
 
 # список всех ресурсных файлов
 Sources := \
-	$(subst ./,,$(shell find $(Path) -name *.cpp | grep -v Tests/ | grep -v Others/ ))
-
+	$(subst ./,,$(shell find $(Path) -name *.cpp | grep -v Tests/ ))
 
 # получаем имена объектных файлов
 Dependences := \
