@@ -7,3 +7,5 @@ Release/*
 flameide.*
 src/Others/BoostProcess/libs/*
 
+gmon.out
+
