@@ -51,6 +51,7 @@ public:
 		// Templates -- Array & List
 		
 		unsigned int TList();
+		unsigned int TArray();
 		
 	} others;
 

@@ -149,7 +149,8 @@ Test::Store::TSession()
 void
 Test::Others::all()
 {
-	this->count_success_tests = this->TList();
+	this->count_success_tests = this->TList() +
+							this->TArray();
 }
 
 unsigned int
@@ -209,6 +210,102 @@ Test::Others::TList()
 	// добавление массива в начало и его удаление
 	list1.pushFrontArray(2, arr);
 	list1.popFront(2);
+	
+	return 1;
+}
+
+unsigned int
+Test::Others::TArray()
+{
+	using namespace templates;
+	
+	std::cout << "Test::Others::TArray()\n";
+	
+	Array<long> array;
+	
+	array.pushBack(10);
+	array.pushBack(9);
+	array.pushFront(8);
+	
+	std::cout << "Push:\n";
+	for(size_t i = 0; i < array.getLength(); i++)
+	{
+		std::cout << i << ". - " << array[i] << '\n';
+	}
+	std::cout << '\n';
+	
+	array.popBack();
+	array.popFront();
+	
+	std::cout << "Pop:\n";
+	for(size_t i = 0; i < array.getLength(); i++)
+	{
+		std::cout << i << ". - " << array[i] << '\n';
+	}
+	std::cout << '\n';
+	
+	array.insert(0, 8);
+	array.insert(1, 9);
+	array.insert(2, 11);
+	
+	std::cout << "Insert:\n";
+	for(size_t i = 0; i < array.getLength(); i++)
+	{
+		std::cout << i << ". - " << array[i] << '\n';
+	}
+	std::cout << '\n';
+	
+	array.popFront(2);
+	array.popBack(1);
+	std::cout << "Pop some:\n";
+	for(size_t i = 0; i < array.getLength(); i++)
+	{
+		std::cout << i << ". - " << array[i] << '\n';
+	}
+	std::cout << '\n';
+	
+	long test_array1[] = {1, 2};
+	long test_array2[] = {101, 102, 103};
+	long test_array3[] = {201, 202};
+	
+	array.insert(0, 2, test_array1);
+	array.insert(2, 3, test_array2);
+	array.insert(array.getLength(), 2, test_array3);
+	std::cout << "Insert array:\n";
+	for(size_t i = 0; i < array.getLength(); i++)
+	{
+		std::cout << i << ". - " << array[i] << '\n';
+	}
+	std::cout << '\n';
+	
+//#ifdef FUTURE
+	Array<long> array1(array);
+	
+	array.erase(0);
+	array.erase(2);
+	array.erase(4);
+	
+	std::cout << "Erase:\n";
+	for(size_t i = 0; i < array.getLength(); i++)
+	{
+		std::cout << i << ". - " << array[i] << '\n';
+	}
+	std::cout << '\n';
+	
+//#endif
+	
+//#ifdef FUTURE
+	array1.erase(0, 2);
+	array1.erase(3, 2);
+	array1.erase(1, 2);
+	
+	std::cout << "Erase some:\n";
+	for(size_t i = 0; i < array1.getLength(); i++)
+	{
+		std::cout << i << ". - " << array1[i] << '\n';
+	}
+	
+//#endif
 	
 	return 1;
 }
