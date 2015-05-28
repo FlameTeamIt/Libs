@@ -11,13 +11,18 @@ namespace flame_ide
 {
 
 template<typename Tt> inline
-Tt** array_get_new(const size_t &length);
+Tt** array_get_new(const size_t &length, bool initialize_pointers = true);
 
 template<typename Tt> inline
 Tt** array_get_copy(const size_t &length, Tt **array);
 
 template<typename Tt> inline
 void array_copying(const size_t &length, Tt **old_array, Tt **new_array);
+
+template<typename Tt> inline
+void array_copying_with_new(const size_t &length,
+				   Tt **old_array, const size_t &start_index_old, 
+				   Tt **new_array, const size_t &start_index_new);
 
 template<typename Tt> inline
 void array_delete(const size_t &length, Tt **array);
@@ -99,11 +104,20 @@ void list_link_containers(Container<Tt> *container_prev, Container<Tt> *containe
 template<typename Tt>
 Tt**
 flame_ide::templates::
-array_get_new(const size_t &length)
+array_get_new(const size_t &length, bool initialize_pointers)
 {
 	Tt** pointer_array = new Tt*[length];
-	for(size_t i = 0; i < length; i++)
-	{	pointer_array[i] = new Tt;}
+	
+	if(initialize_pointers)
+	{
+		for(size_t i = 0; i < length; i++)
+		{	pointer_array[i] = new Tt;}
+	}
+	else
+	{
+		for(size_t i = 0; i < length; i++)
+		{	pointer_array[i] = nullptr;}
+	}
 	
 	return pointer_array;
 }
@@ -133,10 +147,24 @@ array_copying(const size_t &length, Tt **old_array, Tt **new_array)
 template<typename Tt>
 void
 flame_ide::templates::
+array_copying_with_new(const size_t &length,
+			  Tt **old_array, const size_t &start_index_old, 
+			  Tt **new_array, const size_t &start_index_new)
+{
+	for(size_t i = 0; i < length; i++)
+	{	new_array[start_index_new + i] = new Tt(old_array[start_index_old + i][0]);}
+}
+
+template<typename Tt>
+void
+flame_ide::templates::
 array_delete(const size_t &length, Tt **array)
 {
 	for(size_t i = 0; i < length; i++)
-	{	delete array[i];}
+	{
+		if(array[i] != nullptr)
+		{ delete array[i]; }
+	}
 	delete[] array;
 }
 

@@ -74,31 +74,31 @@ public:
 	
 	~List();
 	
-	void pushBack(const T &data); // tested
-	void pushFront(const T &data); // tested
+	void pushBack(const T &data); // вставка элемента в конец
+	void pushFront(const T &data); // вставка элемента в начало
 
-	void pushBackArray(size_t count, const T *array); // tested
-	void pushFrontArray(size_t count, const T *array); // tested
+	void pushBackArray(size_t count, const T *array); // вставка массива в конец
+	void pushFrontArray(size_t count, const T *array); // вставка массива в начало
 	
 #ifdef FUTURE
 	void pushBackList(const List<T> &list);
 	void pushFrontList(const List<T> &list);
 #endif
-	void insert(const ListIterator<T> &pos, const T &elem); //tested
-	void insert(const ListIterator<T> &pos, const size_t &count, const T *array); // tested
+	void insert(const ListIterator<T> &pos, const T &elem); // вставка элементов после итератора
+	void insert(const ListIterator<T> &pos, const size_t &count, const T *array); // вставка вектора после итератора
 #ifdef FUTURE
 	// функция вставки списка
 	// не знаю только, нужно ли или нет
 #endif
 	
-	void popBack(); // tested
-	void popFront(); // tested
+	void popBack(); // удаление элемента с конца
+	void popFront(); // удаление элемента с начала
 	
-	void popBack(size_t count); // tested
-	void popFront(size_t count); // tested
+	void popBack(size_t count); // удаление опр. кол-ва элементов с конца
+	void popFront(size_t count); // удаление опр. кол-ва элементов с начала
 	
-	void erase(const ListIterator<T> &pos);
-	void erase(const ListIterator<T> &pos, const size_t &count);
+	void erase(const ListIterator<T> &pos); // удаление элемента, на который указывает итератор
+	void erase(const ListIterator<T> &pos, const size_t &count); // удаление опр. количества элементов после итератора
 	
 	void clear(); // tested
 	
