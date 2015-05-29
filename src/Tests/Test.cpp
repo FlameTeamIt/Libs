@@ -13,6 +13,8 @@
 #include "../Others/Templates/List.h"
 #include "../Others/JSON/JSON.h"
 
+//#include "../Others/"
+
 #include <iostream>
 
 struct Kilobyte
@@ -31,13 +33,15 @@ Test::~Test()
 void
 Test::all()
 {
-	std::cout << "Test::all()\n";
+	std::cout << "Test::all()"<< '\n';
 	
-//	actions.all();
-//	bus.all();
-//	store.all();
+	actions.all();
+	bus.all();
+	store.all();
 	
 	others.all();
+	
+	std::cout << '\n';
 }
 
 // Actions
@@ -48,20 +52,22 @@ Test::Actions::all()
 	std::cout << "Test::Actions::all()\n";
 	
 	this->TCodeParcer();
-	this->TCommandLine();	
+	this->TCommandLine();
+	
+	std::cout << '\n';
 }
 
 unsigned int
 Test::Actions::TCodeParcer()
 {
-	std::cout << "Test::Actions::TCodeParcer()\n";
+	std::cout << '\t' << "Test::Actions::TCodeParcer()\n";
 	return 1;
 }
 
 unsigned int
 Test::Actions::TCommandLine()
 {
-	std::cout << "Test::Actions::TCommandLine()\n";
+	std::cout << '\t' << "Test::Actions::TCommandLine()\n";
 	
 	CommandLine commands;
 	
@@ -84,7 +90,10 @@ Test::Actions::TCommandLine()
 void
 Test::Bus::all()
 {
+	std::cout << "Test::Bus::all()" << '\n';
 	count_success_tests = this->TMsgInterface();
+	
+	std::cout << '\n';
 }
 
 unsigned int
@@ -99,9 +108,11 @@ Test::Bus::TMsgInterface()
 void
 Test::Store::all()
 {
+	std::cout << "Test::Store::all()" << '\n';
 	count_success_tests = this->TBasicFile()
 						  + this->TProject()
 						  + this->TSession();
+	std::cout << '\n';
 }
 
 unsigned int
@@ -141,7 +152,7 @@ Test::Store::TProject()
 unsigned int
 Test::Store::TSession()
 {
-	std::cout << "Test::Store::TSession()" << '\n';
+	std::cout << '\t' << "Test::Store::TSession()" << '\n';
 	return 1;
 }
 
@@ -149,13 +160,18 @@ Test::Store::TSession()
 void
 Test::Others::all()
 {
+	std::cout << "Test::Others::all()" << '\n';
 	this->count_success_tests = this->TList() +
 							this->TArray();
+	
+	std::cout << '\n';
 }
 
 unsigned int
 Test::Others::TList()
 {
+	std::cout << '\t' << "Test::Others::TList()" << '\n';
+	
 	size_t start_count = 4; // начиная с 4-х элементов не течет. Что? (О_о)
 	std::cout << "Test::Others::TList()" << '\n';
 	int arr[] = {5, 6};
