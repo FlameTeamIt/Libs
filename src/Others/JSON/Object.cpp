@@ -1,24 +1,29 @@
 #include "JSON.h"
 
-using namespace flame_ide::JSON;
+using namespace flame_ide;
 
+JSON::
 Object::Object()
-	: JSON::Data(1, 0, 0)
+	: JSON::DataContainer(true, false)
 {}
 
+JSON::
 Object::Object(const templates::Array<Pair> &template_array)
 	: JSON::Object()
 {
 	this->arr = template_array;
 }
 
+JSON::
 Object::~Object() {}
 
-std::string 
+std::string
+JSON::
 Object::getAsString()
 {	return std::string("{}");}
 
 void
+JSON::
 Object::setAsString(const std::string &json_object)
 {
 	// парсинг объекта

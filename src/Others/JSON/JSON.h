@@ -17,20 +17,23 @@ typedef enum
 } Type;
 
 class Data;
+class DataContainer;
+
+class Single;
+
 class Object;
 class Array;
-class Single;
+
 struct Pair;
 
 class Data
 {
-	bool is_object;
-	bool is_array;
 	bool is_single;
+	bool is_array;
+	bool is_object;
 	
-	// 100 -- object
-	// 10 -- array
-	// 1 -- single
+	bool is_container;
+	
 	unsigned int type;
 protected:
 	
@@ -39,6 +42,7 @@ public:
 	Data(const bool& is_object_type
 		 ,const bool& is_array_type
 		 ,const bool& is_single_type);
+	Data(const Data& data);
 	
 	virtual ~Data();
 	
@@ -46,51 +50,33 @@ public:
 	bool isArray();
 	bool isSingle();
 	
+	bool isContainer();
+	
 	unsigned char getType();
 	
 	virtual std::string getAsString() = 0;
 	virtual void        setAsString(const std::string&) = 0;
 };
 
-class Object : public Data
+class DataContainer : Data
 {
-	templates::Array<Pair> arr;
 public:
-	Object();
-	Object(const templates::Array<Pair> &template_array);
-	Object(const size_t& size);
+	DataContainer(const bool& is_object_type
+				  ,const bool& is_array_type);
 	
-	~Object();
+	virtual void pushBack(Data *data) = 0;
+	virtual void pushFront(Data *data) = 0;
 	
-	Data* operator [](const std::string &str_index) const;
-	Data* operator [](const char *c_str_index) const;
-	Data* operator [](const size_t &index);
+	virtual void insert(const size_t &index, Data *data) = 0;
+	virtual void insert(const size_t &index, const size_t &count, Data **data) = 0;
 	
-	const Object & operator=(const Object& object);
+	virtual void popBack() = 0;
+	virtual void popFront() = 0;
 	
-	void   setSize(const size_t &new_size);
-	size_t getSize();
+	virtual void erase(const size_t &index) = 0;
+	virtual void erase(const size_t &index, const size_t &count) = 0;
 	
-	std::string getAsString();
-	void        setAsString(const std::string &json_object);
-};
-
-class Array : public Data
-{
-	templates::Array<Data> arr;
-	
-public:
-	Array();
-	Array(const templates::Array<Single> &template_array);
-	Array(const size_t& size);
-	
-	Data* operator[](const size_t &index);
-	
-	void   setSize(const size_t &new_size);
-	size_t getSize();
-	
-	std::string getAsString();
-	void        setAsString(const std::string &json_array);
+	~DataContainer() {}
 };
 
 class Single : public Data
@@ -99,7 +85,8 @@ class Single : public Data
 	
 public:
 	Single();
-	Single(const Single& single);
+	Single(const Data &data);
+	Single(const Single &single);
 	Single(const std::string& value);
 	
 	~Single();
@@ -126,6 +113,76 @@ public:
 	
 };
 
+class Object : public DataContainer
+{
+	templates::Array<Pair> arr;
+public:
+	Object();
+	Object(const Data &data);
+	Object(const Object &object);
+	Object(const templates::Array<Pair> &template_array);
+	Object(const size_t& size);
+	
+	~Object();
+	
+	Data* operator [](const std::string &str_index) const;
+	Data* operator [](const char *c_str_index) const;
+	Data* operator [](const size_t &index);
+	
+	const Object & operator=(const Object& object);
+	
+	void   setSize(const size_t &new_size);
+	size_t getSize();
+	
+	void pushBack(Data *data);
+	void pushFront(Data *data);
+	
+	void insert(const size_t &index, Data *data);
+	void insert(const size_t &index, const size_t &count, Data **data);
+	
+	void popBack();
+	void popFront();
+	
+	void erase(const size_t &index);
+	void erase(const size_t &index, const size_t &count);	
+	
+	std::string getAsString();
+	void        setAsString(const std::string &json_object);
+};
+
+class Array : public DataContainer
+{
+	templates::Array<Data*> arr;
+	
+public:
+	Array();
+	Array(const Data &data);
+	Array(const Array &array);
+	Array(const size_t& size);
+	
+	~Array();
+	
+	Data* operator[](const size_t &index);
+	
+	void   setSize(const size_t &new_size);
+	size_t getSize();
+	
+	void pushBack(Data *data);
+	void pushFront(Data *data);
+	
+	void insert(const size_t &index, Data *data);
+	void insert(const size_t &index, const size_t &count, Data **data);
+	
+	void popBack();
+	void popFront();
+	
+	void erase(const size_t &index);
+	void erase(const size_t &index, const size_t &count);	
+	
+	std::string getAsString();
+	void        setAsString(const std::string &json_array);
+};
+
 class Pair
 {
 public:
@@ -134,6 +191,9 @@ public:
 	
 	Pair();
 	~Pair();
+	
+	std::string getAsString();
+	void        setAsString(const std::string& json_pair);
 	
 	const Pair& operator=(const Pair& pair);
 };

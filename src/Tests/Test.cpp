@@ -13,7 +13,7 @@
 #include "../Others/Templates/List.h"
 #include "../Others/JSON/JSON.h"
 
-//#include "../Others/"
+#include "../Others/TextStyle.h"
 
 #include <iostream>
 
@@ -33,7 +33,8 @@ Test::~Test()
 void
 Test::all()
 {
-	std::cout << "Test::all()"<< '\n';
+	std::cout << TEXT_STYLE_CYAN << TEXT_STYLE_BOLD
+			  << "Test::all()" << TEXT_STYLE_NULL << '\n';
 	
 	actions.all();
 	bus.all();

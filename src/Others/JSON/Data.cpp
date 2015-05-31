@@ -21,6 +21,11 @@ Data::Data(const bool &is_object_type
 	this->type = 100 * this->is_object
 				 + 10 * this->is_array
 				 + this->is_single;
+	
+	if(!this->is_single)
+	{ is_container = true; }
+	else
+	{ is_container = false; }
 }
 
 Data::~Data() {}
@@ -36,6 +41,10 @@ Data::isArray()
 bool
 Data::isSingle()
 {	return is_single;}
+
+bool
+Data::isContainer()
+{	return is_container;}
 
 unsigned char
 Data::getType()

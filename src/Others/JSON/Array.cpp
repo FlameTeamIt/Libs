@@ -6,7 +6,7 @@ using namespace flame_ide;
 
 JSON::
 Array::Array()
-	: JSON::Data(0, 1, 0)
+	: JSON::DataContainer(0, 1)
 {}
 
 JSON::Data*
