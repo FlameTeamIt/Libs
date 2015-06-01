@@ -19,7 +19,8 @@ Pair::getAsString() const
 	
 	if(data->getType() == PAIR)
 	{
-		string_out += "{\n" + data->getAsString() + "\n}";
+		// частный вид объекта
+		string_out += "{\n" + data->getAsString() + ";\n}";
 	}
 	else
 	{
@@ -44,8 +45,10 @@ Pair::operator=(const Pair& pair)
 	{
 		switch (pair.data->getType())
 		{
-		case SINGLE:   // single
-			this->data = new JSON::Single(pair.data->getAsString());
+		case PAIR:   // pair
+			break;
+			
+		case SINGLE: // single
 			break;
 			
 		case ARRAY:  // array

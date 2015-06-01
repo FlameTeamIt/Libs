@@ -17,6 +17,62 @@ Object::Object(const templates::Array<Pair> &template_array)
 JSON::
 Object::~Object() {}
 
+void 
+JSON::
+Object::pushBack(Data *data)
+{
+	
+}
+
+void
+JSON::
+Object::pushFront(Data *data)
+{
+	
+}
+
+void
+JSON::
+Object::insert(const size_t &index, Data *data)
+{
+	
+}
+
+void
+JSON::
+Object::insert(const size_t &index, const size_t &count, Data **data)
+{
+	
+}
+
+void
+JSON::
+Object::popBack()
+{
+	
+}
+
+void
+JSON::
+Object::popFront()
+{
+	
+}
+
+void
+JSON::
+Object::erase(const size_t &index)
+{
+	
+}
+
+void
+JSON::
+Object::erase(const size_t &index, const size_t &count)
+{
+	
+}
+
 std::string
 JSON::
 Object::getAsString() const

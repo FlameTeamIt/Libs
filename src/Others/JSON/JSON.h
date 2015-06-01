@@ -37,13 +37,13 @@ class Data
 	
 	unsigned int type;
 protected:
-	unsigned long level; // глубина записи
+	mutable unsigned long level; // глубина записи
 	
 public:
 	Data();
 	Data(bool is_object_type
-		 , bool is_array_type
-		 , bool is_single_type);
+		 ,bool is_array_type
+		 ,bool is_single_type);
 	
 	virtual ~Data();
 	
@@ -54,7 +54,7 @@ public:
 	
 	bool isContainer() const;
 	
-	void setLevel(unsigned long new_level);
+	void setLevel(unsigned long new_level) const;
 	
 	unsigned int getType() const;
 	
@@ -100,7 +100,8 @@ public:
 	const Pair& operator=(const Pair& pair);
 };
 
-class Single : public Data
+class Single
+		: public Data
 {
 	std::string str_data;
 	
@@ -134,7 +135,8 @@ public:
 	
 };
 
-class Object : public DataContainer
+class Object
+		: public DataContainer
 {
 	templates::Array<Pair> arr;
 public:
@@ -146,8 +148,10 @@ public:
 	
 	~Object();
 	
+#ifdef FUTURE // пока думаю, как с этим быть
 	Data* operator [](const std::string &str_index) const;
 	Data* operator [](const char *c_str_index) const;
+#endif
 	Data* operator [](const size_t &index);
 	
 	const Object & operator=(const Object& object);
@@ -165,13 +169,14 @@ public:
 	void popFront();
 	
 	void erase(const size_t &index);
-	void erase(const size_t &index, const size_t &count);	
+	void erase(const size_t &index, const size_t &count);
 	
 	std::string getAsString() const;
 	void        setAsString(const std::string &json_object);
 };
 
-class Array : public DataContainer
+class Array
+		: public DataContainer
 {
 	templates::Array<Data*> arr;
 	
@@ -198,7 +203,7 @@ public:
 	void popFront();
 	
 	void erase(const size_t &index);
-	void erase(const size_t &index, const size_t &count);	
+	void erase(const size_t &index, const size_t &count);
 	
 	std::string getAsString() const;
 	void        setAsString(const std::string &json_array);
