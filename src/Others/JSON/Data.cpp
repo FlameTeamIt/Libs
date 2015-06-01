@@ -8,11 +8,13 @@ Data::Data()
 	is_object = false;
 	is_array = false;
 	is_single = false;
+	
+	level = 0;
 }
 
-Data::Data(const bool &is_object_type
-		   ,const bool &is_array_type
-		   ,const bool &is_single_type)
+Data::Data(bool is_object_type
+		   , bool is_array_type
+		   , bool is_single_type)
 {
 	this->is_object = is_object_type;
 	this->is_array  = is_array_type;
@@ -31,21 +33,29 @@ Data::Data(const bool &is_object_type
 Data::~Data() {}
 
 bool
-Data::isObject()
-{	return is_object;}
+Data::isObject() const
+{	return is_object; }
 
 bool
-Data::isArray()
-{	return is_array;}
+Data::isArray() const
+{	return is_array; }
 
 bool
-Data::isSingle()
-{	return is_single;}
+Data::isSingle() const
+{	return is_single; }
 
 bool
-Data::isContainer()
-{	return is_container;}
+Data::isPair() const
+{ return (!type); }
 
-unsigned char
-Data::getType()
-{	return type;}
+bool
+Data::isContainer() const
+{	return is_container; }
+
+void
+Data::setLevel(unsigned long new_level)
+{ level = new_level; }
+
+unsigned int
+Data::getType() const
+{	return type; }

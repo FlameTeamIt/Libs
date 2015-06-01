@@ -11,8 +11,32 @@ Pair::~Pair()
 	{	delete data;}
 }
 
+std::string
+Pair::getAsString() const
+{
+	// тут нужно подумать.
+	std::string string_out = '"' + key + "\":";
+	
+	if(data->getType() == PAIR)
+	{
+		string_out += "{\n" + data->getAsString() + "\n}";
+	}
+	else
+	{
+		string_out += data->getAsString();
+	}
+	
+	return string_out;
+}
+
+void
+Pair::setAsString(const std::string &json_pair)
+{
+	
+}
+
 const Pair&
-Pair::operator=(const JSON::Pair& pair)
+Pair::operator=(const Pair& pair)
 {
 	Data* tmp = this->data;
 	
@@ -42,4 +66,6 @@ Pair::operator=(const JSON::Pair& pair)
 		this->key = pair.key;
 		delete tmp;
 	}
+	
+	return *this;
 }

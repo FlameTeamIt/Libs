@@ -19,7 +19,7 @@ Object::~Object() {}
 
 std::string
 JSON::
-Object::getAsString()
+Object::getAsString() const
 {	return std::string("{}");}
 
 void

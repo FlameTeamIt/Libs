@@ -6,14 +6,23 @@ Single::Single()
 	: JSON::Data(0, 0, 1)
 {}
 
-Single::Single(const JSON::Single& single)
-	: JSON::Data(0, 0, 1)
+Single::Single(const Data* data)
+	: Single()
+{
+	if(data->getType() == SINGLE)
+	{
+		Single(*((Single*)data));
+	}
+}
+
+Single::Single(const Single& single)
+	: Single()
 {
 	this->str_data = single.str_data;
 }
 
 Single::Single(const std::string& value)
-	: JSON::Single()
+	: Single()
 {	this->str_data = value;}
 
 
@@ -27,7 +36,7 @@ Single::operator =(const JSON::Single &single)
 }
 
 std::string
-Single::getAsString()
+Single::getAsString() const
 {	return this->str_data;}
 
 void

@@ -13,12 +13,12 @@ JSON::Data*
 JSON::
 Array::operator [](const size_t &index)
 {
-	return &arr[index];
+	return arr[index];
 }
 
 std::string
 JSON::
-Array::getAsString()
+Array::getAsString() const
 {
 	return std::string("[]");
 }

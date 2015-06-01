@@ -11,6 +11,7 @@ namespace flame_ide
 
 typedef enum
 {
+	PAIR = 0,
 	SINGLE = 1,
 	ARRAY = 10,
 	OBJECT = 100
@@ -36,29 +37,33 @@ class Data
 	
 	unsigned int type;
 protected:
+	unsigned long level; // глубина записи
 	
 public:
 	Data();
-	Data(const bool& is_object_type
-		 ,const bool& is_array_type
-		 ,const bool& is_single_type);
-	Data(const Data& data);
+	Data(bool is_object_type
+		 , bool is_array_type
+		 , bool is_single_type);
 	
 	virtual ~Data();
 	
-	bool isObject();
-	bool isArray();
-	bool isSingle();
+	bool isObject() const;
+	bool isArray() const;
+	bool isSingle() const;
+	bool isPair() const;
 	
-	bool isContainer();
+	bool isContainer() const;
 	
-	unsigned char getType();
+	void setLevel(unsigned long new_level);
 	
-	virtual std::string getAsString() = 0;
+	unsigned int getType() const;
+	
+	virtual std::string getAsString() const = 0;
 	virtual void        setAsString(const std::string&) = 0;
 };
 
-class DataContainer : Data
+class DataContainer
+		: public Data
 {
 public:
 	DataContainer(const bool& is_object_type
@@ -76,7 +81,23 @@ public:
 	virtual void erase(const size_t &index) = 0;
 	virtual void erase(const size_t &index, const size_t &count) = 0;
 	
-	~DataContainer() {}
+	~DataContainer();
+};
+
+class Pair
+		: public Data
+{
+public:
+	std::string key;
+	Data* data;
+	
+	Pair();
+	~Pair();
+	
+	std::string getAsString() const;
+	void        setAsString(const std::string& json_pair);
+	
+	const Pair& operator=(const Pair& pair);
 };
 
 class Single : public Data
@@ -85,7 +106,7 @@ class Single : public Data
 	
 public:
 	Single();
-	Single(const Data &data);
+	Single(const Data *data);
 	Single(const Single &single);
 	Single(const std::string& value);
 	
@@ -108,7 +129,7 @@ public:
 	
 	bool          isNull();
 #endif	
-	std::string getAsString();
+	std::string getAsString() const;
 	void        setAsString(const std::string& single);
 	
 };
@@ -118,7 +139,7 @@ class Object : public DataContainer
 	templates::Array<Pair> arr;
 public:
 	Object();
-	Object(const Data &data);
+	Object(const Data *data);
 	Object(const Object &object);
 	Object(const templates::Array<Pair> &template_array);
 	Object(const size_t& size);
@@ -146,7 +167,7 @@ public:
 	void erase(const size_t &index);
 	void erase(const size_t &index, const size_t &count);	
 	
-	std::string getAsString();
+	std::string getAsString() const;
 	void        setAsString(const std::string &json_object);
 };
 
@@ -156,7 +177,7 @@ class Array : public DataContainer
 	
 public:
 	Array();
-	Array(const Data &data);
+	Array(const Data *data);
 	Array(const Array &array);
 	Array(const size_t& size);
 	
@@ -179,23 +200,8 @@ public:
 	void erase(const size_t &index);
 	void erase(const size_t &index, const size_t &count);	
 	
-	std::string getAsString();
+	std::string getAsString() const;
 	void        setAsString(const std::string &json_array);
-};
-
-class Pair
-{
-public:
-	std::string key;
-	Data* data;
-	
-	Pair();
-	~Pair();
-	
-	std::string getAsString();
-	void        setAsString(const std::string& json_pair);
-	
-	const Pair& operator=(const Pair& pair);
 };
 
 }}
