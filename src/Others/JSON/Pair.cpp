@@ -5,10 +5,20 @@ using namespace flame_ide::JSON;
 Pair::Pair()
 {	data = nullptr;}
 
+Pair::Pair(const Pair &pair)
+{	
+}
+
 Pair::~Pair()
 {
 	if(data != nullptr)
 	{	delete data;}
+}
+
+Data*
+Pair::getCopy() const
+{
+	return nullptr;
 }
 
 std::string

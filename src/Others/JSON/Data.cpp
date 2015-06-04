@@ -52,10 +52,6 @@ bool
 Data::isContainer() const
 {	return is_container; }
 
-void
-Data::setLevel(unsigned long new_level) const
-{ level = new_level; }
-
 unsigned int
 Data::getType() const
 {	return type; }

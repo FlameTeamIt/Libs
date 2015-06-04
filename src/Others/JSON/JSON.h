@@ -38,7 +38,6 @@ class Data
 	unsigned int type;
 protected:
 	mutable unsigned long level; // глубина записи
-	
 public:
 	Data();
 	Data(bool is_object_type
@@ -54,10 +53,10 @@ public:
 	
 	bool isContainer() const;
 	
-	void setLevel(unsigned long new_level) const;
-	
 	unsigned int getType() const;
 	
+	virtual Data* getCopy() const = 0;
+		
 	virtual std::string getAsString() const = 0;
 	virtual void        setAsString(const std::string&) = 0;
 };
@@ -65,6 +64,14 @@ public:
 class DataContainer
 		: public Data
 {
+#ifdef FUTURE
+protected:
+	virtual void pushBack_Single(const Single* single) = 0;
+	virtual void pushBack_Pair(const Pair* pair) = 0;
+	virtual void pushBack_Array(const Array* array) = 0;
+	virtual void pushBack_Object(const Object* object) = 0;
+#endif
+	
 public:
 	DataContainer(const bool& is_object_type
 				  ,const bool& is_array_type);
@@ -92,7 +99,11 @@ public:
 	Data* data;
 	
 	Pair();
+	Pair(const Pair &pair);
+	
 	~Pair();
+	
+	Data* getCopy() const;
 	
 	std::string getAsString() const;
 	void        setAsString(const std::string& json_pair);
@@ -129,7 +140,10 @@ public:
 	bool          getBool();
 	
 	bool          isNull();
-#endif	
+#endif
+	
+	Data* getCopy() const;
+	
 	std::string getAsString() const;
 	void        setAsString(const std::string& single);
 	
@@ -171,6 +185,8 @@ public:
 	void erase(const size_t &index);
 	void erase(const size_t &index, const size_t &count);
 	
+	Data* getCopy() const;
+	
 	std::string getAsString() const;
 	void        setAsString(const std::string &json_object);
 };
@@ -204,6 +220,8 @@ public:
 	
 	void erase(const size_t &index);
 	void erase(const size_t &index, const size_t &count);
+	
+	Data* getCopy() const;
 	
 	std::string getAsString() const;
 	void        setAsString(const std::string &json_array);

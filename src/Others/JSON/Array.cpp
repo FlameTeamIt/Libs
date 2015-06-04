@@ -26,28 +26,95 @@ void
 JSON::
 Array::pushBack(Data *data)
 {
-	
+	switch (data->getType())
+	{
+	case SINGLE:
+		
+		break;
+	case PAIR:
+		
+		break;
+	case ARRAY:
+		
+		break;
+	case OBJECT:
+		
+		break;
+	default:
+		break;
+	}
 }
 
 void
 JSON::
 Array::pushFront(Data *data)
 {
-	
+	switch (data->getType())
+	{
+	case SINGLE:
+		
+		break;
+	case PAIR:
+		
+		break;
+	case ARRAY:
+		
+		break;
+	case OBJECT:
+		
+		break;
+	default:
+		break;
+	}
 }
 
 void
 JSON::
 Array::insert(const size_t &index, Data *data)
 {
-	
+	switch (data->getType())
+	{
+	case SINGLE:
+		
+		break;
+	case PAIR:
+		
+		break;
+	case ARRAY:
+		
+		break;
+	case OBJECT:
+		
+		break;
+	default:
+		break;
+	}
 }
 
 void 
 JSON::
 Array::insert(const size_t &index, const size_t &count, Data **data)
 {
-	
+	for(size_t i = 0; i < count; i++)
+	{
+		switch (data[i]->getType())
+		{
+		case SINGLE:
+			
+			break;
+		case PAIR:
+			
+			break;
+		case ARRAY:
+			
+			break;
+		case OBJECT:
+			
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void
@@ -76,6 +143,13 @@ JSON::
 Array::erase(const size_t &index, const size_t &count)
 {
 	
+}
+
+JSON::Data*
+JSON::
+Array::getCopy() const
+{
+	return nullptr;
 }
 
 std::string

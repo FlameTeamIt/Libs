@@ -73,6 +73,13 @@ Object::erase(const size_t &index, const size_t &count)
 	
 }
 
+JSON::Data*
+JSON::
+Object::getCopy() const
+{
+	return nullptr;
+}
+
 std::string
 JSON::
 Object::getAsString() const
