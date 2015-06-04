@@ -9,3 +9,5 @@ src/Others/BoostProcess/libs/*
 
 gmon.out
 
+nbproject/*
+
