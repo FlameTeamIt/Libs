@@ -11,8 +11,8 @@ namespace flame_ide
 
 typedef enum
 {
-	PAIR = 0,
 	SINGLE = 1,
+	PAIR = 0,
 	ARRAY = 10,
 	OBJECT = 100
 } Type;
@@ -22,8 +22,8 @@ class DataContainer;
 
 class Single;
 
-class Object;
 class Array;
+class Object;
 
 struct Pair;
 
@@ -36,8 +36,11 @@ class Data
 	bool is_container;
 	
 	unsigned int type;
+
 protected:
 	mutable unsigned long level; // глубина записи
+	mutable std::string str_level;
+	
 public:
 	Data();
 	Data(bool is_object_type
@@ -45,6 +48,8 @@ public:
 		 ,bool is_single_type);
 	
 	virtual ~Data();
+	
+	void setLevel(const unsigned long &new_level) const;
 	
 	bool isObject() const;
 	bool isArray() const;
@@ -59,6 +64,11 @@ public:
 		
 	virtual std::string getAsString() const = 0;
 	virtual void        setAsString(const std::string&) = 0;
+	
+#ifdef FUTURE
+	static templates::Array<std::string> splitStrings(const std::string& json_string);
+	static Data* parseString(const std::string& json_string);
+#endif
 };
 
 class DataContainer
@@ -89,26 +99,6 @@ public:
 	virtual void erase(const size_t &index, const size_t &count) = 0;
 	
 	~DataContainer();
-};
-
-class Pair
-		: public Data
-{
-public:
-	std::string key;
-	Data* data;
-	
-	Pair();
-	Pair(const Pair &pair);
-	
-	~Pair();
-	
-	Data* getCopy() const;
-	
-	std::string getAsString() const;
-	void        setAsString(const std::string& json_pair);
-	
-	const Pair& operator=(const Pair& pair);
 };
 
 class Single
@@ -149,15 +139,70 @@ public:
 	
 };
 
+class Pair
+		: public Data
+{
+public:
+	std::string key;
+	Data* data;
+	
+	Pair();
+	Pair(const Pair &pair);
+	
+	~Pair();
+	
+	Data* getCopy() const;
+	
+	std::string getAsString() const;
+	void        setAsString(const std::string& json_pair);
+	
+	const Pair& operator=(const Pair& pair);
+};
+
+class Array
+		: public DataContainer
+{
+	templates::Array<Data*> arr;
+	
+public:
+	Array();
+	Array(const Data *data);
+	Array(const Array &array);
+	Array(const size_t& size);
+	
+	~Array();
+	
+	Data* operator[](const size_t &index);
+	
+	void   setSize(const size_t &new_size);
+	size_t getSize();
+	
+	void pushBack(const Data *data);
+	void pushFront(const Data *data);
+	
+	void insert(const size_t &index, Data *data);
+	void insert(const size_t &index, const size_t &count, Data **data);
+	
+	void popBack();
+	void popFront();
+	
+	void erase(const size_t &index);
+	void erase(const size_t &index, const size_t &count);
+	
+	Data* getCopy() const;
+	
+	std::string getAsString() const;
+	void        setAsString(const std::string &json_array);
+};
+
 class Object
 		: public DataContainer
 {
-	templates::Array<Pair> arr;
+	templates::Array<Pair*> arr;
 public:
 	Object();
 	Object(const Data *data);
 	Object(const Object &object);
-	Object(const templates::Array<Pair> &template_array);
 	Object(const size_t& size);
 	
 	~Object();
@@ -189,42 +234,6 @@ public:
 	
 	std::string getAsString() const;
 	void        setAsString(const std::string &json_object);
-};
-
-class Array
-		: public DataContainer
-{
-	templates::Array<Data*> arr;
-	
-public:
-	Array();
-	Array(const Data *data);
-	Array(const Array &array);
-	Array(const size_t& size);
-	
-	~Array();
-	
-	Data* operator[](const size_t &index);
-	
-	void   setSize(const size_t &new_size);
-	size_t getSize();
-	
-	void pushBack(Data *data);
-	void pushFront(Data *data);
-	
-	void insert(const size_t &index, Data *data);
-	void insert(const size_t &index, const size_t &count, Data **data);
-	
-	void popBack();
-	void popFront();
-	
-	void erase(const size_t &index);
-	void erase(const size_t &index, const size_t &count);
-	
-	Data* getCopy() const;
-	
-	std::string getAsString() const;
-	void        setAsString(const std::string &json_array);
 };
 
 }}

@@ -3,10 +3,14 @@
 using namespace flame_ide::JSON;
 
 Pair::Pair()
+	: Data(false, false, false)
 {	data = nullptr;}
 
 Pair::Pair(const Pair &pair)
-{	
+	: Data(false, false, false)
+{
+	this->key = pair.key;
+	data = pair.data->getCopy();
 }
 
 Pair::~Pair()
@@ -18,7 +22,9 @@ Pair::~Pair()
 Data*
 Pair::getCopy() const
 {
-	return nullptr;
+	Data *copy_data = new Pair(*this);
+	
+	return copy_data;
 }
 
 std::string
@@ -30,7 +36,7 @@ Pair::getAsString() const
 	if(data->getType() == PAIR)
 	{
 		// частный вид объекта
-		string_out += "{\n" + data->getAsString() + ";\n}";
+		string_out += "{" + data->getAsString() + ";}";
 	}
 	else
 	{

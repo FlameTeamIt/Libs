@@ -32,6 +32,22 @@ Data::Data(bool is_object_type
 
 Data::~Data() {}
 
+unsigned long
+Data::getLevel() const
+{ return level; }
+
+void
+Data::setLevel(const unsigned long &new_level) const
+{
+	level = new_level;
+	
+	if(str_level.length())
+	{ str_level.clear(); }
+	
+	for(size_t i = 0; i < new_level; i++)
+	{ str_level.push_back(' '); }
+}
+
 bool
 Data::isObject() const
 {	return is_object; }

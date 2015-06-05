@@ -24,7 +24,7 @@ Array::operator [](const size_t &index)
 
 void
 JSON::
-Array::pushBack(Data *data)
+Array::pushBack(const Data *data)
 {
 	switch (data->getType())
 	{
@@ -47,7 +47,7 @@ Array::pushBack(Data *data)
 
 void
 JSON::
-Array::pushFront(Data *data)
+Array::pushFront(const Data *data)
 {
 	switch (data->getType())
 	{

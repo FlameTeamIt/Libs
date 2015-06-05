@@ -34,7 +34,8 @@ Single::operator =(const JSON::Single &single)
 Data*
 Single::getCopy() const
 {
-	return nullptr;
+	Data *data = new Single(*this);
+	return data;
 }
 
 std::string

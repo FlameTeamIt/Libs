@@ -8,13 +8,6 @@ Object::Object()
 {}
 
 JSON::
-Object::Object(const templates::Array<Pair> &template_array)
-	: JSON::Object()
-{
-	this->arr = template_array;
-}
-
-JSON::
 Object::~Object() {}
 
 void 
