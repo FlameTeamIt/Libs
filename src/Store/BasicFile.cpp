@@ -13,7 +13,7 @@ using namespace flame_ide;
 
 // constructors & destructor
 
-BasicFile::BasicFile()
+BasicFile::BasicFile() : filename(""), path("")
 {
 	// default values
 	this->initialization();
@@ -22,13 +22,13 @@ BasicFile::BasicFile()
 BasicFile::BasicFile(std::string& str_filename)
 	: BasicFile()
 {
-	this->filename = str_filename;
+	parceFullFilename(str_filename, this->path, this->filename);
 }
 
 BasicFile::BasicFile(const char *str_filename)
 	: BasicFile()
 {
-	this->filename = str_filename;
+	parceFullFilename(std::string(str_filename), this->path, this->filename);
 }
 
 BasicFile::~BasicFile()

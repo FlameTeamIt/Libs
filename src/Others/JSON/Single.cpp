@@ -3,7 +3,7 @@
 using namespace flame_ide::JSON;
 
 Single::Single()
-	: JSON::Data(0, 0, 1)
+	: JSON::Data(0, 0, 1), str_data("")
 {}
 
 Single::Single(const Data* data)
@@ -19,7 +19,7 @@ Single::Single(const Single& single)
 
 Single::Single(const std::string& value)
 	: Single()
-{ this->str_data = value; }
+{ setAsString(value); }
 
 
 Single::~Single() {}
@@ -44,4 +44,61 @@ Single::getAsString() const
 
 void
 Single::setAsString(const std::string &json_single)
-{ str_data = json_single; }
+{
+	bool start = false;
+	bool brace = false;
+	bool spaces = false;
+	bool end = false;
+	
+	str_data = "";
+	if(json_single.length() > 1)
+	{
+		for(std::string::const_iterator it = json_single.begin(),
+			it_end = json_single.end(), it_prevend = --(json_single.end());
+			it != it_end && !end;
+			++it)
+		{
+			if( (*it != ' ') && (*it != '\n') && (*it != '\r')
+				&& !brace && !start)
+			{
+				start = true;
+				
+				if(*it == '"')
+				{ brace = true; }
+				
+				str_data += *it;
+			}
+			else
+			if(start)
+			{
+				if(brace)
+				{
+					str_data += *it;
+					
+					if(*it == '"')
+					{ end = true; }
+					
+					if(it == it_prevend)
+					{ str_data = ""; end = true; }
+				}
+				else
+				{
+					if(*it == '"')
+					{ str_data = ""; end = true; }
+					else
+					{
+						if((*it != ' ') && (*it != '\n') && (*it != '\r'))
+						{
+							if(!spaces)
+							{ str_data += *it; }
+							else
+							{ str_data = ""; end = true; }
+						}
+						else
+						{ spaces = true; }
+					}
+				}
+			}
+		}
+	}
+}

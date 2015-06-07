@@ -162,8 +162,9 @@ void
 Test::Others::all()
 {
 	std::cout << "Test::Others::all()" << '\n';
-	this->count_success_tests = this->TList() +
-							this->TArray();
+	this->count_success_tests = this->TList()
+			+ this->TArray()
+			+ this->TJSON();
 	
 	std::cout << '\n';
 }
@@ -321,8 +322,32 @@ Test::Others::TArray()
 	{
 		std::cout << i << ". - " << array1[i] << '\n';
 	}
+	std::cout << '\n';
 	
 //#endif
+	
+	return 1;
+}
+
+unsigned int
+Test::Others::TJSON()
+{
+	std::cout << "Test::Others::TJSON()\n";
+	
+	std::string json_single("   \"Start\"   "),
+			json_pair_single("\"Start\":\"Start\""),
+			json_array_single("[\"Start\",\"Stop\"]"),
+			json_object_array_single("{\"Start\":\"Start\",\"Stop\":\"Stop\"}");
+	
+	JSON::Single single;
+	
+	std::cout << "INPUT (Single) : _"
+			  << json_single << "_\n";
+	
+	single.setAsString(json_single);
+	
+	std::cout << "OUTPUT (Single) : _"
+			  << single.getAsString() << "_\n";
 	
 	return 1;
 }
