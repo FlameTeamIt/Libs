@@ -38,6 +38,8 @@ class Data
 	unsigned int type;
 
 protected:
+	mutable bool is_initialize;
+	
 	mutable unsigned long level; // глубина записи
 	mutable std::string str_level;
 	
@@ -49,7 +51,8 @@ public:
 	
 	virtual ~Data();
 	
-	void setLevel(const unsigned long &new_level) const;
+	void          setLevel(const unsigned long &new_level) const;
+	unsigned long getLevel() const;
 	
 	bool isObject() const;
 	bool isArray() const;
@@ -57,6 +60,8 @@ public:
 	bool isPair() const;
 	
 	bool isContainer() const;
+	
+	bool isInitialize() const;
 	
 	unsigned int getType() const;
 	

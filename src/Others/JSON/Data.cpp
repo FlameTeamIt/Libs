@@ -9,6 +9,8 @@ Data::Data()
 	is_array = false;
 	is_single = false;
 	
+	is_initialize = false;
+	
 	level = 0;
 }
 
@@ -28,6 +30,8 @@ Data::Data(bool is_object_type
 	{ is_container = true; }
 	else
 	{ is_container = false; }
+	
+	is_initialize = false;
 }
 
 Data::~Data() {}
@@ -67,6 +71,10 @@ Data::isPair() const
 bool
 Data::isContainer() const
 {	return is_container; }
+
+bool
+Data::isInitialize() const
+{	return is_initialize; }
 
 unsigned int
 Data::getType() const
