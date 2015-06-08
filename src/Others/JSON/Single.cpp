@@ -58,44 +58,67 @@ Single::setAsString(const std::string &json_single)
 			it != it_end && !end;
 			++it)
 		{
+			// ignoring spaces and other
 			if( (*it != ' ') && (*it != '\n') && (*it != '\r')
 				&& !brace && !start)
 			{
 				start = true;
 				
 				if(*it == '"')
-				{ brace = true; }
-				
-				str_data += *it;
-			}
-			else
-			if(start)
-			{
-				if(brace)
 				{
-					str_data += *it;
-					
-					if(*it == '"')
-					{ end = true; }
-					
-					if(it == it_prevend)
-					{ str_data = ""; end = true; }
+					brace = true;
 				}
 				else
 				{
+					str_data += *it;
+				}
+			}
+			else
+			if(start) // starting write to sting data
+			{
+				if(brace)
+				{
+					
 					if(*it == '"')
-					{ str_data = ""; end = true; }
+					{
+						end = true;
+					}
 					else
 					{
-						if((*it != ' ') && (*it != '\n') && (*it != '\r'))
+						str_data += *it;
+					}
+
+					
+					if(it == it_prevend)
+					{
+						str_data = "";
+						end = true;
+					}
+				}
+				else
+				{
+					if(*it != '"')
+					{
+						if( (*it != ' ') && (*it != '\n') && (*it != '\r') )
 						{
 							if(!spaces)
-							{ str_data += *it; }
+							{
+								str_data += *it;
+							}
 							else
-							{ str_data = ""; end = true; }
+							{
+								str_data = "";
+								end = true;
+							}
 						}
 						else
-						{ spaces = true; }
+						{
+							spaces = true;
+						}
+					}
+					else
+					{
+						str_data = ""; end = true;
 					}
 				}
 			}

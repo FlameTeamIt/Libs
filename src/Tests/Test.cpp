@@ -340,6 +340,7 @@ Test::Others::TJSON()
 			json_object_array_single("{\"Start\":\"Start\",\"Stop\":\"Stop\"}");
 	
 	JSON::Single single;
+	JSON::Pair pair;
 	
 	std::cout << "INPUT (Single) : _"
 			  << json_single << "_\n";
@@ -347,7 +348,15 @@ Test::Others::TJSON()
 	single.setAsString(json_single);
 	
 	std::cout << "OUTPUT (Single) : _"
-			  << single.getAsString() << "_\n";
+			  << single.getAsString() << "_\n\n";
+	
+	std::cout << "INPUT (Pair-Single) :\n"
+			  << json_pair_single << "\n\n";
+	
+	pair.setAsString(json_pair_single);
+	
+	std::cout << "OUTPUT (Single) :\n"
+			  << pair.key << "\n\n";
 	
 	return 1;
 }

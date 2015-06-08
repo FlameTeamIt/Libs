@@ -22,10 +22,12 @@ class DataContainer;
 
 class Single;
 
+struct Pair;
+
 class Array;
 class Object;
 
-struct Pair;
+/* ------------------------------------------------------------ */
 
 class Data
 {
@@ -152,6 +154,8 @@ public:
 	Data* data;
 	
 	Pair();
+	Pair(const Data *new_data);
+	Pair(const std::string &json_pair);
 	Pair(const Pair &pair);
 	
 	~Pair();
