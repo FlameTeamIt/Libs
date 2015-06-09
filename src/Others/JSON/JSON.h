@@ -11,6 +11,7 @@ namespace flame_ide
 
 typedef enum
 {
+	ERROR = -1,
 	SINGLE = 1,
 	PAIR = 0,
 	ARRAY = 10,
@@ -44,6 +45,8 @@ protected:
 	
 	mutable unsigned long level; // глубина записи
 	mutable std::string str_level;
+	
+	Data* getData(const std::string &json_string);
 	
 public:
 	Data();
@@ -93,11 +96,11 @@ public:
 	DataContainer(const bool& is_object_type
 				  ,const bool& is_array_type);
 	
-	virtual void pushBack(Data *data) = 0;
-	virtual void pushFront(Data *data) = 0;
+	virtual void pushBack(const Data *data) = 0;
+	virtual void pushFront(const Data *data) = 0;
 	
-	virtual void insert(const size_t &index, Data *data) = 0;
-	virtual void insert(const size_t &index, const size_t &count, Data **data) = 0;
+	virtual void insert(const size_t &index, const Data *data) = 0;
+	virtual void insert(const size_t &index, const size_t &count, const Data **data) = 0;
 	
 	virtual void popBack() = 0;
 	virtual void popFront() = 0;
@@ -177,7 +180,7 @@ public:
 	Array();
 	Array(const Data *data);
 	Array(const Array &array);
-	Array(const size_t& size);
+	Array(const std::string &json_array);
 	
 	~Array();
 	
@@ -189,8 +192,8 @@ public:
 	void pushBack(const Data *data);
 	void pushFront(const Data *data);
 	
-	void insert(const size_t &index, Data *data);
-	void insert(const size_t &index, const size_t &count, Data **data);
+	void insert(const size_t &index, const Data *data);
+	void insert(const size_t &index, const size_t &count, const Data **data);
 	
 	void popBack();
 	void popFront();
@@ -212,7 +215,7 @@ public:
 	Object();
 	Object(const Data *data);
 	Object(const Object &object);
-	Object(const size_t& size);
+	Object(const std::string& json_object);
 	
 	~Object();
 	
@@ -227,11 +230,11 @@ public:
 	void   setSize(const size_t &new_size);
 	size_t getSize();
 	
-	void pushBack(Data *data);
-	void pushFront(Data *data);
+	void pushBack(const Data *data);
+	void pushFront(const Data *data);
 	
-	void insert(const size_t &index, Data *data);
-	void insert(const size_t &index, const size_t &count, Data **data);
+	void insert(const size_t &index, const Data *data);
+	void insert(const size_t &index, const size_t &count, const Data **data);
 	
 	void popBack();
 	void popFront();

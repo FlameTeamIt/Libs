@@ -4,7 +4,22 @@ using namespace flame_ide;
 
 JSON::
 Object::Object()
-	: JSON::DataContainer(true, false)
+	: JSON::DataContainer(1, 0)
+{}
+
+JSON::
+Object::Object(const Data *data)
+	: Object()
+{}
+
+JSON::
+Object::Object(const Object &object)
+	: Object()
+{}
+
+JSON::
+Object::Object(const std::string &json_object)
+	: Object()
 {}
 
 JSON::
@@ -12,28 +27,28 @@ Object::~Object() {}
 
 void 
 JSON::
-Object::pushBack(Data *data)
+Object::pushBack(const Data *data)
 {
 	
 }
 
 void
 JSON::
-Object::pushFront(Data *data)
+Object::pushFront(const Data *data)
 {
 	
 }
 
 void
 JSON::
-Object::insert(const size_t &index, Data *data)
+Object::insert(const size_t &index, const Data *data)
 {
 	
 }
 
 void
 JSON::
-Object::insert(const size_t &index, const size_t &count, Data **data)
+Object::insert(const size_t &index, const size_t &count, const Data **data)
 {
 	
 }

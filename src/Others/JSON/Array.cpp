@@ -10,6 +10,23 @@ Array::Array()
 {}
 
 JSON::
+Array::Array(const Data *data)
+	: Array()
+{}
+
+JSON::
+Array::Array(const Array &array)
+	: Array()
+{}
+
+JSON::
+Array::Array(const std::string &json_array)
+	: Array()
+{
+	
+}
+
+JSON::
 Array::~Array()
 {
 	
@@ -70,7 +87,7 @@ Array::pushFront(const Data *data)
 
 void
 JSON::
-Array::insert(const size_t &index, Data *data)
+Array::insert(const size_t &index, const Data *data)
 {
 	switch (data->getType())
 	{
@@ -93,7 +110,7 @@ Array::insert(const size_t &index, Data *data)
 
 void 
 JSON::
-Array::insert(const size_t &index, const size_t &count, Data **data)
+Array::insert(const size_t &index, const size_t &count, const Data **data)
 {
 	for(size_t i = 0; i < count; i++)
 	{

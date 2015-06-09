@@ -36,6 +36,79 @@ Data::Data(bool is_object_type
 
 Data::~Data() {}
 
+// protected
+
+Data*
+Data::getData(const std::string &json_string)
+{
+	bool end = false;
+	Type str_type = ERROR;
+	Data* return_data;
+	
+	for(std::string::const_iterator it = json_string.begin(),
+		it_end = json_string.end();
+		it != it_end && !end;
+		++it)
+	{
+/*		
+		switch (*it)
+		{
+		case '"':
+			
+			// или пара, или одиночка
+			
+			break;
+			
+		case '{':
+			str_type = OBJECT;
+			
+			break;
+		case '[':
+			str_type = ARRAY;
+			
+			break;
+			
+		case ' ':
+		case '\n':
+		case '\r':
+		case '\t':
+			break;
+		
+		default:
+			break;
+		}
+*/		
+	}
+	
+	switch (str_type)
+	{
+	case SINGLE:
+		return_data = new Single(json_string);
+		break;
+		
+	case PAIR:
+		return_data = new Pair(json_string);
+		break;
+		
+	case ARRAY:
+		return_data = new Array(json_string);
+		break;
+		
+	case OBJECT:
+		return_data = new Object(json_string);
+		break;
+		
+	default:
+		
+		return_data = nullptr;
+		break;
+	}
+	
+	return return_data;
+}
+
+// public
+
 unsigned long
 Data::getLevel() const
 { return level; }

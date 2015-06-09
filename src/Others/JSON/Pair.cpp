@@ -127,13 +127,23 @@ Pair::setAsString(const std::string &json_pair)
 	}
 	pos++;
 	
-	if(!search_colon)
+	if(!search_colon && pos >= json_pair.length() )
 	{
 		key = "";
 		return;
 	}
 	
 	// получаем остаток от строки и парсим другой функцией
+	std::string json_data = json_pair.substr(pos, json_pair.length()-pos);
+	
+	// получаем сразу 
+	this->data = getData(json_data);
+	
+	if(data == nullptr)
+	{
+		key = "";
+		return;
+	}
 	
 }
 
