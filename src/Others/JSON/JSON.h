@@ -46,7 +46,8 @@ protected:
 	mutable unsigned long level; // глубина записи
 	mutable std::string str_level;
 	
-	Data* getData(const std::string &json_string);
+	static Type getDataType(const std::string &json_string);
+	static Data* getData(const std::string &json_string);
 	
 public:
 	Data();

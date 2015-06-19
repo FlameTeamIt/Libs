@@ -38,49 +38,60 @@ Data::~Data() {}
 
 // protected
 
-Data*
-Data::getData(const std::string &json_string)
+Type
+Data::getDataType(const std::string &json_string)
 {
 	bool end = false;
-	Type str_type = ERROR;
-	Data* return_data;
+	unsigned short count_string_brace = 0;
+		
+	Type json_str_type = ERROR;
 	
 	for(std::string::const_iterator it = json_string.begin(),
-		it_end = json_string.end();
+		it_end = json_string.end(),
+		it_prevend = --(json_string.end());
 		it != it_end && !end;
 		++it)
 	{
-/*		
-		switch (*it)
+		if(*it == '{')
 		{
-		case '"':
-			
-			// или пара, или одиночка
-			
-			break;
-			
-		case '{':
-			str_type = OBJECT;
-			
-			break;
-		case '[':
-			str_type = ARRAY;
-			
-			break;
-			
-		case ' ':
-		case '\n':
-		case '\r':
-		case '\t':
-			break;
-		
-		default:
-			break;
+			json_str_type = OBJECT;
+			end = true;
 		}
-*/		
+		else
+		if(*it == '[')
+		{
+			json_str_type = ARRAY;
+			end = true;
+		}
+		else
+		if(*it == '"')
+		{
+			// этом может и Single, и Pair
+			count_string_brace++;
+		}
+		else
+		if(*it == ':' && count_string_brace == 2)
+		{
+			json_str_type = PAIR;
+			end = true;
+		}
+		
+		if(it == it_prevend && (count_string_brace == 2 || count_string_brace == 0))
+		{
+			json_str_type = SINGLE;
+			end = true;
+		}
 	}
 	
-	switch (str_type)
+	return json_str_type;
+}
+
+Data*
+Data::getData(const std::string &json_string)
+{
+	Data *return_data;
+	
+	switch (getDataType(json_string))
 	{
 	case SINGLE:
 		return_data = new Single(json_string);

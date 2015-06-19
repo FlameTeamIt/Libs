@@ -60,7 +60,8 @@ Single::setAsString(const std::string &json_single)
 		{
 			// ignoring spaces and other
 			if( (*it != ' ') && (*it != '\n') && (*it != '\r')
-				&& !brace && !start)
+
+					&& !brace && !start)
 			{
 				start = true;
 				
@@ -88,8 +89,7 @@ Single::setAsString(const std::string &json_single)
 						str_data += *it;
 					}
 
-					
-					if(it == it_prevend)
+					if(it == it_prevend && *it != '"')
 					{
 						str_data = "";
 						end = true;

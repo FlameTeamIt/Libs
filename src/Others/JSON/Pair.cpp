@@ -95,7 +95,6 @@ Pair::setAsString(const std::string &json_pair)
 					end = true;
 				}
 			}
-			
 		}
 		
 		end = false;
@@ -136,8 +135,12 @@ Pair::setAsString(const std::string &json_pair)
 	// получаем остаток от строки и парсим другой функцией
 	std::string json_data = json_pair.substr(pos, json_pair.length()-pos);
 	
-	// получаем сразу 
+	std::cout << json_data << '\n';
+	
+	// получаем сразу
 	this->data = getData(json_data);
+	
+	std::cout << json_data << ' ' << data->getAsString() << '\n';
 	
 	if(data == nullptr)
 	{

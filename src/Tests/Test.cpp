@@ -355,8 +355,8 @@ Test::Others::TJSON()
 	
 	pair.setAsString(json_pair_single);
 	
-	std::cout << "OUTPUT (Single) :\n"
-			  << pair.key << "\n\n";
+	std::cout << "OUTPUT (Pair-Single) :\n"
+			  << pair.getAsString() << "\n\n";
 	
 	return 1;
 }
