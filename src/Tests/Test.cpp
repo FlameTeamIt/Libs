@@ -336,7 +336,7 @@ Test::Others::TJSON()
 	
 	std::string json_single("   \"Start\"   "),
 			json_pair_single("\"Start\":\"Start\""),
-			json_array_single("[\"Start\",\"Stop\"]"),
+			json_array_single("[   \"Start\"  ,  \"Stop\"  ]"),
 			json_object_array_single("{\"Start\":\"Start\",\"Stop\":\"Stop\"}");
 	
 	JSON::Single single;
@@ -357,6 +357,15 @@ Test::Others::TJSON()
 	
 	std::cout << "OUTPUT (Pair-Single) :\n"
 			  << pair.getAsString() << "\n\n";
+	
+	templates::Array<std::string> arr_json_str;
+	arr_json_str = JSON::DataContainer::split(json_array_single);
+	
+	std::cout << arr_json_str[0] << '\n' << arr_json_str[1] << '\n';
+	
+	arr_json_str = JSON::DataContainer::split(json_object_array_single);
+	
+	std::cout << arr_json_str[0] << '\n' << arr_json_str[1] << '\n';
 	
 	return 1;
 }

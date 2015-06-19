@@ -26,7 +26,7 @@ Data::Data(bool is_object_type
 				 + 10 * this->is_array
 				 + this->is_single;
 	
-	if(!this->is_single)
+	if(type > 1)
 	{ is_container = true; }
 	else
 	{ is_container = false; }
@@ -86,38 +86,6 @@ Data::getDataType(const std::string &json_string)
 	return json_str_type;
 }
 
-Data*
-Data::getData(const std::string &json_string)
-{
-	Data *return_data;
-	
-	switch (getDataType(json_string))
-	{
-	case SINGLE:
-		return_data = new Single(json_string);
-		break;
-		
-	case PAIR:
-		return_data = new Pair(json_string);
-		break;
-		
-	case ARRAY:
-		return_data = new Array(json_string);
-		break;
-		
-	case OBJECT:
-		return_data = new Object(json_string);
-		break;
-		
-	default:
-		
-		return_data = nullptr;
-		break;
-	}
-	
-	return return_data;
-}
-
 // public
 
 unsigned long
@@ -163,3 +131,35 @@ Data::isInitialize() const
 unsigned int
 Data::getType() const
 {	return type; }
+
+Data*
+Data::getData(const std::string &json_string)
+{
+	Data *return_data;
+	
+	switch (getDataType(json_string))
+	{
+	case SINGLE:
+		return_data = new Single(json_string);
+		break;
+		
+	case PAIR:
+		return_data = new Pair(json_string);
+		break;
+		
+	case ARRAY:
+		return_data = new Array(json_string);
+		break;
+		
+	case OBJECT:
+		return_data = new Object(json_string);
+		break;
+		
+	default:
+		
+		return_data = nullptr;
+		break;
+	}
+	
+	return return_data;
+}

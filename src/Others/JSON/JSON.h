@@ -47,8 +47,6 @@ protected:
 	mutable std::string str_level;
 	
 	static Type getDataType(const std::string &json_string);
-	static Data* getData(const std::string &json_string);
-	
 public:
 	Data();
 	Data(bool is_object_type
@@ -71,6 +69,8 @@ public:
 	
 	unsigned int getType() const;
 	
+	static Data* getData(const std::string &json_string);
+
 	virtual Data* getCopy() const = 0;
 		
 	virtual std::string getAsString() const = 0;
@@ -85,13 +85,15 @@ public:
 class DataContainer
 		: public Data
 {
+//protected:
+public:
 #ifdef FUTURE
-protected:
 	virtual void pushBack_Single(const Single* single) = 0;
 	virtual void pushBack_Pair(const Pair* pair) = 0;
 	virtual void pushBack_Array(const Array* array) = 0;
 	virtual void pushBack_Object(const Object* object) = 0;
 #endif
+	static templates::Array<std::string> split(const std::string &json_container);
 	
 public:
 	DataContainer(const bool& is_object_type
