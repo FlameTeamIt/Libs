@@ -447,11 +447,13 @@ void
 Array<T>::setLength(const size_t &new_length)
 {
 	if(!initialised)
-	{	inc_arr = array_get_new<T>(new_length);}
-	else
-	{	inc_arr = array_resize<T>(this->length, new_length, this->inc_arr);}
+	{
+		inc_arr = array_get_new<T>(new_length);
+		this->length = new_length;
+	}
+//	else
+//	{	inc_arr = array_resize<T>(this->length, new_length, this->inc_arr);}
 	
-	this->length = new_length;
 }
 
 template<typename T>

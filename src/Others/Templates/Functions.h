@@ -25,6 +25,11 @@ void array_copying_with_new(const size_t &length,
 				   Tt **new_array, const size_t &start_index_new);
 
 template<typename Tt> inline
+void array_copying_without_new(const size_t &length,
+							Tt **old_array, const size_t &start_index_old, 
+							Tt **new_array, const size_t &start_index_new);
+
+template<typename Tt> inline
 void array_delete(const size_t &length, Tt **array);
 
 template<typename Tt> inline
@@ -153,6 +158,17 @@ array_copying_with_new(const size_t &length,
 {
 	for(size_t i = 0; i < length; i++)
 	{	new_array[start_index_new + i] = new Tt(old_array[start_index_old + i][0]);}
+}
+
+template<typename Tt>
+void
+flame_ide::templates::
+array_copying_without_new(const size_t &length,
+					   Tt **old_array, const size_t &start_index_old, 
+					   Tt **new_array, const size_t &start_index_new)
+{
+	for(size_t i = 0; i < length; i++)
+	{	new_array[start_index_new + i] = old_array[start_index_old + i];}
 }
 
 template<typename Tt>

@@ -13,7 +13,7 @@
 #include "../Others/Templates/List.h"
 #include "../Others/JSON/JSON.h"
 
-//#include "../Others/"
+#include "../Others/TextStyle.h"
 
 #include <iostream>
 
@@ -33,7 +33,8 @@ Test::~Test()
 void
 Test::all()
 {
-	std::cout << "Test::all()"<< '\n';
+	std::cout << TEXT_STYLE_CYAN << TEXT_STYLE_BOLD
+			  << "Test::all()" << TEXT_STYLE_NULL << '\n';
 	
 	actions.all();
 	bus.all();
@@ -161,8 +162,9 @@ void
 Test::Others::all()
 {
 	std::cout << "Test::Others::all()" << '\n';
-	this->count_success_tests = this->TList() +
-							this->TArray();
+	this->count_success_tests = this->TList()
+			+ this->TArray()
+			+ this->TJSON();
 	
 	std::cout << '\n';
 }
@@ -320,8 +322,50 @@ Test::Others::TArray()
 	{
 		std::cout << i << ". - " << array1[i] << '\n';
 	}
+	std::cout << '\n';
 	
 //#endif
+	
+	return 1;
+}
+
+unsigned int
+Test::Others::TJSON()
+{
+	std::cout << "Test::Others::TJSON()\n";
+	
+	std::string json_single("   \"Start\"   "),
+			json_pair_single("\"Start\":\"Start\""),
+			json_array_single("[   \"Start\"  ,  \"Stop\"  ]"),
+			json_object_pair_single("{\"Start\":\"Start\",\"Stop\":\"Stop\"}");
+	
+	JSON::Single single;
+	JSON::Pair pair;
+	JSON::Array array;
+	
+	std::cout << "INPUT (Single) : _"
+			  << json_single << "_\n";
+	
+	single.setAsString(json_single);
+	
+	std::cout << "OUTPUT (Single) : _"
+			  << single.getAsString() << "_\n\n";
+	
+	std::cout << "INPUT (Pair-Single) :\n"
+			  << json_pair_single << "\n\n";
+	
+	pair.setAsString(json_pair_single);
+	
+	std::cout << "OUTPUT (Pair-Single) :\n"
+			  << pair.getAsString() << "\n\n";
+	
+	std::cout << "INPUT (Array-Single) :\n"
+			  << json_array_single << "\n\n";
+	
+	array.setAsString(json_array_single);
+	
+	std::cout << "OUTPUT (Array-Single) :\n"
+			  << array.getAsString() << "\n\n";
 	
 	return 1;
 }

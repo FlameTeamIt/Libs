@@ -11,95 +11,118 @@ namespace flame_ide
 
 typedef enum
 {
+	ERROR = -1,
 	SINGLE = 1,
+	PAIR = 0,
 	ARRAY = 10,
 	OBJECT = 100
 } Type;
 
 class Data;
-class Object;
-class Array;
+class DataContainer;
+
 class Single;
+
 struct Pair;
+
+class Array;
+class Object;
+
+/* ------------------------------------------------------------ */
 
 class Data
 {
-	bool is_object;
-	bool is_array;
 	bool is_single;
+	bool is_array;
+	bool is_object;
 	
-	// 100 -- object
-	// 10 -- array
-	// 1 -- single
+	bool is_container;
+	
 	unsigned int type;
+
 protected:
+	mutable bool is_initialize;
 	
+	mutable unsigned long level; // глубина записи
+	mutable std::string str_level;
+	
+	static Type getDataType(const std::string &json_string);
 public:
 	Data();
-	Data(const bool& is_object_type
-		 ,const bool& is_array_type
-		 ,const bool& is_single_type);
+	Data(bool is_object_type
+		 ,bool is_array_type
+		 ,bool is_single_type);
 	
 	virtual ~Data();
 	
-	bool isObject();
-	bool isArray();
-	bool isSingle();
+	void          setLevel(const unsigned long &new_level) const;
+	unsigned long getLevel() const;
 	
-	unsigned char getType();
+	bool isObject() const;
+	bool isArray() const;
+	bool isSingle() const;
+	bool isPair() const;
 	
-	virtual std::string getAsString() = 0;
+	bool isContainer() const;
+	
+	bool isInitialize() const;
+	
+	unsigned int getType() const;
+	
+	static Data* getData(const std::string &json_string);
+
+	virtual Data* getCopy() const = 0;
+		
+	virtual std::string getAsString() const = 0;
 	virtual void        setAsString(const std::string&) = 0;
+	
+#ifdef FUTURE
+	static templates::Array<std::string> splitStrings(const std::string& json_string);
+	static Data* parseString(const std::string& json_string);
+#endif
 };
 
-class Object : public Data
+class DataContainer
+		: public Data
 {
-	templates::Array<Pair> arr;
+//protected:
 public:
-	Object();
-	Object(const templates::Array<Pair> &template_array);
-	Object(const size_t& size);
-	
-	~Object();
-	
-	Data* operator [](const std::string &str_index) const;
-	Data* operator [](const char *c_str_index) const;
-	Data* operator [](const size_t &index);
-	
-	const Object & operator=(const Object& object);
-	
-	void   setSize(const size_t &new_size);
-	size_t getSize();
-	
-	std::string getAsString();
-	void        setAsString(const std::string &json_object);
-};
-
-class Array : public Data
-{
-	templates::Array<Data> arr;
+#ifdef FUTURE
+	virtual void pushBack_Single(const Single* single) = 0;
+	virtual void pushBack_Pair(const Pair* pair) = 0;
+	virtual void pushBack_Array(const Array* array) = 0;
+	virtual void pushBack_Object(const Object* object) = 0;
+#endif
+	static templates::Array<std::string> split(const std::string &json_container);
 	
 public:
-	Array();
-	Array(const templates::Array<Single> &template_array);
-	Array(const size_t& size);
+	DataContainer(const bool& is_object_type
+				  ,const bool& is_array_type);
 	
-	Data* operator[](const size_t &index);
+	virtual void pushBack(const Data *data) = 0;
+	virtual void pushFront(const Data *data) = 0;
 	
-	void   setSize(const size_t &new_size);
-	size_t getSize();
+	virtual void insert(const size_t &index, const Data *data) = 0;
+	virtual void insert(const size_t &index, const size_t &count, const Data **data) = 0;
 	
-	std::string getAsString();
-	void        setAsString(const std::string &json_array);
+	virtual void popBack() = 0;
+	virtual void popFront() = 0;
+	
+	virtual void erase(const size_t &index) = 0;
+	virtual void erase(const size_t &index, const size_t &count) = 0;
+	
+	~DataContainer();
 };
 
-class Single : public Data
+class Single
+		: public Data
 {
 	std::string str_data;
 	
 public:
 	Single();
-	Single(const Single& single);
+	Single(const Data *data);
+	Single(const Single &single);
 	Single(const std::string& value);
 	
 	~Single();
@@ -120,22 +143,112 @@ public:
 	bool          getBool();
 	
 	bool          isNull();
-#endif	
-	std::string getAsString();
+#endif
+	
+	Data* getCopy() const;
+	
+	std::string getAsString() const;
 	void        setAsString(const std::string& single);
 	
 };
 
 class Pair
+		: public Data
 {
 public:
 	std::string key;
 	Data* data;
 	
 	Pair();
+	Pair(const Data *new_data);
+	Pair(const std::string &json_pair);
+	Pair(const Pair &pair);
+	
 	~Pair();
 	
+	Data* getCopy() const;
+	
+	std::string getAsString() const;
+	void        setAsString(const std::string& json_pair);
+	
 	const Pair& operator=(const Pair& pair);
+};
+
+class Array
+		: public DataContainer
+{
+	templates::Array<Data*> arr;
+	
+public:
+	Array();
+	Array(const Data *data);
+	Array(const Array &array);
+	Array(const std::string &json_array);
+	
+	~Array();
+	
+	Data* operator[](const size_t &index);
+	
+	void   setSize(const size_t &new_size);
+	size_t getSize();
+	
+	void pushBack(const Data *data);
+	void pushFront(const Data *data);
+	
+	void insert(const size_t &index, const Data *data);
+	void insert(const size_t &index, const size_t &count, const Data **data);
+	
+	void popBack();
+	void popFront();
+	
+	void erase(const size_t &index);
+	void erase(const size_t &index, const size_t &count);
+	
+	Data* getCopy() const;
+	
+	std::string getAsString() const;
+	void        setAsString(const std::string &json_array);
+};
+
+class Object
+		: public DataContainer
+{
+	templates::Array<Pair*> arr;
+public:
+	Object();
+	Object(const Data *data);
+	Object(const Object &object);
+	Object(const std::string& json_object);
+	
+	~Object();
+	
+#ifdef FUTURE // пока думаю, как с этим быть
+	Data* operator [](const std::string &str_index) const;
+	Data* operator [](const char *c_str_index) const;
+#endif
+	Data* operator [](const size_t &index);
+	
+	const Object & operator=(const Object& object);
+	
+	void   setSize(const size_t &new_size);
+	size_t getSize();
+	
+	void pushBack(const Data *data);
+	void pushFront(const Data *data);
+	
+	void insert(const size_t &index, const Data *data);
+	void insert(const size_t &index, const size_t &count, const Data **data);
+	
+	void popBack();
+	void popFront();
+	
+	void erase(const size_t &index);
+	void erase(const size_t &index, const size_t &count);
+	
+	Data* getCopy() const;
+	
+	std::string getAsString() const;
+	void        setAsString(const std::string &json_object);
 };
 
 }}

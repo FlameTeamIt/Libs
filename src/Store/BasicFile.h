@@ -6,7 +6,7 @@
 namespace flame_ide
 {
 
-struct FileLoadSettings
+/*struct FileLoadSettings
 {
 	bool all;
 	
@@ -17,7 +17,7 @@ struct FileLoadSettings
 	
 	unsigned long partition_size;
 	
-};
+};*/
 
 class BasicFile
 {

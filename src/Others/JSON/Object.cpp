@@ -1,24 +1,100 @@
 #include "JSON.h"
 
-using namespace flame_ide::JSON;
+using namespace flame_ide;
 
+JSON::
 Object::Object()
-	: JSON::Data(1, 0, 0)
+	: JSON::DataContainer(1, 0)
 {}
 
-Object::Object(const templates::Array<Pair> &template_array)
-	: JSON::Object()
-{
-	this->arr = template_array;
-}
+JSON::
+Object::Object(const Data *data)
+	: Object()
+{}
 
+JSON::
+Object::Object(const Object &object)
+	: Object()
+{}
+
+JSON::
+Object::Object(const std::string &json_object)
+	: Object()
+{}
+
+JSON::
 Object::~Object() {}
 
-std::string 
-Object::getAsString()
+void 
+JSON::
+Object::pushBack(const Data *data)
+{
+	
+}
+
+void
+JSON::
+Object::pushFront(const Data *data)
+{
+	
+}
+
+void
+JSON::
+Object::insert(const size_t &index, const Data *data)
+{
+	
+}
+
+void
+JSON::
+Object::insert(const size_t &index, const size_t &count, const Data **data)
+{
+	
+}
+
+void
+JSON::
+Object::popBack()
+{
+	
+}
+
+void
+JSON::
+Object::popFront()
+{
+	
+}
+
+void
+JSON::
+Object::erase(const size_t &index)
+{
+	
+}
+
+void
+JSON::
+Object::erase(const size_t &index, const size_t &count)
+{
+	
+}
+
+JSON::Data*
+JSON::
+Object::getCopy() const
+{
+	return nullptr;
+}
+
+std::string
+JSON::
+Object::getAsString() const
 {	return std::string("{}");}
 
 void
+JSON::
 Object::setAsString(const std::string &json_object)
 {
 	// парсинг объекта
