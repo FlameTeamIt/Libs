@@ -68,6 +68,7 @@ Single::setAsString(const std::string &json_single)
 				if(*it == '"')
 				{
 					brace = true;
+					str_data += *it;
 				}
 				else
 				{
@@ -83,6 +84,7 @@ Single::setAsString(const std::string &json_single)
 					if(*it == '"')
 					{
 						end = true;
+						str_data += *it;
 					}
 					else
 					{

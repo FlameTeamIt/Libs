@@ -337,10 +337,11 @@ Test::Others::TJSON()
 	std::string json_single("   \"Start\"   "),
 			json_pair_single("\"Start\":\"Start\""),
 			json_array_single("[   \"Start\"  ,  \"Stop\"  ]"),
-			json_object_array_single("{\"Start\":\"Start\",\"Stop\":\"Stop\"}");
+			json_object_pair_single("{\"Start\":\"Start\",\"Stop\":\"Stop\"}");
 	
 	JSON::Single single;
 	JSON::Pair pair;
+	JSON::Array array;
 	
 	std::cout << "INPUT (Single) : _"
 			  << json_single << "_\n";
@@ -358,14 +359,13 @@ Test::Others::TJSON()
 	std::cout << "OUTPUT (Pair-Single) :\n"
 			  << pair.getAsString() << "\n\n";
 	
-	templates::Array<std::string> arr_json_str;
-	arr_json_str = JSON::DataContainer::split(json_array_single);
+	std::cout << "INPUT (Array-Single) :\n"
+			  << json_array_single << "\n\n";
 	
-	std::cout << arr_json_str[0] << '\n' << arr_json_str[1] << '\n';
+	array.setAsString(json_array_single);
 	
-	arr_json_str = JSON::DataContainer::split(json_object_array_single);
-	
-	std::cout << arr_json_str[0] << '\n' << arr_json_str[1] << '\n';
+	std::cout << "OUTPUT (Array-Single) :\n"
+			  << array.getAsString() << "\n\n";
 	
 	return 1;
 }

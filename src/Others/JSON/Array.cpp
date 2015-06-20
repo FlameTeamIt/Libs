@@ -173,15 +173,38 @@ std::string
 JSON::
 Array::getAsString() const
 {
-	return std::string("[]");
+	std::string out_json_str("[");
+	size_t length = arr.getLength()-1;
+	
+	// пока без форматирования
+	for(size_t i = 0; i < length; i++)
+	{
+		out_json_str += arr[i]->getAsString();
+		out_json_str += ",";
+	}
+	out_json_str += arr[length]->getAsString();
+	out_json_str += "]";
+	
+	return out_json_str;
 }
 
 void
 JSON::
 Array::setAsString(const std::string &json_array)
 {
-	unsigned int count_array_braces; // []
-	unsigned int count_object_braces; // {}
-	unsigned int count_string_braces; // "
-	templates::List<char> char_list;
+	if(!( getDataType(json_array) == ARRAY ))
+	{ return; }
+	
+	templates::Array<std::string> arr_json_str = split(json_array);
+	size_t length = arr_json_str.getLength();
+	
+	this->arr.setLength(length);
+	
+	for(size_t i = 0; i < length; i++)
+	{
+		Data *data = getData(arr_json_str[i]);
+		
+		if(data != nullptr)
+		{ arr[i] = data; }
+	}
 }
