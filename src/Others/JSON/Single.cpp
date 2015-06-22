@@ -21,7 +21,6 @@ Single::Single(const std::string& value)
 	: Single()
 { setAsString(value); }
 
-
 Single::~Single() {}
 
 const Single &

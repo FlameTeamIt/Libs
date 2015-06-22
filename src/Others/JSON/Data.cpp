@@ -97,11 +97,11 @@ Data::setLevel(const unsigned long &new_level) const
 {
 	level = new_level;
 	
-	if(str_level.length())
-	{ str_level.clear(); }
+//	if(str_level.length())
+//	{ str_level.clear(); }
 	
-	for(size_t i = 0; i < new_level; i++)
-	{ str_level.push_back(' '); }
+//	for(size_t i = 0; i < new_level; i++)
+//	{ str_level.push_back(' '); }
 }
 
 bool

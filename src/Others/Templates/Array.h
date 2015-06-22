@@ -439,6 +439,7 @@ Array<T>::clear()
 	{
 		array_delete<T>(this->length, this->inc_arr);
 		this->initialised = false;
+		this->length = 0;
 	}
 }
 
@@ -446,13 +447,14 @@ template<typename T>
 void
 Array<T>::setLength(const size_t &new_length)
 {
-	if(!initialised)
+	if(initialised)
 	{
-		inc_arr = array_get_new<T>(new_length);
-		this->length = new_length;
+		clear();
+		initialised = false;
 	}
-//	else
-//	{	inc_arr = array_resize<T>(this->length, new_length, this->inc_arr);}
+	
+	inc_arr = array_get_new<T>(new_length);
+	this->length = new_length;
 	
 }
 

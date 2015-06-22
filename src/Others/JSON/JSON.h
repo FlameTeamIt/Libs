@@ -4,6 +4,7 @@
 #include <string>
 
 #include "../Templates/Array.h"
+#include "../Templates/List.h"
 
 namespace flame_ide
 {namespace JSON
@@ -85,14 +86,7 @@ public:
 class DataContainer
 		: public Data
 {
-//protected:
-public:
-#ifdef FUTURE
-	virtual void pushBack_Single(const Single* single) = 0;
-	virtual void pushBack_Pair(const Pair* pair) = 0;
-	virtual void pushBack_Array(const Array* array) = 0;
-	virtual void pushBack_Object(const Object* object) = 0;
-#endif
+protected:
 	static templates::Array<std::string> split(const std::string &json_container);
 	
 public:
@@ -110,6 +104,8 @@ public:
 	
 	virtual void erase(const size_t &index) = 0;
 	virtual void erase(const size_t &index, const size_t &count) = 0;
+	
+	virtual void clear() = 0;
 	
 	~DataContainer();
 };
@@ -204,6 +200,8 @@ public:
 	void erase(const size_t &index);
 	void erase(const size_t &index, const size_t &count);
 	
+	void clear();
+	
 	Data* getCopy() const;
 	
 	std::string getAsString() const;
@@ -244,6 +242,8 @@ public:
 	
 	void erase(const size_t &index);
 	void erase(const size_t &index, const size_t &count);
+	
+	void clear();
 	
 	Data* getCopy() const;
 	
