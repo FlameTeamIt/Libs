@@ -12,24 +12,41 @@ Array::Array()
 JSON::
 Array::Array(const Data *data)
 	: Array()
-{}
+{
+	if(data->getType() == ARRAY)
+	{ Array(*((Array*)data)); }
+}
 
 JSON::
 Array::Array(const Array &array)
 	: Array()
-{}
+{
+	JSON::Data* temp_data;
+	size_t array_length = array.arr.getLength();
+	
+	for(size_t i = 0; i < array_length; ++i)
+	{
+		temp_data = array.arr[i]->getCopy();
+		arr.pushBack(temp_data);
+	}
+}
 
 JSON::
 Array::Array(const std::string &json_array)
 	: Array()
 {
-	
+	this->setAsString(json_array);
 }
 
 JSON::
 Array::~Array()
 {
+	for(size_t i = 0, arr_length = arr.getLength();
+		i < arr_length;
+		++i)
+	{ delete arr[i]; }
 	
+	arr.clear();
 }
 
 JSON::Data*
@@ -41,104 +58,47 @@ Array::operator [](const size_t &index)
 
 void
 JSON::
+Array::setSize(const size_t &new_size)
+{
+	arr.setLength(new_size);
+}
+
+size_t
+JSON::
+Array::getSize()
+{
+	return arr.getLength();
+}
+
+void
+JSON::
 Array::pushBack(const Data *data)
 {
-	switch (data->getType())
-	{
-	case SINGLE:
-		
-		break;
-	case PAIR:
-		
-		break;
-	case ARRAY:
-		
-		break;
-	case OBJECT:
-		
-		break;
-	default:
-		break;
-	}
 }
 
 void
 JSON::
 Array::pushFront(const Data *data)
 {
-	switch (data->getType())
-	{
-	case SINGLE:
-		
-		break;
-	case PAIR:
-		
-		break;
-	case ARRAY:
-		
-		break;
-	case OBJECT:
-		
-		break;
-	default:
-		break;
-	}
 }
 
 void
 JSON::
 Array::insert(const size_t &index, const Data *data)
 {
-	switch (data->getType())
-	{
-	case SINGLE:
-		
-		break;
-	case PAIR:
-		
-		break;
-	case ARRAY:
-		
-		break;
-	case OBJECT:
-		
-		break;
-	default:
-		break;
-	}
 }
 
 void 
 JSON::
 Array::insert(const size_t &index, const size_t &count, const Data **data)
 {
-	for(size_t i = 0; i < count; i++)
-	{
-		switch (data[i]->getType())
-		{
-		case SINGLE:
-			
-			break;
-		case PAIR:
-			
-			break;
-		case ARRAY:
-			
-			break;
-		case OBJECT:
-			
-			break;
-		default:
-			break;
-		}
-	}
+	
 }
 
 void
 JSON::
 Array::popBack()
 {
-	
 }
 
 void
@@ -152,14 +112,12 @@ void
 JSON::
 Array::erase(const size_t &index)
 {
-
 }
 
 void
 JSON::
 Array::erase(const size_t &index, const size_t &count)
 {
-	
 }
 
 JSON::Data*
@@ -192,19 +150,17 @@ void
 JSON::
 Array::setAsString(const std::string &json_array)
 {
-	if(!( getDataType(json_array) == ARRAY ))
+	if(getDataType(json_array) != ARRAY)
 	{ return; }
 	
 	templates::Array<std::string> arr_json_str = split(json_array);
 	size_t length = arr_json_str.getLength();
-	
-	this->arr.setLength(length);
 	
 	for(size_t i = 0; i < length; i++)
 	{
 		Data *data = getData(arr_json_str[i]);
 		
 		if(data != nullptr)
-		{ arr[i] = data; }
+		{ arr.pushBack(data); }
 	}
 }

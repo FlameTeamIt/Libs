@@ -343,6 +343,7 @@ Test::Others::TJSON()
 	JSON::Pair pair;
 	JSON::Array array;
 	
+	// Single
 	std::cout << "INPUT (Single) : _"
 			  << json_single << "_\n";
 	
@@ -351,6 +352,7 @@ Test::Others::TJSON()
 	std::cout << "OUTPUT (Single) : _"
 			  << single.getAsString() << "_\n\n";
 	
+	// Pair-Single
 	std::cout << "INPUT (Pair-Single) :\n"
 			  << json_pair_single << "\n\n";
 	
@@ -359,6 +361,7 @@ Test::Others::TJSON()
 	std::cout << "OUTPUT (Pair-Single) :\n"
 			  << pair.getAsString() << "\n\n";
 	
+	// Array-Single
 	std::cout << "INPUT (Array-Single) :\n"
 			  << json_array_single << "\n\n";
 	
@@ -366,6 +369,18 @@ Test::Others::TJSON()
 	
 	std::cout << "OUTPUT (Array-Single) :\n"
 			  << array.getAsString() << "\n\n";
+	
+	// test finctions for Array
+	
+	// copy constructors 
+	// 1
+	JSON::Array array1(array),
+	// 2
+		array2(array1);
+	
+	std::cout << "OUTPUT copy constructors (Array-Single)\n"
+			  << array1.getAsString() << '\n'
+			  << array2.getAsString() << "\n";
 	
 	return 1;
 }
