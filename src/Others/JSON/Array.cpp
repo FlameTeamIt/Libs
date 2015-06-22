@@ -74,57 +74,104 @@ void
 JSON::
 Array::pushBack(const Data *data)
 {
+	Data *new_data = data->getCopy();
+	new_data->setLevel(this->level+1);
+	
+	arr.pushBack(new_data);
 }
 
 void
 JSON::
 Array::pushFront(const Data *data)
 {
+	Data *new_data = data->getCopy();
+	new_data->setLevel(this->level+1);
+	
+	arr.pushFront(new_data);
 }
 
 void
 JSON::
 Array::insert(const size_t &index, const Data *data)
 {
+	Data *new_data = data->getCopy();
+	new_data->setLevel(this->level+1);
+	
+	arr.insert(index, new_data);
 }
 
 void 
 JSON::
 Array::insert(const size_t &index, const size_t &count, const Data **data)
 {
+	Data *new_data[count];
+	for(size_t i = 0; i < count; i++)
+	{
+		new_data[i] = data[i]->getCopy();
+		new_data[i]->setLevel(this->level+1);
+	}
 	
+	arr.insert(index, count, new_data);
 }
 
 void
 JSON::
 Array::popBack()
 {
+	delete arr[arr.getLength()-1];
+	arr.popBack();
 }
 
 void
 JSON::
 Array::popFront()
 {
-	
+	delete arr[0];
+	arr.popFront();
 }
 
 void
 JSON::
 Array::erase(const size_t &index)
 {
+	if(index > arr.getLength()) return;
+	delete arr[index];
+	
+	arr.erase(index);
 }
 
 void
 JSON::
 Array::erase(const size_t &index, const size_t &count)
 {
+	size_t max = index+count;
+	if(max > arr.getLength()) return;
+	for(size_t i = index; i < max; i++)
+	{
+		delete arr[i];
+	}
+	
+	arr.erase(index, count);
+}
+
+void
+JSON::
+Array::clear()
+{
+	size_t length = arr.getLength();
+	for(size_t i = 0; i < length; i++)
+	{
+		delete arr[i];
+	}
+	
+	arr.clear();
 }
 
 JSON::Data*
 JSON::
 Array::getCopy() const
 {
-	return nullptr;
+	return new Array(*this);
 }
 
 std::string
@@ -132,15 +179,29 @@ JSON::
 Array::getAsString() const
 {
 	std::string out_json_str("[");
-	size_t length = arr.getLength()-1;
+	size_t length = arr.getLength();
 	
 	// пока без форматирования
-	for(size_t i = 0; i < length; i++)
+	if(length)
 	{
-		out_json_str += arr[i]->getAsString();
-		out_json_str += ",";
+		length--;
+		
+		for(size_t i = 0; i < length; i++)
+		{
+			if(arr[i]->getType() == PAIR)
+			{ out_json_str += '{' + arr[i]->getAsString() + '}'; }
+			else
+			{ out_json_str += arr[i]->getAsString(); }
+				
+			out_json_str += ",";
+		}
+		
+		if(arr[length]->getType() == PAIR)
+		{ out_json_str += '{' + arr[length]->getAsString() + '}'; }
+		else
+		{ out_json_str += arr[length]->getAsString(); }
 	}
-	out_json_str += arr[length]->getAsString();
+	
 	out_json_str += "]";
 	
 	return out_json_str;

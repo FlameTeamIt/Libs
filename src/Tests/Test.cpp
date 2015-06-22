@@ -380,7 +380,71 @@ Test::Others::TJSON()
 	
 	std::cout << "OUTPUT copy constructors (Array-Single)\n"
 			  << array1.getAsString() << '\n'
-			  << array2.getAsString() << "\n";
+			  << array2.getAsString() << "\n\n";
+	
+	// adding
+	// push_back
+	// Single
+	array1.pushBack(&single);
+	std::cout << "OUTPUT push_back(Single) (Array-Single) :\n"
+			  << array1.getAsString() << "\n\n";
+	// Pair
+	array1.pushBack(&pair);
+	std::cout << "OUTPUT push_back(Pair) (Array-Single) :\n"
+			  << array1.getAsString() << "\n\n";
+	
+	// Array
+	array1.pushBack(&array);
+	std::cout << "OUTPUT push_back(Array) (Array-Single) :\n"
+			  << array1.getAsString() << "\n\n";
+	
+	array1.clear();
+	
+	// Object
+	// -----
+	
+	// push_front
+	// Single
+	array1.pushFront(&single);
+	std::cout << "OUTPUT push_front(Single) (Array-Single) :\n"
+			  << array1.getAsString() << "\n\n";
+	// Pair
+	array1.pushFront(&pair);
+	std::cout << "OUTPUT push_front(Pair) (Array-Single) :\n"
+			  << array1.getAsString() << "\n\n";
+	// Array
+	array1.pushFront(&array);
+	std::cout << "OUTPUT push_front(Array) (Array-Single) :\n"
+			  << array1.getAsString() << "\n\n";
+	// Object
+	// -----
+	
+	// insert
+	// Array
+	array2.insert(1, &array1);
+	std::cout << "OUTPUT insert(Array) (Array-Single) :\n"
+			  << array2.getAsString() << "\n\n";
+	
+	// deleting
+	// pop_back
+	array2.popBack();
+	std::cout << "OUTPUT pop_back() (Array-Single) :\n"
+			  << array2.getAsString() << "\n\n";
+	// pop_front
+	array2.popFront();
+	std::cout << "OUTPUT pop_front() (Array-Single) :\n"
+			  << array2.getAsString() << "\n\n";
+	
+	// erase
+	//
+	array2.erase(0);
+	std::cout << "OUTPUT erase(index) (Array-Single) :\n"
+			  << array2.getAsString() << "\n\n";
+	
+	// 2
+	array1.erase(0,2);
+	std::cout << "OUTPUT erase(index, count) (Array-Single) :\n"
+			  << array1.getAsString() << "\n";
 	
 	return 1;
 }

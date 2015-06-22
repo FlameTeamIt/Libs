@@ -439,6 +439,7 @@ Array<T>::clear()
 	{
 		array_delete<T>(this->length, this->inc_arr);
 		this->initialised = false;
+		this->length = 0;
 	}
 }
 

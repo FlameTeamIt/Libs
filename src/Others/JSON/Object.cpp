@@ -81,6 +81,13 @@ Object::erase(const size_t &index, const size_t &count)
 	
 }
 
+void
+JSON::
+Object::clear()
+{
+	
+}
+
 JSON::Data*
 JSON::
 Object::getCopy() const
