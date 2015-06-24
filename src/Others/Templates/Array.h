@@ -12,7 +12,7 @@ class Array
 {
 	mutable T **inc_arr;
 	
-	size_t length;
+	size_t arr_size;
 	mutable bool initialised;
 	
 	T** getPCopy() const;
@@ -23,7 +23,7 @@ protected:
 public:
 	Array();
 	Array(const Array<T> &array);
-	Array(const size_t &length);
+	Array(const size_t &arr_size);
 	
 	~Array();
 	
@@ -51,9 +51,9 @@ public:
 	
 	void clear();
 	
-	void   setLength(const size_t &new_length);
+	void   setSize(const size_t &new_length);
 	void   setCopy(const Array<T> &copying_array);
-	size_t getLength() const;
+	size_t getSize() const;
 	
 	T*  getPointer(const size_t &index) const;
 	
@@ -74,16 +74,16 @@ template<typename T>
 Array<T>::Array()
 {
 	inc_arr = nullptr;
-	length = 0;
+	arr_size = 0;
 	initialised = false;
 }
 template<typename T>
 Array<T>::Array(const Array<T> &array)
 {
-	if(array.length && array.initialised)
+	if(array.arr_size && array.initialised)
 	{
-		this->inc_arr = array_get_copy<T>(array.length, array.inc_arr);
-		this->length = array.length;
+		this->inc_arr = array_get_copy<T>(array.arr_size, array.inc_arr);
+		this->arr_size = array.arr_size;
 		this->initialised = true;
 	}
 	else Array();
@@ -93,9 +93,9 @@ Array<T>::Array(const size_t& array_length)
 {
 	if(array_length)
 	{
-		this->length = array_length;
+		this->arr_size = array_length;
 		this->initialised = true;
-		inc_arr = array_get_new<T>(this->length);
+		inc_arr = array_get_new<T>(this->arr_size);
 	}
 	else Array();
 }
@@ -104,7 +104,7 @@ template<typename T>
 Array<T>::~Array()
 {
 	if(initialised)
-	{ array_delete<T>(this->length, this->inc_arr);}
+	{ array_delete<T>(this->arr_size, this->inc_arr);}
 }
 
 // private
@@ -113,7 +113,7 @@ template<typename T>
 T**
 Array<T>::getPCopy() const
 {
-	return array_get_copy<T>(this->length, this->inc_arr);
+	return array_get_copy<T>(this->arr_size, this->inc_arr);
 }
 
 // public
@@ -128,19 +128,19 @@ void
 Array<T>::pushBack(const T &data)
 {
 	// создаём новый массив нового размера
-	size_t new_length = length + 1;
+	size_t new_length = arr_size + 1;
 	T **new_arr = array_get_new<T>(new_length, false);
 	
 	// копируем элементы
-	array_copying_with_new<T>(length, inc_arr, 0, new_arr, 0);
+	array_copying_with_new<T>(arr_size, inc_arr, 0, new_arr, 0);
 	
 	// выделяем память на последний элемент
-	new_arr[length] = new T(data);
+	new_arr[arr_size] = new T(data);
 	
 	// удаляем старый массив
 	if(initialised)
 	{
-		array_delete<T>(length, inc_arr);
+		array_delete<T>(arr_size, inc_arr);
 	}
 	else
 	{
@@ -148,7 +148,7 @@ Array<T>::pushBack(const T &data)
 	}
 	
 	inc_arr = new_arr;
-	length = new_length;
+	arr_size = new_length;
 	
 }
 
@@ -157,19 +157,19 @@ void
 Array<T>::pushFront(const T &data)
 {
 	// создаём новый массив нового размера
-	size_t new_length = length + 1;
+	size_t new_length = arr_size + 1;
 	T **new_arr = array_get_new<T>(new_length, false);
 	
 	// выделяем память на первый элемент
 	new_arr[0] = new T(data);
 	
 	// копируем элементы
-	array_copying_with_new<T>(length, inc_arr, 0, new_arr, 1);
+	array_copying_with_new<T>(arr_size, inc_arr, 0, new_arr, 1);
 	
 	// удаляем старый массив
 	if(initialised)
 	{
-		array_delete<T>(length, inc_arr);
+		array_delete<T>(arr_size, inc_arr);
 	}
 	else
 	{
@@ -177,16 +177,16 @@ Array<T>::pushFront(const T &data)
 	}
 	
 	inc_arr = new_arr;
-	length = new_length;
+	arr_size = new_length;
 }
 
 template<typename T>
 void
 Array<T>::insert(const size_t &index, const T &data)
 {
-	if(index > length) return;
+	if(index > arr_size) return;
 	
-	size_t new_length = length + 1;
+	size_t new_length = arr_size + 1;
 	// создаём новый массив нового размера
 	T** new_arr = array_get_new<T>(new_length, false);
 	
@@ -196,22 +196,22 @@ Array<T>::insert(const size_t &index, const T &data)
 	new_arr[index] = new T(data);
 	
 	// копируем данные после индекса
-	array_copying_with_new<T>(length - index, inc_arr, index, new_arr, index+1);
+	array_copying_with_new<T>(arr_size - index, inc_arr, index, new_arr, index+1);
 	
 	if(initialised)
-	{ array_delete<T>(length, inc_arr); }
+	{ array_delete<T>(arr_size, inc_arr); }
 	
 	inc_arr = new_arr;
-	length = new_length;
+	arr_size = new_length;
 }
 
 template<typename T>
 void
 Array<T>::insert(const size_t &index, const size_t &count, const T *array)
 {
-	if(index > length) return;
+	if(index > arr_size) return;
 	
-	size_t new_length = length + count;
+	size_t new_length = arr_size + count;
 	// создаём новый массив нового размера
 	T** new_arr = array_get_new<T>(new_length, false);
 	
@@ -223,16 +223,16 @@ Array<T>::insert(const size_t &index, const size_t &count, const T *array)
 	{ new_arr[index + i] = new T(array[i]); }
 	
 	// копируем данные после индекса
-	array_copying_with_new<T>(length - index, inc_arr, index, new_arr, index+count);
+	array_copying_with_new<T>(arr_size - index, inc_arr, index, new_arr, index+count);
 	
 	// удаляем старый массив
 	if(initialised)
-	{ array_delete<T>(length, inc_arr); }
+	{ array_delete<T>(arr_size, inc_arr); }
 	else
 	{ initialised = true; }
 	
 	inc_arr = new_arr;
-	length = new_length;
+	arr_size = new_length;
 }
 
 template<typename T>
@@ -241,7 +241,7 @@ Array<T>::popBack()
 {
 	if(!initialised) return;
 	
-	size_t new_length = length - 1;
+	size_t new_length = arr_size - 1;
 	T** tmp_inc_arr = inc_arr;
 	
 	if(new_length)
@@ -261,9 +261,9 @@ Array<T>::popBack()
 	}
 
 	// удаляем старый массив
-	array_delete<T>(length, tmp_inc_arr);
+	array_delete<T>(arr_size, tmp_inc_arr);
 	
-	length = new_length;
+	arr_size = new_length;
 }
 
 template<typename T>
@@ -272,7 +272,7 @@ Array<T>::popFront()
 {
 	if(!initialised) return;
 	
-	size_t new_length = length - 1;
+	size_t new_length = arr_size - 1;
 	T** tmp_inc_arr = inc_arr;
 	
 	if(new_length)
@@ -292,18 +292,18 @@ Array<T>::popFront()
 	}
 
 	// удаляем старый массив
-	array_delete<T>(length, tmp_inc_arr);
+	array_delete<T>(arr_size, tmp_inc_arr);
 	
-	length = new_length;
+	arr_size = new_length;
 }
 
 template<typename T>
 void
 Array<T>::popBack(const size_t &count)
 {
-	if(!initialised || (count > length)) return;
+	if(!initialised || (count > arr_size)) return;
 	
-	size_t new_length = length - count;
+	size_t new_length = arr_size - count;
 	T** tmp_inc_arr = inc_arr;
 	
 	if(new_length)
@@ -323,18 +323,18 @@ Array<T>::popBack(const size_t &count)
 	}
 	
 	// удаляем старый массив
-	array_delete<T>(length, tmp_inc_arr);
+	array_delete<T>(arr_size, tmp_inc_arr);
 	
-	length = new_length;
+	arr_size = new_length;
 }
 
 template<typename T>
 void
 Array<T>::popFront(const size_t &count)
 {
-	if(!initialised || (count > length)) return;
+	if(!initialised || (count > arr_size)) return;
 	
-	size_t new_length = length - count;
+	size_t new_length = arr_size - count;
 	T** tmp_inc_arr = inc_arr;
 	
 	if(new_length)
@@ -354,18 +354,18 @@ Array<T>::popFront(const size_t &count)
 	}
 	
 	// удаляем старый массив
-	array_delete<T>(length, tmp_inc_arr);
+	array_delete<T>(arr_size, tmp_inc_arr);
 	
-	length = new_length;
+	arr_size = new_length;
 }
 
 template<typename T>
 void
 Array<T>::erase(const size_t &index)
 {
-	if(!initialised || (index >= length)) return;
+	if(!initialised || (index >= arr_size)) return;
 	
-	size_t new_length = length - 1;
+	size_t new_length = arr_size - 1;
 	T** tmp_inc_arr = inc_arr;
 	
 	if(new_length)
@@ -377,7 +377,7 @@ Array<T>::erase(const size_t &index)
 		array_copying_with_new<T>(index, inc_arr, 0, new_arr, 0);
 		
 		// копируем после индекса
-		array_copying_with_new<T>(length - index - 1,
+		array_copying_with_new<T>(arr_size - index - 1,
 								  inc_arr, index+1,
 								  new_arr, index);
 		
@@ -390,17 +390,17 @@ Array<T>::erase(const size_t &index)
 	}
 		
 	// удаляем старый массив
-	array_delete<T>(length, tmp_inc_arr);
-	length = new_length;
+	array_delete<T>(arr_size, tmp_inc_arr);
+	arr_size = new_length;
 }
 
 template<typename T>
 void
 Array<T>::erase(const size_t &index, const size_t &count)
 {
-	if(!initialised || ( (index + count - 1) >= length)) return;
+	if(!initialised || ( (index + count - 1) >= arr_size)) return;
 	
-	size_t new_length = length - count;
+	size_t new_length = arr_size - count;
 	T** tmp_inc_arr = inc_arr;
 	
 	if(new_length)
@@ -414,7 +414,7 @@ Array<T>::erase(const size_t &index, const size_t &count)
 		array_copying_with_new<T>(index, inc_arr, 0, new_arr, 0);
 		
 		// копируем после индекса + количество удяляемых элементов
-		array_copying_with_new<T>(length - index - count,
+		array_copying_with_new<T>(arr_size - index - count,
 								  inc_arr, index + count,
 								  new_arr, index);
 		
@@ -427,8 +427,8 @@ Array<T>::erase(const size_t &index, const size_t &count)
 	}
 		
 	// удаляем старый массив
-	array_delete<T>(length, tmp_inc_arr);
-	length = new_length;
+	array_delete<T>(arr_size, tmp_inc_arr);
+	arr_size = new_length;
 }
 
 template<typename T>
@@ -437,24 +437,24 @@ Array<T>::clear()
 {
 	if(initialised)
 	{
-		array_delete<T>(this->length, this->inc_arr);
+		array_delete<T>(this->arr_size, this->inc_arr);
 		this->initialised = false;
-		this->length = 0;
+		this->arr_size = 0;
 	}
 }
 
 template<typename T>
 void
-Array<T>::setLength(const size_t &new_length)
+Array<T>::setSize(const size_t &new_length)
 {
 	if(initialised)
 	{
 		clear();
-		initialised = false;
 	}
 	
+	this->initialised = true;
 	inc_arr = array_get_new<T>(new_length);
-	this->length = new_length;
+	this->arr_size = new_length;
 	
 }
 
@@ -462,16 +462,16 @@ template<typename T>
 void
 Array<T>::setCopy(const Array<T> &copying_array)
 {
-	array_delete<T>(this->length, this->inc_arr);
+	array_delete<T>(this->arr_size, this->inc_arr);
 	
-	this->length = copying_array.getLength();
+	this->arr_size = copying_array.getSize();
 	this->inc_arr = copying_array.getPCopy();
 }
 
 template<typename T>
 size_t
-Array<T>::getLength() const
-{	return this->length;}
+Array<T>::getSize() const
+{	return this->arr_size;}
 
 template<typename T>
 T*
@@ -483,13 +483,13 @@ Array<T>::getPointer(const size_t &index) const
 template<typename T>
 T&
 Array<T>::at(const size_t &index) const
-{	return inc_arr[index % this->length][0];}
+{	return inc_arr[index % this->arr_size][0];}
 
 // "защита от дурака" х2
 template<typename T>
 T&
 Array<T>::operator [](const size_t &index) const
-{	return inc_arr[index % this->length][0];}
+{	return inc_arr[index % this->arr_size][0];}
 
 template<typename T>
 const Array<T>&
@@ -497,9 +497,10 @@ Array<T>::operator =(const Array<T> &arg)
 {
 	if(arg.initialised)
 	{
-		array_delete<T>(this->length, this->inc_arr);
-		this->length = arg.length;
+		array_delete<T>(this->arr_size, this->inc_arr);
+		this->arr_size = arg.arr_size;
 		this->inc_arr = arg.getPCopy();
+		this->initialised = true;
 	}
 	
 	return *this;

@@ -102,7 +102,7 @@ public:
 	
 	void clear(); // tested
 	
-	size_t getLength() const; // tested
+	size_t getSize() const; // tested
 	
 	ListIterator<T> begin() const; // head.next
 	ListIterator<T> end() const; // tail
@@ -470,7 +470,7 @@ List<T>::clear()
 
 template<typename T>
 size_t
-List<T>::getLength() const
+List<T>::getSize() const
 {
 	return size;
 }

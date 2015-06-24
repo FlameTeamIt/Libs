@@ -175,7 +175,7 @@ public:
 class Array
 		: public DataContainer
 {
-	templates::Array<Data*> arr;
+	templates::Array<Data*> inc_arr;
 	
 public:
 	Array();
@@ -213,7 +213,7 @@ public:
 class Object
 		: public DataContainer
 {
-	templates::Array<Pair*> arr;
+	templates::Array<Pair*> inc_arr;
 public:
 	Object();
 	Object(const Data *data);

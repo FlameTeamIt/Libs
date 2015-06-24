@@ -21,13 +21,12 @@ JSON::
 Array::Array(const Array &array)
 	: Array()
 {
-	JSON::Data* temp_data;
-	size_t &&array_length = array.arr.getLength();
+	const size_t &array_length = array.inc_arr.getSize();
+	this->inc_arr = array.inc_arr;
 	
 	for(size_t i = 0; i < array_length; ++i)
 	{
-		temp_data = array.arr[i]->getCopy();
-		arr.pushBack(temp_data);
+		this->inc_arr[i] = array.inc_arr[i]->getCopy();
 	}
 }
 
@@ -41,33 +40,33 @@ Array::Array(const std::string &json_array)
 JSON::
 Array::~Array()
 {
-	for(size_t i = 0, arr_length = arr.getLength();
+	for(size_t i = 0, arr_length = inc_arr.getSize();
 		i < arr_length;
 		++i)
-	{ delete arr[i]; }
+	{ delete inc_arr[i]; }
 	
-	arr.clear();
+	inc_arr.clear();
 }
 
 JSON::Data*
 JSON::
 Array::operator [](const size_t &index)
 {
-	return arr[index];
+	return inc_arr[index];
 }
 
 void
 JSON::
 Array::setSize(const size_t &new_size)
 {
-	arr.setLength(new_size);
+	inc_arr.setSize(new_size);
 }
 
 size_t
 JSON::
 Array::getSize()
 {
-	return arr.getLength();
+	return inc_arr.getSize();
 }
 
 void
@@ -77,7 +76,7 @@ Array::pushBack(const Data *data)
 	Data *new_data = data->getCopy();
 	new_data->setLevel(this->level+1);
 	
-	arr.pushBack(new_data);
+	inc_arr.pushBack(new_data);
 }
 
 void
@@ -87,7 +86,7 @@ Array::pushFront(const Data *data)
 	Data *new_data = data->getCopy();
 	new_data->setLevel(this->level+1);
 	
-	arr.pushFront(new_data);
+	inc_arr.pushFront(new_data);
 }
 
 void
@@ -97,7 +96,7 @@ Array::insert(const size_t &index, const Data *data)
 	Data *new_data = data->getCopy();
 	new_data->setLevel(this->level+1);
 	
-	arr.insert(index, new_data);
+	inc_arr.insert(index, new_data);
 }
 
 void 
@@ -111,33 +110,33 @@ Array::insert(const size_t &index, const size_t &count, const Data **data)
 		new_data[i]->setLevel(this->level+1);
 	}
 	
-	arr.insert(index, count, new_data);
+	inc_arr.insert(index, count, new_data);
 }
 
 void
 JSON::
 Array::popBack()
 {
-	delete arr[arr.getLength()-1];
-	arr.popBack();
+	delete inc_arr[inc_arr.getSize()-1];
+	inc_arr.popBack();
 }
 
 void
 JSON::
 Array::popFront()
 {
-	delete arr[0];
-	arr.popFront();
+	delete inc_arr[0];
+	inc_arr.popFront();
 }
 
 void
 JSON::
 Array::erase(const size_t &index)
 {
-	if(index > arr.getLength()) return;
-	delete arr[index];
+	if(index > inc_arr.getSize()) return;
+	delete inc_arr[index];
 	
-	arr.erase(index);
+	inc_arr.erase(index);
 }
 
 void
@@ -145,26 +144,26 @@ JSON::
 Array::erase(const size_t &index, const size_t &count)
 {
 	size_t max = index+count;
-	if(max > arr.getLength()) return;
+	if(max > inc_arr.getSize()) return;
 	for(size_t i = index; i < max; i++)
 	{
-		delete arr[i];
+		delete inc_arr[i];
 	}
 	
-	arr.erase(index, count);
+	inc_arr.erase(index, count);
 }
 
 void
 JSON::
 Array::clear()
 {
-	size_t length = arr.getLength();
+	size_t length = inc_arr.getSize();
 	for(size_t i = 0; i < length; i++)
 	{
-		delete arr[i];
+		delete inc_arr[i];
 	}
 	
-	arr.clear();
+	inc_arr.clear();
 }
 
 JSON::Data*
@@ -179,7 +178,7 @@ JSON::
 Array::getAsString() const
 {
 	std::string out_json_str("[");
-	size_t &&length = arr.getLength();
+	size_t &&length = inc_arr.getSize();
 	
 	// пока без форматирования
 	if(length)
@@ -188,18 +187,18 @@ Array::getAsString() const
 		
 		for(size_t i = 0; i < length; i++)
 		{
-			if(arr[i]->getType() == PAIR)
-			{ out_json_str += '{' + arr[i]->getAsString() + '}'; }
+			if(inc_arr[i]->getType() == PAIR)
+			{ out_json_str += '{' + inc_arr[i]->getAsString() + '}'; }
 			else
-			{ out_json_str += arr[i]->getAsString(); }
+			{ out_json_str += inc_arr[i]->getAsString(); }
 				
 			out_json_str += ",";
 		}
 		
-		if(arr[length]->getType() == PAIR)
-		{ out_json_str += '{' + arr[length]->getAsString() + '}'; }
+		if(inc_arr[length]->getType() == PAIR)
+		{ out_json_str += '{' + inc_arr[length]->getAsString() + '}'; }
 		else
-		{ out_json_str += arr[length]->getAsString(); }
+		{ out_json_str += inc_arr[length]->getAsString(); }
 	}
 	
 	out_json_str += "]";
@@ -215,13 +214,15 @@ Array::setAsString(const std::string &json_array)
 	{ return; }
 	
 	templates::Array<std::string> &&arr_json_str = split(json_array);
-	size_t &&length = arr_json_str.getLength();
+	const size_t &length = arr_json_str.getSize();
+	inc_arr.setSize(length);
 	
 	for(size_t i = 0; i < length; i++)
 	{
 		Data *data = getData(arr_json_str[i]);
 		
 		if(data != nullptr)
-		{ arr.pushBack(data); }
+		{ inc_arr[i] = data; }
+		
 	}
 }

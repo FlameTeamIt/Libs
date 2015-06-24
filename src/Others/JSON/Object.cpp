@@ -21,13 +21,16 @@ JSON::
 Object::Object(const Object &object)
 	: Object()
 {
-	size_t &&length = object.arr.getLength();
-	Pair *tmp_pair;
+	const size_t &&length = object.inc_arr.getSize();
+	this->inc_arr = object.inc_arr;
 	
 	for(size_t i = 0; i < length; i++)
 	{
-		tmp_pair = (Pair*)object.arr[i]->getCopy();
-		this->arr.pushBack(tmp_pair);
+		inc_arr[i] = (Pair*)object.inc_arr[i]->getCopy();
+		
+//		tmp_pair = (Pair*)object.inc_arr[i]->getCopy();
+//		this->inc_arr.pushBack(tmp_pair);
+		// как вариант, засовывать массив.
 	}
 }
 
@@ -47,6 +50,9 @@ Object::pushBack(const Data *data)
 {
 	if(data->getType() != PAIR)
 	{ return; }
+	
+	Pair *pair = (Pair*)data->getCopy();
+	inc_arr.pushBack(pair);
 }
 
 void
@@ -61,21 +67,23 @@ void
 JSON::
 Object::pushBack(const std::string &key, const Data *data)
 {
-	
+	Pair *pair = new Pair(key, data);
+	inc_arr.pushBack(pair);
 }
 
 void
 JSON::
 Object::pushFront(const std::string &key, const Data *data)
 {
-	
+	Pair *pair = new Pair(key, data);
+	inc_arr.pushFront(pair);
 }
 
 void
 JSON::
 Object::insert(const size_t &index, const Data *data)
 {
-	
+//	if
 }
 
 void
@@ -117,13 +125,13 @@ void
 JSON::
 Object::clear()
 {
-	size_t length = arr.getLength();
+	size_t length = inc_arr.getSize();
 	for(size_t i = 0; i < length; i++)
 	{
-		delete arr[i];
+		delete inc_arr[i];
 	}
 	
-	arr.clear();
+	inc_arr.clear();
 }
 
 JSON::Data*
@@ -138,7 +146,7 @@ JSON::
 Object::getAsString() const
 {
 	std::string out_json_str("{");
-	size_t &&length = arr.getLength();
+	size_t &&length = inc_arr.getSize();
 	
 	// пока без форматирования
 	if(length)
@@ -147,18 +155,18 @@ Object::getAsString() const
 		
 		for(size_t i = 0; i < length; i++)
 		{
-			if(arr[i]->getType() == PAIR)
-			{ out_json_str += '{' + arr[i]->getAsString() + '}'; }
+			if(inc_arr[i]->getType() == PAIR)
+			{ out_json_str += '{' + inc_arr[i]->getAsString() + '}'; }
 			else
-			{ out_json_str += arr[i]->getAsString(); }
+			{ out_json_str += inc_arr[i]->getAsString(); }
 				
 			out_json_str += ",";
 		}
 		
-		if(arr[length]->getType() == PAIR)
-		{ out_json_str += '{' + arr[length]->getAsString() + '}'; }
+		if(inc_arr[length]->getType() == PAIR)
+		{ out_json_str += '{' + inc_arr[length]->getAsString() + '}'; }
 		else
-		{ out_json_str += arr[length]->getAsString(); }
+		{ out_json_str += inc_arr[length]->getAsString(); }
 	}
 	
 	out_json_str += "}";	
@@ -174,7 +182,7 @@ Object::setAsString(const std::string &json_object)
 	{ return; }
 
 	templates::Array<std::string> &&obj_json_str = split(json_object);
-	size_t &&length = obj_json_str.getLength();
+	size_t &&length = obj_json_str.getSize();
 	
 	for(size_t i = 0; i < length; i++)
 	{
@@ -182,7 +190,7 @@ Object::setAsString(const std::string &json_object)
 		{
 			Data *data = getData(obj_json_str[i]);
 			if(data != nullptr)
-			{ arr.pushBack((Pair*)data); }
+			{ inc_arr.pushBack((Pair*)data); }
 		}
 	}
 }
