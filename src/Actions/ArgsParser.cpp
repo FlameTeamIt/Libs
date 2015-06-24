@@ -9,7 +9,7 @@
 #include "ArgsParser.h"
 #include <iostream>
 
-#ifdef __linux__
+#ifdef __GNUC__
 #include <algorithm>
 #endif
 
@@ -18,7 +18,6 @@ ArgsParser::ArgsParser(const int argc, const char*argv[])
 {
     this->parse(argc, argv);
 }
-
 
 std::string ArgsParser::trim(std::string const& source, char const* delims)
 {
