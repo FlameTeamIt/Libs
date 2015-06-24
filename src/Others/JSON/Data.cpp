@@ -156,7 +156,6 @@ Data::getData(const std::string &json_string)
 		break;
 		
 	default:
-		
 		return_data = nullptr;
 		break;
 	}

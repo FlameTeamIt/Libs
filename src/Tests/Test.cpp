@@ -246,7 +246,7 @@ Test::Others::TArray()
 	array.pushFront(8);
 	
 	std::cout << "Push:\n";
-	for(size_t i = 0; i < array.getLength(); i++)
+	for(size_t i = 0; i < array.getSize(); i++)
 	{
 		std::cout << i << ". - " << array[i] << '\n';
 	}
@@ -256,7 +256,7 @@ Test::Others::TArray()
 	array.popFront();
 	
 	std::cout << "Pop:\n";
-	for(size_t i = 0; i < array.getLength(); i++)
+	for(size_t i = 0; i < array.getSize(); i++)
 	{
 		std::cout << i << ". - " << array[i] << '\n';
 	}
@@ -267,7 +267,7 @@ Test::Others::TArray()
 	array.insert(2, 11);
 	
 	std::cout << "Insert:\n";
-	for(size_t i = 0; i < array.getLength(); i++)
+	for(size_t i = 0; i < array.getSize(); i++)
 	{
 		std::cout << i << ". - " << array[i] << '\n';
 	}
@@ -276,7 +276,7 @@ Test::Others::TArray()
 	array.popFront(2);
 	array.popBack(1);
 	std::cout << "Pop some:\n";
-	for(size_t i = 0; i < array.getLength(); i++)
+	for(size_t i = 0; i < array.getSize(); i++)
 	{
 		std::cout << i << ". - " << array[i] << '\n';
 	}
@@ -288,9 +288,9 @@ Test::Others::TArray()
 	
 	array.insert(0, 2, test_array1);
 	array.insert(2, 3, test_array2);
-	array.insert(array.getLength(), 2, test_array3);
+	array.insert(array.getSize(), 2, test_array3);
 	std::cout << "Insert array:\n";
-	for(size_t i = 0; i < array.getLength(); i++)
+	for(size_t i = 0; i < array.getSize(); i++)
 	{
 		std::cout << i << ". - " << array[i] << '\n';
 	}
@@ -304,7 +304,7 @@ Test::Others::TArray()
 	array.erase(4);
 	
 	std::cout << "Erase:\n";
-	for(size_t i = 0; i < array.getLength(); i++)
+	for(size_t i = 0; i < array.getSize(); i++)
 	{
 		std::cout << i << ". - " << array[i] << '\n';
 	}
@@ -318,7 +318,7 @@ Test::Others::TArray()
 	array1.erase(1, 2);
 	
 	std::cout << "Erase some:\n";
-	for(size_t i = 0; i < array1.getLength(); i++)
+	for(size_t i = 0; i < array1.getSize(); i++)
 	{
 		std::cout << i << ". - " << array1[i] << '\n';
 	}

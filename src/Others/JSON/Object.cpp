@@ -10,17 +10,36 @@ Object::Object()
 JSON::
 Object::Object(const Data *data)
 	: Object()
-{}
+{
+	if(data->getType() == OBJECT)
+	{
+		Object(*((Object*)data));
+	}
+}
 
 JSON::
 Object::Object(const Object &object)
 	: Object()
-{}
+{
+	const size_t &&length = object.inc_arr.getSize();
+	this->inc_arr = object.inc_arr;
+	
+	for(size_t i = 0; i < length; i++)
+	{
+		inc_arr[i] = (Pair*)object.inc_arr[i]->getCopy();
+		
+//		tmp_pair = (Pair*)object.inc_arr[i]->getCopy();
+//		this->inc_arr.pushBack(tmp_pair);
+		// как вариант, засовывать массив.
+	}
+}
 
 JSON::
 Object::Object(const std::string &json_object)
 	: Object()
-{}
+{
+	this->setAsString(json_object);
+}
 
 JSON::
 Object::~Object() {}
@@ -29,21 +48,42 @@ void
 JSON::
 Object::pushBack(const Data *data)
 {
+	if(data->getType() != PAIR)
+	{ return; }
 	
+	Pair *pair = (Pair*)data->getCopy();
+	inc_arr.pushBack(pair);
 }
 
 void
 JSON::
 Object::pushFront(const Data *data)
 {
-	
+	if(data->getType() != PAIR)
+	{ return; }
+}
+
+void
+JSON::
+Object::pushBack(const std::string &key, const Data *data)
+{
+	Pair *pair = new Pair(key, data);
+	inc_arr.pushBack(pair);
+}
+
+void
+JSON::
+Object::pushFront(const std::string &key, const Data *data)
+{
+	Pair *pair = new Pair(key, data);
+	inc_arr.pushFront(pair);
 }
 
 void
 JSON::
 Object::insert(const size_t &index, const Data *data)
 {
-	
+//	if
 }
 
 void
@@ -85,45 +125,72 @@ void
 JSON::
 Object::clear()
 {
+	size_t length = inc_arr.getSize();
+	for(size_t i = 0; i < length; i++)
+	{
+		delete inc_arr[i];
+	}
 	
+	inc_arr.clear();
 }
 
 JSON::Data*
 JSON::
 Object::getCopy() const
 {
-	return nullptr;
+	return new Object(*this);
 }
 
 std::string
 JSON::
 Object::getAsString() const
-{	return std::string("{}");}
+{
+	std::string out_json_str("{");
+	size_t &&length = inc_arr.getSize();
+	
+	// пока без форматирования
+	if(length)
+	{
+		length--;
+		
+		for(size_t i = 0; i < length; i++)
+		{
+			if(inc_arr[i]->getType() == PAIR)
+			{ out_json_str += '{' + inc_arr[i]->getAsString() + '}'; }
+			else
+			{ out_json_str += inc_arr[i]->getAsString(); }
+				
+			out_json_str += ",";
+		}
+		
+		if(inc_arr[length]->getType() == PAIR)
+		{ out_json_str += '{' + inc_arr[length]->getAsString() + '}'; }
+		else
+		{ out_json_str += inc_arr[length]->getAsString(); }
+	}
+	
+	out_json_str += "}";	
+	
+	return out_json_str;
+}
 
 void
 JSON::
 Object::setAsString(const std::string &json_object)
 {
-	// парсинг объекта
+	if(getDataType(json_object) != OBJECT)
+	{ return; }
+
+	templates::Array<std::string> &&obj_json_str = split(json_object);
+	size_t &&length = obj_json_str.getSize();
 	
-	Data* tmp_data;
-	unsigned short is_key = 0, is_data;
-	
-	for(std::string::const_iterator it = json_object.begin(),
-		it_end = json_object.end();
-		it != it_end;
-		++it)
+	for(size_t i = 0; i < length; i++)
 	{
-		// варианты
-		
-		/*
-		 1. встречаем " (кавычка) 
-		 1.1. если ключ -- посимвольно записываем в ключ
-		 1.2. если значение то определяем, что это за объект.
-		 1.2.1. если встречаем ",true,false,number -- Это Single
-		 1.2.2. если встречаем { -- Это Object
-		 1.2.3. если встречаем [ -- Это Array
-		        
-		*/
+		if(getDataType(obj_json_str[i]) == PAIR)
+		{
+			Data *data = getData(obj_json_str[i]);
+			if(data != nullptr)
+			{ inc_arr.pushBack((Pair*)data); }
+		}
 	}
 }

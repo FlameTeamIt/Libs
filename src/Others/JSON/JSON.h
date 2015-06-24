@@ -151,17 +151,19 @@ public:
 class Pair
 		: public Data
 {
+	Data* inc_data;
 public:
 	std::string key;
-	Data* data;
 	
 	Pair();
-	Pair(const Data *new_data);
 	Pair(const std::string &json_pair);
 	Pair(const Pair &pair);
+	Pair(const Data* data);
+	Pair(const std::string &json_key, const Data *data);
 	
 	~Pair();
 	
+	Data* getData() const;
 	Data* getCopy() const;
 	
 	std::string getAsString() const;
@@ -173,7 +175,7 @@ public:
 class Array
 		: public DataContainer
 {
-	templates::Array<Data*> arr;
+	templates::Array<Data*> inc_arr;
 	
 public:
 	Array();
@@ -211,7 +213,7 @@ public:
 class Object
 		: public DataContainer
 {
-	templates::Array<Pair*> arr;
+	templates::Array<Pair*> inc_arr;
 public:
 	Object();
 	Object(const Data *data);
@@ -233,6 +235,8 @@ public:
 	
 	void pushBack(const Data *data);
 	void pushFront(const Data *data);
+	void pushBack(const std::string &key, const Data *data);
+	void pushFront(const std::string &key, const Data *data);
 	
 	void insert(const size_t &index, const Data *data);
 	void insert(const size_t &index, const size_t &count, const Data **data);
