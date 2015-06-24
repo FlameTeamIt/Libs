@@ -158,6 +158,7 @@ public:
 	Pair();
 	Pair(const std::string &json_pair);
 	Pair(const Pair &pair);
+	Pair(const Data* data);
 	Pair(const std::string &json_key, const Data *data);
 	
 	~Pair();
