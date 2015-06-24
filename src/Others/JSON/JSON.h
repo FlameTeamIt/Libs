@@ -151,17 +151,18 @@ public:
 class Pair
 		: public Data
 {
+	Data* inc_data;
 public:
 	std::string key;
-	Data* data;
 	
 	Pair();
-	Pair(const Data *new_data);
 	Pair(const std::string &json_pair);
 	Pair(const Pair &pair);
+	Pair(const std::string &json_key, const Data *data);
 	
 	~Pair();
 	
+	Data* getData() const;
 	Data* getCopy() const;
 	
 	std::string getAsString() const;
@@ -233,6 +234,8 @@ public:
 	
 	void pushBack(const Data *data);
 	void pushFront(const Data *data);
+	void pushBack(const std::string &key, const Data *data);
+	void pushFront(const std::string &key, const Data *data);
 	
 	void insert(const size_t &index, const Data *data);
 	void insert(const size_t &index, const size_t &count, const Data **data);

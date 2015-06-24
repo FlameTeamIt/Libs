@@ -22,7 +22,7 @@ Array::Array(const Array &array)
 	: Array()
 {
 	JSON::Data* temp_data;
-	size_t array_length = array.arr.getLength();
+	size_t &&array_length = array.arr.getLength();
 	
 	for(size_t i = 0; i < array_length; ++i)
 	{
@@ -179,7 +179,7 @@ JSON::
 Array::getAsString() const
 {
 	std::string out_json_str("[");
-	size_t length = arr.getLength();
+	size_t &&length = arr.getLength();
 	
 	// пока без форматирования
 	if(length)
@@ -214,8 +214,8 @@ Array::setAsString(const std::string &json_array)
 	if(getDataType(json_array) != ARRAY)
 	{ return; }
 	
-	templates::Array<std::string> arr_json_str = split(json_array);
-	size_t length = arr_json_str.getLength();
+	templates::Array<std::string> &&arr_json_str = split(json_array);
+	size_t &&length = arr_json_str.getLength();
 	
 	for(size_t i = 0; i < length; i++)
 	{

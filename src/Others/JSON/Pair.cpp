@@ -4,11 +4,14 @@ using namespace flame_ide::JSON;
 
 Pair::Pair()
 	: Data(false, false, false)
-{	data = nullptr;}
+{	inc_data = nullptr;}
 
-Pair::Pair(const Data *new_data)
+Pair::Pair(const Data *data)
 {
-	data = new_data->getCopy();
+	if(data->getType() == PAIR)
+	{
+		Pair(*((Pair*)data));
+	}
 }
 
 Pair::Pair(const std::string &json_pair)
@@ -20,21 +23,31 @@ Pair::Pair(const Pair &pair)
 	: Data(false, false, false)
 {
 	this->key = pair.key;
-	data = pair.data->getCopy();
+	inc_data = pair.inc_data->getCopy();
+}
+
+Pair::Pair(const std::string &json_key, const Data *data)
+{
+	this->key = json_key;
+	this->inc_data = data->getCopy();
 }
 
 Pair::~Pair()
 {
-	if(data != nullptr)
-	{	delete data;}
+	if(inc_data != nullptr)
+	{ delete inc_data;}
+}
+
+Data*
+Pair::getData() const
+{
+	return inc_data;
 }
 
 Data*
 Pair::getCopy() const
 {
-	Data *copy_data = new Pair(*this);
-	
-	return copy_data;
+	return new Pair(*this);
 }
 
 std::string
@@ -43,14 +56,14 @@ Pair::getAsString() const
 	// тут нужно подумать.
 	std::string string_out = '"' + key + "\":";
 	
-	if(data->getType() == PAIR)
+	if(inc_data->getType() == PAIR)
 	{
 		// частный вид объекта
-		string_out += "{" + data->getAsString() + ";}";
+		string_out += "{" + inc_data->getAsString() + ";}";
 	}
 	else
 	{
-		string_out += data->getAsString();
+		string_out += inc_data->getAsString();
 	}
 	
 	return string_out;
@@ -67,7 +80,7 @@ Pair::setAsString(const std::string &json_pair)
 	
 	std::string::const_iterator it, it_prevend, it_end = json_pair.end();
 	
-	// without catching errors
+	// нужно переделать
 	if(json_pair.length() > 3)
 	{
 		for(it = json_pair.begin(), it_prevend = (json_pair.end() - 3);
@@ -136,9 +149,9 @@ Pair::setAsString(const std::string &json_pair)
 	std::string json_data = json_pair.substr(pos, json_pair.length()-pos);
 	
 	// получаем сразу
-	this->data = getData(json_data);
+	this->inc_data = Data::getData(json_data);
 	
-	if(data == nullptr)
+	if(inc_data == nullptr)
 	{
 		key = "";
 		return;
@@ -149,36 +162,11 @@ Pair::setAsString(const std::string &json_pair)
 const Pair&
 Pair::operator=(const Pair& pair)
 {
-	Data* tmp = this->data;
+	if(this->inc_data != nullptr)
+		delete this->inc_data;
 	
-	if(pair.data != nullptr)
-	{
-		switch (pair.data->getType())
-		{
-		case PAIR:   // pair
-			break;
-			
-		case SINGLE: // single
-			break;
-			
-		case ARRAY:  // array
-			
-			break;
-			
-		case OBJECT: // object
-			
-			break;
-			
-		default:
-			break;
-		}
-	}
-	
-	if(tmp != this->data)
-	{
-		this->key = pair.key;
-		delete tmp;
-	}
+	this->key = pair.key;
+	this->inc_data = pair.inc_data->getCopy();
 	
 	return *this;
 }
