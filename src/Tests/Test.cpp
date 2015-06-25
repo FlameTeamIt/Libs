@@ -527,8 +527,20 @@ Test::Others::TJSON()
 			  << object1.getAsString() << "\n\n";
 	object1.erase(1,3);
 	std::cout << "OUTPUT erase (index, count) :\n"
-			  << object1.getAsString();// << "\n\n";
+			  << object1.getAsString() << "\n\n";
 	
+	BasicFile basic_file("BaltimoreDataBase.json");
+	std::string str_json = basic_file.load();
+	
+	if(str_json.length() != 0)
+	{
+		std::cout << "File loaded\n"
+				<< str_json << '\n';
+	}
+	
+	Data* data = Data::getData(str_json);
+	std::cout << "OUTPUT test file :\n"
+			  << data->getAsString() << '\n';
 	
 	return 1;
 }
