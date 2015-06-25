@@ -13,21 +13,14 @@ JSON::
 Array::Array(const Data *data)
 	: Array()
 {
-	if(data->getType() == ARRAY)
-	{ Array(*((Array*)data)); }
+	set(data);
 }
 
 JSON::
 Array::Array(const Array &array)
 	: Array()
 {
-	const size_t &array_length = array.inc_arr.getSize();
-	this->inc_arr = array.inc_arr;
-	
-	for(size_t i = 0; i < array_length; ++i)
-	{
-		this->inc_arr[i] = array.inc_arr[i]->getCopy();
-	}
+	set(array);
 }
 
 JSON::
@@ -48,6 +41,27 @@ Array::~Array()
 	inc_arr.clear();
 }
 
+void
+JSON::
+Array::set(const Data *data)
+{
+	if(data->getType() == ARRAY)
+	{ set(*((Array*)data)); }
+}
+
+void
+JSON::
+Array::set(const Array &array)
+{
+	const size_t &array_length = array.inc_arr.getSize();
+	this->inc_arr = array.inc_arr;
+	
+	for(size_t i = 0; i < array_length; ++i)
+	{
+		this->inc_arr[i] = array.inc_arr[i]->getCopy();
+	}
+}
+	
 JSON::Data*
 JSON::
 Array::operator [](const size_t &index)
