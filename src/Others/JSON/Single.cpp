@@ -49,6 +49,7 @@ Single::setAsString(const std::string &json_single)
 	bool spaces = false;
 	bool end = false;
 	
+	// Нужно исправлять
 	str_data = "";
 	if(json_single.length() > 1)
 	{

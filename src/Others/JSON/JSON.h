@@ -89,6 +89,8 @@ class DataContainer
 protected:
 	static templates::Array<std::string> split(const std::string &json_container);
 	
+	virtual void set(const Data* data) = 0;
+	
 public:
 	DataContainer(const bool& is_object_type
 				  ,const bool& is_array_type);
@@ -160,6 +162,7 @@ public:
 	Pair(const Pair &pair);
 	Pair(const Data* data);
 	Pair(const std::string &json_key, const Data *data);
+	Pair(const char* key, const Data *data);
 	
 	~Pair();
 	
@@ -176,6 +179,10 @@ class Array
 		: public DataContainer
 {
 	templates::Array<Data*> inc_arr;
+	
+protected:
+	void set(const Data *data);
+	void set(const Array &array);
 	
 public:
 	Array();
@@ -214,6 +221,10 @@ class Object
 		: public DataContainer
 {
 	templates::Array<Pair*> inc_arr;
+protected:
+	void set(const Data *data);
+	void set(const Object &object);
+	
 public:
 	Object();
 	Object(const Data *data);
@@ -240,6 +251,11 @@ public:
 	
 	void insert(const size_t &index, const Data *data);
 	void insert(const size_t &index, const size_t &count, const Data **data);
+	
+#ifdef FUTURE // пока думаю, как с этим быть
+	void insert(const size_t &index, const Pair *pair);
+	void insert(const size_t &index, const size_t &count, const Pair **pairs);
+#endif
 	
 	void popBack();
 	void popFront();

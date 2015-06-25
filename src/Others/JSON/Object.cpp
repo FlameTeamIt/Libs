@@ -11,27 +11,14 @@ JSON::
 Object::Object(const Data *data)
 	: Object()
 {
-	if(data->getType() == OBJECT)
-	{
-		Object(*((Object*)data));
-	}
+	set(data);
 }
 
 JSON::
 Object::Object(const Object &object)
 	: Object()
 {
-	const size_t &&length = object.inc_arr.getSize();
-	this->inc_arr = object.inc_arr;
-	
-	for(size_t i = 0; i < length; i++)
-	{
-		inc_arr[i] = (Pair*)object.inc_arr[i]->getCopy();
-		
-//		tmp_pair = (Pair*)object.inc_arr[i]->getCopy();
-//		this->inc_arr.pushBack(tmp_pair);
-		// как вариант, засовывать массив.
-	}
+	set(object);
 }
 
 JSON::
@@ -42,7 +29,33 @@ Object::Object(const std::string &json_object)
 }
 
 JSON::
-Object::~Object() {}
+Object::~Object()
+{
+	clear();
+}
+
+void
+JSON::
+Object::set(const Data *data)
+{
+	if(data->getType() == OBJECT)
+	{
+		set(*((Object*)data));
+	}
+}
+
+void
+JSON::
+Object::set(const Object &object)
+{
+	const size_t length = object.inc_arr.getSize();
+	this->inc_arr = object.inc_arr;
+	
+	for(size_t i = 0; i < length; i++)
+	{
+		inc_arr[i] = (Pair*)object.inc_arr[i]->getCopy();
+	}
+}
 
 void 
 JSON::
@@ -51,8 +64,7 @@ Object::pushBack(const Data *data)
 	if(data->getType() != PAIR)
 	{ return; }
 	
-	Pair *pair = (Pair*)data->getCopy();
-	inc_arr.pushBack(pair);
+	inc_arr.pushFront((Pair*)data->getCopy());
 }
 
 void
@@ -61,6 +73,8 @@ Object::pushFront(const Data *data)
 {
 	if(data->getType() != PAIR)
 	{ return; }
+	
+	inc_arr.pushFront((Pair*)data->getCopy());
 }
 
 void
@@ -83,42 +97,96 @@ void
 JSON::
 Object::insert(const size_t &index, const Data *data)
 {
-//	if
+	if(data->getType() != PAIR)
+	{ return; }
+	
+	inc_arr.insert(index, (Pair*)data->getCopy());
 }
 
 void
 JSON::
 Object::insert(const size_t &index, const size_t &count, const Data **data)
 {
+	Pair *new_data[count];
+	size_t real_count = count;
 	
+	for(size_t i = 0, j = 0; i < count; i++)
+	{
+		if(data[i]->getType() == PAIR)
+		{
+			new_data[j] = (Pair*)data[i]->getCopy();
+			new_data[j]->setLevel(this->level+1);
+			j++;
+		}
+		else
+		{ --real_count; }
+		
+	}
+	
+	inc_arr.insert(index, real_count, new_data);
 }
+
+//void
+//JSON::
+//Object::insert(const size_t &index, const Pair *pair)
+//{
+//	inc_arr.insert(index, (Pair*)pair->getCopy());
+//}
+
+//void
+//JSON::
+//Object::insert(const size_t &index, const size_t &count, const Pair **pairs)
+//{
+//	Pair *new_data[count];
+	
+//	for(size_t i = 0; i < count; i++)
+//	{
+//		new_data[i] = (Pair*)pairs[i]->getCopy();
+//		new_data[i]->setLevel(this->level+1);
+//	}
+	
+//	inc_arr.insert(index, count, new_data);
+//}
 
 void
 JSON::
 Object::popBack()
 {
-	
+	delete inc_arr[inc_arr.getSize()-1];
+	inc_arr.popBack();
 }
 
 void
 JSON::
 Object::popFront()
 {
-	
+	delete inc_arr[0];
+	inc_arr.popFront();
 }
 
 void
 JSON::
 Object::erase(const size_t &index)
 {
+	if(index >= inc_arr.getSize())
+	{ return; }
 	
+	delete inc_arr[index];
+	inc_arr.erase(index);
 }
 
 void
 JSON::
 Object::erase(const size_t &index, const size_t &count)
 {
+	size_t max = index+count;
+	if(max > inc_arr.getSize()) return;
+	for(size_t i = index; i < max; i++)
+	{
+		delete inc_arr[i];
+	}
 	
+	inc_arr.erase(index, count);
 }
 
 void
@@ -155,18 +223,9 @@ Object::getAsString() const
 		
 		for(size_t i = 0; i < length; i++)
 		{
-			if(inc_arr[i]->getType() == PAIR)
-			{ out_json_str += '{' + inc_arr[i]->getAsString() + '}'; }
-			else
-			{ out_json_str += inc_arr[i]->getAsString(); }
-				
-			out_json_str += ",";
+			out_json_str += inc_arr[i]->getAsString() + ",";
 		}
-		
-		if(inc_arr[length]->getType() == PAIR)
-		{ out_json_str += '{' + inc_arr[length]->getAsString() + '}'; }
-		else
-		{ out_json_str += inc_arr[length]->getAsString(); }
+		out_json_str += inc_arr[length]->getAsString();
 	}
 	
 	out_json_str += "}";	
@@ -182,15 +241,16 @@ Object::setAsString(const std::string &json_object)
 	{ return; }
 
 	templates::Array<std::string> &&obj_json_str = split(json_object);
-	size_t &&length = obj_json_str.getSize();
+	const size_t &length = obj_json_str.getSize();
+	inc_arr.setSize(length);
 	
 	for(size_t i = 0; i < length; i++)
 	{
+		Data *data = getData(obj_json_str[i]);
 		if(getDataType(obj_json_str[i]) == PAIR)
 		{
-			Data *data = getData(obj_json_str[i]);
 			if(data != nullptr)
-			{ inc_arr.pushBack((Pair*)data); }
+			{ inc_arr[i] = (Pair*)data; }
 		}
 	}
 }

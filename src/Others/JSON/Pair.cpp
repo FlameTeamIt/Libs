@@ -7,6 +7,7 @@ Pair::Pair()
 {	inc_data = nullptr;}
 
 Pair::Pair(const Data *data)
+	: Data(false, false, false)
 {
 	if(data->getType() == PAIR)
 	{
@@ -15,6 +16,7 @@ Pair::Pair(const Data *data)
 }
 
 Pair::Pair(const std::string &json_pair)
+	: Data(false, false, false)
 {
 	setAsString(json_pair);
 }
@@ -27,8 +29,16 @@ Pair::Pair(const Pair &pair)
 }
 
 Pair::Pair(const std::string &json_key, const Data *data)
+	: Data(false, false, false)
 {
 	this->key = json_key;
+	this->inc_data = data->getCopy();
+}
+
+Pair::Pair(const char* key, const Data *data)
+	: Data(false, false, false)
+{
+	this->key = key;
 	this->inc_data = data->getCopy();
 }
 
