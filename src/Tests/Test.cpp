@@ -499,7 +499,7 @@ Test::Others::TJSON()
 			  << "Pair: " << pair1.getAsString() << '\n'
 			  << object1.getAsString() << "\n\n";
 	//2
-	Single single1(std::string("\"Something4\"")), single2(std::string("\"Something3\""));
+	Single single1(std::string("\"Something4\"")), single2(std::string("10000"));
 	Pair pair2(std::string("Object3"), &single2);
 	Pair pair3("Object4", &single1);
 	const JSON::Data* pairs[] = {&pair2, &pair3};
@@ -534,13 +534,14 @@ Test::Others::TJSON()
 	
 	if(str_json.length() != 0)
 	{
-		std::cout << "File loaded\n"
-				<< str_json << '\n';
+		std::cout << "File loaded\n";
+//				<< str_json << '\n';
+		
+		Data* data = Data::getData(str_json);
+		std::cout << "OUTPUT test file :\n"
+				  << data->getAsString() << '\n';
 	}
 	
-	Data* data = Data::getData(str_json);
-	std::cout << "OUTPUT test file :\n"
-			  << data->getAsString() << '\n';
 	
 	return 1;
 }

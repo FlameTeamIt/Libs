@@ -1,5 +1,10 @@
 #include "JSON.h"
 
+inline bool is_separator(char ch)
+{
+	return (ch == ' ' || ch == '\n' || ch == '\r' || ch == '\t');
+}
+
 using namespace flame_ide::JSON;
 
 Single::Single()
@@ -44,86 +49,62 @@ Single::getAsString() const
 void
 Single::setAsString(const std::string &json_single)
 {
+	if(json_single.length() <= 1)
+	{ return; }
+		
 	bool start = false;
-	bool brace = false;
-	bool spaces = false;
 	bool end = false;
 	
+	size_t pos_start = 0, pos_end = 0;
+	unsigned short count_braces = 0;
+	
 	// Нужно исправлять
-	str_data = "";
-	if(json_single.length() > 1)
+	for(std::string::const_iterator it = json_single.begin(),
+		it_end = json_single.end(), it_prevend = --(json_single.end());
+		it != it_end && !end;
+		++it)
 	{
-		for(std::string::const_iterator it = json_single.begin(),
-			it_end = json_single.end(), it_prevend = --(json_single.end());
-			it != it_end && !end;
-			++it)
+		if(*it == '"')
+		{ count_braces++; }
+		
+		if(!start)
 		{
-			// ignoring spaces and other
-			if( (*it != ' ') && (*it != '\n') && (*it != '\r')
-
-					&& !brace && !start)
+			if(is_separator(*it))
 			{
-				start = true;
-				
-				if(*it == '"')
-				{
-					brace = true;
-					str_data += *it;
-				}
-				else
-				{
-					str_data += *it;
-				}
+				pos_start++;
 			}
 			else
-			if(start) // starting write to sting data
 			{
-				if(brace)
-				{
-					
-					if(*it == '"')
-					{
-						end = true;
-						str_data += *it;
-					}
-					else
-					{
-						str_data += *it;
-					}
-
-					if(it == it_prevend && *it != '"')
-					{
-						str_data = "";
-						end = true;
-					}
-				}
-				else
-				{
-					if(*it != '"')
-					{
-						if( (*it != ' ') && (*it != '\n') && (*it != '\r') )
-						{
-							if(!spaces)
-							{
-								str_data += *it;
-							}
-							else
-							{
-								str_data = "";
-								end = true;
-							}
-						}
-						else
-						{
-							spaces = true;
-						}
-					}
-					else
-					{
-						str_data = ""; end = true;
-					}
-				}
+				start = true;
+				pos_end = pos_start;
+			}
+		}
+		else
+		{
+			pos_end++;
+			if(count_braces == 2)
+			{
+				end = true;
+				pos_end++;
+			}
+			
+			if(count_braces == 0 && is_separator(*it))
+			{
+				end = true; 
+				pos_start = pos_end = 0;
+			}
+			
+			if(it == it_prevend && (count_braces != 2 && count_braces != 0) )
+			{
+				end = true;
+				pos_start = pos_end = 0;
 			}
 		}
 	}
+		
+	if((!pos_start && !pos_end) && (pos_end < pos_start))
+	{ return; }
+	
+	// течёт
+	str_data = json_single.substr(pos_start, pos_end-pos_start);
 }
