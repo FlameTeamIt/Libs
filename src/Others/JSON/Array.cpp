@@ -46,7 +46,10 @@ JSON::
 Array::set(const Data *data)
 {
 	if(data->getType() == ARRAY)
-	{ set(*((Array*)data)); }
+	{
+		const Array* array = static_cast<const Array*>(data);
+		set(*array);
+	}
 }
 
 void
@@ -236,7 +239,10 @@ Array::setAsString(const std::string &json_array)
 		Data *data = getData(arr_json_str[i]);
 		
 		if(data != nullptr)
-		{ inc_arr[i] = data; }
+		{
+//			inc_arr.pushBack(data);
+			inc_arr[i] = data;
+		}
 		
 	}
 }

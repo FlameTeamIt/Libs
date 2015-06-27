@@ -132,6 +132,7 @@ unsigned int
 Data::getType() const
 {	return type; }
 
+// течёт
 Data*
 Data::getData(const std::string &json_string)
 {
@@ -140,19 +141,19 @@ Data::getData(const std::string &json_string)
 	switch (getDataType(json_string))
 	{
 	case SINGLE:
-		return_data = new Single(json_string);
+		return_data = new JSON::Single(json_string);
 		break;
 		
 	case PAIR:
-		return_data = new Pair(json_string);
+		return_data = new JSON::Pair(json_string);
 		break;
 		
 	case ARRAY:
-		return_data = new Array(json_string);
+		return_data = new JSON::Array(json_string);
 		break;
 		
 	case OBJECT:
-		return_data = new Object(json_string);
+		return_data = new JSON::Object(json_string);
 		break;
 		
 	default:

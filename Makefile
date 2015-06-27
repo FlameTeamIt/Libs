@@ -19,25 +19,25 @@ Dirs := $(DepPath) $(ObjPath) $(BinPath) $(LibPath) $(TypeBuild)
 
 override Libs :=
 
-override Warn_flags := -Wall -Wextra #-Werror
-#override Warn_flags := \
-#			-Wall \
-#			-Wextra \
-#			-Wconversion \
-#			-Werror \
-#			-Winit-self \
-#			-Wunreachable-code \
-#			-Wformat=2 \
-#			-Wswitch-default \
-#			-Wtrigraphs \
-#			-Wstrict-overflow=4 \
-#			-Wfloat-equal \
-#			-Wundef \
-#			-Wshadow \
-#			-Wcast-qual \
-#			-Wcast-align \
-#			-Wwrite-strings \
-#			-Wlogical-op
+#override Warn_flags := -Wall -Wextra #-Werror
+override Warn_flags := \
+			-Wall \
+			-Wextra \
+			-Wconversion \
+			-Werror \
+			-Winit-self \
+			-Wunreachable-code \
+			-Wformat=2 \
+			-Wswitch-default \
+			-Wtrigraphs \
+			-Wstrict-overflow=4 \
+			-Wfloat-equal \
+			-Wundef \
+			-Wshadow \
+			-Wcast-qual \
+			-Wcast-align \
+			-Wwrite-strings \
+			-Wlogical-op
 
 Defines_Debug := -DDEBUG=1
 Defines_Release :=

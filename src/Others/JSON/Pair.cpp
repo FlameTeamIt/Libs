@@ -9,10 +9,7 @@ Pair::Pair()
 Pair::Pair(const Data *data)
 	: Data(false, false, false)
 {
-	if(data->getType() == PAIR)
-	{
-		Pair(*((Pair*)data));
-	}
+	set(data);
 }
 
 Pair::Pair(const std::string &json_pair)
@@ -24,21 +21,20 @@ Pair::Pair(const std::string &json_pair)
 Pair::Pair(const Pair &pair)
 	: Data(false, false, false)
 {
-	this->key = pair.key;
-	inc_data = pair.inc_data->getCopy();
+	set(pair);
 }
 
 Pair::Pair(const std::string &json_key, const Data *data)
 	: Data(false, false, false)
 {
-	this->key = json_key;
+	this->inc_key = json_key;
 	this->inc_data = data->getCopy();
 }
 
 Pair::Pair(const char* key, const Data *data)
 	: Data(false, false, false)
 {
-	this->key = key;
+	this->inc_key = key;
 	this->inc_data = data->getCopy();
 }
 
@@ -46,6 +42,23 @@ Pair::~Pair()
 {
 	if(inc_data != nullptr)
 	{ delete inc_data;}
+}
+
+void
+Pair::set(const Data *data)
+{
+	if(data->getType() == OBJECT)
+	{
+		const Pair* pair = static_cast<const Pair*>(data);
+		set(*pair);
+	}
+}
+
+void
+Pair::set(const Pair &pair)
+{
+	this->inc_key = pair.inc_key;
+	inc_data = pair.inc_data->getCopy();
 }
 
 Data*
@@ -64,7 +77,7 @@ std::string
 Pair::getAsString() const
 {
 	// тут нужно подумать.
-	std::string string_out = '"' + key + "\":";
+	std::string string_out = '"' + inc_key + "\":";
 	
 	if(inc_data->getType() == PAIR)
 	{
@@ -110,11 +123,11 @@ Pair::setAsString(const std::string &json_pair)
 			{
 				if(it != it_prevend)
 				{
-					key += *it;
+					inc_key += *it;
 				}
 				else
 				{
-					key = "";
+					inc_key = "";
 					end = true;
 				}
 			}
@@ -123,7 +136,7 @@ Pair::setAsString(const std::string &json_pair)
 		end = false;
 	}
 	
-	if(!key.length())
+	if(!inc_key.length())
 	{
 		return;
 	}
@@ -151,7 +164,7 @@ Pair::setAsString(const std::string &json_pair)
 	
 	if(!search_colon && pos >= json_pair.length() )
 	{
-		key = "";
+		inc_key = "";
 		return;
 	}
 	
@@ -163,7 +176,7 @@ Pair::setAsString(const std::string &json_pair)
 	
 	if(inc_data == nullptr)
 	{
-		key = "";
+		inc_key = "";
 		return;
 	}
 	
@@ -175,7 +188,7 @@ Pair::operator=(const Pair& pair)
 	if(this->inc_data != nullptr)
 		delete this->inc_data;
 	
-	this->key = pair.key;
+	this->inc_key = pair.inc_key;
 	this->inc_data = pair.inc_data->getCopy();
 	
 	return *this;

@@ -182,7 +182,7 @@ Test::Others::TList()
 	List<int> list(start_count);
 	
 	for(size_t i = 0; i < start_count; i++)
-	{ list[i] = i+1; }
+	{ list[i] = int(i+1); }
 	
 	if(list[0] != 1 && list[1] != 2)
 	{ return 0; }
@@ -499,7 +499,7 @@ Test::Others::TJSON()
 			  << "Pair: " << pair1.getAsString() << '\n'
 			  << object1.getAsString() << "\n\n";
 	//2
-	Single single1(std::string("\"Something4\"")), single2(std::string("\"Something3\""));
+	Single single1(std::string("\"Something4\"")), single2(std::string("10000"));
 	Pair pair2(std::string("Object3"), &single2);
 	Pair pair3("Object4", &single1);
 	const JSON::Data* pairs[] = {&pair2, &pair3};
@@ -527,7 +527,20 @@ Test::Others::TJSON()
 			  << object1.getAsString() << "\n\n";
 	object1.erase(1,3);
 	std::cout << "OUTPUT erase (index, count) :\n"
-			  << object1.getAsString();// << "\n\n";
+			  << object1.getAsString() << "\n\n";
+	
+	BasicFile basic_file("BaltimoreDataBase.json");
+	std::string str_json = basic_file.load();
+	
+	if(str_json.length() != 0)
+	{
+		std::cout << "File loaded\n";
+//				<< str_json << '\n';
+		
+		Data* data = Data::getData(str_json);
+		std::cout << "OUTPUT test file :\n"
+				  << data->getAsString() << '\n';
+	}
 	
 	
 	return 1;
