@@ -40,7 +40,8 @@ Object::set(const Data *data)
 {
 	if(data->getType() == OBJECT)
 	{
-		set(*((Object*)data));
+		const Object* object = static_cast<const Object*>(data);
+		set(*object);
 	}
 }
 
@@ -125,28 +126,6 @@ Object::insert(const size_t &index, const size_t &count, const Data **data)
 	
 	inc_arr.insert(index, real_count, new_data);
 }
-
-//void
-//JSON::
-//Object::insert(const size_t &index, const Pair *pair)
-//{
-//	inc_arr.insert(index, (Pair*)pair->getCopy());
-//}
-
-//void
-//JSON::
-//Object::insert(const size_t &index, const size_t &count, const Pair **pairs)
-//{
-//	Pair *new_data[count];
-	
-//	for(size_t i = 0; i < count; i++)
-//	{
-//		new_data[i] = (Pair*)pairs[i]->getCopy();
-//		new_data[i]->setLevel(this->level+1);
-//	}
-	
-//	inc_arr.insert(index, count, new_data);
-//}
 
 void
 JSON::
@@ -242,7 +221,6 @@ Object::setAsString(const std::string &json_object)
 
 	templates::Array<std::string> &&obj_json_str = split(json_object);
 	const size_t &length = obj_json_str.getSize();
-	inc_arr.setSize(length);
 	
 	for(size_t i = 0; i < length; i++)
 	{
@@ -250,7 +228,10 @@ Object::setAsString(const std::string &json_object)
 		if(getDataType(obj_json_str[i]) == PAIR)
 		{
 			if(data != nullptr)
-			{ inc_arr[i] = (Pair*)data; }
+			{
+				Pair* pair= static_cast<Pair*>(data);
+				inc_arr.pushBack(pair);
+			}
 		}
 	}
 }

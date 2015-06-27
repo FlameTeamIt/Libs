@@ -47,6 +47,8 @@ protected:
 	mutable unsigned long level; // глубина записи
 	mutable std::string str_level;
 	
+	virtual void set(const Data* data) = 0;
+	
 	static Type getDataType(const std::string &json_string);
 public:
 	Data();
@@ -89,8 +91,6 @@ class DataContainer
 protected:
 	static templates::Array<std::string> split(const std::string &json_container);
 	
-	virtual void set(const Data* data) = 0;
-	
 public:
 	DataContainer(const bool& is_object_type
 				  ,const bool& is_array_type);
@@ -116,6 +116,10 @@ class Single
 		: public Data
 {
 	std::string str_data;
+	
+protected:
+	void set(const Data *data);
+	void set(const Single &single);
 	
 public:
 	Single();
@@ -154,8 +158,12 @@ class Pair
 		: public Data
 {
 	Data* inc_data;
+protected:
+	void set(const Data *data);
+	void set(const Pair &pair);
+	
 public:
-	std::string key;
+	std::string inc_key;
 	
 	Pair();
 	Pair(const std::string &json_pair);
@@ -221,6 +229,7 @@ class Object
 		: public DataContainer
 {
 	templates::Array<Pair*> inc_arr;
+	
 protected:
 	void set(const Data *data);
 	void set(const Object &object);

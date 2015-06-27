@@ -14,19 +14,36 @@ Single::Single()
 Single::Single(const Data* data)
 	: Single()
 {
-	if(data->getType() == SINGLE)
-	{ Single(*((Single*)data)); }
+	set(data);
 }
 
 Single::Single(const Single& single)
 	: Single()
-{ this->str_data = single.str_data; }
+{
+	set(single);
+}
 
 Single::Single(const std::string& value)
 	: Single()
 { setAsString(value); }
 
 Single::~Single() {}
+
+void
+Single::set(const Data *data)
+{
+	if(data->getType() == SINGLE)
+	{
+		const Single* single = static_cast<const Single*>(data);
+		set(*single);
+	}
+}
+
+void
+Single::set(const Single &single)
+{
+	this->str_data = single.str_data;
+}
 
 const Single &
 Single::operator =(const JSON::Single &single)

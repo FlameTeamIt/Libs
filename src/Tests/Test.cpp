@@ -182,7 +182,7 @@ Test::Others::TList()
 	List<int> list(start_count);
 	
 	for(size_t i = 0; i < start_count; i++)
-	{ list[i] = i+1; }
+	{ list[i] = int(i+1); }
 	
 	if(list[0] != 1 && list[1] != 2)
 	{ return 0; }

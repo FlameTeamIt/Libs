@@ -449,11 +449,11 @@ Array<T>::setSize(const size_t &new_length)
 {
 	if(initialised)
 	{
-		clear();
+		array_delete<T>(this->arr_size, this->inc_arr);
 	}
 	
 	this->initialised = true;
-	inc_arr = array_get_new<T>(new_length);
+	this->inc_arr = array_get_new<T>(new_length);
 	this->arr_size = new_length;
 	
 }
