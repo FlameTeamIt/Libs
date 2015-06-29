@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_ARRAY_H
 #define TEMPLATES_ARRAY_H
 
-#include "Functions.h"
+#include "Array_Functions.h"
 
 namespace flame_ide
 { namespace templates
@@ -26,11 +26,6 @@ public:
 	Array(const size_t &arr_size);
 	
 	~Array();
-	
-	// future
-	// пока не знаю, как работать с функциями с произвольным количеством аргументов	
-//	template<typename ... cunstructor_args>
-//	Array(const size_t& length, ...);
 	
 	bool isInitialised() const;
 	
