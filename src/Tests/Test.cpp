@@ -244,6 +244,7 @@ Test::Others::TArray()
 	
 	array.pushBack(10);
 	array.pushBack(9);
+	array.pushFront(7);
 	array.pushFront(8);
 	
 	std::cout << "Push:\n";
