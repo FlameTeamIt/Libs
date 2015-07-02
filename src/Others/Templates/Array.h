@@ -146,7 +146,7 @@ Array<T>::pushBack(const T &data)
 	// удаляем старый массив
 	if(initialised)
 	{
-		array_copying_without_new<T>(arr_size, inc_arr, 0, new_arr, 0);
+		array_copying<T>(arr_size, inc_arr, 0, new_arr, 0);
 		array_delete<T>(inc_arr);
 	}
 	else
@@ -171,7 +171,7 @@ Array<T>::pushFront(const T &data)
 	std::copy_n(&data, 1, new_arr);
 	
 	// копируем элементы
-	array_copying_with_new<T>(arr_size, inc_arr, 0, new_arr, 1);
+	array_copying<T>(arr_size, inc_arr, 0, new_arr, 1);
 	
 	// удаляем старый массив
 	if(initialised)
@@ -198,13 +198,13 @@ Array<T>::insert(const size_t &index, const T &data)
 	T* new_arr = array_get_new<T>(new_length);
 	
 	// копируем данные до индекса
-	array_copying_with_new<T>(index, inc_arr, 0, new_arr, 0);
+	array_copying<T>(index, inc_arr, 0, new_arr, 0);
 	
 	// выделяем память на нужный элемент
 	std::copy_n(&data, 1, new_arr+index);
 	
 	// копируем данные после индекса
-	array_copying_with_new<T>(arr_size - index, inc_arr, index, new_arr, index+1);
+	array_copying<T>(arr_size - index, inc_arr, index, new_arr, index+1);
 	
 	if(initialised)
 	{
@@ -226,13 +226,13 @@ Array<T>::insert(const size_t &index, const size_t &count, const T *array)
 	T* new_arr = array_get_new<T>(new_length);
 	
 	// копируем данные до индекса
-	array_copying_with_new<T>(index, inc_arr, 0, new_arr, 0);
+	array_copying<T>(index, inc_arr, 0, new_arr, 0);
 	
 	// копируем данные из массива
 	std::copy_n(array, count, new_arr+index);
 	
 	// копируем данные после индекса
-	array_copying_with_new<T>(arr_size - index, inc_arr, index, new_arr, index+count);
+	array_copying<T>(arr_size - index, inc_arr, index, new_arr, index+count);
 	
 	// удаляем старый массив
 	if(initialised)
@@ -263,7 +263,7 @@ Array<T>::popBack()
 		T *new_arr = array_get_new<T>(new_length);
 		
 		// копируем все данные кроме последнего
-		array_copying_with_new<T>(new_length, inc_arr, 0, new_arr, 0);
+		array_copying<T>(new_length, inc_arr, 0, new_arr, 0);
 		
 		inc_arr = new_arr;
 	}
@@ -294,7 +294,7 @@ Array<T>::popFront()
 		T *new_arr = array_get_new<T>(new_length);
 		
 		// копируем все данные кроме первого
-		array_copying_with_new<T>(new_length, inc_arr, 1, new_arr, 0);
+		array_copying<T>(new_length, inc_arr, 1, new_arr, 0);
 		
 		inc_arr = new_arr;
 	}
@@ -325,7 +325,7 @@ Array<T>::popBack(const size_t &count)
 		T *new_arr = array_get_new<T>(new_length);
 		
 		// копируем все данные кроме последнего
-		array_copying_with_new<T>(new_length, inc_arr, 0, new_arr, 0);
+		array_copying<T>(new_length, inc_arr, 0, new_arr, 0);
 		
 		inc_arr = new_arr;
 	}
@@ -356,7 +356,7 @@ Array<T>::popFront(const size_t &count)
 		T *new_arr = array_get_new<T>(new_length);
 		
 		// копируем все данные кроме первого
-		array_copying_with_new<T>(new_length, inc_arr, count-1, new_arr, 0);
+		array_copying<T>(new_length, inc_arr, count-1, new_arr, 0);
 		
 		inc_arr = new_arr;
 	}
@@ -387,10 +387,10 @@ Array<T>::erase(const size_t &index)
 		T *new_arr = array_get_new<T>(new_length);
 		
 		// копируем элементы до индекса
-		array_copying_with_new<T>(index, inc_arr, 0, new_arr, 0);
+		array_copying<T>(index, inc_arr, 0, new_arr, 0);
 		
 		// копируем после индекса
-		array_copying_with_new<T>(arr_size - index - 1,
+		array_copying<T>(arr_size - index - 1,
 								  inc_arr, index+1,
 								  new_arr, index);
 		
@@ -424,10 +424,10 @@ Array<T>::erase(const size_t &index, const size_t &count)
 		// тут нужно подумать. Что-то тут не так
 		
 		// копируем элементы до индекса
-		array_copying_with_new<T>(index, inc_arr, 0, new_arr, 0);
+		array_copying<T>(index, inc_arr, 0, new_arr, 0);
 		
 		// копируем после индекса + количество удяляемых элементов
-		array_copying_with_new<T>(arr_size - index - count,
+		array_copying<T>(arr_size - index - count,
 								  inc_arr, index + count,
 								  new_arr, index);
 		

@@ -223,11 +223,11 @@ Test::Others::TList()
 	list1 = list;
 	
 	// добавление массива в конец и его удаление
-	list1.pushBackArray(2, arr);
+	list1.pushBack(2, arr);
 	list1.popBack(2);
 	
 	// добавление массива в начало и его удаление
-	list1.pushFrontArray(2, arr);
+	list1.pushFront(2, arr);
 	list1.popFront(2);
 	
 	return 1;

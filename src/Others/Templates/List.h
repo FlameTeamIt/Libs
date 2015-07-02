@@ -17,27 +17,31 @@ class ListIterator
 	bool is_reverse;
 	List<T> *parent;
 	
+#ifdef FUTURE
+	T** inc_arr_elements; // fast getting data
+#endif
+	
 public:
 	ListIterator();
-	ListIterator(const List<T> &);
+	ListIterator(const ListIterator<T> &iterator);
 	
-	T&   getData();
+	inline T& getData();
 	
-	bool toNext();
-	bool toPrev();
+	bool inline toNext() const;
+	bool inline toPrev() const;
 	
 	bool isReverse();
 	
-	const ListIterator<T>& operator=(const ListIterator<T> &iterator);
+	const inline ListIterator<T>& operator=(const ListIterator<T> &iterator) const;
 	
-	bool operator==(const ListIterator<T> &iterator) const;
-	bool operator!=(const ListIterator<T> &iterator) const;
+	bool inline operator==(const ListIterator<T> &iterator) const;
+	bool inline operator!=(const ListIterator<T> &iterator) const;
 	
-	const ListIterator<T>& operator++();
-	const ListIterator<T>& operator++(int);
+	const inline ListIterator<T>& operator++() const;
+	const inline ListIterator<T>& operator++(int) const;
 	
-	const ListIterator<T>& operator--();
-	const ListIterator<T>& operator--(int);
+	const inline ListIterator<T>& operator--() const;
+	const inline ListIterator<T>& operator--(int) const;
 	
 	friend class List<T>;
 };
@@ -45,10 +49,10 @@ public:
 template<typename T>
 class List
 {
-	typedef Container<T> container;
 public:
+	typedef Container<T> container;
 	typedef ListIterator<T> iterator;
-
+	
 private:
 	bool is_opimize;
 	
@@ -77,8 +81,8 @@ public:
 	void pushBack(const T &data); // вставка элемента в конец
 	void pushFront(const T &data); // вставка элемента в начало
 
-	void pushBackArray(size_t count, const T *array); // вставка массива в конец
-	void pushFrontArray(size_t count, const T *array); // вставка массива в начало
+	void pushBack(size_t count, const T *array); // вставка массива в конец
+	void pushFront(size_t count, const T *array); // вставка массива в начало
 	
 #ifdef FUTURE
 	void pushBackList(const List<T> &list);
@@ -128,10 +132,16 @@ using namespace	flame_ide::templates;
 
 template<typename T>
 ListIterator<T>::ListIterator()
-{}
+{
+	
+}
 template<typename T>
-ListIterator<T>::ListIterator(const List<T> &)
-{}
+ListIterator<T>::ListIterator(const ListIterator<T> &iterator)
+{
+	this->pointer = iterator.pointer;
+	this->is_reverse = iterator.is_reverse;
+	this->parent = iterator.parent;
+}
 
 template<typename T>
 T&
@@ -142,11 +152,11 @@ ListIterator<T>::getData()
 
 template<typename T>
 bool
-ListIterator<T>::toNext()
+ListIterator<T>::toNext() const
 {
 	switch (this->is_reverse)
 	{
-	case true: // идем назад
+	case true: // to first
 		if(pointer->pos_type != FIRST)
 		{
 			pointer = pointer->prev;
@@ -154,7 +164,7 @@ ListIterator<T>::toNext()
 		}
 		break;
 		
-	default:
+	default: // to last
 		if(pointer->pos_type != LAST)
 		{
 			pointer = pointer->next;
@@ -168,11 +178,11 @@ ListIterator<T>::toNext()
 
 template<typename T>
 bool
-ListIterator<T>::toPrev()
+ListIterator<T>::toPrev() const
 {
 	switch (this->is_reverse)
 	{
-	case true: // идем вперед
+	case true: // to last
 		if(pointer->pos_type != LAST)
 		{
 			pointer = pointer->next;
@@ -180,7 +190,7 @@ ListIterator<T>::toPrev()
 		}
 		break;
 		
-	default:
+	default: // to first
 		if(pointer->pos_type != FIRST)
 		{
 			pointer = pointer->prev;
@@ -195,14 +205,18 @@ ListIterator<T>::toPrev()
 template<typename T>
 bool
 ListIterator<T>::isReverse()
-{ return this->is_reverse; }
+{
+	return this->is_reverse;
+}
 
 template<typename T>
 const ListIterator<T>&
-ListIterator<T>::operator=(const ListIterator<T> &iterator)
+ListIterator<T>::operator=(const ListIterator<T> &iterator) const
 {
-	pointer = iterator.pointer;
-	is_reverse = iterator.is_reverse;
+	this->pointer = iterator.pointer;
+	this->is_reverse = iterator.is_reverse;
+	this->parent = iterator.parent;
+	
 	return (*this);
 }
 
@@ -227,23 +241,35 @@ ListIterator<T>::operator!=(const ListIterator<T> &iterator) const
 
 template<typename T>
 const ListIterator<T>&
-ListIterator<T>::operator++()
-{ this->toNext(); return *this; }
+ListIterator<T>::operator++() const
+{
+	this->toNext();
+	return *this;
+}
 
 template<typename T>
 const ListIterator<T>&
-ListIterator<T>::operator++(int)
-{ this->toNext(); return *this; }
+ListIterator<T>::operator++(int) const
+{
+	this->toNext();
+	return *this;
+}
 
 template<typename T>
 const ListIterator<T>&
-ListIterator<T>::operator--()
-{ this->toPrev(); return *this; }
+ListIterator<T>::operator--() const
+{
+	this->toPrev();
+	return *this;
+}
 
 template<typename T>
 const ListIterator<T>&
-ListIterator<T>::operator--(int)
-{ this->toPrev(); return *this; }
+ListIterator<T>::operator--(int) const
+{
+	this->toPrev();
+	return *this;
+}
 
 // List
 
@@ -327,7 +353,7 @@ List<T>::pushFront(const T &data)
 
 template<typename T>
 void
-List<T>::pushBackArray(size_t count, const T *array)
+List<T>::pushBack(size_t count, const T *array)
 {
 	list_insert_array_before<T>(&tail, count, array);
 	size += count;
@@ -337,7 +363,7 @@ List<T>::pushBackArray(size_t count, const T *array)
 
 template<typename T>
 void
-List<T>::pushFrontArray(size_t count, const T *array)
+List<T>::pushFront(size_t count, const T *array)
 {
 	list_insert_array_after<T>(&head, count, array);
 	size += count;
@@ -408,11 +434,15 @@ List<T>::popBack(size_t count)
 	
 	// сложно - нужно искать элемент с конца.
 	// запилю отдельной функцией
-	(size > count)
-			? size -= list_erase_some_elements_end<T>(&tail, count)
-			: size = 0;
-	
-	updateIterators();
+	if(size > count)
+	{
+		size -= list_erase_some_elements_end<T>(&tail, count);
+		updateIterators();
+	}
+	else
+	{
+		clear();
+	}
 }
 
 template<typename T>
@@ -421,11 +451,15 @@ List<T>::popFront(size_t count)
 {
 	if(!size) return;
 	
-	(size > count)
-			? size -= list_erase_some_elements<T>(&head, count)
-			: size = 0;
-	
-	updateIterators();
+	if(size > count)
+	{
+		size -= list_erase_some_elements<T>(&head, count);
+		updateIterators();
+	}
+	else
+	{
+		clear();
+	}
 }
 
 template<typename T>
