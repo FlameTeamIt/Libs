@@ -1,3 +1,4 @@
 [submodule "src/Others/JSON"]
 	path = src/Others/JSON
 	url = https://github.com/kachsheev/JSONLib.git
+	ignore = dirty
