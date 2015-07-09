@@ -291,7 +291,9 @@ List<T>::List()
 	revers_end_iterator.pointer = &head;
 	
 	revers_begin_iterator.parent = this;
-	revers_end_iterator.parent = this;	
+	revers_end_iterator.parent = this;
+	
+	is_temporary = false;
 }
 template<typename T>
 List<T>::List(size_t new_size)
@@ -580,7 +582,7 @@ List<T>::operator =(const List<T> &arg)
 {
 	if(this->size) this->clear();
 	
-	if(!arg.is_temporary)
+	if(arg.is_temporary)
 	{
 		this->head = arg.head;
 		this->tail = arg.tail;
