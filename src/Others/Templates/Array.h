@@ -15,6 +15,7 @@ class Array
 	size_t type_size;
 	
 	mutable bool initialised;
+	mutable bool is_temporary;
 	
 	void set();
 	T* getPCopy() const;
@@ -52,6 +53,9 @@ public:
 	void   setCopy(const Array<T> &copying_array);
 	size_t getSize() const;
 	
+	void setTemporary(bool is_temp = true) const;
+	bool isTemporary() const;
+	
 	inline T& at(const size_t &index) const;
 	inline T& operator[](const size_t &index) const;
 	
@@ -88,7 +92,7 @@ Array<T>::Array(const size_t& array_length)
 	{
 		this->arr_size = array_length;
 		this->initialised = true;
-		inc_arr = array_get_new<T>(this->arr_size);
+		this->inc_arr = array_get_new<T>(this->arr_size);
 	}
 	else set();
 }
@@ -96,9 +100,9 @@ Array<T>::Array(const size_t& array_length)
 template<class T>
 Array<T>::~Array()
 {
-	if(initialised)
+	if(initialised && !is_temporary)
 	{
-		array_delete<T>(this->inc_arr);
+		array_delete<T>(inc_arr);
 	}
 }
 
@@ -118,7 +122,7 @@ template<class T>
 T*
 Array<T>::getPCopy() const
 {
-	return array_get_copy<T>(this->arr_size, this->inc_arr);
+	return array_get_copy<T>(arr_size, inc_arr);
 }
 
 // public
@@ -134,15 +138,11 @@ Array<T>::pushBack(const T &data)
 {
 	size_t new_length = arr_size + 1;
 	
+	array_insert_element<T>(arr_size, inc_arr, arr_size, data);
+	
 	if(!initialised)
 	{
-		array_insert_element<T>(arr_size, inc_arr, arr_size, data);
 		initialised	= true;
-	}
-	else
-	{
-//		array_insert_element<T>(arr_size, inc_arr, arr_size-1, data);
-		array_insert_element<T>(arr_size, inc_arr, arr_size, data);
 	}
 	
 	arr_size = new_length;
@@ -172,8 +172,7 @@ Array<T>::insert(const size_t &index, const T &data)
 	
 	size_t new_length = arr_size + 1;
 	
-	array_insert_element<T>(arr_size, inc_arr,
-							index, data);
+	array_insert_element<T>(arr_size, inc_arr, index, data);
 	
 	if(!initialised)
 	{
@@ -191,8 +190,7 @@ Array<T>::insert(const size_t &index, const size_t &count, const T *array)
 	
 	size_t new_length = arr_size + count;
 	
-	array_insert_array<T>(arr_size, inc_arr,
-						  index, count, array);
+	array_insert_array<T>(arr_size, inc_arr, index, count, array);
 	
 	if(!initialised)
 	{
@@ -268,10 +266,10 @@ template<class T>
 void
 Array<T>::popBack(const size_t &count)
 {
-	if(!initialised || (count > arr_size)) return;
+	if(!initialised || (count > this->arr_size)) return;
 	
-	size_t new_length = arr_size - count;
-	T *tmp_inc_arr = inc_arr;
+	size_t new_length = this->arr_size - count;
+	T *tmp_inc_arr = this->inc_arr;
 	
 	if(new_length)
 	{
@@ -279,30 +277,30 @@ Array<T>::popBack(const size_t &count)
 		T *new_arr = array_get_new<T>(new_length);
 		
 		// копируем все данные кроме последнего
-		array_copying<T>(new_length, inc_arr, 0, new_arr, 0);
+		array_copying<T>(new_length, this->inc_arr, 0, new_arr, 0);
 		
 		inc_arr = new_arr;
 	}
 	else
 	{
-		inc_arr = nullptr;
-		initialised = false;
+		this->inc_arr = nullptr;
+		this->initialised = false;
 	}
 	
 	// удаляем старый массив
 	array_delete<T>(tmp_inc_arr);
 	
-	arr_size = new_length;
+	this->arr_size = new_length;
 }
 
 template<class T>
 void
 Array<T>::popFront(const size_t &count)
 {
-	if(!initialised || (count > arr_size)) return;
+	if(!this->initialised || (count > this->arr_size)) return;
 	
-	size_t new_length = arr_size - count;
-	T *tmp_inc_arr = inc_arr;
+	size_t new_length = this->arr_size - count;
+	T *tmp_inc_arr = this->inc_arr;
 	
 	if(new_length)
 	{
@@ -310,29 +308,29 @@ Array<T>::popFront(const size_t &count)
 		T *new_arr = array_get_new<T>(new_length);
 		
 		// копируем все данные кроме первого
-		array_copying<T>(new_length, inc_arr, count-1, new_arr, 0);
+		array_copying<T>(new_length, this->inc_arr, count-1, new_arr, 0);
 		
 		inc_arr = new_arr;
 	}
 	else
 	{
-		inc_arr = nullptr;
-		initialised = false;
+		this->inc_arr = nullptr;
+		this->initialised = false;
 	}
 	
 	// удаляем старый массив
 	array_delete<T>(tmp_inc_arr);
 	
-	arr_size = new_length;
+	this->arr_size = new_length;
 }
 
 template<class T>
 void
 Array<T>::erase(const size_t &index)
 {
-	if(!initialised || (index >= arr_size)) return;
+	if(!this->initialised || (index >= this->arr_size)) return;
 	
-	array_erase<T>(arr_size, inc_arr, index);
+	array_erase<T>(this->arr_size, this->inc_arr, index);
 	
 	if(!arr_size)
 	{
@@ -344,13 +342,13 @@ template<class T>
 void
 Array<T>::erase(const size_t &index, const size_t &count)
 {
-	if(!initialised || ( (index + count - 1) >= arr_size) || !count) return;
+	if(!this->initialised || ( (index + count - 1) >= this->arr_size) || !count) return;
 	
-	array_erase<T>(arr_size, inc_arr, index, count);
+	array_erase<T>(this->arr_size, this->inc_arr, index, count);
 	
-	if(!arr_size)
+	if(!this->arr_size)
 	{
-		initialised = false;
+		this->initialised = false;
 	}
 }
 
@@ -360,10 +358,10 @@ Array<T>::clear()
 {
 	if(initialised)
 	{
-		array_delete<T>(this->inc_arr);
-		this->inc_arr = nullptr;
-		this->initialised = false;
-		this->arr_size = 0;
+		array_delete<T>(inc_arr);
+		inc_arr = nullptr;
+		initialised = false;
+		arr_size = 0;
 	}
 }
 
@@ -371,7 +369,7 @@ template<class T>
 void
 Array<T>::setSize(const size_t &new_length)
 {
-	if(initialised)
+	if(this->initialised)
 	{
 		array_delete<T>(this->inc_arr);
 	}
@@ -396,7 +394,20 @@ template<class T>
 size_t
 Array<T>::getSize() const
 {
-	return this->arr_size;
+	return arr_size;
+}
+template<class T>
+void 
+Array<T>::setTemporary(bool is_temp) const
+{
+	this->is_temporary = is_temp;
+}
+
+template<class T>
+bool
+Array<T>::isTemporary() const
+{
+	return is_temporary;
 }
 
 // сделал "защиту от дурака", чтобы народ не выходил за границы массива
@@ -413,7 +424,7 @@ template<class T>
 T&
 Array<T>::operator [](const size_t &index) const
 {
-	return inc_arr[index % this->arr_size];
+	return this->inc_arr[index % this->arr_size];
 }
 
 template<class T>
@@ -423,8 +434,15 @@ Array<T>::operator =(const Array<T> &arg)
 	if(arg.initialised)
 	{
 		array_delete<T>(this->inc_arr);
+		if(arg.is_temporary)
+		{
+			this->inc_arr = arg.inc_arr;
+		}
+		else
+		{
+			this->inc_arr = arg.getPCopy();
+		}
 		this->arr_size = arg.arr_size;
-		this->inc_arr = arg.getPCopy();
 		this->initialised = true;
 	}
 	

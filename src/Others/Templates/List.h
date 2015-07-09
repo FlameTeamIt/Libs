@@ -56,6 +56,8 @@ public:
 private:
 	bool is_opimize;
 	
+	mutable bool is_temporary;
+	
 	size_t size;
 	
 	container head;
@@ -70,8 +72,6 @@ private:
 	void updateIterators();
 	
 public:
-	mutable T other;
-	
 	List();
 	List(size_t new_size);
 	List(const List &list);
@@ -84,16 +84,8 @@ public:
 	void pushBack(size_t count, const T *array); // вставка массива в конец
 	void pushFront(size_t count, const T *array); // вставка массива в начало
 	
-#ifdef FUTURE
-	void pushBackList(const List<T> &list);
-	void pushFrontList(const List<T> &list);
-#endif
 	void insert(const ListIterator<T> &pos, const T &elem); // вставка элементов после итератора
 	void insert(const ListIterator<T> &pos, const size_t &count, const T *array); // вставка вектора после итератора
-#ifdef FUTURE
-	// функция вставки списка
-	// не знаю только, нужно ли или нет
-#endif
 	
 	void popBack(); // удаление элемента с конца
 	void popFront(); // удаление элемента с начала
@@ -116,6 +108,9 @@ public:
 	
 	ListIterator<T> first() const; // tested
 	ListIterator<T> last() const; // tested
+	
+	void setTemporary(bool is_temp = true) const;
+	bool isTemporary() const;
 	
 	// дополнительные функции -- преобразование к динамическому массиву.
 	// будут отдельно реализованы
@@ -320,7 +315,10 @@ List<T>::List(const List<T> &list)
 template<typename T>
 List<T>::~List()
 {
-	list_erase_some_elements<T>(&head, &tail);
+	if(!is_temporary)
+	{
+		list_erase_some_elements<T>(&head, &tail);
+	}
 }
 
 template<typename T>
@@ -335,8 +333,8 @@ template<typename T>
 void
 List<T>::pushBack(const T &data)
 {
-	list_insert_elem_before<T>(&tail, data);
-	size++;
+	list_insert_elem_before<T>(&this->tail, data);
+	this->size++;
 	
 	updateIterators();	
 }
@@ -346,7 +344,7 @@ void
 List<T>::pushFront(const T &data)
 {
 	list_insert_elem_after<T>(&head, data);
-	size++;
+	this->size++;
 	
 	updateIterators();
 }
@@ -355,8 +353,8 @@ template<typename T>
 void
 List<T>::pushBack(size_t count, const T *array)
 {
-	list_insert_array_before<T>(&tail, count, array);
-	size += count;
+	list_insert_array_before<T>(&this->tail, count, array);
+	this->size += count;
 	
 	updateIterators();
 }
@@ -365,8 +363,8 @@ template<typename T>
 void
 List<T>::pushFront(size_t count, const T *array)
 {
-	list_insert_array_after<T>(&head, count, array);
-	size += count;
+	list_insert_array_after<T>(&this->head, count, array);
+	this->size += count;
 	
 	updateIterators();
 }
@@ -382,7 +380,7 @@ List<T>::insert(const iterator &pos, const T &elem)
 	}
 	
 	list_insert_elem_after<T>(pos.pointer, elem);	
-	size++;
+	this->size++;
 	
 	updateIterators();
 }
@@ -397,7 +395,7 @@ List<T>::insert(const iterator &pos, const size_t &count, const T *array)
 	}
 	
 	list_insert_array_after<T>(pos.pointer, count, array);
-	size += count;
+	this->size += count;
 	
 	updateIterators();
 }
@@ -430,11 +428,9 @@ template<typename T>
 void
 List<T>::popBack(size_t count)
 {
-	if(!size) return;
+	if(!this->size) return;
 	
-	// сложно - нужно искать элемент с конца.
-	// запилю отдельной функцией
-	if(size > count)
+	if(this->size > count)
 	{
 		size -= list_erase_some_elements_end<T>(&tail, count);
 		updateIterators();
@@ -466,7 +462,8 @@ template<typename T>
 void
 List<T>::erase(const iterator &pos)
 {
-	if(!size) return;
+	if(!this->size) return;
+	
 	if(pos.pointer->pos_type == LAST) return;
 	
 	if(pos.pointer->next != nullptr
@@ -482,12 +479,12 @@ template<typename T>
 void
 List<T>::erase(const iterator &pos, const size_t &count)
 {
-	if(!size) return;
+	if(!this->size) return;
 	if(pos.pointer->pos_type == LAST) return;
 	
-	(size > count)
-			? size -= list_erase_some_elements<T>(pos.pointer, count)
-			: size = 0;
+	(this->size > count)
+			? this->size -= list_erase_some_elements<T>(pos.pointer, count)
+			: this->size = 0;
 	
 	updateIterators();
 }
@@ -552,10 +549,22 @@ List<T>::last() const
 }
 
 template<typename T>
+void
+List<T>::setTemporary(bool is_temp) const
+{
+	this->is_temporary = is_temp;
+}
+
+template<typename T>
+bool
+List<T>::isTemporary() const
+{
+	return is_temporary;
+}
+
+template<typename T>
 T& List<T>::operator [](size_t index) const
 {
-	if(!size) { return other; }
-	
 	container *run_pointer = head.next;
 	index = index % size;
 	
@@ -571,10 +580,24 @@ List<T>::operator =(const List<T> &arg)
 {
 	if(this->size) this->clear();
 	
-	list_copy<T>(&(arg.head), &(arg.tail), // откуда
-				 &(this->head), &(this->tail)); // и куда
-	this->size = arg.size;
+	if(!arg.is_temporary)
+	{
+		this->head = arg.head;
+		this->tail = arg.tail;
+		
+		if(this->is_temporary)
+		{
+			is_temporary = false;
+		}
+	}
+	else
+	{
+		list_copy<T>(&(arg.head), &(arg.tail), // from
+					 &(this->head), &(this->tail)); // to
+	}
 	updateIterators();
+	
+	this->size = arg.size;
 	
 	return *this;
 }
