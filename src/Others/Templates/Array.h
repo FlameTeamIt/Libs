@@ -81,7 +81,14 @@ Array<T>::Array(const Array<T> &array)
 	this->is_temporary = false;
 	if(array.arr_size && array.is_initialised)
 	{
-		this->inc_arr = array_get_copy<T>(array.arr_size, array.inc_arr);
+		if(array.is_temporary)
+		{
+			this->inc_arr = array.inc_arr;
+		}
+		else
+		{
+			this->inc_arr = array.getPCopy();
+		}
 		this->arr_size = array.arr_size;
 		this->is_initialised = true;
 	}
@@ -106,6 +113,10 @@ Array<T>::~Array()
 	if(is_initialised && !is_temporary)
 	{
 		array_delete<T>(inc_arr);
+	}
+	else
+	{
+		is_temporary = false;
 	}
 }
 
@@ -434,7 +445,7 @@ template<class T>
 const Array<T>&
 Array<T>::operator =(const Array<T> &arg)
 {
-	if(arg.is_initialised)
+	if(arg.arr_size && arg.is_initialised)
 	{
 		array_delete<T>(this->inc_arr);
 		if(arg.is_temporary)

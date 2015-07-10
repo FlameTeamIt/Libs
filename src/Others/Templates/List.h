@@ -321,6 +321,10 @@ List<T>::~List()
 	{
 		list_erase_some_elements<T>(&head, &tail);
 	}
+	else
+	{
+		is_temporary = false;
+	}
 }
 
 template<typename T>
