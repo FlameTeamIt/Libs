@@ -24,7 +24,7 @@ override Warn_flags := \
 			-Wall \
 			-Wextra \
 			-Wconversion \
-			-Werror \
+			#-Werror \
 			-Winit-self \
 			-Wunreachable-code \
 			-Wformat=2 \
