@@ -31,6 +31,7 @@ public:
 	bool inline toPrev() const;
 	
 	bool isReverse();
+	bool isEnd() const;
 	
 	const inline ListIterator<T>& operator=(const ListIterator<T> &iterator) const;
 	
@@ -142,7 +143,7 @@ template<typename T>
 T&
 ListIterator<T>::getData()
 {
-	return *(pointer->inc_data);
+	return pointer->inc_data;
 }
 
 template<typename T>
@@ -201,7 +202,15 @@ template<typename T>
 bool
 ListIterator<T>::isReverse()
 {
-	return this->is_reverse;
+	return is_reverse;
+}
+
+template<typename T>
+bool
+ListIterator<T>::isEnd() const
+{
+	return ((is_reverse && pointer->pos_type == FIRST)
+			|| (!is_reverse && pointer->pos_type == LAST));
 }
 
 template<typename T>
@@ -270,8 +279,8 @@ ListIterator<T>::operator--(int) const
 
 template<typename T>
 List<T>::List()
-	: head(&tail, nullptr, nullptr, FIRST),
-	  tail(nullptr, &head, nullptr, LAST)
+	: head(&tail, nullptr, FIRST),
+	  tail(nullptr, &head, LAST)
 {
 	size = 0;
 	
@@ -577,7 +586,7 @@ T& List<T>::operator [](size_t index) const
 	for(size_t i = 0; i < index; i++)
 	{ run_pointer = run_pointer->next; }
 		
-	return *(run_pointer->inc_data);
+	return run_pointer->inc_data;
 }
 
 template<typename T>
