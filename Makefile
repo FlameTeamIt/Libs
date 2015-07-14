@@ -42,17 +42,17 @@ override Warn_flags := \
 Defines_Debug := -DDEBUG=1
 Defines_Release :=
 
-override Flags_Debug := -pg -O0 $(Warn_flags)
-override Flags_Release := -O2 $(Warn_flags)
+override Flags_Debug :=-pg -O0 $(Warn_flags)
+override Flags_Release :=-O2 $(Warn_flags)
 
 ifeq ($(TypeBuild),Release)
 override Defines := $(Defines_Release)
-override Flags := -std=c++11 -pipe $(Defines_Release) $(Flags_Release)
+override Flags :=-std=c++11 -pipe $(Defines_Release) $(Flags_Release)
 endif
 
 ifeq ($(TypeBuild),Debug)
 override Defines := $(Defines_Debug)
-override Flags := -std=c++11 -pipe $(Defines_Debug) $(Flags_Debug)
+override Flags :=-std=c++11 -pipe $(Defines_Debug) $(Flags_Debug)
 endif
 
 Path := ./src
@@ -63,7 +63,7 @@ Sources := \
 
 # получаем имена объектных файлов
 Dependences := \
-	$(addprefix $(DepPath)/,$(subst /,_,$(Sources:.cpp=.d)))
+	$(addprefix $(DepPath)/,$(Sources:.cpp=.d))
 Flag_Deps := -MM -c
 
 
@@ -73,9 +73,10 @@ Sources_Test := \
 
 
 Objects := \
-	$(addprefix $(ObjPath)/,$(subst /,_,$(Sources:.cpp=.o)))
-Flag_Obj := -fPIC
-Flag_Lib := -shared
+	$(addprefix $(ObjPath)/,$(Sources:.cpp=.o))
+	
+Flag_Obj :=-fPIC
+Flag_Lib :=-shared
 
 
 Target_lib := $(LibPath)/lib$(Name).so
@@ -89,7 +90,7 @@ Path_ALL := \
 all: .mkdirs .depends .compile .link
 #--------------------
 .mkdirs:
-	@mkdir -p $(Dirs)
+	@mkdir -p $(Dirs) $(shell dirname $(Objects) $(Dependences))
 #--------------------
 #
 # Для описания зависимостей от заголовков
@@ -98,8 +99,8 @@ all: .mkdirs .depends .compile .link
 .make_depends: $(Dependences)
 
 # честно говоря, такой вариант не очень нравится. Надо думать.
-$(DepPath)/%.d :
-	$(CC) $(Flags) $(Flag_Deps) $(Libs) $(subst _,/,$(notdir $(subst .d,.cpp,$@))) > $@
+$(Dependences): $(DepPath)/%.d : %.cpp
+	$(CC) $(Flags) $(Flag_Deps) $(Libs) $< > $@
 include $(wildcard $(DepPath)/*.d)
 #--------------------
 #
@@ -108,8 +109,8 @@ include $(wildcard $(DepPath)/*.d)
 .compile : .depends $(Objects)
 
 # $(Objects): obj/%.o : %.cpp # старый вариант; оставил для понимания происходящего
-$(ObjPath)/%.o :
-	$(CC) $(Flags) $(Flag_Obj) $(Libs) -c $(subst _,/,$(notdir $(subst .o,.cpp,$@))) -o $@
+$(Objects) : $(ObjPath)/%.o : %.cpp
+	$(CC) $(Flags) $(Flag_Obj) $(Libs) -c $< -o $@
 
 #--------------------
 #
@@ -118,7 +119,7 @@ $(ObjPath)/%.o :
 .link: .compile .link_libs .link_test
 
 .link_libs: \
-	$(Target_lib)
+	$(Target_lib) \
 # 	$(Target_lib_static)
 
 # видно с коммандной строки
@@ -126,8 +127,8 @@ $(Target_lib): $(Objects)
 	$(CC) $(Flag_Lib) $(Flags) $(Libs) $(Objects) -o $(Target_lib)
 
 # видно с коммандной строки
-# ./lib/$(Target_lib_static): $(Objects)
-# 	@ar rv lib/$(Target_lib_static) $(Objects)
+$(Target_lib_static): $(Objects)
+	@ar rv $(Target_lib_static) $(Objects)
 
 .link_test: .compile $(Target_bin_test)
 
