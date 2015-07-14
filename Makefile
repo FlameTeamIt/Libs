@@ -24,7 +24,6 @@ override Warn_flags := \
 			-Wall \
 			-Wextra \
 			-Wconversion \
-			#-Werror \
 			-Winit-self \
 			-Wunreachable-code \
 			-Wformat=2 \
@@ -37,13 +36,14 @@ override Warn_flags := \
 			-Wcast-qual \
 			-Wcast-align \
 			-Wwrite-strings \
-			-Wlogical-op
+			-Wlogical-op \
+			#-Werror \
 
 Defines_Debug := -DDEBUG=1
 Defines_Release :=
 
-override Flags_Debug :=-pg -O0 $(Warn_flags)
-override Flags_Release :=-O2 $(Warn_flags)
+override Flags_Debug :=-pg -O0 -fno-inline-small-functions $(Warn_flags)
+override Flags_Release :=-O2 -finline $(Warn_flags)
 
 ifeq ($(TypeBuild),Release)
 override Defines := $(Defines_Release)
@@ -55,7 +55,7 @@ override Defines := $(Defines_Debug)
 override Flags :=-std=c++11 -pipe $(Defines_Debug) $(Flags_Debug)
 endif
 
-Path := ./src
+Path := src/
 
 # список всех ресурсных файлов
 Sources := \
@@ -63,7 +63,7 @@ Sources := \
 
 # получаем имена объектных файлов
 Dependences := \
-	$(addprefix $(DepPath)/,$(Sources:.cpp=.d))
+	$(addprefix $(DepPath)/,$(subst $(Path),,$(Sources:.cpp=.d)))
 Flag_Deps := -MM -c
 
 
@@ -73,7 +73,7 @@ Sources_Test := \
 
 
 Objects := \
-	$(addprefix $(ObjPath)/,$(Sources:.cpp=.o))
+	$(addprefix $(ObjPath)/,$(subst $(Path),,$(Sources:.cpp=.o)))
 	
 Flag_Obj :=-fPIC
 Flag_Lib :=-shared
@@ -99,7 +99,7 @@ all: .mkdirs .depends .compile .link
 .make_depends: $(Dependences)
 
 # честно говоря, такой вариант не очень нравится. Надо думать.
-$(Dependences): $(DepPath)/%.d : %.cpp
+$(Dependences): $(DepPath)/%.d : $(Path)/%.cpp
 	$(CC) $(Flags) $(Flag_Deps) $(Libs) $< > $@
 include $(wildcard $(DepPath)/*.d)
 #--------------------
@@ -109,7 +109,7 @@ include $(wildcard $(DepPath)/*.d)
 .compile : .depends $(Objects)
 
 # $(Objects): obj/%.o : %.cpp # старый вариант; оставил для понимания происходящего
-$(Objects) : $(ObjPath)/%.o : %.cpp
+$(Objects) : $(ObjPath)/%.o : $(Path)/%.cpp
 	$(CC) $(Flags) $(Flag_Obj) $(Libs) -c $< -o $@
 
 #--------------------
