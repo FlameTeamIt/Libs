@@ -58,7 +58,6 @@ list_insert_default(Container<Tt> *start_container, size_t count)
 		Container<Tt> *new_elem = new Container<Tt>;
 		
 		new_elem->pos_type = CENTRAL;
-		new_elem->inc_data = new Tt;
 		
 		run_pointer->next = new_elem;
 		new_elem->prev = run_pointer;
@@ -83,7 +82,8 @@ list_insert_array_after(Container<Tt> *start_container, size_t count, const Tt *
 		Container<Tt> *new_elem = new Container<Tt>;
 		
 		new_elem->pos_type = CENTRAL;
-		new_elem->inc_data = new Tt(array[i]);
+		
+		std::copy(array+i, array+(i+1), &new_elem->inc_data);
 		
 		new_elem->prev = run_pointer;
 
@@ -110,7 +110,8 @@ list_insert_array_before(Container<Tt> *start_container, size_t count, const Tt 
 		Container<Tt> *new_elem = new Container<Tt>;
 		
 		new_elem->pos_type = CENTRAL;
-		new_elem->inc_data = new Tt(array[i]);
+		
+		std::copy(array+i, array+(i+1), &new_elem->inc_data);
 		
 		new_elem->prev = run_pointer;
 		
@@ -132,7 +133,7 @@ list_insert_elem_after(Container<Tt> *container, const Tt &element)
 {
 	Container<Tt> *old_next_container = container->next;
 	Container<Tt> *new_elem = new Container<Tt>(old_next_container, container,
-												new Tt(element), CENTRAL);
+												element, CENTRAL);
 	
 	container->next = new_elem;
 	old_next_container->prev = new_elem;
@@ -146,7 +147,7 @@ list_insert_elem_before(Container<Tt> *container, const Tt &element)
 {
 	Container<Tt> *old_prev_container = container->prev;
 	Container<Tt> *new_elem = new Container<Tt>(container, old_prev_container,
-												new Tt(element), CENTRAL);
+												element, CENTRAL);
 	
 	container->prev = new_elem;
 	old_prev_container->next = new_elem;

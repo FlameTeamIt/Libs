@@ -536,11 +536,12 @@ Test::Others::TJSON()
 	if(str_json.length() != 0)
 	{
 		std::cout << "File loaded\n";
-//				<< str_json << '\n';
 		
 		Data* data = Data::getData(str_json);
-		std::cout << "OUTPUT test file :\n"
-				  << data->getAsString() << '\n';
+//		std::cout << "OUTPUT test file :\n";
+//				  << data->getAsString() << '\n';
+		
+		delete data;
 	}
 	
 	

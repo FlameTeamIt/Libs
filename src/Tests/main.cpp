@@ -2,8 +2,11 @@
 #include <vector>
 #include <iostream>
 
-int main()
+int main(unsigned int argc, char** argv)
 {
+	
+	std::cout << argv[0] << '\n';
+	
 	flame_ide::Test test;
 	test.all();
 	
