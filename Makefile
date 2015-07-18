@@ -39,7 +39,6 @@ override Warn_flags := \
 			-Wlogical-op \
 			#-Werror \
 
-Define_BuildNumber := -DBUILD_NUMBER=$(shell bash change_buildnumber && cat buildnumber | tr -d '\n')
 
 Defines_Debug := -DDEBUG=1
 Defines_Release :=
@@ -49,12 +48,12 @@ override Flags_Release :=-O2 -finline-functions $(Warn_flags)
 
 ifeq ($(TypeBuild),Release)
 override Defines := $(Defines_Release)
-override Flags :=-std=c++11 -pipe $(Defines_Release) $(Flags_Release) $(Define_BuildNumber)
+override Flags :=-std=c++11 -pipe $(Defines_Release) $(Flags_Release)
 endif
 
 ifeq ($(TypeBuild),Debug)
 override Defines := $(Defines_Debug)
-override Flags :=-std=c++11 -pipe $(Defines_Debug) $(Flags_Debug) $(Define_BuildNumber)
+override Flags :=-std=c++11 -pipe $(Defines_Debug) $(Flags_Debug)
 endif
 
 Path := src/
@@ -95,6 +94,12 @@ all: .mkdirs .depends .compile .link
 	@mkdir -p $(Dirs) $(shell dirname $(Objects) $(Dependences))
 	
 #--------------------
+.PHONY: clean
+	
+clean:
+	@rm -rf $(Dirs)
+	
+#--------------------
 #
 # Для описания зависимостей от заголовков
 #
@@ -105,6 +110,7 @@ all: .mkdirs .depends .compile .link
 $(Dependences): $(DepPath)/%.d : $(Path)/%.cpp
 	$(CC) $(Flags) $(Flag_Deps) $(Libs) $< > $@
 include $(wildcard $(DepPath)/*.d)
+Define_BuildNumber :=-DBUILD_NUMBER=$(shell bash change_buildnumber && cat buildnumber | tr -d '\n')
 #--------------------
 #
 # Для компиляции объектных файлов
@@ -113,7 +119,7 @@ include $(wildcard $(DepPath)/*.d)
 
 # $(Objects): obj/%.o : %.cpp # старый вариант; оставил для понимания происходящего
 $(Objects) : $(ObjPath)/%.o : $(Path)/%.cpp
-	$(CC) $(Flags) $(Defines) $(Flag_Obj) $(Libs) -c $< -o $@
+	$(CC) $(Flags) $(Defines) $(Define_BuildNumber) $(Flag_Obj) $(Libs) -c $< -o $@
 
 #--------------------
 #
@@ -127,7 +133,7 @@ $(Objects) : $(ObjPath)/%.o : $(Path)/%.cpp
 
 # видно с коммандной строки
 $(Target_lib): $(Objects)
-	$(CC) $(Flag_Lib) $(Flags) $(Libs) $(Objects) -o $(Target_lib)
+	$(CC) $(Flag_Lib) $(Flags) $(Define_BuildNumber) $(Libs) $(Objects) -o $(Target_lib)
 
 # видно с коммандной строки
 $(Target_lib_static): $(Objects)
@@ -137,8 +143,7 @@ $(Target_lib_static): $(Objects)
 
 # видно с коммандной строки
 $(Target_bin_test): .compile .link_libs
-	@echo $(Defines)
-	$(CC) $(Flags) $(Defines) $(Target_lib) $(Sources_Test) -o $(Target_bin_test)
+	$(CC) $(Flags) $(Defines) $(Define_BuildNumber) $(Target_lib) $(Sources_Test) -o $(Target_bin_test)
 #--------------------
 exec_test:
 	./$(Target_bin_test)
@@ -178,9 +183,3 @@ exec_test:
 # своими мозгами.
 #
 #.debianize:
-#--------------------
-.PHONY: clean
-	
-clean:
-	@rm -rf $(Dirs)
-#--------------------
