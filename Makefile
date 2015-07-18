@@ -39,20 +39,22 @@ override Warn_flags := \
 			-Wlogical-op \
 			#-Werror \
 
+Define_BuildNumber := -DBUILD_NUMBER=$(shell bash change_buildnumber && cat buildnumber | tr -d '\n')
+
 Defines_Debug := -DDEBUG=1
 Defines_Release :=
 
-override Flags_Debug :=-pg -O0 -fno-inline-functions $(Warn_flags)
+override Flags_Debug :=-pg -O0 -fno-inline-functions $(Warn_flags) 
 override Flags_Release :=-O2 -finline-functions $(Warn_flags)
 
 ifeq ($(TypeBuild),Release)
 override Defines := $(Defines_Release)
-override Flags :=-std=c++11 -pipe $(Defines_Release) $(Flags_Release)
+override Flags :=-std=c++11 -pipe $(Defines_Release) $(Flags_Release) $(Define_BuildNumber)
 endif
 
 ifeq ($(TypeBuild),Debug)
 override Defines := $(Defines_Debug)
-override Flags :=-std=c++11 -pipe $(Defines_Debug) $(Flags_Debug)
+override Flags :=-std=c++11 -pipe $(Defines_Debug) $(Flags_Debug) $(Define_BuildNumber)
 endif
 
 Path := src/
@@ -91,6 +93,7 @@ all: .mkdirs .depends .compile .link
 #--------------------
 .mkdirs:
 	@mkdir -p $(Dirs) $(shell dirname $(Objects) $(Dependences))
+	
 #--------------------
 #
 # Для описания зависимостей от заголовков
@@ -110,7 +113,7 @@ include $(wildcard $(DepPath)/*.d)
 
 # $(Objects): obj/%.o : %.cpp # старый вариант; оставил для понимания происходящего
 $(Objects) : $(ObjPath)/%.o : $(Path)/%.cpp
-	$(CC) $(Flags) $(Flag_Obj) $(Libs) -c $< -o $@
+	$(CC) $(Flags) $(Defines) $(Flag_Obj) $(Libs) -c $< -o $@
 
 #--------------------
 #
@@ -134,6 +137,7 @@ $(Target_lib_static): $(Objects)
 
 # видно с коммандной строки
 $(Target_bin_test): .compile .link_libs
+	@echo $(Defines)
 	$(CC) $(Flags) $(Defines) $(Target_lib) $(Sources_Test) -o $(Target_bin_test)
 #--------------------
 exec_test:
