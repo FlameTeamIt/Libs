@@ -9,8 +9,8 @@ namespace flame_ide
 {
 
 template<typename Tt> inline
-Tt* string_add<Tt>(const size_t &length_first, const Tt* &str_first
-				   ,const size_t &length_last, const Tt* &str_last);
+Tt* string_compose<Tt>(const size_t &length_first, const Tt* &str_first
+					   ,const size_t &length_last, const Tt* &str_last);
 
 
 template<typename Tt> inline
@@ -22,8 +22,8 @@ Tt* string_get_substr<Tt>(const size_t &length_str, const Tt* &str
 template<typename Tt>
 Tt*
 flame_ide::templates::
-string_add(const size_t &length_first, const Tt* &str_first
-		   ,const size_t &length_last, const Tt* &str_last)
+string_compose(const size_t &length_first, const Tt* &str_first
+			   ,const size_t &length_last, const Tt* &str_last)
 {
 	Tt* result_str = new Tt[length_first + length_last];
 	
