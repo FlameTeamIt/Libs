@@ -44,7 +44,7 @@ Defines_Debug := -DDEBUG=1
 Defines_Release :=
 
 override Flags_Debug :=-pg -O0 -fno-inline-functions $(Warn_flags) 
-override Flags_Release :=-O2 -finline-functions $(Warn_flags)
+override Flags_Release :=-O2 -finline-functions  $(Warn_flags) #-nostdlib -ffreestanding
 
 ifeq ($(TypeBuild),Release)
 override Defines := $(Defines_Release)
