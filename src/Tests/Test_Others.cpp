@@ -5,6 +5,7 @@
 // Others
 #include "../Others/Templates/Array.h"
 #include "../Others/Templates/List.h"
+#include "../Others/Templates/String.h"
 #include "../Others/JSON/JSON.h"
 
 #include "../Store/BasicFile.h"
@@ -16,8 +17,9 @@ Test::Others::all()
 {
 	std::cout << "Test::Others::all()" << '\n';
 	this->count_success_tests = this->TList()
-			+ this->TArray()
-			+ this->TJSON();
+								+ this->TArray()
+								+ this->TString()
+								+ this->TJSON();
 	
 	std::cout << '\n';
 }
@@ -81,6 +83,16 @@ Test::Others::TList()
 	// добавление массива в начало и его удаление
 	list1.pushFront(2, arr);
 	list1.popFront(2);
+	
+	return 1;
+}
+
+unsigned int
+Test::Others::TString()
+{
+	using namespace templates;
+	
+	String str;
 	
 	return 1;
 }

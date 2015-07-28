@@ -9,13 +9,13 @@ namespace flame_ide
 {
 
 template<typename Tt> inline
-Tt* string_compose<Tt>(const size_t &length_first, const Tt* &str_first
-					   ,const size_t &length_last, const Tt* &str_last);
+Tt* string_compose(const size_t &length_first, const Tt* &str_first
+				   ,const size_t &length_last, const Tt* &str_last);
 
 
 template<typename Tt> inline
-Tt* string_get_substr<Tt>(const size_t &length_str, const Tt* &str
-						  ,const size_t &pos, const size_t &length);
+Tt* string_get_substr(const size_t &length_str, const Tt* &str
+					  ,const size_t &pos, const size_t &length);
 
 }}
 

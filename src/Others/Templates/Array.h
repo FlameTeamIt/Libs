@@ -10,17 +10,17 @@ namespace flame_ide
 template<class T>
 class Array
 {
-	mutable T *inc_arr;
-	size_t arr_size;
-	size_t type_size;
-	
 	mutable bool is_initialised;
 	mutable bool is_temporary;
 	
 	void set();
+protected:
+	mutable T *inc_arr;
+	size_t arr_size;
+	size_t type_size;
+	
 	T* getPCopy() const;
 	
-protected:
 	// static
 	
 public:
