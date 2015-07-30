@@ -12,12 +12,10 @@ template<typename T>
 class TString : public Array<T>
 {
 protected:
-	const T* null_string = "";
+//	constexpr static T null_string[] = "";
 	unsigned long hash;
 	
 	void computeHash();
-	
-	TString<T> getSubstr();
 	
 	// присваивание
 	void assign(const T* c_str);
@@ -33,6 +31,16 @@ protected:
 	
 	bool is_not_qual(const T* c_str) const;
 	bool is_not_qual(const TString<T> &str) const;
+	
+public:
+	TString();
+	TString(const TString<T> &tstring);
+	
+	TString<T> getSubstr(size_t pos, size_t length);
+	
+	const T*& getCString();
+	
+	~TString();
 };
 
 class String : public TString<char>
@@ -41,6 +49,8 @@ public:
 	String();
 	String(const char *c_str);
 	String(const String &string);
+	
+	~String();
 	
 	unsigned long getHash();
 	
@@ -66,6 +76,8 @@ public:
 	WString();
 	WString(const wchar_t *);
 	
+	~WString();
+	
 	WString& operator+(const wchar_t *c_str);
 	WString& operator+(const WString& string);
 	
@@ -83,11 +95,45 @@ public:
 
 using namespace flame_ide::templates;
 
-String::String()
-	: Array()
-{
-	inc_arr = (char*)null_string;
-}
+// TString
 
+template<typename T>
+TString<T>::TString()
+	: Array<T>()
+{}
+
+template<typename T>
+TString<T>::TString(const TString<T> &tstring)
+	: Array<T>(static_cast<const Array<T>&>(tstring))
+{}
+
+template<typename T>
+TString<T>::~TString() {}
+
+// String
+
+String::String()
+	: TString<char>()
+{}
+
+String::String(const String &string)
+	: TString<char>(static_cast<const TString<char>&>(string))
+{}
+
+String::~String()
+{}
+
+// WString
+
+WString::WString()
+	: TString<wchar_t>()
+{}
+
+WString::WString(const WString &wstring)
+	: TString<wchar_t>(static_cast<const TString<wchar_t>&>(wstring))
+{}
+
+WString::~WString()
+{}
 
 #endif // STRING

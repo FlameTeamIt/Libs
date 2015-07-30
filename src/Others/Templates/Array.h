@@ -28,7 +28,7 @@ public:
 	Array(const Array<T> &array);
 	Array(const size_t &arr_size);
 	
-	~Array();
+	virtual ~Array();
 	
 	bool isInitialised() const;
 	
