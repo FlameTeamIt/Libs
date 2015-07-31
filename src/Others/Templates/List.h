@@ -35,9 +35,6 @@ public:
 	
 	const inline ListIterator<T>& operator=(const ListIterator<T> &iterator) const;
 	
-	bool inline operator==(const ListIterator<T> &iterator) const;
-	bool inline operator!=(const ListIterator<T> &iterator) const;
-	
 	const inline ListIterator<T>& operator++() const;
 	const inline ListIterator<T>& operator++(int) const;
 	
@@ -45,7 +42,16 @@ public:
 	const inline ListIterator<T>& operator--(int) const;
 	
 	friend class List<T>;
+	
+	friend bool operator ==(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2);
+	friend bool operator !=(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2);
 };
+
+template<typename T>
+bool inline operator==(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2);
+
+template<typename T>
+bool inline operator!=(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2);
 
 template<typename T>
 class List
@@ -225,25 +231,7 @@ ListIterator<T>::operator=(const ListIterator<T> &iterator) const
 }
 
 template<typename T>
-bool
-ListIterator<T>::operator==(const ListIterator<T> &iterator) const
-{
-	return ((this->parent == iterator.parent)
-			&& (this->pointer == iterator.pointer)
-			&& (this->is_reverse == iterator.is_reverse)
-			);
-}
-template<typename T>
-bool
-ListIterator<T>::operator!=(const ListIterator<T> &iterator) const
-{
-	return ((this->parent != iterator.parent)
-			&& (this->pointer != iterator.pointer)
-			&& (this->is_reverse != iterator.is_reverse)
-			);
-}
 
-template<typename T>
 const ListIterator<T>&
 ListIterator<T>::operator++() const
 {
@@ -273,6 +261,27 @@ ListIterator<T>::operator--(int) const
 {
 	this->toPrev();
 	return *this;
+}
+
+// ListIterator friend functions
+
+template<typename T>
+bool
+operator ==(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2)
+{
+    return ((iterator1.parent == iterator2.parent)
+	         && (iterator1.pointer == iterator2.pointer)
+	         && (iterator1.is_reverse == iterator2.is_reverse)
+           );
+}
+template<typename T>
+bool
+operator !=(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2)
+{
+    return ((iterator1.parent != iterator2.parent)
+	         || (iterator1.pointer != iterator2.pointer)
+	         || (iterator1.is_reverse != iterator2.is_reverse)
+           );
 }
 
 // List
