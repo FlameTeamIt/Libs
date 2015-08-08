@@ -3,6 +3,11 @@
 
 #include <cstring>
 #include <algorithm>
+#include <string.h>
+#include <wchar.h>
+
+#include "For_All.h"
+
 
 namespace flame_ide
 {namespace templates
@@ -16,6 +21,49 @@ Tt* string_compose(const size_t &length_first, const Tt* &str_first
 template<typename Tt> inline
 Tt* string_get_substr(const size_t &length_str, const Tt* &str
 					  ,const size_t &pos, const size_t &length);
+
+
+//template<typename Tt> inline
+//size_t get_cstr_len(const Tt* c_tstr)
+//{
+//		if(Types<char, Tt>::isSame)
+//		{
+//			return strlen(c_tstr);
+//		} 
+//		if(Types<wchar_t, Tt>::isSame)
+//		{
+//			return wcslen();
+//		}
+//}
+
+//template<typename T>
+//class StrLenFunc
+//{
+//	typedef	size_t(*FuncStrLength)(const T*);
+//	FuncStrLength str_len;
+//	inline FuncStrLength set()
+//	{
+//		if(Types<char, T>::isSame)
+//		{
+//			return &strlen;
+//		} 
+//		if(Types<wchar_t, T>::isSame)
+//		{
+//			return &wcslen;
+//		}
+
+//		return nullptr;
+//	}
+	
+//public:
+//	StrLenFunc() { str_len = set(); }
+	
+//	size_t operator ()(const T* c_tstr)
+//	{
+//		return str_len(c_tstr);
+//	}
+//};
+
 
 }}
 
@@ -45,6 +93,11 @@ string_get_substr(const size_t &length_str, const Tt* &str
 	
 	return result_str;
 }
+
+// ---------------------------------------------
+
+//typedef	size_t(*FuncStrLength_char)(const char*);
+//typedef	size_t(*FuncStrLength_wchar)(const wchar_t*);
 
 #endif // STRING_FUNCTIONS
 

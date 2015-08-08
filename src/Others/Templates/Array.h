@@ -3,6 +3,8 @@
 
 #include "Array_Functions.h"
 
+#include <string>
+
 namespace flame_ide
 { namespace templates
 {
@@ -25,6 +27,7 @@ protected:
 	
 public:
 	Array();
+	Array(const size_t &length, const T* array);
 	Array(const Array<T> &array);
 	Array(const size_t &arr_size);
 	
@@ -77,8 +80,8 @@ Array<T>::Array()
 }
 template<class T>
 Array<T>::Array(const Array<T> &array)
+	: Array()
 {
-	this->is_temporary = false;
 	if(array.arr_size && array.is_initialised)
 	{
 		if(array.is_temporary)
@@ -92,19 +95,29 @@ Array<T>::Array(const Array<T> &array)
 		this->arr_size = array.arr_size;
 		this->is_initialised = true;
 	}
-	else set();
 }
 template<class T>
-Array<T>::Array(const size_t& array_length)
+Array<T>::Array(const size_t &array_size, const T *array)
+	: Array()
 {
-	this->is_temporary = false;
+	if(array_size)
+	{
+		arr_size = array_size;
+		inc_arr = array_get_copy(array_size, array);
+		is_initialised = true;
+	}
+}
+
+template<class T>
+Array<T>::Array(const size_t& array_length)
+	: Array()
+{
 	if(array_length)
 	{
 		this->arr_size = array_length;
 		this->is_initialised = true;
 		this->inc_arr = array_get_new<T>(this->arr_size);
 	}
-	else set();
 }
 
 template<class T>
