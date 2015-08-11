@@ -92,7 +92,7 @@ Test::Others::TString()
 {
 	using namespace templates;
 	
-	String str;
+	String str("Hello!");
 	
 	return 1;
 }

@@ -24,20 +24,9 @@ protected:
 	
 	void computeHash();
 	
-	// присваивание
-	void assign(const T* c_tstr);
-	void assign(const TString<T> &tstring);
 	
-	// сложение строк
-	void concatenation(const T* c_tstr);
-	void concatenation(const TString<T> &str);
 	
-	// сравнение
-	bool is_equal(const T* c_tstr) const;
-	bool is_equal(const TString<T> &str) const;
 	
-	bool is_not_qual(const T* c_tstr) const;
-	bool is_not_qual(const TString<T> &str) const;
 	
 	virtual inline size_t getCStrLength(const T* c_tstr) const = 0;
 	
@@ -56,20 +45,31 @@ public:
 	
 	static inline unsigned long getHash(const T* c_tstr);
 	
+	// присваивание
+	void assign(const T* c_tstr);
+	void assign(const TString<T> &tstring);
 	inline TString<T>& operator =(const TString<T>& tstring);
 	inline TString<T>& operator =(const char *c_tstr);
 	
 	inline TString<T>& operator +=(const TString<T>& tstring);
 	inline TString<T>& operator +=(const char *c_tstr);
 	
+	// сложение строк
+	void concatenation(const T* c_tstr);
+	void concatenation(const TString<T> &str);
 	friend TString<T>& operator +(const TString<T>& string, const T *c_tstr);
 	friend TString<T>& operator +(const T *c_tstr, const TString<T>& string);
 	friend TString<T>& operator +(const TString<T>& string1, const TString<T>& string2);
 	
+	// сравнение
+	bool is_equal(const T* c_tstr) const;
+	bool is_equal(const TString<T> &str) const;
 	friend bool operator ==(const T *c_tstr, const TString<T>& string);
 	friend bool operator ==(const TString<T>& string, const T *c_tstr);
 	friend bool operator ==(const TString<T>& string1, const TString<T>& string2);
 	
+	bool is_not_qual(const T* c_tstr) const;
+	bool is_not_qual(const TString<T> &str) const;
 	friend bool operator !=(const T *c_tstr, const TString<T>& string);
 	friend bool operator !=(const TString<T>& string, const T *c_tstr);
 	friend bool operator !=(const TString<T>& string1, const TString<T>& string2);
@@ -104,22 +104,39 @@ using namespace flame_ide::templates;
 template<typename T>
 TString<T>::TString()
 	: Array<T>()
-{}
+{
+	this->is_actual_hash = false;
+	this->hash = 0;
+}
 
 template<typename T>
 TString<T>::TString(const size_t& length, const T *&c_tstr)
 	: Array<T>(length, c_tstr)
-{}
+{
+	this->is_actual_hash = false;
+	this->hash = 0;
+}
 
 template<typename T>
 TString<T>::TString(const TString<T> &tstring)
 	: Array<T>(static_cast<const Array<T>&>(tstring))
-{}
+{
+	if(tstring.is_actual_hash)
+	{
+		this->is_actual_hash = true;
+		this->hash = tstring.hash;
+	}
+	else
+	{
+		this->is_actual_hash = false;
+		this->hash = 0;
+	}
+}
 
 template<typename T>
 TString<T>::~TString() {}
 
-
+// а нужно ли оно мне?
 // protected
 
 template<typename T>
