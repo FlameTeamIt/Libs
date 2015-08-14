@@ -24,10 +24,6 @@ protected:
 	
 	void computeHash();
 	
-	
-	
-	
-	
 	virtual inline size_t getCStrLength(const T* c_tstr) const = 0;
 	
 public:
@@ -50,7 +46,6 @@ public:
 	void assign(const TString<T> &tstring);
 	inline TString<T>& operator =(const TString<T>& tstring);
 	inline TString<T>& operator =(const char *c_tstr);
-	
 	inline TString<T>& operator +=(const TString<T>& tstring);
 	inline TString<T>& operator +=(const char *c_tstr);
 	
