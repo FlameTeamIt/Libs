@@ -59,8 +59,11 @@ public:
 	void setTemporary(bool is_temp = true) const;
 	bool isTemporary() const;
 	
-	inline T& at(const size_t &index) const;
-	inline T& operator[](const size_t &index) const;
+	inline const T& at(const size_t &index) const;
+	inline T& at(const size_t &index);
+	
+	inline const T& operator[](const size_t &index) const;
+	inline T& operator[](const size_t &index);
 	
 	const Array<T> &operator=(const Array<T> &);
 };
@@ -440,16 +443,29 @@ Array<T>::isTemporary() const
 // сделал "защиту от дурака", чтобы народ не выходил за границы массива
 // идиотская идея, т.к. доп действие. Зато типа защищено
 template<class T>
-T&
+const T&
 Array<T>::at(const size_t &index) const
+{
+	return inc_arr[index % this->arr_size];
+}
+
+template<class T>
+T&
+Array<T>::at(const size_t &index)
 {
 	return inc_arr[index % this->arr_size];
 }
 
 // "защита от дурака" х2
 template<class T>
-T&
+const T&
 Array<T>::operator [](const size_t &index) const
+{
+	return this->inc_arr[index % this->arr_size];
+}
+template<class T>
+T&
+Array<T>::operator [](const size_t &index)
 {
 	return this->inc_arr[index % this->arr_size];
 }

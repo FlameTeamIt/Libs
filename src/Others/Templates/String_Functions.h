@@ -16,8 +16,7 @@ Tt* string_compose(const size_t &length_first, const Tt* str_first
 
 
 template<typename Tt> inline
-Tt* string_get_substr(const size_t &length_str, const Tt* str
-					  ,const size_t &pos, const size_t &length);
+Tt* string_get_substr(const Tt* str, const size_t &pos, const size_t &length);
 
 
 //template<typename Tt> inline
@@ -81,8 +80,7 @@ string_compose(const size_t &length_first, const Tt* str_first
 template<typename Tt>
 Tt*
 flame_ide::templates::
-string_get_substr(const size_t &length_str, const Tt* str
-				  ,const size_t &pos, const size_t &length)
+string_get_substr(const Tt* str, const size_t &pos, const size_t &length)
 {
 	Tt* result_str = new Tt[length];
 	

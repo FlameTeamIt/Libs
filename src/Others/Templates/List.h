@@ -43,8 +43,10 @@ public:
 	
 	friend class List<T>;
 	
-	friend bool operator ==(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2);
-	friend bool operator !=(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2);
+	template <typename Tt>
+	friend bool operator == (const ListIterator<Tt> &iterator1, const ListIterator<Tt> &iterator2);
+	template <typename Tt>
+	friend bool operator != (const ListIterator<Tt> &iterator1, const ListIterator<Tt> &iterator2);
 };
 
 template<typename T>
@@ -156,23 +158,21 @@ template<typename T>
 bool
 ListIterator<T>::toNext() const
 {
-	switch (this->is_reverse)
+	if(this->is_reverse)
 	{
-	case true: // to first
 		if(pointer->pos_type != FIRST)
 		{
 			pointer = pointer->prev;
 			return true;
 		}
-		break;
-		
-	default: // to last
+	}
+	else
+	{
 		if(pointer->pos_type != LAST)
 		{
 			pointer = pointer->next;
 			return true;
 		}
-		break;
 	}
 	
 	return false;
@@ -182,23 +182,21 @@ template<typename T>
 bool
 ListIterator<T>::toPrev() const
 {
-	switch (this->is_reverse)
+	if(this->is_reverse)
 	{
-	case true: // to last
 		if(pointer->pos_type != LAST)
 		{
 			pointer = pointer->next;
 			return true;
 		}
-		break;
-		
-	default: // to first
+	}
+	else
+	{
 		if(pointer->pos_type != FIRST)
 		{
 			pointer = pointer->prev;
 			return true;
 		}
-		break;
 	}
 	
 	return false;

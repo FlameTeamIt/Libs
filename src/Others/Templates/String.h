@@ -24,10 +24,28 @@ public:
 	String(const char* c_str);
 	String(const String &str);
 	
+	String getSubstr(size_t pos, size_t length);
+	const String getSubstr(size_t pos, size_t length) const;
+	
 	inline String& operator =(const char *c_tstr);
 	inline String& operator =(const String& tstring);
 	inline String& operator +=(const char *c_tstr);
 	inline String& operator +=(const String& tstring);
+	
+	// concatenation
+	friend String& operator +(const char *c_tstr, const String& tstring);
+	friend String& operator +(const String& tstring, const char *c_tstr);
+	friend String& operator +(const String& tstring1, const String& tstring2);
+	
+	// equal
+	friend bool operator ==(const char *c_tstr, const String& tstring);
+	friend bool operator ==(const String& tstring, const char *c_tstr);
+	friend bool operator ==(const String& tstring1, const String& tstring2);
+	
+	// not equal
+	friend bool operator !=(const char *c_tstr, const String& tstring);
+	friend bool operator !=(const String& tstring, const char *c_tstr);
+	friend bool operator !=(const String& tstring1, const String& tstring2);
 	
 	// output and input
 	friend
@@ -114,6 +132,30 @@ size_t
 String::getCStrLength(const char *c_str) const
 {
 	return strlen(c_str);
+}
+
+String
+String::getSubstr(size_t pos, size_t length)
+{
+	String str; str = "";
+	if(pos + length < this->arr_size)
+	{
+		str = string_get_substr(this->inc_arr, pos, length);
+	}
+	
+	return str;
+}
+
+const String
+String::getSubstr(size_t pos, size_t length) const
+{
+	String str; str = "";
+	if(pos + length < this->arr_size)
+	{
+		str = string_get_substr(this->inc_arr, pos, length);
+	}
+	
+	return str;
 }
 
 // operators

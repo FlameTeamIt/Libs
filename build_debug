@@ -13,6 +13,10 @@ case "$1" in
 "exec")
     make -f Makefile BUILD=$TypeBuild exec_test
     ;;
+
+"leak")
+    valgrind --leak-check=full --show-leak-kinds=all ./Debug/bin/test_FlameIDE
+    ;;
 esac
 exit
 

@@ -28,15 +28,14 @@ public:
 	
 	~TString();
 	
-	virtual TString<T>& getSubstr(size_t pos, size_t length);
 	virtual size_t getCStrLength(const T* c_tstr) const = 0;
 	
 	inline const T* getCString() const;
 	
 //	virtual inline unsigned long getHash(const T* c_tstr) = 0;
 	
-	inline T& operator [](size_t index);
-	inline const T& operator [](size_t index) const;
+//	inline T& operator [](size_t index);
+//	inline const T& operator [](size_t index) const;
 	
 	// присваивание
 	void assign(const T* c_tstr);
@@ -177,13 +176,13 @@ TString<T>::concatenation(const TString<T> &str, bool to_right)
 	T* tmp_inc_arr;
 	if(to_right)
 	{
-		tmp_inc_arr = string_compose(str.arr_size, str.inc_arr,
-									 this->arr_size, this->inc_arr);
+		tmp_inc_arr = string_compose(this->arr_size, this->inc_arr,
+									 str.arr_size, str.inc_arr);
 	}
 	else
 	{
-		tmp_inc_arr = string_compose(this->arr_size, this->inc_arr,
-									 str.arr_size, str.inc_arr);
+		tmp_inc_arr = string_compose(str.arr_size, str.inc_arr,
+									 this->arr_size, this->inc_arr);
 	}
 	
 	if(this->arr_size)
@@ -318,33 +317,10 @@ TString<T>::is_not_equal(const TString<T> &str) const
 // public
 
 template<typename T>
-TString<T>&
-TString<T>::getSubstr(size_t pos, size_t length)
-{
-	
-}
-
-template<typename T>
 const T*
 TString<T>::getCString() const
 {
 	return this->inc_arr;
-}
-
-// operators
-
-template<typename T>
-const T&
-TString<T>::operator [](const size_t index) const
-{
-	return this->inc_arr[index % this->arr_size];
-}
-
-template<typename T>
-T&
-TString<T>::operator [](const size_t index)
-{
-	return this->inc_arr[index % this->arr_size];
 }
 
 #endif // STRING_TSTRING

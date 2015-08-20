@@ -103,6 +103,8 @@ Test::Others::TString()
 	std::cout << str1 << '\n';
 	str1 = str2;
 	std::cout << str1 << '\n';
+	str1 = str1.getSubstr(0, 3);
+	std::cout << str1 << '\n';
 	
 	// work
 //	std::cin >> str1;

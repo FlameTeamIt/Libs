@@ -4,7 +4,7 @@
 
 #include "../About/About.h"
 
-int main(unsigned int argc, char** argv)
+int main(int argc, char** argv)
 {
 	
 	std::cout << argc << ' ' << argv[0] << '\n';
