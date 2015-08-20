@@ -12,7 +12,6 @@ namespace flame_ide
 template<class T>
 class Array
 {
-	void set();
 protected:
 	mutable bool is_initialised;
 	mutable bool is_temporary;
@@ -21,6 +20,8 @@ protected:
 	size_t arr_size;
 	size_t type_size;
 	
+	inline void set();
+	inline void set(const size_t &length, T* arr);
 	T* getPCopy() const;
 	
 	// static
@@ -153,6 +154,15 @@ T*
 Array<T>::getPCopy() const
 {
 	return array_get_copy<T>(arr_size, inc_arr);
+}
+
+template<typename T>
+void
+Array<T>::set(const size_t &length, T *arr)
+{
+	this->inc_arr = arr;
+	this->arr_size = length;
+	this->is_initialised = true;
 }
 
 // public

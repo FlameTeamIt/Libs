@@ -16,8 +16,9 @@ typedef TString<char> ParentCharStr;
 
 class String : public TString<char>
 {
-public:
 	inline size_t getCStrLength(const char* c_str) const;
+	
+	using Array<char>::set;
 	
 public:
 	String();
@@ -140,9 +141,7 @@ String::getSubstr(size_t pos, size_t length)
 	String str; str = "";
 	if(pos + length < this->arr_size)
 	{
-		str.inc_arr = string_get_substr(this->inc_arr, pos, length);
-		str.arr_size = length;
-		str.is_initialised = true;
+		str.set(length, string_get_substr(this->inc_arr, pos, length));
 	}
 	
 	return str;

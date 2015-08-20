@@ -20,6 +20,7 @@ protected:
 	unsigned long hash;
 	
 	void computeHash();
+	inline void set(const size_t length, T* arr);
 	
 public:
 	TString();
