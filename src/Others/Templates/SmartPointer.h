@@ -9,7 +9,7 @@ template<class T>
 class SmartPointer
 {
 	T *inc_pointer;
-	
+	mutable bool is_temporary;
 public:
 	SmartPointer();
 	SmartPointer(T *new_pointer);

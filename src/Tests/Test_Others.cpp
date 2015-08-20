@@ -16,10 +16,10 @@ void
 Test::Others::all()
 {
 	std::cout << "Test::Others::all()" << '\n';
-	this->count_success_tests = this->TList()
-								+ this->TArray()
-								+ this->TString()
-								+ this->TJSON();
+	this->count_success_tests = // this->TList()
+//								+ this->TArray()
+								+ this->TString();
+//								+ this->TJSON();
 	
 	std::cout << '\n';
 }
@@ -90,9 +90,19 @@ Test::Others::TList()
 unsigned int
 Test::Others::TString()
 {
+	std::cout << "Test::Others::TString()" << "\n";
+	
 	using namespace templates;
 	
-	String str("Hello!");
+	String str1("Hello!");
+	String str2("Bye!");
+	
+	str1 += "LOL!"; // нужно описывать оператор в String
+	std::cout << str1 << '\n';
+	str1 += str2;
+	std::cout << str1 << '\n';
+	str1 = str2;
+	std::cout << str1 << '\n';
 	
 	return 1;
 }

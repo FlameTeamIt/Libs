@@ -12,11 +12,11 @@ namespace flame_ide
 template<class T>
 class Array
 {
+	void set();
+protected:
 	mutable bool is_initialised;
 	mutable bool is_temporary;
 	
-	void set();
-protected:
 	mutable T *inc_arr;
 	size_t arr_size;
 	size_t type_size;

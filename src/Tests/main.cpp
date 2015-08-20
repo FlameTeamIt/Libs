@@ -7,7 +7,7 @@
 int main(unsigned int argc, char** argv)
 {
 	
-//	std::cout << argv[0] << '\n';
+	std::cout << argc << ' ' << argv[0] << '\n';
 	
 	flame_ide::Test test;
 	test.all();

@@ -1,9 +1,6 @@
 #ifndef STRING_TSTRING
 #define STRING_TSTRING
 
-#include <string.h>
-#include <wchar.h>
-
 #include "For_All.h"
 #include "Array.h"
 #include "String_Functions.h"
@@ -24,72 +21,40 @@ protected:
 	
 	void computeHash();
 	
-	virtual inline size_t getCStrLength(const T* c_tstr) const = 0;
-	
 public:
 	TString();
-	TString(const size_t &length, const T* &c_tstr);
-	TString(const TString<T> &tstring);
+	explicit TString(const size_t &length, const T* &c_tstr);
+	explicit TString(const TString<T> &tstring);
 	
 	~TString();
 	
 	virtual TString<T>& getSubstr(size_t pos, size_t length);
+	virtual size_t getCStrLength(const T* c_tstr) const = 0;
 	
-	const T* getCString() const;
+	inline const T* getCString() const;
 	
-	inline T& operator [](size_t index) const;
+//	virtual inline unsigned long getHash(const T* c_tstr) = 0;
 	
-	static inline unsigned long getHash(const T* c_tstr);
+	inline T& operator [](size_t index);
+	inline const T& operator [](size_t index) const;
 	
 	// присваивание
 	void assign(const T* c_tstr);
 	void assign(const TString<T> &tstring);
-	inline TString<T>& operator =(const TString<T>& tstring);
-	inline TString<T>& operator =(const char *c_tstr);
-	inline TString<T>& operator +=(const TString<T>& tstring);
-	inline TString<T>& operator +=(const char *c_tstr);
 	
 	// сложение строк
-	void concatenation(const T* c_tstr);
-	void concatenation(const TString<T> &str);
-	friend TString<T>& operator +(const TString<T>& string, const T *c_tstr);
-	friend TString<T>& operator +(const T *c_tstr, const TString<T>& string);
-	friend TString<T>& operator +(const TString<T>& string1, const TString<T>& string2);
+	void concatenation(const T* c_tstr
+					   ,bool to_right = true);
+	void concatenation(const TString<T> &str
+					   ,bool to_right = true);
 	
 	// сравнение
 	bool is_equal(const T* c_tstr) const;
 	bool is_equal(const TString<T> &str) const;
-	friend bool operator ==(const T *c_tstr, const TString<T>& string);
-	friend bool operator ==(const TString<T>& string, const T *c_tstr);
-	friend bool operator ==(const TString<T>& string1, const TString<T>& string2);
 	
-	bool is_not_qual(const T* c_tstr) const;
-	bool is_not_qual(const TString<T> &str) const;
-	friend bool operator !=(const T *c_tstr, const TString<T>& string);
-	friend bool operator !=(const TString<T>& string, const T *c_tstr);
-	friend bool operator !=(const TString<T>& string1, const TString<T>& string2);
+	bool is_not_equal(const T* c_tstr) const;
+	bool is_not_equal(const TString<T> &str) const;
 };
-
-template<typename T> inline
-TString<T>& operator +(const TString<T> &string, const T *c_tstr);
-template<typename T> inline
-TString<T>& operator +(const T *c_tstr, const TString<T> &string);
-template<typename T> inline
-TString<T>& operator +(const TString<T> &string1, const TString<T> &string2);
-
-template<typename T> inline
-bool operator ==(const T *c_tstr, const TString<T> &string);
-template<typename T> inline
-bool operator ==(const TString<T> &string, const T *c_tstr);
-template<typename T> inline
-bool operator ==(const TString<T> &string1, const TString<T> &string2);
-
-template<typename T> inline
-bool operator !=(const T *c_tstr, const TString<T> &string);
-template<typename T> inline
-bool operator !=(const TString<T> &string, const T *c_tstr);
-template<typename T> inline
-bool operator !=(const TString<T> &string1, const TString<T> &string2);
 
 
 }}
@@ -142,38 +107,213 @@ TString<T>::computeHash()
 template<typename T>
 void
 TString<T>::assign(const T *c_tstr)
-{}
+{
+	size_t length_c_tstr = getCStrLength(c_tstr);
+	
+	if(length_c_tstr)
+	{
+		array_delete(this->inc_arr);
+		this->inc_arr = array_get_new<T>(length_c_tstr);
+		array_copying(length_c_tstr, c_tstr, this->inc_arr);
+		
+		is_actual_hash = false;
+	}
+}
 template<typename T>
 void
 TString<T>::assign(const TString<T> &tstring)
-{}
+{
+	if(tstring.getSize())
+	{
+		array_delete(this->inc_arr);
+		if(tstring.isTemporary())
+		{
+			this->inc_arr = tstring.inc_arr;
+		}
+		else
+		{
+			this->inc_arr = tstring.getPCopy();
+		}
+		this->arr_size = tstring.arr_size;
+		this->is_initialised = true;
+		
+		if(tstring.is_actual_hash)
+		{
+			this->hash = tstring.hash;
+			this->is_actual_hash = true;
+		}
+	}
+}
 
 template<typename T>
 void
-TString<T>::concatenation(const T* c_tstr)
-{}
+TString<T>::concatenation(const T* c_tstr, bool to_right)
+{
+	size_t length_c_tstr = getCStrLength(c_tstr);
+	T* tmp_inc_arr = nullptr;
+	if(to_right)
+	{
+		tmp_inc_arr = string_compose(length_c_tstr, c_tstr,
+									 this->arr_size, this->inc_arr);
+	}
+	else
+	{
+		tmp_inc_arr = string_compose(this->arr_size, this->inc_arr,
+									 length_c_tstr, c_tstr);
+	}
+	
+	if(this->arr_size)
+	{
+		array_delete<T>(this->inc_arr);
+	}
+	this->inc_arr = tmp_inc_arr;
+	this->arr_size += length_c_tstr;
+	this->is_initialised = true;
+}
 template<typename T>
 void
-TString<T>::concatenation(const TString<T> &str)
-{}
+TString<T>::concatenation(const TString<T> &str, bool to_right)
+{
+	T* tmp_inc_arr;
+	if(to_right)
+	{
+		tmp_inc_arr = string_compose(str.arr_size, str.inc_arr,
+									 this->arr_size, this->inc_arr);
+	}
+	else
+	{
+		tmp_inc_arr = string_compose(this->arr_size, this->inc_arr,
+									 str.arr_size, str.inc_arr);
+	}
+	
+	if(this->arr_size)
+	{
+		array_delete<T>(this->inc_arr);
+	}
+	this->inc_arr = tmp_inc_arr;
+	this->arr_size += str.arr_size;
+	this->is_initialised = true;
+}
 
 template<typename T>
 bool
 TString<T>::is_equal(const T *c_tstr) const
-{}
+{
+	size_t length_c_tstr = getCStrLength(c_tstr);
+	bool ret_value = false;
+	
+	if(length_c_tstr == this->arr_size)
+	{
+		size_t count_equal = 0;
+		for(size_t i = 0; i < this->arr_size; i++)
+		{
+			if(this->inc_arr[i] == c_tstr[i])
+			{
+				count_equal++;
+			}
+			else
+			{
+				i = this->arr_size;
+			}
+		}
+		
+		if(count_equal == this->arr_size)
+		{
+			ret_value = true;
+		}
+	}
+	
+	return ret_value;
+}
 template<typename T>
 bool
 TString<T>::is_equal(const TString<T> &str) const
-{}
+{
+	bool ret_value = false;
+	
+	if(str.getSize() == this->arr_size)
+	{
+		size_t count_equal = 0;
+		for(size_t i = 0; i < this->arr_size; i++)
+		{
+			if(this->inc_arr[i] == str[i])
+			{
+				count_equal++;
+			}
+			else
+			{
+				i = this->arr_size;
+			}
+		}
+		
+		if(count_equal == this->arr_size)
+		{
+			ret_value = true;
+		}
+	}
+	
+	return ret_value;
+}
 
 template<typename T>
 bool
-TString<T>::is_not_qual(const T *c_tstr) const
-{}
+TString<T>::is_not_equal(const T *c_tstr) const
+{
+	size_t length_c_tstr = getCStrLength(c_tstr);
+	bool ret_value = true;
+	
+	if(length_c_tstr == this->arr_size)
+	{
+		size_t count_equal = 0;
+		for(size_t i = 0; i < this->arr_size; i++)
+		{
+			if(this->inc_arr[i] == c_tstr[i])
+			{
+				count_equal++;
+			}
+			else
+			{
+				i = this->arr_size;
+			}
+		}
+		
+		if(count_equal == this->arr_size)
+		{
+			ret_value = false;
+		}
+	}
+	
+	return ret_value;
+}
 template<typename T>
 bool
-TString<T>::is_not_qual(const TString<T> &str) const
-{}
+TString<T>::is_not_equal(const TString<T> &str) const
+{
+	bool ret_value = true;
+	
+	if(str.getSize() == this->arr_size)
+	{
+		size_t count_equal = 0;
+		for(size_t i = 0; i < this->arr_size; i++)
+		{
+			if(this->inc_arr[i] == str[i])
+			{
+				count_equal++;
+			}
+			else
+			{
+				i = this->arr_size;
+			}
+		}
+		
+		if(count_equal == this->arr_size)
+		{
+			ret_value = false;
+		}
+	}
+	
+	return ret_value;
+}
 
 // public
 
@@ -187,30 +327,24 @@ TString<T>::getSubstr(size_t pos, size_t length)
 template<typename T>
 const T*
 TString<T>::getCString() const
-{}
-
-template<typename T>
-T&
-TString<T>::operator [](size_t index) const
 {
-	return this->inc_arr[index];
-}
-
-// static
-
-template<typename T>
-unsigned long
-TString<T>::getHash(const T *c_tstr)
-{
-	// тут сложно из-за незнания размера массива
-	// нужно как-то узнавать его
-//	size_t c_tstr_len = getCStrLength(c_tstr);
+	return this->inc_arr;
 }
 
 // operators
 
+template<typename T>
+const T&
+TString<T>::operator [](const size_t index) const
+{
+	return this->inc_arr[index % this->arr_size];
+}
 
-
-// friend operators
+template<typename T>
+T&
+TString<T>::operator [](const size_t index)
+{
+	return this->inc_arr[index % this->arr_size];
+}
 
 #endif // STRING_TSTRING
