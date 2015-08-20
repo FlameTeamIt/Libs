@@ -111,7 +111,7 @@ TString<T>::assign(const T *c_tstr)
 	
 	if(length_c_tstr)
 	{
-		array_delete(this->inc_arr);
+		this->clear();
 		this->inc_arr = array_get_new<T>(length_c_tstr);
 		array_copying(length_c_tstr, c_tstr, this->inc_arr);
 		
@@ -124,7 +124,7 @@ TString<T>::assign(const TString<T> &tstring)
 {
 	if(tstring.getSize())
 	{
-		array_delete(this->inc_arr);
+		this->clear();
 		if(tstring.isTemporary())
 		{
 			this->inc_arr = tstring.inc_arr;

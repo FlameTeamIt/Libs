@@ -85,7 +85,7 @@ std::istream& operator>>(std::istream &input_stream,
 	
 	input_stream.get(buffer_c_str[buffer_count]);
 	while((buffer_c_str[buffer_count] != '\n')
-		   || (buffer_c_str[buffer_count] != ' '))
+		   && (buffer_c_str[buffer_count] != ' '))
 	{
 		buffer_count++;
 		if(buffer_count == MAX_BUFFER_COUNT)
@@ -140,7 +140,9 @@ String::getSubstr(size_t pos, size_t length)
 	String str; str = "";
 	if(pos + length < this->arr_size)
 	{
-		str = string_get_substr(this->inc_arr, pos, length);
+		str.inc_arr = string_get_substr(this->inc_arr, pos, length);
+		str.arr_size = length;
+		str.is_initialised = true;
 	}
 	
 	return str;
@@ -149,9 +151,10 @@ String::getSubstr(size_t pos, size_t length)
 const String
 String::getSubstr(size_t pos, size_t length) const
 {
-	String str; str = "";
+	String str;
 	if(pos + length < this->arr_size)
 	{
+		// leak -- double 'new char[length]'
 		str = string_get_substr(this->inc_arr, pos, length);
 	}
 	
