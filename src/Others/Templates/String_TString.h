@@ -153,13 +153,13 @@ TString<T>::concatenation(const T* c_tstr, bool to_right)
 	T* tmp_inc_arr = nullptr;
 	if(to_right)
 	{
-		tmp_inc_arr = string_compose(length_c_tstr, c_tstr,
-									 this->arr_size, this->inc_arr);
+		tmp_inc_arr = string_compose(this->arr_size, this->inc_arr,
+								     length_c_tstr, c_tstr);
 	}
 	else
 	{
-		tmp_inc_arr = string_compose(this->arr_size, this->inc_arr,
-									 length_c_tstr, c_tstr);
+		tmp_inc_arr = string_compose(length_c_tstr, c_tstr,
+									 this->arr_size, this->inc_arr);
 	}
 	
 	if(this->arr_size)

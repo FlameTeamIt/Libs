@@ -104,6 +104,10 @@ Test::Others::TString()
 	str1 = str2;
 	std::cout << str1 << '\n';
 	
+	// work
+//	std::cin >> str1;
+//	std::cout << str1 << '\n';
+	
 	return 1;
 }
 
@@ -421,4 +425,3 @@ Test::Others::TJSON()
 	
 	return 1;
 }
-

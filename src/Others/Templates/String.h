@@ -1,6 +1,8 @@
 #ifndef STRING
 #define STRING
 
+#define MAX_BUFFER_COUNT 1024
+
 #include <string.h>
 #include <wchar.h>
 
@@ -51,9 +53,38 @@ std::ostream& operator<<(std::ostream &output_stream,
 std::istream& operator>>(std::istream &input_stream,
 						  String &str)
 {
-	char *tmp_c_str;
+	if(str.getSize())
+	{
+		str.clear();
+	}
 	
-	input_stream >> tmp_c_str;
+	unsigned int buffer_count = 0;
+	char buffer_c_str[MAX_BUFFER_COUNT];
+	for(size_t i = 0; i < MAX_BUFFER_COUNT; i++)
+	{
+		buffer_c_str[i] = '\0';
+	}
+	
+	input_stream.get(buffer_c_str[buffer_count]);
+	while((buffer_c_str[buffer_count] != '\n')
+		   || (buffer_c_str[buffer_count] != ' '))
+	{
+		buffer_count++;
+		if(buffer_count == MAX_BUFFER_COUNT)
+		{
+			str += buffer_c_str;
+			for(size_t i = 0; i < MAX_BUFFER_COUNT; i++)
+			{
+				buffer_c_str[i] = '\0';
+			}
+			buffer_count = 0;
+		}
+		
+		input_stream.get(buffer_c_str[buffer_count]);
+	}
+	buffer_c_str[buffer_count] = '\0';
+	
+	str += buffer_c_str;
 	
 	return input_stream;
 }
