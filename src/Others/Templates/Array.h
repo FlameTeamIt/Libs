@@ -3,6 +3,8 @@
 
 #include "Array_Functions.h"
 
+#include <string>
+
 namespace flame_ide
 { namespace templates
 {
@@ -10,25 +12,26 @@ namespace flame_ide
 template<class T>
 class Array
 {
+	void set();
+protected:
+	mutable bool is_initialised;
+	mutable bool is_temporary;
+	
 	mutable T *inc_arr;
 	size_t arr_size;
 	size_t type_size;
 	
-	mutable bool is_initialised;
-	mutable bool is_temporary;
-	
-	void set();
 	T* getPCopy() const;
 	
-protected:
 	// static
 	
 public:
 	Array();
+	Array(const size_t &length, const T* array);
 	Array(const Array<T> &array);
 	Array(const size_t &arr_size);
 	
-	~Array();
+	virtual ~Array();
 	
 	bool isInitialised() const;
 	
@@ -56,8 +59,11 @@ public:
 	void setTemporary(bool is_temp = true) const;
 	bool isTemporary() const;
 	
-	inline T& at(const size_t &index) const;
-	inline T& operator[](const size_t &index) const;
+	inline const T& at(const size_t &index) const;
+	inline T& at(const size_t &index);
+	
+	inline const T& operator[](const size_t &index) const;
+	inline T& operator[](const size_t &index);
 	
 	const Array<T> &operator=(const Array<T> &);
 };
@@ -77,8 +83,8 @@ Array<T>::Array()
 }
 template<class T>
 Array<T>::Array(const Array<T> &array)
+	: Array()
 {
-	this->is_temporary = false;
 	if(array.arr_size && array.is_initialised)
 	{
 		if(array.is_temporary)
@@ -92,19 +98,29 @@ Array<T>::Array(const Array<T> &array)
 		this->arr_size = array.arr_size;
 		this->is_initialised = true;
 	}
-	else set();
 }
 template<class T>
-Array<T>::Array(const size_t& array_length)
+Array<T>::Array(const size_t &array_size, const T *array)
+	: Array()
 {
-	this->is_temporary = false;
+	if(array_size)
+	{
+		arr_size = array_size;
+		inc_arr = array_get_copy(array_size, array);
+		is_initialised = true;
+	}
+}
+
+template<class T>
+Array<T>::Array(const size_t& array_length)
+	: Array()
+{
 	if(array_length)
 	{
 		this->arr_size = array_length;
 		this->is_initialised = true;
 		this->inc_arr = array_get_new<T>(this->arr_size);
 	}
-	else set();
 }
 
 template<class T>
@@ -427,16 +443,29 @@ Array<T>::isTemporary() const
 // сделал "защиту от дурака", чтобы народ не выходил за границы массива
 // идиотская идея, т.к. доп действие. Зато типа защищено
 template<class T>
-T&
+const T&
 Array<T>::at(const size_t &index) const
+{
+	return inc_arr[index % this->arr_size];
+}
+
+template<class T>
+T&
+Array<T>::at(const size_t &index)
 {
 	return inc_arr[index % this->arr_size];
 }
 
 // "защита от дурака" х2
 template<class T>
-T&
+const T&
 Array<T>::operator [](const size_t &index) const
+{
+	return this->inc_arr[index % this->arr_size];
+}
+template<class T>
+T&
+Array<T>::operator [](const size_t &index)
 {
 	return this->inc_arr[index % this->arr_size];
 }

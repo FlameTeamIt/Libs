@@ -35,9 +35,6 @@ public:
 	
 	const inline ListIterator<T>& operator=(const ListIterator<T> &iterator) const;
 	
-	bool inline operator==(const ListIterator<T> &iterator) const;
-	bool inline operator!=(const ListIterator<T> &iterator) const;
-	
 	const inline ListIterator<T>& operator++() const;
 	const inline ListIterator<T>& operator++(int) const;
 	
@@ -45,7 +42,18 @@ public:
 	const inline ListIterator<T>& operator--(int) const;
 	
 	friend class List<T>;
+	
+	template <typename Tt>
+	friend bool operator == (const ListIterator<Tt> &iterator1, const ListIterator<Tt> &iterator2);
+	template <typename Tt>
+	friend bool operator != (const ListIterator<Tt> &iterator1, const ListIterator<Tt> &iterator2);
 };
+
+template<typename T>
+bool inline operator==(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2);
+
+template<typename T>
+bool inline operator!=(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2);
 
 template<typename T>
 class List
@@ -150,23 +158,21 @@ template<typename T>
 bool
 ListIterator<T>::toNext() const
 {
-	switch (this->is_reverse)
+	if(this->is_reverse)
 	{
-	case true: // to first
 		if(pointer->pos_type != FIRST)
 		{
 			pointer = pointer->prev;
 			return true;
 		}
-		break;
-		
-	default: // to last
+	}
+	else
+	{
 		if(pointer->pos_type != LAST)
 		{
 			pointer = pointer->next;
 			return true;
 		}
-		break;
 	}
 	
 	return false;
@@ -176,23 +182,21 @@ template<typename T>
 bool
 ListIterator<T>::toPrev() const
 {
-	switch (this->is_reverse)
+	if(this->is_reverse)
 	{
-	case true: // to last
 		if(pointer->pos_type != LAST)
 		{
 			pointer = pointer->next;
 			return true;
 		}
-		break;
-		
-	default: // to first
+	}
+	else
+	{
 		if(pointer->pos_type != FIRST)
 		{
 			pointer = pointer->prev;
 			return true;
 		}
-		break;
 	}
 	
 	return false;
@@ -225,25 +229,7 @@ ListIterator<T>::operator=(const ListIterator<T> &iterator) const
 }
 
 template<typename T>
-bool
-ListIterator<T>::operator==(const ListIterator<T> &iterator) const
-{
-	return ((this->parent == iterator.parent)
-			&& (this->pointer == iterator.pointer)
-			&& (this->is_reverse == iterator.is_reverse)
-			);
-}
-template<typename T>
-bool
-ListIterator<T>::operator!=(const ListIterator<T> &iterator) const
-{
-	return ((this->parent != iterator.parent)
-			&& (this->pointer != iterator.pointer)
-			&& (this->is_reverse != iterator.is_reverse)
-			);
-}
 
-template<typename T>
 const ListIterator<T>&
 ListIterator<T>::operator++() const
 {
@@ -273,6 +259,27 @@ ListIterator<T>::operator--(int) const
 {
 	this->toPrev();
 	return *this;
+}
+
+// ListIterator friend functions
+
+template<typename T>
+bool
+operator ==(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2)
+{
+    return ((iterator1.parent == iterator2.parent)
+	         && (iterator1.pointer == iterator2.pointer)
+	         && (iterator1.is_reverse == iterator2.is_reverse)
+           );
+}
+template<typename T>
+bool
+operator !=(const ListIterator<T> &iterator1, const ListIterator<T> &iterator2)
+{
+    return ((iterator1.parent != iterator2.parent)
+	         || (iterator1.pointer != iterator2.pointer)
+	         || (iterator1.is_reverse != iterator2.is_reverse)
+           );
 }
 
 // List

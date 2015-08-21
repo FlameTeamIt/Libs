@@ -52,6 +52,7 @@ public:
 		
 		unsigned int TList();
 		unsigned int TArray();
+		unsigned int TString();
 		
 		unsigned int TJSON();
 		

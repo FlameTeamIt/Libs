@@ -5,6 +5,7 @@
 // Others
 #include "../Others/Templates/Array.h"
 #include "../Others/Templates/List.h"
+#include "../Others/Templates/String.h"
 #include "../Others/JSON/JSON.h"
 
 #include "../Store/BasicFile.h"
@@ -15,9 +16,10 @@ void
 Test::Others::all()
 {
 	std::cout << "Test::Others::all()" << '\n';
-	this->count_success_tests = this->TList()
-			+ this->TArray()
-			+ this->TJSON();
+	this->count_success_tests = // this->TList()
+//								+ this->TArray()
+								+ this->TString();
+//								+ this->TJSON();
 	
 	std::cout << '\n';
 }
@@ -81,6 +83,32 @@ Test::Others::TList()
 	// добавление массива в начало и его удаление
 	list1.pushFront(2, arr);
 	list1.popFront(2);
+	
+	return 1;
+}
+
+unsigned int
+Test::Others::TString()
+{
+	std::cout << "Test::Others::TString()" << "\n";
+	
+	using namespace templates;
+	
+	String str1("Hello!");
+	String str2("Bye!");
+	
+	str1 += "LOL!"; // нужно описывать оператор в String
+	std::cout << str1 << '\n';
+	str1 += str2;
+	std::cout << str1 << '\n';
+	str1 = str2;
+	std::cout << str1 << '\n';
+	str1 = str1.getSubstr(0, 3);
+	std::cout << str1 << '\n';
+	
+	// work
+//	std::cin >> str1;
+//	std::cout << str1 << '\n';
 	
 	return 1;
 }
@@ -399,4 +427,3 @@ Test::Others::TJSON()
 	
 	return 1;
 }
-
