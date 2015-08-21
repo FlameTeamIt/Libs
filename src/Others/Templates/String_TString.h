@@ -14,29 +14,13 @@ template<typename T>
 class TString : public Array<T>
 {
 protected:
-	bool is_actual_hash;
+	mutable bool is_actual_hash;
 	
 //	constexpr static T null_string[] = "";
-	unsigned long hash;
+	mutable unsigned long hash;
 	
 	void computeHash();
 	inline void set(const size_t length, T* arr);
-	
-public:
-	TString();
-	explicit TString(const size_t &length, const T* &c_tstr);
-	explicit TString(const TString<T> &tstring);
-	
-	~TString();
-	
-	virtual size_t getCStrLength(const T* c_tstr) const = 0;
-	
-	inline const T* getCString() const;
-	
-//	virtual inline unsigned long getHash(const T* c_tstr) = 0;
-	
-//	inline T& operator [](size_t index);
-//	inline const T& operator [](size_t index) const;
 	
 	// присваивание
 	void assign(const T* c_tstr);
@@ -54,6 +38,22 @@ public:
 	
 	bool is_not_equal(const T* c_tstr) const;
 	bool is_not_equal(const TString<T> &str) const;
+public:
+	TString();
+	explicit TString(const size_t &length, const T* &c_tstr);
+	explicit TString(const TString<T> &tstring);
+	
+	~TString();
+	
+	virtual size_t getCStrLength(const T* c_tstr) const = 0;
+	
+	inline const T* getCString() const;
+	
+	virtual unsigned long getHash() const = 0;
+	
+//	inline T& operator [](size_t index);
+//	inline const T& operator [](size_t index) const;
+	
 };
 
 
@@ -114,7 +114,11 @@ TString<T>::assign(const T *c_tstr)
 	{
 		this->clear();
 		this->inc_arr = array_get_new<T>(length_c_tstr);
+		
 		array_copying(length_c_tstr, c_tstr, this->inc_arr);
+		
+		this->arr_size = length_c_tstr;
+		this->is_initialised = true;
 		
 		is_actual_hash = false;
 	}
@@ -137,11 +141,12 @@ TString<T>::assign(const TString<T> &tstring)
 		this->arr_size = tstring.arr_size;
 		this->is_initialised = true;
 		
-		if(tstring.is_actual_hash)
-		{
-			this->hash = tstring.hash;
-			this->is_actual_hash = true;
-		}
+//		if(tstring.is_actual_hash)
+//		{
+//			this->hash = tstring.hash;
+//			this->is_actual_hash = true;
+//		}
+
 	}
 }
 
@@ -169,6 +174,7 @@ TString<T>::concatenation(const T* c_tstr, bool to_right)
 	this->inc_arr = tmp_inc_arr;
 	this->arr_size += length_c_tstr;
 	this->is_initialised = true;
+	this->is_actual_hash = false;
 }
 template<typename T>
 void
@@ -193,6 +199,7 @@ TString<T>::concatenation(const TString<T> &str, bool to_right)
 	this->inc_arr = tmp_inc_arr;
 	this->arr_size += str.arr_size;
 	this->is_initialised = true;
+	this->is_actual_hash = false;
 }
 
 template<typename T>
