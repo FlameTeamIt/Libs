@@ -434,14 +434,31 @@ unsigned int
 Test::Others::TSmartPointer()
 {
 	std::cout << "Test::Others::TSmartPointer()\n";
-	SmartPointer<std::string> p_str("10");
-	
-	std::cout << *p_str << '\n';
+	SmartPointer<std::string> p_str;
 	
 	// 1. make
+	p_str.make("Hello, world!");
+	std::cout << "1. * - " << *p_str << '\n'
+			  << "2. -> - " << p_str->c_str() << '\n';
+	
 	// 2. clear
-	// 3. using methods
+	p_str.clear();
+	if(p_str.getPointer() != nullptr)
+	{
+		return 0;
+	}
+	
+	// 3. using methods +
 	// 4. assign
+	std::string str("Bye!");
+	
+	p_str = str;
+	std::cout << "1. * - " << *p_str << '\n'
+			  << "2. -> - " << p_str->c_str() << '\n';
+	
+	p_str = "Bye Bye!";
+	std::cout << "1. * - " << *p_str << '\n'
+			  << "2. -> - " << p_str->c_str() << '\n';
 	
 	return 1;
 }

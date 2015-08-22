@@ -38,6 +38,7 @@ public:
 	
 	SmartPointer& operator =(const SmartPointer<T> &arg);
 	SmartPointer& operator =(const T &arg);
+	
 };
 
 }}
@@ -117,6 +118,7 @@ SmartPointer<T>::clear()
 	if(is_initilized)
 	{
 		delete inc_pointer;
+		inc_pointer = nullptr;
 		
 		is_initilized = false;
 	}
@@ -161,12 +163,14 @@ template<class T>
 SmartPointer<T>& 
 SmartPointer<T>::operator =(const SmartPointer<T> &arg)
 {
+	this->clear();
 	this->set(arg);
 }
 template<class T>
 SmartPointer<T>& 
 SmartPointer<T>::operator =(const T &arg)
 {
+	this->clear();
 	this->make(arg);
 }
 
