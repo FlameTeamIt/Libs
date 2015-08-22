@@ -6,6 +6,7 @@
 #include "../Others/Templates/Array.h"
 #include "../Others/Templates/List.h"
 #include "../Others/Templates/String.h"
+#include "../Others/Templates/SmartPointer.h"
 #include "../Others/JSON/JSON.h"
 
 #include "../Store/BasicFile.h"
@@ -18,7 +19,8 @@ Test::Others::all()
 	std::cout << "Test::Others::all()" << '\n';
 	this->count_success_tests = // this->TList()
 //								+ this->TArray()
-								+ this->TString();
+//								+ this->TString()
+								+ this->TSmartPointer();
 //								+ this->TJSON();
 	
 	std::cout << '\n';
@@ -424,6 +426,17 @@ Test::Others::TJSON()
 		delete data;
 	}
 	
+	
+	return 1;
+}
+
+unsigned int
+Test::Others::TSmartPointer()
+{
+	std::cout << "Test::Others::TSmartPointer()\n";
+	SmartPointer<std::string> p_str("10");
+	
+	std::cout << *p_str << '\n';
 	
 	return 1;
 }
