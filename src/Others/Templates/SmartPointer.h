@@ -165,6 +165,8 @@ SmartPointer<T>::operator =(const SmartPointer<T> &arg)
 {
 	this->clear();
 	this->set(arg);
+	
+	return *this;
 }
 template<class T>
 SmartPointer<T>& 
@@ -172,6 +174,8 @@ SmartPointer<T>::operator =(const T &arg)
 {
 	this->clear();
 	this->make(arg);
+	
+	return *this;
 }
 
 #endif // SMARTPOINTER_H
