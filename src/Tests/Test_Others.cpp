@@ -105,8 +105,139 @@ Test::Others::TString()
 	std::cout << str1 << '\n';
 	str1 = str2;
 	std::cout << str1 << '\n';
-	str1 = str1.getSubstr(0, 3);
-	std::cout << str1 << '\n';
+	std::cout << str1.getSubstr(0, 3) << "\n\n";
+	
+	str1 = "Hello!";
+	str2 = "Bye!";
+	
+	// str1
+	
+	std::cout << "str1(\"" << str1 << "\") == \"Hello!\" : ";
+	if(str1 == "Hello!")
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	std::cout << "str1(\"" << str1 << "\") == \"He1lo!\" : ";
+	if(str1 == "He1lo!")
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	str1 += "LOL!";
+	std::cout << "str1(\"" << str1 << "\") == \"Hello!\" : ";
+	if(str1 == "Hello!")
+	{ std::cout << "true\n\n"; }
+	else
+	{ std::cout << "false\n\n"; }
+	
+	str1 = "Hello!";
+	
+	std::cout << "str1(\"" << str1 << "\") != \"Hello!\" : ";
+	if(str1 != "Hello!")
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	std::cout << "str1(\"" << str1 << "\") != \"He1lo!\" : ";
+	if(str1 != "He1lo!")
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	str1 += "LOL!";
+	std::cout << "str1(\"" << str1 << "\") != \"Hello!\" : ";
+	if(str1 != "Hello!")
+	{ std::cout << "true\n\n"; }
+	else
+	{ std::cout << "false\n\n"; }
+	
+	// str2
+	
+	std::cout << "\"Bye!\" == str2(\"" << str2 << "\") : ";
+	if("Bye!" == str2)
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	std::cout << "\"Byu!\" == str2(\"" << str2 << "\") : ";
+	if("Byu!" == str2)
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	str2 += "LOL2!";
+	std::cout << "\"Bye!\" == str2(\"" << str2 << "\") : ";
+	if("Bye!" == str2)
+	{ std::cout << "true\n\n"; }
+	else
+	{ std::cout << "false\n\n"; }
+	
+	str2 = "Bye!";
+	
+	std::cout << "\"Bye!\" != str2(\"" << str2 << "\") : ";
+	if("Bye!" != str2)
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	std::cout << "\"Byu!\" != str2(\"" << str2 << "\") : ";
+	if("Byu!" != str2)
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	str2 += "LOL2!";
+	std::cout << "\"Bye!\" != str2(\"" << str2 << "\") : ";
+	if("Bye!" != str2)
+	{ std::cout << "true\n\n"; }
+	else
+	{ std::cout << "false\n\n"; }
+	
+	// str1 and str2
+	str1 = str2;
+	std::cout << "str1(\"" << str1 << "\") == str2(\"" << str2 << "\") : ";
+	if(str1 == str2)
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	str1[2] = 'G';
+	std::cout << "str1(\"" << str1 << "\") == str2(\"" << str2 << "\") : ";
+	if(str1 == str2)
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	str2 += "LOLIK!";
+	std::cout << "str1(\"" << str1 << "\") == str2(\"" << str2 << "\") : ";
+	if(str1 == str2)
+	{ std::cout << "true\n\n"; }
+	else
+	{ std::cout << "false\n\n"; }
+	
+	str2 = "linux!";
+	
+	str1 = str2;
+	std::cout << "str1(\"" << str1 << "\") != str2(\"" << str2 << "\") : ";
+	if(str1 != str2)
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	str1[2] = 'G';
+	std::cout << "str1(\"" << str1 << "\") != str2(\"" << str2 << "\") : ";
+	if(str1 != str2)
+	{ std::cout << "true\n"; }
+	else
+	{ std::cout << "false\n"; }
+	
+	str2 += "LOLIK!";
+	std::cout << "str1(\"" << str1 << "\") != str2(\"" << str2 << "\") : ";
+	if(str1 != str2)
+	{ std::cout << "true\n\n"; }
+	else
+	{ std::cout << "false\n\n"; }
 	
 	// work
 //	std::cin >> str1;

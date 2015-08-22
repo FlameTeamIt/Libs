@@ -1,6 +1,8 @@
 Name := FlameIDE
 
+ifeq ($(CC),cc)
 override CC := g++
+endif
 
 ifdef BUILD
 override TypeBuild := $(BUILD)
