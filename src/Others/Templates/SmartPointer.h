@@ -82,8 +82,6 @@ SmartPointer<T>::~SmartPointer()
 	if(is_initilized)
 	{
 		delete inc_pointer;
-		
-		is_initilized = false;
 	}
 }
 
