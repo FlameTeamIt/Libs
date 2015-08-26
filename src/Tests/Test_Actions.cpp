@@ -13,8 +13,8 @@ Test::Actions::all()
 {
 	std::cout << "Test::Actions::all()\n";
 	
-	this->TCodeParcer();
-	this->TCommandLine();
+	this->count_success_tests = this->TCodeParcer()
+			                    + this->TCommandLine();
 	
 	std::cout << '\n';
 }
@@ -22,14 +22,14 @@ Test::Actions::all()
 unsigned int
 Test::Actions::TCodeParcer()
 {
-	std::cout << '\t' << "Test::Actions::TCodeParcer()\n";
+	std::cout << "Test::Actions::TCodeParcer()\n";
 	return 1;
 }
 
 unsigned int
 Test::Actions::TCommandLine()
 {
-	std::cout << '\t' << "Test::Actions::TCommandLine()\n";
+	std::cout << "Test::Actions::TCommandLine()\n";
 	
 	CommandLine commands;
 	

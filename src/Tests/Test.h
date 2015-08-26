@@ -1,6 +1,8 @@
 #ifndef TEST_H
 #define TEST_H
 
+#include "../Others/JSON/JSON.h"
+
 namespace flame_ide
 {
 
@@ -55,7 +57,21 @@ public:
 		unsigned int TString();
 		unsigned int TSmartPointer();
 		
-		unsigned int TJSON();
+		struct JSONLib : Base
+		{
+			void all();
+			
+			JSON::Single single;
+			JSON::Pair pair;
+			JSON::Array array;
+			JSON::Object object;
+			
+			unsigned int Single();
+			unsigned int Pair();
+			unsigned int Array();
+			unsigned int Object();
+		} json_lib;
+		
 		
 	} others;
 

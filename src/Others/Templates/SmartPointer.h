@@ -38,7 +38,6 @@ public:
 	
 	SmartPointer& operator =(const SmartPointer<T> &arg);
 	SmartPointer& operator =(const T &arg);
-	
 };
 
 }}
@@ -82,8 +81,6 @@ SmartPointer<T>::~SmartPointer()
 	if(is_initilized)
 	{
 		delete inc_pointer;
-		
-		is_initilized = false;
 	}
 }
 
