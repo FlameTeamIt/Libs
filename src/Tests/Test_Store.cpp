@@ -22,7 +22,7 @@ Test::Store::all()
 unsigned int
 Test::Store::TBasicFile()
 {
-	std::cout << '\t' << "Test::Store::TBasicFile()" << '\n';
+	std::cout << "Test::Store::TBasicFile()" << '\n';
 	
 	BasicFile basic_file("test.txt");
 	std::string text("This is test file\n"), out_text;
@@ -56,6 +56,6 @@ Test::Store::TProject()
 unsigned int
 Test::Store::TSession()
 {
-	std::cout << '\t' << "Test::Store::TSession()" << '\n';
+	std::cout << "Test::Store::TSession()" << '\n';
 	return 1;
 }

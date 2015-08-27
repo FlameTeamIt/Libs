@@ -19,12 +19,24 @@ Test::Others::JSONLib::all()
 			+ this->Array() + this->Object();
 	
 	// stress test
-//	BasicFile basic_file("BaltimoreDataBase.json");
+//	BasicFile basic_file("BigJSON.json");
 //	std::string str_json = basic_file.load();
 //	if(str_json.length() != 0)
 //	{
 //		std::cout << "File loaded\n";
 //		Data* data = Data::getData(str_json);
+		
+//		std::cin.get();
+		
+//		str_json.clear();
+		
+//		std::cin.get();
+		
+//		if(data->getType() == JSON::ARRAY)
+//		{
+//			JSON::Array* json_array = static_cast<JSON::Array*>(data);
+//			std::cout << "Size of array: " << json_array->getSize() << '\n';
+//		}
 //		std::cout << "OUTPUT test file :\n";
 //				  << data->getAsString() << '\n';
 //		delete data;

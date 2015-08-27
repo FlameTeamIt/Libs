@@ -22,9 +22,9 @@ Test::Others::all()
 								+ this->TString()
 								+ this->TSmartPointer();
 	
-	json_lib.all();
-	
 	std::cout << '\n';
+	
+	json_lib.all();
 }
 
 unsigned int
@@ -33,7 +33,6 @@ Test::Others::TList()
 	std::cout << "Test::Others::TList()" << '\n';
 	
 	size_t start_count = 4; // начиная с 4-х элементов не течет. Что? (О_о)
-	std::cout << "Test::Others::TList()" << '\n';
 	int arr[] = {5, 6};
 	
 	List<int> list(start_count);
