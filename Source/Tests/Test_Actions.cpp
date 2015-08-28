@@ -3,8 +3,8 @@
 #include "../Others/TextStyle.h"
 
 // Actions
-#include "../Actions/CommandLine.h"
-#include "../Actions/CodeParcer.h"
+#include "../Process/CommandLine.h"
+#include "../Analysers/CodeParcer.h"
 
 using namespace flame_ide;
 

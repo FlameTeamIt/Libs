@@ -3,8 +3,10 @@
 
 #include <string>
 
-#include "../Templates/Array.h"
-#include "../Templates/List.h"
+//#include "../../Templates/Array.h"
+//#include "../../Templates/List.h"
+#include <Templates/Array.h>
+#include <Templates/List.h>
 
 namespace flame_ide
 {namespace JSON

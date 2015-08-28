@@ -3,13 +3,13 @@
 #include "../Others/TextStyle.h"
 
 // Others
-#include "../Others/Templates/Array.h"
-#include "../Others/Templates/List.h"
-#include "../Others/Templates/String.h"
-#include "../Others/Templates/SmartPointer.h"
-#include "../Others/JSON/JSON.h"
+#include "../Templates/Array.h"
+#include "../Templates/List.h"
+#include "../Templates/String.h"
+#include "../Templates/SmartPointer.h"
+#include "../Analysers/JSON/JSON.h"
 
-#include "../Store/BasicFile.h"
+#include "../Filesystem/BasicFile.h"
 
 using namespace flame_ide;
 

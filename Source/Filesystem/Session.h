@@ -1,8 +1,8 @@
 #ifndef SESSION_H
 #define SESSION_H
 
-#include "BasicFile.h"
-#include "Project.h"
+#include <Filesystem/BasicFile.h>
+#include <Filesystem/Project.h>
 
 #include <vector>
 

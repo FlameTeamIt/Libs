@@ -1,7 +1,7 @@
 #ifndef TEST_H
 #define TEST_H
 
-#include "../Others/JSON/JSON.h"
+#include "../Analysers/JSON/JSON.h"
 
 namespace flame_ide
 {

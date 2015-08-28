@@ -1,6 +1,6 @@
 #include "JSON.h"
 
-#include "../Templates/List.h"
+#include "../../Templates/List.h"
 
 using namespace flame_ide;
 

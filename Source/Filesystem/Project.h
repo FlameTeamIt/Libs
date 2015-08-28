@@ -1,7 +1,7 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-#include "../Store/BasicFile.h"
+#include <Filesystem/BasicFile.h>
 
 namespace flame_ide
 {

@@ -3,9 +3,9 @@
 #include "../Others/TextStyle.h"
 
 // Store
-#include "../Store/BasicFile.h"
-#include "../Store/Project.h"
-#include "../Store/Session.h"
+#include "../Filesystem/BasicFile.h"
+#include "../Filesystem/Project.h"
+#include "../Filesystem/Session.h"
 
 using namespace flame_ide;
 

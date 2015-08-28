@@ -2,9 +2,9 @@
 #include "Test.h"
 #include "../Others/TextStyle.h"
 
-#include "../Others/JSON/JSON.h"
+#include "../Analysers/JSON/JSON.h"
 
-#include "../Store/BasicFile.h"
+#include "../Filesystem/BasicFile.h"
 
 using namespace flame_ide;
 

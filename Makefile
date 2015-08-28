@@ -10,6 +10,7 @@ else
 override TypeBuild := Release
 endif
 
+Path := Source/
 BuildPath := $(TypeBuild)
 
 DepPath := $(BuildPath)/dep
@@ -50,15 +51,14 @@ override Flags_Release :=-O2 -finline-functions  $(Warn_flags) #-nostdlib -ffree
 
 ifeq ($(TypeBuild),Release)
 override Defines := $(Defines_Release)
-override Flags :=-std=c++11 -pipe $(Defines_Release) $(Flags_Release)
+override Flags :=-std=c++11 -pipe $(Defines_Release) $(Flags_Release) -I$(Path)
 endif
 
 ifeq ($(TypeBuild),Debug)
 override Defines := $(Defines_Debug)
-override Flags :=-std=c++11 -pipe $(Defines_Debug) $(Flags_Debug)
+override Flags :=-std=c++11 -pipe $(Defines_Debug) $(Flags_Debug) -I$(Path)
 endif
 
-Path := Source/
 
 # список всех ресурсных файлов
 Sources := \
