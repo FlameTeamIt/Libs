@@ -12,23 +12,25 @@ void
 Test::Templates::all()
 {
 	this->count_success_tests =
-			this->TArray()
-			+ this->TList()
-			+ this->TString()
-			+ this->TSmartPointer();
+			this->Array()
+			+ this->List()
+			+ this->String()
+			+ this->SmartPointer();
 	
 	std::cout << '\n';
 }
 
 unsigned int
-Test::Templates::TList()
+Test::Templates::List()
 {
 	std::cout << "Test::Templates::TList()" << '\n';
+	
+	using namespace flame_ide::templates;
 	
 	size_t start_count = 4; // начиная с 4-х элементов не течет. Что? (О_о)
 	int arr[] = {5, 6};
 	
-	List<int> list(start_count);
+	templates::List<int> list(start_count);
 	
 	for(size_t i = 0; i < start_count; i++)
 	{ list[i] = int(i+1); }
@@ -62,7 +64,7 @@ Test::Templates::TList()
 	list.erase(list.begin()++);
 	
 	// проверка конструктора копирования
-	List<int> list1(list);
+	templates::List<int> list1(list);
 	list1.popBack(3);
 	
 	// проверка оператора присваивания
@@ -83,14 +85,12 @@ Test::Templates::TList()
 }
 
 unsigned int
-Test::Templates::TString()
+Test::Templates::String()
 {
 	std::cout << "Test::Templates::TString()" << "\n";
 	
-	using namespace templates;
-	
-	String str1("Hello!");
-	String str2("Bye!");
+	templates::String str1("Hello!");
+	templates::String str2("Bye!");
 	
 	str1 += "LOL!"; // нужно описывать оператор в String
 	std::cout << str1 << '\n';
@@ -109,13 +109,13 @@ Test::Templates::TString()
 }
 
 unsigned int
-Test::Templates::TArray()
+Test::Templates::Array()
 {
 	using namespace templates;
 	
 	std::cout << "Test::Templates::TArray()\n";
 	
-	Array<long> array;
+	templates::Array<long> array;
 	
 	array.pushBack(10);
 	array.pushBack(9);
@@ -174,7 +174,7 @@ Test::Templates::TArray()
 	std::cout << '\n';
 	
 //#ifdef FUTURE
-	Array<long> array1(array);
+	templates::Array<long> array1(array);
 	
 	array.erase(0);
 	array.erase(2);
@@ -207,10 +207,10 @@ Test::Templates::TArray()
 }
 
 unsigned int
-Test::Templates::TSmartPointer()
+Test::Templates::SmartPointer()
 {
 	std::cout << "Test::Templates::TSmartPointer()\n";
-	SmartPointer<std::string> p_str;
+	templates::SmartPointer<std::string> p_str;
 	
 	// 1. make
 	p_str.make("Hello, world!");

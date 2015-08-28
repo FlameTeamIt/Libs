@@ -5,7 +5,6 @@
 #include "Array.h"
 #include "String_Functions.h"
 
-
 namespace flame_ide
 {namespace templates
 {

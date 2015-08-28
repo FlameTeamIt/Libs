@@ -1,8 +1,9 @@
-#include "Test.h"
 #include <vector>
 #include <iostream>
 
-#include "../About/About.h"
+#include <About/About.h>
+
+#include "Test.h"
 
 int main(int argc, char** argv)
 {
@@ -11,10 +12,6 @@ int main(int argc, char** argv)
 	
 	flame_ide::Test test;
 	test.all();
-	
-//	std::cout << "pos_type = "
-//			  << sizeof(std::istream::pos_type)*8
-//			  << '\n';
 	
 	flame_ide::About about;
 	

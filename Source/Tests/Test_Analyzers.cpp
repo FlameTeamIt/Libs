@@ -14,8 +14,8 @@ Test::Analyzers::all()
 {
 	std::cout << "Test::Analyzers::all()\n";
 	
-	this->count_success_tests = this->TCodeParcer()
-			                    + this->TCommandLine();
+	this->count_success_tests = this->CodeParcer()
+			                    + this->CommandLine();
 	
 	std::cout << '\n';
 	
@@ -23,18 +23,18 @@ Test::Analyzers::all()
 }
 
 unsigned int
-Test::Analyzers::TCodeParcer()
+Test::Analyzers::CodeParcer()
 {
 	std::cout << "Test::Analyzers::TCodeParcer()\n";
 	return 1;
 }
 
 unsigned int
-Test::Analyzers::TCommandLine()
+Test::Analyzers::CommandLine()
 {
 	std::cout << "Test::Analyzers::TCommandLine()\n";
 	
-	CommandLine commands;
+	flame_ide::CommandLine commands;
 	
 #define c_comm "ls -a"
 	

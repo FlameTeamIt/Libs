@@ -22,9 +22,10 @@ Test::all()
 	std::cout << TEXT_STYLE_CYAN << TEXT_STYLE_BOLD
 			  << "Test::all()" << TEXT_STYLE_NULL << '\n';
 	
-	actions.all();
+	analyzers.all();
 	bus.all();
-	store.all();
+	filesystem.all();
+	templates.all();
 	
 	others.all();
 	

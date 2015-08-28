@@ -1,7 +1,7 @@
 #ifndef TEST_H
 #define TEST_H
 
-#include "../Analysers/JSON/JSON.h"
+#include <Analysers/JSON/JSON.h>
 
 namespace flame_ide
 {
@@ -24,8 +24,8 @@ public:
 	{
 		void all();
 		
-		unsigned int TCodeParcer();
-		unsigned int TCommandLine();
+		unsigned int CodeParcer();
+		unsigned int CommandLine();
 		
 		struct JSONLib : Base
 		{
@@ -43,23 +43,23 @@ public:
 			
 		} json_lib;
 		
-	} actions;
+	} analyzers;
 	
 	struct Bus : Base
 	{
 		void all();
 		
-		unsigned int TMsgInterface();
+		unsigned int MsgInterface();
 	} bus;
 	
 	struct Filesystem : Base
 	{
 		void all();
 		
-		unsigned int TBasicFile();
-		unsigned int TProject();
-		unsigned int TSession();
-	} store;
+		unsigned int BasicFile();
+		unsigned int Project();
+		unsigned int Session();
+	} filesystem;
 	
 	struct Others : Base
 	{
@@ -71,10 +71,10 @@ public:
 	{
 		void all();
 		
-		unsigned int TList();
-		unsigned int TArray();
-		unsigned int TString();
-		unsigned int TSmartPointer();
+		unsigned int List();
+		unsigned int Array();
+		unsigned int String();
+		unsigned int SmartPointer();
 		
 	} templates;
 

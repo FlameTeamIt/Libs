@@ -14,18 +14,18 @@ void
 Test::Filesystem::all()
 {
 	std::cout << "Test::Filesystem::all()" << '\n';
-	count_success_tests = this->TBasicFile()
-						  + this->TProject()
-						  + this->TSession();
+	count_success_tests = this->BasicFile()
+						  + this->Project()
+						  + this->Session();
 	std::cout << '\n';
 }
 
 unsigned int
-Test::Filesystem::TBasicFile()
+Test::Filesystem::BasicFile()
 {
 	std::cout << "Test::Filesystem::TBasicFile()" << '\n';
 	
-	BasicFile basic_file("test.txt");
+	flame_ide::BasicFile basic_file("test.txt");
 	std::string text("This is test file\n"), out_text;
 	
 	basic_file.save(text);
@@ -48,14 +48,14 @@ Test::Filesystem::TBasicFile()
 }
 
 unsigned int
-Test::Filesystem::TProject()
+Test::Filesystem::Project()
 {
 	std::cout << "Test::Filesystem::TProject()" << '\n';
 	return 1;
 }
 
 unsigned int
-Test::Filesystem::TSession()
+Test::Filesystem::Session()
 {
 	std::cout << "Test::Filesystem::TSession()" << '\n';
 	return 1;

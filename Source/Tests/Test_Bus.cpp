@@ -12,13 +12,13 @@ void
 Test::Bus::all()
 {
 	std::cout << "Test::Bus::all()" << '\n';
-	count_success_tests = this->TMsgInterface();
+	count_success_tests = this->MsgInterface();
 	
 	std::cout << '\n';
 }
 
 unsigned int
-Test::Bus::TMsgInterface()
+Test::Bus::MsgInterface()
 {
 	std::cout << "Test::Bus::TMsgInterface()" << '\n';
 	return 1;
