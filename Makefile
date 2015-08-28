@@ -58,7 +58,7 @@ override Defines := $(Defines_Debug)
 override Flags :=-std=c++11 -pipe $(Defines_Debug) $(Flags_Debug)
 endif
 
-Path := src/
+Path := Source/
 
 # список всех ресурсных файлов
 Sources := \
