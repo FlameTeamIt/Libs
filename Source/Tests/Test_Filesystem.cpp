@@ -1,18 +1,19 @@
 #include <iostream>
-#include "Test.h"
-#include "../Others/TextStyle.h"
+#include <Others/TextStyle.h>
 
 // Store
-#include "../Filesystem/BasicFile.h"
-#include "../Filesystem/Project.h"
-#include "../Filesystem/Session.h"
+#include <Filesystem/BasicFile.h>
+#include <Filesystem/Project.h>
+#include <Filesystem/Session.h>
+
+#include "Test.h"
 
 using namespace flame_ide;
 
 void
-Test::Store::all()
+Test::Filesystem::all()
 {
-	std::cout << "Test::Store::all()" << '\n';
+	std::cout << "Test::Filesystem::all()" << '\n';
 	count_success_tests = this->TBasicFile()
 						  + this->TProject()
 						  + this->TSession();
@@ -20,9 +21,9 @@ Test::Store::all()
 }
 
 unsigned int
-Test::Store::TBasicFile()
+Test::Filesystem::TBasicFile()
 {
-	std::cout << "Test::Store::TBasicFile()" << '\n';
+	std::cout << "Test::Filesystem::TBasicFile()" << '\n';
 	
 	BasicFile basic_file("test.txt");
 	std::string text("This is test file\n"), out_text;
@@ -47,15 +48,15 @@ Test::Store::TBasicFile()
 }
 
 unsigned int
-Test::Store::TProject()
+Test::Filesystem::TProject()
 {
-	std::cout << "Test::Store::TProject()" << '\n';
+	std::cout << "Test::Filesystem::TProject()" << '\n';
 	return 1;
 }
 
 unsigned int
-Test::Store::TSession()
+Test::Filesystem::TSession()
 {
-	std::cout << "Test::Store::TSession()" << '\n';
+	std::cout << "Test::Filesystem::TSession()" << '\n';
 	return 1;
 }

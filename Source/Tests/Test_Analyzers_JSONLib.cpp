@@ -1,23 +1,23 @@
 #include <iostream>
+
+#include <Others/TextStyle.h>
+#include <Analysers/JSON/JSON.h>
+#include <Filesystem/BasicFile.h>
+
 #include "Test.h"
-#include "../Others/TextStyle.h"
-
-#include "../Analysers/JSON/JSON.h"
-
-#include "../Filesystem/BasicFile.h"
 
 using namespace flame_ide;
 
 void
-Test::Others::JSONLib::all()
+Test::Analyzers::JSONLib::all()
 {
 	using namespace JSON;
-	std::cout << "Test::Others::JSONLib::all()\n";
+	std::cout << "Test::Analyzers::JSONLib::all()\n";
 	
 	this->count_success_tests =
 			this->Single() + this->Pair()
 			+ this->Array() + this->Object();
-	
+
 	// stress test
 //	BasicFile basic_file("BigJSON.json");
 //	std::string str_json = basic_file.load();
@@ -46,9 +46,9 @@ Test::Others::JSONLib::all()
 }
 
 unsigned int
-Test::Others::JSONLib::Single()
+Test::Analyzers::JSONLib::Single()
 {
-	std::cout << "Test::Others::JSONLib::Single()\n";
+	std::cout << "Test::Analyzers::JSONLib::Single()\n";
 	
 	JSON::Single single;
 	std::string json_single("   \"Start\"   ");
@@ -65,9 +65,9 @@ Test::Others::JSONLib::Single()
 }
 
 unsigned int
-Test::Others::JSONLib::Pair()
+Test::Analyzers::JSONLib::Pair()
 {
-	std::cout << "Test::Others::JSONLib::Pair()\n";
+	std::cout << "Test::Analyzers::JSONLib::Pair()\n";
 	
 	std::string json_pair_single("\"Start\":\"Start\"");
 	
@@ -83,9 +83,9 @@ Test::Others::JSONLib::Pair()
 }
 
 unsigned int
-Test::Others::JSONLib::Array()
+Test::Analyzers::JSONLib::Array()
 {
-	std::cout << "Test::Others::JSONLib::Array()\n";
+	std::cout << "Test::Analyzers::JSONLib::Array()\n";
 	
 	std::string json_array_single("[   \"Start\"  ,  \"Stop\"  ]");
 	
@@ -183,9 +183,9 @@ Test::Others::JSONLib::Array()
 }
 
 unsigned int
-Test::Others::JSONLib::Object()
+Test::Analyzers::JSONLib::Object()
 {
-	std::cout << "Test::Others::JSONLib::Object()\n";
+	std::cout << "Test::Analyzers::JSONLib::Object()\n";
 	
 	std::string json_object_pair_single("{\"Start\":\"Start\",\"Stop\":\"Stop\"}");
 	

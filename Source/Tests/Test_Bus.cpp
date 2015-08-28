@@ -1,9 +1,10 @@
 #include <iostream>
-#include "Test.h"
-#include "../Others/TextStyle.h"
+#include <Others/TextStyle.h>
 
 // Bus
-#include "../Bus/MsgInterface.h"
+#include <Bus/MsgInterface.h>
+
+#include "Test.h"
 
 using namespace flame_ide;
 

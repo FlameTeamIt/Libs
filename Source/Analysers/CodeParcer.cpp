@@ -1,6 +1,5 @@
-#include "CodeParcer.h"
-
 #include <Filesystem/BasicFile.h>
+#include "CodeParcer.h"
 
 #include <iostream>
 
@@ -13,7 +12,7 @@ BasicCodeParcer::loadFile(std::string&)
 	return buffer;
 }
 
-std::list< std::string >
+std::list<std::string>
 BasicCodeParcer::getSemanticList(std::string&)
 {
 	std::list< std::string > semantics(0);

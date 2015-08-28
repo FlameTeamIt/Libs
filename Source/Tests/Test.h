@@ -20,42 +20,12 @@ public:
 		virtual void all() = 0;
 	};
 	
-	struct Actions : Base
+	struct Analyzers : Base
 	{
 		void all();
 		
 		unsigned int TCodeParcer();
 		unsigned int TCommandLine();
-	} actions;
-	
-	struct Bus : Base
-	{
-		void all();
-		
-		unsigned int TMsgInterface();
-	} bus;
-	
-	struct Store : Base
-	{
-		void all();
-		
-		unsigned int TBasicFile();
-		unsigned int TProject();
-		unsigned int TSession();
-	} store;
-	
-	struct Others : Base
-	{
-		void all();
-		
-		// тестирование
-		// JSON
-		// Templates -- Array & List
-		
-		unsigned int TList();
-		unsigned int TArray();
-		unsigned int TString();
-		unsigned int TSmartPointer();
 		
 		struct JSONLib : Base
 		{
@@ -70,10 +40,43 @@ public:
 			unsigned int Pair();
 			unsigned int Array();
 			unsigned int Object();
+			
 		} json_lib;
 		
+	} actions;
+	
+	struct Bus : Base
+	{
+		void all();
+		
+		unsigned int TMsgInterface();
+	} bus;
+	
+	struct Filesystem : Base
+	{
+		void all();
+		
+		unsigned int TBasicFile();
+		unsigned int TProject();
+		unsigned int TSession();
+	} store;
+	
+	struct Others : Base
+	{
+		void all();
 		
 	} others;
+	
+	struct Templates : Base
+	{
+		void all();
+		
+		unsigned int TList();
+		unsigned int TArray();
+		unsigned int TString();
+		unsigned int TSmartPointer();
+		
+	} templates;
 
 	void all();
 };

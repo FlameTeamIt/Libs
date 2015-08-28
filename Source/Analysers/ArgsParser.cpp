@@ -6,9 +6,10 @@
 //  Copyright (c) 2014 SR3u. All rights reserved.
 //
 
-#include "ArgsParser.h"
 #include <iostream>
 #include <algorithm>
+
+#include "ArgsParser.h"
 
 ArgsParser::ArgsParser(){}
 ArgsParser::ArgsParser(const int argc, const char*argv[])

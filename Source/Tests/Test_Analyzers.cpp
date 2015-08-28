@@ -1,35 +1,38 @@
 #include <iostream>
-#include "Test.h"
-#include "../Others/TextStyle.h"
+#include <Others/TextStyle.h>
 
 // Actions
-#include "../Process/CommandLine.h"
-#include "../Analysers/CodeParcer.h"
+#include <Process/CommandLine.h>
+#include <Analysers/CodeParcer.h>
+
+#include "Test.h"
 
 using namespace flame_ide;
 
 void
-Test::Actions::all()
+Test::Analyzers::all()
 {
-	std::cout << "Test::Actions::all()\n";
+	std::cout << "Test::Analyzers::all()\n";
 	
 	this->count_success_tests = this->TCodeParcer()
 			                    + this->TCommandLine();
 	
 	std::cout << '\n';
+	
+	json_lib.all();
 }
 
 unsigned int
-Test::Actions::TCodeParcer()
+Test::Analyzers::TCodeParcer()
 {
-	std::cout << "Test::Actions::TCodeParcer()\n";
+	std::cout << "Test::Analyzers::TCodeParcer()\n";
 	return 1;
 }
 
 unsigned int
-Test::Actions::TCommandLine()
+Test::Analyzers::TCommandLine()
 {
-	std::cout << "Test::Actions::TCommandLine()\n";
+	std::cout << "Test::Analyzers::TCommandLine()\n";
 	
 	CommandLine commands;
 	
