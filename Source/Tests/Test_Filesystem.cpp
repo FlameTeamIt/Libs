@@ -23,7 +23,7 @@ Test::Filesystem::all()
 unsigned int
 Test::Filesystem::BasicFile()
 {
-	std::cout << "Test::Filesystem::TBasicFile()" << '\n';
+	std::cout << "Test::Filesystem::BasicFile()" << '\n';
 	
 	flame_ide::BasicFile basic_file("test.txt");
 	std::string text("This is test file\n"), out_text;
@@ -50,13 +50,13 @@ Test::Filesystem::BasicFile()
 unsigned int
 Test::Filesystem::Project()
 {
-	std::cout << "Test::Filesystem::TProject()" << '\n';
+	std::cout << "Test::Filesystem::Project()" << '\n';
 	return 1;
 }
 
 unsigned int
 Test::Filesystem::Session()
 {
-	std::cout << "Test::Filesystem::TSession()" << '\n';
+	std::cout << "Test::Filesystem::Session()" << '\n';
 	return 1;
 }

@@ -25,14 +25,14 @@ Test::Analyzers::all()
 unsigned int
 Test::Analyzers::CodeParcer()
 {
-	std::cout << "Test::Analyzers::TCodeParcer()\n";
+	std::cout << "Test::Analyzers::CodeParcer()\n";
 	return 1;
 }
 
 unsigned int
 Test::Analyzers::CommandLine()
 {
-	std::cout << "Test::Analyzers::TCommandLine()\n";
+	std::cout << "Test::Analyzers::CommandLine()\n";
 	
 	flame_ide::CommandLine commands;
 	

@@ -23,7 +23,7 @@ Test::Templates::all()
 unsigned int
 Test::Templates::List()
 {
-	std::cout << "Test::Templates::TList()" << '\n';
+	std::cout << "Test::Templates::List()" << '\n';
 	
 	using namespace flame_ide::templates;
 	
@@ -87,7 +87,7 @@ Test::Templates::List()
 unsigned int
 Test::Templates::String()
 {
-	std::cout << "Test::Templates::TString()" << "\n";
+	std::cout << "Test::Templates::String()" << "\n";
 	
 	templates::String str1("Hello!");
 	templates::String str2("Bye!");
@@ -113,7 +113,7 @@ Test::Templates::Array()
 {
 	using namespace templates;
 	
-	std::cout << "Test::Templates::TArray()\n";
+	std::cout << "Test::Templates::Array()\n";
 	
 	templates::Array<long> array;
 	
@@ -209,7 +209,7 @@ Test::Templates::Array()
 unsigned int
 Test::Templates::SmartPointer()
 {
-	std::cout << "Test::Templates::TSmartPointer()\n";
+	std::cout << "Test::Templates::SmartPointer()\n";
 	templates::SmartPointer<std::string> p_str;
 	
 	// 1. make

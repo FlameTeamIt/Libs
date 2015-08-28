@@ -20,6 +20,6 @@ Test::Bus::all()
 unsigned int
 Test::Bus::MsgInterface()
 {
-	std::cout << "Test::Bus::TMsgInterface()" << '\n';
+	std::cout << "Test::Bus::MsgInterface()" << '\n';
 	return 1;
 }

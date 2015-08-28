@@ -13,4 +13,3 @@ Test::Others::all()
 	std::cout << "Test::Others::all()" << '\n';
 	std::cout << '\n';
 }
-
