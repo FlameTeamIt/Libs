@@ -1,9 +1,9 @@
 #ifndef TEMPLATES_ARRAY_H
 #define TEMPLATES_ARRAY_H
 
-#include "Array_Functions.h"
-
 #include <string>
+
+#include <Templates/Array_Functions.h>
 
 namespace flame_ide
 { namespace templates

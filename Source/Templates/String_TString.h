@@ -1,9 +1,9 @@
 #ifndef STRING_TSTRING
 #define STRING_TSTRING
 
-#include "For_All.h"
-#include "Array.h"
-#include "String_Functions.h"
+#include <Templates/For_All.h>
+#include <Templates/Array.h>
+#include <Templates/String_Functions.h>
 
 namespace flame_ide
 {namespace templates
