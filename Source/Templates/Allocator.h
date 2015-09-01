@@ -52,6 +52,18 @@ Allocator::~Allocator()
 	}
 }
 
+void*
+Allocator::newPointer(unsigned long size)
+{
+	
+}
+
+void
+Allocator::deletePointer(void *pointer, unsigned long size)
+{
+	
+}
+
 /*
 
 Есть несколько вещей, с которыми хотел бы разобраться:
