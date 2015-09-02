@@ -1,12 +1,10 @@
 #ifndef JSON_H
 #define JSON_H
 
-#include <string>
-
-//#include "../../Templates/Array.h"
-//#include "../../Templates/List.h"
 #include <Templates/Array.h>
 #include <Templates/List.h>
+#include <Templates/SmartPointer.h>
+//#include <Templates/String.h>
 
 namespace flame_ide
 {namespace JSON
@@ -33,6 +31,7 @@ class Object;
 
 class Document;
 
+typedef SmartPointer<Data> JsonPointer;
 /* ------------------------------------------------------------ */
 
 class Data
@@ -135,6 +134,7 @@ public:
 	Single();
 	Single(const Data *data);
 	Single(const Single &single);
+	Single(Single&& single);
 	Single(const std::string& value);
 	
 	~Single();

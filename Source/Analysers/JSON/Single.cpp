@@ -25,6 +25,12 @@ Single::Single(const Single& single)
 	set(single);
 }
 
+Single::Single(Single &&single)
+	: Single()
+{
+	
+}
+
 Single::Single(const std::string& value)
 	: Single()
 { setAsString(value); }

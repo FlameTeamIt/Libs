@@ -1,7 +1,7 @@
-#ifndef TEMPLATES_FUNCTIONS
-#define TEMPLATES_FUNCTIONS
+#ifndef TEMPLATES_LIST_FUNCTIONS
+#define TEMPLATES_LIST_FUNCTIONS
 
-#include "List_Container.h"
+#include <Templates/List_Container.h>
 
 namespace flame_ide
 {namespace templates

@@ -2,7 +2,6 @@
 
 using namespace flame_ide::JSON;
 
-
 Data::Data()
 {
 	is_object = false;

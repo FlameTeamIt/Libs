@@ -1,5 +1,5 @@
-#ifndef SMARTPOINTER_H
-#define SMARTPOINTER_H
+#ifndef TEMPLATES_SMARTPOINTER
+#define TEMPLATES_SMARTPOINTER
 
 namespace flame_ide
 {namespace templates
@@ -8,18 +8,18 @@ namespace flame_ide
 template<class T>
 class SmartPointer
 {
-	mutable T *inc_pointer;
-	mutable bool is_temporary;
-	mutable bool is_initilized;
+	T *inc_pointer;
+	bool is_initilized;
+	
+	SmartPointer(const SmartPointer &pointer);
 	
 protected:
-	void set(const SmartPointer& pointer);
+	void set(SmartPointer& pointer);
 	
 public:
 	SmartPointer();
-	SmartPointer(T *new_pointer);
 	SmartPointer(const T &object);
-	SmartPointer(const SmartPointer& pointer);
+	SmartPointer(SmartPointer &&pointer);
 	
 	~SmartPointer();
 	
@@ -36,9 +36,12 @@ public:
 	const T& operator *() const noexcept;
 	const T* operator ->() const noexcept;
 	
-	SmartPointer& operator =(const SmartPointer<T> &arg);
+	SmartPointer& operator =(SmartPointer<T> &arg);
 	SmartPointer& operator =(const T &arg);
 };
+
+template<class T, class ... Ts>
+SmartPointer<T> make(Ts ... args);
 
 }}
 
@@ -48,18 +51,6 @@ template<class T>
 SmartPointer<T>::SmartPointer()
 {
 	inc_pointer = nullptr;
-	is_temporary = false;
-}
-
-template<class T>
-SmartPointer<T>::SmartPointer(T *new_pointer)
-	: SmartPointer<T>()
-{
-	if(new_pointer != nullptr)
-	{
-		this->inc_pointer = new_pointer;
-		this->is_initilized = true;
-	}
 }
 
 template<class T>
@@ -69,7 +60,7 @@ SmartPointer<T>::SmartPointer(const T &object)
 }
 
 template<class T>
-SmartPointer<T>::SmartPointer(const SmartPointer &pointer)
+SmartPointer<T>::SmartPointer(SmartPointer &&pointer)
 	: SmartPointer<T>()
 {
 	set(pointer);
@@ -88,7 +79,7 @@ SmartPointer<T>::~SmartPointer()
 
 template<class T>
 void
-SmartPointer<T>::set(const SmartPointer &pointer)
+SmartPointer<T>::set(SmartPointer &pointer)
 {
 	this->inc_pointer = pointer.inc_pointer;
 	this->is_initilized = true;
@@ -158,7 +149,7 @@ SmartPointer<T>::operator ->() const noexcept
 
 template<class T>
 SmartPointer<T>& 
-SmartPointer<T>::operator =(const SmartPointer<T> &arg)
+SmartPointer<T>::operator =(SmartPointer<T> &arg)
 {
 	this->clear();
 	this->set(arg);
@@ -173,6 +164,12 @@ SmartPointer<T>::operator =(const T &arg)
 	this->make(arg);
 	
 	return *this;
+}
+
+template<class T, class ... Ts>
+SmartPointer<T> make(Ts ... args)
+{
+	
 }
 
 #endif // SMARTPOINTER_H

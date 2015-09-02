@@ -1,5 +1,5 @@
-#ifndef LIST_FUNCTIONS_H
-#define LIST_FUNCTIONS_H
+#ifndef TEMPLATES_LIST_CONTAINER
+#define TEMPLATES_LIST_CONTAINER
 
 #include <algorithm>
 
@@ -25,6 +25,7 @@ struct Container
 	
 	Container();
 	Container(const Container<T> &container);
+	Container(Container<T> &&container);
 	Container(PosType position_type);
 	Container(const T &init_data, PosType position_type);
 	Container(Container<T> *init_next, Container<T> *init_prev,
@@ -58,6 +59,16 @@ Container<T>::Container(const Container<T> &container) : Container()
 {
 	pos_type = container.pos_type;
 	std::copy(&(container.inc_data), &(container.inc_data)+1, &(this->inc_data));
+}
+
+template<typename T>
+flame_ide::templates::
+Container<T>::Container(Container<T> &&container) : Container()
+{
+	pos_type = container.pos_type;
+	this->inc_data = container.inc_data;
+	
+	container.inc_data = nullptr;
 }
 template<typename T>
 flame_ide::templates::

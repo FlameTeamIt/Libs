@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_LIST
 #define TEMPLATES_LIST
 
-#include "List_Functions.h"
+#include <Templates/List_Functions.h>
 
 namespace flame_ide
 { namespace templates
@@ -24,6 +24,7 @@ class ListIterator
 public:
 	ListIterator();
 	ListIterator(const ListIterator<T> &iterator);
+	ListIterator(ListIterator<T> &&iterator);
 	
 	inline T& getData();
 	
@@ -83,7 +84,8 @@ private:
 public:
 	List();
 	List(size_t new_size);
-	List(const List &list);
+	List(const List<T> &list);
+	List(List<T> &&list);
 	
 	~List();
 	
@@ -136,11 +138,17 @@ using namespace	flame_ide::templates;
 
 template<typename T>
 ListIterator<T>::ListIterator()
-{
-	
-}
+{}
+
 template<typename T>
 ListIterator<T>::ListIterator(const ListIterator<T> &iterator)
+{
+	this->pointer = iterator.pointer;
+	this->is_reverse = iterator.is_reverse;
+	this->parent = iterator.parent;
+}
+template<typename T>
+ListIterator<T>::ListIterator(ListIterator<T> &&iterator)
 {
 	this->pointer = iterator.pointer;
 	this->is_reverse = iterator.is_reverse;
@@ -328,6 +336,17 @@ List<T>::List(const List<T> &list)
 				 &(this->head), &(this->tail)); // и куда
 	
 	this->size = list.size;
+}
+template<typename T>
+List<T>::List(List<T> &&list)
+	: List()
+{
+	this->head = list.head;
+	this->tail = list.tail;
+	
+	this->size = list.size;
+	
+	list_link_containers<T>(&head, &tail);
 }
 
 template<typename T>

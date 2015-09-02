@@ -1,5 +1,5 @@
-#ifndef STRING_FUNCTIONS
-#define STRING_FUNCTIONS
+#ifndef TEMPLATES_STRING_FUNCTIONS
+#define TEMPLATES_STRING_FUNCTIONS
 
 #include <algorithm>
 

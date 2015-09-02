@@ -1,5 +1,5 @@
-#ifndef ARRAY_FUNCTIONS
-#define ARRAY_FUNCTIONS
+#ifndef TEMPLATES_ARRAY_FUNCTIONS
+#define TEMPLATES_ARRAY_FUNCTIONS
 
 #include <cstdlib>
 #include <algorithm>

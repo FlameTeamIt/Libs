@@ -16,7 +16,7 @@ Test::Templates::all()
 	this->count_success_tests =
 			this->Array()
 			+ this->List()
-			+ this->String()
+//			+ this->String()
 			+ this->SmartPointer();
 	
 	std::cout << '\n';
@@ -86,29 +86,29 @@ Test::Templates::List()
 	return 1;
 }
 
-unsigned int
-Test::Templates::String()
-{
-	std::cout << "Test::Templates::String()" << "\n";
+//unsigned int
+//Test::Templates::String()
+//{
+//	std::cout << "Test::Templates::String()" << "\n";
 	
-	templates::String str1("Hello!");
-	templates::String str2("Bye!");
+//	templates::String str1("Hello!");
+//	templates::String str2("Bye!");
 	
-	str1 += "LOL!"; // нужно описывать оператор в String
-	std::cout << str1 << '\n';
-	str1 += str2;
-	std::cout << str1 << '\n';
-	str1 = str2;
-	std::cout << str1 << '\n';
-	str1 = str1.getSubstr(0, 3);
-	std::cout << str1 << '\n';
-	
-	// work
-//	std::cin >> str1;
+//	str1 += "LOL!"; // нужно описывать оператор в String
+//	std::cout << str1 << '\n';
+//	str1 += str2;
+//	std::cout << str1 << '\n';
+//	str1 = str2;
+//	std::cout << str1 << '\n';
+//	str1 = str1.getSubstr(0, 3);
 //	std::cout << str1 << '\n';
 	
-	return 1;
-}
+//	// work
+////	std::cin >> str1;
+////	std::cout << str1 << '\n';
+	
+//	return 1;
+//}
 
 unsigned int
 Test::Templates::Array()

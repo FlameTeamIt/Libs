@@ -1,5 +1,5 @@
-#ifndef FOR_ALL
-#define FOR_ALL
+#ifndef TEMPLATES_FOR_ALL
+#define TEMPLATES_FOR_ALL
 
 namespace flame_ide
 {namespace templates

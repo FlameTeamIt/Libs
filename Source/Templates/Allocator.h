@@ -1,5 +1,7 @@
-#ifndef ALLOCATOR
-#define ALLOCATOR
+#ifndef TEMPLATES_ALLOCATOR
+#define TEMPLATES_ALLOCATOR
+
+#ifdef WITH_CUSTOM_ALLOCATOR
 
 #if defined(MAX_KBYTES) && !defined(MAX_MBYTES)
 
@@ -42,7 +44,7 @@ struct Node
 class Allocator
 {
 	Node *head;
-//	Node *tail;
+	Node *tail;
 	
 public:
 	Allocator();
@@ -70,7 +72,7 @@ using namespace flame_ide::templates;
 Allocator::Allocator()
 {
 	head = new Node;
-	head->next = nullptr;
+	head->next = head->prev = nullptr;
 }
 
 Allocator::~Allocator()
@@ -84,6 +86,7 @@ Allocator::~Allocator()
 	}
 }
 
+// сдвиги указателя
 void*
 Allocator::allocate(unsigned long size)
 {
@@ -111,6 +114,8 @@ Allocator::deallocate(void *pointer, unsigned long size)
 #undef MAX_NODE_SIZE
 #undef MAX_BYTES
 #undef MAX_KBYTES
+
+#endif
 
 #endif // ALLOCATOR
 

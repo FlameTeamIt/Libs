@@ -1,7 +1,5 @@
-#ifndef TEMPLATES_ARRAY_H
-#define TEMPLATES_ARRAY_H
-
-#include <string>
+#ifndef TEMPLATES_ARRAY
+#define TEMPLATES_ARRAY
 
 #include <Templates/Array_Functions.h>
 
@@ -30,6 +28,7 @@ public:
 	Array();
 	Array(const size_t &length, const T* array);
 	Array(const Array<T> &array);
+	Array(Array<T> &&array);
 	Array(const size_t &arr_size);
 	
 	virtual ~Array();
@@ -98,6 +97,20 @@ Array<T>::Array(const Array<T> &array)
 		}
 		this->arr_size = array.arr_size;
 		this->is_initialised = true;
+	}
+}
+template<class T>
+Array<T>::Array(Array<T> &&array)
+	: Array()
+{
+	if(array.isInitialised())
+	{
+		this->inc_arr = array.inc_arr;
+		this->arr_size = array.arr_size;
+		this->is_initialised = true;
+		
+		array.inc_arr = nullptr;
+		array.is_initialised = false;
 	}
 }
 template<class T>

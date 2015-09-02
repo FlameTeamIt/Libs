@@ -1,18 +1,17 @@
-#ifndef STRING
-#define STRING
+#ifndef TEMPLATES_STRING
+#define TEMPLATES_STRING
 
 #define MAX_BUFFER_COUNT 1024
 
 #include <string.h>
 #include <wchar.h>
+#include <iostream>
 
-#include "String_TString.h"
+#include <Templates/String_TString.h>
 
 namespace flame_ide
 {namespace templates
 {
-
-typedef TString<char> ParentCharStr;
 
 class String : public TString<char>
 {
@@ -173,20 +172,16 @@ operator>>(std::istream &input_stream,
 	return input_stream;
 }
 
-}}
-
-using namespace flame_ide::templates;
-
 // constructors and destructor
 
 String::String()
-	: ParentCharStr()
+	: TString<char>()
 {}
 String::String(const char *c_str)
 	: TString<char>(getCStrLength(c_str), c_str)
 {}
 String::String(const String &str)
-	: ParentCharStr(static_cast<const ParentCharStr &>(str))
+	: TString<char>(static_cast<const TString<char> &>(str))
 {}
 
 String::~String()
@@ -296,5 +291,7 @@ String::operator +=(const String& string)
 	this->concatenation(string);
 	return *this;
 }
+
+}}
 
 #endif // STRING

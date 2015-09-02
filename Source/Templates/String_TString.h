@@ -1,5 +1,5 @@
-#ifndef STRING_TSTRING
-#define STRING_TSTRING
+#ifndef TEMPLATES_STRING_TSTRING
+#define TEMPLATES_STRING_TSTRING
 
 #include <Templates/For_All.h>
 #include <Templates/Array.h>
@@ -15,7 +15,6 @@ class TString : public Array<T>
 protected:
 	mutable bool is_actual_hash;
 	
-//	constexpr static T null_string[] = "";
 	mutable unsigned long hash;
 	
 	void computeHash();
@@ -49,9 +48,6 @@ public:
 	inline const T* getCString() const;
 	
 	virtual unsigned long getHash() const = 0;
-	
-//	inline T& operator [](size_t index);
-//	inline const T& operator [](size_t index) const;
 	
 };
 
