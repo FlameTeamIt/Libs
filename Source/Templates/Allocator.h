@@ -1,7 +1,30 @@
 #ifndef ALLOCATOR
 #define ALLOCATOR
 
-// 16K
+#if defined(MAX_KBYTES) && !defined(MAX_MBYTES)
+
+#define MAX_BYTES        MAX_KBYTES*1024
+#define MAX_NODE_SIZE    MAX_BYTES
+
+#endif
+
+#if !defined(MAX_KBYTES) && defined(MAX_MBYTES)
+
+#define MAX_KBYTES       MAX_MBYTES*1024
+#define MAX_BYTES        MAX_KBYTES*1024
+#define MAX_NODE_SIZE    MAX_BYTES
+
+#endif
+
+// 16 KBYTES
+#if !defined(MAX_KBYTES) || !defined(MAX_MBYTES)
+
+#define MAX_KBYTES       16
+#define MAX_BYTES        MAX_KBYTES*1024
+#define MAX_NODE_SIZE    MAX_BYTES
+
+#endif
+
 #include <Templates/For_All.h>
 
 namespace flame_ide
@@ -10,8 +33,7 @@ namespace flame_ide
 
 struct Node
 {
-	const unsigned long size = 1024*16 - (2*sizeof(void*) + sizeof(unsigned long));
-	char data[size];
+	char data[MAX_NODE_SIZE - 2*sizeof(void*)];
 	
 	Node *next;
 	Node *prev;
@@ -25,8 +47,18 @@ class Allocator
 public:
 	Allocator();
 	
-	void* newPointer(unsigned long size);
-	void  deletePointer(void* pointer, unsigned long size);
+	void* allocate(unsigned long size);
+	void  deallocate(void* pointer, unsigned long size);
+	
+	template<class T>
+	void construct(T* t_pointer);
+//	template<class T>
+//	void construct(T* t_pointer, const T& t_const_ref);
+	template<class T, class ... Ts>
+	void construct(T* t_pointer, Ts ... args);
+	
+	template<class T>
+	void destroy(T* t_pointer);
 	
 	~Allocator();
 };
@@ -53,13 +85,13 @@ Allocator::~Allocator()
 }
 
 void*
-Allocator::newPointer(unsigned long size)
+Allocator::allocate(unsigned long size)
 {
 	
 }
 
 void
-Allocator::deletePointer(void *pointer, unsigned long size)
+Allocator::deallocate(void *pointer, unsigned long size)
 {
 	
 }
@@ -75,5 +107,10 @@ Allocator::deletePointer(void *pointer, unsigned long size)
 Пиздец это, в общем.
 
 */
+
+#undef MAX_NODE_SIZE
+#undef MAX_BYTES
+#undef MAX_KBYTES
+
 #endif // ALLOCATOR
 

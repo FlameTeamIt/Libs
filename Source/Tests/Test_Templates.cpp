@@ -1,8 +1,10 @@
 #include <iostream>
+
 #include <Templates/Array.h>
 #include <Templates/List.h>
 #include <Templates/String.h>
 #include <Templates/SmartPointer.h>
+#include <Templates/Allocator.h>
 
 #include "Test.h"
 
@@ -239,3 +241,8 @@ Test::Templates::SmartPointer()
 	return 1;
 }
 
+unsigned int
+Test::Templates::Allocator()
+{
+	
+}

@@ -75,6 +75,7 @@ public:
 		unsigned int Array();
 		unsigned int String();
 		unsigned int SmartPointer();
+		unsigned int Allocator();
 		
 	} templates;
 
