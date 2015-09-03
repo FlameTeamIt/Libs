@@ -31,34 +31,34 @@ operator +(const String& tstring1, const String& tstring2)
 }
 
 // equal
-inline bool
+bool
 operator ==(const char *c_tstr, const String& tstring)
 {
 	return tstring.is_equal(c_tstr);
 }
-inline bool
+bool
 operator ==(const String& tstring, const char *c_tstr)
 {
 	return tstring.is_equal(c_tstr);
 }
-inline bool
+bool
 operator ==(const String& tstring1, const String& tstring2)
 {
 	return tstring1.is_equal(tstring2);
 }
 
 // not equal
-inline bool
+bool
 operator !=(const char *c_tstr, const String& tstring)
 {
 	return tstring.is_not_equal(c_tstr);
 }
-inline bool
+bool
 operator !=(const String& tstring, const char *c_tstr)
 {
 	return tstring.is_not_equal(c_tstr);
 }
-inline bool
+bool
 operator !=(const String& tstring1, const String& tstring2)
 {
 	return tstring1.is_not_equal(tstring2);

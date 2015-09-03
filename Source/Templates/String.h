@@ -39,13 +39,13 @@ public:
 	String getSubstr(size_t pos, size_t length);
 	const String getSubstr(size_t pos, size_t length) const;
 	
-	static inline unsigned long getHash(const char* c_tstr);
+	static unsigned long getHash(const char* c_tstr);
 	unsigned long getHash() const;
 	
-	inline String& operator =(const char *c_tstr);
-	inline String& operator =(const String& tstring);
-	inline String& operator +=(const char *c_tstr);
-	inline String& operator +=(const String& tstring);
+	String& operator =(const char *c_tstr);
+	String& operator =(const String& tstring);
+	String& operator +=(const char *c_tstr);
+	String& operator +=(const String& tstring);
 	
 	// concatenation
 	friend String operator +(const char *c_tstr, const String& tstring);
