@@ -3,7 +3,7 @@
 #include <Templates/Array.h>
 #include <Templates/List.h>
 #include <Templates/String.h>
-#include <Templates/SmartPointer.h>
+#include <Templates/Pointers_UniquePointer.h>
 //#include <Templates/Allocator.h>
 
 #include <Tests/Test.h>
@@ -16,8 +16,8 @@ Test::Templates::all()
 	this->count_success_tests =
 			this->Array()
 			+ this->List()
-//			+ this->String()
-			+ this->SmartPointer();
+			+ this->String()
+			+ this->UniquePointer();
 	
 	std::cout << '\n';
 }
@@ -86,29 +86,29 @@ Test::Templates::List()
 	return 1;
 }
 
-//unsigned int
-//Test::Templates::String()
-//{
-//	std::cout << "Test::Templates::String()" << "\n";
+unsigned int
+Test::Templates::String()
+{
+	std::cout << "Test::Templates::String()" << "\n";
 	
-//	templates::String str1("Hello!");
-//	templates::String str2("Bye!");
+	templates::String str1("Hello!");
+	templates::String str2("Bye!");
 	
-//	str1 += "LOL!"; // нужно описывать оператор в String
-//	std::cout << str1 << '\n';
-//	str1 += str2;
-//	std::cout << str1 << '\n';
-//	str1 = str2;
-//	std::cout << str1 << '\n';
-//	str1 = str1.getSubstr(0, 3);
+	str1 += "LOL!"; // нужно описывать оператор в String
+	std::cout << str1 << '\n';
+	str1 += str2;
+	std::cout << str1 << '\n';
+	str1 = str2;
+	std::cout << str1 << '\n';
+	str1 = str1.getSubstr(0, 3);
+	std::cout << str1 << '\n';
+	
+	// work
+//	std::cin >> str1;
 //	std::cout << str1 << '\n';
 	
-//	// work
-////	std::cin >> str1;
-////	std::cout << str1 << '\n';
-	
-//	return 1;
-//}
+	return 1;
+}
 
 unsigned int
 Test::Templates::Array()
@@ -209,10 +209,10 @@ Test::Templates::Array()
 }
 
 unsigned int
-Test::Templates::SmartPointer()
+Test::Templates::UniquePointer()
 {
-	std::cout << "Test::Templates::SmartPointer()\n";
-	templates::SmartPointer<std::string> p_str;
+	std::cout << "Test::Templates::UniquePointer()\n";
+	templates::UniquePointer<std::string> p_str, p_str1("LOL!");
 	
 	// 1. make
 	p_str.make("Hello, world!");
@@ -221,10 +221,8 @@ Test::Templates::SmartPointer()
 	
 	// 2. clear
 	p_str.clear();
-	if(p_str.getPointer() != nullptr)
-	{
-		return 0;
-	}
+	p_str = p_str1;
+	std::cout << *p_str << '\n';
 	
 	// 3. using methods +
 	// 4. assign
@@ -234,7 +232,7 @@ Test::Templates::SmartPointer()
 	std::cout << "1. * - " << *p_str << '\n'
 			  << "2. -> - " << p_str->c_str() << '\n';
 	
-	p_str = "Bye Bye!";
+	p_str = std::string("Bye Bye!");
 	std::cout << "1. * - " << *p_str << '\n'
 			  << "2. -> - " << p_str->c_str() << '\n';
 	

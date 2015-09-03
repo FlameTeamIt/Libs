@@ -1,7 +1,7 @@
 #ifndef JSON_H
 #define JSON_H
 
-#include <Templates/SmartPointer.h>
+#include <Templates/Pointers_UniquePointer.h>
 #include <Templates/String.h>
 #include <Templates/Array.h>
 #include <Templates/List.h>
@@ -19,15 +19,15 @@ typedef enum
 	OBJECT = 100
 } Type;
 
-class Data;           typedef SmartPointer<Data>           DataPointer;
-class DataContainer;  typedef SmartPointer<DataContainer>  DataContainerPointer;
+class Data;           typedef UniquePointer<Data>           DataPointer;
+class DataContainer;  typedef UniquePointer<DataContainer>  DataContainerPointer;
 
-class Single;  typedef SmartPointer<Single>  SinglePointer;
-class Pair;    typedef SmartPointer<Pair>    PairPointer;
-class Array;   typedef SmartPointer<Array>   ArrayPointer;
-class Object;  typedef SmartPointer<Object>  ObjectPointer;
+class Single;  typedef UniquePointer<Single>  SinglePointer;
+class Pair;    typedef UniquePointer<Pair>    PairPointer;
+class Array;   typedef UniquePointer<Array>   ArrayPointer;
+class Object;  typedef UniquePointer<Object>  ObjectPointer;
 
-class Document; typedef SmartPointer<Document>  DocumentPointer;
+class Document; typedef UniquePointer<Document>  DocumentPointer;
 
 /* ------------------------------------------------------------ */
 
