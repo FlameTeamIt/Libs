@@ -6,7 +6,7 @@
 #include <Filesystem/Project.h>
 #include <Filesystem/Session.h>
 
-#include "Test.h"
+#include <Tests/Test.h>
 
 using namespace flame_ide;
 

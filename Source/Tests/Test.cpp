@@ -1,7 +1,7 @@
 #include <iostream>
 #include <Others/TextStyle.h>
 
-#include "Test.h"
+#include <Tests/Test.h>
 
 struct Kilobyte
 {

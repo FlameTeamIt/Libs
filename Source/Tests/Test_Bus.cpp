@@ -4,7 +4,7 @@
 // Bus
 #include <Bus/MsgInterface.h>
 
-#include "Test.h"
+#include <Tests/Test.h>
 
 using namespace flame_ide;
 

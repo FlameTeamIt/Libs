@@ -4,9 +4,9 @@
 #include <Templates/List.h>
 #include <Templates/String.h>
 #include <Templates/SmartPointer.h>
-#include <Templates/Allocator.h>
+//#include <Templates/Allocator.h>
 
-#include "Test.h"
+#include <Tests/Test.h>
 
 using namespace flame_ide;
 
@@ -244,5 +244,6 @@ Test::Templates::SmartPointer()
 unsigned int
 Test::Templates::Allocator()
 {
-	
+	std::cout << "Test::Templates::Allocator()\n";
+	return 1;
 }

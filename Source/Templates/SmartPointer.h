@@ -36,8 +36,8 @@ public:
 	const T& operator *() const noexcept;
 	const T* operator ->() const noexcept;
 	
-	SmartPointer& operator =(SmartPointer<T> &arg);
-	SmartPointer& operator =(const T &arg);
+	const SmartPointer& operator =(SmartPointer<T> &arg);
+	const SmartPointer& operator =(const T &arg);
 };
 
 template<class T, class ... Ts>
@@ -148,7 +148,7 @@ SmartPointer<T>::operator ->() const noexcept
 }
 
 template<class T>
-SmartPointer<T>& 
+const SmartPointer<T>& 
 SmartPointer<T>::operator =(SmartPointer<T> &arg)
 {
 	this->clear();
@@ -157,7 +157,7 @@ SmartPointer<T>::operator =(SmartPointer<T> &arg)
 	return *this;
 }
 template<class T>
-SmartPointer<T>& 
+const SmartPointer<T>& 
 SmartPointer<T>::operator =(const T &arg)
 {
 	this->clear();
@@ -169,7 +169,10 @@ SmartPointer<T>::operator =(const T &arg)
 template<class T, class ... Ts>
 SmartPointer<T> make(Ts ... args)
 {
+	SmartPointer<T> pointer;
+	pointer.make(args ...);
 	
+	return pointer;
 }
 
 #endif // SMARTPOINTER_H

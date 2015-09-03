@@ -1,4 +1,4 @@
-#include "JSON.h"
+#include <Analysers/JSON/JSON.h>
 
 inline bool is_separator(char ch)
 {

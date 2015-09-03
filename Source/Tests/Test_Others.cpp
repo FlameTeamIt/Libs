@@ -3,7 +3,7 @@
 
 #include <Filesystem/BasicFile.h>
 
-#include "Test.h"
+#include <Tests/Test.h>
 
 using namespace flame_ide;
 

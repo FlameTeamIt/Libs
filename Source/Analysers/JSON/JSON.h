@@ -1,10 +1,10 @@
 #ifndef JSON_H
 #define JSON_H
 
+#include <Templates/SmartPointer.h>
+#include <Templates/String.h>
 #include <Templates/Array.h>
 #include <Templates/List.h>
-#include <Templates/SmartPointer.h>
-//#include <Templates/String.h>
 
 namespace flame_ide
 {namespace JSON
@@ -19,19 +19,16 @@ typedef enum
 	OBJECT = 100
 } Type;
 
-class Data;
-class DataContainer;
+class Data;           typedef SmartPointer<Data>           DataPointer;
+class DataContainer;  typedef SmartPointer<DataContainer>  DataContainerPointer;
 
-class Single;
+class Single;  typedef SmartPointer<Single>  SinglePointer;
+class Pair;    typedef SmartPointer<Pair>    PairPointer;
+class Array;   typedef SmartPointer<Array>   ArrayPointer;
+class Object;  typedef SmartPointer<Object>  ObjectPointer;
 
-class Pair;
+class Document; typedef SmartPointer<Document>  DocumentPointer;
 
-class Array;
-class Object;
-
-class Document;
-
-typedef SmartPointer<Data> JsonPointer;
 /* ------------------------------------------------------------ */
 
 class Data

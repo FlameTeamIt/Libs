@@ -51,7 +51,6 @@ public:
 	
 };
 
-
 }}
 
 using namespace flame_ide::templates;

@@ -1,4 +1,4 @@
-#include "JSON.h"
+#include <Analysers/JSON/JSON.h>
 
 #include <Templates/List.h>
 

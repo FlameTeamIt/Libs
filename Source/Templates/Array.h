@@ -515,4 +515,4 @@ Array<T>::operator =(const Array<T> &arg)
 	return *this;
 }
 
-#endif // TEMPLATES_ARRAY_H
+#endif // TEMPLATES_ARRAY

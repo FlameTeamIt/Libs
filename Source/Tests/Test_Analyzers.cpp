@@ -5,7 +5,7 @@
 #include <Process/CommandLine.h>
 #include <Analysers/CodeParcer.h>
 
-#include "Test.h"
+#include <Tests/Test.h>
 
 using namespace flame_ide;
 

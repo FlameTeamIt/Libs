@@ -1,4 +1,4 @@
-#include "JSON.h"
+#include <Analysers/JSON/JSON.h>
 
 using namespace flame_ide;
 

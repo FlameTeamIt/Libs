@@ -1,9 +1,6 @@
-#include <vector>
 #include <iostream>
-
 #include <About/About.h>
-
-#include "Test.h"
+#include <Tests/Test.h>
 
 int main(int argc, char** argv)
 {
