@@ -15,13 +15,8 @@ public:
 	MsgInterface();
 	~MsgInterface();
 	
-	static
-	bool
-	isFurst();
-	
-	static
-	std::list<int>
-	getSessionList();
+	static bool isFurst();
+	static std::list<int> getSessionList();
 };
 
 }
