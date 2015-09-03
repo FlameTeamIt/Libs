@@ -13,7 +13,7 @@ class UniquePointer : public BasicPointer<T>
 	UniquePointer(const UniquePointer &pointer);
 	
 protected:
-	void set(UniquePointer& pointer);
+	void set(UniquePointer &pointer);
 	
 public:
 	UniquePointer();
@@ -22,24 +22,25 @@ public:
 	
 	~UniquePointer();
 	
-	T& operator *();
-	T* operator ->();
+	inline T& operator *();
+	inline T* operator ->();
 	
-	const T& operator *() const;
-	const T* operator ->() const;
+	inline const T& operator *() const;
+	inline const T* operator ->() const;
 	
-	const UniquePointer& operator =(UniquePointer<T> &arg);
-	const UniquePointer& operator =(const T &arg);
+	inline const UniquePointer& operator =(UniquePointer<T> &arg);
+	inline const UniquePointer& operator =(UniquePointer<T> &&arg);
+	inline const UniquePointer& operator =(const T &arg);
 };
 
-//template<class T, class ... Ts>
-//UniquePointer<T> make<T>(Ts ... args)
-//{
-//	UniquePointer<T> pointer;
-//	pointer.make(args ...);
+template<class T, class ... Ts>
+UniquePointer<T> make_unique(Ts&& ... args)
+{
+	UniquePointer<T> pointer;
+	pointer.make(args ...);
 	
-//	return pointer;
-//}
+	return pointer;
+}
 
 }}
 
@@ -77,8 +78,11 @@ template<class T>
 void
 UniquePointer<T>::set(UniquePointer &pointer)
 {
-	this->inc_pointer = pointer.inc_pointer;
-	pointer.inc_pointer = nullptr;
+	if(pointer.isInitialized())
+	{
+		this->inc_pointer = pointer.inc_pointer;
+		pointer.inc_pointer = nullptr;
+	}
 }
 
 // operators
@@ -112,6 +116,15 @@ UniquePointer<T>::operator ->() const
 template<class T>
 const UniquePointer<T>& 
 UniquePointer<T>::operator =(UniquePointer<T> &arg)
+{
+	this->clear();
+	this->set(arg);
+	
+	return *this;
+}
+template<class T>
+const UniquePointer<T>& 
+UniquePointer<T>::operator =(UniquePointer<T> &&arg)
 {
 	this->clear();
 	this->set(arg);

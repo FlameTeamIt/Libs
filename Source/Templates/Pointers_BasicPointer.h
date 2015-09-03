@@ -27,19 +27,19 @@ public:
 	virtual ~BasicPointer();
 	
 	template<class ... Ts>
-	void make(Ts ... args);
+	inline void make(Ts ... args);
 	template<class ... Ts>
-	void make(Ts ... args) const;
+	inline void make(Ts ... args) const;
 	
 	void clear();
 	
-	bool isInitialized() const;
+	inline bool isInitialized() const;
 	
-	T& operator *();
-	T* operator ->();
+	inline       T& operator *();
+	inline       T* operator ->();
 	
-	const T& operator *() const;
-	const T* operator ->() const;
+	inline const T& operator *() const;
+	inline const T* operator ->() const;
 };
 
 }}
