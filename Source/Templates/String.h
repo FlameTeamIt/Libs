@@ -23,11 +23,11 @@ class String : public TString<char>
 	
 	using Array<char>::set;
 protected:
-	using TString<char>::concatenation;
+//	using TString<char>::concatenation;
 	
-	using TString<char>::assign;
-	using TString<char>::is_equal;
-	using TString<char>::is_not_equal;
+//	using TString<char>::assign;
+//	using TString<char>::is_equal;
+//	using TString<char>::is_not_equal;
 	
 public:
 	static const unsigned long max_buffer_size = MAX_BUFFER_COUNT;
