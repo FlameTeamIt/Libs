@@ -4,6 +4,7 @@
 #include <Templates/List.h>
 #include <Templates/String.h>
 #include <Templates/Pointers_UniquePointer.h>
+#include <Templates/Pointers_SharedPointer.h>
 //#include <Templates/Allocator.h>
 
 #include <Tests/Test.h>
@@ -17,7 +18,8 @@ Test::Templates::all()
 			this->Array()
 			+ this->List()
 			+ this->String()
-			+ this->UniquePointer();
+			+ this->UniquePointer()
+			+ this->SharedPointer();
 	
 	std::cout << '\n';
 }
@@ -232,9 +234,52 @@ Test::Templates::UniquePointer()
 	std::cout << "1. * - " << *p_str << '\n'
 			  << "2. -> - " << p_str->c_str() << '\n';
 	
-	p_str = std::string("Bye Bye!");
+	p_str = templates::make_unique<std::string>("Bye Bye!");
 	std::cout << "1. * - " << *p_str << '\n'
 			  << "2. -> - " << p_str->c_str() << '\n';
+	
+	return 1;
+}
+
+unsigned int
+Test::Templates::SharedPointer()
+{
+	std::cout << "Test::Templates::SharedPointer()\n";
+	typedef templates::SharedPointer<std::string> SharedPointerString;
+	
+	// 1. constructors
+	// 1.0 default
+	SharedPointerString p_str;
+	
+	// 1.1. move
+	SharedPointerString p_str1(templates::make_shared<std::string>("Hello!"));
+	
+	// 1.2. copy
+	SharedPointerString p_str2(p_str1);
+	
+	// 1.3. custom - object
+	SharedPointerString p_str3(std::string("Bye-bye!"));
+	
+	// 2. make
+	p_str.make("Lol!");
+	
+	// 3. clear
+	// 3.1. if !first
+	p_str2.clear();
+	p_str2.make("World");
+	
+	// 3.2. if first
+	p_str1.clear();
+	
+	// 4. assign
+	// 4.1. copy
+	p_str = p_str3;
+	
+	// 4.2. move
+	p_str = templates::make_shared<std::string>(*p_str2);
+	
+	// 4.3. custom - object
+	p_str = std::string("Hello, World");
 	
 	return 1;
 }

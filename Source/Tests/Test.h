@@ -74,7 +74,8 @@ public:
 		unsigned int List();
 		unsigned int Array();
 		unsigned int String();
-		unsigned int SmartPointer();
+		unsigned int UniquePointer();
+		unsigned int SharedPointer();
 		unsigned int Allocator();
 		
 	} templates;
