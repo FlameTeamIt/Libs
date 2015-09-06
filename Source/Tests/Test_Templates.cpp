@@ -3,8 +3,7 @@
 #include <Templates/Array.h>
 #include <Templates/List.h>
 #include <Templates/String.h>
-#include <Templates/Pointers_UniquePointer.h>
-#include <Templates/Pointers_SharedPointer.h>
+#include <Templates/Pointers.h>
 //#include <Templates/Allocator.h>
 
 #include <Tests/Test.h>
@@ -246,10 +245,12 @@ Test::Templates::SharedPointer()
 {
 	std::cout << "Test::Templates::SharedPointer()\n";
 	typedef templates::SharedPointer<std::string> SharedPointerString;
+	typedef templates::UniquePointer<std::string> UniquePointerString;
 	
 	// 1. constructors
 	// 1.0 default
 	SharedPointerString p_str;
+	UniquePointerString up_str(std::string("Unique"));
 	
 	// 1.1. move
 	SharedPointerString p_str1(templates::make_shared<std::string>("Hello!"));
@@ -280,6 +281,14 @@ Test::Templates::SharedPointer()
 	
 	// 4.3. custom - object
 	p_str = std::string("Hello, World");
+	
+	// 4.4. BasicPointer or child
+	// p_str = up_str;
+	
+	p_str.clear();
+	p_str1.clear();
+	p_str2.clear();
+	p_str3.clear();
 	
 	return 1;
 }
