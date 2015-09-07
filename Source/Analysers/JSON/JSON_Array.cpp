@@ -1,5 +1,4 @@
 #include <Analysers/JSON/JSON.h>
-
 #include <Templates/List.h>
 
 using namespace flame_ide;

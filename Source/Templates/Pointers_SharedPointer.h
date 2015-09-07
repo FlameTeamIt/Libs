@@ -141,10 +141,9 @@ template<class T>
 const SharedPointer<T>&
 SharedPointer<T>::operator =(const SharedPointer<T> &pointer)
 {
-	clear();
-	
 	if(pointer.isInitialized())
 	{
+		clear();
 		this->inc_pointer = pointer.inc_pointer;
 		counter = pointer.counter + 1;
 	}
@@ -155,10 +154,9 @@ template<class T>
 const SharedPointer<T>&
 SharedPointer<T>::operator =(SharedPointer<T> &&pointer)
 {
-	clear();
-	
 	if(pointer.isInitialized())
 	{
+		clear();
 		this->inc_pointer = pointer.inc_pointer;
 		pointer.inc_pointer = nullptr;
 	}
