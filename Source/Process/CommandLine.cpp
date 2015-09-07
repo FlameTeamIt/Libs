@@ -1,41 +1,31 @@
 #include "CommandLine.h"
 
-#ifdef DEBUG
-#include <iostream>
-#endif // DEBUG
-
-#include <stdio.h>
+#include <cstdio>
 
 using namespace flame_ide;
 
 CommandLine::CommandLine()
 {
-	//ctor
 }
 
 CommandLine::~CommandLine()
 {
-	//dtor
 }
 
 std::string
 CommandLine::getOutput(const std::string& command)
 {
-#ifdef DEBUG
-	std::cout << "CommandLine::getOutput(const std::string command)\n";
-#endif // DEBUG
-
 	FILE* pipe = popen(command.c_str(), "r");
 
 	if (!pipe)
 		return "ERROR";
 
-	char buffer[256];
+	char buffer[_BUFFER_SIZE];
 	std::string result = "";
 
     while(!feof(pipe))
 	{
-		if(fgets(buffer, 256, pipe) != NULL)
+		if(fgets(buffer, _BUFFER_SIZE, pipe) != NULL)
 			result += buffer;
     }
 
@@ -48,10 +38,6 @@ CommandLine::getOutput(const std::string& command)
 std::string
 CommandLine::getOutput(char* command)
 {
-#ifdef DEBUG
-	std::cout << "CommandLine::getOutput(char* command)\n";
-#endif // DEBUG
-
 	FILE* pipe = popen(command, "r");
 
 	if (!pipe)
@@ -74,10 +60,6 @@ CommandLine::getOutput(char* command)
 std::string
 CommandLine::getOutput(const char* command)
 {
-#ifdef DEBUG
-	std::cout << "CommandLine::getOutput(const char* command)\n";
-#endif // DEBUG
-
 	FILE* pipe = popen(command, "r");
 
 	if (!pipe)
