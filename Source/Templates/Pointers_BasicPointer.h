@@ -1,0 +1,199 @@
+#ifndef POINTERS_BASICPOINTER
+#define POINTERS_BASICPOINTER
+
+#include <Templates/Pointers.h>
+
+namespace flame_ide
+{namespace templates
+{
+
+template<class T>
+class BasicPointer
+{
+	BasicPointer(const BasicPointer<T> &pointer);
+	BasicPointer(BasicPointer<T> &&pointer);
+	
+protected:
+	mutable T *inc_pointer;
+		
+	inline       T* get_pointer();
+	inline       T& get_reference();
+	
+	inline const T* get_pointer() const;
+	inline const T& get_reference() const;
+	
+public:
+	BasicPointer();
+	BasicPointer(const T &object);
+	
+	~BasicPointer();
+	
+	template<class ... Ts>
+	inline void make(Ts ... args);
+	template<class ... Ts>
+	inline void make(Ts ... args) const;
+	
+	inline virtual void clear();
+	inline T* get() const;
+	inline SharedPointer<T> getShared() const;
+	
+	inline bool isInitialized() const;
+	
+	inline operator bool() const;
+	
+	inline       T& operator *();
+	inline       T* operator ->();
+	
+	inline const T& operator *() const;
+	inline const T* operator ->() const;
+	
+	inline const BasicPointer<T>&
+	operator =(BasicPointer<T> &&pointer);
+	
+	friend class SharedPointer<T>;
+	friend class UniquePointer<T>;
+	
+};
+
+}}
+
+using namespace flame_ide::templates;
+
+template<class T>
+BasicPointer<T>::BasicPointer()
+{
+	inc_pointer = nullptr;
+}
+template<class T>
+BasicPointer<T>::BasicPointer(const T &object)
+{
+	make(object);
+}
+
+template<class T>
+BasicPointer<T>::~BasicPointer()
+{
+	if(isInitialized())
+	{
+		delete inc_pointer;
+	}
+}
+
+template<class T>
+T* BasicPointer<T>::get_pointer()
+{
+	return inc_pointer;
+}
+
+template<class T>
+T& BasicPointer<T>::get_reference()
+{
+	return *inc_pointer;
+}
+
+template<class T>
+const T* BasicPointer<T>::get_pointer() const
+{
+	return inc_pointer;
+}
+
+template<class T>
+const T& BasicPointer<T>::get_reference() const
+{
+	return *inc_pointer;
+}
+
+template<class T>
+template<class ... Ts>
+void
+BasicPointer<T>::make(Ts ... args)
+{
+	inc_pointer = new T(args ...);
+}
+template<class T>
+template<class ... Ts>
+void
+BasicPointer<T>::make(Ts ... args) const
+{
+	inc_pointer = new T(args ...);
+}
+
+template<class T>
+void
+BasicPointer<T>::clear()
+{
+	if(inc_pointer != nullptr)
+	{
+		delete inc_pointer;
+		inc_pointer = nullptr;
+	}
+}
+
+template<class T>
+T*
+BasicPointer<T>::get() const
+{
+	return get_pointer();
+}
+
+template<class T>
+SharedPointer<T>
+BasicPointer<T>::getShared() const
+{
+	SharedPointer<T> pointer;
+	
+	return pointer;
+}
+
+template<class T>
+bool
+BasicPointer<T>::isInitialized() const
+{
+	return (inc_pointer != nullptr);
+}
+
+template<class T>
+BasicPointer<T>::operator bool() const
+{
+	return (inc_pointer != nullptr);
+}
+
+// operators
+
+template<class T>
+T*
+BasicPointer<T>::operator ->()
+{
+	return get_pointer();
+}
+
+template<class T>
+T&
+BasicPointer<T>::operator *()
+{
+	return get_reference();
+}
+
+template<class T>
+const T* BasicPointer<T>::operator ->() const
+{
+	return get_pointer();
+}
+
+template<class T>
+const T& BasicPointer<T>::operator *() const
+{
+	return get_reference();
+}
+
+template<class T>
+const BasicPointer<T>&
+BasicPointer<T>::operator =(BasicPointer<T> &&pointer)
+{
+	this->inc_pointer = pointer.inc_pointer;
+	pointer.inc_pointer = nullptr;
+	
+	return *this;
+}
+
+#endif // POINTERS_BASICPOINTER
