@@ -26,7 +26,7 @@ public:
 	BasicPointer();
 	BasicPointer(const T &object);
 	
-	~BasicPointer();
+	virtual ~BasicPointer();
 	
 	template<class ... Ts>
 	inline void make(Ts ... args);

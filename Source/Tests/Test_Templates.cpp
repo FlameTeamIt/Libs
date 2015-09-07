@@ -4,7 +4,7 @@
 #include <Templates/List.h>
 #include <Templates/String.h>
 #include <Templates/Pointers.h>
-//#include <Templates/Allocator.h>
+#include <Templates/Allocator.h>
 
 #include <Tests/Test.h>
 
@@ -189,9 +189,8 @@ Test::Templates::Array()
 		std::cout << i << ". - " << array[i] << '\n';
 	}
 	std::cout << '\n';
-	
 //#endif
-	
+
 //#ifdef FUTURE
 	array1.erase(0, 2);
 	array1.erase(3, 2);
@@ -203,7 +202,6 @@ Test::Templates::Array()
 		std::cout << i << ". - " << array1[i] << '\n';
 	}
 	std::cout << '\n';
-	
 //#endif
 	
 	return 1;
