@@ -85,8 +85,8 @@ operator>>(std::istream &input_stream,
 	}
 	
 	unsigned int buffer_count = 0;
-	char buffer_c_str[String::max_buffer_size];
-	for(size_t i = 0; i < String::max_buffer_size; i++)
+	char buffer_c_str[String::_MAX_BUFFER_SIZE];
+	for(size_t i = 0; i < String::_MAX_BUFFER_SIZE; i++)
 	{
 		buffer_c_str[i] = '\0';
 	}
@@ -96,10 +96,10 @@ operator>>(std::istream &input_stream,
 		   && (buffer_c_str[buffer_count] != ' '))
 	{
 		buffer_count++;
-		if(buffer_count == String::max_buffer_size)
+		if(buffer_count == String::_MAX_BUFFER_SIZE)
 		{
 			str += buffer_c_str;
-			for(size_t i = 0; i < String::max_buffer_size; i++)
+			for(size_t i = 0; i < String::_MAX_BUFFER_SIZE; i++)
 			{
 				buffer_c_str[i] = '\0';
 			}

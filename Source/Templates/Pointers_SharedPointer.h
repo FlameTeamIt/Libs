@@ -10,7 +10,7 @@ namespace flame_ide
 template<class T>
 class SharedPointer : public BasicPointer<T>
 {
-	unsigned long counter;
+	unsigned long is_shared;
 	
 protected:
 	inline void set(SharedPointer<T> &pointer);
@@ -54,18 +54,18 @@ using namespace flame_ide::templates;
 template<class T>
 SharedPointer<T>::SharedPointer()
 	: BasicPointer<T>()
-	, counter(0)
+	, is_shared(false)
 {
 }
 template<class T>
 SharedPointer<T>::SharedPointer(const T &object)
 	: BasicPointer<T>(object)
-	, counter(0)
+	, is_shared(false)
 {
 }
 template<class T>
 SharedPointer<T>::SharedPointer(SharedPointer<T> &&pointer)
-	: counter(0)
+	: is_shared(false)
 {
 	set(pointer);
 }
@@ -74,13 +74,13 @@ SharedPointer<T>::SharedPointer(const SharedPointer<T> &pointer)
 	: SharedPointer<T>()
 {
 	this->inc_pointer = pointer.inc_pointer;
-	this->counter = pointer.counter + 1;
+	this->is_shared = true;
 }
 
 template<class T>
 SharedPointer<T>::~SharedPointer()
 {
-	if(!counter && this->inc_pointer != nullptr)
+	if(!is_shared && this->inc_pointer != nullptr)
 	{
 		delete this->inc_pointer;
 	}
@@ -98,13 +98,13 @@ template<class T>
 void
 SharedPointer<T>::clear()
 {
-	if(!counter && this->inc_pointer != nullptr)
+	if(!is_shared && this->inc_pointer != nullptr)
 	{
 		delete this->inc_pointer;
 	}
 	else
 	{
-		counter = 0;
+		is_shared = false;
 	}
 	this->inc_pointer = nullptr;
 }
@@ -145,7 +145,7 @@ SharedPointer<T>::operator =(const SharedPointer<T> &pointer)
 	{
 		clear();
 		this->inc_pointer = pointer.inc_pointer;
-		counter = pointer.counter + 1;
+		is_shared = true;
 	}
 	
 	return *this;
@@ -178,7 +178,7 @@ const SharedPointer<T>&
 SharedPointer<T>::operator =(const BasicPointer<T> &arg)
 {
 	this->inc_pointer = arg.inc_pointer;
-	this->counter = 1;
+	this->is_shared = 1;
 	
 	return *this;
 }

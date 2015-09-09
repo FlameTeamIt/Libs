@@ -4,7 +4,7 @@
 //#warning Hello! 
 
 #ifndef MAX_BUFFER_COUNT
-#define MAX_BUFFER_COUNT 1024
+#define MAX_BUFFER_SIZE 1024
 #endif
 
 #include <string.h>
@@ -30,7 +30,7 @@ protected:
 //	using TString<char>::is_not_equal;
 	
 public:
-	static const unsigned long max_buffer_size = MAX_BUFFER_COUNT;
+	static const unsigned long _MAX_BUFFER_SIZE = MAX_BUFFER_SIZE;
 	
 	String();
 	String(const char* c_str);
@@ -97,6 +97,6 @@ std::istream& operator >>(std::istream &input_stream,
 
 }}
 
-#undef MAX_BUFFER_COUNT
+#undef MAX_BUFFER_SIZE
 
 #endif // TEMPLATES_STRING
