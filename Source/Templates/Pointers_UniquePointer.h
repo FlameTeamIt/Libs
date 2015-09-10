@@ -33,6 +33,11 @@ public:
 	inline const UniquePointer& operator =(const T &arg);
 
 	inline const UniquePointer& operator =(BasicPointer<T> &arg);
+
+	template<class Tt, class Uu> friend
+	UniquePointer<Tt> static_pointer_cast(const UniquePointer<Uu>& pointer) noexcept;
+	template<class Tt, class Uu> friend
+	UniquePointer<Tt> dynamic_pointer_cast(const UniquePointer<Uu>& pointer) noexcept;
 };
 
 template<class T, class ... Ts>

@@ -10,7 +10,7 @@ namespace flame_ide
 template<class T>
 class SharedPointer : public BasicPointer<T>
 {
-	unsigned long is_shared;
+	bool is_shared;
 	
 protected:
 	inline void set(SharedPointer<T> &pointer);
@@ -36,6 +36,11 @@ public:
 	inline const SharedPointer& operator =(const T &arg);
 	
 	inline const SharedPointer& operator =(const BasicPointer<T> &arg);
+	
+	template<class Tt, class Uu> friend
+	SharedPointer<Tt> static_pointer_cast(const SharedPointer<Uu>& pointer) noexcept;
+	template<class Tt, class Uu> friend
+	SharedPointer<Tt> dynamic_pointer_cast(const SharedPointer<Uu>& pointer) noexcept;
 };
 
 template<class T, class ... Ts>

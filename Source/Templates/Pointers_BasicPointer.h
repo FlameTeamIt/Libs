@@ -48,11 +48,15 @@ public:
 	inline const T* operator ->() const;
 	
 	inline const BasicPointer<T>&
-	operator =(BasicPointer<T> &&pointer);
+	operator =(const BasicPointer<T> &pointer);
 	
 	friend class SharedPointer<T>;
 	friend class UniquePointer<T>;
 	
+	template<class Tt, class Uu> friend
+	BasicPointer<Tt> static_pointer_cast(const BasicPointer<Uu>& pointer) noexcept;
+	template<class Tt, class Uu> friend
+	BasicPointer<Tt> dynamic_pointer_cast(const BasicPointer<Uu>& pointer) noexcept;
 };
 
 }}
@@ -188,10 +192,9 @@ const T& BasicPointer<T>::operator *() const
 
 template<class T>
 const BasicPointer<T>&
-BasicPointer<T>::operator =(BasicPointer<T> &&pointer)
+BasicPointer<T>::operator =(const BasicPointer<T> &pointer)
 {
 	this->inc_pointer = pointer.inc_pointer;
-	pointer.inc_pointer = nullptr;
 	
 	return *this;
 }
