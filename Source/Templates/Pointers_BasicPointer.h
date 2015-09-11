@@ -13,6 +13,9 @@ class BasicPointer
 	BasicPointer(const BasicPointer<T> &pointer);
 	BasicPointer(BasicPointer<T> &&pointer);
 	
+	const BasicPointer<T>& operator =(const BasicPointer<T> &pointer);
+	const BasicPointer<T>& operator =(BasicPointer<T> &&pointer);
+	
 protected:
 	mutable T *inc_pointer;
 		
@@ -46,9 +49,6 @@ public:
 	
 	inline const T& operator *() const;
 	inline const T* operator ->() const;
-	
-	inline const BasicPointer<T>&
-	operator =(const BasicPointer<T> &pointer);
 	
 	friend class SharedPointer<T>;
 	friend class UniquePointer<T>;
@@ -190,13 +190,14 @@ const T& BasicPointer<T>::operator *() const
 	return get_reference();
 }
 
-template<class T>
-const BasicPointer<T>&
-BasicPointer<T>::operator =(const BasicPointer<T> &pointer)
-{
-	this->inc_pointer = pointer.inc_pointer;
-	
-	return *this;
-}
+/* ----- private ----- */
+//template<class T>
+//const BasicPointer<T>&
+//BasicPointer<T>::operator =(const BasicPointer<T> &pointer)
+//{
+//	this->inc_pointer = pointer.inc_pointer;
+//	
+//	return *this;
+//}
 
 #endif // POINTERS_BASICPOINTER
