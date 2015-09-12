@@ -14,6 +14,7 @@ class UniquePointer : public BasicPointer<T>
 	
 protected:
 	inline void set(UniquePointer &pointer);
+	using BasicPointer<T>::inc_pointer;
 	
 public:
 	UniquePointer();
@@ -22,11 +23,11 @@ public:
 	
 	~UniquePointer();
 	
-	inline T& operator *();
-	inline T* operator ->();
+//	inline T& operator *();
+//	inline T* operator ->();
 	
-	inline const T& operator *() const;
-	inline const T* operator ->() const;
+//	inline const T& operator *() const;
+//	inline const T* operator ->() const;
 	
 	inline const UniquePointer& operator =(UniquePointer<T> &arg);
 	inline const UniquePointer& operator =(UniquePointer<T> &&arg);
@@ -35,9 +36,9 @@ public:
 	inline const UniquePointer& operator =(BasicPointer<T> &arg);
 
 	template<class Tt, class Uu> friend
-	UniquePointer<Tt> static_pointer_cast(const UniquePointer<Uu>& pointer) noexcept;
+	UniquePointer<Tt> static_pointer_cast(UniquePointer<Uu>& pointer) noexcept;
 	template<class Tt, class Uu> friend
-	UniquePointer<Tt> dynamic_pointer_cast(const UniquePointer<Uu>& pointer) noexcept;
+	UniquePointer<Tt> dynamic_pointer_cast(UniquePointer<Uu>& pointer) noexcept;
 };
 
 template<class T, class ... Ts>
@@ -94,31 +95,31 @@ UniquePointer<T>::set(UniquePointer &pointer)
 
 // operators
 
-template<class T>
-T& 
-UniquePointer<T>::operator *()
-{
-	return this->get_reference();
-}
-template<class T>
-T* 
-UniquePointer<T>::operator ->()
-{
-	return this->get_pointer();
-}
+//template<class T>
+//T& 
+//UniquePointer<T>::operator *()
+//{
+//	return this->get_reference();
+//}
+//template<class T>
+//T* 
+//UniquePointer<T>::operator ->()
+//{
+//	return this->get_pointer();
+//}
 
-template<class T>
-const T& 
-UniquePointer<T>::operator *() const
-{
-	return this->get_reference();
-}
-template<class T>
-const T* 
-UniquePointer<T>::operator ->() const
-{
-	return this->get_pointer();
-}
+//template<class T>
+//const T& 
+//UniquePointer<T>::operator *() const
+//{
+//	return this->get_reference();
+//}
+//template<class T>
+//const T* 
+//UniquePointer<T>::operator ->() const
+//{
+//	return this->get_pointer();
+//}
 
 template<class T>
 const UniquePointer<T>& 

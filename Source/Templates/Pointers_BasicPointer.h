@@ -18,7 +18,7 @@ class BasicPointer
 	
 protected:
 	mutable T *inc_pointer;
-		
+	
 	inline       T* get_pointer();
 	inline       T& get_reference();
 	
@@ -37,7 +37,7 @@ public:
 	inline void make(Ts ... args) const;
 	
 	inline virtual void clear();
-	inline T* get() const;
+	inline const T* get() const;
 	inline SharedPointer<T> getShared() const;
 	
 	inline bool isInitialized() const;
@@ -84,25 +84,29 @@ BasicPointer<T>::~BasicPointer()
 }
 
 template<class T>
-T* BasicPointer<T>::get_pointer()
+T*
+BasicPointer<T>::get_pointer()
 {
 	return inc_pointer;
 }
 
 template<class T>
-T& BasicPointer<T>::get_reference()
+T&
+BasicPointer<T>::get_reference()
 {
 	return *inc_pointer;
 }
 
 template<class T>
-const T* BasicPointer<T>::get_pointer() const
+const T*
+BasicPointer<T>::get_pointer() const
 {
 	return inc_pointer;
 }
 
 template<class T>
-const T& BasicPointer<T>::get_reference() const
+const T&
+BasicPointer<T>::get_reference() const
 {
 	return *inc_pointer;
 }
@@ -134,10 +138,10 @@ BasicPointer<T>::clear()
 }
 
 template<class T>
-T*
+const T*
 BasicPointer<T>::get() const
 {
-	return get_pointer();
+	return inc_pointer;
 }
 
 template<class T>
@@ -145,6 +149,8 @@ SharedPointer<T>
 BasicPointer<T>::getShared() const
 {
 	SharedPointer<T> pointer;
+	pointer.inc_pointer = this->inc_pointer;
+	pointer.is_shared = true;
 	
 	return pointer;
 }
@@ -179,13 +185,15 @@ BasicPointer<T>::operator *()
 }
 
 template<class T>
-const T* BasicPointer<T>::operator ->() const
+const T*
+BasicPointer<T>::operator ->() const
 {
 	return get_pointer();
 }
 
 template<class T>
-const T& BasicPointer<T>::operator *() const
+const T&
+BasicPointer<T>::operator *() const
 {
 	return get_reference();
 }
