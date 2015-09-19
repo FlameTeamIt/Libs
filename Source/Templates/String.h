@@ -19,9 +19,9 @@ namespace flame_ide
 
 class String : public TString<char>
 {
-	inline size_t getCStrLength(const char* c_str) const;
+	size_t getCStrLength(const char* c_str);
+	size_t getCStrLength(const char* c_str) const;
 	
-	using Array<char>::set;
 protected:
 //	using TString<char>::concatenation;
 	
@@ -37,30 +37,34 @@ public:
 	String(const String &str);
 	
 	String getSubstr(size_t pos, size_t length);
-	const String getSubstr(size_t pos, size_t length) const;
+	String getSubstr(size_t pos, size_t length) const;
 	
 	static unsigned long getHash(const char* c_tstr);
 	unsigned long getHash() const;
 	
-	String& operator =(const char *c_tstr);
-	String& operator =(const String& tstring);
-	String& operator +=(const char *c_tstr);
-	String& operator +=(const String& tstring);
+	const String& operator =(char *c_tstr);
+	const String& operator =(const char *c_tstr);
+	const String& operator =(const String &tstring);
+	const String& operator =(String &&tstring);
+	const String& operator +=(const char *c_tstr);
+	const String& operator +=(char *c_tstr);
+	const String& operator +=(const String &tstring);
+	const String& operator +=(String &&tstring);
 	
 	// concatenation
 	friend String operator +(const char *c_tstr, const String& tstring);
-	friend String operator +(const String& tstring, const char *c_tstr);
-	friend String operator +(const String& tstring1, const String& tstring2);
+	friend String operator +(const String &tstring, const char *c_tstr);
+	friend String operator +(const String &tstring1, const String &tstring2);
 	
 	// equal
-	friend bool operator ==(const char *c_tstr, const String& tstring);
+	friend bool operator ==(const char *c_tstr, const String &tstring);
 	friend bool operator ==(const String& tstring, const char *c_tstr);
-	friend bool operator ==(const String& tstring1, const String& tstring2);
+	friend bool operator ==(const String& tstring1, const String &tstring2);
 	
 	// not equal
-	friend bool operator !=(const char *c_tstr, const String& tstring);
-	friend bool operator !=(const String& tstring, const char *c_tstr);
-	friend bool operator !=(const String& tstring1, const String& tstring2);
+	friend bool operator !=(const char *c_tstr, const String &tstring);
+	friend bool operator !=(const String &tstring, const char *c_tstr);
+	friend bool operator !=(const String &tstring1, const String &tstring2);
 	
 	// output and input
 	friend

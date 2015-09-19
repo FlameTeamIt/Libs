@@ -82,7 +82,7 @@ Tt*
 flame_ide::templates::
 string_get_substr(const Tt* str, const size_t &pos, const size_t &length)
 {
-	Tt* result_str = new Tt[length];
+	Tt* result_str = new Tt[length+1];
 	
 	std::copy_n(str+pos, length, result_str);
 	

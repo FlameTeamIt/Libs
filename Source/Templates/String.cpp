@@ -68,9 +68,11 @@ std::ostream&
 operator<<(std::ostream &output_stream,
 		   const String &str)
 {
-	for(size_t i = 0; i < str.getSize(); ++i)
+	char ch;
+	for(size_t i = 0, length = str.getSize(); i < length; ++i)
 	{
-		output_stream << str.at(i);
+		output_stream << str.inc_arr[i];
+		ch = str.inc_arr[i];
 	}
 	return output_stream;
 }
@@ -137,6 +139,11 @@ String::~String()
 // methods
 
 size_t
+String::getCStrLength(const char *c_str)
+{
+	return strlen(c_str);
+}
+size_t
 String::getCStrLength(const char *c_str) const
 {
 	return strlen(c_str);
@@ -145,16 +152,17 @@ String::getCStrLength(const char *c_str) const
 String
 String::getSubstr(size_t pos, size_t length)
 {
-	String str; str = "";
+	String str;
 	if(pos + length < this->arr_size)
 	{
-		str.set(length, string_get_substr(this->inc_arr, pos, length));
+		// leak -- double 'new char[length]'
+		str = string_get_substr(this->inc_arr, pos, length);
 	}
 	
 	return str;
 }
 
-const String
+String
 String::getSubstr(size_t pos, size_t length) const
 {
 	String str;
@@ -211,30 +219,68 @@ String::getHash(const char *c_str)
 
 // operators
 
-String& 
+const String& 
+String::operator =(char *c_str)
+{
+	this->assign(c_str);
+	return *this;
+}
+
+const String& 
 String::operator =(const char *c_str)
 {
 	this->assign(c_str);
 	return *this;
 }
 
-String&
-String::operator =(const String& string)
+const String&
+String::operator =(const String &string)
 {
 	this->assign(string);
 	return *this;
 }
 
-String& 
+const String&
+String::operator =(String &&string)
+{
+	std::cout << string << '\n';
+	clear();
+	this->inc_arr = string.inc_arr;
+	this->arr_size = string.arr_size;
+	this->is_initialised = true;
+	
+	string.arr_size = 0;
+	string.inc_arr = nullptr;
+	
+	return *this;
+}
+
+const String& 
+String::operator +=(char *c_str)
+{
+	this->concatenation(c_str);
+	delete[] c_str;
+	return *this;
+}
+
+const String& 
 String::operator +=(const char *c_str)
 {
 	this->concatenation(c_str);
 	return *this;
 }
 
-String&
-String::operator +=(const String& string)
+const String&
+String::operator +=(const String &string)
 {
 	this->concatenation(string);
+	return *this;
+}
+
+const String&
+String::operator +=(String &&string)
+{
+	this->concatenation(string);
+	string.clear();
 	return *this;
 }
