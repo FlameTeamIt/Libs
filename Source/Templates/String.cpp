@@ -68,11 +68,9 @@ std::ostream&
 operator<<(std::ostream &output_stream,
 		   const String &str)
 {
-	char ch;
 	for(size_t i = 0, length = str.getSize(); i < length; ++i)
 	{
 		output_stream << str.inc_arr[i];
-		ch = str.inc_arr[i];
 	}
 	return output_stream;
 }
@@ -153,10 +151,12 @@ String
 String::getSubstr(size_t pos, size_t length)
 {
 	String str;
+	char *arr_ch = nullptr;
 	if(pos + length < this->arr_size)
 	{
 		// leak -- double 'new char[length]'
-		str = string_get_substr(this->inc_arr, pos, length);
+		arr_ch = string_get_substr(this->inc_arr, pos, length);
+		str = arr_ch;
 	}
 	
 	return str;
@@ -166,10 +166,12 @@ String
 String::getSubstr(size_t pos, size_t length) const
 {
 	String str;
+	char *arr_ch = nullptr;
 	if(pos + length < this->arr_size)
 	{
 		// leak -- double 'new char[length]'
-		str = string_get_substr(this->inc_arr, pos, length);
+		str.inc_arr = string_get_substr(this->inc_arr, pos, length);
+		str.arr_size = length;
 	}
 	
 	return str;
@@ -243,7 +245,6 @@ String::operator =(const String &string)
 const String&
 String::operator =(String &&string)
 {
-	std::cout << string << '\n';
 	clear();
 	this->inc_arr = string.inc_arr;
 	this->arr_size = string.arr_size;
