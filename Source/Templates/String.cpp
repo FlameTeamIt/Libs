@@ -6,6 +6,22 @@ namespace flame_ide
 
 // concatenation
 String
+operator +(char ch, const String& tstring)
+{
+	String tmp_str = tstring;
+	tmp_str.pushFront(ch);
+	
+	return tmp_str;
+}
+String
+operator +(const String& tstring, char ch)
+{
+	String tmp_str = tstring;
+	tmp_str.pushBack(ch);
+	
+	return tmp_str;
+}
+String
 operator +(const char *c_tstr, const String& tstring)
 {
 	String tmp_str = tstring;
@@ -222,16 +238,16 @@ String::getHash(const char *c_str)
 // operators
 
 const String& 
-String::operator =(char *c_str)
+String::operator =(const char *c_str)
 {
 	this->assign(c_str);
 	return *this;
 }
 
 const String& 
-String::operator =(const char *c_str)
+String::operator =(char ch)
 {
-	this->assign(c_str);
+	this->pushBack(ch);
 	return *this;
 }
 
@@ -257,17 +273,16 @@ String::operator =(String &&string)
 }
 
 const String& 
-String::operator +=(char *c_str)
+String::operator +=(const char *c_str)
 {
 	this->concatenation(c_str);
-	delete[] c_str;
 	return *this;
 }
 
 const String& 
-String::operator +=(const char *c_str)
+String::operator +=(char ch)
 {
-	this->concatenation(c_str);
+	this->pushBack(ch);
 	return *this;
 }
 

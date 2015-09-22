@@ -13,7 +13,7 @@ BasicPointer<T> static_pointer_cast(const BasicPointer<U>& pointer) noexcept
 	BasicPointer<T> ret_pointer;
 	if(pointer.isInitialized())
 	{
-		ret_pointer.inc_pointer = static_cast<U*>(pointer.inc_pointer);
+		ret_pointer.inc_pointer = static_cast<T*>(pointer.inc_pointer);
 	}
 	
 	return ret_pointer;
@@ -24,7 +24,7 @@ SharedPointer<T> static_pointer_cast(const SharedPointer<U>& pointer) noexcept
 	SharedPointer<T> ret_pointer;
 	if(pointer.isInitialized())
 	{
-		ret_pointer.inc_pointer = static_cast<U*>(pointer.inc_pointer);
+		ret_pointer.inc_pointer = static_cast<T*>(pointer.inc_pointer);
 		if(ret_pointer.inc_pointer != nullptr)
 		{
 			ret_pointer.is_shared = true;
@@ -39,7 +39,7 @@ UniquePointer<T> static_pointer_cast(UniquePointer<U>& pointer) noexcept
 	UniquePointer<T> ret_pointer;
 	if(pointer.isInitialized())
 	{
-		ret_pointer.inc_pointer	= static_cast<U*>(pointer.inc_pointer);
+		ret_pointer.inc_pointer	= static_cast<T*>(pointer.inc_pointer);
 		if(ret_pointer.inc_pointer != nullptr)
 		{
 			pointer.inc_pointer	= nullptr;
@@ -55,7 +55,7 @@ BasicPointer<T> dynamic_pointer_cast(const BasicPointer<U>& pointer) noexcept
 	BasicPointer<T> ret_pointer;
 	if(pointer.isInitialized())
 	{
-		ret_pointer.inc_pointer = dynamic_cast<U*>(pointer.inc_pointer);
+		ret_pointer.inc_pointer = dynamic_cast<T*>(pointer.inc_pointer);
 	}
 	
 	return ret_pointer;
@@ -66,7 +66,7 @@ SharedPointer<T> dynamic_pointer_cast(const SharedPointer<U>& pointer) noexcept
 	SharedPointer<T> ret_pointer;
 	if(pointer.isInitialized())
 	{
-		ret_pointer.inc_pointer = dynamic_cast<U*>(pointer.inc_pointer);
+		ret_pointer.inc_pointer = dynamic_cast<T*>(pointer.inc_pointer);
 		if(ret_pointer.inc_pointer != nullptr)
 		{
 			ret_pointer.is_shared = true;
@@ -81,7 +81,7 @@ UniquePointer<T> dynamic_pointer_cast(UniquePointer<U>& pointer) noexcept
 	UniquePointer<T> ret_pointer;
 	if(pointer.isInitialized())
 	{
-		ret_pointer.inc_pointer = dynamic_cast<U*>(pointer.inc_pointer);
+		ret_pointer.inc_pointer = dynamic_cast<T*>(pointer.inc_pointer);
 		if(ret_pointer.inc_pointer != nullptr)
 		{
 			pointer.inc_pointer = nullptr;

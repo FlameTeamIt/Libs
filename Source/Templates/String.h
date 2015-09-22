@@ -42,16 +42,18 @@ public:
 	static unsigned long getHash(const char* c_tstr);
 	unsigned long getHash() const;
 	
-	const String& operator =(char *c_tstr);
 	const String& operator =(const char *c_tstr);
+	const String& operator =(char ch);
 	const String& operator =(const String &tstring);
 	const String& operator =(String &&tstring);
 	const String& operator +=(const char *c_tstr);
-	const String& operator +=(char *c_tstr);
+	const String& operator +=(char ch);
 	const String& operator +=(const String &tstring);
 	const String& operator +=(String &&tstring);
 	
 	// concatenation
+	friend String operator +(char ch, const String& tstring);
+	friend String operator +(const String &tstring, char ch);
 	friend String operator +(const char *c_tstr, const String& tstring);
 	friend String operator +(const String &tstring, const char *c_tstr);
 	friend String operator +(const String &tstring1, const String &tstring2);
@@ -78,6 +80,8 @@ public:
 };
 
 // concatenation
+String operator +(char ch, const String& tstring);
+String operator +(const String& tstring, char ch);
 String operator +(const char *c_tstr, const String& tstring);
 String operator +(const String& tstring, const char *c_tstr);
 String operator +(const String& tstring1, const String& tstring2);
