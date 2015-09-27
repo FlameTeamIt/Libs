@@ -91,6 +91,7 @@ SharedPointer<T>::~SharedPointer()
 	{
 		delete this->inc_pointer;
 	}
+	this->inc_pointer = nullptr;
 }
 
 template<class T>

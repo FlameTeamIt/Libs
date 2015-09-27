@@ -74,9 +74,10 @@ UniquePointer<T>::UniquePointer(UniquePointer &&pointer)
 template<class T>
 UniquePointer<T>::~UniquePointer()
 {
-	if(this->inc_pointer != nullptr)
+	if(this->isInitialized())
 	{
 		delete this->inc_pointer;
+		this->inc_pointer = nullptr;
 	}
 }
 
