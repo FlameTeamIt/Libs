@@ -182,12 +182,12 @@ String
 String::getSubstr(size_t pos, size_t length) const
 {
 	String str;
-	char *arr_ch = nullptr;
-	if(pos + length < this->arr_size)
+	if(pos + length <= this->arr_size)
 	{
 		// leak -- double 'new char[length]'
 		str.inc_arr = string_get_substr(this->inc_arr, pos, length);
 		str.arr_size = length;
+		str.is_initialised = true;
 	}
 	
 	return str;
