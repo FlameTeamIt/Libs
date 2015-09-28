@@ -16,11 +16,11 @@ Test::Templates::all()
 {
 	this->count_success_tests =
 			this->SimpleArray()
-			+ this->Array()
-			+ this->List()
-			+ this->String()
-			+ this->UniquePointer()
-			+ this->SharedPointer()
+//			+ this->Array()
+//			+ this->List()
+//			+ this->String()
+//			+ this->UniquePointer()
+//			+ this->SharedPointer()
 			;
 	
 	std::cout << '\n';
@@ -29,13 +29,42 @@ Test::Templates::all()
 unsigned int
 Test::Templates::SimpleArray()
 {
-	using namespace templates;
 	std::cout << "Test::Templates::SimpleArray()\n";
 	
-	SimpleArray<long> simple_array;
+	templates::SimpleArray<long> simple_array1, simple_array2;
+	simple_array1.setSize(2);
 	
+	simple_array1[0] = 10;
+	simple_array1[1] = 5;
+	
+	std::cout << "\nsimple_array1.getSize() = "
+		<< simple_array1.getSize() << '\n'
+			  << "simple_array1[0] = " << simple_array1[0] << '\n'
+			  << "simple_array1[1] = " << simple_array1[1] << "\n";
+	
+	simple_array1.setSize(4);
+	simple_array1.rewrite(2, 200);
+	simple_array1.rewrite(3, 555);
+
+	std::cout << "\nsimple_array1.getSize() = "
+		<< simple_array1.getSize() << '\n'
+			  << "simple_array1[2] = " << simple_array1[2] << '\n'
+			  << "simple_array1[3] = " << simple_array1[3] << "\n";
+
+	simple_array1.setSize(3);
+	std::cout << "\nsimple_array1.getSize() = "
+		<< simple_array1.getSize() << '\n';
+	
+	simple_array2 = simple_array1;
+	simple_array1 = templates::SimpleArray<long>(size_t(8));
+	std::cout << "\nsimple_array1.getSize() = "
+		<< simple_array1.getSize() << '\n'
+		      << "simple_array2.getSize() = "
+		<< simple_array2.getSize() << '\n';
 	
 	std::cout << '\n';
+	
+	return 1;
 }
 
 unsigned int
@@ -219,7 +248,7 @@ Test::Templates::Array()
 //	std::cout << '\n';
 ////#endif
 	
-//	return 1;
+	return 1;
 }
 
 unsigned int

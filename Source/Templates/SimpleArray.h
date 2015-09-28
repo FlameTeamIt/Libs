@@ -16,7 +16,7 @@ class SimpleArray
 {
 	void _setInit(size_t init_size);
 	void _setCopy(const SimpleArray<T> &array);
-	void _setMove(SimpleArray<T> &&array);
+	void _setMove(SimpleArray<T> &array);
 	
 protected:
 	static const unsigned long _OBJ_BLOCK_SIZE = OBJ_BLOCK_SIZE;
@@ -120,7 +120,7 @@ SimpleArray<T>::_setCopy(const SimpleArray<T> &array)
 }
 template<class T>
 void
-SimpleArray<T>::_setMove(SimpleArray<T> &&array)
+SimpleArray<T>::_setMove(SimpleArray<T> &array)
 {
 	this->real_arr_size = array.real_arr_size;
 	this->inc_arr = array.inc_arr;
@@ -143,10 +143,14 @@ SimpleArray<T>::setSize(size_t new_size)
 						  new_inc_arr);
 			array_delete(inc_arr);
 			
-			this->real_arr_size = new_size;
 			this->inc_arr = new_inc_arr;
 		}
 	}
+	else
+	{
+		inc_arr = array_get_new<T>(new_size);
+	}
+	this->real_arr_size = new_size;
 }
 
 
