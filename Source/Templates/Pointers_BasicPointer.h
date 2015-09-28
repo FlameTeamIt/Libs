@@ -44,11 +44,11 @@ public:
 	
 	inline operator bool() const;
 	
-	inline       T& operator *();
-	inline       T* operator ->();
+	virtual inline       T& operator *();
+	virtual inline       T* operator ->();
 	
-	inline const T& operator *() const;
-	inline const T* operator ->() const;
+	virtual inline const T& operator *() const;
+	virtual inline const T* operator ->() const;
 	
 	friend class SharedPointer<T>;
 	friend class UniquePointer<T>;
