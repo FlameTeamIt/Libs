@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <Templates/SimpleArray.h>
 #include <Templates/Array.h>
 #include <Templates/List.h>
 #include <Templates/String.h>
@@ -14,11 +15,25 @@ void
 Test::Templates::all()
 {
 	this->count_success_tests =
-			this->Array()
+			this->SimpleArray()
+			+ this->Array()
 			+ this->List()
 			+ this->String()
 			+ this->UniquePointer()
-			+ this->SharedPointer();
+			+ this->SharedPointer()
+			;
+	
+	std::cout << '\n';
+}
+
+unsigned int
+Test::Templates::SimpleArray()
+{
+	using namespace templates;
+	std::cout << "Test::Templates::SimpleArray()\n";
+	
+	SimpleArray<long> simple_array;
+	
 	
 	std::cout << '\n';
 }
@@ -92,17 +107,17 @@ Test::Templates::String()
 {
 	std::cout << "Test::Templates::String()" << "\n";
 	
-	templates::String str1("Hello!");
-	templates::String str2("Bye!");
+//	templates::String str1("Hello!");
+//	templates::String str2("Bye!");
 	
-	str1 += "LOL!"; // нужно описывать оператор в String
-	std::cout << str1 << '\n';
-	str1 += str2;
-	std::cout << str1 << '\n';
-	str1 = str2;
-	std::cout << str1 << '\n';
-	str1 = str1.getSubstr(0, 3);
-	std::cout << str1 << '\n';
+//	str1 += "LOL!"; // нужно описывать оператор в String
+//	std::cout << str1 << '\n';
+//	str1 += str2;
+//	std::cout << str1 << '\n';
+//	str1 = str2;
+//	std::cout << str1 << '\n';
+//	str1 = str1.getSubstr(0, 3);
+//	std::cout << str1 << '\n';
 	
 	// work
 //	std::cin >> str1;
@@ -118,93 +133,93 @@ Test::Templates::Array()
 	
 	std::cout << "Test::Templates::Array()\n";
 	
-	templates::Array<long> array;
+//	templates::Array<long> array;
 	
-	array.pushBack(10);
-	array.pushBack(9);
-	array.pushFront(7);
-	array.pushFront(8);
+//	array.pushBack(10);
+//	array.pushBack(9);
+//	array.pushFront(7);
+//	array.pushFront(8);
 	
-	std::cout << "Push:\n";
-	for(size_t i = 0; i < array.getSize(); i++)
-	{
-		std::cout << i << ". - " << array[i] << '\n';
-	}
-	std::cout << '\n';
+//	std::cout << "Push:\n";
+//	for(size_t i = 0; i < array.getSize(); i++)
+//	{
+//		std::cout << i << ". - " << array[i] << '\n';
+//	}
+//	std::cout << '\n';
 	
-	array.popBack();
-	array.popFront();
+//	array.popBack();
+//	array.popFront();
 	
-	std::cout << "Pop:\n";
-	for(size_t i = 0; i < array.getSize(); i++)
-	{
-		std::cout << i << ". - " << array[i] << '\n';
-	}
-	std::cout << '\n';
+//	std::cout << "Pop:\n";
+//	for(size_t i = 0; i < array.getSize(); i++)
+//	{
+//		std::cout << i << ". - " << array[i] << '\n';
+//	}
+//	std::cout << '\n';
 	
-	array.insert(0, 8);
-	array.insert(1, 9);
-	array.insert(2, 11);
+//	array.insert(0, 8);
+//	array.insert(1, 9);
+//	array.insert(2, 11);
 	
-	std::cout << "Insert:\n";
-	for(size_t i = 0; i < array.getSize(); i++)
-	{
-		std::cout << i << ". - " << array[i] << '\n';
-	}
-	std::cout << '\n';
+//	std::cout << "Insert:\n";
+//	for(size_t i = 0; i < array.getSize(); i++)
+//	{
+//		std::cout << i << ". - " << array[i] << '\n';
+//	}
+//	std::cout << '\n';
 	
-	array.popFront(2);
-	array.popBack(1);
-	std::cout << "Pop some:\n";
-	for(size_t i = 0; i < array.getSize(); i++)
-	{
-		std::cout << i << ". - " << array[i] << '\n';
-	}
-	std::cout << '\n';
+//	array.popFront(2);
+//	array.popBack(1);
+//	std::cout << "Pop some:\n";
+//	for(size_t i = 0; i < array.getSize(); i++)
+//	{
+//		std::cout << i << ". - " << array[i] << '\n';
+//	}
+//	std::cout << '\n';
 	
-	long test_array1[] = {1, 2};
-	long test_array2[] = {101, 102, 103};
-	long test_array3[] = {201, 202};
+//	long test_array1[] = {1, 2};
+//	long test_array2[] = {101, 102, 103};
+//	long test_array3[] = {201, 202};
 	
-	array.insert(0, 2, test_array1);
-	array.insert(2, 3, test_array2);
-	array.insert(array.getSize(), 2, test_array3);
-	std::cout << "Insert array:\n";
-	for(size_t i = 0; i < array.getSize(); i++)
-	{
-		std::cout << i << ". - " << array[i] << '\n';
-	}
-	std::cout << '\n';
+//	array.insert(0, 2, test_array1);
+//	array.insert(2, 3, test_array2);
+//	array.insert(array.getSize(), 2, test_array3);
+//	std::cout << "Insert array:\n";
+//	for(size_t i = 0; i < array.getSize(); i++)
+//	{
+//		std::cout << i << ". - " << array[i] << '\n';
+//	}
+//	std::cout << '\n';
 	
-//#ifdef FUTURE
-	templates::Array<long> array1(array);
+////#ifdef FUTURE
+//	templates::Array<long> array1(array);
 	
-	array.erase(0);
-	array.erase(2);
-	array.erase(4);
+//	array.erase(0);
+//	array.erase(2);
+//	array.erase(4);
 	
-	std::cout << "Erase:\n";
-	for(size_t i = 0; i < array.getSize(); i++)
-	{
-		std::cout << i << ". - " << array[i] << '\n';
-	}
-	std::cout << '\n';
-//#endif
+//	std::cout << "Erase:\n";
+//	for(size_t i = 0; i < array.getSize(); i++)
+//	{
+//		std::cout << i << ". - " << array[i] << '\n';
+//	}
+//	std::cout << '\n';
+////#endif
 
-//#ifdef FUTURE
-	array1.erase(0, 2);
-	array1.erase(3, 2);
-	array1.erase(1, 2);
+////#ifdef FUTURE
+//	array1.erase(0, 2);
+//	array1.erase(3, 2);
+//	array1.erase(1, 2);
 	
-	std::cout << "Erase some:\n";
-	for(size_t i = 0; i < array1.getSize(); i++)
-	{
-		std::cout << i << ". - " << array1[i] << '\n';
-	}
-	std::cout << '\n';
-//#endif
+//	std::cout << "Erase some:\n";
+//	for(size_t i = 0; i < array1.getSize(); i++)
+//	{
+//		std::cout << i << ". - " << array1[i] << '\n';
+//	}
+//	std::cout << '\n';
+////#endif
 	
-	return 1;
+//	return 1;
 }
 
 unsigned int

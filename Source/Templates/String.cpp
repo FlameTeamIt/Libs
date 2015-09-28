@@ -1,9 +1,9 @@
 #include <Templates/String.h>
 
+/*
 namespace flame_ide
 {namespace templates
 {
-
 // concatenation
 String
 operator +(char ch, const String& tstring)
@@ -187,7 +187,6 @@ String::getSubstr(size_t pos, size_t length) const
 		// leak -- double 'new char[length]'
 		str.inc_arr = string_get_substr(this->inc_arr, pos, length);
 		str.arr_size = length;
-		str.is_initialised = true;
 	}
 	
 	return str;
@@ -264,10 +263,8 @@ String::operator =(String &&string)
 	clear();
 	this->inc_arr = string.inc_arr;
 	this->arr_size = string.arr_size;
-	this->is_initialised = true;
 	
 	string.arr_size = 0;
-	string.inc_arr = nullptr;
 	
 	return *this;
 }
@@ -300,3 +297,4 @@ String::operator +=(String &&string)
 	string.clear();
 	return *this;
 }
+*/

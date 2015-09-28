@@ -25,7 +25,7 @@ Test::all()
 	analyzers.all();
 	bus.all();
 	filesystem.all();
-	templates.all();
+	template_classes.all();
 	
 	others.all();
 	

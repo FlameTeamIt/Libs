@@ -1,7 +1,7 @@
 #ifndef SIMPLEARRAY
 #define SIMPLEARRAY
 
-#ifndef
+#ifndef OBJ_BLOCK_SIZE
 #define OBJ_BLOCK_SIZE 64
 #endif
 
@@ -23,7 +23,7 @@ protected:
 	size_t real_arr_size;
 	T* inc_arr;
 	
-	T* _getArrayCopy();
+	T* _getArrayCopy() const;
 	
 public:
 	SimpleArray();
@@ -99,7 +99,7 @@ SimpleArray<T>::~SimpleArray()
 
 template<class T>
 T*
-SimpleArray<T>::_getArrayCopy()
+SimpleArray<T>::_getArrayCopy() const
 {
 	return array_get_copy(real_arr_size, inc_arr);
 }
@@ -138,7 +138,7 @@ SimpleArray<T>::setSize(size_t new_size)
 	{
 		if(new_size > this->real_arr_size)
 		{
-			T* new_inc_arr = array_get_new(new_size);
+			T* new_inc_arr = array_get_new<T>(new_size);
 			array_copying(this->real_arr_size, this->inc_arr,
 						  new_inc_arr);
 			array_delete(inc_arr);

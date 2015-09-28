@@ -133,7 +133,6 @@ TString<T>::assign(const T *c_tstr)
 		array_copying(length_c_tstr, c_tstr, this->inc_arr);
 		
 		this->arr_size = length_c_tstr;
-		this->is_initialised = true;
 		
 		is_actual_hash = false;
 	}
@@ -144,17 +143,8 @@ TString<T>::assign(const TString<T> &tstring)
 {
 	if(tstring.getSize())
 	{
-		this->clear();
-		if(tstring.isTemporary())
-		{
-			this->inc_arr = tstring.inc_arr;
-		}
-		else
-		{
-			this->inc_arr = tstring.getPCopy();
-		}
+		this->inc_arr = tstring._getArrayCopy();
 		this->arr_size = tstring.arr_size;
-		this->is_initialised = true;
 		
 //		if(tstring.is_actual_hash)
 //		{
@@ -215,7 +205,6 @@ TString<T>::concatenation(const T* c_tstr, bool to_right)
 	}
 	this->inc_arr = tmp_inc_arr;
 	this->arr_size += length_c_tstr;
-	this->is_initialised = true;
 	this->is_actual_hash = false;
 }
 template<typename T>
@@ -240,7 +229,6 @@ TString<T>::concatenation(const TString<T> &str, bool to_right)
 	}
 	this->inc_arr = tmp_inc_arr;
 	this->arr_size += str.arr_size;
-	this->is_initialised = true;
 	this->is_actual_hash = false;
 }
 

@@ -31,10 +31,10 @@ public:
 		{
 			void all();
 			
-			JSON::Single single;
-			JSON::Pair pair;
-			JSON::Array array;
-			JSON::Object object;
+//			JSON::Single single;
+//			JSON::Pair pair;
+//			JSON::Array array;
+//			JSON::Object object;
 			
 			unsigned int Single();
 			unsigned int Pair();
@@ -71,14 +71,15 @@ public:
 	{
 		void all();
 		
-		unsigned int List();
+		unsigned int SimpleArray();
 		unsigned int Array();
+		unsigned int List();
 		unsigned int String();
 		unsigned int UniquePointer();
 		unsigned int SharedPointer();
 		unsigned int Allocator();
 		
-	} templates;
+	} template_classes;
 
 	void all();
 };
