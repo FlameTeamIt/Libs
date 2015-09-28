@@ -27,6 +27,9 @@ void array_insert_element(const size_t &length, Tt *&array
 						  ,const size_t &index
 						  ,const Tt &insert_elem);
 
+template<typename Tt> inline
+void array_rewrite(Tt *array, size_t pos, const Tt &object);
+
 // no implementation
 template<typename Tt> inline
 void array_insert_array(const size_t &length, Tt *&array
@@ -83,6 +86,14 @@ array_copying(const size_t &length
 	std::copy(old_array + start_index_old
 			  ,old_array + start_index_old + length
 			  ,new_array + start_index_new);
+}
+
+template<typename Tt>
+void
+flame_ide::templates::
+array_rewrite(Tt *array, size_t pos, const Tt &object)
+{
+	std::copy_n(&object, 1, array+pos);
 }
 
 template<typename Tt>
