@@ -14,23 +14,23 @@ namespace flame_ide
 template<class T>
 class SimpleArray
 {
-	void _setInit(size_t init_size);
-	void _setCopy(const SimpleArray<T> &array);
-	void _setMove(SimpleArray<T> &array);
+	void _simple_setInit(size_t init_size);
+	void _simple_setCopy(const SimpleArray<T> &array);
+	void _simple_setMove(SimpleArray<T> &array);
 	
 protected:
 	static const unsigned long _OBJ_BLOCK_SIZE = OBJ_BLOCK_SIZE;
 	size_t real_arr_size;
 	T* inc_arr;
 	
-	T* _getArrayCopy() const;
+	T* _getSimpleArrayCopy() const;
 	
 public:
 	SimpleArray();
 	SimpleArray(bool set_default_size);
-	SimpleArray(size_t init_size);
-	SimpleArray(const SimpleArray &array);
-	SimpleArray(SimpleArray &&array);
+	SimpleArray(const size_t &init_size);
+	SimpleArray(const SimpleArray<T> &array);
+	SimpleArray(SimpleArray<T> &&array);
 	
 	virtual ~SimpleArray();
 	
@@ -63,27 +63,27 @@ SimpleArray<T>::SimpleArray()
 {}
 template<class T>
 SimpleArray<T>::SimpleArray(bool set_default_size)
-	: real_arr_size(0), inc_arr(nullptr)
+    : SimpleArray()
 {
 	if(set_default_size)
 	{
-		this->_setInit(_OBJ_BLOCK_SIZE);
+		this->_simple_setInit(_OBJ_BLOCK_SIZE);
 	}
 }
 template<class T>
-SimpleArray<T>::SimpleArray(size_t init_size)
+SimpleArray<T>::SimpleArray(const size_t &init_size)
 {
-	this->_setInit(init_size);
+	this->_simple_setInit(init_size);
 }
 template<class T>
 SimpleArray<T>::SimpleArray(const SimpleArray &array)
 {
-	this->_setCopy(array);
+	this->_simple_setCopy(array);
 }
 template<class T>
 SimpleArray<T>::SimpleArray(SimpleArray &&array)
 {
-	this->_setMove(array);
+	this->_simple_setMove(array);
 }
 
 template<class T>
@@ -99,28 +99,28 @@ SimpleArray<T>::~SimpleArray()
 
 template<class T>
 T*
-SimpleArray<T>::_getArrayCopy() const
+SimpleArray<T>::_getSimpleArrayCopy() const
 {
 	return array_get_copy(real_arr_size, inc_arr);
 }
 
 template<class T>
 void
-SimpleArray<T>::_setInit(size_t init_size)
+SimpleArray<T>::_simple_setInit(size_t init_size)
 {
 	this->real_arr_size = init_size;
 	this->inc_arr = array_get_new<T>(init_size);
 }
 template<class T>
 void
-SimpleArray<T>::_setCopy(const SimpleArray<T> &array)
+SimpleArray<T>::_simple_setCopy(const SimpleArray<T> &array)
 {
 	this->real_arr_size = array.real_arr_size;
-	this->inc_arr = array._getArrayCopy();
+	this->inc_arr = array._getSimpleArrayCopy();
 }
 template<class T>
 void
-SimpleArray<T>::_setMove(SimpleArray<T> &array)
+SimpleArray<T>::_simple_setMove(SimpleArray<T> &array)
 {
 	this->real_arr_size = array.real_arr_size;
 	this->inc_arr = array.inc_arr;
@@ -138,6 +138,8 @@ SimpleArray<T>::setSize(size_t new_size)
 	{
 		if(new_size > this->real_arr_size)
 		{
+			this->real_arr_size = new_size;
+			
 			T* new_inc_arr = array_get_new<T>(new_size);
 			array_copying(this->real_arr_size, this->inc_arr,
 						  new_inc_arr);
@@ -148,9 +150,9 @@ SimpleArray<T>::setSize(size_t new_size)
 	}
 	else
 	{
+		this->real_arr_size = new_size;
 		inc_arr = array_get_new<T>(new_size);
 	}
-	this->real_arr_size = new_size;
 }
 
 
@@ -207,14 +209,16 @@ const SimpleArray<T>&
 SimpleArray<T>::operator =(const SimpleArray<T> &array)
 {
 	clear();
-	_setCopy(array);
+	_simple_setCopy(array);
+	return *this;
 }
 template<class T>
 const SimpleArray<T>&
 SimpleArray<T>::operator =(SimpleArray<T> &&array)
 {
 	clear();
-	_setMove(array);
+	_simple_setMove(array);
+	return *this;
 }
 
 template<class T>
