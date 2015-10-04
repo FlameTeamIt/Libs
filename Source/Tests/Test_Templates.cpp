@@ -14,13 +14,13 @@ using namespace flame_ide;
 void
 Test::Templates::all()
 {
-	this->count_success_tests =
-			this->SimpleArray()
+	this->count_success_tests = 0
+			+ this->SimpleArray()
 //			+ this->Array()
 //			+ this->List()
 //			+ this->String()
 //			+ this->UniquePointer()
-//			+ this->SharedPointer()
+			+ this->SharedPointer()
 			;
 	
 	std::cout << '\n';
@@ -63,94 +63,6 @@ Test::Templates::SimpleArray()
 		<< simple_array2.getSize() << '\n';
 	
 	std::cout << '\n';
-	
-	return 1;
-}
-
-unsigned int
-Test::Templates::List()
-{
-	std::cout << "Test::Templates::List()" << '\n';
-	
-	using namespace flame_ide::templates;
-	
-	size_t start_count = 4; // начиная с 4-х элементов не течет. Что? (О_о)
-	int arr[] = {5, 6};
-	
-	templates::List<int> list(start_count);
-	
-	for(size_t i = 0; i < start_count; i++)
-	{ list[i] = int(i+1); }
-	
-	if(list[0] != 1 && list[1] != 2)
-	{ return 0; }
-	
-	// добавление по одному элементу в конец и в начало
-	list.pushFront(4);
-	list.pushBack(1);
-	
-	// удаление с конца и с начала по элементу
-	list.popBack();
-	list.popFront();
-	
-	// вставка и удаление массива
-	// в начало
-	list.insert((list.begin())--, 2, arr);
-	list.erase((list.begin())--, 2);
-	
-	// в середину
-	list.insert(list.begin(), 2, arr);
-	list.erase(list.begin(), 2);
-	
-	// в конец
-	list.insert((list.end())--, 2, arr);
-	list.erase((list.begin())++, 2);
-	
-	//добавление элемента в середину и его удаление
-	list.insert(list.begin(), arr[0]);
-	list.erase(list.begin()++);
-	
-	// проверка конструктора копирования
-	templates::List<int> list1(list);
-	list1.popBack(3);
-	
-	// проверка оператора присваивания
-	list1 = list;
-	list1.popFront(1);
-	
-	list1 = list;
-	
-	// добавление массива в конец и его удаление
-	list1.pushBack(2, arr);
-	list1.popBack(2);
-	
-	// добавление массива в начало и его удаление
-	list1.pushFront(2, arr);
-	list1.popFront(2);
-	
-	return 1;
-}
-
-unsigned int
-Test::Templates::String()
-{
-	std::cout << "Test::Templates::String()" << "\n";
-	
-//	templates::String str1("Hello!");
-//	templates::String str2("Bye!");
-	
-//	str1 += "LOL!"; // нужно описывать оператор в String
-//	std::cout << str1 << '\n';
-//	str1 += str2;
-//	std::cout << str1 << '\n';
-//	str1 = str2;
-//	std::cout << str1 << '\n';
-//	str1 = str1.getSubstr(0, 3);
-//	std::cout << str1 << '\n';
-	
-	// work
-//	std::cin >> str1;
-//	std::cout << str1 << '\n';
 	
 	return 1;
 }
@@ -247,6 +159,94 @@ Test::Templates::Array()
 //	}
 //	std::cout << '\n';
 ////#endif
+	
+	return 1;
+}
+
+unsigned int
+Test::Templates::List()
+{
+	std::cout << "Test::Templates::List()" << '\n';
+	
+	using namespace flame_ide::templates;
+	
+	size_t start_count = 4; // начиная с 4-х элементов не течет. Что? (О_о)
+	int arr[] = {5, 6};
+	
+	templates::List<int> list(start_count);
+	
+	for(size_t i = 0; i < start_count; i++)
+	{ list[i] = int(i+1); }
+	
+	if(list[0] != 1 && list[1] != 2)
+	{ return 0; }
+	
+	// добавление по одному элементу в конец и в начало
+	list.pushFront(4);
+	list.pushBack(1);
+	
+	// удаление с конца и с начала по элементу
+	list.popBack();
+	list.popFront();
+	
+	// вставка и удаление массива
+	// в начало
+	list.insert((list.begin())--, 2, arr);
+	list.erase((list.begin())--, 2);
+	
+	// в середину
+	list.insert(list.begin(), 2, arr);
+	list.erase(list.begin(), 2);
+	
+	// в конец
+	list.insert((list.end())--, 2, arr);
+	list.erase((list.begin())++, 2);
+	
+	//добавление элемента в середину и его удаление
+	list.insert(list.begin(), arr[0]);
+	list.erase(list.begin()++);
+	
+	// проверка конструктора копирования
+	templates::List<int> list1(list);
+	list1.popBack(3);
+	
+	// проверка оператора присваивания
+	list1 = list;
+	list1.popFront(1);
+	
+	list1 = list;
+	
+	// добавление массива в конец и его удаление
+	list1.pushBack(2, arr);
+	list1.popBack(2);
+	
+	// добавление массива в начало и его удаление
+	list1.pushFront(2, arr);
+	list1.popFront(2);
+	
+	return 1;
+}
+
+unsigned int
+Test::Templates::String()
+{
+	std::cout << "Test::Templates::String()" << "\n";
+	
+//	templates::String str1("Hello!");
+//	templates::String str2("Bye!");
+	
+//	str1 += "LOL!"; // нужно описывать оператор в String
+//	std::cout << str1 << '\n';
+//	str1 += str2;
+//	std::cout << str1 << '\n';
+//	str1 = str2;
+//	std::cout << str1 << '\n';
+//	str1 = str1.getSubstr(0, 3);
+//	std::cout << str1 << '\n';
+	
+	// work
+//	std::cin >> str1;
+//	std::cout << str1 << '\n';
 	
 	return 1;
 }
