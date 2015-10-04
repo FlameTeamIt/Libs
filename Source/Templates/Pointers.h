@@ -14,18 +14,21 @@ class SharedPointer;
 template<class T>
 class UniquePointer;
 
-template<class T, class U>
+template<class T> inline
+T&& move(T &reference) noexcept;
+
+template<class T, class U> inline
 BasicPointer<T> static_pointer_cast(const BasicPointer<U>& pointer) noexcept;
-template<class T, class U>
+template<class T, class U> inline
 SharedPointer<T> static_pointer_cast(const SharedPointer<U>& pointer) noexcept;
-template<class T, class U>
+template<class T, class U> inline
 UniquePointer<T> static_pointer_cast(UniquePointer<U>& pointer) noexcept;
 
-template<class T, class U>
+template<class T, class U> inline
 BasicPointer<T> dynamic_pointer_cast(const BasicPointer<U>& pointer) noexcept;
-template<class T, class U>
+template<class T, class U> inline
 SharedPointer<T> dynamic_pointer_cast(const SharedPointer<U>& pointer) noexcept;
-template<class T, class U>
+template<class T, class U> inline
 UniquePointer<T> dynamic_pointer_cast(UniquePointer<U>& pointer) noexcept;
 
 }}

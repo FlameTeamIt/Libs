@@ -7,8 +7,16 @@ namespace flame_ide
 {namespace templates
 {
 
+template<class T>
+T&&
+move(T &reference) noexcept
+{
+	return static_cast<T &&>(reference);
+}
+
 template<class T, class U>
-BasicPointer<T> static_pointer_cast(const BasicPointer<U>& pointer) noexcept
+BasicPointer<T>
+static_pointer_cast(const BasicPointer<U>& pointer) noexcept
 {
 	BasicPointer<T> ret_pointer;
 	if(pointer.isInitialized())
@@ -19,7 +27,8 @@ BasicPointer<T> static_pointer_cast(const BasicPointer<U>& pointer) noexcept
 	return ret_pointer;
 }
 template<class T, class U>
-SharedPointer<T> static_pointer_cast(const SharedPointer<U>& pointer) noexcept
+SharedPointer<T>
+static_pointer_cast(const SharedPointer<U>& pointer) noexcept
 {
 	SharedPointer<T> ret_pointer;
 	if(pointer.isInitialized())
@@ -34,7 +43,8 @@ SharedPointer<T> static_pointer_cast(const SharedPointer<U>& pointer) noexcept
 	return ret_pointer;
 }
 template<class T, class U>
-UniquePointer<T> static_pointer_cast(UniquePointer<U>& pointer) noexcept
+UniquePointer<T>
+static_pointer_cast(UniquePointer<U>& pointer) noexcept
 {
 	UniquePointer<T> ret_pointer;
 	if(pointer.isInitialized())
@@ -50,7 +60,8 @@ UniquePointer<T> static_pointer_cast(UniquePointer<U>& pointer) noexcept
 }
 
 template<class T, class U>
-BasicPointer<T> dynamic_pointer_cast(const BasicPointer<U>& pointer) noexcept
+BasicPointer<T>
+dynamic_pointer_cast(const BasicPointer<U>& pointer) noexcept
 {
 	BasicPointer<T> ret_pointer;
 	if(pointer.isInitialized())
@@ -61,7 +72,8 @@ BasicPointer<T> dynamic_pointer_cast(const BasicPointer<U>& pointer) noexcept
 	return ret_pointer;
 }
 template<class T, class U>
-SharedPointer<T> dynamic_pointer_cast(const SharedPointer<U>& pointer) noexcept
+SharedPointer<T>
+dynamic_pointer_cast(const SharedPointer<U>& pointer) noexcept
 {
 	SharedPointer<T> ret_pointer;
 	if(pointer.isInitialized())
@@ -76,7 +88,8 @@ SharedPointer<T> dynamic_pointer_cast(const SharedPointer<U>& pointer) noexcept
 	return ret_pointer;
 }
 template<class T, class U>
-UniquePointer<T> dynamic_pointer_cast(UniquePointer<U>& pointer) noexcept
+UniquePointer<T>
+dynamic_pointer_cast(UniquePointer<U>& pointer) noexcept
 {
 	UniquePointer<T> ret_pointer;
 	if(pointer.isInitialized())
@@ -94,4 +107,3 @@ UniquePointer<T> dynamic_pointer_cast(UniquePointer<U>& pointer) noexcept
 }}
 
 #endif // POINTERS_FUNCTIONS
-
