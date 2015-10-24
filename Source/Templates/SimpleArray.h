@@ -6,10 +6,57 @@
 #endif
 
 #include <Templates/Array_Functions.h>
+#include <Templates/BaseIterator.h>
 
 namespace flame_ide
 { namespace templates
 {
+
+template<class T> class SimpleArrayIterator;
+template<class T> class SimpleArrayReverseIterator;
+template<class T> class SimpleArray;
+
+template<class T>
+class SimpleArrayIterator : public BasicReverseIterator<T, T>
+{
+public:
+	SimpleArrayIterator();
+	SimpleArrayIterator(SimpleArrayIterator &&iterator);
+	SimpleArrayIterator(const SimpleArrayIterator &iterator);
+	
+	~SimpleArrayIterator();
+	
+	const T& operator *() const noexcept;
+	      T& operator *()       noexcept;
+		  
+	const T* operator ->() const noexcept;
+	      T* operator ->()       noexcept;
+	
+	friend class SimpleArrayReverseIterator<T>;
+	friend class SimpleArray<T>;
+	
+	friend operator ==(const SimpleArrayIterator &iter1, const SimpleArrayIterator &iter2);
+	friend operator !=(const SimpleArrayIterator &iter1, const SimpleArrayIterator &iter2);
+};
+
+template<class T>
+class SimpleArrayReverseIterator : public BasicReverseIterator<T, T>
+{
+	SimpleArrayReverseIterator();
+	SimpleArrayReverseIterator(SimpleArrayIterator &&iterator);
+	SimpleArrayReverseIterator(const SimpleArrayIterator &iterator);
+	
+	~SimpleArrayReverseIterator();
+	
+	const T& operator *() const noexcept = 0;
+	      T& operator *()       noexcept = 0;
+		  
+	const T* operator ->() const noexcept = 0;
+	      T* operator ->()       noexcept = 0;
+	
+	friend class SimpleArrayIterator<T>;
+	friend class SimpleArray<T>;
+};
 
 template<class T>
 class SimpleArray
@@ -28,6 +75,9 @@ protected:
 	T* _getSimpleArrayCopy() const;
 	
 public:
+	typedef SimpleArrayIterator<T> iterator;
+	typedef SimpleArrayReverseIterator<T> reverse_iterator;
+	
 	SimpleArray();
 	SimpleArray(bool set_default_size);
 	SimpleArray(size_t init_size);
@@ -51,6 +101,12 @@ public:
 	virtual int popBack(size_t count = 1);
 	virtual int erase(size_t pos_index, size_t count = 1);
 	
+	virtual iterator begin();
+	virtual iterator end();
+	
+	virtual reverse_iterator rbegin();
+	virtual reverse_iterator rend();
+	
 	void rewrite(size_t pos, const T &object);
 	virtual void clear();
 	
@@ -60,9 +116,8 @@ public:
 	const SimpleArray<T>& operator =(SimpleArray<T> &&array);
 	
 	virtual const T& operator [](size_t index) const noexcept;
-	virtual const T& operator [](int index)    const noexcept;
 	virtual       T& operator [](size_t index)		 noexcept;
-	virtual       T& operator [](int index)          noexcept;
+	
 };
 
 }}
@@ -355,22 +410,10 @@ SimpleArray<T>::operator [](size_t index) const noexcept
 {
 	return inc_arr[index];
 }
-template<class T>
-const T&
-SimpleArray<T>::operator [](int index) const noexcept
-{
-	return inc_arr[index];
-}
 
 template<class T>
 T&
 SimpleArray<T>::operator [](size_t index) noexcept
-{
-	return inc_arr[index];
-}
-template<class T>
-T&
-SimpleArray<T>::operator [](int index) noexcept
 {
 	return inc_arr[index];
 }
