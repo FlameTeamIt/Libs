@@ -28,37 +28,36 @@ class BasicIterator : public InterfaceIterator<T, TData>
 {
 public:
 	BasicIterator();
-	BasicIterator(BasicIterator<T> &&iterator);
-	BasicIterator(const BasicIterator<T> &iterator);
+	BasicIterator(BasicIterator<T, TData> &&iterator);
+	BasicIterator(const BasicIterator<T, TData> &iterator);
 	
 	~BasicIterator();
 	
-	inline const BasicIterator<T>& operator ++();
-	inline const BasicIterator<T>& operator --();
+	inline const BasicIterator<T, TData>& operator ++();
+	inline const BasicIterator<T, TData>& operator --();
 	
-	inline const BasicIterator<T>& operator ++(int);
-	inline const BasicIterator<T>& operator --(int);
+	inline const BasicIterator<T, TData>& operator ++(int);
+	inline const BasicIterator<T, TData>& operator --(int);
 };
 
 template<class T, class TData>
-class BasicReverseIterator : public InterfaceIterator<TData>
-
+class BasicReverseIterator : public InterfaceIterator<T, TData>
 {
 protected:
 	mutable T* inc_data;
 	
 public:
 	BasicReverseIterator();
-	BasicReverseIterator(BasicReverseIterator<T> &&iterator);
-	BasicReverseIterator(const BasicReverseIterator<T> &iterator);
+	BasicReverseIterator(BasicReverseIterator<T, TData> &&iterator);
+	BasicReverseIterator(const BasicReverseIterator<T, TData> &iterator);
 	
-	~BaseIterator();
+	~BasicReverseIterator();
 	
-	inline const BasicReverseIterator<T>& operator ++();
-	inline const BasicReverseIterator<T>& operator --();
+	inline const BasicReverseIterator<T, TData>& operator ++();
+	inline const BasicReverseIterator<T, TData>& operator --();
 	
-	inline const BasicReverseIterator<T>& operator ++(int);
-	inline const BasicReverseIterator<T>& operator --(int);
+	inline const BasicReverseIterator<T, TData>& operator ++(int);
+	inline const BasicReverseIterator<T, TData>& operator --(int);
 };
 
 }}
@@ -81,14 +80,14 @@ BasicIterator<T, TData>::BasicIterator()
 {}
 
 template<class T, class TData>
-BasicIterator<T, TData>::BasicIterator(BasicIterator<T> &&iterator)
+BasicIterator<T, TData>::BasicIterator(BasicIterator<T, TData> &&iterator)
 	: BasicIterator<T, TData>()
 {
 	this->inc_data = iterator.inc_data;
 }
 
 template<class T, class TData>
-BasicIterator<T, TData>::BasicIterator(const BasicIterator<T> &iterator)
+BasicIterator<T, TData>::BasicIterator(const BasicIterator<T, TData> &iterator)
 	: BasicIterator<T, TData>()
 {
 	this->inc_data = iterator.inc_data;
@@ -98,34 +97,34 @@ template<class T, class TData>
 BasicIterator<T, TData>::~BasicIterator() {}
 
 template<class T, class TData>
-const BasicIterator<T>&
+const BasicIterator<T, TData>&
 BasicIterator<T, TData>::operator ++()
 {
-	this->inc_data++;
+	++(this->inc_data);
 	return *this;
 }
 
 template<class T, class TData>
-const BasicIterator<T>&
+const BasicIterator<T, TData>&
 BasicIterator<T, TData>::operator --()
 {
-	this->inc_data--;
+	--(this->inc_data);
 	return *this;
 }
 
 template<class T, class TData>
-const BasicIterator<T>&
+const BasicIterator<T, TData>&
 BasicIterator<T, TData>::operator ++(int)
 {
-	this->inc_data++;
+	(this->inc_data)++;
 	return *this;
 }
 
 template<class T, class TData>
-const BasicIterator<T>&
+const BasicIterator<T, TData>&
 BasicIterator<T, TData>::operator --(int)
 {
-	this->inc_data--;
+	(this->inc_data)--;
 	return *this;
 }
 
@@ -136,54 +135,52 @@ BasicReverseIterator<T, TData>::BasicReverseIterator()
 {}
 
 template<class T, class TData>
-BasicReverseIterator<T, TData>::BasicReverseIterator(BasicReverseIterator<T> &&iterator)
+BasicReverseIterator<T, TData>::BasicReverseIterator(BasicReverseIterator<T, TData> &&iterator)
 	: BasicReverseIterator<T, TData>()
 {
 	this->inc_data = iterator.inc_data;
 }
 
 template<class T, class TData>
-BasicReverseIterator<T, TData>::BasicReverseIterator(const BasicReverseIterator<T> &iterator)
+BasicReverseIterator<T, TData>::BasicReverseIterator(const BasicReverseIterator<T, TData> &iterator)
 	: BasicReverseIterator<T, TData>()
 {
 	this->inc_data = iterator.inc_data;
 }
 
 template<class T, class TData>
-BasicReverseIterator<T, TData>::~BasicReverseIterator()
-{}
+BasicReverseIterator<T, TData>::~BasicReverseIterator() {}
 
 template<class T, class TData>
-const BasicReverseIterator<T>&
+const BasicReverseIterator<T, TData>&
 BasicReverseIterator<T, TData>::operator ++()
 {
-	this->inc_data--;
+	--(this->inc_data);
 	return *this;
 }
 
 template<class T, class TData>
-const BasicReverseIterator<T>&
+const BasicReverseIterator<T, TData>&
 BasicReverseIterator<T, TData>::operator --()
 {
-	this->inc_data++;
+	++(this->inc_data);
 	return *this;
 }
 
 template<class T, class TData>
-const BasicReverseIterator<T>&
+const BasicReverseIterator<T, TData>&
 BasicReverseIterator<T, TData>::operator ++(int)
 {
-	this->inc_data--;
+	(this->inc_data)--;
 	return *this;
 }
 
 template<class T, class TData>
-const BasicReverseIterator<T>&
+const BasicReverseIterator<T, TData>&
 BasicReverseIterator<T, TData>::operator --(int)
 {
-	this->inc_data++;
+	(this->inc_data)++;
 	return *this;
 }
 
 #endif // ITERATOR_H
-
