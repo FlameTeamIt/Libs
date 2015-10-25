@@ -1,62 +1,16 @@
-#ifndef SIMPLEARRAY
-#define SIMPLEARRAY
+#ifndef TEMPLATES_SIMPLEARRAY
+#define TEMPLATES_SIMPLEARRAY
 
 #ifndef OBJ_BLOCK_SIZE
 #define OBJ_BLOCK_SIZE 64
 #endif
 
 #include <Templates/Array_Functions.h>
-#include <Templates/BaseIterator.h>
+#include <Templates/SimpleArray_Iterators.h>
 
 namespace flame_ide
-{ namespace templates
+{namespace templates
 {
-
-template<class T> class SimpleArrayIterator;
-template<class T> class SimpleArrayReverseIterator;
-template<class T> class SimpleArray;
-
-template<class T>
-class SimpleArrayIterator : public BasicReverseIterator<T, T>
-{
-public:
-	SimpleArrayIterator();
-	SimpleArrayIterator(SimpleArrayIterator &&iterator);
-	SimpleArrayIterator(const SimpleArrayIterator &iterator);
-	
-	~SimpleArrayIterator();
-	
-	const T& operator *() const noexcept;
-	      T& operator *()       noexcept;
-		  
-	const T* operator ->() const noexcept;
-	      T* operator ->()       noexcept;
-	
-	friend class SimpleArrayReverseIterator<T>;
-	friend class SimpleArray<T>;
-	
-	friend operator ==(const SimpleArrayIterator &iter1, const SimpleArrayIterator &iter2);
-	friend operator !=(const SimpleArrayIterator &iter1, const SimpleArrayIterator &iter2);
-};
-
-template<class T>
-class SimpleArrayReverseIterator : public BasicReverseIterator<T, T>
-{
-	SimpleArrayReverseIterator();
-	SimpleArrayReverseIterator(SimpleArrayIterator &&iterator);
-	SimpleArrayReverseIterator(const SimpleArrayIterator &iterator);
-	
-	~SimpleArrayReverseIterator();
-	
-	const T& operator *() const noexcept = 0;
-	      T& operator *()       noexcept = 0;
-		  
-	const T* operator ->() const noexcept = 0;
-	      T* operator ->()       noexcept = 0;
-	
-	friend class SimpleArrayIterator<T>;
-	friend class SimpleArray<T>;
-};
 
 template<class T>
 class SimpleArray
@@ -75,8 +29,11 @@ protected:
 	T* _getSimpleArrayCopy() const;
 	
 public:
-	typedef SimpleArrayIterator<T> iterator;
+	typedef SimpleArrayIterator<T>        iterator;
 	typedef SimpleArrayReverseIterator<T> reverse_iterator;
+	
+	typedef const SimpleArrayIterator<T>        const_iterator;
+	typedef const SimpleArrayReverseIterator<T> const_reverse_iterator;
 	
 	SimpleArray();
 	SimpleArray(bool set_default_size);
@@ -95,17 +52,19 @@ public:
 	
 	virtual int pushBack(const T &obj);
 	virtual int pushBack(T &&obj);
+	
 	virtual int insert(size_t pos_index, T &&obj);
 	virtual int insert(size_t pos_index, const T &obj);
 	
 	virtual int popBack(size_t count = 1);
+	
 	virtual int erase(size_t pos_index, size_t count = 1);
 	
-	virtual iterator begin();
-	virtual iterator end();
+	iterator begin();
+	iterator end();
 	
-	virtual reverse_iterator rbegin();
-	virtual reverse_iterator rend();
+	reverse_iterator rbegin();
+	reverse_iterator rend();
 	
 	void rewrite(size_t pos, const T &object);
 	virtual void clear();
@@ -123,23 +82,19 @@ public:
 }}
 
 
-using namespace flame_ide::templates;
+using flame_ide::templates::SimpleArray;
 
 template<class T>
 SimpleArray<T>::SimpleArray()
-	: arr_size(0), arr_capaity(0), inc_arr(nullptr)
+	: inc_arr(nullptr)
 {
-	
+	arr_size = 0;
+	arr_capaity = 0;
 }
 template<class T>
 SimpleArray<T>::SimpleArray(bool set_default_size)
     : SimpleArray()
-{
-	if(set_default_size)
-	{
-		this->_simple_setInit(_OBJ_BLOCK_SIZE);
-	}
-}
+{}
 template<class T>
 SimpleArray<T>::SimpleArray(size_t init_size)
     : arr_size(0)
@@ -419,5 +374,5 @@ SimpleArray<T>::operator [](size_t index) noexcept
 }
 
 #undef OBJ_BLOCK_SIZE
-#endif // SIMPLEARRAY
+#endif // TEMPLATES_SIMPLEARRAY
 
