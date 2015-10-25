@@ -117,4 +117,4 @@ Allocator::deallocate(void *pointer, unsigned long size)
 
 #endif
 
-#endif // ALLOCATOR
+#endif // TEMPLATES_ALLOCATOR
