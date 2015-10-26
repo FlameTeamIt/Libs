@@ -38,12 +38,14 @@ public:
 	SimpleArray();
 	SimpleArray(bool set_default_size);
 	SimpleArray(size_t init_size);
+	
+	template<typename TSize_Type> SimpleArray(TSize_Type init_size);
+	
 	SimpleArray(const SimpleArray<T> &array);
 	SimpleArray(SimpleArray<T> &&array);
 	
 	virtual ~SimpleArray();
 	
-	virtual void   setSize(size_t size);
 	virtual size_t getSize() const noexcept;
 	virtual size_t getMaxSize() const noexcept;
 	
@@ -66,7 +68,7 @@ public:
 	reverse_iterator rbegin();
 	reverse_iterator rend();
 	
-	void rewrite(size_t pos, const T &object);
+	virtual void rewrite(size_t pos, const T &object);
 	virtual void clear();
 	
 	bool isInitialized() const noexcept;
@@ -102,6 +104,14 @@ SimpleArray<T>::SimpleArray(size_t init_size)
 	this->_simple_setInit(init_size);
 }
 template<class T>
+template<typename TSize_Type>
+SimpleArray<T>::SimpleArray(TSize_Type init_size)
+	: arr_size(0)
+{
+	size_t casted_init_size = static_cast<size_t>(init_size);
+	this->_simple_setInit(casted_init_size);
+}
+template<class T>
 SimpleArray<T>::SimpleArray(const SimpleArray &array)
 {
 	this->_simple_setCopy(array);
@@ -117,6 +127,7 @@ SimpleArray<T>::~SimpleArray()
 {
 	if(arr_capaity)
 	{
+		array_call_distructors(arr_size, inc_arr);
 		array_delete(inc_arr);
 	}
 }
@@ -157,32 +168,6 @@ SimpleArray<T>::_simple_setMove(SimpleArray<T> &array)
 }
 
 // public
-
-template<class T>
-void 
-SimpleArray<T>::setSize(size_t new_size)
-{
-	if(this->inc_arr)
-	{
-		if(new_size > this->arr_capaity)
-		{
-			this->arr_capaity = new_size;
-			
-			T* new_inc_arr = array_get_new<T>(new_size);
-			array_copying(this->arr_capaity, this->inc_arr,
-						  new_inc_arr);
-			array_delete(inc_arr);
-			
-			this->inc_arr = new_inc_arr;
-		}
-	}
-	else
-	{
-		this->arr_capaity = new_size;
-		inc_arr = array_get_new<T>(new_size);
-	}
-}
-
 
 template<class T>
 size_t
@@ -232,7 +217,7 @@ SimpleArray<T>::pushBack(T &&obj)
 {
 	if(arr_size < arr_capaity)
 	{
-		inc_arr[arr_size] = obj;
+		inc_arr[arr_size] = T(obj);
 		arr_size++;
 	}
 	else
@@ -318,9 +303,13 @@ template<class T>
 void
 SimpleArray<T>::rewrite(size_t pos, const T &object)
 {
-	if(pos < arr_size)
+	if(pos <= arr_size)
 	{
 		array_rewrite(this->inc_arr, pos, object);
+		if(pos == arr_size)
+		{
+			++arr_size;
+		}
 	}
 }
 
