@@ -15,9 +15,9 @@ namespace flame_ide
 template<class T>
 class SimpleArray
 {
-	void _simple_setInit(size_t init_size);
-	void _simple_setCopy(const SimpleArray<T> &array);
-	void _simple_setMove(SimpleArray<T> &array);
+	inline void _simple_setInit(size_t init_size);
+	inline void _simple_setCopy(const SimpleArray<T> &array);
+	inline void _simple_setMove(SimpleArray<T> &array);
 	
 protected:
 	static const unsigned long _OBJ_BLOCK_SIZE = OBJ_BLOCK_SIZE;
@@ -26,7 +26,7 @@ protected:
 	
 	T* inc_arr;
 	
-	T* _getSimpleArrayCopy() const;
+	inline T* _getSimpleArrayCopy() const;
 	
 public:
 	typedef SimpleArrayIterator<T>        iterator;
@@ -75,6 +75,11 @@ public:
 	
 	const SimpleArray<T>& operator =(const SimpleArray<T> &array);
 	const SimpleArray<T>& operator =(SimpleArray<T> &&array);
+	
+	template<typename TSize_Type> 
+	const T& operator [](TSize_Type index) const noexcept;
+	template<typename TSize_Type> 
+	      T& operator [](TSize_Type index)		 noexcept;
 	
 	virtual const T& operator [](size_t index) const noexcept;
 	virtual       T& operator [](size_t index)		 noexcept;
@@ -260,7 +265,7 @@ SimpleArray<T>::insert(size_t pos_index, T &&obj)
 	else
 	if(pos_index == this->arr_size)
 	{
-		
+		this->inc_arr[pos_index] = T(obj);
 		arr_size++;
 	}
 	else // >
@@ -271,25 +276,41 @@ SimpleArray<T>::insert(size_t pos_index, T &&obj)
 	return 1;
 }
 
-template<class T>
+template<typename T>
 int
 SimpleArray<T>::popBack(size_t count)
 {
+	if(count <= this->arr_size)
+	{
+		auto tmp_index = this->arr_size - 1;
+		for(size_t i = 0; i < count; ++i)
+		{
+			this->inc_arr[tmp_index - i].~T();
+		}
+		this->arr_size -= count;
+	}
+	else
+	{
+		return -1;
+	}
+	
 	return 1;
 }
 
-template<class T>
+template<typename T>
 int
 SimpleArray<T>::erase(size_t pos_index, size_t count)
 {
-	if(pos_index < this->arr_size)
+	if(this->arr_size - pos_index - count >= 0)
 	{
-		if(pos_index < this->arr_size)
+		for(size_t i = 0; i < count; ++i)
 		{
-			
+			this->inc_arr[pos_index+i].~T();
 		}
+		//нужно сдвинуть по необходимости
 		
-		arr_size--;
+		
+		this->arr_size -= count;
 	}
 	else
 	{
@@ -317,10 +338,10 @@ template<class T>
 void
 SimpleArray<T>::clear()
 {
-	if(arr_capaity)
+	if(arr_size)
 	{
-		arr_capaity = 0;
-		array_delete(this->inc_arr);
+		array_call_distructors(arr_size, inc_arr);
+		arr_size = 0;
  	}
 }
 
@@ -346,6 +367,22 @@ SimpleArray<T>::operator =(SimpleArray<T> &&array)
 	clear();
 	_simple_setMove(array);
 	return *this;
+}
+
+template<class T>
+template<typename TSize_Type> 
+const T&
+SimpleArray<T>::operator [](TSize_Type index) const noexcept
+{
+	return inc_arr[index];
+}
+
+template<class T>
+template<typename TSize_Type> 
+T&
+SimpleArray<T>::operator [](TSize_Type index) noexcept
+{
+	return inc_arr[index];
 }
 
 template<class T>

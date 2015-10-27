@@ -37,11 +37,11 @@ public:
 using namespace flame_ide::templates;
 
 template<class T>
-MemoryBlock<T>::Block()
+MemoryBlock<T>::MemoryBlock()
 	: SimpleArray<T>(true)
 {}
 template<class T>
-MemoryBlock<T>::Block(size_t real_size)
+MemoryBlock<T>::MemoryBlock(size_t real_size)
 	: SimpleArray<T>(real_size)
 {}
 
