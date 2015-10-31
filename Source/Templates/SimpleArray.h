@@ -58,6 +58,10 @@ public:
 	virtual int insert(size_t pos_index, T &&obj);
 	virtual int insert(size_t pos_index, const T &obj);
 	
+	template<typename Iterator>
+	int insert(const size_t pos_index,
+			   const Iterator &start, const Iterator &end);
+	
 	virtual int popBack(size_t count = 1);
 	
 	virtual int erase(size_t pos_index, size_t count = 1);
@@ -265,13 +269,46 @@ SimpleArray<T>::insert(size_t pos_index, T &&obj)
 	else
 	if(pos_index == this->arr_size)
 	{
-		this->inc_arr[pos_index] = T(obj);
+		this->inc_arr[pos_index] = obj;
 		arr_size++;
 	}
 	else // >
 	{
 		return -1;
 	}
+	
+	return 1;
+}
+template<class T>
+template<typename TIterator>
+int
+SimpleArray<T>::insert(const size_t pos_index,
+					   const TIterator &start, const TIterator &end)
+{
+	TIterator it;
+	size_t count_insertion = 0;
+	for(it = start; it != end; ++it)
+	{
+		++count_insertion;
+	}
+	
+	if(this->arr_size + count_insertion > this->arr_capaity)
+	{
+		return -1;
+	}
+	
+	// далее нужно понять, на сколько нужно сдвинуть элементы, чтобы вместить
+	// диапозон.
+	
+	// сдвигаем
+	if(pos_index < this->arr_size)
+	{
+		std::copy(this->inc_arr + pos_index,
+				  this->inc_arr + this->arr_size,
+				  this->inc_arr + (pos_index + count_insertion));
+	}
+	
+	std::copy(start, end, this->inc_arr+pos_index);
 	
 	return 1;
 }
@@ -301,15 +338,25 @@ template<typename T>
 int
 SimpleArray<T>::erase(size_t pos_index, size_t count)
 {
-	if(this->arr_size - pos_index - count >= 0)
+	auto tmp_size = pos_index + count;
+	if(this->arr_size >= tmp_size)
 	{
 		for(size_t i = 0; i < count; ++i)
 		{
 			this->inc_arr[pos_index+i].~T();
 		}
+		
 		//нужно сдвинуть по необходимости
-		
-		
+		if(this->arr_size > tmp_size)
+		{
+			// сдвиг
+			for(auto i = tmp_size; i < this->arr_size; ++i)
+			{
+				std::copy(this->inc_arr+tmp_size,
+						  this->inc_arr+this->arr_size,
+						  this->inc_arr+pos_index);
+			}
+		}
 		this->arr_size -= count;
 	}
 	else

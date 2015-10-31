@@ -162,26 +162,26 @@ template<class T>
 const T&
 SimpleArrayIterator<T>::operator *() const noexcept
 {
-	return this->inc_data;
+	return this->inc_data_iterator;
 }
 template<class T>
 T&
 SimpleArrayIterator<T>::operator *() noexcept
 {
-	return this->inc_data;
+	return this->inc_data_iterator;
 }
 
 template<class T>
 const T*
 SimpleArrayIterator<T>::operator ->() const noexcept
 {
-	return this->inc_data;
+	return this->inc_data_iterator;
 }
 template<class T>
 T*
 SimpleArrayIterator<T>::operator ->() noexcept
 {
-	return this->inc_data;
+	return this->inc_data_iterator;
 }
 
 template<class T>
@@ -189,7 +189,7 @@ bool flame_ide::templates::
 operator ==(const SimpleArrayIterator<T> &iter1,
 			const SimpleArrayIterator<T> &iter2)
 {
-	return (iter1.inc_data == iter2.inc_data);
+	return (iter1.inc_data_iterator == iter2.inc_data_iterator);
 }
 
 template<class T>
@@ -197,7 +197,7 @@ bool flame_ide::templates::
 operator !=(const SimpleArrayIterator<T> &iter1,
 			const SimpleArrayIterator<T> &iter2)
 {
-	return (iter1.inc_data != iter2.inc_data);
+	return (iter1.inc_data_iterator != iter2.inc_data_iterator);
 }
 
 // ============================================================================
@@ -224,26 +224,26 @@ template<class T>
 const T&
 SimpleArrayReverseIterator<T>::operator *() const noexcept
 {
-	return this->inc_data;
+	return this->inc_data_iterator;
 }
 template<class T>
 T&
 SimpleArrayReverseIterator<T>::operator *() noexcept
 {
-	return this->inc_data;
+	return this->inc_data_iterator;
 }
 
 template<class T>
 const T*
 SimpleArrayReverseIterator<T>::operator ->() const noexcept
 {
-	return this->inc_data;
+	return this->inc_data_iterator;
 }
 template<class T>
 T*
 SimpleArrayReverseIterator<T>::operator ->() noexcept
 {
-	return this->inc_data;
+	return this->inc_data_iterator;
 }
 
 
@@ -252,7 +252,7 @@ bool flame_ide::templates::
 operator ==(const SimpleArrayReverseIterator<T> &iter1,
 			const SimpleArrayReverseIterator<T> &iter2)
 {
-	return (iter1.inc_data == iter2.inc_data);
+	return (iter1.inc_data_iterator == iter2.inc_data_iterator);
 }
 
 template<class T>
@@ -260,7 +260,7 @@ bool flame_ide::templates::
 operator !=(const SimpleArrayReverseIterator<T> &iter1,
 			const SimpleArrayReverseIterator<T> &iter2)
 {
-	return (iter1.inc_data != iter2.inc_data);
+	return (iter1.inc_data_iterator != iter2.inc_data_iterator);
 }
 
 
@@ -272,7 +272,7 @@ bool flame_ide::templates::
 operator ==(const SimpleArrayIterator<T> &iter1,
 			const SimpleArrayReverseIterator<T> &iter2)
 {
-	return (iter1.inc_data == iter2.inc_data);
+	return (iter1.inc_data_iterator == iter2.inc_data_iterator);
 }
 
 template<class T>
@@ -280,7 +280,7 @@ bool flame_ide::templates::
 operator !=(const SimpleArrayIterator<T> &iter1,
 			const SimpleArrayReverseIterator<T> &iter2)
 {
-	return (iter1.inc_data != iter2.inc_data);
+	return (iter1.inc_data_iterator != iter2.inc_data_iterator);
 }
 
 template<class T>
@@ -288,7 +288,7 @@ bool flame_ide::templates::
 operator ==(const SimpleArrayReverseIterator<T> &iter1,
 			const SimpleArrayIterator<T> &iter2)
 {
-	return (iter1.inc_data == iter2.inc_data);
+	return (iter1.inc_data_iterator == iter2.inc_data_iterator);
 }
 
 template<class T>
@@ -296,7 +296,7 @@ bool flame_ide::templates::
 operator !=(const SimpleArrayReverseIterator<T> &iter1,
 			const SimpleArrayIterator<T> &iter2)
 {
-	return (iter1.inc_data != iter2.inc_data);
+	return (iter1.inc_data_iterator != iter2.inc_data_iterator);
 }
 
 
