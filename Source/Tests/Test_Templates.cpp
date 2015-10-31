@@ -20,7 +20,7 @@ Test::Templates::all()
 //			+ this->List()
 //			+ this->String()
 //			+ this->UniquePointer()
-			+ this->SharedPointer()
+//			+ this->SharedPointer()
 			;
 	
 	std::cout << '\n';
@@ -31,7 +31,7 @@ Test::Templates::SimpleArray()
 {
 	std::cout << "Test::Templates::SimpleArray()\n";
 	
-	templates::SimpleArray<long> simple_array1(4), simple_array2;
+	templates::SimpleArray<long> simple_array1(10), simple_array2;
 	
 	simple_array1.pushBack(10);
 	simple_array1.pushBack(5);
@@ -57,6 +57,8 @@ Test::Templates::SimpleArray()
 		<< simple_array1.getMaxSize() << '\n'
 		      << "simple_array2.getSize() = "
 		<< simple_array2.getSize() << '\n';
+	
+	long array[4] {-64, -82, -55, -39};
 	
 	std::cout << '\n';
 	
