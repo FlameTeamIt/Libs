@@ -39,7 +39,8 @@ Test::Templates::SimpleArray()
 	
 	std::cout
 		<< "\nCode:\n"
-		<< "\
+		<< 
+"\
 	simple_array1.pushBack(10);\n\
 	simple_array1.pushBack(5);\
 "
@@ -53,9 +54,11 @@ Test::Templates::SimpleArray()
 	
 	std::cout
 		<< "\nCode:\n"
-		<< "\
+		<< 
+"\
 	simple_array1.rewrite(2, 200);\n\
-	simple_array1.rewrite(3, 555);"
+	simple_array1.rewrite(3, 555);\
+"
 		<< "\nResult:\n"
 			<< "	simple_array1.getSize() = " << simple_array1.getSize() << '\n'
 			<< "	simple_array1[2] = "		<< simple_array1[2] << '\n'
@@ -65,7 +68,8 @@ Test::Templates::SimpleArray()
 	simple_array1 = templates::SimpleArray<long>(8);
 	std::cout
 		<< "\nCode:\n"
-		<< "\
+		<< 
+"\
 	simple_array2 = simple_array1;\n\
 	simple_array1 = templates::SimpleArray<long>(8);\
 "
@@ -80,22 +84,25 @@ Test::Templates::SimpleArray()
 	auto returned_insert2 = simple_array2.insert(0, &array[0], &array[4]);
 	std::cout
 		<< "\nCode:\n"
-		<< "\
-	auto returned_insert2 = simple_array2.insert(0, &array[0], &array[4]);"
+		<< 
+"\
+	auto returned_insert2 = simple_array2.insert(0, &array[0], &array[4]);\
+"
 		<< "\nResult:\n"
 			<< "	simple_array2.getSize() = "		<< simple_array2.getSize() << '\n'
 			<< "	returned_insert2 = "			<< returned_insert2 << '\n' 
 			<< "All values:\n";
 	std::for_each(&simple_array2[0],
 			&simple_array2[simple_array2.getSize()],
-			[](long out) {std::cout << '\t' <<  out << '\n';});
+			[](long out) {std::cout << '\t' << out << '\n';});
 	std::cout << '\n';
 	
 	// popBack
 	simple_array2.popBack();
 	std::cout
 		<< "\nCode:\n"
-		<< "\
+		<< 
+"\
 	simple_array2.popBack();\
 "
 		<< "\nResult:\n"
@@ -104,25 +111,46 @@ Test::Templates::SimpleArray()
 			<< "All values:\n";
 	std::for_each(&simple_array2[0],
 			&simple_array2[simple_array2.getSize()],
-			[](long out) {std::cout << '\t' <<  out << '\n';});
+			[](long out) {std::cout << '\t' << out << '\n';});
 	std::cout << '\n';
 	
 	// popBack
 	simple_array2.popBack(3);
 	std::cout
 		<< "\nCode:\n"
-		<< "\
+		<< 
+"\
 	simple_array2.popBack(3);\
 "
 		<< "\nResult:\n"
 			<< "	simple_array2.getSize() = "	<< simple_array2.getSize() << '\n'
 			<< "	returned_insert2 = "		<< returned_insert2 << '\n'
 			<< "All values:\n";
-	std::for_each(&simple_array2[0],
-			&simple_array2[simple_array2.getSize()],
-			[](long out) {std::cout << '\t' <<  out << '\n';});
+	for(templates::SimpleArray<long>::iterator it = simple_array2.begin();
+			it!=simple_array2.end();
+			++it)
+	{
+			std::cout << '\t' << *it << '\n';
+	}
 	std::cout << '\n';
 	
+	// insert
+	simple_array2.insert(0, 260);
+	std::cout
+		<< "\nCode:\n"
+		<< 
+"\
+	simple_array2.insert(0, 260);\
+"
+		<< "\nResult:\n"
+			<< "	simple_array2.getSize() = "	<< simple_array2.getSize() << '\n'
+			<< "	returned_insert2 = "		<< returned_insert2 << '\n'
+			<< "All values:\n";
+	std::for_each(
+				simple_array2.begin(), simple_array2.end(),
+			[](long out) {std::cout << '\t' << out << '\n';}
+	);
+	std::cout << '\n';
 	
 	std::cout << '\n';
 	

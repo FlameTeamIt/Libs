@@ -19,7 +19,7 @@ public:
 	SimpleArrayIterator(SimpleArrayIterator &&iterator);
 	SimpleArrayIterator(const SimpleArrayIterator &iterator);
 	
-	~SimpleArrayIterator();
+	~SimpleArrayIterator() = default;
 	
 	const T& operator *() const noexcept;
 	      T& operator *()       noexcept;
@@ -59,19 +59,19 @@ class SimpleArrayReverseIterator : public BasicReverseIterator<T, T>
 	SimpleArrayReverseIterator(SimpleArrayReverseIterator<T> &&iterator);
 	SimpleArrayReverseIterator(const SimpleArrayReverseIterator<T> &iterator);
 	
-	~SimpleArrayReverseIterator();
+	~SimpleArrayReverseIterator() = default;
 	
-	const T& operator *() const noexcept;
-	      T& operator *()       noexcept;
+	const inline T& operator *() const noexcept;
+	      inline T& operator *()       noexcept;
 		  
-	const T* operator ->() const noexcept;
-	      T* operator ->()       noexcept;
+	const inline T* operator ->() const noexcept;
+	      inline T* operator ->()       noexcept;
 	
-	const SimpleArrayReverseIterator<T>& operator =(
-			SimpleArrayReverseIterator<T> &&iterator);
+	const SimpleArrayReverseIterator<T>& operator =
+		(SimpleArrayReverseIterator<T> &&iterator);
   
-	const SimpleArrayReverseIterator<T>& operator =(
-			const SimpleArrayReverseIterator<T> &iterator);
+	const SimpleArrayReverseIterator<T>& operator =
+		(const SimpleArrayReverseIterator<T> &iterator);
 	
 	friend class SimpleArray<T>;
 	
@@ -162,13 +162,13 @@ template<class T>
 const T&
 SimpleArrayIterator<T>::operator *() const noexcept
 {
-	return this->inc_data_iterator;
+	return *(this->inc_data_iterator);
 }
 template<class T>
 T&
 SimpleArrayIterator<T>::operator *() noexcept
 {
-	return this->inc_data_iterator;
+	return *(this->inc_data_iterator);
 }
 
 template<class T>
@@ -197,7 +197,7 @@ bool flame_ide::templates::
 operator !=(const SimpleArrayIterator<T> &iter1,
 			const SimpleArrayIterator<T> &iter2)
 {
-	return (iter1.inc_data_iterator != iter2.inc_data_iterator);
+	return (iter1.operator ->() != iter2.operator ->());
 }
 
 // ============================================================================
@@ -237,13 +237,13 @@ template<class T>
 const T*
 SimpleArrayReverseIterator<T>::operator ->() const noexcept
 {
-	return this->inc_data_iterator;
+	return *(this->inc_data_iterator);
 }
 template<class T>
 T*
 SimpleArrayReverseIterator<T>::operator ->() noexcept
 {
-	return this->inc_data_iterator;
+	return *(this->inc_data_iterator);
 }
 
 
