@@ -152,6 +152,24 @@ Test::Templates::SimpleArray()
 	);
 	std::cout << '\n';
 	
+	// erade
+	simple_array2.erase(4);
+	std::cout
+			<< "\nCode:\n"
+			<< 
+"\
+	simple_array2.erase(4);\
+"
+	<< "\nResult:\n"
+	<< "	simple_array2.getSize() = "	<< simple_array2.getSize() << '\n'
+																   << "	returned_insert2 = "		<< returned_insert2 << '\n'
+																   << "All values:\n";
+	std::for_each(
+				simple_array2.begin(), simple_array2.end(),
+				[](long out) {std::cout << '\t' << out << '\n';}
+	);
+	std::cout << '\n';
+	
 	std::cout << '\n';
 	
 	return 1;

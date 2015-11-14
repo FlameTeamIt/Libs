@@ -28,7 +28,7 @@ protected:
 	inline T* _getSimpleArrayCopy() const; // tested
 	
 public:
-	typedef SimpleArrayIterator<T>        iterator;
+	typedef SimpleArrayIterator<T>        iterator; // tested
 	typedef SimpleArrayReverseIterator<T> reverse_iterator;
 	
 	typedef const SimpleArrayIterator<T>        const_iterator;
@@ -54,7 +54,7 @@ public:
 	int pushBack(const T &obj); // tested
 	int pushBack(T &&obj); // tested
 	
-	int insert(size_t pos_index, T &&obj);
+	int insert(size_t pos_index, T &&obj); // tested
 	int insert(size_t pos_index, const T &obj);
 	
 	template<typename TIterator>
@@ -63,7 +63,7 @@ public:
 	
 	int popBack(size_t count = 1); // tested
 	
-	int erase(size_t pos_index, size_t count = 1);
+	int erase(size_t pos_index, size_t count = 1); // tested
 	
 	void rewrite(size_t pos, const T &object); // tested
 	void clear(); // tested
