@@ -20,7 +20,6 @@ class SimpleArray
 	inline void _simple_setMove(SimpleArray<T> &array);
 	
 protected:
-	static const unsigned long _OBJ_BLOCK_SIZE = OBJ_BLOCK_SIZE;
 	size_t arr_capaity;
 	size_t arr_size;
 	
@@ -36,35 +35,35 @@ public:
 	typedef const SimpleArrayReverseIterator<T> const_reverse_iterator;
 	
 	SimpleArray();
-	SimpleArray(bool set_default_size);
 	SimpleArray(size_t init_size);
 	
-	template<typename TSize_Type> SimpleArray(TSize_Type init_size);
+	template<typename TSize_Type>
+	SimpleArray(TSize_Type init_size);
 	
 	SimpleArray(const SimpleArray<T> &array);
 	SimpleArray(SimpleArray<T> &&array);
 	
-	virtual ~SimpleArray();
+	~SimpleArray();
 	
-	virtual size_t getSize() const noexcept;
-	virtual size_t getMaxSize() const noexcept;
+	size_t getSize() const noexcept;
+	size_t getCapacity() const noexcept;
 	
-	virtual const T& at(size_t index) const;
-	virtual       T& at(size_t index);
+	const T& at(size_t index) const;
+	      T& at(size_t index);
 	
-	virtual int pushBack(const T &obj);
-	virtual int pushBack(T &&obj);
+	int pushBack(const T &obj); // tested
+	int pushBack(T &&obj); // tested
 	
-	virtual int insert(size_t pos_index, T &&obj);
-	virtual int insert(size_t pos_index, const T &obj);
+	int insert(size_t pos_index, T &&obj);
+	int insert(size_t pos_index, const T &obj);
 	
-	template<typename Iterator>
+	template<typename TIterator>
 	int insert(const size_t pos_index,
-			   const Iterator &start, const Iterator &end);
+			   const TIterator &start, const TIterator &end);  // tested
 	
-	virtual int popBack(size_t count = 1);
+	int popBack(size_t count = 1);
 	
-	virtual int erase(size_t pos_index, size_t count = 1);
+	int erase(size_t pos_index, size_t count = 1);
 	
 	iterator begin();
 	iterator end();
@@ -72,10 +71,10 @@ public:
 	reverse_iterator rbegin();
 	reverse_iterator rend();
 	
-	virtual void rewrite(size_t pos, const T &object);
-	virtual void clear();
+	void rewrite(size_t pos, const T &object);
+	void clear();
 	
-	bool isInitialized() const noexcept;
+	bool isEmpty() const noexcept;
 	
 	const SimpleArray<T>& operator =(const SimpleArray<T> &array);
 	const SimpleArray<T>& operator =(SimpleArray<T> &&array);
@@ -85,8 +84,8 @@ public:
 	template<typename TSize_Type> 
 	      T& operator [](TSize_Type index)		 noexcept;
 	
-	virtual const T& operator [](size_t index) const noexcept;
-	virtual       T& operator [](size_t index)		 noexcept;
+	const T& operator [](size_t index) const noexcept;
+	      T& operator [](size_t index)		 noexcept;
 	
 };
 
@@ -102,10 +101,6 @@ SimpleArray<T>::SimpleArray()
 	arr_size = 0;
 	arr_capaity = 0;
 }
-template<class T>
-SimpleArray<T>::SimpleArray(bool set_default_size)
-    : SimpleArray()
-{}
 template<class T>
 SimpleArray<T>::SimpleArray(size_t init_size)
     : arr_size(0)
@@ -187,7 +182,7 @@ SimpleArray<T>::getSize() const noexcept
 
 template<class T>
 size_t
-SimpleArray<T>::getMaxSize() const noexcept
+SimpleArray<T>::getCapacity() const noexcept
 {
 	return arr_capaity;
 }
@@ -283,7 +278,7 @@ template<class T>
 template<typename TIterator>
 int
 SimpleArray<T>::insert(const size_t pos_index,
-					   const TIterator &start, const TIterator &end)
+					   const TIterator &start, const TIterator &end) // tested
 {
 	TIterator it;
 	size_t count_insertion = 0;
@@ -292,7 +287,8 @@ SimpleArray<T>::insert(const size_t pos_index,
 		++count_insertion;
 	}
 	
-	if(this->arr_size + count_insertion > this->arr_capaity)
+	if(this->arr_size + count_insertion > this->arr_capaity
+		|| this->arr_size < pos_index)
 	{
 		return -1;
 	}
@@ -309,21 +305,18 @@ SimpleArray<T>::insert(const size_t pos_index,
 	}
 	
 	std::copy(start, end, this->inc_arr+pos_index);
+	this->arr_size = this->arr_size + count_insertion;
 	
 	return 1;
 }
 
 template<typename T>
 int
-SimpleArray<T>::popBack(size_t count)
+SimpleArray<T>::popBack(size_t count) //tested
 {
 	if(count <= this->arr_size)
 	{
-		auto tmp_index = this->arr_size - 1;
-		for(size_t i = 0; i < count; ++i)
-		{
-			this->inc_arr[tmp_index - i].~T();
-		}
+		array_call_distructors(count, this->inc_arr + (arr_size-1 - count));
 		this->arr_size -= count;
 	}
 	else
@@ -369,7 +362,7 @@ SimpleArray<T>::erase(size_t pos_index, size_t count)
 
 template<class T>
 void
-SimpleArray<T>::rewrite(size_t pos, const T &object)
+SimpleArray<T>::rewrite(size_t pos, const T &object) // tested
 {
 	if(pos <= arr_size)
 	{
@@ -383,7 +376,7 @@ SimpleArray<T>::rewrite(size_t pos, const T &object)
 
 template<class T>
 void
-SimpleArray<T>::clear()
+SimpleArray<T>::clear() // tested
 {
 	if(arr_size)
 	{
@@ -394,14 +387,14 @@ SimpleArray<T>::clear()
 
 template<class T>
 bool
-SimpleArray<T>::isInitialized() const noexcept
+SimpleArray<T>::isEmpty() const noexcept
 {
-	return (arr_capaity != 0);
+	return (arr_size == 0);
 }
 
 template<class T>
 const SimpleArray<T>&
-SimpleArray<T>::operator =(const SimpleArray<T> &array)
+SimpleArray<T>::operator =(const SimpleArray<T> &array) // tested
 {
 	clear();
 	_simple_setCopy(array);
@@ -409,7 +402,7 @@ SimpleArray<T>::operator =(const SimpleArray<T> &array)
 }
 template<class T>
 const SimpleArray<T>&
-SimpleArray<T>::operator =(SimpleArray<T> &&array)
+SimpleArray<T>::operator =(SimpleArray<T> &&array) // tested
 {
 	clear();
 	_simple_setMove(array);
