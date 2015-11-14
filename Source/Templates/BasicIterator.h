@@ -130,7 +130,7 @@ BasicIterator<T, TData>::operator --(int)
 
 template<class T, class TData>
 BasicReverseIterator<T, TData>::BasicReverseIterator()
-	: inc_data_iterator(nullptr)
+	: InterfaceIterator<T, TData>()
 {}
 
 template<class T, class TData>
