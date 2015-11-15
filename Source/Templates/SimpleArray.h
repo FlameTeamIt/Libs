@@ -73,9 +73,9 @@ public:
 	const SimpleArray<T>& operator =(const SimpleArray<T> &array); // tested
 	const SimpleArray<T>& operator =(SimpleArray<T> &&array); // tested
 	
-	template<typename TSize_Type> 
+	template<typename TSize_Type>
 	const T& operator [](TSize_Type index) const noexcept; // tested
-	template<typename TSize_Type> 
+	template<typename TSize_Type>
 	      T& operator [](TSize_Type index)		 noexcept; // tested
 	
 	const T& operator [](size_t index) const noexcept; // tested

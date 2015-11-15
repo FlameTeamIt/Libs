@@ -45,9 +45,12 @@ Test::Templates::SimpleArray()
 	simple_array1.pushBack(5);\
 "
 		<< "\nResult:\n"
-			<< "	simple_array1.getSize() = " << simple_array1.getSize() << '\n'
-			<< "	simple_array1[0] = " << simple_array1[0] << '\n'
-			<< "	simple_array1[1] = " << simple_array1[1] << "\n\n";
+			<< "	simple_array1.getSize() = "
+				<< simple_array1.getSize() << '\n'
+			<< "	simple_array1[0] = "
+				<< simple_array1[0] << '\n'
+			<< "	simple_array1[1] = "
+				<< simple_array1[1] << "\n\n";
 	
 	simple_array1.rewrite(2, 200);
 	simple_array1.rewrite(3, 555);
@@ -60,9 +63,12 @@ Test::Templates::SimpleArray()
 	simple_array1.rewrite(3, 555);\
 "
 		<< "\nResult:\n"
-			<< "	simple_array1.getSize() = " << simple_array1.getSize() << '\n'
-			<< "	simple_array1[2] = "		<< simple_array1[2] << '\n'
-			<< "	simple_array1[3] = "		<< simple_array1[3] << "\n";
+			<< "	simple_array1.getSize() = "
+				<< simple_array1.getSize() << '\n'
+			<< "	simple_array1[2] = "
+				<< simple_array1[2] << '\n'
+			<< "	simple_array1[3] = "
+				<< simple_array1[3] << "\n";
 
 	simple_array2 = simple_array1;
 	simple_array1 = templates::SimpleArray<long>(8);
@@ -74,9 +80,12 @@ Test::Templates::SimpleArray()
 	simple_array1 = templates::SimpleArray<long>(8);\
 "
 		<< "\nResult:\n"
-			<< "	simple_array1.getSize() = "		<< simple_array1.getSize() << '\n'
-			<< "	simple_array1.getCapacity() = "	<< simple_array1.getCapacity() << '\n'
-			<< "	simple_array2.getSize() = "		<< simple_array2.getSize() << '\n';
+			<< "	simple_array1.getSize() = "
+				<< simple_array1.getSize() << '\n'
+			<< "	simple_array1.getCapacity() = "
+				<< simple_array1.getCapacity() << '\n'
+			<< "	simple_array2.getSize() = "
+				<< simple_array2.getSize() << '\n';
 	
 	long array[4] {-64, -82, -55, -39};
 	
@@ -89,8 +98,10 @@ Test::Templates::SimpleArray()
 	auto returned_insert2 = simple_array2.insert(0, &array[0], &array[4]);\
 "
 		<< "\nResult:\n"
-			<< "	simple_array2.getSize() = "		<< simple_array2.getSize() << '\n'
-			<< "	returned_insert2 = "			<< returned_insert2 << '\n' 
+			<< "	simple_array2.getSize() = "
+				<< simple_array2.getSize() << '\n'
+			<< "	returned_insert2 = "
+				<< returned_insert2 << '\n' 
 			<< "All values:\n";
 	std::for_each(&simple_array2[0],
 			&simple_array2[simple_array2.getSize()],
