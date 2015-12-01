@@ -43,7 +43,7 @@ public:
 	SimpleArray(const SimpleArray<T> &array); // tested
 	SimpleArray(SimpleArray<T> &&array); // tested
 	
-	~SimpleArray(); // tested
+	virtual ~SimpleArray(); // tested
 	
 	size_t getSize() const noexcept; // tested
 	size_t getCapacity() const noexcept; // tested
@@ -54,12 +54,25 @@ public:
 	int pushBack(const T &obj); // tested
 	int pushBack(T &&obj); // tested
 	
+	// insertion after
 	int insert(size_t pos_index, T &&obj); // tested
 	int insert(size_t pos_index, const T &obj);
+	
+	int insert(iterator it, T &&obj);
+	int insert(iterator it, const T &obj);
+	
+	int insert(reverse_iterator it, T &&obj);
+	int insert(reverse_iterator it, const T &obj);
 	
 	template<typename TIterator>
 	int insert(const size_t pos_index,
 			   const TIterator &start, const TIterator &end);  // tested
+	template<typename TIterator>
+	int insert(const iterator pos_index,
+			   const TIterator &start, const TIterator &end);
+	template<typename TIterator>
+	int insert(const reverse_iterator pos_index,
+			   const TIterator &start, const TIterator &end);
 	
 	int popBack(size_t count = 1); // tested
 	
@@ -298,6 +311,37 @@ SimpleArray<T>::insert(size_t pos_index, T &&obj)
 	
 	return 1;
 }
+
+template<class T>
+int
+SimpleArray<T>::insert(iterator it, const T &obj)
+{
+	size_t index = this->inc_arr - it.inc_data_iterator;
+	return this->insert(index, obj);
+}
+template<class T>
+int
+SimpleArray<T>::insert(iterator it, T &&obj)
+{
+	size_t index = this->inc_arr - it.inc_data_iterator;
+	return this->insert(index, obj);
+}
+
+template<class T>
+int
+SimpleArray<T>::insert(reverse_iterator it, const T &obj)
+{
+	size_t index = this->inc_arr - it.inc_data_iterator;
+	return this->insert(index, obj);
+}
+template<class T>
+int
+SimpleArray<T>::insert(reverse_iterator it, T &&obj)
+{
+	size_t index = this->inc_arr - it.inc_data_iterator;
+	return this->insert(index, obj);
+}
+
 template<class T>
 template<typename TIterator>
 int
@@ -331,6 +375,26 @@ SimpleArray<T>::insert(const size_t pos_index,
 	std::copy(start, end, this->inc_arr+pos_index);
 	this->arr_size = this->arr_size + count_insertion;
 	
+	return 1;
+}
+template<class T>
+template<typename TIterator>
+int
+SimpleArray<T>::insert(const iterator it,
+					   const TIterator &start, const TIterator &end) // tested
+{
+	size_t index = this->inc_arr - it.inc_data_iterator;
+	return this->insert(index, start, end);
+	return 1;
+}
+template<class T>
+template<typename TIterator>
+int
+SimpleArray<T>::insert(const reverse_iterator it,
+					   const TIterator &start, const TIterator &end) // tested
+{
+	size_t index = this->inc_arr - it.inc_data_iterator;
+	return this->insert(index, start, end);
 	return 1;
 }
 
