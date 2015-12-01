@@ -16,8 +16,9 @@ void
 Test::Templates::all()
 {
 	this->count_success_tests = 0
-			+ this->SimpleArray()
+//			+ this->SimpleArray()
 //			+ this->Array()
+			+ this->Array_MemoryBlock()
 //			+ this->List()
 //			+ this->String()
 //			+ this->UniquePointer()
@@ -137,11 +138,11 @@ Test::Templates::SimpleArray()
 			<< "	simple_array2.getSize() = "	<< simple_array2.getSize() << '\n'
 			<< "	returned_insert2 = "		<< returned_insert2 << '\n'
 			<< "All values:\n";
-	for(templates::SimpleArray<long>::iterator it = simple_array2.begin();
-			it!=simple_array2.end();
+	for(auto it = simple_array2.begin();
+			it != simple_array2.end();
 			++it)
 	{
-			std::cout << '\t' << *it << '\n';
+		std::cout << '\t' << *it << '\n';
 	}
 	std::cout << '\n';
 	
@@ -157,9 +158,13 @@ Test::Templates::SimpleArray()
 			<< "	simple_array2.getSize() = "	<< simple_array2.getSize() << '\n'
 			<< "	returned_insert2 = "		<< returned_insert2 << '\n'
 			<< "All values:\n";
-	std::for_each(
-				simple_array2.begin(), simple_array2.end(),
-			[](long out) {std::cout << '\t' << out << '\n';}
+	std::for_each
+	(
+		simple_array2.begin(), simple_array2.end(),
+		[](long out)
+		{
+			std::cout << '\t' << out << '\n';
+		}
 	);
 	std::cout << '\n';
 	
@@ -175,13 +180,26 @@ Test::Templates::SimpleArray()
 	<< "	simple_array2.getSize() = "	<< simple_array2.getSize() << '\n'
 																   << "	returned_insert2 = "		<< returned_insert2 << '\n'
 																   << "All values:\n";
-	std::for_each(
-				simple_array2.begin(), simple_array2.end(),
-				[](long out) {std::cout << '\t' << out << '\n';}
+	std::for_each
+	(
+		simple_array2.begin(), simple_array2.end(),
+		[](long out) {std::cout << '\t' << out << '\n';}
 	);
 	std::cout << '\n';
 	
 	std::cout << '\n';
+	
+	return 1;
+}
+
+unsigned int
+Test::Templates::Array_MemoryBlock()
+{
+	std::cout << "Test::Templates::Array_MemoryBlock()\n";
+	
+	MemoryBlock<long> block;
+	
+	std::cout << block.getNext().isEnd();
 	
 	return 1;
 }
@@ -192,7 +210,7 @@ Test::Templates::Array()
 	using namespace templates;
 	
 	std::cout << "Test::Templates::Array()\n";
-	
+		
 //	templates::Array<long> array;
 	
 //	array.pushBack(10);

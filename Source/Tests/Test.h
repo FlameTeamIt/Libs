@@ -72,7 +72,10 @@ public:
 		void all();
 		
 		unsigned int SimpleArray();
+
+		unsigned int Array_MemoryBlock();
 		unsigned int Array();
+		
 		unsigned int List();
 		unsigned int String();
 		unsigned int UniquePointer();
