@@ -21,13 +21,7 @@ public:
 	UniquePointer(const T &object);
 	UniquePointer(UniquePointer &&pointer);
 	
-	~UniquePointer();
-	
-//	inline T& operator *();
-//	inline T* operator ->();
-	
-//	inline const T& operator *() const;
-//	inline const T* operator ->() const;
+	virtual ~UniquePointer();
 	
 	inline const UniquePointer& operator =(UniquePointer<T> &arg);
 	inline const UniquePointer& operator =(UniquePointer<T> &&arg);
@@ -95,32 +89,6 @@ UniquePointer<T>::set(UniquePointer &pointer)
 }
 
 // operators
-
-//template<class T>
-//T& 
-//UniquePointer<T>::operator *()
-//{
-//	return this->get_reference();
-//}
-//template<class T>
-//T* 
-//UniquePointer<T>::operator ->()
-//{
-//	return this->get_pointer();
-//}
-
-//template<class T>
-//const T& 
-//UniquePointer<T>::operator *() const
-//{
-//	return this->get_reference();
-//}
-//template<class T>
-//const T* 
-//UniquePointer<T>::operator ->() const
-//{
-//	return this->get_pointer();
-//}
 
 template<class T>
 const UniquePointer<T>& 

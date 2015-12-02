@@ -21,15 +21,9 @@ public:
 	SharedPointer(SharedPointer<T> &&pointer);
 	explicit SharedPointer(const SharedPointer<T> &pointer);
 	
-	~SharedPointer();
+	virtual ~SharedPointer();
 	
-	inline void clear();
-	
-//	inline T& operator *();
-//	inline T* operator ->();
-	
-//	inline const T& operator *() const;
-//	inline const T* operator ->() const;
+	virtual inline void clear();
 	
 	inline const SharedPointer& operator =(const SharedPointer<T> &arg);
 	inline const SharedPointer& operator =(SharedPointer<T> &&arg);
@@ -62,14 +56,12 @@ template<class T>
 SharedPointer<T>::SharedPointer()
 	: BasicPointer<T>()
 	, is_shared(false)
-{
-}
+{}
 template<class T>
 SharedPointer<T>::SharedPointer(const T &object)
 	: BasicPointer<T>(object)
 	, is_shared(false)
-{
-}
+{}
 template<class T>
 SharedPointer<T>::SharedPointer(SharedPointer<T> &&pointer)
 	: is_shared(false)
@@ -116,34 +108,6 @@ SharedPointer<T>::clear()
 	}
 	this->inc_pointer = nullptr;
 }
-
-// operators
-
-//template<class T>
-//T&
-//SharedPointer<T>::operator *()
-//{
-//	return this->get_reference();
-//}
-//template<class T>
-//T*
-//SharedPointer<T>::operator ->()
-//{
-//	return this->get_pointer();
-//}
-
-//template<class T>
-//const T&
-//SharedPointer<T>::operator *() const
-//{
-//	return this->get_reference();
-//}
-//template<class T>
-//const T*
-//SharedPointer<T>::operator ->() const
-//{
-//	return this->get_pointer();
-//}
 
 template<class T>
 const SharedPointer<T>&
