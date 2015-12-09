@@ -2,17 +2,11 @@
 #define POINTERS_FUNCTIONS
 
 #include <Templates/Pointers.h>
+#include <Templates/For_All.h>
 
 namespace flame_ide
 {namespace templates
 {
-
-template<class T>
-T&&
-move(T &reference) noexcept
-{
-	return static_cast<T &&>(reference);
-}
 
 template<class T, class U>
 BasicPointer<T>

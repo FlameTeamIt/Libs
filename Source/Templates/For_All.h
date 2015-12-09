@@ -1,6 +1,8 @@
 #ifndef TEMPLATES_FOR_ALL
 #define TEMPLATES_FOR_ALL
 
+typedef unsigned long size_t;
+
 namespace flame_ide
 {namespace templates
 {
@@ -18,12 +20,18 @@ struct Types<Tt, Tt>
 };
 
 template<typename Tt>
-constexpr bool is_preemptive_type();
+inline constexpr bool is_preemptive_type();
+
+template<typename Tt1, typename Tt2>
+inline constexpr bool is_same_types();
+
+template<class T>
+T&& move(T &reference) noexcept;
 
 }}
 
-template<typename Tt>
-constexpr bool
+template<typename Tt> inline constexpr
+bool
 flame_ide::templates::is_preemptive_type()
 {
 	typedef unsigned char u_char;
@@ -47,11 +55,25 @@ flame_ide::templates::is_preemptive_type()
 
 	typedef Types<Tt, double> Type_double;
 	
-	return (Type_char::isSame || Type_u_char::isSame
-		|| Type_short::isSame || Type_u_short::isSame
-		|| Type_int::isSame   || Type_u_int::isSame
-		|| Type_long::isSame  || Type_u_long::isSame
-		|| Type_float::isSame || Type_double::isSame);
+	return (Type_char::isSame  || Type_u_char::isSame
+	     || Type_short::isSame || Type_u_short::isSame
+	     || Type_int::isSame   || Type_u_int::isSame
+	     || Type_long::isSame  || Type_u_long::isSame
+	     || Type_float::isSame || Type_double::isSame);
+}
+
+template<typename Tt1, typename Tt2> inline constexpr
+bool
+flame_ide::templates::is_same_types()
+{
+	return (Types<Tt1, Tt2>::isSame);
+}
+
+template<class T>
+T&& flame_ide::templates::
+move(T &reference) noexcept
+{
+	return static_cast<T &&>(reference);
 }
 
 #endif // FOR_ALL
