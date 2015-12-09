@@ -19,6 +19,7 @@ public:
 	SharedPointer();
 	SharedPointer(const T &object);
 	SharedPointer(SharedPointer<T> &&pointer);
+	SharedPointer(T* obj);
 	explicit SharedPointer(const SharedPointer<T> &pointer);
 	
 	virtual ~SharedPointer();
@@ -75,6 +76,13 @@ SharedPointer<T>::SharedPointer(const SharedPointer<T> &pointer)
 	this->inc_pointer = pointer.inc_pointer;
 	this->is_shared = true;
 }
+template<class T>
+SharedPointer<T>::SharedPointer(T *obj)
+	: BasicPointer<T>()
+	, is_shared(true)
+{
+	this->inc_pointer = obj;
+}
 
 template<class T>
 SharedPointer<T>::~SharedPointer()
@@ -130,6 +138,10 @@ SharedPointer<T>::operator =(SharedPointer<T> &&pointer)
 	{
 		clear();
 		this->inc_pointer = pointer.inc_pointer;
+		if(pointer.is_shared)
+		{
+			this->is_shared = true;
+		}
 		pointer.inc_pointer = nullptr;
 	}
 	
