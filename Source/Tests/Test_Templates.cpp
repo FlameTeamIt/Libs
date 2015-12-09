@@ -199,8 +199,6 @@ Test::Templates::Array_MemoryBlock()
 	
 	MemoryBlock<long> block;
 	
-	std::cout << block.getNext().isEnd();
-	
 	return 1;
 }
 

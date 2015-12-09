@@ -3,6 +3,8 @@
 #include <About/About.h>
 #include <Tests/Test.h>
 
+#include <Templates/For_All.h>
+
 int main(int argc, char** argv)
 {
 	
@@ -27,6 +29,22 @@ int main(int argc, char** argv)
 //			std::cout << "input = " << input << "; i = " << i << '\n';
 //			++i;
 //		});
+	
+	(flame_ide::templates::is_same_types<int, int>()) 
+		? std::cout << "true\n"
+		: std::cout << "false\n";
+	
+	(flame_ide::templates::is_same_types<int, long>()) 
+		? std::cout << "true\n"
+		: std::cout << "false\n";
+	
+	(flame_ide::templates::is_preemptive_type<long>()) 
+		? std::cout << "true\n"
+		: std::cout << "false\n";
+	
+	(flame_ide::templates::is_preemptive_type<std::ostream>()) 
+		? std::cout << "true\n"
+		: std::cout << "false\n";
 	
 	return 0;
 }
