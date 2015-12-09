@@ -66,13 +66,13 @@ public:
 	
 	template<typename TIterator>
 	int insert(const size_t pos_index,
-			   const TIterator &start, const TIterator &end);  // tested
+	           const TIterator &start, const TIterator &end);  // tested
 	template<typename TIterator>
 	int insert(const iterator pos_index,
-			   const TIterator &start, const TIterator &end);
+	           const TIterator &start, const TIterator &end);
 	template<typename TIterator>
 	int insert(const reverse_iterator pos_index,
-			   const TIterator &start, const TIterator &end);
+	           const TIterator &start, const TIterator &end);
 	
 	int popBack(size_t count = 1); // tested
 	
@@ -89,10 +89,10 @@ public:
 	template<typename TSize_Type>
 	const T& operator [](TSize_Type index) const noexcept; // tested
 	template<typename TSize_Type>
-	      T& operator [](TSize_Type index)		 noexcept; // tested
+	      T& operator [](TSize_Type index)       noexcept; // tested
 	
 	const T& operator [](size_t index) const noexcept; // tested
-	      T& operator [](size_t index)		 noexcept; // tested
+	      T& operator [](size_t index)       noexcept; // tested
 	
 	iterator begin(); //tested
 	iterator end(); // tested
@@ -346,7 +346,7 @@ template<class T>
 template<typename TIterator>
 int
 SimpleArray<T>::insert(const size_t pos_index,
-					   const TIterator &start, const TIterator &end) // tested
+                       const TIterator &start, const TIterator &end) // tested
 {
 	TIterator it;
 	size_t count_insertion = 0;
@@ -381,7 +381,7 @@ template<class T>
 template<typename TIterator>
 int
 SimpleArray<T>::insert(const iterator it,
-					   const TIterator &start, const TIterator &end) // tested
+                       const TIterator &start, const TIterator &end) // tested
 {
 	size_t index = this->inc_arr - it.inc_data_iterator;
 	return this->insert(index, start, end);
@@ -391,7 +391,7 @@ template<class T>
 template<typename TIterator>
 int
 SimpleArray<T>::insert(const reverse_iterator it,
-					   const TIterator &start, const TIterator &end) // tested
+                       const TIterator &start, const TIterator &end) // tested
 {
 	size_t index = this->inc_arr - it.inc_data_iterator;
 	return this->insert(index, start, end);
