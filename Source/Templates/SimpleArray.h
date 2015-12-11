@@ -8,6 +8,14 @@
 #include <Templates/Array_Functions.h>
 #include <Templates/SimpleArray_Iterators.h>
 
+/*
+Что нужно сделать и/или поодумать, как сделать:
+1. Добавить тесты ко всем имеющимся методам
+2. Доавить методы, работающие с итераторами (erase, insert)
+   2.3. И их тоже протестировать
+*/
+
+
 namespace flame_ide
 {namespace templates
 {
