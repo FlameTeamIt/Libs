@@ -197,7 +197,10 @@ Test::Templates::Array_MemoryBlock()
 {
 	std::cout << "Test::Templates::Array_MemoryBlock()\n";
 	
-	MemoryBlock<long> block;
+	MemoryBlock<long> empty_block;
+	MemoryBlock<long> full_block(10);
+	
+	std::cout << "capacity = " << full_block.getCapacity() << '\n';
 	
 	return 1;
 }
