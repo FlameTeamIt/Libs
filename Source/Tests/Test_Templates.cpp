@@ -16,9 +16,9 @@ void
 Test::Templates::all()
 {
 	this->count_success_tests = 0
-//			+ this->SimpleArray()
+			+ this->SimpleArray()
 //			+ this->Array()
-			+ this->Array_MemoryBlock()
+//			+ this->Array_MemoryBlock()
 //			+ this->List()
 //			+ this->String()
 //			+ this->UniquePointer()
@@ -35,6 +35,8 @@ Test::Templates::SimpleArray()
 	
 	templates::SimpleArray<long> simple_array1(10), simple_array2;
 	
+	
+// pushBack
 	simple_array1.pushBack(10);
 	simple_array1.pushBack(5);
 	
@@ -52,7 +54,7 @@ Test::Templates::SimpleArray()
 				<< simple_array1[0] << '\n'
 			<< "	simple_array1[1] = "
 				<< simple_array1[1] << "\n\n";
-	
+// rewrite
 	simple_array1.rewrite(2, 200);
 	simple_array1.rewrite(3, 555);
 	
@@ -90,7 +92,7 @@ Test::Templates::SimpleArray()
 	
 	long array[4] {-64, -82, -55, -39};
 	
-	// insert -- with start & end iterators
+// insert -- with start & end iterators
 	auto returned_insert2 = simple_array2.insert(0, &array[0], &array[4]);
 	std::cout
 		<< "\nCode:\n"
@@ -109,7 +111,7 @@ Test::Templates::SimpleArray()
 			[](long out) {std::cout << '\t' << out << '\n';});
 	std::cout << '\n';
 	
-	// popBack
+// popBack
 	simple_array2.popBack();
 	std::cout
 		<< "\nCode:\n"
@@ -126,7 +128,7 @@ Test::Templates::SimpleArray()
 			[](long out) {std::cout << '\t' << out << '\n';});
 	std::cout << '\n';
 	
-	// popBack
+// popBack - count
 	simple_array2.popBack(3);
 	std::cout
 		<< "\nCode:\n"
@@ -146,8 +148,8 @@ Test::Templates::SimpleArray()
 	}
 	std::cout << '\n';
 	
-	// insert
-	simple_array2.insert(0, 260);
+// insert
+	returned_insert2 = simple_array2.insert(0, 260);
 	std::cout
 		<< "\nCode:\n"
 		<< 
@@ -168,7 +170,29 @@ Test::Templates::SimpleArray()
 	);
 	std::cout << '\n';
 	
-	// erade
+// insert -- iterator
+	returned_insert2 = simple_array2.insert(simple_array2.begin(), 620);
+	std::cout
+			<< "\nCode:\n"
+			<< 
+			   "\
+	simple_array2.insert(simple_array2.begin(), 620);\
+	"
+	<< "\nResult:\n"
+	<< "	simple_array2.getSize() = "	<< simple_array2.getSize() << '\n'
+																   << "	returned_insert2 = "		<< returned_insert2 << '\n'
+																   << "All values:\n";
+	std::for_each
+			(
+				simple_array2.begin(), simple_array2.end(),
+				[](long out)
+	{
+		std::cout << '\t' << out << '\n';
+	}
+	);
+	std::cout << '\n';
+	
+// erase
 	simple_array2.erase(4);
 	std::cout
 			<< "\nCode:\n"

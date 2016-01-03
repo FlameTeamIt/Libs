@@ -9,7 +9,7 @@
 #include <Templates/SimpleArray_Iterators.h>
 
 /*
-Что нужно сделать и/или поодумать, как сделать:
+Что нужно сделать и/или подумать, как сделать:
 1. Добавить тесты ко всем имеющимся методам
 2. Доавить методы, работающие с итераторами (erase, insert)
    2.3. И их тоже протестировать
@@ -28,6 +28,8 @@ class SimpleArray
 	inline void _simple_setMove(SimpleArray<T> &array); // tested
 	
 protected:
+	size_t first_index, last_index;
+	
 	size_t arr_capaity;
 	size_t arr_size;
 	
@@ -85,8 +87,13 @@ public:
 	int popBack(size_t count = 1); // tested
 	
 	int erase(size_t pos_index, size_t count = 1); // tested
+	int erase(iterator it, size_t count = 1);
+	int erase(reverse_iterator it, size_t count = 1);
 	
 	void rewrite(size_t pos, const T &object); // tested
+	void rewrite(iterator it, const T &object);
+	void rewrite(reverse_iterator it, const T &object);
+	
 	void clear(); // tested
 	
 	bool isEmpty() const noexcept;
@@ -121,21 +128,25 @@ using flame_ide::templates::SimpleArray;
 
 template<class T>
 SimpleArray<T>::SimpleArray()
-	: inc_arr(nullptr)
+	: first_index(0)
+	, last_index(0)
 {
+	inc_arr = nullptr;
 	arr_size = 0;
 	arr_capaity = 0;
 }
 template<class T>
 SimpleArray<T>::SimpleArray(size_t init_size)
-    : arr_size(0)
+    : first_index(0)
+	, last_index(0)
 {
 	this->_simple_setInit(init_size);
 }
 template<class T>
 template<typename TSize_Type>
 SimpleArray<T>::SimpleArray(TSize_Type init_size)
-	: arr_size(0)
+	: first_index(0)
+	, last_index(0)
 {
 	size_t casted_init_size = static_cast<size_t>(init_size);
 	this->_simple_setInit(casted_init_size);
@@ -175,6 +186,7 @@ void
 SimpleArray<T>::_simple_setInit(size_t init_size)
 {
 	this->arr_capaity = init_size;
+	this->arr_size = 0;
 	this->inc_arr = array_get_new<T>(init_size);
 }
 template<class T>
@@ -184,6 +196,8 @@ SimpleArray<T>::_simple_setCopy(const SimpleArray<T> &array)
 	this->arr_capaity = array.arr_capaity;
 	this->arr_size = array.arr_size;
 	this->inc_arr = array._getSimpleArrayCopy();
+	
+	this->last_index = this->arr_size;
 }
 template<class T>
 void
@@ -194,6 +208,8 @@ SimpleArray<T>::_simple_setMove(SimpleArray<T> &array)
 	this->inc_arr = array.inc_arr;
 	
 	array.arr_capaity = 0;
+	
+	this->last_index = this->arr_size;
 }
 
 // public
@@ -237,6 +253,7 @@ SimpleArray<T>::pushBack(const T &obj)
 	{
 		array_copying(1, &obj, this->inc_arr+this->arr_size);
 		arr_size++;
+		last_index++;
 	}
 	return 1;
 }
@@ -248,6 +265,7 @@ SimpleArray<T>::pushBack(T &&obj)
 	{
 		inc_arr[arr_size] = T(obj);
 		arr_size++;
+		last_index++;
 	}
 	else
 	{
@@ -277,9 +295,10 @@ SimpleArray<T>::insert(size_t pos_index, const T &obj)
 		else
 		if(pos_index == this->arr_size)
 		{
-			new ((void*)this->inc_arr+pos_index) T(obj);
+			new (this->inc_arr+pos_index) T(obj);
 		}
 		arr_size++;
+		last_index++;
 	}
 	else // >
 	{
@@ -311,6 +330,7 @@ SimpleArray<T>::insert(size_t pos_index, T &&obj)
 			new (this->inc_arr+pos_index) T(obj);
 		}
 		arr_size++;
+		last_index++;
 	}
 	else // >
 	{
@@ -382,6 +402,7 @@ SimpleArray<T>::insert(const size_t pos_index,
 	
 	std::copy(start, end, this->inc_arr+pos_index);
 	this->arr_size = this->arr_size + count_insertion;
+	this->last_index = this->arr_size;
 	
 	return 1;
 }
@@ -414,6 +435,7 @@ SimpleArray<T>::popBack(size_t count) //tested
 	{
 		array_call_distructors(count, this->inc_arr + (arr_size-1 - count));
 		this->arr_size -= count;
+		this->last_index = this->arr_size;
 	}
 	else
 	{
@@ -447,6 +469,7 @@ SimpleArray<T>::erase(size_t pos_index, size_t count)
 			}
 		}
 		this->arr_size -= count;
+		this->last_index = this->arr_size;
 	}
 	else
 	{
@@ -454,6 +477,22 @@ SimpleArray<T>::erase(size_t pos_index, size_t count)
 	}
 	
 	return 1;
+}
+
+template<typename T>
+int
+SimpleArray<T>::erase(iterator it, size_t count)
+{
+	size_t index = this->inc_arr - it.inc_data_iterator;
+	return this->erase(index, count);
+}
+
+template<typename T>
+int
+SimpleArray<T>::erase(reverse_iterator it, size_t count)
+{
+	size_t index = this->inc_arr - it.inc_data_iterator;
+	return this->erase(index, count);
 }
 
 template<class T>
@@ -466,6 +505,7 @@ SimpleArray<T>::rewrite(size_t pos, const T &object) // tested
 		if(pos == arr_size)
 		{
 			++arr_size;
+			++last_index;
 		}
 	}
 }
@@ -478,6 +518,7 @@ SimpleArray<T>::clear() // tested
 	{
 		array_call_distructors(arr_size, inc_arr);
 		arr_size = 0;
+		last_index = 0;
  	}
 }
 
@@ -540,7 +581,7 @@ SimpleArrayIterator<T>
 SimpleArray<T>::begin() // tested
 {
 	iterator it;
-	it.inc_data_iterator = this->inc_arr;
+	it.inc_data_iterator = this->inc_arr + this->first_index;
 	
 	return it;
 }
@@ -550,7 +591,7 @@ SimpleArrayIterator<T>
 SimpleArray<T>::end() // tested
 {
 	iterator it;
-	it.inc_data_iterator = this->inc_arr + this->arr_size;
+	it.inc_data_iterator = this->inc_arr + this->last_index;
 	
 	return it;
 }
@@ -560,7 +601,7 @@ SimpleArrayReverseIterator<T>
 SimpleArray<T>::rbegin()
 {
 	reverse_iterator it;
-	it.inc_data_iterator = this->inc_arr + this->arr_size - 1;
+	it.inc_data_iterator = this->inc_arr + this->last_index - 1;
 	
 	return it;
 }
@@ -570,7 +611,7 @@ SimpleArrayReverseIterator<T>
 SimpleArray<T>::rend()
 {
 	reverse_iterator it;
-	it.inc_data_iterator = this->inc_arr - 1;
+	it.inc_data_iterator = this->inc_arr + this->first_index - 1;
 	
 	return it;
 }
@@ -580,7 +621,7 @@ const SimpleArrayIterator<T>
 SimpleArray<T>::begin() const
 {
 	const_iterator it;
-	it.inc_data_iterator = this->inc_arr;
+	it.inc_data_iterator = this->inc_arr + this->first_index;
 	
 	return it;
 }
@@ -590,7 +631,7 @@ const SimpleArrayIterator<T>
 SimpleArray<T>::end() const
 {
 	const_iterator it;
-	it.inc_data_iterator = this->inc_arr + this->arr_size;
+	it.inc_data_iterator = this->inc_arr + this->last_index;
 	
 	return it;
 }
@@ -600,7 +641,7 @@ const SimpleArrayReverseIterator<T>
 SimpleArray<T>::rbegin() const
 {
 	const_reverse_iterator it;
-	it.inc_data_iterator = this->inc_arr + this->arr_size - 1;
+	it.inc_data_iterator = this->inc_arr + this->last_index - 1;
 	
 	return it;
 }
@@ -610,7 +651,7 @@ const SimpleArrayReverseIterator<T>
 SimpleArray<T>::rend() const
 {
 	const_reverse_iterator it;
-	it.inc_data_iterator = this->inc_arr - 1;
+	it.inc_data_iterator = this->inc_arr + this->first_index - 1;
 	
 	return it;
 }
