@@ -39,7 +39,7 @@ protected:
 	
 public:
 	typedef SimpleArrayIterator<T>        iterator; // tested
-	typedef SimpleArrayReverseIterator<T> reverse_iterator;
+	typedef SimpleArrayReverseIterator<T> reverse_iterator; // tested
 	
 	typedef const SimpleArrayIterator<T>        const_iterator;
 	typedef const SimpleArrayReverseIterator<T> const_reverse_iterator;
@@ -68,11 +68,11 @@ public:
 	int insert(size_t pos_index, T &&obj); // tested
 	int insert(size_t pos_index, const T &obj);
 	
-	int insert(iterator it, T &&obj);
-	int insert(iterator it, const T &obj);
+	int insert(const_iterator &it, T &&obj); // tested
+	int insert(const_iterator &it, const T &obj);
 	
-	int insert(reverse_iterator it, T &&obj);
-	int insert(reverse_iterator it, const T &obj);
+	int insert(const_reverse_iterator &it, T &&obj);
+	int insert(const_reverse_iterator &it, const T &obj);
 	
 	template<typename TIterator>
 	int insert(const size_t pos_index,
@@ -87,12 +87,12 @@ public:
 	int popBack(size_t count = 1); // tested
 	
 	int erase(size_t pos_index, size_t count = 1); // tested
-	int erase(iterator it, size_t count = 1);
-	int erase(reverse_iterator it, size_t count = 1);
+	int erase(const_iterator &it, size_t count = 1);
+	int erase(const_reverse_iterator &it, size_t count = 1);
 	
 	void rewrite(size_t pos, const T &object); // tested
-	void rewrite(iterator it, const T &object);
-	void rewrite(reverse_iterator it, const T &object);
+	void rewrite(const_iterator &it, const T &object);
+	void rewrite(const_reverse_iterator &it, const T &object);
 	
 	void clear(); // tested
 	
@@ -125,6 +125,8 @@ public:
 
 
 using flame_ide::templates::SimpleArray;
+using flame_ide::templates::SimpleArrayIterator;
+using flame_ide::templates::SimpleArrayReverseIterator;
 
 template<class T>
 SimpleArray<T>::SimpleArray()
@@ -342,14 +344,14 @@ SimpleArray<T>::insert(size_t pos_index, T &&obj)
 
 template<class T>
 int
-SimpleArray<T>::insert(iterator it, const T &obj)
+SimpleArray<T>::insert(const_iterator &it, const T &obj)
 {
 	size_t index = this->inc_arr - it.inc_data_iterator;
 	return this->insert(index, obj);
 }
 template<class T>
 int
-SimpleArray<T>::insert(iterator it, T &&obj)
+SimpleArray<T>::insert(const_iterator &it, T &&obj)
 {
 	size_t index = this->inc_arr - it.inc_data_iterator;
 	return this->insert(index, obj);
@@ -357,14 +359,14 @@ SimpleArray<T>::insert(iterator it, T &&obj)
 
 template<class T>
 int
-SimpleArray<T>::insert(reverse_iterator it, const T &obj)
+SimpleArray<T>::insert(const_reverse_iterator &it, const T &obj)
 {
 	size_t index = this->inc_arr - it.inc_data_iterator;
 	return this->insert(index, obj);
 }
 template<class T>
 int
-SimpleArray<T>::insert(reverse_iterator it, T &&obj)
+SimpleArray<T>::insert(const_reverse_iterator &it, T &&obj)
 {
 	size_t index = this->inc_arr - it.inc_data_iterator;
 	return this->insert(index, obj);

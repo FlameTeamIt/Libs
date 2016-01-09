@@ -37,14 +37,13 @@ public:
 	
 	inline const BasicIterator<T, TData>& operator ++();
 	inline const BasicIterator<T, TData>& operator --();
-	
-	inline const BasicIterator<T, TData>& operator ++(int);
-	inline const BasicIterator<T, TData>& operator --(int);
 };
 
 template<class T, class TData>
 class BasicReverseIterator : public InterfaceIterator<T, TData>
 {
+protected:
+	using InterfaceIterator<T, TData>::inc_data_iterator;
 public:
 	BasicReverseIterator();
 	BasicReverseIterator(BasicReverseIterator<T, TData> &&iterator);
@@ -54,9 +53,6 @@ public:
 	
 	inline const BasicReverseIterator<T, TData>& operator ++();
 	inline const BasicReverseIterator<T, TData>& operator --();
-	
-	inline const BasicReverseIterator<T, TData>& operator ++(int);
-	inline const BasicReverseIterator<T, TData>& operator --(int);
 };
 
 }}
@@ -111,22 +107,6 @@ BasicIterator<T, TData>::operator --()
 	return *this;
 }
 
-template<class T, class TData>
-const BasicIterator<T, TData>&
-BasicIterator<T, TData>::operator ++(int)
-{
-	(this->inc_data_iterator)++;
-	return *this;
-}
-
-template<class T, class TData>
-const BasicIterator<T, TData>&
-BasicIterator<T, TData>::operator --(int)
-{
-	(this->inc_data_iterator)--;
-	return *this;
-}
-
 
 template<class T, class TData>
 BasicReverseIterator<T, TData>::BasicReverseIterator()
@@ -163,22 +143,6 @@ const BasicReverseIterator<T, TData>&
 BasicReverseIterator<T, TData>::operator --()
 {
 	++(this->inc_data_iterator);
-	return *this;
-}
-
-template<class T, class TData>
-const BasicReverseIterator<T, TData>&
-BasicReverseIterator<T, TData>::operator ++(int)
-{
-	(this->inc_data_iterator)--;
-	return *this;
-}
-
-template<class T, class TData>
-const BasicReverseIterator<T, TData>&
-BasicReverseIterator<T, TData>::operator --(int)
-{
-	(this->inc_data_iterator)++;
 	return *this;
 }
 
