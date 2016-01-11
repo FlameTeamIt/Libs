@@ -483,7 +483,7 @@ SimpleArray<T>::erase(size_t pos_index, size_t count)
 
 template<typename T>
 int
-SimpleArray<T>::erase(iterator it, size_t count)
+SimpleArray<T>::erase(const_iterator &it, size_t count)
 {
 	size_t index = this->inc_arr - it.inc_data_iterator;
 	return this->erase(index, count);
@@ -491,7 +491,7 @@ SimpleArray<T>::erase(iterator it, size_t count)
 
 template<typename T>
 int
-SimpleArray<T>::erase(reverse_iterator it, size_t count)
+SimpleArray<T>::erase(const_reverse_iterator &it, size_t count)
 {
 	size_t index = this->inc_arr - it.inc_data_iterator;
 	return this->erase(index, count);

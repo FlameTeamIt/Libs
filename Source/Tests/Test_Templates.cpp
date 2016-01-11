@@ -78,7 +78,7 @@ Test::Templates::SimpleArray()
 	auto returned_insert2 = simple_array2.insert(0, &array[0], &array[4]);
 	std::cout
 		<< "\n" "Code:" "\n"
-			<< "\t" "auto returned_insert2 = simple_array2.insert(0, &array[0], &array[4]);"
+			<< "\t" "simple_array2.insert(0, &array[0], &array[4]);"
 		<< "\n" "Result:" "\n"
 			<< "\t" "simple_array2.getSize() = " << simple_array2.getSize() << '\n'
 			<< "\t" "returned_insert2 = "        << returned_insert2 << '\n';
