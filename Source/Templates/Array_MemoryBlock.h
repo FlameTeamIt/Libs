@@ -11,6 +11,8 @@
 Что нужно сделать и поодумать, как сделать:
 1. Вставка/удаление вперёд/назад
    1.1. Может даже стоит это делегировать Array
+   1.1.1. Вставка и удаление присходят локально
+   1.1.2. Если нужно будет удалить диапозон - надо думать
 2. Вставка/удаление в произвольном месте произвольное количество объектов
    2.1. Может даже стоит это делегировать Array
 3. Индексация - делегирование на Array или здесь внутри.
@@ -36,7 +38,7 @@ protected:
 	bool is_front_adding;
 	
 	size_t first_index, last_index;
-	size_t block_start_index, block_end_index; // start/end index in block list
+	size_t block_start_index; // start/end index in block list
 	
 	SharedPointer<my_type> prev_block;
 	SharedPointer<my_type> next_block;
@@ -62,7 +64,7 @@ public:
 	SharedPointer<my_type> getNext();
 	SharedPointer<my_type> getPrev();
 	
-	bool isEnd() const noexcept;
+	bool isEndBlock() const noexcept;
 	
 	int pushFront(const T &obj);
 	int pushFront(T &&obj);
@@ -77,13 +79,16 @@ public:
 	
 	void clear();
 	
+	const T& at(size_t index) const;
+	      T& at(size_t index);
+	
 	const T& operator [](size_t index) const noexcept;
 	      T& operator [](size_t index)       noexcept;
 	
 	template<typename TSize_Type> 
 	const T& operator [](TSize_Type index) const noexcept;
 	template<typename TSize_Type> 
-		  T& operator [](TSize_Type index)       noexcept;
+	      T& operator [](TSize_Type index)       noexcept;
 	
 	const my_type& operator =(const my_type &block);
 	const my_type& operator =(my_type &&block);
@@ -101,6 +106,7 @@ MemoryBlock<T>::MemoryBlock()
 	, is_front_adding(false)
 	, first_index(0)
 	, last_index(0)
+	, block_start_index(0)
 	, prev_block(make_shared<my_type>(true))
 //	, next_block(make_shared<my_type>(true))
 {
@@ -116,7 +122,6 @@ MemoryBlock<T>::MemoryBlock(size_t init_size)
 	, first_index(0)
 	, last_index(0)
 	, block_start_index(0)
-	, block_end_index(init_size)
 	, prev_block(make_shared<my_type>(true))
 //	, next_block(make_shared<my_type>(true))
 {
@@ -133,7 +138,6 @@ MemoryBlock<T>::MemoryBlock(TSize_Type init_size)
 	, first_index(0)
 	, last_index(0)
 	, block_start_index(0)
-	, block_end_index(static_cast<size_t>(init_size))
 	, prev_block(make_shared<my_type>(true, init_size))
 //	, next_block(make_shared<my_type>(true))
 {
@@ -149,7 +153,6 @@ MemoryBlock<T>::MemoryBlock(bool is_front_adding)
 	, first_index(0)
 	, last_index(0)
 	, block_start_index(0)
-	, block_end_index(0)
 {}
 
 template<typename T>
@@ -161,7 +164,6 @@ MemoryBlock<T>::MemoryBlock(bool is_front_adding, size_t init_size)
 	, first_index(is_front_adding ? init_size : 0)
 	, last_index(is_front_adding ? init_size : 0)
 	, block_start_index(0)
-	, block_end_index(static_cast<size_t>(init_size))
 {}
 
 template<typename T>
@@ -174,7 +176,6 @@ MemoryBlock<T>::MemoryBlock(bool is_front_adding, TSize_Type init_size)
 	, first_index(is_front_adding ? init_size : 0)
 	, last_index(is_front_adding ? init_size : 0)
 	, block_start_index(0)
-	, block_end_index(init_size)
 {}
 
 template<typename T>
@@ -204,7 +205,7 @@ MemoryBlock<T>::getPrev()
 
 template<typename T>
 bool
-MemoryBlock<T>::isEnd()	const noexcept
+MemoryBlock<T>::isEndBlock() const noexcept
 {
 	return is_end;
 }
@@ -212,13 +213,6 @@ MemoryBlock<T>::isEnd()	const noexcept
 template<typename T>
 int
 MemoryBlock<T>::pushFront(const T &obj)
-{
-	return 1;
-}
-
-template<typename T>
-int
-MemoryBlock<T>::pushFront(T &&obj)
 {
 	if(this->is_front_adding)
 	{
@@ -232,10 +226,26 @@ MemoryBlock<T>::pushFront(T &&obj)
 
 template<typename T>
 int
+MemoryBlock<T>::pushFront(T &&obj)
+{
+	if(this->is_front_adding)
+	{
+		return 1;
+	}
+	else
+	{
+		// нужно сдвинуть массив на один элемент вправо
+		return 1;
+	}
+}
+
+template<typename T>
+int
 MemoryBlock<T>::pushBack(const T &obj)
 {
 	if(this->is_front_adding)
 	{
+		// нужно сдвинуть массив на один элемент влево
 		return 1;
 	}
 	else
