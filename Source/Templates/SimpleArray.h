@@ -123,7 +123,6 @@ public:
 
 }}
 
-
 using flame_ide::templates::SimpleArray;
 using flame_ide::templates::SimpleArrayIterator;
 using flame_ide::templates::SimpleArrayReverseIterator;
@@ -154,12 +153,12 @@ SimpleArray<T>::SimpleArray(TSize_Type init_size)
 	this->_simple_setInit(casted_init_size);
 }
 template<class T>
-SimpleArray<T>::SimpleArray(const SimpleArray &array)
+SimpleArray<T>::SimpleArray(const SimpleArray<T> &array)
 {
 	this->_simple_setCopy(array);
 }
 template<class T>
-SimpleArray<T>::SimpleArray(SimpleArray &&array)
+SimpleArray<T>::SimpleArray(SimpleArray<T> &&array)
 {
 	this->_simple_setMove(array);
 }
@@ -169,7 +168,7 @@ SimpleArray<T>::~SimpleArray()
 {
 	if(arr_capaity)
 	{
-		array_call_distructors(arr_size, inc_arr);
+		array_call_distructors(arr_size, inc_arr + first_index);
 		array_delete(inc_arr);
 	}
 }
@@ -234,13 +233,13 @@ template<class T>
 const T&
 SimpleArray<T>::at(size_t index) const
 {
-	return inc_arr[index % arr_capaity];
+	return inc_arr[(index + first_index) % arr_capaity];
 }
 template<class T>
 T&
 SimpleArray<T>::at(size_t index)
 {
-	return inc_arr[index % arr_capaity];
+	return inc_arr[(index + first_index) % arr_capaity];
 }
 
 template<class T>
