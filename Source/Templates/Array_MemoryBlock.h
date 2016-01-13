@@ -4,6 +4,8 @@
 #include <Templates/Pointers.h>
 #include <Templates/SimpleArray.h>
 
+#define DEFAULT_CAPACITY size_t(32)
+
 /*
 Что сделано:
 1. Реализованы все конструкторы и деструктор
@@ -104,12 +106,11 @@ using namespace flame_ide::templates;
 
 template<typename T>
 MemoryBlock<T>::MemoryBlock()
-	: SimpleArray<T>()
+	: SimpleArray<T>(DEFAULT_CAPACITY)
 	,is_end(true)
 	,is_front_adding(false)
 	,block_start_index(0)
-{
-}
+{}
 
 template<typename T>
 MemoryBlock<T>::MemoryBlock(size_t init_size)
@@ -130,7 +131,7 @@ MemoryBlock<T>::MemoryBlock(TSize_Type init_size)
 
 template<typename T>
 MemoryBlock<T>::MemoryBlock(bool is_front_adding)
-	: SimpleArray<T>()
+	: SimpleArray<T>(DEFAULT_CAPACITY)
 	,is_end(true)
 	,is_front_adding(is_front_adding)
 	,block_start_index(0)
@@ -169,7 +170,7 @@ MemoryBlock<T>::_block_init_spNextBlock()
 {
 	if(!this->next_block.isInitialized())
 	{
-		this->next_block = make_shared<MemoryBlock>(this->arr_capaity);
+		this->next_block = make_shared<MemoryBlock>(this->arr_capacity);
 		this->next_block->prev_block = SharedPointer<MemoryBlock>(this);
 		this->is_end = false;
 	}	
@@ -181,7 +182,7 @@ MemoryBlock<T>::_block_init_spPrevBlock()
 {
 	if(!this->prev_block.isInitialized())
 	{
-		this->prev_block = make_shared<MemoryBlock>(true, this->arr_capaity);
+		this->prev_block = make_shared<MemoryBlock>(true, this->arr_capacity);
 		this->prev_block->next_block = SharedPointer<MemoryBlock>(this);
 		this->is_end = false;
 	}	
@@ -213,7 +214,7 @@ MemoryBlock<T>::pushFront(const T &obj)
 {
 	if(this->is_front_adding)
 	{
-		if(this->arr_size < this->arr_capaity)
+		if(this->arr_size < this->arr_capacity)
 		{
 			--this->first_index;
 			++this->arr_size;
@@ -225,7 +226,7 @@ MemoryBlock<T>::pushFront(const T &obj)
 	}
 	else
 	{
-		int &return_code = this->SimpleArray<T>::insert(0, obj);
+		int return_code = this->SimpleArray<T>::insert(0, obj);
 		if(return_code > 0)
 		{
 			return return_code;
@@ -243,19 +244,19 @@ MemoryBlock<T>::pushFront(T &&obj)
 {
 	if(this->is_front_adding)
 	{
-		if(this->arr_size < this->arr_capaity)
+		if(this->arr_size < this->arr_capacity)
 		{
 			--this->first_index;
 			++this->arr_size;
 			
-			inc_arr[this->first_index] = T(obj);
+			this->inc_arr[this->first_index] = T(obj);
 			
 			return 1;
 		}
 	}
 	else
 	{
-		int &return_code = this->SimpleArray<T>::insert(0, obj);
+		int return_code = this->SimpleArray<T>::insert(0, obj);
 		if(return_code > 0)
 		{
 			return return_code;
@@ -274,13 +275,13 @@ MemoryBlock<T>::pushBack(const T &obj)
 	if(this->is_front_adding)
 	{
 		// нужно сдвинуть массив на один элемент влево
-		if(this->arr_size < this->arr_capaity)
+		if(this->arr_size < this->arr_capacity)
 		{
 			std::copy(this->inc_arr + this->first_index,
-					  this->inc_arr + this->arr_capaity,
+					  this->inc_arr + this->arr_capacity,
 					  this->inc_arr + this->first_index - 1);
 			
-			array_copying(1, &obj, this->inc_arr + this->arr_capaity - 1);
+			array_copying(1, &obj, this->inc_arr + this->arr_capacity - 1);
 			
 			--this->first_index;
 			++this->arr_size;
@@ -290,7 +291,7 @@ MemoryBlock<T>::pushBack(const T &obj)
 	}
 	else
 	{
-		int &return_code = this->SimpleArray<T>::pushBack(obj);
+		int return_code = this->SimpleArray<T>::pushBack(obj);
 		if(return_code > 0)
 		{
 			return return_code;
@@ -306,14 +307,14 @@ MemoryBlock<T>::pushBack(T &&obj)
 {
 	if(this->is_front_adding)
 	{
-		if(this->arr_size < this->arr_capaity)
+		if(this->arr_size < this->arr_capacity)
 		{
 			std::copy(this->inc_arr + this->first_index,
-					  this->inc_arr + this->arr_capaity,
+					  this->inc_arr + this->arr_capacity,
 					  this->inc_arr + this->first_index - 1);
 			
-			this->inc_arr[this->arr_capaity - 1].~T();
-			this->inc_arr[this->arr_capaity - 1] = T(obj);
+			this->inc_arr[this->arr_capacity - 1].~T();
+			this->inc_arr[this->arr_capacity - 1] = T(obj);
 			
 			--this->first_index;
 			++this->arr_size;
@@ -323,57 +324,43 @@ MemoryBlock<T>::pushBack(T &&obj)
 	}
 	else
 	{
-		int &return_code = this->SimpleArray<T>::pushBack(obj);
-		if(return_code < 0)
+		int return_code = this->SimpleArray<T>::pushBack(obj);
+		if(return_code > 0)
 		{
-			_block_init_spNextBlock();
-			return next_block->pushBack(obj);
+			return return_code;
 		}
-		return return_code;
 	}
+	_block_init_spNextBlock();
+	return next_block->pushBack(obj);
 }
 
 template<typename T>
 int
 MemoryBlock<T>::popFront(size_t count)
 {
+	if(this->arr_size < count)
+	{
+		return -1;
+	}
+	
 	if(this->is_front_adding)
 	{
-		if(this->arr_size - count > 0 && this->arr_capaity > 0)
-		{
-//			array_call_distructors(count, this->inc_arr + this->first_index);
-			
-//			if(prev_block.isInitialized())
-//			{
-//				// подтягиваем элементы из другого блока
-				
-				
-//				// если элементов меньше, то забираем всё
-//				// иначе тянем только нужно количество, удаляя их в старом месте
-//			}
-//			else
-//			{
-//				this->first_index += count;
-//				this->arr_size    -= count;
-//			}
-			
-			return 1;
-		}
-		else
-		{
-			return -1;
-		}
 	}
 	else
-	{		
-		return this->SimpleArray<T>::erase(0, count);
+	{
 	}
+	return 1;
 }
 
 template<typename T>
 int
 MemoryBlock<T>::popBack(size_t count)
 {
+	if(this->arr_size < count)
+	{
+		return -1;
+	}
+	
 	if(this->is_front_adding)
 	{
 		return 1;
@@ -388,6 +375,11 @@ template<typename T>
 int
 MemoryBlock<T>::erase(size_t pos_index, size_t count)
 {
+	if(this->arr_size < count)
+	{
+		return -1;
+	}
+	
 	if(this->is_front_adding)
 	{
 		return 1;
@@ -403,7 +395,6 @@ void
 MemoryBlock<T>::clear()
 {
 	// don't know about pointers
-	
 	
 	this->SimpleArray<T>::clear();
 	if(is_front_adding)

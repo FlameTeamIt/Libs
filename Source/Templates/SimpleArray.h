@@ -30,7 +30,7 @@ class SimpleArray
 protected:
 	size_t first_index, last_index;
 	
-	size_t arr_capaity;
+	size_t arr_capacity;
 	size_t arr_size;
 	
 	T* inc_arr;
@@ -134,7 +134,7 @@ SimpleArray<T>::SimpleArray()
 {
 	inc_arr = nullptr;
 	arr_size = 0;
-	arr_capaity = 0;
+	arr_capacity = 0;
 }
 template<class T>
 SimpleArray<T>::SimpleArray(size_t init_size)
@@ -166,7 +166,7 @@ SimpleArray<T>::SimpleArray(SimpleArray<T> &&array)
 template<class T>
 SimpleArray<T>::~SimpleArray()
 {
-	if(arr_capaity)
+	if(arr_capacity)
 	{
 		array_call_distructors(arr_size, inc_arr + first_index);
 		array_delete(inc_arr);
@@ -179,14 +179,14 @@ template<class T>
 T*
 SimpleArray<T>::_getSimpleArrayCopy() const
 {
-	return array_get_copy(arr_capaity, inc_arr);
+	return array_get_copy(arr_capacity, inc_arr);
 }
 
 template<class T>
 void
 SimpleArray<T>::_simple_setInit(size_t init_size)
 {
-	this->arr_capaity = init_size;
+	this->arr_capacity = init_size;
 	this->arr_size = 0;
 	this->inc_arr = array_get_new<T>(init_size);
 }
@@ -194,7 +194,7 @@ template<class T>
 void
 SimpleArray<T>::_simple_setCopy(const SimpleArray<T> &array)
 {
-	this->arr_capaity = array.arr_capaity;
+	this->arr_capacity = array.arr_capacity;
 	this->arr_size = array.arr_size;
 	this->inc_arr = array._getSimpleArrayCopy();
 	
@@ -204,11 +204,11 @@ template<class T>
 void
 SimpleArray<T>::_simple_setMove(SimpleArray<T> &array)
 {
-	this->arr_capaity = array.arr_capaity;
+	this->arr_capacity = array.arr_capacity;
 	this->arr_size = array.arr_size;
 	this->inc_arr = array.inc_arr;
 	
-	array.arr_capaity = 0;
+	array.arr_capacity = 0;
 	
 	this->last_index = this->arr_size;
 }
@@ -226,27 +226,27 @@ template<class T>
 size_t
 SimpleArray<T>::getCapacity() const noexcept // tested
 {
-	return arr_capaity;
+	return arr_capacity;
 }
 
 template<class T>
 const T&
 SimpleArray<T>::at(size_t index) const
 {
-	return inc_arr[(index + first_index) % arr_capaity];
+	return inc_arr[(index + first_index) % arr_capacity];
 }
 template<class T>
 T&
 SimpleArray<T>::at(size_t index)
 {
-	return inc_arr[(index + first_index) % arr_capaity];
+	return inc_arr[(index + first_index) % arr_capacity];
 }
 
 template<class T>
 int
 SimpleArray<T>::pushBack(const T &obj)
 {
-	if(arr_size >= arr_capaity)
+	if(arr_size >= arr_capacity)
 	{
 		return -1;
 	}
@@ -262,7 +262,7 @@ template<class T>
 int
 SimpleArray<T>::pushBack(T &&obj)
 {
-	if(arr_size < arr_capaity)
+	if(arr_size < arr_capacity)
 	{
 		inc_arr[arr_size] = T(obj);
 		arr_size++;
@@ -280,7 +280,7 @@ template<class T>
 int
 SimpleArray<T>::insert(size_t pos_index, const T &obj)
 {
-	if(this->arr_size < this->arr_capaity)
+	if(this->arr_size < this->arr_capacity)
 	{
 		if(pos_index < this->arr_size)
 		{
@@ -312,7 +312,7 @@ template<class T>
 int
 SimpleArray<T>::insert(size_t pos_index, T &&obj)
 {
-	if(this->arr_size < this->arr_capaity)
+	if(this->arr_size < this->arr_capacity)
 	{
 		if(pos_index < this->arr_size)
 		{
@@ -384,7 +384,7 @@ SimpleArray<T>::insert(const size_t pos_index,
 		++count_insertion;
 	}
 	
-	if(this->arr_size + count_insertion > this->arr_capaity
+	if(this->arr_size + count_insertion > this->arr_capacity
 		|| this->arr_size < pos_index)
 	{
 		return -1;
@@ -517,7 +517,7 @@ SimpleArray<T>::clear() // tested
 {
 	if(arr_size)
 	{
-		array_call_distructors(arr_size, inc_arr);
+		array_call_distructors(arr_size, inc_arr + first_index);
 		arr_size = 0;
 		last_index = 0;
  	}
