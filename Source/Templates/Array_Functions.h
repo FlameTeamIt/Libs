@@ -97,12 +97,6 @@ array_copying(const size_t &length
 			  ,const Tt *old_array, const size_t &start_index_old
 			  ,Tt *new_array, const size_t &start_index_new)
 {
-	if(length)
-	{	
-		std::copy_n(old_array + start_index_old
-				  ,length
-				  ,new_array + start_index_new);
-	}
 }
 
 template<class Tt>
