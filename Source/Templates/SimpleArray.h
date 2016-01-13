@@ -23,9 +23,9 @@ namespace flame_ide
 template<class T>
 class SimpleArray
 {
-	inline void _simple_setInit(size_t init_size); // tested
-	inline void _simple_setCopy(const SimpleArray<T> &array); // tested
-	inline void _simple_setMove(SimpleArray<T> &array); // tested
+	inline void __simple_setInit(size_t init_size); // tested
+	inline void __simple_setCopy(const SimpleArray<T> &array); // tested
+	inline void __simple_setMove(SimpleArray<T> &array); // tested
 	
 protected:
 	size_t first_index, last_index;
@@ -35,14 +35,14 @@ protected:
 	
 	T* inc_arr;
 	
-	inline T* _getSimpleArrayCopy() const; // tested
+	inline T* _simple_getArrayCopy() const; // tested
 	
 public:
 	typedef SimpleArrayIterator<T>        iterator; // tested
 	typedef SimpleArrayReverseIterator<T> reverse_iterator; // tested
 	
-	typedef const SimpleArrayIterator<T>        const_iterator;
-	typedef const SimpleArrayReverseIterator<T> const_reverse_iterator;
+	typedef const SimpleArrayIterator<T>        const_iterator; // tested
+	typedef const SimpleArrayReverseIterator<T> const_reverse_iterator; //tested
 	
 	SimpleArray(); // tested
 	SimpleArray(size_t init_size); // tested
@@ -111,8 +111,8 @@ public:
 	
 	iterator begin(); //tested
 	iterator end(); // tested
-	reverse_iterator rbegin();
-	reverse_iterator rend();
+	reverse_iterator rbegin(); // tested
+	reverse_iterator rend(); // tested
 
 	const_iterator begin() const;
 	const_iterator end() const;
@@ -141,7 +141,7 @@ SimpleArray<T>::SimpleArray(size_t init_size)
     : first_index(0)
 	, last_index(0)
 {
-	this->_simple_setInit(init_size);
+	this->__simple_setInit(init_size);
 }
 template<class T>
 template<typename TSize_Type>
@@ -150,17 +150,17 @@ SimpleArray<T>::SimpleArray(TSize_Type init_size)
 	, last_index(0)
 {
 	size_t casted_init_size = static_cast<size_t>(init_size);
-	this->_simple_setInit(casted_init_size);
+	this->__simple_setInit(casted_init_size);
 }
 template<class T>
 SimpleArray<T>::SimpleArray(const SimpleArray<T> &array)
 {
-	this->_simple_setCopy(array);
+	this->__simple_setCopy(array);
 }
 template<class T>
 SimpleArray<T>::SimpleArray(SimpleArray<T> &&array)
 {
-	this->_simple_setMove(array);
+	this->__simple_setMove(array);
 }
 
 template<class T>
@@ -177,14 +177,14 @@ SimpleArray<T>::~SimpleArray()
 
 template<class T>
 T*
-SimpleArray<T>::_getSimpleArrayCopy() const
+SimpleArray<T>::_simple_getArrayCopy() const
 {
 	return array_get_copy(arr_capacity, inc_arr);
 }
 
 template<class T>
 void
-SimpleArray<T>::_simple_setInit(size_t init_size)
+SimpleArray<T>::__simple_setInit(size_t init_size)
 {
 	this->arr_capacity = init_size;
 	this->arr_size = 0;
@@ -192,17 +192,17 @@ SimpleArray<T>::_simple_setInit(size_t init_size)
 }
 template<class T>
 void
-SimpleArray<T>::_simple_setCopy(const SimpleArray<T> &array)
+SimpleArray<T>::__simple_setCopy(const SimpleArray<T> &array)
 {
 	this->arr_capacity = array.arr_capacity;
 	this->arr_size = array.arr_size;
-	this->inc_arr = array._getSimpleArrayCopy();
+	this->inc_arr = array._simple_getArrayCopy();
 	
 	this->last_index = this->arr_size;
 }
 template<class T>
 void
-SimpleArray<T>::_simple_setMove(SimpleArray<T> &array)
+SimpleArray<T>::__simple_setMove(SimpleArray<T> &array)
 {
 	this->arr_capacity = array.arr_capacity;
 	this->arr_size = array.arr_size;
@@ -535,7 +535,7 @@ const SimpleArray<T>&
 SimpleArray<T>::operator =(const SimpleArray<T> &array) // tested
 {
 	clear();
-	_simple_setCopy(array);
+	__simple_setCopy(array);
 	return *this;
 }
 template<class T>
@@ -543,7 +543,7 @@ const SimpleArray<T>&
 SimpleArray<T>::operator =(SimpleArray<T> &&array) // tested
 {
 	clear();
-	_simple_setMove(array);
+	__simple_setMove(array);
 	return *this;
 }
 
