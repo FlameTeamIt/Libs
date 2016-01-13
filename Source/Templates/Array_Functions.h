@@ -43,7 +43,7 @@ void array_erase(size_t &length, Tt *&array
 				 ,const size_t &count = 1);
 
 template<class Tt> inline
-void array_call_distructors(Tt *array);
+void array_call_distructors(size_t length, Tt *array);
 
 template<class Tt> inline
 void array_delete(Tt *array);
@@ -118,30 +118,6 @@ array_insert_element(const size_t &length, Tt *&array
 					 ,const size_t &index
 					 ,const Tt &insert_elem)
 {
-	// создаём новый массив нового размера
-	Tt* new_arr = array_get_new<Tt>(length+1);
-	
-	// копируем данные до индекса
-	if(index > 0)
-	{
-		array_copying<Tt>(index, array, 0, new_arr, 0);
-	}
-	
-	// выделяем память на нужный элемент
-	std::copy_n(&insert_elem, 1, new_arr+index);
-	
-	// копируем данные после индекса
-	if(index < length)
-	{
-		array_copying<Tt>(length - index, array, index, new_arr, index+1);
-	}
-	
-	if(length)
-	{
-		array_delete<Tt>(array);
-	}
-	
-	array = new_arr;
 }
 
 // no implementation
@@ -151,68 +127,15 @@ array_insert_array(const size_t &length, Tt *&array
 				   ,const size_t &index
 				   ,const size_t &length_insert, const Tt *insert_array)
 {
-	// создаём новый массив нового размера
-	Tt* new_arr = array_get_new<Tt>(length+length_insert);
-	
-	// копируем данные до индекса
-	if(index > 0)
-	{
-		array_copying<Tt>(index, array, 0, new_arr, 0);
-	}
-	
-	// копируем данные из массива
-	std::copy_n(insert_array, length_insert, new_arr+index);
-	
-	// копируем данные после индекса
-	if(index < length)
-	{
-		array_copying<Tt>(length - index, array, index, new_arr, index+length_insert);
-	}
-	
-	// удаляем старый массив
-	if(length)
-	{
-		array_delete<Tt>(array);
-	}
-	
-	array = new_arr;
 }
 
 // no implementation
-template<class Tt>
-void
-array_erase(size_t &length, Tt *array
-			,const size_t &index
-			,const size_t &count)
+template<class Tt> inline
+void array_erase(size_t &length, Tt *&array
+				 ,const size_t &index
+				 ,const size_t &count)
 {
-	size_t new_length = length - count;
-	Tt* tmp_arr = array;
-	
-	if(new_length)
-	{
-		// содаем новый массив
-		Tt *new_arr = array_get_new<Tt>(new_length);
-		
-		// копируем элементы до индекса
-		array_copying<Tt>(index, array, 0, new_arr, 0);
-		
-		// копируем после индекса + количество удяляемых элементов
-		array_copying<Tt>(length - index - count,
-								  array, index + count,
-								  new_arr, index);
-		
-		array = new_arr;
-	}
-	else
-	{
-		array = nullptr;
-	}
-		
-	// удаляем старый массив
-	array_delete<Tt>(tmp_arr);
-	length = new_length;
 }
-
 
 template<typename Tt>
 void
