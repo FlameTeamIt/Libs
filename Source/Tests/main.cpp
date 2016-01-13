@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 		? std::cout << "true\n"
 		: std::cout << "false\n";
 	
-	(flame_ide::templates::is_preemptive_type<long>()) 
+	(flame_ide::templates::is_preemptive_type<unsigned char>()) 
 		? std::cout << "true\n"
 		: std::cout << "false\n";
 	

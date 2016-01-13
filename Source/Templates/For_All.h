@@ -28,6 +28,10 @@ inline constexpr bool is_same_types();
 template<class T>
 T&& move(T &reference) noexcept;
 
+template<typename TIteratorInput, typename TIteratorOutput>
+void copy(const TIteratorInput &start, const TIteratorInput &end,
+                TIteratorOutput &out);
+
 }}
 
 template<typename Tt> inline constexpr
@@ -38,6 +42,9 @@ flame_ide::templates::is_preemptive_type()
 	typedef unsigned short u_short;
 	typedef unsigned int u_int;
 	typedef unsigned long u_long;
+	
+	typedef long long llong;
+	typedef unsigned long long u_llong;
 	
 	typedef Types<Tt, char> Type_char;
 	typedef Types<Tt, u_char> Type_u_char;
@@ -53,12 +60,16 @@ flame_ide::templates::is_preemptive_type()
 	typedef Types<Tt, long> Type_long;
 	typedef Types<Tt, u_long> Type_u_long;
 
+	typedef Types<Tt, llong> Type_llong;
+	typedef Types<Tt, u_llong> Type_u_llong;
+	
 	typedef Types<Tt, double> Type_double;
 	
 	return (Type_char::isSame  || Type_u_char::isSame
 	     || Type_short::isSame || Type_u_short::isSame
 	     || Type_int::isSame   || Type_u_int::isSame
 	     || Type_long::isSame  || Type_u_long::isSame
+	     || Type_llong::isSame || Type_u_llong::isSame
 	     || Type_float::isSame || Type_double::isSame);
 }
 
@@ -76,5 +87,25 @@ move(T &reference) noexcept
 	return static_cast<T &&>(reference);
 }
 
-#endif // FOR_ALL
+template<typename TIteratorInput, typename TIteratorOutput, typename T>
+void flame_ide::templates::
+copy(const TIteratorInput &start, const TIteratorInput &end,
+     TIteratorOutput &out)
+{
+	// нужно:
+	// От входных итераторов -- реализованный оператор operator*()
+	// От выходных итератора -- реализованный оператор operator*()
+	
+	for(auto it = start; it != end; ++it)
+	{
+		out.operator*().~T(); // спорно. А вдруг ничего там нет.
+		
+		                      // надо разобраться, как это в stl реализовано,
+		                      // а то это слишком упорото.
+		
+		new (out.operator->()) T(*it);
+		++out;
+	}
+}
 
+#endif // FOR_ALL
