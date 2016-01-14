@@ -46,6 +46,9 @@ protected:
 	inline void _block_init_spNextBlock();
 	inline void _block_init_spPrevBlock();
 	
+	void _block_popFront(size_t count);
+	void _block_popBack(size_t count);
+	
 public:
 	
 	MemoryBlock();
@@ -78,8 +81,8 @@ public:
 	int insert(size_t pos_index, const T &obj);
 	int insert(size_t pos_index, T &&obj);
 	
-	int popFront(size_t count = 1);
-	int popBack(size_t count = 1);
+	void popFront(size_t count = 1);
+	void popBack(size_t count = 1);
 	
 	int erase(size_t pos_index, size_t count = 1); // tested
 	
@@ -172,8 +175,8 @@ MemoryBlock<T>::_block_init_spNextBlock()
 	{
 		this->next_block = make_shared<MemoryBlock>(this->arr_capacity);
 		this->next_block->prev_block = SharedPointer<MemoryBlock>(this);
-		this->is_end = false;
 	}	
+	this->is_end = false;
 }
 
 template<typename T>
@@ -184,8 +187,106 @@ MemoryBlock<T>::_block_init_spPrevBlock()
 	{
 		this->prev_block = make_shared<MemoryBlock>(true, this->arr_capacity);
 		this->prev_block->next_block = SharedPointer<MemoryBlock>(this);
-		this->is_end = false;
 	}	
+	this->is_end = false;
+}
+
+template<typename T>
+void
+MemoryBlock<T>::_block_popFront(size_t count)
+{
+	if(is_front_adding)
+	{
+		if(this->arr_size < count)
+		{
+			array_call_distructors(this->arr_size, this->inc_arr + this->first_index);
+			if(this->next_block.isInitialized())
+			{
+				this->next_block->_block_popFront(count - this->arr_size);
+			}
+			this->arr_size = 0;
+			this->first_index = this->last_index;
+		}
+		else
+		{
+			array_call_distructors(count, this->inc_arr + this->first_index);
+			this->arr_size    -= count;
+			this->first_index += count;
+		}
+	}
+	else
+	{
+		if(this->arr_size < count)
+		{
+			if(this->next_block.isInitialized())
+			{
+				this->next_block->_block_popFront(count - this->arr_size);
+			}
+			this->SimpleArray<T>::erase(0, this->arr_size);
+		}
+		else
+		{
+			this->SimpleArray<T>::erase(0, count);
+		}
+		
+	}
+	is_end = true;
+}
+
+template<typename T>
+void
+MemoryBlock<T>::_block_popBack(size_t count)
+{
+	if(is_front_adding)
+	{
+		if(this->arr_size < count)
+		{
+			array_call_distructors(this->arr_size, this->inc_arr + this->first_index);
+			if(this->prev_block.isInitialized())
+			{
+				this->prev_block->_block_popBack(count - this->arr_size);
+			}
+			this->arr_size = 0;
+			this->first_index = this->last_index;
+		}
+		else
+		{
+			array_call_distructors(
+				count,
+				this->inc_arr + (this->last_index-1) - count
+			);
+			this->arr_size -= count;
+			
+			// move elements
+			for(size_t i = 0; i < this->arr_size; ++i)
+			{
+				array_rewrite(this->inc_arr, this->arr_capacity - 1 - i,
+					this->inc_arr[this->first_index + this->arr_size - 1 - i]);
+				array_call_distructors(1,
+					this->inc_arr + this->first_index + this->arr_size - 1 - i);
+				
+			}
+			this->first_index += count;
+		}
+		
+	}
+	else
+	{
+		if(this->arr_size < count)
+		{
+			if(this->prev_block.isInitialized())
+			{
+				this->prev_block->_block_popBack(count - this->arr_size);
+			}
+			this->SimpleArray<T>::popBack(this->arr_size);
+		}
+		else
+		{
+			this->SimpleArray<T>::popBack(count);
+		}
+		
+	}
+	is_end = true;	
 }
 
 template<typename T>
@@ -335,39 +436,30 @@ MemoryBlock<T>::pushBack(T &&obj)
 }
 
 template<typename T>
-int
+void
 MemoryBlock<T>::popFront(size_t count)
 {
-	if(this->arr_size < count)
+	if(this->prev_block.isInitialized())
 	{
-		return -1;
-	}
-	
-	if(this->is_front_adding)
-	{
+		this->prev_block->popFront(count);
 	}
 	else
 	{
+		this->_block_popFront(count);
 	}
-	return 1;
 }
 
 template<typename T>
-int
+void
 MemoryBlock<T>::popBack(size_t count)
 {
-	if(this->arr_size < count)
+	if(this->next_block.isInitialized())
 	{
-		return -1;
-	}
-	
-	if(this->is_front_adding)
-	{
-		return 1;
+		this->next_block->popBack(count);
 	}
 	else
 	{
-		return 1;
+		this->_block_popBack(count);
 	}
 }
 

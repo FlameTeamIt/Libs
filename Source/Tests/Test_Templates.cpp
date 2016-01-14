@@ -16,7 +16,7 @@ void
 Test::Templates::all()
 {
 	this->count_success_tests = 0
-			+ this->SimpleArray()
+//			+ this->SimpleArray()
 //			+ this->Array()
 			+ this->Array_MemoryBlock()
 //			+ this->List()
@@ -260,110 +260,193 @@ Test::Templates::Array_MemoryBlock()
 // push_back
 	
 	// back adding block
-	
-	back_add_block.pushBack(test_obj);
-	back_add_block.pushBack(1);
-	back_add_block.pushBack(2);
-	back_add_block.pushBack(3);
-	
-	std::cout
-		<< "Code (back adding block):" "\n"
-			<< "\t" "back_add_block.pushBack(test_obj); // test_obj == 0" "\n"
-			<< "\t" "back_add_block.pushBack(1);" "\n"
-			<< "\t" "back_add_block.pushBack(2);" "\n"
-			<< "\t" "back_add_block.pushBack(3);" "\n"
-		<< "Result:" "\n"
-			<< '\t' << back_add_block[0] << '\n'
-			<< '\t' << back_add_block[(size_t)1] << '\n'
-			<< '\t' << back_add_block[(size_t)2] << '\n'
-			<< '\t' << back_add_block[(size_t)3] << '\n';
-	std::cout << '\n';
-	
+	{
+		back_add_block.pushBack(test_obj);
+		back_add_block.pushBack(1);
+		back_add_block.pushBack(2);
+		back_add_block.pushBack(3);
+		
+		std::cout
+			<< "Code (back adding block):" "\n"
+				<< "\t" "back_add_block.pushBack(test_obj); // test_obj == 0" "\n"
+				<< "\t" "back_add_block.pushBack(1);" "\n"
+				<< "\t" "back_add_block.pushBack(2);" "\n"
+				<< "\t" "back_add_block.pushBack(3);" "\n"
+			<< "Result:" "\n"
+				<< '\t' << back_add_block[0] << '\n'
+				<< '\t' << back_add_block[(size_t)1] << '\n'
+				<< '\t' << back_add_block[(size_t)2] << '\n'
+				<< '\t' << back_add_block[(size_t)3] << '\n';
+		std::cout << '\n';
+	}
 	
 	// front adding block
-	
-	front_add_block.pushBack(test_obj);
-	front_add_block.pushBack(1);
-	front_add_block.pushBack(2);
-	front_add_block.pushBack(3);
-	
-	std::cout
-		<< "Code (front adding block):" "\n"
-			<< "\t" "front_add_block.pushBack(test_obj); // test_obj == 0" "\n"
-			<< "\t" "front_add_block.pushBack(1);" "\n"
-			<< "\t" "front_add_block.pushBack(2);" "\n"
-			<< "\t" "front_add_block.pushBack(3);" "\n"
-		<< "Result:" "\n"
-			<< '\t' << front_add_block[0] << '\n'
-			<< '\t' << front_add_block[(size_t)1] << '\n'
-			<< '\t' << front_add_block[(size_t)2] << '\n'
-			<< '\t' << front_add_block[(size_t)3] << '\n';
-	std::cout << '\n';
-	
+	{
+		front_add_block.pushBack(test_obj);
+		front_add_block.pushBack(1);
+		front_add_block.pushBack(2);
+		front_add_block.pushBack(3);
+		
+		std::cout
+			<< "Code (front adding block):" "\n"
+				<< "\t" "front_add_block.pushBack(test_obj); // test_obj == 0" "\n"
+				<< "\t" "front_add_block.pushBack(1);" "\n"
+				<< "\t" "front_add_block.pushBack(2);" "\n"
+				<< "\t" "front_add_block.pushBack(3);" "\n"
+			<< "Result:" "\n"
+				<< '\t' << front_add_block[0] << '\n'
+				<< '\t' << front_add_block[(size_t)1] << '\n'
+				<< '\t' << front_add_block[(size_t)2] << '\n'
+				<< '\t' << front_add_block[(size_t)3] << '\n';
+		std::cout << '\n';
+	}
 // push_front
 	
 	// back adding block
-	
-	back_add_block.pushFront(test_obj);
-	back_add_block.pushFront(-1);
-	back_add_block.pushFront(-2);
-	back_add_block.pushFront(-3);
-	
-	std::cout
-		<< "Code:" "\n"
-		   << "\t" "back_add_block.pushFront(-3);" "\n"
-		   << "\t" "back_add_block.pushFront(-2);" "\n"
-		   << "\t" "back_add_block.pushFront(-1);" "\n"
-		   << "\t" "back_add_block.pushFront(test_obj);" "\n"
-		<< "Result:" "\n"
-			<< '\t' << back_add_block[0] << '\n'
-			<< '\t' << back_add_block[(size_t)1] << '\n'
-			<< '\t' << back_add_block[(size_t)2] << '\n'
-			<< '\t' << back_add_block[(size_t)3] << '\n';
-	std::cout << '\n';
-	
+	{
+		back_add_block.pushFront(test_obj);
+		back_add_block.pushFront(-1);
+		back_add_block.pushFront(-2);
+		back_add_block.pushFront(-3);
+		
+		std::cout
+			<< "Code:" "\n"
+			   << "\t" "back_add_block.pushFront(-3);" "\n"
+			   << "\t" "back_add_block.pushFront(-2);" "\n"
+			   << "\t" "back_add_block.pushFront(-1);" "\n"
+			   << "\t" "back_add_block.pushFront(test_obj);" "\n"
+			<< "Result:" "\n"
+				<< '\t' << back_add_block[0] << '\n'
+				<< '\t' << back_add_block[(size_t)1] << '\n'
+				<< '\t' << back_add_block[(size_t)2] << '\n'
+				<< '\t' << back_add_block[(size_t)3] << '\n';
+		std::cout << '\n';
+		
+		std::cout << "All containts (back adding block):" "\n";
+	    std::for_each
+	    (
+		    back_add_block.begin(), back_add_block.end(),
+		    [](long out)
+		    {
+			    std::cout << '\t' << out << '\n';
+		    }
+	    );
+	}
 	
 	// front adding block
+	{
+		front_add_block.pushFront(test_obj);
+		front_add_block.pushFront(-1);
+		front_add_block.pushFront(-2);
+		front_add_block.pushFront(-3);
+		
+		std::cout
+			<< "Code:" "\n"
+				<< "\t" "front_add_block.pushFront(-3);" "\n"
+				<< "\t" "front_add_block.pushFront(-2);" "\n"
+				<< "\t" "front_add_block.pushFront(-1);" "\n"
+				<< "\t" "front_add_block.pushFront(test_obj);" "\n"
+			<< "Result:" "\n"
+				<< '\t' << front_add_block[0] << '\n'
+				<< '\t' << front_add_block[(size_t)1] << '\n'
+				<< '\t' << front_add_block[(size_t)2] << '\n'
+				<< '\t' << front_add_block[(size_t)3] << '\n';
+		std::cout << '\n';
+		
+		std::cout << "All containts (front adding block):" "\n";
+		std::for_each
+		(
+			front_add_block.begin(), front_add_block.end(),
+			[](long out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
+	}
 	
-	front_add_block.pushFront(test_obj);
-	front_add_block.pushFront(-1);
-	front_add_block.pushFront(-2);
-	front_add_block.pushFront(-3);
+// pop_back
 	
-	std::cout
-		<< "Code:" "\n"
-			<< "\t" "front_add_block.pushFront(-3);" "\n"
-			<< "\t" "front_add_block.pushFront(-2);" "\n"
-			<< "\t" "front_add_block.pushFront(-1);" "\n"
-			<< "\t" "front_add_block.pushFront(test_obj);" "\n"
-		<< "Result:" "\n"
-			<< '\t' << front_add_block[0] << '\n'
-			<< '\t' << front_add_block[(size_t)1] << '\n'
-			<< '\t' << front_add_block[(size_t)2] << '\n'
-			<< '\t' << front_add_block[(size_t)3] << '\n';
-	std::cout << '\n';
+	// back adding block
+	{
+		back_add_block.popBack(2);
+		back_add_block.popBack();
+		std::cout
+			<< "Code:" "\n"
+				<< "\t" "back_add_block.popBack(2);" "\n"
+				<< "\t" "back_add_block.popBack();" "\n"
+			<< "Result:" "\n";
+		std::for_each
+		(
+			back_add_block.begin(), back_add_block.end(),
+			[](long out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
+		
+	}
 	
-	std::cout << "All containts (back adding block):" "\n";
-	std::for_each
-	(
-		back_add_block.begin(), back_add_block.end(),
-		[](long out)
-		{
-			std::cout << '\t' << out << '\n';
-		}
-	);
+	// front adding block
+	{
+		front_add_block.popBack(2);
+		front_add_block.popBack();
+		std::cout
+				<< "Code:" "\n"
+				<< "\t" "front_add_block.popBack(2);" "\n"
+				<< "\t" "front_add_block.popBack();" "\n"
+				<< "Result:" "\n";
+		std::for_each
+		(
+			front_add_block.begin(), front_add_block.end(),
+			[](long out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
+		
+	}
 	
-	std::cout << "All containts (front adding block):" "\n";
-	std::for_each
-	(
-		front_add_block.begin(), front_add_block.end(),
-		[](long out)
-		{
-			std::cout << '\t' << out << '\n';
-		}
-	);
+// pop_front
 	
-	// pop_back
+	// back adding block
+	{
+		back_add_block.popFront(2);
+		back_add_block.popFront();
+		std::cout
+				<< "Code:" "\n"
+				<< "\t" "back_add_block.popFront(2);" "\n"
+				<< "\t" "back_add_block.popFront();" "\n"
+				<< "Result:" "\n";
+		std::for_each
+		(
+			back_add_block.begin(), back_add_block.end(),
+			[](long out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
+		
+	}
+	
+	// front adding block
+	{
+		front_add_block.popFront(2);
+		front_add_block.popFront();
+		std::cout
+				<< "Code:" "\n"
+				<< "\t" "front_add_block.popFront(2);" "\n"
+				<< "\t" "front_add_block.popFront();" "\n"
+				<< "Result:" "\n";
+		std::for_each
+		(
+			front_add_block.begin(), front_add_block.end(),
+			[](long out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
+		
+	}
 	
 	return 1;
 }

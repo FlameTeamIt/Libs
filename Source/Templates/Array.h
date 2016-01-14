@@ -86,17 +86,17 @@ Array<T>::~Array()
 
 template<class T>
 void
-Array<T>::_array_setCopy(const Array<T> &array)
+Array<T>::__array_setCopy(const Array<T> &array)
 {}
 
 template<class T>
 void
-Array<T>::_array_init(size_t size)
+Array<T>::__array_init(size_t size)
 {}
 
 template<class T>
 void
-Array<T>::_array_setMove(Array<T> &array)
+Array<T>::__array_setMove(Array<T> &array)
 {}
 
 #endif // TEMPLATES_ARRAY
