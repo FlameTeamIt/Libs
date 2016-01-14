@@ -17,11 +17,8 @@ public:
 	InterfaceIterator();
 	~InterfaceIterator();
 	
-	virtual const TData& operator *() const noexcept = 0;
-	virtual       TData& operator *()       noexcept = 0;
-		  
-	virtual const TData* operator ->() const noexcept = 0;
-	virtual       TData* operator ->()       noexcept = 0;
+	virtual       TData& operator *() const noexcept = 0;
+	virtual       TData*& operator ->() const noexcept = 0;
 };
 
 
@@ -37,6 +34,8 @@ public:
 	
 	inline const BasicIterator<T, TData>& operator ++();
 	inline const BasicIterator<T, TData>& operator --();
+	inline const BasicIterator<T, TData>& operator ++() const;
+	inline const BasicIterator<T, TData>& operator --() const;
 };
 
 template<class T, class TData>
@@ -102,6 +101,22 @@ BasicIterator<T, TData>::operator ++()
 template<class T, class TData>
 const BasicIterator<T, TData>&
 BasicIterator<T, TData>::operator --()
+{
+	--(this->inc_data_iterator);
+	return *this;
+}
+
+template<class T, class TData>
+const BasicIterator<T, TData>&
+BasicIterator<T, TData>::operator ++() const
+{
+	++(this->inc_data_iterator);
+	return *this;
+}
+
+template<class T, class TData>
+const BasicIterator<T, TData>&
+BasicIterator<T, TData>::operator --() const
 {
 	--(this->inc_data_iterator);
 	return *this;

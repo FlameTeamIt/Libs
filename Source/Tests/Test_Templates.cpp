@@ -192,6 +192,28 @@ Test::Templates::SimpleArray()
 	);
 	std::cout << '\n';
 	
+	// insert -- reverse iterator
+	
+	auto rit = simple_array2.rend()-1;
+	returned_insert2 = simple_array2.insert(rit, 206);
+	std::cout
+			<< "\n" "Code:" "\n"
+			<< "\t" "simple_array2.insert((simple_array2.rend())-1, 206);"
+			<< "\n" "Result:" "\n"
+			<< "\t" "simple_array2.getSize() = " << simple_array2.getSize() << '\n'
+			<< "\t" "returned_insert2 = "        << returned_insert2 << '\n';
+	
+	std::cout << "All values:" "\n";
+	std::for_each
+	(
+		simple_array2.begin(), simple_array2.end(),
+		[](long out)
+		{
+			std::cout << '\t' << out << '\n';
+		}
+	);
+	std::cout << '\n';
+	
 // erase
 	returned_insert2 = simple_array2.erase(4);
 	std::cout

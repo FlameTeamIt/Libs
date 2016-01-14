@@ -453,10 +453,7 @@ SimpleArray<T>::erase(size_t pos_index, size_t count)
 	auto tmp_size = pos_index + count;
 	if(this->arr_size >= tmp_size)
 	{
-		for(size_t i = 0; i < count; ++i)
-		{
-			this->inc_arr[pos_index+i].~T();
-		}
+		array_call_distructors(count, this->inc_arr + pos_index);
 		
 		//нужно сдвинуть по необходимости
 		if(this->arr_size > tmp_size)
