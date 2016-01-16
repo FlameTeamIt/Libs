@@ -74,8 +74,8 @@ flame_ide::templates::is_preemptive_type()
 }
 
 template<typename Tt1, typename Tt2> inline constexpr
-bool
-flame_ide::templates::is_same_types()
+bool flame_ide::templates::
+is_same_types()
 {
 	return (Types<Tt1, Tt2>::isSame);
 }
@@ -108,4 +108,4 @@ copy(const TIteratorInput &start, const TIteratorInput &end,
 	}
 }
 
-#endif // FOR_ALL
+#endif // TEMPLATES_FOR_ALL
