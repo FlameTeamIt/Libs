@@ -7,6 +7,19 @@
 
 #define DEFAULT_CAPACITY size_t(32)
 
+/*
+
+Что нужно реализовать:
+1. Конструкторы копирования/перемещения
+2. _block_at()
+3. _block_operator_at()
+4. _block_getArrayCopy()
+
+5. insert()/erase() (включая итераторы)
+6. begin()/end()
+7. rbegin()/rend()
+
+*/
 namespace flame_ide
 {namespace templates
 {
@@ -40,10 +53,12 @@ protected:
 	const T& _block_at(size_t index) const;
 	      T& _block_at(size_t index);
 		  
+	const T& _block_operator_at(size_t index) const;
+	      T& _block_operator_at(size_t index);
+		  
 	inline T* _block_getArrayCopy() const;
 	
 public:
-	
 	MemoryBlock();
 	MemoryBlock(size_t init_size);
 	template<typename TSize_Type> MemoryBlock(TSize_Type init_size);
@@ -55,9 +70,6 @@ public:
 	MemoryBlock(MemoryBlock<T> &&block);
 	
 	virtual ~MemoryBlock();
-	
-	
-	bool isEndBlock() const noexcept;
 	
 	int pushFront(const T &obj);
 	int pushFront(T &&obj);
@@ -322,13 +334,6 @@ SharedPointer<MemoryBlock<T>>
 MemoryBlock<T>::_block_getPrev()
 {
 	return prev_block;
-}
-
-template<typename T>
-bool
-MemoryBlock<T>::isEndBlock() const noexcept
-{
-	return is_end;
 }
 
 template<typename T>
