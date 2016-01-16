@@ -1,25 +1,11 @@
-#ifndef TEMPLATES_ARRAY_STRUCTURES
-#define TEMPLATES_ARRAY_STRUCTURES
+#ifndef TEMPLATES_MEMORYBLOCK
+#define TEMPLATES_MEMORYBLOCK
 
 #include <Templates/Pointers.h>
 #include <Templates/SimpleArray.h>
+#include <Templates/MemoryBlock_Iterators.h>
 
 #define DEFAULT_CAPACITY size_t(32)
-
-/*
-Что сделано:
-1. Реализованы все конструкторы и деструктор
-
-Что нужно сделать и поодумать, как сделать:
-1. Вставка/удаление вперёд/назад
-   1.1. Может даже стоит это делегировать Array
-   1.1.1. Вставка и удаление присходят локально
-   1.1.2. Если нужно будет удалить диапозон - надо думать
-2. Вставка/удаление в произвольном месте произвольное количество объектов
-   2.1. Может даже стоит это делегировать Array
-3. Индексация - делегирование на Array или здесь внутри.
-   3.1 Или вообще использовать только для внутреннего пользования
-*/
 
 namespace flame_ide
 {namespace templates
@@ -28,7 +14,6 @@ namespace flame_ide
 template<class T>
 class MemoryBlock : public SimpleArray<T>
 {
-	inline void __block_setInit(size_t init_size);
 	inline void __block_setCopy(const MemoryBlock<T> &block);
 	inline void __block_setMove(MemoryBlock<T> &block);
 	
@@ -49,26 +34,28 @@ protected:
 	void _block_popFront(size_t count);
 	void _block_popBack(size_t count);
 	
+	SharedPointer<my_type> _block_getNext();
+	SharedPointer<my_type> _block_getPrev();
+	
+	const T& _block_at(size_t index) const;
+	      T& _block_at(size_t index);
+		  
+	inline T* _block_getArrayCopy() const;
+	
 public:
 	
 	MemoryBlock();
 	MemoryBlock(size_t init_size);
-	template<typename TSize_Type>
-	MemoryBlock(TSize_Type init_size);
-	
+	template<typename TSize_Type> MemoryBlock(TSize_Type init_size);
 	MemoryBlock(bool is_front_adding);
 	MemoryBlock(bool is_front_adding, size_t init_size);
-	template<typename TSize_Type>
-	MemoryBlock(bool is_front_adding, TSize_Type init_size);
-	
-	
-	MemoryBlock(const MemoryBlock<T> &array);
-	MemoryBlock(MemoryBlock<T> &&array);
+	template<typename TSize_Type> MemoryBlock(bool is_front_adding,
+											  TSize_Type init_size);
+	MemoryBlock(const MemoryBlock<T> &block);
+	MemoryBlock(MemoryBlock<T> &&block);
 	
 	virtual ~MemoryBlock();
 	
-	SharedPointer<my_type> getNext();
-	SharedPointer<my_type> getPrev();
 	
 	bool isEndBlock() const noexcept;
 	
@@ -164,8 +151,43 @@ MemoryBlock<T>::MemoryBlock(bool is_front_adding, TSize_Type init_size)
 }
 
 template<typename T>
+MemoryBlock<T>::MemoryBlock(MemoryBlock<T> &&block)
+{
+	this->__block_setMove(block);
+}
+
+template<typename T>
+MemoryBlock<T>::MemoryBlock(const MemoryBlock<T> &block)
+{
+	this->__block_setCopy(block);
+}
+
+template<typename T>
 MemoryBlock<T>::~MemoryBlock()
-{}
+{
+	if(prev_block.isInitialized())
+	{
+		prev_block.clear();
+	}
+	if(next_block.isInitialized())
+	{
+		next_block.clear();
+	}
+}
+
+template<typename T>
+void
+MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
+{
+	
+}
+
+template<typename T>
+void
+MemoryBlock<T>::__block_setMove(MemoryBlock<T> &block)
+{
+	
+}
 
 template<typename T>
 void
@@ -291,13 +313,13 @@ MemoryBlock<T>::_block_popBack(size_t count)
 
 template<typename T>
 SharedPointer<MemoryBlock<T>>
-MemoryBlock<T>::getNext()
+MemoryBlock<T>::_block_getNext()
 {
 	return next_block;
 }
 template<typename T>
 SharedPointer<MemoryBlock<T>>
-MemoryBlock<T>::getPrev()
+MemoryBlock<T>::_block_getPrev()
 {
 	return prev_block;
 }
@@ -541,14 +563,14 @@ template<typename T>
 const MemoryBlock<T>&
 MemoryBlock<T>::operator =(const MemoryBlock<T> &block)
 {
-	return this;
+	return *this;
 }
 
 template<typename T>
 const MemoryBlock<T>&
 MemoryBlock<T>::operator =(MemoryBlock<T> &&block)
 {
-	return this;
+	return *this;
 }
 
-#endif // TEMPLATES_ARRAY_STRUCTURES
+#endif // TEMPLATES_MEMORYBLOCK
