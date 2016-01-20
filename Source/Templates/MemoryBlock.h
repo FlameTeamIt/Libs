@@ -71,6 +71,12 @@ public:
 	
 	virtual ~MemoryBlock();
 	
+	size_t size(); // new - not in plan
+	size_t capacity(); // new - not in plan
+	
+	void resize(size_t count); // new - not in plan
+	void reserve(size_t count); // new - not in plan
+	
 	int pushFront(const T &obj);
 	int pushFront(T &&obj);
 	
@@ -83,7 +89,7 @@ public:
 	void popFront(size_t count = 1);
 	void popBack(size_t count = 1);
 	
-	int erase(size_t pos_index, size_t count = 1); // tested
+	int erase(size_t pos_index, size_t count = 1);
 	
 	void clear();
 	
