@@ -10,19 +10,26 @@
 /*
 
 Что нужно реализовать:
-1. Конструкторы копирования/перемещения
-2. _block_at()
-3. _block_operator_at()
-4. _block_getArrayCopy()
+1. Конструкторы копирования/перемещения   -- not done
+2. _block_at()                            -> done
+3. _block_operator_at()                   -- not done
+4. _block_getArrayCopy()                  -- not done
 
-5. insert()/erase() (включая итераторы)
-6. begin()/end()
-7. rbegin()/rend()
+5. insert()/erase() (включая итераторы)   -- not done
+6. begin()/end()                          -- not done
+7. rbegin()/rend()                        -- not done
 
 */
 namespace flame_ide
 {namespace templates
 {
+
+typedef enum
+{
+	FROM_NULL,
+	FROM_FRONT,
+	FROM_BACK
+} FromBlock;
 
 template<class T>
 class MemoryBlock : public SimpleArray<T>
@@ -50,8 +57,7 @@ protected:
 	SharedPointer<my_type> _block_getNext();
 	SharedPointer<my_type> _block_getPrev();
 	
-	const T& _block_at(size_t index) const;
-	      T& _block_at(size_t index);
+	template<typename TSize_Type> T& _block_at(size_t index, FromBlock from_back);
 		  
 	const T& _block_operator_at(size_t index) const;
 	      T& _block_operator_at(size_t index);
@@ -71,11 +77,11 @@ public:
 	
 	virtual ~MemoryBlock();
 	
-	size_t size(); // new - not in plan
-	size_t capacity(); // new - not in plan
+//	size_t size(); // new - not in plan
+//	size_t capacity(); // new - not in plan
 	
-	void resize(size_t count); // new - not in plan
-	void reserve(size_t count); // new - not in plan
+//	void resize(size_t count); // new - not in plan
+//	void reserve(size_t count); // new - not in plan
 	
 	int pushFront(const T &obj);
 	int pushFront(T &&obj);
@@ -93,8 +99,8 @@ public:
 	
 	void clear();
 	
-	const T& at(size_t index) const;
-	      T& at(size_t index);
+	template<typename TSize_Type> const T& at(TSize_Type index) const;
+	template<typename TSize_Type>       T& at(TSize_Type index);
 	
 	const T& operator [](size_t index) const noexcept;
 	      T& operator [](size_t index)       noexcept;
@@ -343,6 +349,63 @@ MemoryBlock<T>::_block_getPrev()
 }
 
 template<typename T>
+template<typename TSize_Type>
+T&
+MemoryBlock<T>::_block_at(TSize_Type index, FromBlock from_block)
+{
+	size_t local_index = static_cast<size_t>(index);
+	switch (from_block)
+	{
+	case FROM_NULL:
+	case FROM_BACK:
+		if(prev_block.isInitialized())
+		{
+			return prev_block->_block_at(local_index, FROM_BACK);
+		}
+		else
+		{
+			if(local_index < this->arr_size)
+			{
+				return this->SimpleArray<T>::at(local_index);
+			}
+			else
+			{
+				if(next_block.isInitialized())
+				{
+					return next_block->_block_at(local_index - this->inc_arr,
+												 FROM_FRONT);
+				}
+				else
+				{
+					return this->SimpleArray<T>::at(size_t(0));
+				}
+			}
+		}
+	
+	
+	case FROM_FRONT:
+	    if(local_index < this->arr_size)
+	    {
+		    return this->SimpleArray<T>::at(local_index);
+	    }
+	    else
+	    {
+		    if(next_block.isInitialized())
+		    {
+			    return next_block->_block_at(local_index - this->inc_arr + 1,
+										     FROM_FRONT);
+		    }
+		    else
+		    {
+			    return this->SimpleArray<T>::at(size_t(0));
+		    }
+	    }
+	}
+	
+	return this->SimpleArray<T>::at(size_t(0));
+}
+
+template<typename T>
 int
 MemoryBlock<T>::pushFront(const T &obj)
 {
@@ -530,6 +593,21 @@ MemoryBlock<T>::clear()
 	{
 		
 	}
+}
+
+template<typename T>
+template<typename TSize_Type>
+const T&
+MemoryBlock<T>::at(TSize_Type index) const
+{
+	return this->_block_at(index, FROM_NULL);
+}
+template<typename T>
+template<typename TSize_Type>
+T&
+MemoryBlock<T>::at(TSize_Type index)
+{
+	return this->_block_at(index, FROM_NULL);
 }
 
 template<typename T>
