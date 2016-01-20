@@ -8,12 +8,12 @@ namespace flame_ide
 {namespace templates
 {
 
-template<typename T> class MemoryBlock<T>;
-template<typename T> class MemoryBlockIterator<T>;
-template<typename T> class MemoryBlockReverseIterator<T>;
+template<typename T> class MemoryBlock;
+template<typename T> class MemoryBlockIterator;
+template<typename T> class MemoryBlockReverseIterator;
 
 template<typename T>
-class MemoryBlockIterator<T>
+class MemoryBlockIterator
 		: public BasicReverseIterator<SimpleArrayIterator<T>, T>
 {
 private:
@@ -82,7 +82,7 @@ public:
 };
 
 template<typename T>
-class MemoryBlockReverseIterator<T>
+class MemoryBlockReverseIterator
 		: public BasicReverseIterator<SimpleArrayReverseIterator<T>, T>
 {
 private:
@@ -97,7 +97,7 @@ public:
 	MemoryBlockReverseIterator(MemoryBlockReverseIterator<T> &&iterator);
 	MemoryBlockReverseIterator(const MemoryBlockReverseIterator<T> &iterator);
 	
-	~MemoryBlockIterator() = default;
+	~MemoryBlockReverseIterator() = default;
 	
 	inline const my_type& operator ++();
 	inline const my_type& operator --();
