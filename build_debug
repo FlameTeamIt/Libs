@@ -17,6 +17,12 @@ case "$1" in
 "leak")
     valgrind --leak-check=full --show-leak-kinds=all ./Debug/bin/test_FlameIDE
     ;;
+"mingw32")
+    make -j4 -f Makefile CC=i686-w64-mingw32-g++ BUILD=$TypeBuild
+    ;;
+"mingw64")
+    make -j4 -f Makefile CC=x86_64-w64-mingw32-g++ BUILD=$TypeBuild
+    ;;
 esac
 exit
 
