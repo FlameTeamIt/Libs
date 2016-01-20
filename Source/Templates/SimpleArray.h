@@ -233,13 +233,13 @@ template<class T>
 const T&
 SimpleArray<T>::at(size_t index) const
 {
-	return inc_arr[(index + first_index) % arr_capacity];
+	return inc_arr[(index % arr_capacity) + first_index];
 }
 template<class T>
 T&
 SimpleArray<T>::at(size_t index)
 {
-	return inc_arr[(index + first_index) % arr_capacity];
+	return inc_arr[(index % arr_capacity) + first_index];
 }
 
 template<class T>
