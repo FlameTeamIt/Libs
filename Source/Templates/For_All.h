@@ -27,6 +27,8 @@ inline constexpr bool is_same_types();
 
 template<class T>
 T&& move(T &reference) noexcept;
+template<class T>
+T&& move(const T &reference) noexcept;
 
 template<typename TIteratorInput, typename TIteratorOutput>
 void copy(const TIteratorInput &start, const TIteratorInput &end,
@@ -83,6 +85,13 @@ is_same_types()
 template<class T>
 T&& flame_ide::templates::
 move(T &reference) noexcept
+{
+	return static_cast<T &&>(reference);
+}
+
+template<class T>
+T&& flame_ide::templates::
+move(const T &reference) noexcept
 {
 	return static_cast<T &&>(reference);
 }
