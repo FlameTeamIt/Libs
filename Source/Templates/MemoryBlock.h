@@ -11,7 +11,7 @@
 
 Что нужно реализовать:
 1. Конструкторы копирования/перемещения   -- not done
-2. _block_at()                            -> done
+2. _block_at()                            -> done and tested
 3. _block_operator_at()                   -- not done
 4. _block_getArrayCopy()                  -- not done
 
@@ -26,9 +26,9 @@ namespace flame_ide
 
 typedef enum
 {
-	FROM_NULL,
-	FROM_FRONT,
-	FROM_BACK
+	FROM_NULL = char(0),
+	FROM_FRONT = char(1),
+	FROM_BACK = char(2)
 } FromBlock;
 
 template<class T>
@@ -57,7 +57,8 @@ protected:
 	SharedPointer<my_type> _block_getNext();
 	SharedPointer<my_type> _block_getPrev();
 	
-	template<typename TSize_Type> T& _block_at(size_t index, FromBlock from_back);
+	template<typename TSize_Type> T& _block_at(TSize_Type index,
+											   FromBlock from_back);
 		  
 	const T& _block_operator_at(size_t index) const;
 	      T& _block_operator_at(size_t index);
@@ -372,7 +373,7 @@ MemoryBlock<T>::_block_at(TSize_Type index, FromBlock from_block)
 			{
 				if(next_block.isInitialized())
 				{
-					return next_block->_block_at(local_index - this->inc_arr,
+					return next_block->_block_at(local_index - this->arr_size,
 												 FROM_FRONT);
 				}
 				else
@@ -392,7 +393,7 @@ MemoryBlock<T>::_block_at(TSize_Type index, FromBlock from_block)
 	    {
 		    if(next_block.isInitialized())
 		    {
-			    return next_block->_block_at(local_index - this->inc_arr + 1,
+			    return next_block->_block_at(local_index - this->arr_size + 1,
 										     FROM_FRONT);
 		    }
 		    else

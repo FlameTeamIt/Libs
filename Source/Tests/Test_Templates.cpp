@@ -310,7 +310,7 @@ Test::Templates::Array_MemoryBlock()
 		back_add_block.pushFront(-3);
 		
 		std::cout
-			<< "Code:" "\n"
+			<< "Code (back adding block):" "\n"
 			   << "\t" "back_add_block.pushFront(-3);" "\n"
 			   << "\t" "back_add_block.pushFront(-2);" "\n"
 			   << "\t" "back_add_block.pushFront(-1);" "\n"
@@ -331,6 +331,7 @@ Test::Templates::Array_MemoryBlock()
 			    std::cout << '\t' << out << '\n';
 		    }
 	    );
+		std::cout << '\n';
 	}
 	
 	// front adding block
@@ -341,7 +342,7 @@ Test::Templates::Array_MemoryBlock()
 		front_add_block.pushFront(-3);
 		
 		std::cout
-			<< "Code:" "\n"
+			<< "Code (front adding block):" "\n"
 				<< "\t" "front_add_block.pushFront(-3);" "\n"
 				<< "\t" "front_add_block.pushFront(-2);" "\n"
 				<< "\t" "front_add_block.pushFront(-1);" "\n"
@@ -362,7 +363,38 @@ Test::Templates::Array_MemoryBlock()
 				std::cout << '\t' << out << '\n';
 			}
 		);
+		std::cout << '\n';
 	}
+	
+// at()
+	
+	// back adding block
+	{
+		std::cout
+			<< "Code (back adding block):" "\n"
+				<< "\t" "back_add_block.at(index)" "\n"
+			<< "Result:" "\n";
+		for(size_t i = 0, size = back_add_block.getSize(); i < size; ++i)
+		{
+			std::cout << '\t' << back_add_block.at(i) << '\n';
+		}
+		std::cout << '\n';
+	}
+	
+	// front adding block
+	{
+		std::cout
+			<< "Code (front adding block):" "\n"
+				<< "\t" "front_add_block.at(index)" "\n"
+			<< "Result:" "\n";
+		for(size_t i = 0, size = front_add_block.getSize(); i < size; ++i)
+		{
+			std::cout << '\t' << front_add_block.at(i) << '\n';
+		}
+		std::cout << '\n';
+	}
+	
+	
 	
 // pop_back
 	
@@ -371,7 +403,7 @@ Test::Templates::Array_MemoryBlock()
 		back_add_block.popBack(2);
 		back_add_block.popBack();
 		std::cout
-			<< "Code:" "\n"
+			<< "Code (back adding block):" "\n"
 				<< "\t" "back_add_block.popBack(2);" "\n"
 				<< "\t" "back_add_block.popBack();" "\n"
 			<< "Result:" "\n";
@@ -383,6 +415,7 @@ Test::Templates::Array_MemoryBlock()
 				std::cout << '\t' << out << '\n';
 			}
 		);
+		std::cout << '\n';
 		
 	}
 	
@@ -391,10 +424,10 @@ Test::Templates::Array_MemoryBlock()
 		front_add_block.popBack(2);
 		front_add_block.popBack();
 		std::cout
-				<< "Code:" "\n"
+			<< "Code (front adding block):" "\n"
 				<< "\t" "front_add_block.popBack(2);" "\n"
 				<< "\t" "front_add_block.popBack();" "\n"
-				<< "Result:" "\n";
+			<< "Result:" "\n";
 		std::for_each
 		(
 			front_add_block.begin(), front_add_block.end(),
@@ -403,6 +436,7 @@ Test::Templates::Array_MemoryBlock()
 				std::cout << '\t' << out << '\n';
 			}
 		);
+		std::cout << '\n';
 		
 	}
 	
@@ -413,10 +447,10 @@ Test::Templates::Array_MemoryBlock()
 		back_add_block.popFront(2);
 		back_add_block.popFront();
 		std::cout
-				<< "Code:" "\n"
+			<< "Code (back adding block):" "\n"
 				<< "\t" "back_add_block.popFront(2);" "\n"
 				<< "\t" "back_add_block.popFront();" "\n"
-				<< "Result:" "\n";
+			<< "Result:" "\n";
 		std::for_each
 		(
 			back_add_block.begin(), back_add_block.end(),
@@ -425,6 +459,7 @@ Test::Templates::Array_MemoryBlock()
 				std::cout << '\t' << out << '\n';
 			}
 		);
+		std::cout << '\n';
 		
 	}
 	
@@ -433,10 +468,10 @@ Test::Templates::Array_MemoryBlock()
 		front_add_block.popFront(2);
 		front_add_block.popFront();
 		std::cout
-				<< "Code:" "\n"
+			<< "Code (front adding block):" "\n"
 				<< "\t" "front_add_block.popFront(2);" "\n"
 				<< "\t" "front_add_block.popFront();" "\n"
-				<< "Result:" "\n";
+			<< "Result:" "\n";
 		std::for_each
 		(
 			front_add_block.begin(), front_add_block.end(),
@@ -445,6 +480,7 @@ Test::Templates::Array_MemoryBlock()
 				std::cout << '\t' << out << '\n';
 			}
 		);
+		std::cout << '\n';
 		
 	}
 	
