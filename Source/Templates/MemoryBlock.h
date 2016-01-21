@@ -12,7 +12,7 @@
 Что нужно реализовать:
 1. Конструкторы копирования/перемещения   -- not done
 2. _block_at()                            -> done and tested
-3. _block_getArrayCopy()                  -- not done
+3. _block_getArrayCopy()                  -- done
 
 4. insert()/erase() (включая итераторы)   -- not done
 5. begin()/end()                          -- not done
@@ -397,6 +397,13 @@ MemoryBlock<T>::_block_at(TSize_Type index, FromBlock from_block)
 	}
 	
 	return this->SimpleArray<T>::at(size_t(0));
+}
+
+template<typename T>
+T*
+MemoryBlock<T>::_block_getArrayCopy()
+{
+	return this->SimpleArray<T>::_simple_getArrayCopy();
 }
 
 template<typename T>
