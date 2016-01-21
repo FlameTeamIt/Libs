@@ -198,7 +198,8 @@ SimpleArray<T>::__simple_setCopy(const SimpleArray<T> &array)
 	this->arr_size = array.arr_size;
 	this->inc_arr = array._simple_getArrayCopy();
 	
-	this->last_index = this->arr_size;
+	this->last_index = array.last_index;
+	this->first_index = array.first_index;
 }
 template<class T>
 void
@@ -210,7 +211,8 @@ SimpleArray<T>::__simple_setMove(SimpleArray<T> &array)
 	
 	array.arr_capacity = 0;
 	
-	this->last_index = this->arr_size;
+	this->last_index = array.last_index;
+	this->first_index = array.first_index;
 }
 
 // public
