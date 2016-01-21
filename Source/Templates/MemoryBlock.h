@@ -12,12 +12,11 @@
 Что нужно реализовать:
 1. Конструкторы копирования/перемещения   -- not done
 2. _block_at()                            -> done and tested
-3. _block_operator_at()                   -- not done
-4. _block_getArrayCopy()                  -- not done
+3. _block_getArrayCopy()                  -- not done
 
-5. insert()/erase() (включая итераторы)   -- not done
-6. begin()/end()                          -- not done
-7. rbegin()/rend()                        -- not done
+4. insert()/erase() (включая итераторы)   -- not done
+5. begin()/end()                          -- not done
+6. rbegin()/rend()                        -- not done
 
 */
 namespace flame_ide
@@ -40,7 +39,6 @@ class MemoryBlock : public SimpleArray<T>
 protected:
 	typedef MemoryBlock<T> my_type;
 	
-	bool is_end;
 	bool is_front_adding;
 	
 	size_t block_start_index; // start/end index in block list
@@ -59,9 +57,6 @@ protected:
 	
 	template<typename TSize_Type> T& _block_at(TSize_Type index,
 											   FromBlock from_back);
-		  
-	const T& _block_operator_at(size_t index) const;
-	      T& _block_operator_at(size_t index);
 		  
 	inline T* _block_getArrayCopy() const;
 	
@@ -122,7 +117,6 @@ using namespace flame_ide::templates;
 template<typename T>
 MemoryBlock<T>::MemoryBlock()
 	: SimpleArray<T>(DEFAULT_CAPACITY)
-	,is_end(true)
 	,is_front_adding(false)
 	,block_start_index(0)
 {}
@@ -130,7 +124,6 @@ MemoryBlock<T>::MemoryBlock()
 template<typename T>
 MemoryBlock<T>::MemoryBlock(size_t init_size)
 	: SimpleArray<T>(init_size)
-	,is_end(true)
 	,is_front_adding(false)
 	,block_start_index(0)
 {}
@@ -139,7 +132,6 @@ template<typename T>
 template<typename TSize_Type>
 MemoryBlock<T>::MemoryBlock(TSize_Type init_size)
 	: SimpleArray<T>(init_size)
-	,is_end(true)
 	,is_front_adding(false)
 	,block_start_index(0)
 {}
@@ -147,7 +139,6 @@ MemoryBlock<T>::MemoryBlock(TSize_Type init_size)
 template<typename T>
 MemoryBlock<T>::MemoryBlock(bool is_front_adding)
 	: SimpleArray<T>(DEFAULT_CAPACITY)
-	,is_end(true)
 	,is_front_adding(is_front_adding)
 	,block_start_index(0)
 {}
@@ -155,7 +146,6 @@ MemoryBlock<T>::MemoryBlock(bool is_front_adding)
 template<typename T>
 MemoryBlock<T>::MemoryBlock(bool is_front_adding, size_t init_size)
 	: SimpleArray<T>(init_size)
-	,is_end(true)
 	,is_front_adding(is_front_adding)
 	,block_start_index(0)
 {
@@ -167,7 +157,6 @@ template<typename T>
 template<typename TSize_Type>
 MemoryBlock<T>::MemoryBlock(bool is_front_adding, TSize_Type init_size)
 	: SimpleArray<T>(init_size)
-	,is_end(true)
 	,is_front_adding(is_front_adding)
 	,block_start_index(0)
 {
@@ -222,8 +211,8 @@ MemoryBlock<T>::_block_init_spNextBlock()
 	{
 		this->next_block = make_shared<MemoryBlock>(this->arr_capacity);
 		this->next_block->prev_block = SharedPointer<MemoryBlock>(this);
+		this->next_block->block_start_index = this->block_start_index + 1;
 	}	
-	this->is_end = false;
 }
 
 template<typename T>
@@ -234,8 +223,14 @@ MemoryBlock<T>::_block_init_spPrevBlock()
 	{
 		this->prev_block = make_shared<MemoryBlock>(true, this->arr_capacity);
 		this->prev_block->next_block = SharedPointer<MemoryBlock>(this);
+		
+		SharedPointer<my_type> *p_sp_block = &(this->prev_block->next_block);
+		while(p_sp_block->isInitialized())
+		{
+			(*p_sp_block)->block_start_index++;
+			p_sp_block = &((*p_sp_block)->next_block);
+		}
 	}	
-	this->is_end = false;
 }
 
 template<typename T>
@@ -277,7 +272,6 @@ MemoryBlock<T>::_block_popFront(size_t count)
 		}
 		
 	}
-	is_end = true;
 }
 
 template<typename T>
@@ -333,7 +327,6 @@ MemoryBlock<T>::_block_popBack(size_t count)
 		}
 		
 	}
-	is_end = true;	
 }
 
 template<typename T>
@@ -615,18 +608,14 @@ template<typename T>
 const T&
 MemoryBlock<T>::operator [](size_t index) const noexcept
 {
-	return *(this->inc_arr 
-	       + this->first_index
-	       + index);
+	return this->_block_at(index, FROM_NULL);
 }
 
 template<typename T>
 T&
 MemoryBlock<T>::operator [](size_t index) noexcept
 {
-	return *(this->inc_arr 
-	       + this->first_index
-	       + index);
+	return this->_block_at(index, FROM_NULL);
 }
 
 template<typename T>
@@ -634,9 +623,7 @@ template<typename TSize_Type>
 const T&
 MemoryBlock<T>::operator [](TSize_Type index) const noexcept
 {
-	return *(this->inc_arr
-	       + this->first_index
-	       + static_cast<size_t>(index));
+	return this->_block_at(index, FROM_NULL);
 }
 
 template<typename T>
@@ -644,9 +631,7 @@ template<typename TSize_Type>
 T&
 MemoryBlock<T>::operator [](TSize_Type index) noexcept
 {
-	return *(this->inc_arr
-	       + this->first_index
-	       + static_cast<size_t>(index));
+	return this->_block_at(index, FROM_NULL);
 }
 
 template<typename T>
