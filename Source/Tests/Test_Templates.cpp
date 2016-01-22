@@ -394,7 +394,9 @@ Test::Templates::Array_MemoryBlock()
 		std::cout << '\n';
 	}
 	
-	
+// copy constructor
+	MemoryBlock<long> copied_block = front_add_block;
+		
 	
 // pop_back
 	
