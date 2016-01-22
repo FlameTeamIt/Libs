@@ -11,12 +11,14 @@
 
 Что нужно реализовать:
 1. Конструкторы копирования/перемещения   -- done
-2. _block_at()                            -> done and tested
+2. _block_at()                            -> done
 3. _block_getArrayCopy()                  -- done
 
-4. insert()/erase() (включая итераторы)   -- not done
-5. begin()/end()                          -- not done
-6. rbegin()/rend()                        -- not done
+4. Реализация итераторов                  -- not done
+
+5. insert()/erase() (включая итераторы)   -- not done
+6. begin()/end()                          -- not done
+7. rbegin()/rend()                        -- not done
 
 */
 namespace flame_ide
@@ -166,14 +168,14 @@ MemoryBlock<T>::MemoryBlock(bool front_adding, TSize_Type init_size)
 
 template<typename T>
 MemoryBlock<T>::MemoryBlock(const MemoryBlock<T> &block)
-	: SimpleArray<T>(block)
+	: SimpleArray<T>(static_cast<const SimpleArray<T>&>(block))
 {
 	this->__block_setCopy(block);
 }
 
 template<typename T>
 MemoryBlock<T>::MemoryBlock(MemoryBlock<T> &&block)
-	: SimpleArray<T>(block)
+	: SimpleArray<T>(static_cast<SimpleArray<T>&&>(block))
 {
 	this->__block_setMove(block);
 }
@@ -193,7 +195,8 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 	this->block_number = block.block_number;
 	this->is_front_adding = block.is_front_adding;
 	
-	SharedPointer<my_type> *sp_block, *my_sp_block;
+	SharedPointer<my_type> const *sp_block;
+	SharedPointer<my_type> *my_sp_block;
 	my_type *my_p_block, *p_initing_block = nullptr;
 	
 	// циклы инициализации
@@ -211,7 +214,7 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 		(*my_sp_block) = make_shared<MemoryBlock>(true, 0);
 		(*my_sp_block)->next_block = SharedPointer<MemoryBlock>(my_p_block);
 		
-		p_initing_block = my_sp_block.operator ->();
+		p_initing_block = my_sp_block->operator ->();
 		p_initing_block->arr_capacity = (*sp_block)->arr_capacity;
 		p_initing_block->arr_size     = (*sp_block)->arr_size;
 		p_initing_block->first_index  = (*sp_block)->first_index;
@@ -225,7 +228,7 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 	    ;
 	    sp_block->isInitialized()
 	    ;
-		sp_block = &(*sp_block)->next_block
+	    sp_block = &(*sp_block)->next_block
 	       ,my_p_block = my_sp_block->operator ->()
 	       ,my_sp_block = &(*my_sp_block)->next_block
 	)
@@ -233,7 +236,7 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 		(*my_sp_block) = make_shared<MemoryBlock>(false, 0);
 		(*my_sp_block)->prev_block = SharedPointer<MemoryBlock>(my_p_block);
 		
-		p_initing_block = my_sp_block.operator ->();
+		p_initing_block = my_sp_block->operator ->();
 		p_initing_block->arr_capacity = (*sp_block)->arr_capacity;
 		p_initing_block->arr_size     = (*sp_block)->arr_size;
 		p_initing_block->first_index  = (*sp_block)->first_index;
@@ -301,7 +304,8 @@ MemoryBlock<T>::_block_popFront(size_t count)
 	{
 		if(this->arr_size < count)
 		{
-			array_call_distructors(this->arr_size, this->inc_arr + this->first_index);
+			array_call_distructors(this->arr_size,
+								   this->inc_arr + this->first_index);
 			if(this->next_block.isInitialized())
 			{
 				this->next_block->_block_popFront(count - this->arr_size);
@@ -342,7 +346,8 @@ MemoryBlock<T>::_block_popBack(size_t count)
 	{
 		if(this->arr_size < count)
 		{
-			array_call_distructors(this->arr_size, this->inc_arr + this->first_index);
+			array_call_distructors(this->arr_size,
+								   this->inc_arr + this->first_index);
 			if(this->prev_block.isInitialized())
 			{
 				this->prev_block->_block_popBack(count - this->arr_size);
@@ -705,6 +710,8 @@ template<typename T>
 const MemoryBlock<T>&
 MemoryBlock<T>::operator =(const MemoryBlock<T> &block)
 {
+	this->clear();
+	this->__block_setCopy(block);
 	return *this;
 }
 
@@ -712,6 +719,8 @@ template<typename T>
 const MemoryBlock<T>&
 MemoryBlock<T>::operator =(MemoryBlock<T> &&block)
 {
+	this->clear();
+	this->__block_setMove(block);
 	return *this;
 }
 
