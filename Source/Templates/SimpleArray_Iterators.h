@@ -14,10 +14,10 @@ template<class T> class SimpleArrayReverseIterator;
 template<class T> class SimpleArray;
 
 template<class T>
-class SimpleArrayIterator : public BasicIterator<T, T>
+class SimpleArrayIterator : public BasicIterator<T*, T>
 {
-	using BasicIterator<T,T>::operator ++;
-	using BasicIterator<T,T>::operator --;
+	using BasicIterator<T*,T>::operator ++;
+	using BasicIterator<T*,T>::operator --;
 	
 public:
 	SimpleArrayIterator();
@@ -29,6 +29,12 @@ public:
 	friend class SimpleArray<T>;
 	typedef SimpleArrayIterator<T> my_type;
 	typedef SimpleArrayReverseIterator<T> friend_type;
+	
+	inline const my_type& operator =(const my_type &iterator);
+	inline const my_type& operator =(my_type &&iterator);
+	
+	inline const my_type& operator =(const my_type &iterator) const;
+	inline const my_type& operator =(my_type &&iterator)      const;
 	
 	virtual T&  operator *()  const noexcept;
 	virtual T*& operator ->() const noexcept;
@@ -80,10 +86,10 @@ public:
 };
 
 template<class T>
-class SimpleArrayReverseIterator : public BasicReverseIterator<T, T>
+class SimpleArrayReverseIterator : public BasicReverseIterator<T*, T>
 {
-	using BasicReverseIterator<T,T>::operator ++;
-	using BasicReverseIterator<T,T>::operator --;
+	using BasicReverseIterator<T*,T>::operator ++;
+	using BasicReverseIterator<T*,T>::operator --;
 	
 public:
 	SimpleArrayReverseIterator();
@@ -96,14 +102,14 @@ public:
 	typedef SimpleArrayReverseIterator<T> my_type;
 	typedef SimpleArrayIterator<T> friend_type;
 	
+	inline const my_type& operator =(const my_type &iterator);
+	inline const my_type& operator =(my_type &&iterator);
+	
+	inline const my_type& operator =(const my_type &iterator) const;
+	inline const my_type& operator =(my_type &&iterator)      const;
+	
 	virtual inline T&  operator *()  const noexcept;
 	virtual inline T*& operator ->() const noexcept;
-	
-	const SimpleArrayReverseIterator<T>& operator =
-	     (SimpleArrayReverseIterator<T> &&iterator);
-  
-	const SimpleArrayReverseIterator<T>& operator =
-	     (const SimpleArrayReverseIterator<T> &iterator);
 	
 	inline const my_type& operator ++();
 	inline const my_type& operator --();
@@ -221,20 +227,52 @@ SimpleArrayReverseIterator<T>& operator -(size_t dimer,
 
 template<class T>
 SimpleArrayIterator<T>::SimpleArrayIterator()
-	: BasicIterator<T, T>()
+	: BasicIterator<T*, T>()
 {}
 
 template<class T>
 SimpleArrayIterator<T>
 	::SimpleArrayIterator(SimpleArrayIterator<T> &&iterator)
-		: BasicIterator<T, T>(iterator)
+		: BasicIterator<T*, T>(iterator)
 {}
 
 template<class T>
 SimpleArrayIterator<T>
 	::SimpleArrayIterator(const SimpleArrayIterator<T> &iterator)
-		: BasicIterator<T, T>(iterator)
+		: BasicIterator<T*, T>(iterator)
 {}
+
+template<class T>
+const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>::operator =(SimpleArrayIterator<T> &&iterator)
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	return *this;
+}
+
+template<class T>
+const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>::operator =(const SimpleArrayIterator<T> &iterator)
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	return *this;
+}
+
+template<class T>
+const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>::operator =(SimpleArrayIterator<T> &&iterator) const
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	return *this;
+}
+
+template<class T>
+const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>::operator =(const SimpleArrayIterator<T> &iterator) const
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	return *this;
+}
 
 template<class T>
 T&
@@ -254,14 +292,14 @@ template<class T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++()
 {
-	this->BasicIterator<T,T>::operator ++();
+	this->BasicIterator<T*,T>::operator ++();
 	return *this;
 }
 template<class T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++() const
 {
-	this->BasicIterator<T,T>::operator ++();
+	this->BasicIterator<T*,T>::operator ++();
 	return *this;
 }
 
@@ -269,14 +307,14 @@ template<class T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --() const
 {
-	this->BasicIterator<T,T>::operator --();
+	this->BasicIterator<T*,T>::operator --();
 	return *this;
 }
 template<class T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --()
 {
-	this->BasicIterator<T,T>::operator --();
+	this->BasicIterator<T*,T>::operator --();
 	return *this;
 }
 
@@ -284,14 +322,14 @@ template<class T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++(int)
 {
-	this->BasicIterator<T,T>::operator ++();
+	this->BasicIterator<T*,T>::operator ++();
 	return *this;
 }
 template<class T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++(int) const
 {
-	this->BasicIterator<T,T>::operator ++();
+	this->BasicIterator<T*,T>::operator ++();
 	return *this;
 }
 
@@ -299,14 +337,14 @@ template<class T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --(int)
 {
-	this->BasicIterator<T,T>::operator --();
+	this->BasicIterator<T*,T>::operator --();
 	return *this;
 }
 template<class T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --(int) const
 {
-	this->BasicIterator<T,T>::operator --();
+	this->BasicIterator<T*,T>::operator --();
 	return *this;
 }
 
@@ -331,19 +369,19 @@ operator !=(const SimpleArrayIterator<T> &iter1,
 
 template<class T>
 SimpleArrayReverseIterator<T>::SimpleArrayReverseIterator()
-	: BasicReverseIterator<T, T>()
+	: BasicReverseIterator<T*, T>()
 {}
 
 template<class T>
 SimpleArrayReverseIterator<T>
 	::SimpleArrayReverseIterator(SimpleArrayReverseIterator &&iterator)
-		: BasicReverseIterator<T, T>(iterator)
+		: BasicReverseIterator<T*, T>(iterator)
 {}
 
 template<class T>
 SimpleArrayReverseIterator<T>
 	::SimpleArrayReverseIterator(const SimpleArrayReverseIterator &iterator)
-		: BasicReverseIterator<T, T>(iterator)
+		: BasicReverseIterator<T*, T>(iterator)
 {}
 
 template<class T>
@@ -364,7 +402,7 @@ template<class T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++()
 {
-	this->BasicReverseIterator<T,T>::operator ++();
+	this->BasicReverseIterator<T*,T>::operator ++();
 	return *this;
 }
 
@@ -372,7 +410,7 @@ template<class T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --()
 {
-	this->BasicReverseIterator<T,T>::operator --();
+	this->BasicReverseIterator<T*,T>::operator --();
 	return *this;
 }
 
@@ -380,7 +418,7 @@ template<class T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++() const
 {
-	this->BasicReverseIterator<T,T>::operator ++();
+	this->BasicReverseIterator<T*,T>::operator ++();
 	return *this;
 }
 
@@ -388,7 +426,7 @@ template<class T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --() const
 {
-	this->BasicReverseIterator<T,T>::operator --();
+	this->BasicReverseIterator<T*,T>::operator --();
 	return *this;
 }
 
@@ -396,7 +434,7 @@ template<class T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++(int)
 {
-	this->BasicReverseIterator<T,T>::operator ++();
+	this->BasicReverseIterator<T*,T>::operator ++();
 	return *this;
 }
 
@@ -404,7 +442,7 @@ template<class T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --(int)
 {
-	this->BasicReverseIterator<T,T>::operator --();
+	this->BasicReverseIterator<T*,T>::operator --();
 	return *this;
 }
 
@@ -412,7 +450,7 @@ template<class T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++(int) const
 {
-	this->BasicReverseIterator<T,T>::operator ++();
+	this->BasicReverseIterator<T*,T>::operator ++();
 	return *this;
 }
 
@@ -420,7 +458,7 @@ template<class T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --(int) const
 {
-	this->BasicReverseIterator<T,T>::operator --();
+	this->BasicReverseIterator<T*,T>::operator --();
 	return *this;
 }
 

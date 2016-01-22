@@ -5,22 +5,38 @@ namespace flame_ide
 {namespace templates
 {
 
-// T - простой итератор
+// TIterator - простой итератор
 // TData - данные
 template<class TIterator, class TData>
 class InterfaceIterator
 {
 protected:
-	mutable TIterator* inc_data_iterator;
+	mutable TIterator inc_data_iterator;
 	
 public:
 	InterfaceIterator();
 	~InterfaceIterator();
 	
-	virtual       TData& operator *() const noexcept = 0;
-	virtual       TData*& operator ->() const noexcept = 0;
+	typedef InterfaceIterator<TIterator, TData> my_type;
+	
+	virtual TData&  operator *() const noexcept = 0;
+	virtual TData*& operator ->() const noexcept = 0;
+	
+//	template<TIterator, TData> friend
+//	bool operator ==(const InterfaceIterator<TIterator, TData>& iiterator1,
+//					 const InterfaceIterator<TIterator, TData>& iiterator2);
+//	template<TIterator, TData> friend
+//	bool operator !=(const InterfaceIterator<TIterator, TData>& iiterator1,
+//					 const InterfaceIterator<TIterator, TData>& iiterator2);
 };
 
+
+//template<class TIterator, class TData>
+//bool operator ==(const InterfaceIterator<TIterator, TData>& iiterator1,
+//				 const InterfaceIterator<TIterator, TData>& iiterator2);
+//template<class TIterator, class TData>
+//bool operator !=(const InterfaceIterator<TIterator, TData>& iiterator1,
+//				 const InterfaceIterator<TIterator, TData>& iiterator2);
 
 template<class TIterator, class TData>
 class BasicIterator : public InterfaceIterator<TIterator, TData>
@@ -54,6 +70,25 @@ public:
 	inline const BasicReverseIterator<TIterator, TData>& operator --();
 };
 
+
+// operators
+
+//template<class TIterator, class TData>
+//bool operator ==(const InterfaceIterator<TIterator, TData>& iiterator1,
+//				 const InterfaceIterator<TIterator, TData>& iiterator2)
+//{
+//	return iiterator1.inc_data_iterator == iiterator2.inc_data_iterator;
+//}
+
+//template<class TIterator, class TData>
+//bool operator !=(const InterfaceIterator<TIterator, TData>& iiterator1,
+//				 const InterfaceIterator<TIterator, TData>& iiterator2)
+//{
+//	return iiterator1.inc_data_iterator != iiterator2.inc_data_iterator;
+//}
+
+
+
 }}
 
 using flame_ide::templates::InterfaceIterator;
@@ -62,7 +97,6 @@ using flame_ide::templates::BasicReverseIterator;
 
 template<class TIterator, class TData>
 InterfaceIterator<TIterator, TData>::InterfaceIterator()
-	: inc_data_iterator(nullptr)
 {}
 
 template<class TIterator, class TData>
@@ -74,14 +108,16 @@ BasicIterator<TIterator, TData>::BasicIterator()
 {}
 
 template<class TIterator, class TData>
-BasicIterator<TIterator, TData>::BasicIterator(BasicIterator<TIterator, TData> &&iterator)
+BasicIterator<TIterator, TData>::BasicIterator(
+		BasicIterator<TIterator, TData> &&iterator)
 	: BasicIterator<TIterator, TData>()
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 }
 
 template<class TIterator, class TData>
-BasicIterator<TIterator, TData>::BasicIterator(const BasicIterator<TIterator, TData> &iterator)
+BasicIterator<TIterator, TData>::BasicIterator(
+		const BasicIterator<TIterator, TData> &iterator)
 	: BasicIterator<TIterator, TData>()
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
