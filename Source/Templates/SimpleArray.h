@@ -141,7 +141,14 @@ SimpleArray<T>::SimpleArray(size_t init_size)
     : first_index(0)
 	, last_index(0)
 {
-	this->__simple_setInit(init_size);
+	if(init_size > 0)
+	{
+		this->__simple_setInit(init_size);
+	}
+	else
+	{
+		inc_arr = nullptr;
+	}
 }
 template<class T>
 template<typename TSize_Type>
@@ -150,7 +157,14 @@ SimpleArray<T>::SimpleArray(TSize_Type init_size)
 	, last_index(0)
 {
 	size_t casted_init_size = static_cast<size_t>(init_size);
-	this->__simple_setInit(casted_init_size);
+	if(casted_init_size > 0)
+	{
+		this->__simple_setInit(casted_init_size);
+	}
+	else
+	{
+		inc_arr = nullptr;
+	}
 }
 template<class T>
 SimpleArray<T>::SimpleArray(const SimpleArray<T> &array)
@@ -173,14 +187,7 @@ SimpleArray<T>::~SimpleArray()
 	}
 }
 
-// protected
-
-template<class T>
-T*
-SimpleArray<T>::_simple_getArrayCopy() const
-{
-	return array_get_copy(arr_capacity, inc_arr);
-}
+// private
 
 template<class T>
 void
@@ -213,6 +220,15 @@ SimpleArray<T>::__simple_setMove(SimpleArray<T> &array)
 	
 	this->last_index = array.last_index;
 	this->first_index = array.first_index;
+}
+
+// protected
+
+template<class T>
+T*
+SimpleArray<T>::_simple_getArrayCopy() const
+{
+	return array_get_copy(arr_capacity, inc_arr);
 }
 
 // public
