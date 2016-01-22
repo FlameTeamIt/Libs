@@ -10,7 +10,7 @@
 /*
 
 Что нужно реализовать:
-1. Конструкторы копирования/перемещения   -- not done
+1. Конструкторы копирования/перемещения   -- done
 2. _block_at()                            -> done and tested
 3. _block_getArrayCopy()                  -- done
 
@@ -41,7 +41,7 @@ protected:
 	
 	bool is_front_adding;
 	
-	size_t block_start_index; // start/end index in block list
+	size_t block_number; // start/end index in block list
 	
 	SharedPointer<my_type> prev_block;
 	SharedPointer<my_type> next_block;
@@ -118,14 +118,14 @@ template<typename T>
 MemoryBlock<T>::MemoryBlock()
 	: SimpleArray<T>(DEFAULT_CAPACITY)
 	,is_front_adding(false)
-	,block_start_index(0)
+	,block_number(0)
 {}
 
 template<typename T>
 MemoryBlock<T>::MemoryBlock(size_t init_size)
 	: SimpleArray<T>(init_size)
 	,is_front_adding(false)
-	,block_start_index(0)
+	,block_number(0)
 {}
 
 template<typename T>
@@ -133,75 +133,135 @@ template<typename TSize_Type>
 MemoryBlock<T>::MemoryBlock(TSize_Type init_size)
 	: SimpleArray<T>(init_size)
 	,is_front_adding(false)
-	,block_start_index(0)
+	,block_number(0)
 {}
 
 template<typename T>
-MemoryBlock<T>::MemoryBlock(bool is_front_adding)
+MemoryBlock<T>::MemoryBlock(bool front_adding)
 	: SimpleArray<T>(DEFAULT_CAPACITY)
-	,is_front_adding(is_front_adding)
-	,block_start_index(0)
+	,is_front_adding(front_adding)
+	,block_number(0)
 {}
 
 template<typename T>
-MemoryBlock<T>::MemoryBlock(bool is_front_adding, size_t init_size)
+MemoryBlock<T>::MemoryBlock(bool front_adding, size_t init_size)
 	: SimpleArray<T>(init_size)
-	,is_front_adding(is_front_adding)
-	,block_start_index(0)
+	,is_front_adding(front_adding)
+	,block_number(0)
 {
-	this->first_index = is_front_adding ? init_size : 0;
-	this->last_index = is_front_adding ? init_size : 0;
+	this->first_index = front_adding ? init_size : 0;
+	this->last_index = front_adding ? init_size : 0;
 }
 
 template<typename T>
 template<typename TSize_Type>
-MemoryBlock<T>::MemoryBlock(bool is_front_adding, TSize_Type init_size)
+MemoryBlock<T>::MemoryBlock(bool front_adding, TSize_Type init_size)
 	: SimpleArray<T>(init_size)
-	,is_front_adding(is_front_adding)
-	,block_start_index(0)
+	,is_front_adding(front_adding)
+	,block_number(0)
 {
-	this->first_index = is_front_adding ? static_cast<size_t>(init_size) : 0;
-	this->last_index = is_front_adding ? static_cast<size_t>(init_size) : 0;
-}
-
-template<typename T>
-MemoryBlock<T>::MemoryBlock(MemoryBlock<T> &&block)
-{
-	this->__block_setMove(block);
+	this->first_index = front_adding ? static_cast<size_t>(init_size) : 0;
+	this->last_index = front_adding ? static_cast<size_t>(init_size) : 0;
 }
 
 template<typename T>
 MemoryBlock<T>::MemoryBlock(const MemoryBlock<T> &block)
+	: SimpleArray<T>(block)
 {
 	this->__block_setCopy(block);
 }
 
 template<typename T>
+MemoryBlock<T>::MemoryBlock(MemoryBlock<T> &&block)
+	: SimpleArray<T>(block)
+{
+	this->__block_setMove(block);
+}
+
+template<typename T>
 MemoryBlock<T>::~MemoryBlock()
 {
-	if(prev_block.isInitialized())
-	{
-		prev_block.clear();
-	}
-	if(next_block.isInitialized())
-	{
-		next_block.clear();
-	}
+	this->clear();
 }
+
+// private
 
 template<typename T>
 void
 MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 {
+	this->block_number = block.block_number;
+	this->is_front_adding = block.is_front_adding;
 	
+	SharedPointer<my_type> *sp_block, *my_sp_block;
+	my_type *my_p_block, *p_initing_block = nullptr;
+	
+	// циклы инициализации
+	for(sp_block = &block.prev_block
+	       ,my_p_block = this
+	       ,my_sp_block = &this->prev_block
+	    ;
+	    sp_block->isInitialized()
+	    ;
+	    sp_block = &(*sp_block)->prev_block
+	       ,my_p_block = my_sp_block->operator ->()
+	       ,my_sp_block = &(*my_sp_block)->prev_block
+	)
+	{
+		(*my_sp_block) = make_shared<MemoryBlock>(true, 0);
+		(*my_sp_block)->next_block = SharedPointer<MemoryBlock>(my_p_block);
+		
+		p_initing_block = my_sp_block.operator ->();
+		p_initing_block->arr_capacity = (*sp_block)->arr_capacity;
+		p_initing_block->arr_size     = (*sp_block)->arr_size;
+		p_initing_block->first_index  = (*sp_block)->first_index;
+		p_initing_block->last_index   = (*sp_block)->last_index;
+		p_initing_block->block_number = (*sp_block)->block_number;
+	}
+	
+	for(sp_block = &block.next_block
+	       ,my_p_block = this
+	       ,my_sp_block = &this->next_block
+	    ;
+	    sp_block->isInitialized()
+	    ;
+		sp_block = &(*sp_block)->next_block
+	       ,my_p_block = my_sp_block->operator ->()
+	       ,my_sp_block = &(*my_sp_block)->next_block
+	)
+	{
+		(*my_sp_block) = make_shared<MemoryBlock>(false, 0);
+		(*my_sp_block)->prev_block = SharedPointer<MemoryBlock>(my_p_block);
+		
+		p_initing_block = my_sp_block.operator ->();
+		p_initing_block->arr_capacity = (*sp_block)->arr_capacity;
+		p_initing_block->arr_size     = (*sp_block)->arr_size;
+		p_initing_block->first_index  = (*sp_block)->first_index;
+		p_initing_block->last_index   = (*sp_block)->last_index;
+		p_initing_block->block_number = (*sp_block)->block_number;
+	}
 }
 
 template<typename T>
 void
 MemoryBlock<T>::__block_setMove(MemoryBlock<T> &block)
 {
+	this->block_number = block.block_number;
+	this->is_front_adding = block.is_front_adding;
 	
+	if(block.prev_block.isInitialized())
+	{
+		this->prev_block = move(block.prev_block);
+		this->prev_block->next_block = SharedPointer<MemoryBlock>(this);
+	}
+	if(block.next_block.isInitialized())
+	{
+		this->next_block = move(block.next_block);
+		this->next_block->prev_block = SharedPointer<MemoryBlock>(this);
+	}
 }
+
+// protected
 
 template<typename T>
 void
@@ -211,7 +271,7 @@ MemoryBlock<T>::_block_init_spNextBlock()
 	{
 		this->next_block = make_shared<MemoryBlock>(this->arr_capacity);
 		this->next_block->prev_block = SharedPointer<MemoryBlock>(this);
-		this->next_block->block_start_index = this->block_start_index + 1;
+		this->next_block->block_number = this->block_number + 1;
 	}	
 }
 
@@ -227,7 +287,7 @@ MemoryBlock<T>::_block_init_spPrevBlock()
 		SharedPointer<my_type> *p_sp_block = &(this->prev_block->next_block);
 		while(p_sp_block->isInitialized())
 		{
-			(*p_sp_block)->block_start_index++;
+			(*p_sp_block)->block_number++;
 			p_sp_block = &((*p_sp_block)->next_block);
 		}
 	}	
@@ -401,7 +461,7 @@ MemoryBlock<T>::_block_at(TSize_Type index, FromBlock from_block)
 
 template<typename T>
 T*
-MemoryBlock<T>::_block_getArrayCopy()
+MemoryBlock<T>::_block_getArrayCopy() const
 {
 	return this->SimpleArray<T>::_simple_getArrayCopy();
 }
@@ -586,13 +646,13 @@ MemoryBlock<T>::clear()
 	// don't know about pointers
 	
 	this->SimpleArray<T>::clear();
-	if(is_front_adding)
+	if(prev_block.isInitialized())
 	{
-		
+		prev_block.clear();
 	}
-	else
+	if(next_block.isInitialized())
 	{
-		
+		next_block.clear();
 	}
 }
 
