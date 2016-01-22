@@ -32,6 +32,8 @@ typedef enum
 	FROM_BACK = char(2)
 } FromBlock;
 
+template<typename T> class Array;
+
 template<class T>
 class MemoryBlock : public SimpleArray<T>
 {
@@ -54,15 +56,32 @@ protected:
 	void _block_popFront(size_t count);
 	void _block_popBack(size_t count);
 	
-	SharedPointer<my_type> _block_getNext();
-	SharedPointer<my_type> _block_getPrev();
+	SharedPointer<my_type>& _block_getNext();
+	SharedPointer<my_type>& _block_getPrev();
 	
 	template<typename TSize_Type> T& _block_at(TSize_Type index,
 											   FromBlock from_back);
 		  
 	inline T* _block_getArrayCopy() const;
 	
+	SimpleArrayIterator<T> _block_simpleBegin();
+	SimpleArrayIterator<T> _block_simpleEnd();
+	
+	SimpleArrayReverseIterator<T> _block_simpleRBegin();
+	SimpleArrayReverseIterator<T> _block_simpleREnd();
+	
 public:
+	friend class MemoryBlockIterator<T>;
+	friend class MemoryBlockReverseIterator<T>;
+	
+	friend class Array<T>;
+	
+	typedef MemoryBlockIterator<T>        iterator;
+	typedef MemoryBlockReverseIterator<T> reverse_iterator;
+	
+	typedef const MemoryBlockIterator<T>        const_iterator;
+	typedef const MemoryBlockReverseIterator<T> const_reverse_iterator;
+	
 	MemoryBlock();
 	MemoryBlock(size_t init_size);
 	template<typename TSize_Type> MemoryBlock(TSize_Type init_size);
@@ -100,21 +119,37 @@ public:
 	template<typename TSize_Type> const T& at(TSize_Type index) const;
 	template<typename TSize_Type>       T& at(TSize_Type index);
 	
-	const T& operator [](size_t index) const noexcept;
-	      T& operator [](size_t index)       noexcept;
+	const my_type& operator =(const my_type &block);
+    const my_type& operator =(my_type &&block);
 	
 	template<typename TSize_Type> 
 	const T& operator [](TSize_Type index) const noexcept;
 	template<typename TSize_Type> 
 	      T& operator [](TSize_Type index)       noexcept;
 	
-	const my_type& operator =(const my_type &block);
-	const my_type& operator =(my_type &&block);
+	const T& operator [](size_t index) const noexcept;
+	      T& operator [](size_t index)       noexcept;
+		  
+	iterator begin();
+	iterator end();
+//	reverse_iterator& rbegin(); // tested
+//	reverse_iterator& rend(); // tested
+
+//	const_iterator& begin() const;
+//	const_iterator& end() const;
+//	const_reverse_iterator& rbegin() const;
+//	const_reverse_iterator& rend() const;
 };
 
 }}
 
-using namespace flame_ide::templates;
+using flame_ide::templates::SimpleArray;
+using flame_ide::templates::SimpleArrayIterator;
+using flame_ide::templates::SimpleArrayReverseIterator;
+
+using flame_ide::templates::MemoryBlock;
+using flame_ide::templates::MemoryBlockIterator;
+using flame_ide::templates::MemoryBlockReverseIterator;
 
 template<typename T>
 MemoryBlock<T>::MemoryBlock()
@@ -395,13 +430,13 @@ MemoryBlock<T>::_block_popBack(size_t count)
 }
 
 template<typename T>
-SharedPointer<MemoryBlock<T>>
+SharedPointer<MemoryBlock<T>>&
 MemoryBlock<T>::_block_getNext()
 {
 	return next_block;
 }
 template<typename T>
-SharedPointer<MemoryBlock<T>>
+SharedPointer<MemoryBlock<T>>&
 MemoryBlock<T>::_block_getPrev()
 {
 	return prev_block;
@@ -469,6 +504,32 @@ T*
 MemoryBlock<T>::_block_getArrayCopy() const
 {
 	return this->SimpleArray<T>::_simple_getArrayCopy();
+}
+
+template<typename T>
+SimpleArrayIterator<T>
+MemoryBlock<T>::_block_simpleBegin()
+{
+	return this->SimpleArray<T>::begin();
+}
+template<typename T>
+SimpleArrayIterator<T>
+MemoryBlock<T>::_block_simpleEnd()
+{
+	return this->SimpleArray<T>::end();
+}
+
+template<typename T>
+SimpleArrayReverseIterator<T>
+MemoryBlock<T>::_block_simpleRBegin()
+{
+	return this->SimpleArray<T>::rbegin();
+}
+template<typename T>
+SimpleArrayReverseIterator<T>
+MemoryBlock<T>::_block_simpleREnd()
+{
+	return this->SimpleArray<T>::rend();
 }
 
 template<typename T>
@@ -677,17 +738,21 @@ MemoryBlock<T>::at(TSize_Type index)
 }
 
 template<typename T>
-const T&
-MemoryBlock<T>::operator [](size_t index) const noexcept
+const MemoryBlock<T>&
+MemoryBlock<T>::operator =(const MemoryBlock<T> &block)
 {
-	return this->_block_at(index, FROM_NULL);
+	this->clear();
+	this->__block_setCopy(block);
+	return *this;
 }
 
 template<typename T>
-T&
-MemoryBlock<T>::operator [](size_t index) noexcept
+const MemoryBlock<T>&
+MemoryBlock<T>::operator =(MemoryBlock<T> &&block)
 {
-	return this->_block_at(index, FROM_NULL);
+	this->clear();
+	this->__block_setMove(block);
+	return *this;
 }
 
 template<typename T>
@@ -707,21 +772,77 @@ MemoryBlock<T>::operator [](TSize_Type index) noexcept
 }
 
 template<typename T>
-const MemoryBlock<T>&
-MemoryBlock<T>::operator =(const MemoryBlock<T> &block)
+const T&
+MemoryBlock<T>::operator [](size_t index) const noexcept
 {
-	this->clear();
-	this->__block_setCopy(block);
-	return *this;
+	return this->_block_at(index, FROM_NULL);
 }
 
 template<typename T>
-const MemoryBlock<T>&
-MemoryBlock<T>::operator =(MemoryBlock<T> &&block)
+T&
+MemoryBlock<T>::operator [](size_t index) noexcept
 {
-	this->clear();
-	this->__block_setMove(block);
-	return *this;
+	return this->_block_at(index, FROM_NULL);
 }
 
+template<typename T>
+MemoryBlockIterator<T>
+MemoryBlock<T>::begin()
+{
+	iterator it;
+	if(prev_block.isInitialized())
+	{
+		SharedPointer<my_type> *sp_block = &prev_block;
+		while(sp_block->isInitialized())
+		{
+			it.inc_block = (*sp_block).operator ->();
+			it.inc_data_iterator = it.inc_block->_block_simpleBegin();
+			sp_block = &(*sp_block)->prev_block;
+		}
+	}
+	else
+	{
+		it.inc_block = this;
+		it.inc_data_iterator = it.inc_block->_block_simpleBegin();
+	}
+	return it;
+}
+
+template<typename T>
+MemoryBlockIterator<T>
+MemoryBlock<T>::end()
+{
+	iterator it;
+	
+	if(next_block.isInitialized())
+	{
+		SharedPointer<my_type> *sp_block = &next_block;
+		while(sp_block->isInitialized())
+		{
+			it.inc_block = (*sp_block).operator ->();
+			it.inc_data_iterator = it.inc_block->_block_simpleEnd();
+			sp_block = &(*sp_block)->next_block;
+		}
+	}
+	else
+	{
+		it.inc_block = this;
+		it.inc_data_iterator = it.inc_block->_block_simpleEnd();
+	}
+	return it;
+}
+
+//template<typename T>
+//MemoryBlockIterator<T>&
+//MemoryBlock<T>::rbegin()
+//{
+	
+//}
+
+//template<typename T>
+//MemoryBlockIterator<T>&
+//MemoryBlock<T>::rend()
+//{
+	
+//}
 #endif // TEMPLATES_MEMORYBLOCK
