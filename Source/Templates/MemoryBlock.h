@@ -84,11 +84,17 @@ public:
 	
 	MemoryBlock();
 	MemoryBlock(size_t init_size);
-	template<typename TSize_Type> MemoryBlock(TSize_Type init_size);
+	
+	template<typename TSize_Type>
+	MemoryBlock(TSize_Type init_size);
+	
 	MemoryBlock(bool is_front_adding);
 	MemoryBlock(bool is_front_adding, size_t init_size);
-	template<typename TSize_Type> MemoryBlock(bool is_front_adding,
-											  TSize_Type init_size);
+	
+	template<typename TSize_Type>
+	MemoryBlock(bool is_front_adding,
+				TSize_Type init_size);
+	
 	MemoryBlock(const MemoryBlock<T> &block);
 	MemoryBlock(MemoryBlock<T> &&block);
 	
@@ -132,8 +138,8 @@ public:
 		  
 	iterator begin();
 	iterator end();
-//	reverse_iterator& rbegin(); // tested
-//	reverse_iterator& rend(); // tested
+	reverse_iterator& rbegin(); // tested
+	reverse_iterator& rend(); // tested
 
 //	const_iterator& begin() const;
 //	const_iterator& end() const;
@@ -637,8 +643,9 @@ MemoryBlock<T>::pushBack(T &&obj)
 					  this->inc_arr + this->arr_capacity,
 					  this->inc_arr + this->first_index - 1);
 			
-			this->inc_arr[this->arr_capacity - 1].~T();
-			this->inc_arr[this->arr_capacity - 1] = T(obj);
+//			this->inc_arr[this->arr_capacity - 1].~T();
+//			this->inc_arr[this->arr_capacity - 1] = T(obj);
+			array_copying(1, &obj, this->inc_arr + this->arr_capacity - 1);
 			
 			--this->first_index;
 			++this->arr_size;
@@ -821,7 +828,7 @@ MemoryBlock<T>::end()
 		{
 			it.inc_block = (*sp_block).operator ->();
 			it.inc_data_iterator = it.inc_block->_block_simpleEnd();
-			sp_block = &(*sp_block)->next_block;
+			sp_block = &((*sp_block)->next_block);
 		}
 	}
 	else

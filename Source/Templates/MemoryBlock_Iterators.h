@@ -71,20 +71,20 @@ public:
 	                 const MemoryBlockIterator<Tt> &iter2);
 	
 	
-	template<T> friend
-	bool operator ==(const MemoryBlockIterator<T> &iter1,
-	                 const friend_type &iter2);
-	template<T> friend
-	bool operator !=(const MemoryBlockIterator<T> &iter1,
-	                 const friend_type &iter2);
+	template<typename Tt> friend
+	bool operator ==(const MemoryBlockIterator<Tt> &iter1,
+	                 const MemoryBlockReverseIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const MemoryBlockIterator<Tt> &iter1,
+	                 const MemoryBlockReverseIterator<Tt> &iter2);
 	
 	
-	template<T> friend
-	bool operator ==(const friend_type &iter1,
-	                 const MemoryBlockIterator<T> &iter2);
-	template<T> friend
-	bool operator !=(const friend_type &iter1,
-	                 const MemoryBlockIterator<T> &iter2);
+	template<typename Tt> friend
+	bool operator ==(const MemoryBlockReverseIterator<Tt> &iter1,
+	                 const MemoryBlockIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const MemoryBlockReverseIterator<Tt> &iter1,
+	                 const MemoryBlockIterator<Tt> &iter2);
 };
 
 template<typename T>
@@ -132,28 +132,28 @@ public:
 //	inline const my_type& operator +(TSizeType adder) const;
 	
 	
-	template<T> friend
-	bool operator ==(const my_type &iter1,
-	                 const my_type &iter2);
-	template<T> friend
-	bool operator !=(const my_type &iter1,
-	                 const my_type &iter2);
+	template<typename Tt> friend
+	bool operator ==(const MemoryBlockReverseIterator<Tt> &iter1,
+	                 const MemoryBlockReverseIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const MemoryBlockReverseIterator<Tt> &iter1,
+	                 const MemoryBlockReverseIterator<Tt> &iter2);
 	
 	
-	template<T> friend
-	bool operator ==(const my_type &iter1,
-	                 const friend_type &iter2);
-	template<T> friend
-	bool operator !=(const my_type &iter1,
-	                 const friend_type &iter2);
+	template<typename Tt> friend
+	bool operator ==(const MemoryBlockReverseIterator<Tt> &iter1,
+	                 const MemoryBlockIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const MemoryBlockReverseIterator<Tt> &iter1,
+	                 const MemoryBlockIterator<Tt> &iter2);
 	
 	
-	template<T> friend
-	bool operator ==(const friend_type &iter1,
-	                 const my_type &iter2);
-	template<T> friend
-	bool operator !=(const friend_type &iter1,
-	                 const my_type &iter2);	
+	template<typename Tt> friend
+	bool operator ==(const MemoryBlockIterator<Tt> &iter1,
+	                 const MemoryBlockReverseIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const MemoryBlockIterator<Tt> &iter1,
+	                 const MemoryBlockReverseIterator<Tt> &iter2);	
 };
 
 // MemoryBlockIterator
@@ -313,7 +313,61 @@ operator !=(const MemoryBlockIterator<T> &it1,
 			&& (it1.operator ->() != it2.operator ->());
 }
 
+template<typename T> inline
+bool
+operator ==(const MemoryBlockReverseIterator<T> &it1,
+			const MemoryBlockReverseIterator<T> &it2)
+{
+	return (it1.inc_block == it2.inc_block)
+			&& (it1.operator ->() == it2.operator ->());
+}
+
+template<typename T> inline
+bool
+operator !=(const MemoryBlockReverseIterator<T> &it1,
+			const MemoryBlockReverseIterator<T> &it2)
+{
+	return (it1.inc_block != it2.inc_block)
+			&& (it1.operator ->() != it2.operator ->());
+}
+
 // hybrid operators
+
+template<typename T> inline
+bool
+operator ==(const MemoryBlockIterator<T> &it1,
+			const MemoryBlockReverseIterator<T> &it2)
+{
+	return (it1.inc_block == it2.inc_block)
+			&& (it1.operator ->() == it2.operator ->());
+}
+
+template<typename T> inline
+bool
+operator !=(const MemoryBlockIterator<T> &it1,
+			const MemoryBlockReverseIterator<T> &it2)
+{
+	return (it1.inc_block != it2.inc_block)
+			&& (it1.operator ->() != it2.operator ->());
+}
+
+template<typename T> inline
+bool
+operator ==(const MemoryBlockReverseIterator<T> &it1,
+			const MemoryBlockIterator<T> &it2)
+{
+	return (it1.inc_block == it2.inc_block)
+			&& (it1.operator ->() == it2.operator ->());
+}
+
+template<typename T> inline
+bool
+operator !=(const MemoryBlockReverseIterator<T> &it1,
+			const MemoryBlockIterator<T> &it2)
+{
+	return (it1.inc_block != it2.inc_block)
+			&& (it1.operator ->() != it2.operator ->());
+}
 
 }}
 
