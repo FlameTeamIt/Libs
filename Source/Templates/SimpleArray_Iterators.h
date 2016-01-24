@@ -9,11 +9,11 @@ namespace flame_ide
 {namespace templates
 {
 
-template<class T> class SimpleArrayIterator;
-template<class T> class SimpleArrayReverseIterator;
-template<class T> class SimpleArray;
+template<typename T> class SimpleArrayIterator;
+template<typename T> class SimpleArrayReverseIterator;
+template<typename T> class SimpleArray;
 
-template<class T>
+template<typename T>
 class SimpleArrayIterator : public BasicIterator<T*, T>
 {
 	using BasicIterator<T*,T>::operator ++;
@@ -52,40 +52,41 @@ public:
 	inline const my_type& operator ++(int) const;
 	inline const my_type& operator --(int) const;
 	
-	template<class TSizeType>
+	template<typename TSizeType>
 	inline const my_type& operator -(TSizeType dimer);
-	template<class TSizeType>
+	template<typename TSizeType>
 	inline const my_type& operator -(TSizeType dimer) const;
 	
-	template<class TSizeType>
+	template<typename TSizeType>
 	inline const my_type& operator +(TSizeType adder);
-	template<class TSizeType>
+	template<typename TSizeType>
 	inline const my_type& operator +(TSizeType adder) const;
 	
-	template<T> friend
-	bool operator ==(const my_type &iter1,
-	                 const my_type &iter2);
-	template<T> friend
-	bool operator !=(const my_type &iter1,
-	                 const my_type &iter2);
+	template<typename Tt> friend
+	bool operator ==(const SimpleArrayIterator<Tt> &iter1,
+	                 const SimpleArrayIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const SimpleArrayIterator<Tt> &iter1,
+	                 const SimpleArrayIterator<Tt> &iter2);
 	
 	
-	template<T> friend
-	bool operator ==(const my_type &iter1,
-	                 const friend_type &iter2);
-	template<T> friend
-	bool operator !=(const my_type &iter1,
-	                 const friend_type &iter2);
+	template<typename Tt> friend
+	bool operator ==(const SimpleArrayIterator<Tt> &iter1,
+	                 const SimpleArrayReverseIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const SimpleArrayIterator<Tt> &iter1,
+	                 const SimpleArrayReverseIterator<Tt> &iter2);
 	
-	template<T> friend
-	bool operator ==(const friend_type &iter1,
-	                 const my_type &iter2);
-	template<T> friend
-	bool operator !=(const friend_type &iter1,
-	                 const my_type &iter2);
+	
+	template<typename Tt> friend
+	bool operator ==(const SimpleArrayReverseIterator<Tt> &iter1,
+	                 const SimpleArrayIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const SimpleArrayReverseIterator<Tt> &iter1,
+	                 const SimpleArrayIterator<Tt> &iter2);
 };
 
-template<class T>
+template<typename T>
 class SimpleArrayReverseIterator : public BasicReverseIterator<T*, T>
 {
 	using BasicReverseIterator<T*,T>::operator ++;
@@ -125,99 +126,101 @@ public:
 	inline const my_type& operator --(int) const;
 	
 	
-	template<class TSizeType>
+	template<typename TSizeType>
 	inline const my_type& operator -(TSizeType dimer);
-	template<class TSizeType>
+	template<typename TSizeType>
 	inline const my_type& operator -(TSizeType dimer) const;
 	
-	template<class TSizeType>
+	template<typename TSizeType>
 	inline const my_type& operator +(TSizeType adder);
-	template<class TSizeType>
+	template<typename TSizeType>
 	inline const my_type& operator +(TSizeType adder) const;
 	
 	
-	template<T> friend
-	bool operator ==(const my_type &iter1,
-	                 const my_type &iter2);
-	template<T> friend
-	bool operator !=(const SimpleArrayReverseIterator<T> &iter1,
-	                 const SimpleArrayReverseIterator<T> &iter2);
+	template<typename Tt> friend
+	bool operator ==(const SimpleArrayReverseIterator<Tt> &iter1,
+	                 const SimpleArrayReverseIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const SimpleArrayReverseIterator<Tt> &iter1,
+	                 const SimpleArrayReverseIterator<Tt> &iter2);
 	
-	template<T> friend
-	bool operator ==(const friend_type &iter1,
-	                 const my_type &iter2);
-	template<T> friend
-	bool operator !=(const friend_type &iter1,
-	                 const my_type &iter2);
 	
-	template<T> friend
-	bool operator ==(const my_type &iter1,
-	                 const friend_type &iter2);
-	template<T> friend
-	bool operator !=(const my_type &iter1,
-	                 const friend_type &iter2);
+	template<typename Tt> friend
+	bool operator ==(const SimpleArrayIterator<Tt> &iter1,
+	                 const SimpleArrayReverseIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const SimpleArrayIterator<Tt> &iter1,
+	                 const SimpleArrayReverseIterator<Tt> &iter2);
+	
+	
+	template<typename Tt> friend
+	bool operator ==(const SimpleArrayReverseIterator<Tt> &iter1,
+	                 const SimpleArrayIterator<Tt> &iter2);
+	template<typename Tt> friend
+	bool operator !=(const SimpleArrayReverseIterator<Tt> &iter1,
+	                 const SimpleArrayIterator<Tt> &iter2);
 };
 
 
-template<class T> inline
+template<typename T> inline
 bool operator ==(const SimpleArrayIterator<T> &iter1,
 				 const SimpleArrayIterator<T> &iter2);
-template<class T> inline
+template<typename T> inline
 bool operator !=(const SimpleArrayIterator<T> &iter1,
 				 const SimpleArrayIterator<T> &iter2);
 
 
-template<class T> inline
+template<typename T> inline
 bool operator ==(const SimpleArrayReverseIterator<T> &iter1,
                  const SimpleArrayReverseIterator<T> &iter2);
-template<class T> inline
+template<typename T> inline
 bool operator !=(const SimpleArrayReverseIterator<T> &iter1,
                  const SimpleArrayReverseIterator<T> &iter2);
 
 
-template<class T> inline
+template<typename T> inline
 bool operator ==(const SimpleArrayIterator<T> &iter1,
 				 const SimpleArrayReverseIterator<T> &iter2);
-template<class T> inline
+template<typename T> inline
 bool operator !=(const SimpleArrayIterator<T> &iter1,
 				 const SimpleArrayReverseIterator<T> &iter2);
 
 
-template<class T> inline
+template<typename T> inline
 bool operator ==(const SimpleArrayReverseIterator<T> &iter1,
 				 const SimpleArrayIterator<T> &iter2);
-template<class T> inline
+template<typename T> inline
 bool operator !=(const SimpleArrayReverseIterator<T> &iter1,
 				 const SimpleArrayIterator<T> &iter2);
 
-template<class T, class TSizeType> inline
+template<typename T, typename TSizeType> inline
 SimpleArrayIterator<T>& operator +(SimpleArrayIterator<T> &it,
 								   size_t adder);	
-template<class T, class TSizeType> inline
+template<typename T, typename TSizeType> inline
 SimpleArrayIterator<T>& operator +(size_t adder,
 								   SimpleArrayIterator<T> &it);
 
 
-template<class T, class TSizeType> inline
+template<typename T, typename TSizeType> inline
 SimpleArrayIterator<T>& operator -(SimpleArrayIterator<T> &it,
 								   size_t dimer);	
-template<class T, class TSizeType> inline
+template<typename T, typename TSizeType> inline
 SimpleArrayIterator<T>& operator -(size_t dimer,
 								   SimpleArrayIterator<T> &it);
 
 
-template<class T, class TSizeType> inline
+template<typename T, typename TSizeType> inline
 SimpleArrayReverseIterator<T>& operator +(SimpleArrayIterator<T> &it,
 										  size_t adder);	
-template<class T, class TSizeType> inline
+template<typename T, typename TSizeType> inline
 SimpleArrayReverseIterator<T>& operator +(size_t adder,
 										  SimpleArrayReverseIterator<T> &it);
 
 
-template<class T, class TSizeType> inline
+template<typename T, typename TSizeType> inline
 SimpleArrayReverseIterator<T>& operator -(SimpleArrayReverseIterator<T> &it,
 										  size_t dimer);	
-template<class T, class TSizeType> inline
+template<typename T, typename TSizeType> inline
 SimpleArrayReverseIterator<T>& operator -(size_t dimer,
 										  SimpleArrayReverseIterator<T> &it);
 
@@ -225,24 +228,24 @@ SimpleArrayReverseIterator<T>& operator -(size_t dimer,
 // ============================================================================
 // SimpleArrayIterator
 
-template<class T>
+template<typename T>
 SimpleArrayIterator<T>::SimpleArrayIterator()
 	: BasicIterator<T*, T>()
 {}
 
-template<class T>
+template<typename T>
 SimpleArrayIterator<T>
 	::SimpleArrayIterator(SimpleArrayIterator<T> &&iterator)
 		: BasicIterator<T*, T>(iterator)
 {}
 
-template<class T>
+template<typename T>
 SimpleArrayIterator<T>
 	::SimpleArrayIterator(const SimpleArrayIterator<T> &iterator)
 		: BasicIterator<T*, T>(iterator)
 {}
 
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator =(SimpleArrayIterator<T> &&iterator)
 {
@@ -250,7 +253,7 @@ SimpleArrayIterator<T>::operator =(SimpleArrayIterator<T> &&iterator)
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator =(const SimpleArrayIterator<T> &iterator)
 {
@@ -258,7 +261,7 @@ SimpleArrayIterator<T>::operator =(const SimpleArrayIterator<T> &iterator)
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator =(SimpleArrayIterator<T> &&iterator) const
 {
@@ -266,7 +269,7 @@ SimpleArrayIterator<T>::operator =(SimpleArrayIterator<T> &&iterator) const
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator =(const SimpleArrayIterator<T> &iterator) const
 {
@@ -274,28 +277,28 @@ SimpleArrayIterator<T>::operator =(const SimpleArrayIterator<T> &iterator) const
 	return *this;
 }
 
-template<class T>
+template<typename T>
 T&
 SimpleArrayIterator<T>::operator *() const noexcept
 {
 	return *(this->inc_data_iterator);
 }
 
-template<class T>
+template<typename T>
 T*&
 SimpleArrayIterator<T>::operator ->() const noexcept
 {
 	return this->inc_data_iterator;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++()
 {
 	this->BasicIterator<T*,T>::operator ++();
 	return *this;
 }
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++() const
 {
@@ -303,14 +306,14 @@ SimpleArrayIterator<T>::operator ++() const
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --() const
 {
 	this->BasicIterator<T*,T>::operator --();
 	return *this;
 }
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --()
 {
@@ -318,14 +321,14 @@ SimpleArrayIterator<T>::operator --()
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++(int)
 {
 	this->BasicIterator<T*,T>::operator ++();
 	return *this;
 }
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++(int) const
 {
@@ -333,14 +336,14 @@ SimpleArrayIterator<T>::operator ++(int) const
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --(int)
 {
 	this->BasicIterator<T*,T>::operator --();
 	return *this;
 }
-template<class T>
+template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --(int) const
 {
@@ -348,7 +351,7 @@ SimpleArrayIterator<T>::operator --(int) const
 	return *this;
 }
 
-template<class T>
+template<typename T>
 bool
 operator ==(const SimpleArrayIterator<T> &iter1,
 			const SimpleArrayIterator<T> &iter2)
@@ -356,49 +359,49 @@ operator ==(const SimpleArrayIterator<T> &iter1,
 	return (iter1.inc_data_iterator == iter2.inc_data_iterator);
 }
 
-template<class T>
+template<typename T>
 bool
 operator !=(const SimpleArrayIterator<T> &iter1,
 			const SimpleArrayIterator<T> &iter2)
 {
-	return (iter1.operator ->() != iter2.operator ->());
+	return (iter1.inc_data_iterator != iter2.inc_data_iterator);
 }
 
 // ============================================================================
 // SimpleArrayReverseIterator
 
-template<class T>
+template<typename T>
 SimpleArrayReverseIterator<T>::SimpleArrayReverseIterator()
 	: BasicReverseIterator<T*, T>()
 {}
 
-template<class T>
+template<typename T>
 SimpleArrayReverseIterator<T>
 	::SimpleArrayReverseIterator(SimpleArrayReverseIterator &&iterator)
 		: BasicReverseIterator<T*, T>(iterator)
 {}
 
-template<class T>
+template<typename T>
 SimpleArrayReverseIterator<T>
 	::SimpleArrayReverseIterator(const SimpleArrayReverseIterator &iterator)
 		: BasicReverseIterator<T*, T>(iterator)
 {}
 
-template<class T>
+template<typename T>
 T&
 SimpleArrayReverseIterator<T>::operator *() const noexcept
 {
 	return *(this->inc_data_iterator);
 }
 
-template<class T>
+template<typename T>
 T*&
 SimpleArrayReverseIterator<T>::operator ->() const noexcept
 {
 	return (this->inc_data_iterator);
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++()
 {
@@ -406,7 +409,7 @@ SimpleArrayReverseIterator<T>::operator ++()
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --()
 {
@@ -414,7 +417,7 @@ SimpleArrayReverseIterator<T>::operator --()
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++() const
 {
@@ -422,7 +425,7 @@ SimpleArrayReverseIterator<T>::operator ++() const
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --() const
 {
@@ -430,7 +433,7 @@ SimpleArrayReverseIterator<T>::operator --() const
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++(int)
 {
@@ -438,7 +441,7 @@ SimpleArrayReverseIterator<T>::operator ++(int)
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --(int)
 {
@@ -446,7 +449,7 @@ SimpleArrayReverseIterator<T>::operator --(int)
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++(int) const
 {
@@ -454,7 +457,7 @@ SimpleArrayReverseIterator<T>::operator ++(int) const
 	return *this;
 }
 
-template<class T>
+template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --(int) const
 {
@@ -462,27 +465,27 @@ SimpleArrayReverseIterator<T>::operator --(int) const
 	return *this;
 }
 
-template<class T>
+template<typename T>
 bool
 operator ==(const SimpleArrayReverseIterator<T> &iter1,
             const SimpleArrayReverseIterator<T> &iter2)
 {
-	return (iter1.operator ->() == iter2.operator ->());
+	return (iter1.inc_data_iterator == iter2.inc_data_iterator);
 }
 
-template<class T>
+template<typename T>
 bool
 operator !=(const SimpleArrayReverseIterator<T> &iter1,
             const SimpleArrayReverseIterator<T> &iter2)
 {
-	return (iter1.operator ->() != iter2.operator ->());
+	return (iter1.inc_data_iterator != iter2.inc_data_iterator);
 }
 
 
 // ============================================================================
 // Hibrid compare operators
 
-template<class T>
+template<typename T>
 bool
 operator ==(const SimpleArrayIterator<T> &iter1,
 			const SimpleArrayReverseIterator<T> &iter2)
@@ -490,7 +493,7 @@ operator ==(const SimpleArrayIterator<T> &iter1,
 	return (iter1.inc_data_iterator == iter2.inc_data_iterator);
 }
 
-template<class T>
+template<typename T>
 bool
 operator !=(const SimpleArrayIterator<T> &iter1,
 			const SimpleArrayReverseIterator<T> &iter2)
@@ -498,7 +501,7 @@ operator !=(const SimpleArrayIterator<T> &iter1,
 	return (iter1.inc_data_iterator != iter2.inc_data_iterator);
 }
 
-template<class T>
+template<typename T>
 bool
 operator ==(const SimpleArrayReverseIterator<T> &iter1,
 			const SimpleArrayIterator<T> &iter2)
@@ -506,7 +509,7 @@ operator ==(const SimpleArrayReverseIterator<T> &iter1,
 	return (iter1.inc_data_iterator == iter2.inc_data_iterator);
 }
 
-template<class T>
+template<typename T>
 bool
 operator !=(const SimpleArrayReverseIterator<T> &iter1,
 			const SimpleArrayIterator<T> &iter2)
@@ -518,8 +521,8 @@ operator !=(const SimpleArrayReverseIterator<T> &iter1,
 // Add and dim operators
 
 
-template<class T>
-template<class TSizeType>
+template<typename T>
+template<typename TSizeType>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator +(TSizeType adder)
 {
@@ -527,8 +530,8 @@ SimpleArrayIterator<T>::operator +(TSizeType adder)
 	
 	return *this;
 }
-template<class T>
-template<class TSizeType>
+template<typename T>
+template<typename TSizeType>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator +(TSizeType adder) const
 {
@@ -537,8 +540,8 @@ SimpleArrayIterator<T>::operator +(TSizeType adder) const
 	return *this;
 }
 
-template<class T>
-template<class TSizeType>
+template<typename T>
+template<typename TSizeType>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator -(TSizeType dimer)
 {
@@ -546,8 +549,8 @@ SimpleArrayIterator<T>::operator -(TSizeType dimer)
 	
 	return *this;
 }
-template<class T>
-template<class TSizeType>
+template<typename T>
+template<typename TSizeType>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator -(TSizeType dimer) const
 {
@@ -557,8 +560,8 @@ SimpleArrayIterator<T>::operator -(TSizeType dimer) const
 }
 
 
-template<class T>
-template<class TSizeType>
+template<typename T>
+template<typename TSizeType>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator +(TSizeType adder)
 {
@@ -566,8 +569,8 @@ SimpleArrayReverseIterator<T>::operator +(TSizeType adder)
 	
 	return *this;
 }
-template<class T>
-template<class TSizeType>
+template<typename T>
+template<typename TSizeType>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator +(TSizeType adder) const
 {
@@ -576,8 +579,8 @@ SimpleArrayReverseIterator<T>::operator +(TSizeType adder) const
 	return *this;
 }
 
-template<class T>
-template<class TSizeType>
+template<typename T>
+template<typename TSizeType>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator -(TSizeType dimer)
 {
@@ -585,8 +588,8 @@ SimpleArrayReverseIterator<T>::operator -(TSizeType dimer)
 	
 	return *this;
 }
-template<class T>
-template<class TSizeType>
+template<typename T>
+template<typename TSizeType>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator -(TSizeType dimer) const
 {
