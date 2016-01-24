@@ -73,7 +73,7 @@ public:
 		
 		unsigned int SimpleArray();
 
-		unsigned int Array_MemoryBlock();
+		unsigned int MemoryBlock();
 		unsigned int Array();
 		
 		unsigned int List();
