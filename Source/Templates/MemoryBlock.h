@@ -64,11 +64,11 @@ protected:
 		  
 	inline T* _block_getArrayCopy() const;
 	
-	SimpleArrayIterator<T> _block_simpleBegin();
-	SimpleArrayIterator<T> _block_simpleEnd();
+	SimpleArrayIterator<T> _block_simple_begin();
+	SimpleArrayIterator<T> _block_simple_end();
 	
-	SimpleArrayReverseIterator<T> _block_simpleRBegin();
-	SimpleArrayReverseIterator<T> _block_simpleREnd();
+	SimpleArrayReverseIterator<T> _block_simple_rbegin();
+	SimpleArrayReverseIterator<T> _block_simple_rend();
 	
 public:
 	friend class MemoryBlockIterator<T>;
@@ -514,26 +514,26 @@ MemoryBlock<T>::_block_getArrayCopy() const
 
 template<typename T>
 SimpleArrayIterator<T>
-MemoryBlock<T>::_block_simpleBegin()
+MemoryBlock<T>::_block_simple_begin()
 {
 	return this->SimpleArray<T>::begin();
 }
 template<typename T>
 SimpleArrayIterator<T>
-MemoryBlock<T>::_block_simpleEnd()
+MemoryBlock<T>::_block_simple_end()
 {
 	return this->SimpleArray<T>::end();
 }
 
 template<typename T>
 SimpleArrayReverseIterator<T>
-MemoryBlock<T>::_block_simpleRBegin()
+MemoryBlock<T>::_block_simple_rbegin()
 {
 	return this->SimpleArray<T>::rbegin();
 }
 template<typename T>
 SimpleArrayReverseIterator<T>
-MemoryBlock<T>::_block_simpleREnd()
+MemoryBlock<T>::_block_simple_rend()
 {
 	return this->SimpleArray<T>::rend();
 }
@@ -796,47 +796,34 @@ template<typename T>
 MemoryBlockIterator<T>
 MemoryBlock<T>::begin()
 {
-	iterator it;
 	if(prev_block.isInitialized())
 	{
-		SharedPointer<my_type> *sp_block = &prev_block;
-		while(sp_block->isInitialized())
-		{
-			it.inc_block = (*sp_block).operator ->();
-			it.inc_data_iterator = it.inc_block->_block_simpleBegin();
-			sp_block = &(*sp_block)->prev_block;
-		}
+		return prev_block->begin();
 	}
 	else
 	{
+		iterator it;
 		it.inc_block = this;
-		it.inc_data_iterator = it.inc_block->_block_simpleBegin();
+		it.inc_data_iterator = it.inc_block->_block_simple_begin();
+		return it;
 	}
-	return it;
 }
 
 template<typename T>
 MemoryBlockIterator<T>
 MemoryBlock<T>::end()
 {
-	iterator it;
-	
 	if(next_block.isInitialized())
 	{
-		SharedPointer<my_type> *sp_block = &next_block;
-		while(sp_block->isInitialized())
-		{
-			it.inc_block = (*sp_block).operator ->();
-			it.inc_data_iterator = it.inc_block->_block_simpleEnd();
-			sp_block = &((*sp_block)->next_block);
-		}
+		return next_block->end();
 	}
 	else
 	{
+		iterator it;
 		it.inc_block = this;
-		it.inc_data_iterator = it.inc_block->_block_simpleEnd();
+		it.inc_data_iterator = it.inc_block->_block_simple_end();
+		return it;
 	}
-	return it;
 }
 
 //template<typename T>
