@@ -264,19 +264,19 @@ Test::Templates::MemoryBlock()
 	// back adding block
 	{
 		MemoryBlock<long> &block = back_add_block;
-		for(long i = -1; i > -11; --i)
+		for(long i = 0; i < 11; ++i)
 		{
 			block.pushBack(i);
 		}
-		block.pushBack(-11);
+		block.pushBack(11);
 		
 		std::cout
 			<< "Code (back adding block):" "\n"
-				<< "\t" "for(long i = -1; i < -11; --i)" "\n"
+				<< "\t" "for(long i = 0; i < 11; ++i)" "\n"
 				   "\t" "{" "\n"
-		           "\t" "\t" "block.pushBack(i);" "\n"
-		           "\t" "}" "\n"
-		           "\t" "block.pushBack(-11);" "\n";
+				   "\t" "\t" "block.pushBack(i);" "\n"
+				   "\t" "}" "\n"
+				   "\t" "block.pushBack(11);" "\n";
 		std::cout << "Result (iterators):" "\n";
 		std::for_each(
 			block.begin(), block.end(),
@@ -290,24 +290,29 @@ Test::Templates::MemoryBlock()
 	
 	
 	// front adding block
-	/*{
+	{
 		MemoryBlock<long> &block = front_add_block;
-		block.pushBack(test_obj);
-		block.pushBack(1);
-		block.pushBack(2);
-		block.pushBack(3);
+		for(long i = 0; i < 11; ++i)
+		{
+			block.pushBack(i);
+		}
+		block.pushBack(11);
 		
 		std::cout
 			<< "Code (front adding block):" "\n"
-				<< "\t" "front_add_block.pushBack(test_obj); // test_obj == 0" "\n"
-				<< "\t" "front_add_block.pushBack(1);" "\n"
-				<< "\t" "front_add_block.pushBack(2);" "\n"
-				<< "\t" "front_add_block.pushBack(3);" "\n"
-			<< "Result:" "\n"
-				<< '\t' << block[0] << '\n'
-				<< '\t' << block[(size_t)1] << '\n'
-				<< '\t' << block[(size_t)2] << '\n'
-				<< '\t' << block[(size_t)3] << '\n';
+				<< "\t" "for(long i = 0; i < 11; ++i)" "\n"
+				   "\t" "{" "\n"
+				   "\t" "\t" "block.pushBack(i);" "\n"
+				   "\t" "}" "\n"
+				   "\t" "block.pushBack(11);" "\n";
+		std::cout << "Result (iterators):" "\n";
+		std::for_each(
+			block.begin(), block.end(),
+			[&](const long &out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
 		std::cout << '\n';
 	}
 	
@@ -315,28 +320,24 @@ Test::Templates::MemoryBlock()
 	
 	// back adding block
 	{
-		back_add_block.pushFront(test_obj);
-		back_add_block.pushFront(-1);
-		back_add_block.pushFront(-2);
-		back_add_block.pushFront(-3);
+		MemoryBlock<long> &block = back_add_block;
+		for(long i = -1; i > -11; --i)
+		{
+			block.pushFront(i);
+		}
+		block.pushFront(-11);
 		
 		std::cout
 			<< "Code (back adding block):" "\n"
-			   << "\t" "back_add_block.pushFront(-3);" "\n"
-			   << "\t" "back_add_block.pushFront(-2);" "\n"
-			   << "\t" "back_add_block.pushFront(-1);" "\n"
-			   << "\t" "back_add_block.pushFront(test_obj);" "\n"
-			<< "Result:" "\n"
-				<< '\t' << back_add_block[0] << '\n'
-				<< '\t' << back_add_block[(size_t)1] << '\n'
-				<< '\t' << back_add_block[(size_t)2] << '\n'
-				<< '\t' << back_add_block[(size_t)3] << '\n';
-		std::cout << '\n';
-		
-		std::cout << "All containts (back adding block):" "\n";
+				<< "\t" "for(long i = -1; i > -11; --i)" "\n"
+				   "\t" "{" "\n"
+				   "\t" "\t" "block.pushFront(i);" "\n"
+				   "\t" "}" "\n"
+				   "\t" "block.pushFront(-11);" "\n"
+			<< "Result:" "\n";
 	    std::for_each
 	    (
-		    back_add_block.begin(), back_add_block.end(),
+		    block.begin(), block.end(),
 		    [](long out)
 		    {
 			    std::cout << '\t' << out << '\n';
@@ -347,39 +348,37 @@ Test::Templates::MemoryBlock()
 	
 	// front adding block
 	{
-		front_add_block.pushFront(test_obj);
-		front_add_block.pushFront(-1);
-		front_add_block.pushFront(-2);
-		front_add_block.pushFront(-3);
+		MemoryBlock<long> &block = front_add_block;
+		for(long i = -1; i > -11; --i)
+		{
+			block.pushFront(i);
+		}
+		block.pushFront(-11);
 		
 		std::cout
 			<< "Code (front adding block):" "\n"
-				<< "\t" "front_add_block.pushFront(-3);" "\n"
-				<< "\t" "front_add_block.pushFront(-2);" "\n"
-				<< "\t" "front_add_block.pushFront(-1);" "\n"
-				<< "\t" "front_add_block.pushFront(test_obj);" "\n"
-			<< "Result:" "\n"
-				<< '\t' << front_add_block[0] << '\n'
-				<< '\t' << front_add_block[(size_t)1] << '\n'
-				<< '\t' << front_add_block[(size_t)2] << '\n'
-				<< '\t' << front_add_block[(size_t)3] << '\n';
+				<< "\t" "for(long i = -1; i > -11; --i)" "\n"
+				   "\t" "{" "\n"
+				   "\t" "\t" "block.pushFront(i);" "\n"
+				   "\t" "}" "\n"
+				   "\t" "block.pushFront(-11);" "\n"
+			<< "Result:" "\n";
 		std::cout << '\n';
-		
-		std::cout << "All containts (front adding block):" "\n";
-		std::for_each
-		(
-			front_add_block.begin(), front_add_block.end(),
-			[](long out)
-			{
-				std::cout << '\t' << out << '\n';
-			}
-		);
+	    std::for_each
+	    (
+		    block.begin(), block.end(),
+		    [](long out)
+		    {
+			    std::cout << '\t' << out << '\n';
+		    }
+	    );
 		std::cout << '\n';
 	}
 	
 // at()
 	
 	// back adding block
+	/*
 	{
 		std::cout
 			<< "Code (back adding block):" "\n"
