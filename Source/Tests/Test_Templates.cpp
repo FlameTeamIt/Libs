@@ -276,23 +276,16 @@ Test::Templates::MemoryBlock()
 				   "\t" "{" "\n"
 		           "\t" "\t" "block.pushBack(i);" "\n"
 		           "\t" "}" "\n"
-		           "\t" "block.pushBack(-11);" "\n"
-			<< "Result:" "\n";
-		for(int i = 0; i < 11; ++i)
-		{
-			std::cout << '\t' << block[i] << '\n';
-		}
-		
-	// есть проблема с итераторами -- до последнего блока не доходит.
-//		std::for_each
-//		(
-//			block.begin(), ++(block.end()),
-//			[](long out)
-//			{
-//				std::cout << '\t' << out << '\n';
-//			}
-//		);
-//		std::cout << '\n';
+		           "\t" "block.pushBack(-11);" "\n";
+		std::cout << "Result (iterators):" "\n";
+		std::for_each(
+			block.begin(), block.end(),
+			[&](const long &out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
+		std::cout << '\n';
 	}
 	
 	
