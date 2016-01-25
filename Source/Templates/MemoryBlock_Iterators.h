@@ -14,7 +14,7 @@ template<typename T> class MemoryBlockReverseIterator;
 
 template<typename T>
 class MemoryBlockIterator
-		: public BasicIterator<SimpleArrayIterator<T>, T>
+	: public BasicIterator<SimpleArrayIterator<T>, T>
 {
 protected:
 	mutable MemoryBlock<T> *inc_block;
@@ -89,7 +89,7 @@ public:
 
 template<typename T>
 class MemoryBlockReverseIterator
-		: public BasicReverseIterator<SimpleArrayReverseIterator<T>, T>
+	: public BasicReverseIterator<SimpleArrayReverseIterator<T>, T>
 {
 protected:
 	mutable MemoryBlock<T> *inc_block;
@@ -234,7 +234,7 @@ MemoryBlockIterator<T>::operator ++()
 {
 	this->inc_data_iterator++;
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
-		&& inc_block->next_block.isInitialized())
+	   && inc_block->next_block.isInitialized())
 	{
 		inc_block = inc_block->_block_getNext().operator ->();
 		this->inc_data_iterator = inc_block->_block_simple_begin();
@@ -245,14 +245,12 @@ template<typename T>
 const MemoryBlockIterator<T>&
 MemoryBlockIterator<T>::operator --()
 {
-	if(this->inc_data_iterator != inc_block->_block_simple_rend())
-	{
-		this->inc_data_iterator--;
-	}
-	else
+	this->inc_data_iterator--;
+	if(this->inc_data_iterator == inc_block->_block_simple_rend()
+	   && inc_block->prev_block.isInitialized())
 	{
 		inc_block = inc_block->_block_getPrev().operator ->();
-		this->inc_data_iterator = (inc_block->_block_simple_end())--;
+		this->inc_data_iterator = --(inc_block->_block_simple_end());
 	}
 	return *this;
 }
@@ -261,14 +259,12 @@ template<typename T>
 const MemoryBlockIterator<T>&
 MemoryBlockIterator<T>::operator ++() const
 {
-	if(this->inc_data_iterator != inc_block->_block_simpleEnd()--)
-	{
-		++this->inc_data_iterator;
-	}
-	else
+	this->inc_data_iterator++;
+	if(this->inc_data_iterator == inc_block->_block_simple_end()
+	   && inc_block->next_block.isInitialized())
 	{
 		inc_block = inc_block->_block_getNext().operator ->();
-		this->inc_data_iterator = inc_block->_block_simpleBegin();
+		this->inc_data_iterator = inc_block->_block_simple_begin();
 	}
 	return *this;
 }
@@ -276,20 +272,146 @@ template<typename T>
 const MemoryBlockIterator<T>&
 MemoryBlockIterator<T>::operator --() const
 {
-	if(this->inc_data_iterator != inc_block->_block_rend())
-	{
-		this->inc_data_iterator--;
-	}
-	else
+	this->inc_data_iterator--;
+	if(this->inc_data_iterator == inc_block->_block_simple_rend()
+	   && inc_block->prev_block.isInitialized())
 	{
 		inc_block = inc_block->_block_getPrev().operator ->();
-		this->inc_data_iterator = (inc_block->_block_simpleEnd())--;
+		this->inc_data_iterator = --(inc_block->_block_simple_end());
 	}
 	return *this;
 }
 
 
 // MemoryBlockReverseIterator
+
+template<typename T>
+MemoryBlockReverseIterator<T>::MemoryBlockReverseIterator()
+	: BasicReverseIterator<SimpleArrayReverseIterator<T>, T>()
+	,inc_block(nullptr)
+{}
+
+template<typename T>
+MemoryBlockReverseIterator<T>::MemoryBlockReverseIterator(
+	MemoryBlockReverseIterator<T> &&iterator)
+		: BasicReverseIterator<SimpleArrayReverseIterator<T>, T>(iterator)
+		,inc_block(iterator.inc_block)
+{}
+
+template<typename T>
+MemoryBlockReverseIterator<T>::MemoryBlockReverseIterator(
+	const MemoryBlockReverseIterator<T> &iterator)
+	: BasicReverseIterator<SimpleArrayReverseIterator<T>, T>(iterator)
+	,inc_block(iterator.inc_block)
+{}
+
+template<class T>
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator =(
+	MemoryBlockReverseIterator<T> &&iterator)
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	this->inc_block = iterator.inc_block;
+	return *this;
+}
+
+template<class T>
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator =(
+	const MemoryBlockReverseIterator<T> &iterator)
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	this->inc_block = iterator.inc_block;
+	return *this;
+}
+
+template<class T>
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator =(
+	MemoryBlockReverseIterator<T> &&iterator) const
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	this->inc_block = iterator.inc_block;
+	return *this;
+}
+
+template<class T>
+const MemoryBlockIterator<T>&
+MemoryBlockReverseIterator<T>::operator =(
+	const MemoryBlockIterator<T> &iterator) const
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	this->inc_block = iterator.inc_block;
+	return *this;
+}
+
+template<typename T>
+T&
+MemoryBlockReverseIterator<T>::operator *() const noexcept
+{
+	return *(this->inc_data_iterator);
+}
+
+template<typename T>
+T*&
+MemoryBlockReverseIterator<T>::operator ->() const noexcept
+{
+	return this->inc_data_iterator.operator ->();
+}
+
+template<typename T>
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator ++()
+{
+	this->inc_data_iterator++;
+	if(this->inc_data_iterator == inc_block->_block_simple_rend()
+	   && inc_block->prev_block.isInitialized())
+	{
+		inc_block = inc_block->_block_getPrev().operator ->();
+		this->inc_data_iterator = inc_block->_block_simple_rbegin();
+	}
+	return *this;
+}
+template<typename T>
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator --()
+{
+	this->inc_data_iterator--;
+	if(this->inc_data_iterator == inc_block->_block_simple_end()
+	   && inc_block->next_block.isInitialized())
+	{
+		inc_block = inc_block->_block_getNext().operator ->();
+		this->inc_data_iterator = --(inc_block->_block_simple_end());
+	}
+	return *this;
+}
+
+template<typename T>
+const MemoryBlockIterator<T>&
+MemoryBlockIterator<T>::operator ++() const
+{
+	this->inc_data_iterator++;
+	if(this->inc_data_iterator == inc_block->_block_simple_rend()
+	   && inc_block->prev_block.isInitialized())
+	{
+		inc_block = inc_block->_block_getPrev().operator ->();
+		this->inc_data_iterator = inc_block->_block_simple_rbegin();
+	}
+	return *this;
+}
+template<typename T>
+const MemoryBlockIterator<T>&
+MemoryBlockIterator<T>::operator --() const
+{
+	this->inc_data_iterator--;
+	if(this->inc_data_iterator == inc_block->_block_simple_end()
+	   && inc_block->next_block.isInitialized())
+	{
+		inc_block = inc_block->_block_getNext().operator ->();
+		this->inc_data_iterator = --(inc_block->_block_simple_end());
+	}
+	return *this;
+}
 
 // operators
 

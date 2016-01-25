@@ -138,8 +138,8 @@ public:
 		  
 	iterator begin();
 	iterator end();
-	reverse_iterator& rbegin(); // tested
-	reverse_iterator& rend(); // tested
+	reverse_iterator rbegin(); // tested
+	reverse_iterator rend(); // tested
 
 //	const_iterator& begin() const;
 //	const_iterator& end() const;
@@ -643,9 +643,9 @@ MemoryBlock<T>::pushBack(T &&obj)
 					  this->inc_arr + this->arr_capacity,
 					  this->inc_arr + this->first_index - 1);
 			
-//			this->inc_arr[this->arr_capacity - 1].~T();
-//			this->inc_arr[this->arr_capacity - 1] = T(obj);
-			array_copying(1, &obj, this->inc_arr + this->arr_capacity - 1);
+			this->inc_arr[this->arr_capacity - 1].~T();
+			this->inc_arr[this->arr_capacity - 1] = T(obj);
+//			array_copying(1, &obj, this->inc_arr + this->arr_capacity - 1);
 			
 			--this->first_index;
 			++this->arr_size;
@@ -826,17 +826,37 @@ MemoryBlock<T>::end()
 	}
 }
 
-//template<typename T>
-//MemoryBlockIterator<T>&
-//MemoryBlock<T>::rbegin()
-//{
-	
-//}
+template<typename T>
+MemoryBlockReverseIterator<T>
+MemoryBlock<T>::rbegin()
+{
+	if(next_block.isInitialized())
+	{
+		return next_block->rbegin();
+	}
+	else
+	{
+		reverse_iterator it;
+		it.inc_block = this;
+		it.inc_data_iterator = it.inc_block->_block_simple_rbegin();
+		return it;
+	}
+}
 
-//template<typename T>
-//MemoryBlockIterator<T>&
-//MemoryBlock<T>::rend()
-//{
-	
-//}
+template<typename T>
+MemoryBlockReverseIterator<T>
+MemoryBlock<T>::rend()
+{
+	if(prev_block.isInitialized())
+	{
+		return prev_block->rend();
+	}
+	else
+	{
+		reverse_iterator it;
+		it.inc_block = this;
+		it.inc_data_iterator = it.inc_block->_block_simple_rend();
+		return it;
+	}
+}
 #endif // TEMPLATES_MEMORYBLOCK
