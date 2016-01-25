@@ -232,14 +232,12 @@ template<typename T>
 const MemoryBlockIterator<T>&
 MemoryBlockIterator<T>::operator ++()
 {
-	if(this->inc_data_iterator != inc_block->_block_simpleEnd())
-	{
-		this->inc_data_iterator++;
-	}
-	else
+	this->inc_data_iterator++;
+	if(this->inc_data_iterator == inc_block->_block_simple_end()
+		&& inc_block->next_block.isInitialized())
 	{
 		inc_block = inc_block->_block_getNext().operator ->();
-		this->inc_data_iterator = inc_block->_block_simpleBegin();
+		this->inc_data_iterator = inc_block->_block_simple_begin();
 	}
 	return *this;
 }
@@ -247,14 +245,14 @@ template<typename T>
 const MemoryBlockIterator<T>&
 MemoryBlockIterator<T>::operator --()
 {
-	if(this->inc_data_iterator != inc_block->_block_simpleREnd())
+	if(this->inc_data_iterator != inc_block->_block_simple_rend())
 	{
 		this->inc_data_iterator--;
 	}
 	else
 	{
 		inc_block = inc_block->_block_getPrev().operator ->();
-		this->nc_data_iterator = (inc_block->_block_simpleEnd())--;
+		this->inc_data_iterator = (inc_block->_block_simple_end())--;
 	}
 	return *this;
 }
@@ -263,9 +261,9 @@ template<typename T>
 const MemoryBlockIterator<T>&
 MemoryBlockIterator<T>::operator ++() const
 {
-	if(this->inc_data_iterator != inc_block->_block_simpleEnd())
+	if(this->inc_data_iterator != inc_block->_block_simpleEnd()--)
 	{
-		this->inc_data_iterator++;
+		++this->inc_data_iterator;
 	}
 	else
 	{
@@ -300,8 +298,10 @@ bool
 operator ==(const MemoryBlockIterator<T> &it1,
 			const MemoryBlockIterator<T> &it2)
 {
-	return (it1.inc_block == it2.inc_block)
-			&& (it1.operator ->() == it2.operator ->());
+	return
+		(it1.inc_data_iterator == it2.inc_data_iterator)
+		 &&
+		(it1.inc_block == it2.inc_block);
 }
 
 template<typename T> inline
@@ -309,8 +309,10 @@ bool
 operator !=(const MemoryBlockIterator<T> &it1,
 			const MemoryBlockIterator<T> &it2)
 {
-	return (it1.inc_block != it2.inc_block)
-			&& (it1.operator ->() != it2.operator ->());
+	return
+		(it1.inc_data_iterator != it2.inc_data_iterator)
+		 ||
+		(it1.inc_block != it2.inc_block);
 }
 
 template<typename T> inline
@@ -318,8 +320,10 @@ bool
 operator ==(const MemoryBlockReverseIterator<T> &it1,
 			const MemoryBlockReverseIterator<T> &it2)
 {
-	return (it1.inc_block == it2.inc_block)
-			&& (it1.operator ->() == it2.operator ->());
+	return
+		(it1.inc_data_iterator == it2.inc_data_iterator)
+		 &&
+		(it1.inc_block == it2.inc_block);
 }
 
 template<typename T> inline
@@ -327,8 +331,10 @@ bool
 operator !=(const MemoryBlockReverseIterator<T> &it1,
 			const MemoryBlockReverseIterator<T> &it2)
 {
-	return (it1.inc_block != it2.inc_block)
-			&& (it1.operator ->() != it2.operator ->());
+	return
+		(it1.inc_data_iterator != it2.inc_data_iterator)
+		 ||
+		(it1.inc_block != it2.inc_block);
 }
 
 // hybrid operators
@@ -338,8 +344,10 @@ bool
 operator ==(const MemoryBlockIterator<T> &it1,
 			const MemoryBlockReverseIterator<T> &it2)
 {
-	return (it1.inc_block == it2.inc_block)
-			&& (it1.operator ->() == it2.operator ->());
+	return
+		(it1.inc_data_iterator == it2.inc_data_iterator)
+		 &&
+		(it1.inc_block == it2.inc_block);
 }
 
 template<typename T> inline
@@ -347,8 +355,10 @@ bool
 operator !=(const MemoryBlockIterator<T> &it1,
 			const MemoryBlockReverseIterator<T> &it2)
 {
-	return (it1.inc_block != it2.inc_block)
-			&& (it1.operator ->() != it2.operator ->());
+	return
+		(it1.inc_data_iterator != it2.inc_data_iterator)
+		 ||
+		(it1.inc_block != it2.inc_block);
 }
 
 template<typename T> inline
@@ -356,8 +366,10 @@ bool
 operator ==(const MemoryBlockReverseIterator<T> &it1,
 			const MemoryBlockIterator<T> &it2)
 {
-	return (it1.inc_block == it2.inc_block)
-			&& (it1.operator ->() == it2.operator ->());
+	return
+		(it1.inc_data_iterator == it2.inc_data_iterator)
+		 &&
+		(it1.inc_block == it2.inc_block);
 }
 
 template<typename T> inline
@@ -365,8 +377,10 @@ bool
 operator !=(const MemoryBlockReverseIterator<T> &it1,
 			const MemoryBlockIterator<T> &it2)
 {
-	return (it1.inc_block != it2.inc_block)
-			&& (it1.operator ->() != it2.operator ->());
+	return
+		(it1.inc_data_iterator != it2.inc_data_iterator)
+		 ||
+		(it1.inc_block != it2.inc_block);
 }
 
 }}
