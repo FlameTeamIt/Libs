@@ -105,6 +105,15 @@ public:
 	
 	~MemoryBlockReverseIterator() = default;
 	
+	inline const my_type& operator =(const my_type &iterator);
+	inline const my_type& operator =(my_type &&iterator);
+	
+	inline const my_type& operator =(const my_type &iterator) const;
+	inline const my_type& operator =(my_type &&iterator)      const;
+	
+	virtual T&  operator *()  const noexcept;
+	virtual T*& operator ->() const noexcept;
+	
 	inline const my_type& operator ++();
 	inline const my_type& operator --();
 	
@@ -336,9 +345,9 @@ MemoryBlockReverseIterator<T>::operator =(
 }
 
 template<class T>
-const MemoryBlockIterator<T>&
+const MemoryBlockReverseIterator<T>&
 MemoryBlockReverseIterator<T>::operator =(
-	const MemoryBlockIterator<T> &iterator) const
+	const MemoryBlockReverseIterator<T> &iterator) const
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	this->inc_block = iterator.inc_block;
@@ -387,8 +396,8 @@ MemoryBlockReverseIterator<T>::operator --()
 }
 
 template<typename T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator ++() const
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator ++() const
 {
 	this->inc_data_iterator++;
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -400,8 +409,8 @@ MemoryBlockIterator<T>::operator ++() const
 	return *this;
 }
 template<typename T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator --() const
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator --() const
 {
 	this->inc_data_iterator--;
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
