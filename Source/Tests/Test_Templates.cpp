@@ -405,20 +405,34 @@ Test::Templates::MemoryBlock()
 		std::cout << '\n';
 	}
 	
-// copy constructor
+// copy and move constructors
 	
 	// back adding block
-	
 	{
 		MemoryBlock<long> &block = back_add_block;
 		MemoryBlock<long> copied_block = block;
 		std::cout
-			<< "Code (front adding block):" "\n"
+			<< "Code (back adding block):" "\n"
 				<< "\t" "MemoryBlock<long> copied_block = block;" "\n"
 			<< "Result:" "\n";
 		std::for_each
 	    (
 			copied_block.begin(), copied_block.end(),
+		    [](long out)
+		    {
+			    std::cout << '\t' << out << '\n';
+		    }
+	    );
+		std::cout << '\n';
+		
+		auto move_block = move(copied_block);
+		std::cout
+			<< "Code (back adding block):" "\n"
+				<< "\t" "auto move_block = move(copied_block);" "\n"
+			<< "Result:" "\n";
+		std::for_each
+	    (
+			move_block.begin(), move_block.end(),
 		    [](long out)
 		    {
 			    std::cout << '\t' << out << '\n';
@@ -433,12 +447,27 @@ Test::Templates::MemoryBlock()
 		MemoryBlock<long> &block = front_add_block;
 		MemoryBlock<long> copied_block = block;
 		std::cout
-			<< "Code (back adding block):" "\n"
+			<< "Code (front adding block):" "\n"
 				<< "\t" "MemoryBlock<long> copied_block = block;" "\n"
 			<< "Result:" "\n";
 		std::for_each
 	    (
 		    copied_block.begin(), copied_block.end(),
+		    [](long out)
+		    {
+			    std::cout << '\t' << out << '\n';
+		    }
+	    );
+		std::cout << '\n';
+		
+		MemoryBlock<long> move_block = flame_ide::templates::move(copied_block);
+		std::cout
+			<< "Code (front adding block):" "\n"
+				<< "\t" "auto move_block = move(copied_block);" "\n"
+			<< "Result:" "\n";
+		std::for_each
+	    (
+			move_block.begin(), move_block.end(),
 		    [](long out)
 		    {
 			    std::cout << '\t' << out << '\n';

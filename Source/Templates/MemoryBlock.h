@@ -240,9 +240,10 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 	this->block_number = block.block_number;
 	this->is_front_adding = block.is_front_adding;
 	
-	SharedPointer<my_type> const *sp_block;
-	SharedPointer<my_type> *my_sp_block;
-	my_type *my_p_block, *p_initing_block = nullptr;
+	SharedPointer<my_type> const *sp_block = nullptr;
+	SharedPointer<my_type> *my_sp_block = nullptr;
+	my_type *my_p_block = nullptr,
+	        *p_initing_block = nullptr;
 	
 	// циклы инициализации
 	for(sp_block = &block.prev_block
@@ -265,6 +266,8 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 		p_initing_block->first_index  = (*sp_block)->first_index;
 		p_initing_block->last_index   = (*sp_block)->last_index;
 		p_initing_block->block_number = (*sp_block)->block_number;
+		
+		p_initing_block->inc_arr = (*sp_block)->_block_getArrayCopy();
 	}
 	
 	for(sp_block = &block.next_block
@@ -287,6 +290,8 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 		p_initing_block->first_index  = (*sp_block)->first_index;
 		p_initing_block->last_index   = (*sp_block)->last_index;
 		p_initing_block->block_number = (*sp_block)->block_number;
+		
+		p_initing_block->inc_arr = (*sp_block)->_block_getArrayCopy();
 	}
 }
 
