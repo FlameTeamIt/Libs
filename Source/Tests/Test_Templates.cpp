@@ -442,7 +442,6 @@ Test::Templates::MemoryBlock()
 	}	
 	
 	// front adding block
-	
 	{
 		MemoryBlock<long> &block = front_add_block;
 		MemoryBlock<long> copied_block = block;
@@ -475,6 +474,32 @@ Test::Templates::MemoryBlock()
 	    );
 		std::cout << '\n';
 	}
+
+// reverse iterators and back iterations
+	
+	{
+		MemoryBlock<long> &block = back_add_block;
+		std::cout << "Result all (iterators: reverse, reverse back, "
+					 "simple, simple back):" "\n";
+		auto r_it = block.rbegin(),
+		     r_it_back = --(block.rend());
+		auto it = block.begin(),
+		     it_back = --(block.end());
+		for(;
+		    r_it      !=    block.rend() &&
+		    r_it_back != --(block.rbegin()) &&
+	        it        !=    block.end() &&
+		    it_back   != --(block.begin());
+		    ++r_it, --r_it_back, ++it, --it_back)
+		{
+			std::cout << '\t' << *r_it
+					  << '\t' << *r_it_back
+					  << '\t' << *it
+					  << '\t' << *it_back << '\n'; 
+		}
+		std::cout << '\n';
+	}
+	
 // pop_back
 	
 	// back adding block
