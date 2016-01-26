@@ -162,7 +162,7 @@ const SharedPointer<T>&
 SharedPointer<T>::operator =(const BasicPointer<T> &arg)
 {
 	this->inc_pointer = arg.inc_pointer;
-	this->is_shared = 1;
+	this->is_shared = true;
 	
 	return *this;
 }
