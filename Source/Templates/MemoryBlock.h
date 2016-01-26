@@ -374,6 +374,7 @@ MemoryBlock<T>::_block_getSize(FromBlock from_block) const
 		{
 			size += next_block->_block_getSize(FROM_FRONT);
 		}
+		break;
 	}
 	return size;
 }
@@ -400,11 +401,13 @@ MemoryBlock<T>::_block_getCapacity(FromBlock from_block) const
 		{
 			capacity += prev_block->_block_getCapacity(FROM_BACK);
 		}
+		break;
 	case FROM_FRONT :
 		if(next_block.isInitialized())
 		{
 			capacity += next_block->_block_getCapacity(FROM_FRONT);
 		}
+		break;
 	}
 	return capacity;
 }
