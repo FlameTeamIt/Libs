@@ -103,11 +103,11 @@ public:
 	typedef SimpleArrayReverseIterator<T> my_type;
 	typedef SimpleArrayIterator<T> friend_type;
 	
-	inline const my_type& operator =(const my_type &iterator);
-	inline const my_type& operator =(my_type &&iterator);
+	inline const my_type& operator =(const my_type &iterator) noexcept;
+	inline const my_type& operator =(my_type &&iterator) noexcept;
 	
-	inline const my_type& operator =(const my_type &iterator) const;
-	inline const my_type& operator =(my_type &&iterator)      const;
+	inline const my_type& operator =(const my_type &iterator) const noexcept;
+	inline const my_type& operator =(my_type &&iterator)      const noexcept;
 	
 	virtual inline T&  operator *()  const noexcept;
 	virtual inline T*& operator ->() const noexcept;
@@ -386,6 +386,42 @@ SimpleArrayReverseIterator<T>
 	::SimpleArrayReverseIterator(const SimpleArrayReverseIterator &iterator)
 		: BasicReverseIterator<T*, T>(iterator)
 {}
+
+template<typename T>
+const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>::operator =(
+	SimpleArrayReverseIterator &&iterator) noexcept
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	return *this;
+}
+
+template<typename T>
+const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>::operator =(
+	const SimpleArrayReverseIterator &iterator) noexcept
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	return *this;
+}
+
+template<typename T>
+const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>::operator =(
+		SimpleArrayReverseIterator &&iterator) const noexcept
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	return *this;
+}
+
+template<typename T>
+const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>::operator =(
+	const SimpleArrayReverseIterator &iterator) const noexcept
+{
+	this->inc_data_iterator = iterator.inc_data_iterator;
+	return *this;
+}
 
 template<typename T>
 T&
