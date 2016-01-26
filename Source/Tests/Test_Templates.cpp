@@ -378,39 +378,78 @@ Test::Templates::MemoryBlock()
 // at()
 	
 	// back adding block
-	/*
 	{
+		MemoryBlock<long> &block = back_add_block;
 		std::cout
 			<< "Code (back adding block):" "\n"
-				<< "\t" "back_add_block.at(index)" "\n"
-			<< "Result:" "\n";
-		for(size_t i = 0, size = back_add_block.getSize(); i < size; ++i)
+				<< "\t" "block.at(index)" "\n"
+		<< "Result:" "\n";
+		for(size_t i = 0, size = block.getSize(); i < size; ++i)
 		{
-			std::cout << '\t' << back_add_block.at(i) << '\n';
+			std::cout << '\t' << block[i] << '\n';
 		}
 		std::cout << '\n';
 	}
 	
 	// front adding block
 	{
+		MemoryBlock<long> &block = back_add_block;
 		std::cout
 			<< "Code (front adding block):" "\n"
-				<< "\t" "front_add_block.at(index)" "\n"
+				<< "\t" "block.at(index)" "\n"
 			<< "Result:" "\n";
-		for(size_t i = 0, size = front_add_block.getSize(); i < size; ++i)
+		for(size_t i = 0, size = block.getSize(); i < size; ++i)
 		{
-			std::cout << '\t' << front_add_block.at(i) << '\n';
+			std::cout << '\t' << block[i] << '\n';
 		}
 		std::cout << '\n';
 	}
 	
 // copy constructor
-	MemoryBlock<long> copied_block = front_add_block;
-		
 	
+	// back adding block
+	
+	{
+		MemoryBlock<long> &block = back_add_block;
+		MemoryBlock<long> copied_block = block;
+		std::cout
+			<< "Code (front adding block):" "\n"
+				<< "\t" "MemoryBlock<long> copied_block = block;" "\n"
+			<< "Result:" "\n";
+		std::for_each
+	    (
+			copied_block.begin(), copied_block.end(),
+		    [](long out)
+		    {
+			    std::cout << '\t' << out << '\n';
+		    }
+	    );
+		std::cout << '\n';
+	}	
+	
+	// front adding block
+	
+	{
+		MemoryBlock<long> &block = front_add_block;
+		MemoryBlock<long> copied_block = block;
+		std::cout
+			<< "Code (back adding block):" "\n"
+				<< "\t" "MemoryBlock<long> copied_block = block;" "\n"
+			<< "Result:" "\n";
+		std::for_each
+	    (
+		    copied_block.begin(), copied_block.end(),
+		    [](long out)
+		    {
+			    std::cout << '\t' << out << '\n';
+		    }
+	    );
+		std::cout << '\n';
+	}
 // pop_back
 	
 	// back adding block
+	/*
 	{
 		back_add_block.popBack(2);
 		back_add_block.popBack();

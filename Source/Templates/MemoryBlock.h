@@ -50,8 +50,12 @@ protected:
 	SharedPointer<my_type> prev_block;
 	SharedPointer<my_type> next_block;
 	
+	
 	inline void _block_init_spNextBlock();
 	inline void _block_init_spPrevBlock();
+	
+	size_t _block_getSize(FromBlock from_block) const;
+	size_t _block_getCapacity(FromBlock from_block) const;
 	
 	void _block_popFront(size_t count);
 	void _block_popBack(size_t count);
@@ -100,8 +104,8 @@ public:
 	
 	virtual ~MemoryBlock();
 	
-//	size_t size(); // new - not in plan
-//	size_t capacity(); // new - not in plan
+	size_t getSize() const; // new - not in plan
+	size_t getCapacity() const; // new - not in plan
 	
 //	void resize(size_t count); // new - not in plan
 //	void reserve(size_t count); // new - not in plan
@@ -338,6 +342,69 @@ MemoryBlock<T>::_block_init_spPrevBlock()
 }
 
 template<typename T>
+size_t
+MemoryBlock<T>::_block_getSize(FromBlock from_block) const
+{
+	size_t size = this->arr_size;
+	switch(from_block)
+	{
+	case FROM_NULL :
+		if(prev_block.isInitialized())
+		{
+			size += prev_block->_block_getSize(FROM_BACK);
+		}
+		if(next_block.isInitialized())
+		{
+			size += next_block->_block_getSize(FROM_FRONT);
+		}
+		break;
+	case FROM_BACK:
+		if(prev_block.isInitialized())
+		{
+			size += prev_block->_block_getSize(FROM_BACK);
+		}
+		break;
+	case FROM_FRONT:
+		if(next_block.isInitialized())
+		{
+			size += next_block->_block_getSize(FROM_FRONT);
+		}
+	}
+	return size;
+}
+
+template<typename T>
+size_t
+MemoryBlock<T>::_block_getCapacity(FromBlock from_block) const
+{
+	size_t capacity = this->arr_capacity;
+	switch(from_block)
+	{
+	case FROM_NULL :
+		if(prev_block.isInitialized())
+		{
+			capacity += prev_block->_block_getCapacity(FROM_BACK);
+		}
+		if(next_block.isInitialized())
+		{
+			capacity += next_block->_block_getCapacity(FROM_FRONT);
+		}
+		break;
+	case FROM_BACK :
+		if(prev_block.isInitialized())
+		{
+			capacity += prev_block->_block_getCapacity(FROM_BACK);
+		}
+	case FROM_FRONT :
+		if(next_block.isInitialized())
+		{
+			capacity += next_block->_block_getCapacity(FROM_FRONT);
+		}
+	}
+	return capacity;
+}
+
+template<typename T>
 void
 MemoryBlock<T>::_block_popFront(size_t count)
 {
@@ -492,7 +559,7 @@ MemoryBlock<T>::_block_at(TSize_Type index, FromBlock from_block)
 	    {
 		    if(next_block.isInitialized())
 		    {
-			    return next_block->_block_at(local_index - this->arr_size + 1,
+			    return next_block->_block_at(local_index - this->arr_size,
 										     FROM_FRONT);
 		    }
 		    else
@@ -536,6 +603,22 @@ SimpleArrayReverseIterator<T>
 MemoryBlock<T>::_block_simple_rend()
 {
 	return this->SimpleArray<T>::rend();
+}
+
+// public
+
+template<typename T>
+size_t
+MemoryBlock<T>::getSize() const
+{
+	return this->_block_getSize(FROM_NULL);
+}
+
+template<typename T>
+size_t
+MemoryBlock<T>::getCapacity() const
+{
+	return this->_block_getCapacity(FROM_NULL);
 }
 
 template<typename T>
