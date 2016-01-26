@@ -390,7 +390,7 @@ MemoryBlockReverseIterator<T>::operator --()
 	   && inc_block->next_block.isInitialized())
 	{
 		inc_block = inc_block->_block_getNext().operator ->();
-		this->inc_data_iterator = --(inc_block->_block_simple_end());
+		this->inc_data_iterator = --(inc_block->_block_simple_rend());
 	}
 	return *this;
 }
