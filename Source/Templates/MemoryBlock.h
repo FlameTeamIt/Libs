@@ -10,11 +10,11 @@
 /*
 
 Что нужно реализовать:
-1. Конструкторы копирования/перемещения   -- done
-2. _block_at()                            -> done
-3. _block_getArrayCopy()                  -- done
+1. Конструкторы копирования/перемещения   -> done and tested
+2. _block_at()                            -> done and tested
+3. _block_getArrayCopy()                  -> done and tested
 
-4. Реализация итераторов                  -- not done
+4. Реализация итераторов       -- semi done (no implemented operator ++/--(int))
 
 5. insert()/erase() (включая итераторы)   -- not done
 6. begin()/end()                          -- not done
