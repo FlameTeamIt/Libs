@@ -14,7 +14,7 @@
 2. _block_at()                            -> done and tested
 3. _block_getArrayCopy()                  -> done and tested
 
-4. Реализация итераторов       -- done
+4. Реализация итераторов       -- done and tested
 
 5. insert()/erase() (включая итераторы)   -- not done
 6. begin()/end()                          -> done and tested
