@@ -11,20 +11,13 @@ namespace flame_ide
 template<class T>
 class Array
 {
-	size_t size, capacity;
-	MemoryBlock<T> my_block;
-	SharedPointer<MemoryBlock<T>> sp_head, sp_tail, sp_main;
-	
 	void __array_init(size_t);
 	void __array_setCopy(const Array<T> &array);
 	void __array_setMove(Array<T> &array);
 	
 public:
-//	typedef ArrayIterator<T>        iterator;
-//	typedef ArrayReverseIterator<T> reverse_iterator;
-	
-//	typedef const ArrayIterator<T>        const_iterator;
-//	typedef const ArrayReverseIterator<T> const_reverse_iterator;
+	size_t arr_size;
+	size_t arr_capacity;
 	
 	Array();
 	Array(size_t arr_size);

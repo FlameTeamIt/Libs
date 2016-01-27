@@ -3,7 +3,7 @@
 
 #include <Templates/BasicIterator.h>
 
-typedef unsigned long size_t;
+//typedef unsigned long size_t;
 
 namespace flame_ide
 {namespace templates

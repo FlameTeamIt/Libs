@@ -1,11 +1,12 @@
 #ifndef TEMPLATES_FOR_ALL
 #define TEMPLATES_FOR_ALL
 
-typedef unsigned long size_t;
-
 namespace flame_ide
+
 {namespace templates
 {
+
+//typedef unsigned long size_t;
 
 template<typename Tt1, typename Tt2>
 struct Types
@@ -101,20 +102,8 @@ void flame_ide::templates::
 copy(const TIteratorInput &start, const TIteratorInput &end,
      TIteratorOutput &out)
 {
-	// нужно:
-	// От входных итераторов -- реализованный оператор operator*()
-	// От выходных итератора -- реализованный оператор operator*()
-	
-	for(auto it = start; it != end; ++it)
-	{
-		out.operator*().~T(); // спорно. А вдруг ничего там нет.
-		
-		                      // надо разобраться, как это в stl реализовано,
-		                      // а то это слишком упорото.
-		
-		new (out.operator->()) T(*it);
-		++out;
-	}
+	// определение типа
+	// а дальше поробуем скопировать побайтово.
 }
 
 #endif // TEMPLATES_FOR_ALL
