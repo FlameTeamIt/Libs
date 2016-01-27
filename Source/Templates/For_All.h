@@ -41,38 +41,38 @@ template<typename Tt> inline constexpr
 bool
 flame_ide::templates::is_preemptive_type()
 {
-	typedef unsigned char u_char;
-	typedef unsigned short u_short;
-	typedef unsigned int u_int;
-	typedef unsigned long u_long;
+	typedef unsigned char unsigned_char;
+	typedef unsigned short unsigned_short;
+	typedef unsigned int unsigned_int;
+	typedef unsigned long unsigned_long;
 	
 	typedef long long llong;
-	typedef unsigned long long u_llong;
+	typedef unsigned long long unsigned_llong;
 	
 	typedef Types<Tt, char> Type_char;
-	typedef Types<Tt, u_char> Type_u_char;
+	typedef Types<Tt, unsigned_char> Type_unsigned_char;
 	
 	typedef Types<Tt, short> Type_short;
-	typedef Types<Tt, u_short> Type_u_short;
+	typedef Types<Tt, unsigned_short> Type_unsigned_short;
 	
 	typedef Types<Tt, int> Type_int;
-	typedef Types<Tt, u_int> Type_u_int;
+	typedef Types<Tt, unsigned_int> Type_unsigned_int;
 	
 	typedef Types<Tt, float> Type_float;
 	
 	typedef Types<Tt, long> Type_long;
-	typedef Types<Tt, u_long> Type_u_long;
+	typedef Types<Tt, unsigned_long> Type_unsigned_long;
 
 	typedef Types<Tt, llong> Type_llong;
-	typedef Types<Tt, u_llong> Type_u_llong;
+	typedef Types<Tt, unsigned_llong> Type_unsigned_llong;
 	
 	typedef Types<Tt, double> Type_double;
 	
-	return (Type_char::isSame  || Type_u_char::isSame
-	     || Type_short::isSame || Type_u_short::isSame
-	     || Type_int::isSame   || Type_u_int::isSame
-	     || Type_long::isSame  || Type_u_long::isSame
-	     || Type_llong::isSame || Type_u_llong::isSame
+	return (Type_char::isSame  || Type_unsigned_char::isSame
+	     || Type_short::isSame || Type_unsigned_short::isSame
+	     || Type_int::isSame   || Type_unsigned_int::isSame
+	     || Type_long::isSame  || Type_unsigned_long::isSame
+	     || Type_llong::isSame || Type_unsigned_llong::isSame
 	     || Type_float::isSame || Type_double::isSame);
 }
 
