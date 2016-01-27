@@ -14,11 +14,11 @@
 2. _block_at()                            -> done and tested
 3. _block_getArrayCopy()                  -> done and tested
 
-4. Реализация итераторов       -- semi done (no implemented operator ++/--(int))
+4. Реализация итераторов       -- done
 
 5. insert()/erase() (включая итераторы)   -- not done
-6. begin()/end()                          -- not done
-7. rbegin()/rend()                        -- not done
+6. begin()/end()                          -> done and tested
+7. rbegin()/rend()                        -> done and tested
 
 */
 namespace flame_ide
@@ -65,8 +65,13 @@ protected:
 	
 	template<typename TSize_Type> T& _block_at(TSize_Type index,
 											   FromBlock from_back);
-		  
-	inline T* _block_getArrayCopy() const;
+	
+	inline T* _block_simple_getArrayCopy() const;
+	
+	inline size_t _block_simple_getSize() const;
+    inline size_t _block_simple_getCapacity() const;
+    
+	inline bool _block_simple_isEmpty() const;
 	
 	SimpleArrayIterator<T> _block_simple_begin();
 	SimpleArrayIterator<T> _block_simple_end();
@@ -267,7 +272,7 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 		p_initing_block->last_index   = (*sp_block)->last_index;
 		p_initing_block->block_number = (*sp_block)->block_number;
 		
-		p_initing_block->inc_arr = (*sp_block)->_block_getArrayCopy();
+		p_initing_block->inc_arr = (*sp_block)->_block_simple_getArrayCopy();
 	}
 	
 	for(sp_block = &block.next_block
@@ -291,7 +296,7 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 		p_initing_block->last_index   = (*sp_block)->last_index;
 		p_initing_block->block_number = (*sp_block)->block_number;
 		
-		p_initing_block->inc_arr = (*sp_block)->_block_getArrayCopy();
+		p_initing_block->inc_arr = (*sp_block)->_block_simple_getArrayCopy();
 	}
 }
 
@@ -438,7 +443,14 @@ MemoryBlock<T>::_block_popFront(size_t count)
 	}
 	else
 	{
-		if(this->arr_size < count)
+		if(!this->arr_size)
+		{
+			if(this->next_block.isInitialized())
+			{
+				this->next_block->_block_popFront(count);
+			}
+		}
+		else if(this->arr_size < count)
 		{
 			if(this->next_block.isInitialized())
 			{
@@ -582,9 +594,30 @@ MemoryBlock<T>::_block_at(TSize_Type index, FromBlock from_block)
 
 template<typename T>
 T*
-MemoryBlock<T>::_block_getArrayCopy() const
+MemoryBlock<T>::_block_simple_getArrayCopy() const
 {
 	return this->SimpleArray<T>::_simple_getArrayCopy();
+}
+
+template<typename T>
+size_t
+MemoryBlock<T>::_block_simple_getSize() const
+{
+	return this->SimpleArray<T>::getSize();
+}
+
+template<typename T>
+size_t
+MemoryBlock<T>::_block_simple_getCapacity() const
+{
+	return this->SimpleArray<T>::getCapacity();
+}
+
+template<typename T>
+bool
+MemoryBlock<T>::_block_simple_isEmpty() const
+{
+	return this->SimpleArray<T>::isEmpty();
 }
 
 template<typename T>
@@ -760,7 +793,8 @@ template<typename T>
 void
 MemoryBlock<T>::popFront(size_t count)
 {
-	if(this->prev_block.isInitialized())
+	if(this->prev_block.isInitialized()
+	   && this->prev_block->_block_simple_getSize())
 	{
 		this->prev_block->popFront(count);
 	}
@@ -774,7 +808,8 @@ template<typename T>
 void
 MemoryBlock<T>::popBack(size_t count)
 {
-	if(this->next_block.isInitialized())
+	if(this->next_block.isInitialized()
+	   && !(this->next_block->_block_simple_isEmpty()))
 	{
 		this->next_block->popBack(count);
 	}
@@ -887,7 +922,8 @@ template<typename T>
 MemoryBlockIterator<T>
 MemoryBlock<T>::begin()
 {
-	if(prev_block.isInitialized())
+	if(prev_block.isInitialized()
+	   && !(prev_block->_block_simple_isEmpty()) )
 	{
 		return prev_block->begin();
 	}
@@ -904,7 +940,8 @@ template<typename T>
 MemoryBlockIterator<T>
 MemoryBlock<T>::end()
 {
-	if(next_block.isInitialized())
+	if(next_block.isInitialized()
+	   && !(next_block->_block_simple_isEmpty()) )
 	{
 		return next_block->end();
 	}
@@ -921,7 +958,8 @@ template<typename T>
 MemoryBlockReverseIterator<T>
 MemoryBlock<T>::rbegin()
 {
-	if(next_block.isInitialized())
+	if(next_block.isInitialized()
+	   && !(next_block->_block_simple_isEmpty()) )
 	{
 		return next_block->rbegin();
 	}
@@ -938,7 +976,8 @@ template<typename T>
 MemoryBlockReverseIterator<T>
 MemoryBlock<T>::rend()
 {
-	if(prev_block.isInitialized())
+	if(prev_block.isInitialized()
+	   && !(prev_block->_block_simple_isEmpty()) )
 	{
 		return prev_block->rend();
 	}

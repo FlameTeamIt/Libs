@@ -316,6 +316,52 @@ Test::Templates::MemoryBlock()
 		std::cout << '\n';
 	}
 	
+// pop_back
+	
+	// back adding block
+	{
+		MemoryBlock<long> &block = back_add_block;
+		block.popBack(2);
+		block.popBack();
+		
+		std::cout
+			<< "Code (back adding block):" "\n"
+				<< "\t" "block.popBack(2);" "\n"
+				<< "\t" "block.popBack();" "\n"
+			<< "Result:" "\n";
+		std::for_each
+		(
+			block.begin(), block.end(),
+			[](long out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
+		std::cout << '\n';
+		
+	}
+	
+	// front adding block
+	{
+		front_add_block.popBack(2);
+		front_add_block.popBack();
+		std::cout
+			<< "Code (front adding block):" "\n"
+				<< "\t" "front_add_block.popBack(2);" "\n"
+				<< "\t" "front_add_block.popBack();" "\n"
+			<< "Result:" "\n";
+		std::for_each
+		(
+			front_add_block.begin(), front_add_block.end(),
+			[](long out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
+		std::cout << '\n';
+		
+	}
+	
 // push_front
 	
 	// back adding block
@@ -373,6 +419,50 @@ Test::Templates::MemoryBlock()
 		    }
 	    );
 		std::cout << '\n';
+	}
+	
+// pop_front
+	
+	// back adding block
+	{
+		back_add_block.popFront(2);
+		back_add_block.popFront();
+		std::cout
+			<< "Code (back adding block):" "\n"
+				<< "\t" "back_add_block.popFront(2);" "\n"
+				<< "\t" "back_add_block.popFront();" "\n"
+			<< "Result:" "\n";
+		std::for_each
+		(
+			back_add_block.begin(), back_add_block.end(),
+			[](long out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
+		std::cout << '\n';
+		
+	}
+	
+	// front adding block
+	{
+		front_add_block.popFront(2);
+		front_add_block.popFront();
+		std::cout
+			<< "Code (front adding block):" "\n"
+				<< "\t" "front_add_block.popFront(2);" "\n"
+				<< "\t" "front_add_block.popFront();" "\n"
+			<< "Result:" "\n";
+		std::for_each
+		(
+			front_add_block.begin(), front_add_block.end(),
+			[](long out)
+			{
+				std::cout << '\t' << out << '\n';
+			}
+		);
+		std::cout << '\n';
+		
 	}
 	
 // at()
@@ -480,7 +570,7 @@ Test::Templates::MemoryBlock()
 	{
 		MemoryBlock<long> &block = back_add_block;
 		std::cout << "Result all (iterators: reverse, reverse back, "
-					 "simple, simple back):" "\n";
+					 "simple, simple back; operators ++/--()):" "\n";
 		auto r_it = block.rbegin(),
 		     r_it_back = --(block.rend());
 		auto it = block.begin(),
@@ -500,94 +590,28 @@ Test::Templates::MemoryBlock()
 		std::cout << '\n';
 	}
 	
-// pop_back
-	
-	// back adding block
-	/*
 	{
-		back_add_block.popBack(2);
-		back_add_block.popBack();
-		std::cout
-			<< "Code (back adding block):" "\n"
-				<< "\t" "back_add_block.popBack(2);" "\n"
-				<< "\t" "back_add_block.popBack();" "\n"
-			<< "Result:" "\n";
-		std::for_each
-		(
-			back_add_block.begin(), back_add_block.end(),
-			[](long out)
-			{
-				std::cout << '\t' << out << '\n';
-			}
-		);
+		MemoryBlock<long> &block = back_add_block;
+		std::cout << "Result all (iterators: reverse, reverse back, "
+					 "simple, simple back; operators ++/--(int)):" "\n";
+		auto r_it = block.rbegin(),
+				r_it_back = (block.rend())--;
+		auto it = block.begin(),
+				it_back = (block.end())--;
+		for(;
+			r_it      !=  block.rend() &&
+			r_it_back != (block.rbegin())-- &&
+			it        !=  block.end() &&
+			it_back   != (block.begin())--;
+			r_it++, r_it_back--, it++, it_back--)
+		{
+			std::cout << '\t' << *r_it
+					  << '\t' << *r_it_back
+					  << '\t' << *it
+					  << '\t' << *it_back << '\n'; 
+		}
 		std::cout << '\n';
-		
 	}
-	
-	// front adding block
-	{
-		front_add_block.popBack(2);
-		front_add_block.popBack();
-		std::cout
-			<< "Code (front adding block):" "\n"
-				<< "\t" "front_add_block.popBack(2);" "\n"
-				<< "\t" "front_add_block.popBack();" "\n"
-			<< "Result:" "\n";
-		std::for_each
-		(
-			front_add_block.begin(), front_add_block.end(),
-			[](long out)
-			{
-				std::cout << '\t' << out << '\n';
-			}
-		);
-		std::cout << '\n';
-		
-	}
-	
-// pop_front
-	
-	// back adding block
-	{
-		back_add_block.popFront(2);
-		back_add_block.popFront();
-		std::cout
-			<< "Code (back adding block):" "\n"
-				<< "\t" "back_add_block.popFront(2);" "\n"
-				<< "\t" "back_add_block.popFront();" "\n"
-			<< "Result:" "\n";
-		std::for_each
-		(
-			back_add_block.begin(), back_add_block.end(),
-			[](long out)
-			{
-				std::cout << '\t' << out << '\n';
-			}
-		);
-		std::cout << '\n';
-		
-	}
-	
-	// front adding block
-	{
-		front_add_block.popFront(2);
-		front_add_block.popFront();
-		std::cout
-			<< "Code (front adding block):" "\n"
-				<< "\t" "front_add_block.popFront(2);" "\n"
-				<< "\t" "front_add_block.popFront();" "\n"
-			<< "Result:" "\n";
-		std::for_each
-		(
-			front_add_block.begin(), front_add_block.end(),
-			[](long out)
-			{
-				std::cout << '\t' << out << '\n';
-			}
-		);
-		std::cout << '\n';
-		
-	}*/
 	
 	return 1;
 }

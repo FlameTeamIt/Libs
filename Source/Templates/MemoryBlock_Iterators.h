@@ -241,9 +241,10 @@ template<typename T>
 const MemoryBlockIterator<T>&
 MemoryBlockIterator<T>::operator ++()
 {
-	this->inc_data_iterator++;
+	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
-	   && inc_block->next_block.isInitialized())
+	   && inc_block->next_block.isInitialized()
+	   && !(inc_block->next_block->_block_simple_isEmpty()))
 	{
 		inc_block = inc_block->_block_getNext().operator ->();
 		this->inc_data_iterator = inc_block->_block_simple_begin();
@@ -254,9 +255,10 @@ template<typename T>
 const MemoryBlockIterator<T>&
 MemoryBlockIterator<T>::operator --()
 {
-	this->inc_data_iterator--;
+	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
-	   && inc_block->prev_block.isInitialized())
+	   && inc_block->prev_block.isInitialized()
+	   && !(inc_block->prev_block->_block_simple_isEmpty()) )
 	{
 		inc_block = inc_block->_block_getPrev().operator ->();
 		this->inc_data_iterator = --(inc_block->_block_simple_end());
@@ -268,9 +270,10 @@ template<typename T>
 const MemoryBlockIterator<T>&
 MemoryBlockIterator<T>::operator ++() const
 {
-	this->inc_data_iterator++;
+	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
-	   && inc_block->next_block.isInitialized())
+	   && inc_block->next_block.isInitialized()
+	   && !(inc_block->next_block->_block_simple_isEmpty()) )
 	{
 		inc_block = inc_block->_block_getNext().operator ->();
 		this->inc_data_iterator = inc_block->_block_simple_begin();
@@ -281,12 +284,71 @@ template<typename T>
 const MemoryBlockIterator<T>&
 MemoryBlockIterator<T>::operator --() const
 {
-	this->inc_data_iterator--;
+	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
-	   && inc_block->prev_block.isInitialized())
+	   && inc_block->prev_block.isInitialized()
+	   && !(inc_block->prev_block->_block_simple_isEmpty()) )
 	{
 		inc_block = inc_block->_block_getPrev().operator ->();
 		this->inc_data_iterator = --(inc_block->_block_simple_end());
+	}
+	return *this;
+}
+
+template<typename T>
+const MemoryBlockIterator<T>&
+MemoryBlockIterator<T>::operator ++(int)
+{
+	this->inc_data_iterator++;
+	if(this->inc_data_iterator == inc_block->_block_simple_end()
+	   && inc_block->next_block.isInitialized()
+	   && !(inc_block->next_block->_block_simple_isEmpty()) )
+	{
+		inc_block = inc_block->_block_getNext().operator ->();
+		this->inc_data_iterator = inc_block->_block_simple_begin();
+	}
+	return *this;
+}
+template<typename T>
+const MemoryBlockIterator<T>&
+MemoryBlockIterator<T>::operator --(int)
+{
+	this->inc_data_iterator--;
+	if(this->inc_data_iterator == inc_block->_block_simple_rend()
+	   && inc_block->prev_block.isInitialized()
+	   && !(inc_block->prev_block->_block_simple_isEmpty()) )
+	{
+		inc_block = inc_block->_block_getPrev().operator ->();
+		this->inc_data_iterator = (inc_block->_block_simple_end())--;
+	}
+	return *this;
+}
+
+template<typename T>
+const MemoryBlockIterator<T>&
+MemoryBlockIterator<T>::operator ++(int) const
+{
+	this->inc_data_iterator++;
+	if(this->inc_data_iterator == inc_block->_block_simple_end()
+	   && inc_block->next_block.isInitialized()
+	   && !(inc_block->next_block->_block_simple_isEmpty()) )
+	{
+		inc_block = inc_block->_block_getNext().operator ->();
+		this->inc_data_iterator = inc_block->_block_simple_begin();
+	}
+	return *this;
+}
+template<typename T>
+const MemoryBlockIterator<T>&
+MemoryBlockIterator<T>::operator --(int) const
+{
+	this->inc_data_iterator--;
+	if(this->inc_data_iterator == inc_block->_block_simple_rend()
+	   && inc_block->prev_block.isInitialized()
+	   && !(inc_block->prev_block->_block_simple_isEmpty()) )
+	{
+		inc_block = inc_block->_block_getPrev().operator ->();
+		this->inc_data_iterator = (inc_block->_block_simple_end())--;
 	}
 	return *this;
 }
@@ -372,9 +434,10 @@ template<typename T>
 const MemoryBlockReverseIterator<T>&
 MemoryBlockReverseIterator<T>::operator ++()
 {
-	this->inc_data_iterator++;
+	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
-	   && inc_block->prev_block.isInitialized())
+	   && inc_block->prev_block.isInitialized()
+	   && !(inc_block->prev_block->_block_simple_isEmpty()) )
 	{
 		inc_block = inc_block->_block_getPrev().operator ->();
 		this->inc_data_iterator = inc_block->_block_simple_rbegin();
@@ -385,9 +448,10 @@ template<typename T>
 const MemoryBlockReverseIterator<T>&
 MemoryBlockReverseIterator<T>::operator --()
 {
-	this->inc_data_iterator--;
+	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
-	   && inc_block->next_block.isInitialized())
+	   && inc_block->next_block.isInitialized()
+	   && !(inc_block->next_block->_block_simple_isEmpty()) )
 	{
 		inc_block = inc_block->_block_getNext().operator ->();
 		this->inc_data_iterator = --(inc_block->_block_simple_rend());
@@ -399,9 +463,10 @@ template<typename T>
 const MemoryBlockReverseIterator<T>&
 MemoryBlockReverseIterator<T>::operator ++() const
 {
-	this->inc_data_iterator++;
+	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
-	   && inc_block->prev_block.isInitialized())
+	   && inc_block->prev_block.isInitialized()
+	   && !(inc_block->prev_block->_block_simple_isEmpty()) )
 	{
 		inc_block = inc_block->_block_getPrev().operator ->();
 		this->inc_data_iterator = inc_block->_block_simple_rbegin();
@@ -412,12 +477,71 @@ template<typename T>
 const MemoryBlockReverseIterator<T>&
 MemoryBlockReverseIterator<T>::operator --() const
 {
-	this->inc_data_iterator--;
+	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
-	   && inc_block->next_block.isInitialized())
+	   && inc_block->next_block.isInitialized()
+	   && !(inc_block->next_block->_block_simple_isEmpty()) )
 	{
 		inc_block = inc_block->_block_getNext().operator ->();
 		this->inc_data_iterator = --(inc_block->_block_simple_end());
+	}
+	return *this;
+}
+
+template<typename T>
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator ++(int)
+{
+	this->inc_data_iterator++;
+	if(this->inc_data_iterator == inc_block->_block_simple_rend()
+	   && inc_block->prev_block.isInitialized()
+	   && !(inc_block->prev_block->_block_simple_isEmpty()) )
+	{
+		inc_block = inc_block->_block_getPrev().operator ->();
+		this->inc_data_iterator = inc_block->_block_simple_rbegin();
+	}
+	return *this;
+}
+template<typename T>
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator --(int)
+{
+	this->inc_data_iterator--;
+	if(this->inc_data_iterator == inc_block->_block_simple_end()
+	   && inc_block->next_block.isInitialized()
+	   && !(inc_block->next_block->_block_simple_isEmpty()) )
+	{
+		inc_block = inc_block->_block_getNext().operator ->();
+		this->inc_data_iterator = (inc_block->_block_simple_rend())--;
+	}
+	return *this;
+}
+
+template<typename T>
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator ++(int) const
+{
+	this->inc_data_iterator++;
+	if(this->inc_data_iterator == inc_block->_block_simple_rend()
+	   && inc_block->prev_block.isInitialized()
+	   && !(inc_block->prev_block->_block_simple_isEmpty()) )
+	{
+		inc_block = inc_block->_block_getPrev().operator ->();
+		this->inc_data_iterator = inc_block->_block_simple_rbegin();
+	}
+	return *this;
+}
+template<typename T>
+const MemoryBlockReverseIterator<T>&
+MemoryBlockReverseIterator<T>::operator --(int) const
+{
+	this->inc_data_iterator--;
+	if(this->inc_data_iterator == inc_block->_block_simple_end()
+	   && inc_block->next_block.isInitialized()
+	   && !(inc_block->next_block->_block_simple_isEmpty()) )
+	{
+		inc_block = inc_block->_block_getNext().operator ->();
+		this->inc_data_iterator = (inc_block->_block_simple_end())--;
 	}
 	return *this;
 }
