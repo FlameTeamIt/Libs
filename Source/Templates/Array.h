@@ -60,7 +60,7 @@ Array<T>::Array()
 {}
 
 template<class T>
-Array<T>::Array(size_t arr_size)
+Array<T>::Array(size_t array_size)
 {}
 
 template<class T>
