@@ -16,7 +16,7 @@
 
 4. Реализация итераторов       -> done and tested
 
-5. insert()/erase() (включая итераторы)   -- not done
+5. insert()/erase() (включая итераторы)   -- start
 6. begin()/end()                          -> done and tested
 7. rbegin()/rend()                        -> done and tested
 
@@ -124,10 +124,26 @@ public:
 	int insert(size_t pos_index, const T &obj);
 	int insert(size_t pos_index, T &&obj);
 	
+	template<class TInputIterator>
+	int insert(const TInputIterator &pos_index, T &&obj);
+	template<class TInputIterator>
+	int insert(const TInputIterator &pos_index, const T &obj);
+	
+	template<class TInputIterator>
+	int insert(const TInputIterator &pos1,
+			   const TInputIterator &pos2);
+	
 	void popFront(size_t count = 1);
 	void popBack(size_t count = 1);
 	
 	int erase(size_t pos_index, size_t count = 1);
+	
+	template<class TInputIterator>
+	int erase(const TInputIterator &pos_index, size_t count = 1);
+	
+	template<class TInputIterator>
+	int erase(const TInputIterator &pos1,
+			  const TInputIterator &pos2);
 	
 	void clear();
 	
@@ -380,6 +396,8 @@ MemoryBlock<T>::_block_getSize(FromBlock from_block) const
 			size += next_block->_block_getSize(FROM_FRONT);
 		}
 		break;
+	default :
+		break;
 	}
 	return size;
 }
@@ -587,6 +605,8 @@ MemoryBlock<T>::_block_at(TSize_Type index, FromBlock from_block)
 			    return this->SimpleArray<T>::at(size_t(0));
 		    }
 	    }
+	default :
+		break;
 	}
 	
 	return this->SimpleArray<T>::at(size_t(0));
@@ -769,7 +789,6 @@ MemoryBlock<T>::pushBack(T &&obj)
 			
 			this->inc_arr[this->arr_capacity - 1].~T();
 			this->inc_arr[this->arr_capacity - 1] = T(obj);
-//			array_copying(1, &obj, this->inc_arr + this->arr_capacity - 1);
 			
 			--this->first_index;
 			++this->arr_size;
@@ -787,6 +806,45 @@ MemoryBlock<T>::pushBack(T &&obj)
 	}
 	_block_init_spNextBlock();
 	return next_block->pushBack(obj);
+}
+
+template<typename T>
+int
+MemoryBlock<T>::insert(size_t pos_index, const T &obj)
+{
+	
+}
+
+template<typename T>
+int
+MemoryBlock<T>::insert(size_t pos_index, T &&obj)
+{
+	
+}
+
+template<typename T>
+template<class TInputIterator>
+int
+MemoryBlock<T>::insert(const TInputIterator &pos_index, T &&obj)
+{
+	
+}
+
+template<typename T>
+template<class TInputIterator>
+int
+MemoryBlock<T>::insert(const TInputIterator &pos_index, const T &obj)
+{
+	
+}
+
+template<typename T>
+template<class TInputIterator>
+int
+MemoryBlock<T>::insert(const TInputIterator &pos1,
+                       const TInputIterator &pos2)
+{
+	
 }
 
 template<typename T>
@@ -823,19 +881,24 @@ template<typename T>
 int
 MemoryBlock<T>::erase(size_t pos_index, size_t count)
 {
-	if(this->arr_size < count)
-	{
-		return -1;
-	}
 	
-	if(this->is_front_adding)
-	{
-		return 1;
-	}
-	else
-	{
-		return 1;
-	}
+}
+
+template<typename T>
+template<class TInputIterator>
+int
+MemoryBlock<T>::erase(const TInputIterator &pos_index, size_t count)
+{
+	
+}
+
+template<typename T>
+template<class TInputIterator>
+int
+MemoryBlock<T>::erase(const TInputIterator &pos1,
+                      const TInputIterator &pos2)
+{
+	
 }
 
 template<typename T>
