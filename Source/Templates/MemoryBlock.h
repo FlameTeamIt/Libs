@@ -32,8 +32,6 @@ typedef enum
 	FROM_BACK = char(2)
 } FromBlock;
 
-template<typename T> class Array;
-
 template<class T>
 class MemoryBlock : public SimpleArray<T>
 {
@@ -217,8 +215,8 @@ MemoryBlock<T>::MemoryBlock(bool front_adding, size_t init_size)
 	,is_front_adding(front_adding)
 	,block_number(0)
 {
-	this->first_index = front_adding ? init_size : 0;
-	this->last_index = front_adding ? init_size : 0;
+	this->arr_first_index = front_adding ? init_size : 0;
+	this->arr_last_index = front_adding ? init_size : 0;
 }
 
 template<typename T>
@@ -228,8 +226,8 @@ MemoryBlock<T>::MemoryBlock(bool front_adding, TSize_Type init_size)
 	,is_front_adding(front_adding)
 	,block_number(0)
 {
-	this->first_index = front_adding ? static_cast<size_t>(init_size) : 0;
-	this->last_index = front_adding ? static_cast<size_t>(init_size) : 0;
+	this->arr_first_index = front_adding ? static_cast<size_t>(init_size) : 0;
+	this->arr_last_index = front_adding ? static_cast<size_t>(init_size) : 0;
 }
 
 template<typename T>
@@ -284,8 +282,8 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 		p_initing_block = my_sp_block->operator ->();
 		p_initing_block->arr_capacity = (*sp_block)->arr_capacity;
 		p_initing_block->arr_size     = (*sp_block)->arr_size;
-		p_initing_block->first_index  = (*sp_block)->first_index;
-		p_initing_block->last_index   = (*sp_block)->last_index;
+		p_initing_block->arr_first_index  = (*sp_block)->arr_first_index;
+		p_initing_block->arr_last_index   = (*sp_block)->arr_last_index;
 		p_initing_block->block_number = (*sp_block)->block_number;
 		
 		p_initing_block->inc_arr = (*sp_block)->_block_simple_getArrayCopy();
@@ -308,8 +306,8 @@ MemoryBlock<T>::__block_setCopy(const MemoryBlock<T> &block)
 		p_initing_block = my_sp_block->operator ->();
 		p_initing_block->arr_capacity = (*sp_block)->arr_capacity;
 		p_initing_block->arr_size     = (*sp_block)->arr_size;
-		p_initing_block->first_index  = (*sp_block)->first_index;
-		p_initing_block->last_index   = (*sp_block)->last_index;
+		p_initing_block->arr_first_index  = (*sp_block)->arr_first_index;
+		p_initing_block->arr_last_index   = (*sp_block)->arr_last_index;
 		p_initing_block->block_number = (*sp_block)->block_number;
 		
 		p_initing_block->inc_arr = (*sp_block)->_block_simple_getArrayCopy();
@@ -444,19 +442,19 @@ MemoryBlock<T>::_block_popFront(size_t count)
 		if(this->arr_size < count)
 		{
 			array_call_distructors(this->arr_size,
-								   this->inc_arr + this->first_index);
+								   this->inc_arr + this->arr_first_index);
 			if(this->next_block.isInitialized())
 			{
 				this->next_block->_block_popFront(count - this->arr_size);
 			}
 			this->arr_size = 0;
-			this->first_index = this->last_index;
+			this->arr_first_index = this->arr_last_index;
 		}
 		else
 		{
-			array_call_distructors(count, this->inc_arr + this->first_index);
+			array_call_distructors(count, this->inc_arr + this->arr_first_index);
 			this->arr_size    -= count;
-			this->first_index += count;
+			this->arr_first_index += count;
 		}
 	}
 	else
@@ -493,19 +491,19 @@ MemoryBlock<T>::_block_popBack(size_t count)
 		if(this->arr_size < count)
 		{
 			array_call_distructors(this->arr_size,
-								   this->inc_arr + this->first_index);
+								   this->inc_arr + this->arr_first_index);
 			if(this->prev_block.isInitialized())
 			{
 				this->prev_block->_block_popBack(count - this->arr_size);
 			}
 			this->arr_size = 0;
-			this->first_index = this->last_index;
+			this->arr_first_index = this->arr_last_index;
 		}
 		else
 		{
 			array_call_distructors(
 				count,
-				this->inc_arr + (this->last_index-1) - count
+				this->inc_arr + (this->arr_last_index-1) - count
 			);
 			this->arr_size -= count;
 			
@@ -513,12 +511,12 @@ MemoryBlock<T>::_block_popBack(size_t count)
 			for(size_t i = 0; i < this->arr_size; ++i)
 			{
 				array_rewrite(this->inc_arr, this->arr_capacity - 1 - i,
-					this->inc_arr[this->first_index + this->arr_size - 1 - i]);
+					this->inc_arr[this->arr_first_index + this->arr_size - 1 - i]);
 				array_call_distructors(1,
-					this->inc_arr + this->first_index + this->arr_size - 1 - i);
+					this->inc_arr + this->arr_first_index + this->arr_size - 1 - i);
 				
 			}
-			this->first_index += count;
+			this->arr_first_index += count;
 		}
 		
 	}
@@ -690,10 +688,10 @@ MemoryBlock<T>::pushFront(const T &obj)
 	{
 		if(this->arr_size < this->arr_capacity)
 		{
-			--this->first_index;
+			--this->arr_first_index;
 			++this->arr_size;
 			
-			array_copying(1, &obj, this->inc_arr + this->first_index);
+			array_copying(1, &obj, this->inc_arr + this->arr_first_index);
 			
 			return 1;
 		}
@@ -720,10 +718,10 @@ MemoryBlock<T>::pushFront(T &&obj)
 	{
 		if(this->arr_size < this->arr_capacity)
 		{
-			--this->first_index;
+			--this->arr_first_index;
 			++this->arr_size;
 			
-			this->inc_arr[this->first_index] = T(obj);
+			this->inc_arr[this->arr_first_index] = T(obj);
 			
 			return 1;
 		}
@@ -751,13 +749,13 @@ MemoryBlock<T>::pushBack(const T &obj)
 		// нужно сдвинуть массив на один элемент влево
 		if(this->arr_size < this->arr_capacity)
 		{
-			std::copy(this->inc_arr + this->first_index,
+			std::copy(this->inc_arr + this->arr_first_index,
 					  this->inc_arr + this->arr_capacity,
-					  this->inc_arr + this->first_index - 1);
+					  this->inc_arr + this->arr_first_index - 1);
 			
 			array_copying(1, &obj, this->inc_arr + this->arr_capacity - 1);
 			
-			--this->first_index;
+			--this->arr_first_index;
 			++this->arr_size;
 			
 			return 1;
@@ -783,14 +781,14 @@ MemoryBlock<T>::pushBack(T &&obj)
 	{
 		if(this->arr_size < this->arr_capacity)
 		{
-			std::copy(this->inc_arr + this->first_index,
+			std::copy(this->inc_arr + this->arr_first_index,
 					  this->inc_arr + this->arr_capacity,
-					  this->inc_arr + this->first_index - 1);
+					  this->inc_arr + this->arr_first_index - 1);
 			
 			this->inc_arr[this->arr_capacity - 1].~T();
 			this->inc_arr[this->arr_capacity - 1] = T(obj);
 			
-			--this->first_index;
+			--this->arr_first_index;
 			++this->arr_size;
 			
 			return 1;
@@ -812,14 +810,22 @@ template<typename T>
 int
 MemoryBlock<T>::insert(size_t pos_index, const T &obj)
 {
+	// 1. нужно найти блок с данным индексом
 	
+	// 2. сдвинуть элементы
+	
+	// 3. копировать объект
 }
 
 template<typename T>
 int
 MemoryBlock<T>::insert(size_t pos_index, T &&obj)
 {
+	// 1. нужно найти блок с данным индексом
 	
+	// 2. сдвинуть элементы
+	
+	// 3. переместить объект
 }
 
 template<typename T>
