@@ -48,9 +48,7 @@ void array_call_distructors(size_t length, Tt *array);
 template<class Tt> inline
 void array_delete(Tt *array);
 
-
-// ============================================================================
-
+/* ========================================================================= */
 
 template<class Tt>
 Tt*
@@ -59,7 +57,16 @@ array_get_new(const size_t &length)
 	Tt* pointer_array = nullptr;
 	if(length)
 	{
-		pointer_array = (Tt*)malloc(sizeof(Tt)*length);
+		size_t real_size = sizeof(Tt)*length;
+		char *ch_arr = (char*)malloc(real_size);
+		if(ch_arr)
+		{
+			for(size_t i = 0; i < real_size; ++i)
+			{
+				ch_arr[i] = 0;
+			}
+		}
+		pointer_array = (Tt*)ch_arr;
 	}
 	return pointer_array;
 }
