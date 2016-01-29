@@ -87,7 +87,7 @@ Test::Templates::SimpleArray()
 	std::for_each(
 		&simple_array2[0],
 		&simple_array2[simple_array2.getSize()],
-		[](long out)
+		[](const long &out)
 		{
 			std::cout << '\t' << out << '\n';
 		}
@@ -107,7 +107,7 @@ Test::Templates::SimpleArray()
 	std::for_each(
 		&simple_array2[0],
 		&simple_array2[simple_array2.getSize()],
-		[](long out)
+		[](const long &out)
 		{
 			std::cout << '\t' << out << '\n';
 		}
@@ -145,7 +145,7 @@ Test::Templates::SimpleArray()
 	std::for_each
 	(
 		simple_array2.begin(), simple_array2.end(),
-		[](long out)
+		[](const long &out)
 		{
 			std::cout << '\t' << out << '\n';
 		}
@@ -165,7 +165,7 @@ Test::Templates::SimpleArray()
 	std::for_each
 	(
 		simple_array2.begin(), simple_array2.end(),
-		[](long out)
+		[](const long &out)
 		{
 			std::cout << '\t' << out << '\n';
 		}
@@ -185,7 +185,7 @@ Test::Templates::SimpleArray()
 	std::for_each
 	(
 		simple_array2.begin(), simple_array2.end(),
-		[](long out)
+		[](const long &out)
 		{
 			std::cout << '\t' << out << '\n';
 		}
@@ -207,7 +207,7 @@ Test::Templates::SimpleArray()
 	std::for_each
 	(
 		simple_array2.begin(), simple_array2.end(),
-		[](long out)
+		[](const long &out)
 		{
 			std::cout << '\t' << out << '\n';
 		}
@@ -227,7 +227,7 @@ Test::Templates::SimpleArray()
 	std::for_each
 	(
 		simple_array2.begin(), simple_array2.end(),
-		[](long out) {std::cout << '\t' << out << '\n';}
+		[](const long &out) {std::cout << '\t' << out << '\n';}
 	);
 	std::cout << '\n';
 	
@@ -235,7 +235,7 @@ Test::Templates::SimpleArray()
 	std::for_each
 	(
 		simple_array2.rbegin(), simple_array2.rend(),
-		[](long out) {std::cout << '\t' << out << '\n';}
+		[](const long &out) {std::cout << '\t' << out << '\n';}
 	);
 	
 	std::cout << '\n';
@@ -246,7 +246,7 @@ Test::Templates::SimpleArray()
 unsigned int
 Test::Templates::MemoryBlock()
 {
-	std::cout << "Test::Templates::Array_MemoryBlock()\n";
+	std::cout << "Test::Templates::MemoryBlock()\n";
 	
 	using flame_ide::templates::MemoryBlock;
 	
@@ -332,7 +332,7 @@ Test::Templates::MemoryBlock()
 		std::for_each
 		(
 			block.begin(), block.end(),
-			[](long out)
+			[](const long &out)
 			{
 				std::cout << '\t' << out << '\n';
 			}
@@ -353,7 +353,7 @@ Test::Templates::MemoryBlock()
 		std::for_each
 		(
 			front_add_block.begin(), front_add_block.end(),
-			[](long out)
+			[](const long &out)
 			{
 				std::cout << '\t' << out << '\n';
 			}
@@ -384,7 +384,7 @@ Test::Templates::MemoryBlock()
 	    std::for_each
 	    (
 		    block.begin(), block.end(),
-		    [](long out)
+		    [](const long &out)
 		    {
 			    std::cout << '\t' << out << '\n';
 		    }
@@ -413,7 +413,7 @@ Test::Templates::MemoryBlock()
 	    std::for_each
 	    (
 		    block.begin(), block.end(),
-		    [](long out)
+		    [](const long &out)
 		    {
 			    std::cout << '\t' << out << '\n';
 		    }
@@ -435,7 +435,7 @@ Test::Templates::MemoryBlock()
 		std::for_each
 		(
 			back_add_block.begin(), back_add_block.end(),
-			[](long out)
+			[](const long &out)
 			{
 				std::cout << '\t' << out << '\n';
 			}
@@ -456,7 +456,7 @@ Test::Templates::MemoryBlock()
 		std::for_each
 		(
 			front_add_block.begin(), front_add_block.end(),
-			[](long out)
+			[](const long &out)
 			{
 				std::cout << '\t' << out << '\n';
 			}
@@ -508,7 +508,7 @@ Test::Templates::MemoryBlock()
 		std::for_each
 	    (
 			copied_block.begin(), copied_block.end(),
-		    [](long out)
+		    [](const long &out)
 		    {
 			    std::cout << '\t' << out << '\n';
 		    }
@@ -523,7 +523,7 @@ Test::Templates::MemoryBlock()
 		std::for_each
 	    (
 			move_block.begin(), move_block.end(),
-		    [](long out)
+		    [](const long &out)
 		    {
 			    std::cout << '\t' << out << '\n';
 		    }
@@ -542,7 +542,7 @@ Test::Templates::MemoryBlock()
 		std::for_each
 	    (
 		    copied_block.begin(), copied_block.end(),
-		    [](long out)
+		    [](const long &out)
 		    {
 			    std::cout << '\t' << out << '\n';
 		    }
@@ -557,7 +557,7 @@ Test::Templates::MemoryBlock()
 		std::for_each
 	    (
 			move_block.begin(), move_block.end(),
-		    [](long out)
+		    [](const long &out)
 		    {
 			    std::cout << '\t' << out << '\n';
 		    }
