@@ -33,7 +33,7 @@ typedef enum
 } FromBlock;
 
 template<class T>
-class MemoryBlock : public SimpleArray<T>
+class MemoryBlock : protected SimpleArray<T>
 {
 	inline void __block_setCopy(const MemoryBlock<T> &block);
 	inline void __block_setMove(MemoryBlock<T> &block);
@@ -372,16 +372,6 @@ MemoryBlock<T>::_block_getSize(FromBlock from_block) const
 	size_t size = this->arr_size;
 	switch(from_block)
 	{
-	case FROM_NULL :
-		if(prev_block.isInitialized())
-		{
-			size += prev_block->_block_getSize(FROM_BACK);
-		}
-		if(next_block.isInitialized())
-		{
-			size += next_block->_block_getSize(FROM_FRONT);
-		}
-		break;
 	case FROM_BACK:
 		if(prev_block.isInitialized())
 		{
@@ -395,6 +385,14 @@ MemoryBlock<T>::_block_getSize(FromBlock from_block) const
 		}
 		break;
 	default :
+		if(prev_block.isInitialized())
+		{
+			size += prev_block->_block_getCapacity(FROM_BACK);
+		}
+		if(next_block.isInitialized())
+		{
+			size += next_block->_block_getCapacity(FROM_FRONT);
+		}
 		break;
 	}
 	return size;
@@ -407,16 +405,6 @@ MemoryBlock<T>::_block_getCapacity(FromBlock from_block) const
 	size_t capacity = this->arr_capacity;
 	switch(from_block)
 	{
-	case FROM_NULL :
-		if(prev_block.isInitialized())
-		{
-			capacity += prev_block->_block_getCapacity(FROM_BACK);
-		}
-		if(next_block.isInitialized())
-		{
-			capacity += next_block->_block_getCapacity(FROM_FRONT);
-		}
-		break;
 	case FROM_BACK :
 		if(prev_block.isInitialized())
 		{
@@ -424,6 +412,16 @@ MemoryBlock<T>::_block_getCapacity(FromBlock from_block) const
 		}
 		break;
 	case FROM_FRONT :
+		if(next_block.isInitialized())
+		{
+			capacity += next_block->_block_getCapacity(FROM_FRONT);
+		}
+		break;
+	default :
+		if(prev_block.isInitialized())
+		{
+			capacity += prev_block->_block_getCapacity(FROM_BACK);
+		}
 		if(next_block.isInitialized())
 		{
 			capacity += next_block->_block_getCapacity(FROM_FRONT);
@@ -721,7 +719,7 @@ MemoryBlock<T>::pushFront(T &&obj)
 			--this->arr_first_index;
 			++this->arr_size;
 			
-			this->inc_arr[this->arr_first_index] = T(obj);
+			this->inc_arr[this->arr_first_index] = obj;
 			
 			return 1;
 		}
@@ -786,7 +784,7 @@ MemoryBlock<T>::pushBack(T &&obj)
 					  this->inc_arr + this->arr_first_index - 1);
 			
 			this->inc_arr[this->arr_capacity - 1].~T();
-			this->inc_arr[this->arr_capacity - 1] = T(obj);
+			this->inc_arr[this->arr_capacity - 1] = obj;
 			
 			--this->arr_first_index;
 			++this->arr_size;
