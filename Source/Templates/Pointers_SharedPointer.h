@@ -15,6 +15,8 @@ class SharedPointer : public BasicPointer<T>
 protected:
 	inline void set(SharedPointer<T> &pointer);
 	
+	virtual inline _clear();
+	
 public:
 	SharedPointer();
 	SharedPointer(const T &object);
@@ -24,7 +26,7 @@ public:
 	
 	virtual ~SharedPointer();
 	
-	virtual inline void clear();
+	inline void clear();
 	
 	inline const SharedPointer& operator =(const SharedPointer<T> &arg);
 	inline const SharedPointer& operator =(SharedPointer<T> &&arg);
@@ -96,15 +98,7 @@ SharedPointer<T>::~SharedPointer()
 
 template<class T>
 void
-SharedPointer<T>::set(SharedPointer<T> &pointer)
-{
-	this->inc_pointer = pointer.inc_pointer;
-	pointer.inc_pointer = nullptr;
-}
-
-template<class T>
-void
-SharedPointer<T>::clear()
+SharedPointer<T>::_clear()
 {
 	if(!is_shared && this->inc_pointer != nullptr)
 	{
@@ -115,6 +109,14 @@ SharedPointer<T>::clear()
 		is_shared = false;
 	}
 	this->inc_pointer = nullptr;
+}
+
+template<class T>
+void
+SharedPointer<T>::set(SharedPointer<T> &pointer)
+{
+	this->inc_pointer = pointer.inc_pointer;
+	pointer.inc_pointer = nullptr;
 }
 
 template<class T>

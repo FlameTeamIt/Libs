@@ -16,14 +16,17 @@ class BasicPointer
 	const BasicPointer<T>& operator =(const BasicPointer<T> &pointer);
 	const BasicPointer<T>& operator =(BasicPointer<T> &&pointer);
 	
+	
 protected:
 	mutable T *inc_pointer;
 	
-	inline       T* get_pointer();
-	inline       T& get_reference();
+	inline       T* _get_pointer();
+	inline       T& _get_reference();
 	
-	inline const T* get_pointer() const;
-	inline const T& get_reference() const;
+	inline const T* _get_pointer() const;
+	inline const T& _get_reference() const;
+	
+	inline virtual void _clear();
 	
 public:
 	BasicPointer();
@@ -36,7 +39,7 @@ public:
 	template<class ... Ts>
 	inline void make(Ts ... args) const;
 	
-	inline virtual void clear();
+	inline void clear();
 	inline const T* get() const;
 	inline SharedPointer<T> getShared() const;
 	
@@ -85,30 +88,41 @@ BasicPointer<T>::~BasicPointer()
 
 template<class T>
 T*
-BasicPointer<T>::get_pointer()
+BasicPointer<T>::_get_pointer()
 {
 	return inc_pointer;
 }
 
 template<class T>
 T&
-BasicPointer<T>::get_reference()
+BasicPointer<T>::_get_reference()
 {
 	return *inc_pointer;
 }
 
 template<class T>
 const T*
-BasicPointer<T>::get_pointer() const
+BasicPointer<T>::_get_pointer() const
 {
 	return inc_pointer;
 }
 
 template<class T>
 const T&
-BasicPointer<T>::get_reference() const
+BasicPointer<T>::_get_reference() const
 {
 	return *inc_pointer;
+}
+
+template<class T>
+const T&
+BasicPointer<T>::_clear()
+{
+	if(inc_pointer != nullptr)
+	{
+		delete inc_pointer;
+		inc_pointer = nullptr;
+	}
 }
 
 template<class T>
@@ -130,11 +144,7 @@ template<class T>
 void
 BasicPointer<T>::clear()
 {
-	if(inc_pointer != nullptr)
-	{
-		delete inc_pointer;
-		inc_pointer = nullptr;
-	}
+	this->_clear();
 }
 
 template<class T>
@@ -174,28 +184,28 @@ template<class T>
 T*
 BasicPointer<T>::operator ->()
 {
-	return get_pointer();
+	return _get_pointer();
 }
 
 template<class T>
 T&
 BasicPointer<T>::operator *()
 {
-	return get_reference();
+	return _get_reference();
 }
 
 template<class T>
 const T*
 BasicPointer<T>::operator ->() const
 {
-	return get_pointer();
+	return _get_pointer();
 }
 
 template<class T>
 const T&
 BasicPointer<T>::operator *() const
 {
-	return get_reference();
+	return _get_reference();
 }
 
 /* ----- private ----- */
