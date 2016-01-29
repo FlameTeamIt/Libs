@@ -36,7 +36,7 @@ public:
 };
 
 template<class T, class ... Ts>
-UniquePointer<T> make_unique(Ts&& ... args)
+UniquePointer<T>& make_unique(Ts&& ... args)
 {
 	UniquePointer<T> pointer;
 	pointer.make(args ...);
