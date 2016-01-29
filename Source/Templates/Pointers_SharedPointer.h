@@ -41,7 +41,7 @@ public:
 };
 
 template<class T, class ... Ts>
-SharedPointer<T>& make_shared(Ts&& ... args)
+SharedPointer<T> make_shared(Ts&& ... args)
 {
 	SharedPointer<T> pointer;
 	pointer.make(args ...);
