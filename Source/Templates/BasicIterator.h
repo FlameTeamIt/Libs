@@ -8,38 +8,38 @@ namespace flame_ide
 // TIterator - простой итератор
 // TData - данные
 template<class TIterator, class TData>
-class InterfaceIterator
+class IteratorInterface
 {
 protected:
 	mutable TIterator inc_data_iterator;
 	
 public:
-	InterfaceIterator();
-	~InterfaceIterator();
+	IteratorInterface();
+	~IteratorInterface();
 	
-	typedef InterfaceIterator<TIterator, TData> my_type;
+	typedef IteratorInterface<TIterator, TData> my_type;
 	
 	virtual TData&  operator *() const noexcept = 0;
 	virtual TData*& operator ->() const noexcept = 0;
 	
 //	template<TIterator, TData> friend
-//	bool operator ==(const InterfaceIterator<TIterator, TData>& iiterator1,
-//					 const InterfaceIterator<TIterator, TData>& iiterator2);
+//	bool operator ==(const IteratorInterface<TIterator, TData>& iiterator1,
+//					 const IteratorInterface<TIterator, TData>& iiterator2);
 //	template<TIterator, TData> friend
-//	bool operator !=(const InterfaceIterator<TIterator, TData>& iiterator1,
-//					 const InterfaceIterator<TIterator, TData>& iiterator2);
+//	bool operator !=(const IteratorInterface<TIterator, TData>& iiterator1,
+//					 const IteratorInterface<TIterator, TData>& iiterator2);
 };
 
 
 //template<class TIterator, class TData>
-//bool operator ==(const InterfaceIterator<TIterator, TData>& iiterator1,
-//				 const InterfaceIterator<TIterator, TData>& iiterator2);
+//bool operator ==(const IteratorInterface<TIterator, TData>& iiterator1,
+//				 const IteratorInterface<TIterator, TData>& iiterator2);
 //template<class TIterator, class TData>
-//bool operator !=(const InterfaceIterator<TIterator, TData>& iiterator1,
-//				 const InterfaceIterator<TIterator, TData>& iiterator2);
+//bool operator !=(const IteratorInterface<TIterator, TData>& iiterator1,
+//				 const IteratorInterface<TIterator, TData>& iiterator2);
 
 template<class TIterator, class TData>
-class BasicIterator : public InterfaceIterator<TIterator, TData>
+class BasicIterator : public IteratorInterface<TIterator, TData>
 {
 public:
 	BasicIterator();
@@ -55,10 +55,10 @@ public:
 };
 
 template<class TIterator, class TData>
-class BasicReverseIterator : public InterfaceIterator<TIterator, TData>
+class BasicReverseIterator : public IteratorInterface<TIterator, TData>
 {
 protected:
-	using InterfaceIterator<TIterator, TData>::inc_data_iterator;
+	using IteratorInterface<TIterator, TData>::inc_data_iterator;
 public:
 	BasicReverseIterator();
 	BasicReverseIterator(BasicReverseIterator<TIterator, TData> &&iterator);
@@ -74,15 +74,15 @@ public:
 // operators
 
 //template<class TIterator, class TData>
-//bool operator ==(const InterfaceIterator<TIterator, TData>& iiterator1,
-//				 const InterfaceIterator<TIterator, TData>& iiterator2)
+//bool operator ==(const IteratorInterface<TIterator, TData>& iiterator1,
+//				 const IteratorInterface<TIterator, TData>& iiterator2)
 //{
 //	return iiterator1.inc_data_iterator == iiterator2.inc_data_iterator;
 //}
 
 //template<class TIterator, class TData>
-//bool operator !=(const InterfaceIterator<TIterator, TData>& iiterator1,
-//				 const InterfaceIterator<TIterator, TData>& iiterator2)
+//bool operator !=(const IteratorInterface<TIterator, TData>& iiterator1,
+//				 const IteratorInterface<TIterator, TData>& iiterator2)
 //{
 //	return iiterator1.inc_data_iterator != iiterator2.inc_data_iterator;
 //}
@@ -91,20 +91,20 @@ public:
 
 }}
 
-using flame_ide::templates::InterfaceIterator;
+using flame_ide::templates::IteratorInterface;
 using flame_ide::templates::BasicIterator;
 using flame_ide::templates::BasicReverseIterator;
 
 template<class TIterator, class TData>
-InterfaceIterator<TIterator, TData>::InterfaceIterator()
+IteratorInterface<TIterator, TData>::IteratorInterface()
 {}
 
 template<class TIterator, class TData>
-InterfaceIterator<TIterator, TData>::~InterfaceIterator() {}
+IteratorInterface<TIterator, TData>::~IteratorInterface() {}
 
 template<class TIterator, class TData>
 BasicIterator<TIterator, TData>::BasicIterator()
-	: InterfaceIterator<TIterator, TData>()
+	: IteratorInterface<TIterator, TData>()
 {}
 
 template<class TIterator, class TData>
@@ -161,7 +161,7 @@ BasicIterator<TIterator, TData>::operator --() const
 
 template<class TIterator, class TData>
 BasicReverseIterator<TIterator, TData>::BasicReverseIterator()
-	: InterfaceIterator<TIterator, TData>()
+	: IteratorInterface<TIterator, TData>()
 {}
 
 template<class TIterator, class TData>
