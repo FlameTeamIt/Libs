@@ -15,7 +15,7 @@ class SharedPointer : public BasicPointer<T>
 protected:
 	inline void set(SharedPointer<T> &pointer);
 	
-	virtual inline _clear();
+	virtual inline void _clear();
 	
 public:
 	SharedPointer();
@@ -26,8 +26,6 @@ public:
 	
 	virtual ~SharedPointer();
 	
-	inline void clear();
-	
 	inline const SharedPointer& operator =(const SharedPointer<T> &arg);
 	inline const SharedPointer& operator =(SharedPointer<T> &&arg);
 	inline const SharedPointer& operator =(const T &arg);
@@ -37,9 +35,11 @@ public:
 	friend class BasicPointer<T>;
 
 	template<class Tt, class Uu> friend
-	SharedPointer<Tt> static_pointer_cast(const SharedPointer<Uu>& pointer) noexcept;
+	SharedPointer<Tt>
+	static_pointer_cast(const SharedPointer<Uu>& pointer) noexcept;
 	template<class Tt, class Uu> friend
-	SharedPointer<Tt> dynamic_pointer_cast(const SharedPointer<Uu>& pointer) noexcept;
+	SharedPointer<Tt>
+	dynamic_pointer_cast(const SharedPointer<Uu>& pointer) noexcept;
 };
 
 template<class T, class ... Ts>
@@ -125,7 +125,7 @@ SharedPointer<T>::operator =(const SharedPointer<T> &pointer)
 {
 	if(pointer.isInitialized())
 	{
-		clear();
+		this->clear();
 		this->inc_pointer = pointer.inc_pointer;
 		is_shared = true;
 	}
@@ -138,7 +138,7 @@ SharedPointer<T>::operator =(SharedPointer<T> &&pointer)
 {
 	if(pointer.isInitialized())
 	{
-		clear();
+		this->clear();
 		this->inc_pointer = pointer.inc_pointer;
 		if(pointer.is_shared)
 		{
@@ -153,7 +153,7 @@ template<class T>
 const SharedPointer<T>&
 SharedPointer<T>::operator =(const T &arg)
 {
-	clear();
+	this->clear();
 	this->make(arg);
 	
 	return *this;

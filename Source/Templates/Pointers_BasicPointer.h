@@ -115,7 +115,7 @@ BasicPointer<T>::_get_reference() const
 }
 
 template<class T>
-const T&
+void
 BasicPointer<T>::_clear()
 {
 	if(inc_pointer != nullptr)
