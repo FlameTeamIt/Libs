@@ -2,7 +2,7 @@
 #define TEMPLATES_ARRAY
 
 #include <Templates/Array_Iterators.h>
-#include <Templates/MemoryBlock.h>
+#include <Templates/ArrayBlocks.h>
 
 namespace flame_ide
 {namespace templates

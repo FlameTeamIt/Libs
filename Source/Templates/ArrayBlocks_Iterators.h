@@ -1,5 +1,5 @@
-#ifndef TEMPLATES_MEMORYBLOCK_ITERATORS
-#define TEMPLATES_MEMORYBLOCK_ITERATORS
+#ifndef TEMPLATES_ArrayBlocks_ITERATORS
+#define TEMPLATES_ArrayBlocks_ITERATORS
 
 #include <Templates/BasicIterator.h>
 #include <Templates/SimpleArray.h>
@@ -8,26 +8,26 @@ namespace flame_ide
 {namespace templates
 {
 
-template<typename T> class MemoryBlock;
-template<typename T> class MemoryBlockIterator;
-template<typename T> class MemoryBlockReverseIterator;
+template<typename T> class ArrayBlocks;
+template<typename T> class ArrayBlocksIterator;
+template<typename T> class ArrayBlocksReverseIterator;
 
 template<typename T>
-class MemoryBlockIterator
+class ArrayBlocksIterator
 	: public BasicIterator<SimpleArrayIterator<T>, T>
 {
 protected:
-	mutable MemoryBlock<T> *inc_block;
+	mutable ArrayBlocks<T> *inc_block;
 public:
-	friend class MemoryBlock<T>;
-	typedef MemoryBlockIterator<T> my_type;
-	typedef MemoryBlockReverseIterator<T> friend_type;
+	friend class ArrayBlocks<T>;
+	typedef ArrayBlocksIterator<T> my_type;
+	typedef ArrayBlocksReverseIterator<T> friend_type;
 	
-	MemoryBlockIterator();
-	MemoryBlockIterator(MemoryBlockIterator<T> &&iterator);
-	MemoryBlockIterator(const MemoryBlockIterator<T> &iterator);
+	ArrayBlocksIterator();
+	ArrayBlocksIterator(ArrayBlocksIterator<T> &&iterator);
+	ArrayBlocksIterator(const ArrayBlocksIterator<T> &iterator);
 	
-	~MemoryBlockIterator() = default;
+	~ArrayBlocksIterator() = default;
 	
 	inline const my_type& operator =(const my_type &iterator);
 	inline const my_type& operator =(my_type &&iterator);
@@ -64,46 +64,46 @@ public:
 //	inline const my_type& operator +(TSizeType adder) const;
 	
 	template<typename Tt> friend
-	bool operator ==(const MemoryBlockIterator<Tt> &iter1,
-	                 const MemoryBlockIterator<Tt> &iter2);
+	bool operator ==(const ArrayBlocksIterator<Tt> &iter1,
+	                 const ArrayBlocksIterator<Tt> &iter2);
 	template<typename Tt> friend
-	bool operator !=(const MemoryBlockIterator<Tt> &iter1,
-	                 const MemoryBlockIterator<Tt> &iter2);
+	bool operator !=(const ArrayBlocksIterator<Tt> &iter1,
+	                 const ArrayBlocksIterator<Tt> &iter2);
 	
 	
 	template<typename Tt> friend
-	bool operator ==(const MemoryBlockIterator<Tt> &iter1,
-	                 const MemoryBlockReverseIterator<Tt> &iter2);
+	bool operator ==(const ArrayBlocksIterator<Tt> &iter1,
+	                 const ArrayBlocksReverseIterator<Tt> &iter2);
 	template<typename Tt> friend
-	bool operator !=(const MemoryBlockIterator<Tt> &iter1,
-	                 const MemoryBlockReverseIterator<Tt> &iter2);
+	bool operator !=(const ArrayBlocksIterator<Tt> &iter1,
+	                 const ArrayBlocksReverseIterator<Tt> &iter2);
 	
 	
 	template<typename Tt> friend
-	bool operator ==(const MemoryBlockReverseIterator<Tt> &iter1,
-	                 const MemoryBlockIterator<Tt> &iter2);
+	bool operator ==(const ArrayBlocksReverseIterator<Tt> &iter1,
+	                 const ArrayBlocksIterator<Tt> &iter2);
 	template<typename Tt> friend
-	bool operator !=(const MemoryBlockReverseIterator<Tt> &iter1,
-	                 const MemoryBlockIterator<Tt> &iter2);
+	bool operator !=(const ArrayBlocksReverseIterator<Tt> &iter1,
+	                 const ArrayBlocksIterator<Tt> &iter2);
 };
 
 template<typename T>
-class MemoryBlockReverseIterator
+class ArrayBlocksReverseIterator
 	: public BasicReverseIterator<SimpleArrayReverseIterator<T>, T>
 {
 protected:
-	mutable MemoryBlock<T> *inc_block;
+	mutable ArrayBlocks<T> *inc_block;
     
 public:
-	friend class MemoryBlock<T>;
-	typedef MemoryBlockReverseIterator<T> my_type;
-	typedef MemoryBlockIterator<T> friend_type;
+	friend class ArrayBlocks<T>;
+	typedef ArrayBlocksReverseIterator<T> my_type;
+	typedef ArrayBlocksIterator<T> friend_type;
 	
-	MemoryBlockReverseIterator();
-	MemoryBlockReverseIterator(MemoryBlockReverseIterator<T> &&iterator);
-	MemoryBlockReverseIterator(const MemoryBlockReverseIterator<T> &iterator);
+	ArrayBlocksReverseIterator();
+	ArrayBlocksReverseIterator(ArrayBlocksReverseIterator<T> &&iterator);
+	ArrayBlocksReverseIterator(const ArrayBlocksReverseIterator<T> &iterator);
 	
-	~MemoryBlockReverseIterator() = default;
+	~ArrayBlocksReverseIterator() = default;
 	
 	inline const my_type& operator =(const my_type &iterator);
 	inline const my_type& operator =(my_type &&iterator);
@@ -142,54 +142,54 @@ public:
 	
 	
 	template<typename Tt> friend
-	bool operator ==(const MemoryBlockReverseIterator<Tt> &iter1,
-	                 const MemoryBlockReverseIterator<Tt> &iter2);
+	bool operator ==(const ArrayBlocksReverseIterator<Tt> &iter1,
+	                 const ArrayBlocksReverseIterator<Tt> &iter2);
 	template<typename Tt> friend
-	bool operator !=(const MemoryBlockReverseIterator<Tt> &iter1,
-	                 const MemoryBlockReverseIterator<Tt> &iter2);
+	bool operator !=(const ArrayBlocksReverseIterator<Tt> &iter1,
+	                 const ArrayBlocksReverseIterator<Tt> &iter2);
 	
 	
 	template<typename Tt> friend
-	bool operator ==(const MemoryBlockReverseIterator<Tt> &iter1,
-	                 const MemoryBlockIterator<Tt> &iter2);
+	bool operator ==(const ArrayBlocksReverseIterator<Tt> &iter1,
+	                 const ArrayBlocksIterator<Tt> &iter2);
 	template<typename Tt> friend
-	bool operator !=(const MemoryBlockReverseIterator<Tt> &iter1,
-	                 const MemoryBlockIterator<Tt> &iter2);
+	bool operator !=(const ArrayBlocksReverseIterator<Tt> &iter1,
+	                 const ArrayBlocksIterator<Tt> &iter2);
 	
 	
 	template<typename Tt> friend
-	bool operator ==(const MemoryBlockIterator<Tt> &iter1,
-	                 const MemoryBlockReverseIterator<Tt> &iter2);
+	bool operator ==(const ArrayBlocksIterator<Tt> &iter1,
+	                 const ArrayBlocksReverseIterator<Tt> &iter2);
 	template<typename Tt> friend
-	bool operator !=(const MemoryBlockIterator<Tt> &iter1,
-	                 const MemoryBlockReverseIterator<Tt> &iter2);	
+	bool operator !=(const ArrayBlocksIterator<Tt> &iter1,
+	                 const ArrayBlocksReverseIterator<Tt> &iter2);	
 };
 
-// MemoryBlockIterator
+// ArrayBlocksIterator
 
 template<typename T>
-MemoryBlockIterator<T>::MemoryBlockIterator()
+ArrayBlocksIterator<T>::ArrayBlocksIterator()
 	: BasicIterator<SimpleArrayIterator<T>, T>()
 	,inc_block(nullptr)
 {}
 
 template<typename T>
-MemoryBlockIterator<T>::MemoryBlockIterator(
-	MemoryBlockIterator<T> &&iterator)
+ArrayBlocksIterator<T>::ArrayBlocksIterator(
+	ArrayBlocksIterator<T> &&iterator)
 	: BasicIterator<SimpleArrayIterator<T>, T>(iterator)
 	,inc_block(iterator.inc_block)
 {}
 
 template<typename T>
-MemoryBlockIterator<T>::MemoryBlockIterator(
-	const MemoryBlockIterator<T> &iterator)
+ArrayBlocksIterator<T>::ArrayBlocksIterator(
+	const ArrayBlocksIterator<T> &iterator)
 	: BasicIterator<SimpleArrayIterator<T>, T>(iterator)
 	,inc_block(iterator.inc_block)
 {}
 
 template<class T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator =(MemoryBlockIterator<T> &&iterator)
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator =(ArrayBlocksIterator<T> &&iterator)
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	this->inc_block = iterator.inc_block;
@@ -197,8 +197,8 @@ MemoryBlockIterator<T>::operator =(MemoryBlockIterator<T> &&iterator)
 }
 
 template<class T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator =(const MemoryBlockIterator<T> &iterator)
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator =(const ArrayBlocksIterator<T> &iterator)
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	this->inc_block = iterator.inc_block;
@@ -206,8 +206,8 @@ MemoryBlockIterator<T>::operator =(const MemoryBlockIterator<T> &iterator)
 }
 
 template<class T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator =(MemoryBlockIterator<T> &&iterator) const
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator =(ArrayBlocksIterator<T> &&iterator) const
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	this->inc_block = iterator.inc_block;
@@ -215,8 +215,8 @@ MemoryBlockIterator<T>::operator =(MemoryBlockIterator<T> &&iterator) const
 }
 
 template<class T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator =(const MemoryBlockIterator<T> &iterator) const
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator =(const ArrayBlocksIterator<T> &iterator) const
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	this->inc_block = iterator.inc_block;
@@ -225,21 +225,21 @@ MemoryBlockIterator<T>::operator =(const MemoryBlockIterator<T> &iterator) const
 
 template<typename T>
 T&
-MemoryBlockIterator<T>::operator *() const noexcept
+ArrayBlocksIterator<T>::operator *() const noexcept
 {
 	return *(this->inc_data_iterator);
 }
 
 template<typename T>
 T*&
-MemoryBlockIterator<T>::operator ->() const noexcept
+ArrayBlocksIterator<T>::operator ->() const noexcept
 {
 	return this->inc_data_iterator.operator ->();
 }
 
 template<typename T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator ++()
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator ++()
 {
 	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -252,8 +252,8 @@ MemoryBlockIterator<T>::operator ++()
 	return *this;
 }
 template<typename T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator --()
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator --()
 {
 	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -267,8 +267,8 @@ MemoryBlockIterator<T>::operator --()
 }
 
 template<typename T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator ++() const
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator ++() const
 {
 	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -281,8 +281,8 @@ MemoryBlockIterator<T>::operator ++() const
 	return *this;
 }
 template<typename T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator --() const
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator --() const
 {
 	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -296,8 +296,8 @@ MemoryBlockIterator<T>::operator --() const
 }
 
 template<typename T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator ++(int)
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator ++(int)
 {
 	this->inc_data_iterator++;
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -310,8 +310,8 @@ MemoryBlockIterator<T>::operator ++(int)
 	return *this;
 }
 template<typename T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator --(int)
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator --(int)
 {
 	this->inc_data_iterator--;
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -325,8 +325,8 @@ MemoryBlockIterator<T>::operator --(int)
 }
 
 template<typename T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator ++(int) const
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator ++(int) const
 {
 	this->inc_data_iterator++;
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -339,8 +339,8 @@ MemoryBlockIterator<T>::operator ++(int) const
 	return *this;
 }
 template<typename T>
-const MemoryBlockIterator<T>&
-MemoryBlockIterator<T>::operator --(int) const
+const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>::operator --(int) const
 {
 	this->inc_data_iterator--;
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -354,32 +354,32 @@ MemoryBlockIterator<T>::operator --(int) const
 }
 
 
-// MemoryBlockReverseIterator
+// ArrayBlocksReverseIterator
 
 template<typename T>
-MemoryBlockReverseIterator<T>::MemoryBlockReverseIterator()
+ArrayBlocksReverseIterator<T>::ArrayBlocksReverseIterator()
 	: BasicReverseIterator<SimpleArrayReverseIterator<T>, T>()
 	,inc_block(nullptr)
 {}
 
 template<typename T>
-MemoryBlockReverseIterator<T>::MemoryBlockReverseIterator(
-	MemoryBlockReverseIterator<T> &&iterator)
+ArrayBlocksReverseIterator<T>::ArrayBlocksReverseIterator(
+	ArrayBlocksReverseIterator<T> &&iterator)
 		: BasicReverseIterator<SimpleArrayReverseIterator<T>, T>(iterator)
 		,inc_block(iterator.inc_block)
 {}
 
 template<typename T>
-MemoryBlockReverseIterator<T>::MemoryBlockReverseIterator(
-	const MemoryBlockReverseIterator<T> &iterator)
+ArrayBlocksReverseIterator<T>::ArrayBlocksReverseIterator(
+	const ArrayBlocksReverseIterator<T> &iterator)
 	: BasicReverseIterator<SimpleArrayReverseIterator<T>, T>(iterator)
 	,inc_block(iterator.inc_block)
 {}
 
 template<class T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator =(
-	MemoryBlockReverseIterator<T> &&iterator)
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator =(
+	ArrayBlocksReverseIterator<T> &&iterator)
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	this->inc_block = iterator.inc_block;
@@ -387,9 +387,9 @@ MemoryBlockReverseIterator<T>::operator =(
 }
 
 template<class T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator =(
-	const MemoryBlockReverseIterator<T> &iterator)
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator =(
+	const ArrayBlocksReverseIterator<T> &iterator)
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	this->inc_block = iterator.inc_block;
@@ -397,9 +397,9 @@ MemoryBlockReverseIterator<T>::operator =(
 }
 
 template<class T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator =(
-	MemoryBlockReverseIterator<T> &&iterator) const
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator =(
+	ArrayBlocksReverseIterator<T> &&iterator) const
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	this->inc_block = iterator.inc_block;
@@ -407,9 +407,9 @@ MemoryBlockReverseIterator<T>::operator =(
 }
 
 template<class T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator =(
-	const MemoryBlockReverseIterator<T> &iterator) const
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator =(
+	const ArrayBlocksReverseIterator<T> &iterator) const
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	this->inc_block = iterator.inc_block;
@@ -418,21 +418,21 @@ MemoryBlockReverseIterator<T>::operator =(
 
 template<typename T>
 T&
-MemoryBlockReverseIterator<T>::operator *() const noexcept
+ArrayBlocksReverseIterator<T>::operator *() const noexcept
 {
 	return *(this->inc_data_iterator);
 }
 
 template<typename T>
 T*&
-MemoryBlockReverseIterator<T>::operator ->() const noexcept
+ArrayBlocksReverseIterator<T>::operator ->() const noexcept
 {
 	return this->inc_data_iterator.operator ->();
 }
 
 template<typename T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator ++()
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator ++()
 {
 	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -445,8 +445,8 @@ MemoryBlockReverseIterator<T>::operator ++()
 	return *this;
 }
 template<typename T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator --()
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator --()
 {
 	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -460,8 +460,8 @@ MemoryBlockReverseIterator<T>::operator --()
 }
 
 template<typename T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator ++() const
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator ++() const
 {
 	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -474,8 +474,8 @@ MemoryBlockReverseIterator<T>::operator ++() const
 	return *this;
 }
 template<typename T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator --() const
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator --() const
 {
 	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -489,8 +489,8 @@ MemoryBlockReverseIterator<T>::operator --() const
 }
 
 template<typename T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator ++(int)
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator ++(int)
 {
 	this->inc_data_iterator++;
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -503,8 +503,8 @@ MemoryBlockReverseIterator<T>::operator ++(int)
 	return *this;
 }
 template<typename T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator --(int)
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator --(int)
 {
 	this->inc_data_iterator--;
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -518,8 +518,8 @@ MemoryBlockReverseIterator<T>::operator --(int)
 }
 
 template<typename T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator ++(int) const
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator ++(int) const
 {
 	this->inc_data_iterator++;
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -532,8 +532,8 @@ MemoryBlockReverseIterator<T>::operator ++(int) const
 	return *this;
 }
 template<typename T>
-const MemoryBlockReverseIterator<T>&
-MemoryBlockReverseIterator<T>::operator --(int) const
+const ArrayBlocksReverseIterator<T>&
+ArrayBlocksReverseIterator<T>::operator --(int) const
 {
 	this->inc_data_iterator--;
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -550,8 +550,8 @@ MemoryBlockReverseIterator<T>::operator --(int) const
 
 template<typename T> inline
 bool
-operator ==(const MemoryBlockIterator<T> &it1,
-			const MemoryBlockIterator<T> &it2)
+operator ==(const ArrayBlocksIterator<T> &it1,
+			const ArrayBlocksIterator<T> &it2)
 {
 	return
 		(it1.inc_data_iterator == it2.inc_data_iterator)
@@ -561,8 +561,8 @@ operator ==(const MemoryBlockIterator<T> &it1,
 
 template<typename T> inline
 bool
-operator !=(const MemoryBlockIterator<T> &it1,
-			const MemoryBlockIterator<T> &it2)
+operator !=(const ArrayBlocksIterator<T> &it1,
+			const ArrayBlocksIterator<T> &it2)
 {
 	return
 		(it1.inc_data_iterator != it2.inc_data_iterator)
@@ -572,8 +572,8 @@ operator !=(const MemoryBlockIterator<T> &it1,
 
 template<typename T> inline
 bool
-operator ==(const MemoryBlockReverseIterator<T> &it1,
-			const MemoryBlockReverseIterator<T> &it2)
+operator ==(const ArrayBlocksReverseIterator<T> &it1,
+			const ArrayBlocksReverseIterator<T> &it2)
 {
 	return
 		(it1.inc_data_iterator == it2.inc_data_iterator)
@@ -583,8 +583,8 @@ operator ==(const MemoryBlockReverseIterator<T> &it1,
 
 template<typename T> inline
 bool
-operator !=(const MemoryBlockReverseIterator<T> &it1,
-			const MemoryBlockReverseIterator<T> &it2)
+operator !=(const ArrayBlocksReverseIterator<T> &it1,
+			const ArrayBlocksReverseIterator<T> &it2)
 {
 	return
 		(it1.inc_data_iterator != it2.inc_data_iterator)
@@ -596,8 +596,8 @@ operator !=(const MemoryBlockReverseIterator<T> &it1,
 
 template<typename T> inline
 bool
-operator ==(const MemoryBlockIterator<T> &it1,
-			const MemoryBlockReverseIterator<T> &it2)
+operator ==(const ArrayBlocksIterator<T> &it1,
+			const ArrayBlocksReverseIterator<T> &it2)
 {
 	return
 		(it1.inc_data_iterator == it2.inc_data_iterator)
@@ -607,8 +607,8 @@ operator ==(const MemoryBlockIterator<T> &it1,
 
 template<typename T> inline
 bool
-operator !=(const MemoryBlockIterator<T> &it1,
-			const MemoryBlockReverseIterator<T> &it2)
+operator !=(const ArrayBlocksIterator<T> &it1,
+			const ArrayBlocksReverseIterator<T> &it2)
 {
 	return
 		(it1.inc_data_iterator != it2.inc_data_iterator)
@@ -618,8 +618,8 @@ operator !=(const MemoryBlockIterator<T> &it1,
 
 template<typename T> inline
 bool
-operator ==(const MemoryBlockReverseIterator<T> &it1,
-			const MemoryBlockIterator<T> &it2)
+operator ==(const ArrayBlocksReverseIterator<T> &it1,
+			const ArrayBlocksIterator<T> &it2)
 {
 	return
 		(it1.inc_data_iterator == it2.inc_data_iterator)
@@ -629,8 +629,8 @@ operator ==(const MemoryBlockReverseIterator<T> &it1,
 
 template<typename T> inline
 bool
-operator !=(const MemoryBlockReverseIterator<T> &it1,
-			const MemoryBlockIterator<T> &it2)
+operator !=(const ArrayBlocksReverseIterator<T> &it1,
+			const ArrayBlocksIterator<T> &it2)
 {
 	return
 		(it1.inc_data_iterator != it2.inc_data_iterator)
@@ -640,4 +640,4 @@ operator !=(const MemoryBlockReverseIterator<T> &it1,
 
 }}
 
-#endif // TEMPLATES_MEMORYBLOCK_ITERATORS
+#endif // TEMPLATES_ArrayBlocks_ITERATORS

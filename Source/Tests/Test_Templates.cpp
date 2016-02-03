@@ -18,7 +18,7 @@ Test::Templates::all()
 	this->count_success_tests = 0
 //			+ this->SimpleArray()
 //			+ this->Array()
-			+ this->MemoryBlock()
+			+ this->ArrayBlocks()
 //			+ this->List()
 //			+ this->String()
 //			+ this->UniquePointer()
@@ -244,15 +244,15 @@ Test::Templates::SimpleArray()
 }
 
 unsigned int
-Test::Templates::MemoryBlock()
+Test::Templates::ArrayBlocks()
 {
-	std::cout << "Test::Templates::MemoryBlock()\n";
+	std::cout << "Test::Templates::ArrayBlocks()\n";
 	
-	using flame_ide::templates::MemoryBlock;
+	using flame_ide::templates::ArrayBlocks;
 	
-	MemoryBlock<long> empty_block;
-	MemoryBlock<long> back_add_block(5);
-	MemoryBlock<long> front_add_block(true, 5);
+	ArrayBlocks<long> empty_block;
+	ArrayBlocks<long> back_add_block(5);
+	ArrayBlocks<long> front_add_block(true, 5);
 	
 //	long test_obj = 111;
 	
@@ -263,7 +263,7 @@ Test::Templates::MemoryBlock()
 	
 	// back adding block
 	{
-		MemoryBlock<long> &block = back_add_block;
+		ArrayBlocks<long> &block = back_add_block;
 		for(long i = 0; i < 11; ++i)
 		{
 			block.pushBack(i);
@@ -291,7 +291,7 @@ Test::Templates::MemoryBlock()
 	
 	// front adding block
 	{
-		MemoryBlock<long> &block = front_add_block;
+		ArrayBlocks<long> &block = front_add_block;
 		for(long i = 0; i < 11; ++i)
 		{
 			block.pushBack(i);
@@ -320,7 +320,7 @@ Test::Templates::MemoryBlock()
 	
 	// back adding block
 	{
-		MemoryBlock<long> &block = back_add_block;
+		ArrayBlocks<long> &block = back_add_block;
 		block.popBack(2);
 		block.popBack();
 		
@@ -366,7 +366,7 @@ Test::Templates::MemoryBlock()
 	
 	// back adding block
 	{
-		MemoryBlock<long> &block = back_add_block;
+		ArrayBlocks<long> &block = back_add_block;
 		for(long i = -1; i > -11; --i)
 		{
 			block.pushFront(i);
@@ -394,7 +394,7 @@ Test::Templates::MemoryBlock()
 	
 	// front adding block
 	{
-		MemoryBlock<long> &block = front_add_block;
+		ArrayBlocks<long> &block = front_add_block;
 		for(long i = -1; i > -11; --i)
 		{
 			block.pushFront(i);
@@ -469,7 +469,7 @@ Test::Templates::MemoryBlock()
 	
 	// back adding block
 	{
-		MemoryBlock<long> &block = back_add_block;
+		ArrayBlocks<long> &block = back_add_block;
 		std::cout
 			<< "Code (back adding block):" "\n"
 				<< "\t" "block.at(index)" "\n"
@@ -483,7 +483,7 @@ Test::Templates::MemoryBlock()
 	
 	// front adding block
 	{
-		MemoryBlock<long> &block = back_add_block;
+		ArrayBlocks<long> &block = back_add_block;
 		std::cout
 			<< "Code (front adding block):" "\n"
 				<< "\t" "block.at(index)" "\n"
@@ -499,11 +499,11 @@ Test::Templates::MemoryBlock()
 	
 	// back adding block
 	{
-		MemoryBlock<long> &block = back_add_block;
-		MemoryBlock<long> copied_block = block;
+		ArrayBlocks<long> &block = back_add_block;
+		ArrayBlocks<long> copied_block = block;
 		std::cout
 			<< "Code (back adding block):" "\n"
-				<< "\t" "MemoryBlock<long> copied_block = block;" "\n"
+				<< "\t" "ArrayBlocks<long> copied_block = block;" "\n"
 			<< "Result:" "\n";
 		std::for_each
 	    (
@@ -533,11 +533,11 @@ Test::Templates::MemoryBlock()
 	
 	// front adding block
 	{
-		MemoryBlock<long> &block = front_add_block;
-		MemoryBlock<long> copied_block = block;
+		ArrayBlocks<long> &block = front_add_block;
+		ArrayBlocks<long> copied_block = block;
 		std::cout
 			<< "Code (front adding block):" "\n"
-				<< "\t" "MemoryBlock<long> copied_block = block;" "\n"
+				<< "\t" "ArrayBlocks<long> copied_block = block;" "\n"
 			<< "Result:" "\n";
 		std::for_each
 	    (
@@ -549,7 +549,7 @@ Test::Templates::MemoryBlock()
 	    );
 		std::cout << '\n';
 		
-		MemoryBlock<long> move_block = flame_ide::templates::move(copied_block);
+		ArrayBlocks<long> move_block = flame_ide::templates::move(copied_block);
 		std::cout
 			<< "Code (front adding block):" "\n"
 				<< "\t" "auto move_block = move(copied_block);" "\n"
@@ -568,7 +568,7 @@ Test::Templates::MemoryBlock()
 // reverse iterators and back iterations
 	
 	{
-		MemoryBlock<long> &block = back_add_block;
+		ArrayBlocks<long> &block = back_add_block;
 		std::cout << "Result all (iterators: reverse, reverse back, "
 					 "simple, simple back; operators ++/--()):" "\n";
 		auto r_it = block.rbegin(),
@@ -591,7 +591,7 @@ Test::Templates::MemoryBlock()
 	}
 	
 	{
-		MemoryBlock<long> &block = back_add_block;
+		ArrayBlocks<long> &block = back_add_block;
 		std::cout << "Result all (iterators: reverse, reverse back, "
 					 "simple, simple back; operators ++/--(int)):" "\n";
 		auto r_it = block.rbegin(),
