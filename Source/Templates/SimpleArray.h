@@ -270,7 +270,7 @@ SimpleArray<T>::pushBack(const T &obj)
 	}
 	else
 	{
-		array_copying(1, &obj, this->inc_arr+this->arr_size);
+		inc_arr[arr_size] = obj;
 		arr_size++;
 		arr_last_index++;
 	}
@@ -282,7 +282,7 @@ SimpleArray<T>::pushBack(T &&obj)
 {
 	if(arr_size < arr_capacity)
 	{
-		inc_arr[arr_size] = T(obj);
+		inc_arr[arr_size] = obj;
 		arr_size++;
 		arr_last_index++;
 	}
