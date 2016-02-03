@@ -31,9 +31,17 @@ T&& move(T &reference) noexcept;
 template<class T>
 T&& move(const T &reference) noexcept;
 
-template<typename TIteratorInput, typename TIteratorOutput>
+// obj_input and obj_output not using!
+template<typename TIteratorInput, typename TIteratorOutput,
+         typename TInput, typename TOutput>
 void copy(const TIteratorInput &start, const TIteratorInput &end,
-                TIteratorOutput &out);
+                TIteratorOutput &out,
+          const TInput &obj_input /*= *start*/, const TOutput &obj_output /*= *out*/);
+template<typename TIteratorInput, typename TIteratorOutput,
+         typename TInput, typename TOutput>
+void copy(TIteratorInput &&start, TIteratorInput &&end,
+          TIteratorOutput &out,
+          TInput &obj_input /*= *start*/, TOutput &obj_output /*= *out*/);
 
 }}
 
@@ -97,13 +105,32 @@ move(const T &reference) noexcept
 	return static_cast<T &&>(reference);
 }
 
-template<typename TIteratorInput, typename TIteratorOutput, typename T>
+template<typename TIteratorInput, typename TIteratorOutput,
+         typename TInput,         typename TOutput>
 void flame_ide::templates::
 copy(const TIteratorInput &start, const TIteratorInput &end,
-     TIteratorOutput &out)
+           TIteratorOutput &out,
+     const TInput &, const TOutput &)
 {
-	// определение типа
-	// а дальше поробуем скопировать побайтово.
+	if(is_same_types<TInput, TOutput>)
+	for(auto iterator = start; iterator != end; ++iterator, ++out)
+	{
+		new (out.operator ->()) TInput(*iterator);
+	}
+}
+
+template<typename TIteratorInput, typename TIteratorOutput,
+         typename TInput,         typename TOutput>
+void flame_ide::templates::
+copy(TIteratorInput &&start, TIteratorInput &&end,
+     TIteratorOutput &out,
+     TInput &, TOutput &)
+{
+	if(is_same_types<TInput, TOutput>)
+	for(auto iterator = start; iterator != end; ++iterator, ++out)
+	{
+		new (out.operator ->()) TInput(move(*iterator));
+	}
 }
 
 #endif // TEMPLATES_FOR_ALL
