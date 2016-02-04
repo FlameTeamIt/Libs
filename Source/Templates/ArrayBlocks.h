@@ -5,9 +5,8 @@
 #include <Templates/SimpleArray.h>
 #include <Templates/ArrayBlocks_Iterators.h>
 
-#define DEFAULT_CAPACITY size_t(32)
-
 /*
+
 
 Что нужно реализовать:
 1. Конструкторы копирования/перемещения   -> done and tested
@@ -21,15 +20,18 @@
 7. rbegin()/rend()                        -> done and tested
 
 */
+
+const size_t DEFAULT_CAPACITY = size_t(32);
+
 namespace flame_ide
 {namespace templates
 {
 
 typedef enum
 {
-	FROM_NULL = char(0),
+	FROM_NULL  = char(0),
 	FROM_FRONT = char(1),
-	FROM_BACK = char(2)
+	FROM_BACK  = char(2)
 } FromBlock;
 
 template<typename T>
@@ -37,6 +39,7 @@ struct BlockIndex
 {
 	ArrayBlocks<T> *p_block;
 	size_t index;
+	
 	BlockIndex() : p_block(nullptr), index(0) {}
 };
 
@@ -67,7 +70,7 @@ protected:
 	SharedPointer<ArrayBlocks<T>>& _block_getPrev();
 	
 	template<typename TSize_Type> T& _block_at(TSize_Type index,
-											   FromBlock from_back);
+	                                           FromBlock from_back);
 	
 	inline T* _block_simple_getArrayCopy() const;
 	
@@ -151,7 +154,7 @@ public:
 	
 	template<typename TArrayBlockIterator>
 	int erase(TArrayBlockIterator start,
-			  TArrayBlockIterator end);
+	          TArrayBlockIterator end);
 	
 	void clear();
 	
@@ -168,7 +171,7 @@ public:
 	
 	const T& operator [](size_t index) const noexcept;
 	      T& operator [](size_t index)       noexcept;
-		  
+	
 	iterator begin();
 	iterator end();
 	reverse_iterator rbegin(); // tested
@@ -476,7 +479,7 @@ ArrayBlocks<T>::_block_popFront(size_t count)
 		if(this->arr_size < count)
 		{
 			array_call_distructors(this->arr_size,
-								   this->inc_arr + this->arr_first_index);
+			                       this->inc_arr + this->arr_first_index);
 			if(this->next_block.isInitialized())
 			{
 				this->next_block->_block_popFront(count - this->arr_size);
@@ -487,7 +490,7 @@ ArrayBlocks<T>::_block_popFront(size_t count)
 		else
 		{
 			array_call_distructors(count, this->inc_arr + this->arr_first_index);
-			this->arr_size    -= count;
+			this->arr_size        -= count;
 			this->arr_first_index += count;
 		}
 	}
@@ -525,7 +528,7 @@ ArrayBlocks<T>::_block_popBack(size_t count)
 		if(this->arr_size < count)
 		{
 			array_call_distructors(this->arr_size,
-								   this->inc_arr + this->arr_first_index);
+			                       this->inc_arr + this->arr_first_index);
 			if(this->prev_block.isInitialized())
 			{
 				this->prev_block->_block_popBack(count - this->arr_size);
@@ -545,9 +548,11 @@ ArrayBlocks<T>::_block_popBack(size_t count)
 			for(size_t i = 0; i < this->arr_size; ++i)
 			{
 				array_rewrite(this->inc_arr, this->arr_capacity - 1 - i,
-					this->inc_arr[this->arr_first_index + this->arr_size - 1 - i]);
+				              this->inc_arr[this->arr_first_index
+				                            + this->arr_size - 1 - i]);
 				array_call_distructors(1,
-					this->inc_arr + this->arr_first_index + this->arr_size - 1 - i);
+				                       this->inc_arr + this->arr_first_index
+				                       + this->arr_size - 1 - i);
 				
 			}
 			this->arr_first_index += count;
@@ -610,7 +615,7 @@ ArrayBlocks<T>::_block_at(TSize_Type index, FromBlock from_block)
 				if(next_block.isInitialized())
 				{
 					return next_block->_block_at(local_index - this->arr_size,
-												 FROM_FRONT);
+					                             FROM_FRONT);
 				}
 				else
 				{
@@ -621,22 +626,22 @@ ArrayBlocks<T>::_block_at(TSize_Type index, FromBlock from_block)
 	
 	
 	case FROM_FRONT:
-	    if(local_index < this->arr_size)
-	    {
-		    return this->SimpleArray<T>::at(local_index);
-	    }
-	    else
-	    {
-		    if(next_block.isInitialized())
-		    {
-			    return next_block->_block_at(local_index - this->arr_size,
-										     FROM_FRONT);
-		    }
-		    else
-		    {
-			    return this->SimpleArray<T>::at(size_t(0));
-		    }
-	    }
+		if(local_index < this->arr_size)
+		{
+			return this->SimpleArray<T>::at(local_index);
+		}
+		else
+		{
+			if(next_block.isInitialized())
+			{
+				return next_block->_block_at(local_index - this->arr_size,
+				                             FROM_FRONT);
+			}
+			else
+			{
+				return this->SimpleArray<T>::at(size_t(0));
+			}
+		}
 	default :
 		break;
 	}
@@ -741,8 +746,8 @@ ArrayBlocks<T>::_block_findBlockByElement(const T *&element_address) const
 		if(iterator.operator ->() == element_address)
 		{
 			block_index.p_block = iterator.inc_block;
-			block_index.index =
-				iterator.operator ->() - iterator.inc_block->inc_arr;
+			block_index.index = iterator.operator ->()
+			                    - iterator.inc_block->inc_arr;
 			
 			iterator = iterator_end;
 		}
@@ -838,8 +843,8 @@ ArrayBlocks<T>::pushBack(const T &obj)
 		if(this->arr_size < this->arr_capacity)
 		{
 			std::copy(this->inc_arr + this->arr_first_index,
-					  this->inc_arr + this->arr_capacity,
-					  this->inc_arr + this->arr_first_index - 1);
+			          this->inc_arr + this->arr_capacity,
+			          this->inc_arr + this->arr_first_index - 1);
 			
 			array_copying(1, &obj, this->inc_arr + this->arr_capacity - 1);
 			
@@ -870,8 +875,8 @@ ArrayBlocks<T>::pushBack(T &&obj)
 		if(this->arr_size < this->arr_capacity)
 		{
 			std::copy(this->inc_arr + this->arr_first_index,
-					  this->inc_arr + this->arr_capacity,
-					  this->inc_arr + this->arr_first_index - 1);
+			          this->inc_arr + this->arr_capacity,
+			          this->inc_arr + this->arr_first_index - 1);
 			
 			this->inc_arr[this->arr_capacity - 1].~T();
 			this->inc_arr[this->arr_capacity - 1] = obj;
@@ -952,7 +957,7 @@ int
 ArrayBlocks<T>::insert(TArrayBlockIterator pos_index, T &&obj)
 {
 	BlockIndex<T> block_index =
-		this->_block_findBlockByElement(pos_index.operator ->());
+	    this->_block_findBlockByElement(pos_index.operator ->());
 	if(block_index.p_block)
 	{
 		// 2. сдвинуть элементы
@@ -974,7 +979,7 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos,
 {
 	typedef decltype(start.operator *()) TInput;
 	BlockIndex<T> block_index =
-		this->_block_findBlockByElement(pos.operator ->());
+	    this->_block_findBlockByElement(pos.operator ->());
 	if(block_index.p_block)
 	{
 		// 2. сдвинуть элементы

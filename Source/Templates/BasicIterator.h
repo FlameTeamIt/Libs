@@ -165,14 +165,16 @@ BasicReverseIterator<TIterator, TData>::BasicReverseIterator()
 {}
 
 template<class TIterator, class TData>
-BasicReverseIterator<TIterator, TData>::BasicReverseIterator(BasicReverseIterator<TIterator, TData> &&iterator)
+BasicReverseIterator<TIterator, TData>::BasicReverseIterator(
+	BasicReverseIterator<TIterator, TData> &&iterator)
 	: BasicReverseIterator<TIterator, TData>()
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 }
 
 template<class TIterator, class TData>
-BasicReverseIterator<TIterator, TData>::BasicReverseIterator(const BasicReverseIterator<TIterator, TData> &iterator)
+BasicReverseIterator<TIterator, TData>::BasicReverseIterator(
+	const BasicReverseIterator<TIterator, TData> &iterator)
 	: BasicReverseIterator<TIterator, TData>()
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
