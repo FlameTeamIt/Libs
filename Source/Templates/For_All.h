@@ -6,18 +6,16 @@ namespace flame_ide
 {namespace templates
 {
 
-//typedef unsigned long size_t;
-
 template<typename Tt1, typename Tt2>
 struct Types
 {
-	enum { isSame = 0 };
+	static const bool IS_SAME = false;
 };
 
 template<typename Tt>
 struct Types<Tt, Tt>
 {
-	enum { isSame = 1 };
+	static const bool IS_SAME = true;
 };
 
 template<typename Tt>
@@ -26,10 +24,13 @@ inline constexpr bool is_preemptive_type();
 template<typename Tt1, typename Tt2>
 inline constexpr bool is_same_types();
 
-template<class T>
+template<class T> inline
 T&& move(T &reference) noexcept;
-template<class T>
+template<class T> inline
 T&& move(const T &reference) noexcept;
+
+template<class T> inline
+const T& not_move(T &&reference) noexcept;
 
 // obj_input and obj_output not using!
 template<typename TIteratorInput, typename TIteratorOutput,
@@ -42,6 +43,9 @@ template<typename TIteratorInput, typename TIteratorOutput,
 void copy(TIteratorInput &&start, TIteratorInput &&end,
           TIteratorOutput &out,
           TInput &obj_input /*= *start*/, TOutput &obj_output /*= *out*/);
+
+template<typename TIterator>
+unsigned long count_iterations(const TIterator &start, const TIterator &end);
 
 }}
 
@@ -76,19 +80,19 @@ flame_ide::templates::is_preemptive_type()
 	
 	typedef Types<Tt, double> Type_double;
 	
-	return (Type_char::isSame  || Type_unsigned_char::isSame
-	     || Type_short::isSame || Type_unsigned_short::isSame
-	     || Type_int::isSame   || Type_unsigned_int::isSame
-	     || Type_long::isSame  || Type_unsigned_long::isSame
-	     || Type_llong::isSame || Type_unsigned_llong::isSame
-	     || Type_float::isSame || Type_double::isSame);
+	return (Type_char::IS_SAME  || Type_unsigned_char::IS_SAME
+	     || Type_short::IS_SAME || Type_unsigned_short::IS_SAME
+	     || Type_int::IS_SAME   || Type_unsigned_int::IS_SAME
+	     || Type_long::IS_SAME  || Type_unsigned_long::IS_SAME
+	     || Type_llong::IS_SAME || Type_unsigned_llong::IS_SAME
+	     || Type_float::IS_SAME || Type_double::IS_SAME);
 }
 
 template<typename Tt1, typename Tt2> inline constexpr
 bool flame_ide::templates::
 is_same_types()
 {
-	return (Types<Tt1, Tt2>::isSame);
+	return (Types<Tt1, Tt2>::IS_SAME);
 }
 
 template<class T>
@@ -103,6 +107,13 @@ T&& flame_ide::templates::
 move(const T &reference) noexcept
 {
 	return static_cast<T &&>(reference);
+}
+
+template<class T>
+const T& flame_ide::templates::
+not_move(T &&reference) noexcept
+{
+	return static_cast<const T &>(reference);
 }
 
 template<typename TIteratorInput, typename TIteratorOutput,
@@ -131,6 +142,17 @@ copy(TIteratorInput &&start, TIteratorInput &&end,
 	{
 		new (out.operator ->()) TInput(move(*iterator));
 	}
+}
+
+template<typename TIterator>
+unsigned long flame_ide::templates::
+count_iterations(const TIterator &start, const TIterator &end)
+{
+	unsigned long count = 0;
+	for(auto iterator = start; iterator != end; ++iterator, ++count)
+	{}
+	
+	return count;
 }
 
 #endif // TEMPLATES_FOR_ALL
