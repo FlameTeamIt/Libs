@@ -46,6 +46,14 @@ struct BlockIndex
 template<typename T>
 class ArrayBlocks : protected SimpleArray<T>
 {
+public:
+	typedef ArrayBlocksIterator<T>        iterator;
+	typedef ArrayBlocksReverseIterator<T> reverse_iterator;
+	
+	typedef const ArrayBlocksIterator<T>        const_iterator;
+	typedef const ArrayBlocksReverseIterator<T> const_reverse_iterator;
+	
+private:
 	inline void __block_setCopy(const ArrayBlocks<T> &block);
 	inline void __block_setMove(ArrayBlocks<T> &block);
 	
@@ -62,7 +70,7 @@ protected:
 	
 	size_t _block_getSize(FromBlock from_block) const;
 	size_t _block_getCapacity(FromBlock from_block) const;
-	
+
 	void _block_popFront(size_t count);
 	void _block_popBack(size_t count);
 	
@@ -91,14 +99,6 @@ protected:
 public:
 	friend class ArrayBlocksIterator<T>;
 	friend class ArrayBlocksReverseIterator<T>;
-	
-	friend class Array<T>;
-	
-	typedef ArrayBlocksIterator<T>        iterator;
-	typedef ArrayBlocksReverseIterator<T> reverse_iterator;
-	
-	typedef const ArrayBlocksIterator<T>        const_iterator;
-	typedef const ArrayBlocksReverseIterator<T> const_reverse_iterator;
 	
 	ArrayBlocks();
 	ArrayBlocks(size_t init_size);
@@ -130,15 +130,14 @@ public:
 	int pushBack(const T &obj);
 	int pushBack(T &&obj);
 	
+	
+	// in plan, but not implemented
 	int insert(size_t pos_index, const T &obj);
 	int insert(size_t pos_index, T &&obj);
-	
 	template<typename TArrayBlockIterator>
 	int insert(TArrayBlockIterator pos_index, T &&obj);
-	
 	template<typename TArrayBlockIterator>
 	int insert(TArrayBlockIterator pos_index, const T &obj);
-	
 	template<typename TArrayBlockIterator, typename TInputIterator>
 	int insert(TArrayBlockIterator position,
 	           TInputIterator start,
@@ -147,11 +146,10 @@ public:
 	void popFront(size_t count = 1);
 	void popBack(size_t count = 1);
 	
+	// in plan, but not implemented
 	int erase(size_t pos_index, size_t count = 1);
-	
 	template<typename TArrayBlockIterator>
 	int erase(TArrayBlockIterator pos_index, size_t count = 1);
-	
 	template<typename TArrayBlockIterator>
 	int erase(TArrayBlockIterator start,
 	          TArrayBlockIterator end);
@@ -423,7 +421,7 @@ ArrayBlocks<T>::_block_getSize(FromBlock from_block) const
 			size += next_block->_block_getSize(FROM_FRONT);
 		}
 		break;
-	default :
+	case FROM_NULL :
 		if(prev_block.isInitialized())
 		{
 			size += prev_block->_block_getSize(FROM_BACK);
@@ -433,6 +431,7 @@ ArrayBlocks<T>::_block_getSize(FromBlock from_block) const
 			size += next_block->_block_getSize(FROM_FRONT);
 		}
 		break;
+	default : break;
 	}
 	return size;
 }
@@ -456,7 +455,7 @@ ArrayBlocks<T>::_block_getCapacity(FromBlock from_block) const
 			capacity += next_block->_block_getCapacity(FROM_FRONT);
 		}
 		break;
-	default :
+	case FROM_NULL :
 		if(prev_block.isInitialized())
 		{
 			capacity += prev_block->_block_getCapacity(FROM_BACK);
@@ -466,6 +465,7 @@ ArrayBlocks<T>::_block_getCapacity(FromBlock from_block) const
 			capacity += next_block->_block_getCapacity(FROM_FRONT);
 		}
 		break;
+	default : break;
 	}
 	return capacity;
 }
@@ -539,9 +539,8 @@ ArrayBlocks<T>::_block_popBack(size_t count)
 		else
 		{
 			array_call_distructors(
-				count,
-				this->inc_arr + (this->arr_last_index-1) - count
-			);
+			                       count,
+			                       this->inc_arr + (this->arr_last_index-1) - count);
 			this->arr_size -= count;
 			
 			// move elements
@@ -642,8 +641,7 @@ ArrayBlocks<T>::_block_at(TSize_Type index, FromBlock from_block)
 				return this->SimpleArray<T>::at(size_t(0));
 			}
 		}
-	default :
-		break;
+	default : break;
 	}
 	
 	return this->SimpleArray<T>::at(size_t(0));
@@ -741,7 +739,7 @@ ArrayBlocks<T>::_block_findBlockByElement(const T *&element_address) const
 	BlockIndex<T> block_index;
 	
 	for(auto iterator = this->begin(), iterator_end = this->end();
-	         iterator != iterator_end; ++iterator)
+	    iterator != iterator_end; ++iterator)
 	{
 		if(iterator.operator ->() == element_address)
 		{
@@ -900,116 +898,6 @@ ArrayBlocks<T>::pushBack(T &&obj)
 }
 
 template<typename T>
-int
-ArrayBlocks<T>::insert(size_t pos_index, const T &obj)
-{
-	// 1. нужно найти блок с данным индексом
-	BlockIndex<T> block_index;
-	
-	// 2. сдвинуть элементы
-	
-	// 3. копировать объект
-	
-	return -1;
-}
-
-template<typename T>
-int
-ArrayBlocks<T>::insert(size_t pos_index, T &&obj)
-{
-	// 1. нужно найти блок с данным индексом
-	BlockIndex<T> block_index = this->_block_findBlockByIndex(pos_index);
-	
-	if(block_index.p_block)
-	{
-		// 2. сдвинуть элементы
-		
-		// 3. переместить объект
-		
-		return 1;
-	}
-	
-	return -1;
-}
-
-template<typename T>
-template<typename TArrayBlockIterator>
-int
-ArrayBlocks<T>::insert(TArrayBlockIterator pos_index, const T &obj)
-{
-	BlockIndex<T> block_index =
-		this->_block_findBlockByElement(pos_index.operator ->());
-	if(block_index.p_block)
-	{
-		// 2. сдвинуть элементы
-		
-		// 3. копировать объект
-		
-		return 1;
-	}
-	
-	return -1;
-}
-
-template<typename T>
-template<typename TArrayBlockIterator>
-int
-ArrayBlocks<T>::insert(TArrayBlockIterator pos_index, T &&obj)
-{
-	BlockIndex<T> block_index =
-	    this->_block_findBlockByElement(pos_index.operator ->());
-	if(block_index.p_block)
-	{
-		// 2. сдвинуть элементы
-		
-		// 3. переместить объект
-		
-		return 1;
-	}
-	
-	return -1;
-}
-
-template<typename T>
-template<typename TArrayBlockIterator, typename TInputIterator>
-int
-ArrayBlocks<T>::insert(TArrayBlockIterator pos,
-                       TInputIterator start,
-                       TInputIterator end)
-{
-	typedef decltype(start.operator *()) TInput;
-	BlockIndex<T> block_index =
-	    this->_block_findBlockByElement(pos.operator ->());
-	if(block_index.p_block)
-	{
-		// 2. сдвинуть элементы
-		
-		// ...
-		
-		if(is_same_types<TInput, T>()
-		   || is_same_types<TInput, T&>() )
-		{
-			// 3. переместить объекты
-			for(; start != end; ++start)
-			{}
-			
-			return 1;
-		}
-		if(is_same_types<TInput, const T>()
-		   || is_same_types<TInput, const T&>())
-		{
-			// 3. копировать объекты
-			for(; start != end; ++start)
-			{}
-			
-			return 1;
-		}
-	}
-	
-	return -1;
-}
-
-template<typename T>
 void
 ArrayBlocks<T>::popFront(size_t count)
 {
@@ -1037,55 +925,6 @@ ArrayBlocks<T>::popBack(size_t count)
 	{
 		this->_block_popBack(count);
 	}
-}
-
-template<typename T>
-int
-ArrayBlocks<T>::erase(size_t pos_index, size_t count)
-{
-	BlockIndex<T> block_index = _block_findBlockByIndex(pos_index);
-	
-	if(block_index.p_block)
-	{
-		for(size_t i = 0; i < count; ++i)
-		{
-			
-		}
-	}
-	
-	return -1;
-}
-
-template<typename T>
-template<typename TArrayBlockIterator>
-int
-ArrayBlocks<T>::erase(TArrayBlockIterator pos_index, size_t count)
-{
-	
-	BlockIndex<T> block_index
-	    = this->_block_findBlockByElement(pos_index.operator ->());
-	
-	return -1;
-}
-
-template<typename T>
-template<typename TArrayBlockIterator>
-int
-ArrayBlocks<T>::erase(TArrayBlockIterator start,
-                      TArrayBlockIterator end)
-{
-	BlockIndex<T> block_index_start
-	    = this->_block_findBlockByElement(start.operator ->());
-	BlockIndex<T> block_index_end
-	    = this->_block_findBlockByElement(end.operator ->());
-	
-	if(block_index_start.p_block
-	   && block_index_end.p_block)
-	{
-		
-	}
-	
-	return -1;
 }
 
 template<typename T>
