@@ -60,6 +60,9 @@ public:
 	BasicPointer<Tt> static_pointer_cast(const BasicPointer<Uu>& pointer) noexcept;
 	template<class Tt, class Uu> friend
 	BasicPointer<Tt> dynamic_pointer_cast(const BasicPointer<Uu>& pointer) noexcept;
+	
+	template<class Uu>
+	operator BasicPointer<Uu> () {static_pointer_cast<Uu>(*this)};
 };
 
 }}
