@@ -30,8 +30,8 @@ int main(int argc, char** argv)
 	    ? std::cout << "true\n"
 	    : std::cout << "false\n";
 	
-//	flame_ide::Test test;
-//	test.all();
+	flame_ide::Test test;
+	test.all();
 	
 	flame_ide::About about;
 	
