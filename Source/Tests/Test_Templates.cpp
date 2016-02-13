@@ -267,11 +267,15 @@ Test::Templates::ArrayBlocks()
 		for(long i = 0; i < 11; ++i)
 		{
 			block.pushBack(i);
-			if(i == 4)
+			if(i == 3)
 			{
-				i += 100 - 4;
+				i += 100 - 3;
 				block.insert(size_t(2), i);
-				i -= 100 - 4;
+				i -= 100 - 3;
+			}
+			if(i == 5)
+			{
+				block.insert(size_t(4), 200);
 			}
 		}
 		block.pushBack(11);
@@ -301,11 +305,15 @@ Test::Templates::ArrayBlocks()
 		for(long i = 0; i < 11; ++i)
 		{
 			block.pushBack(i);
-			if(i == 4)
+			if(i == 3)
 			{
-				i += 100 - 4;
+				i += 100 - 3;
 				block.insert(size_t(2), i);
-				i -= 100 - 4;
+				i -= 100 - 3;
+			}
+			if(i == 5)
+			{
+				block.insert(size_t(4), 200);
 			}
 		}
 		block.pushBack(11);

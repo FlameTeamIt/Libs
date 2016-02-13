@@ -827,7 +827,8 @@ ArrayBlocks<T>::_block_move_elements(size_t new_cells,
                                      TOutIt & target_it)
 {
 	auto source_it = source_first;
-	for(auto i = new_cells; i != 0; --i, ++source_it, ++target_it)
+	for(auto i = new_cells; i != 0 && target_it != source_last;
+	    --i, ++source_it, ++target_it)
 	{
 		placement_new(target_it.operator ->(), *source_it);
 	}
@@ -985,6 +986,7 @@ ArrayBlocks<T>::insert(size_t pos_index, const T &obj)
 {
 	size_t current_arr_size;
 	BlockIndex<T> block_index;
+	ArrayBlocks<T> *p_block = nullptr;
 	
 	// очевидные варианты
 	if(pos_index == 0)
@@ -1006,47 +1008,144 @@ ArrayBlocks<T>::insert(size_t pos_index, const T &obj)
 	
 	// неочевидные
 	// перемещаем элементы
-	ArrayBlocks<T> *p_block = _block_getFirstBlock();
-	if(p_block->_block_simple_getSize() < p_block->_block_simple_getCapacity())
+	
+	(pos_index < current_arr_size/2)
+		? p_block = _block_getFirstBlock()
+		: p_block = _block_getLastBlock();
+	
+	if(p_block->_block_simple_getSize() == p_block->_block_simple_getCapacity())
 	{
-		if(p_block->is_front_adding)
+		if(!p_block->next_block.isInitialized())
 		{
-			iterator it_target;
-			iterator it_source;
-			
-			p_block->arr_size++;
-			p_block->arr_first_index--;
-			
-			it_target.inc_block = p_block;
-			it_target.inc_data_iterator = p_block->_block_simple_begin();
-			
-			it_source = it_target; ++it_source;
-			
-			
-			_block_move_elements(1, it_source, block_index.it_front, it_target);
-			block_index.it_front.operator *() = obj;
+			p_block->_block_init_spNextBlock();
+			p_block = p_block->next_block.operator ->();
 		}
-		else
+		else if(!p_block->prev_block.isInitialized())
 		{
-			reverse_iterator it_target;
-			reverse_iterator it_source;
-			
-			p_block->arr_size++;
-			p_block->arr_last_index++;
-			
-			it_target.inc_block = p_block;
-			it_target.inc_data_iterator = p_block->_block_simple_rbegin();
-			
-			it_source = it_target; ++it_source;
-			
-			_block_move_elements(1, it_source, block_index.it_back, it_target);
-			block_index.it_back.operator *() = obj;
+			p_block->_block_init_spPrevBlock();
+			p_block = p_block->prev_block.operator ->();
 		}
+		else return -1;
+	}
+	
+	if(p_block->is_front_adding)
+	{
+		iterator it_target;
+		iterator it_source;
+		
+		p_block->arr_size++;
+		p_block->arr_first_index--;
+		
+		it_target.inc_block = p_block;
+		it_target.inc_data_iterator = p_block->_block_simple_begin();
+		
+		it_source = it_target; ++it_source;
+		
+		_block_move_elements(1, it_source, block_index.it_front, it_target);
+		block_index.it_front.operator *() = obj;
 	}
 	else
 	{
+		reverse_iterator it_target;
+		reverse_iterator it_source;
 		
+		p_block->arr_size++;
+		p_block->arr_last_index++;
+		
+		it_target.inc_block = p_block;
+		it_target.inc_data_iterator = p_block->_block_simple_rbegin();
+		
+		it_source = it_target; ++it_source;
+		
+		_block_move_elements(1, it_source, block_index.it_back, it_target);
+		block_index.it_back.operator *() = obj;
 	}
+		
+	return 1;
+}
+
+template<typename T>
+int
+ArrayBlocks<T>::insert(size_t pos_index, T &&obj)
+{
+	size_t current_arr_size;
+	BlockIndex<T> block_index;
+	ArrayBlocks<T> *p_block = nullptr;
+	
+	// очевидные варианты
+	if(pos_index == 0)
+	{
+		return this->pushFront(obj);
+	}
+	
+	current_arr_size = this->getSize();
+	if(pos_index == current_arr_size)
+	{
+		return this->pushBack(obj);
+	}
+	
+	block_index = this->_block_findBlockByIndex(pos_index);
+	if(!block_index.p_block)
+	{
+		return -1;
+	}
+	
+	// неочевидные
+	// перемещаем элементы
+	
+	(pos_index < current_arr_size/2)
+		? p_block = _block_getFirstBlock()
+		: p_block = _block_getLastBlock();
+	
+	if(p_block->_block_simple_getSize() == p_block->_block_simple_getCapacity())
+	{
+		if(!p_block->next_block.isInitialized())
+		{
+			p_block->_block_init_spNextBlock();
+			p_block = p_block->next_block.operator ->();
+		}
+		else if(!p_block->prev_block.isInitialized())
+		{
+			p_block->_block_init_spPrevBlock();
+			p_block = p_block->prev_block.operator ->();
+		}
+		else return -1;
+	}
+	
+	if(p_block->is_front_adding)
+	{
+		iterator it_target;
+		iterator it_source;
+		
+		p_block->arr_size++;
+		p_block->arr_first_index--;
+		
+		it_target.inc_block = p_block;
+		it_target.inc_data_iterator = p_block->_block_simple_begin();
+		
+		it_source = it_target; ++it_source;
+		
+		_block_move_elements(1, it_source, block_index.it_front, it_target);
+		block_index.it_front.operator *() = obj;
+	}
+	else
+	{
+		reverse_iterator it_target;
+		reverse_iterator it_source;
+		
+		p_block->arr_size++;
+		p_block->arr_last_index++;
+		
+		it_target.inc_block = p_block;
+		it_target.inc_data_iterator = p_block->_block_simple_rbegin();
+		
+		it_source = it_target; ++it_source;
+		
+		_block_move_elements(1, it_source, block_index.it_back, it_target);
+		block_index.it_back.operator *() = obj;
+	}
+		
+	return 1;
 }
 
 template<typename T>
