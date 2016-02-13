@@ -62,7 +62,7 @@ public:
 	BasicPointer<Tt> dynamic_pointer_cast(const BasicPointer<Uu>& pointer) noexcept;
 	
 	template<class Uu>
-	operator BasicPointer<Uu> () {static_pointer_cast<Uu>(*this)};
+	operator BasicPointer<Uu>() {return static_pointer_cast<Uu>(*this);}
 };
 
 }}

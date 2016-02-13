@@ -12,8 +12,6 @@ class SharedPointer : public BasicPointer<T>
 {
 	bool is_shared;
 	
-	using BasicPointer<T>::operator BasicPointer<Uu>;
-	
 protected:
 	inline void set(SharedPointer<T> &pointer);
 	
@@ -42,7 +40,7 @@ public:
 	SharedPointer<Tt> dynamic_pointer_cast(const SharedPointer<Uu>& pointer) noexcept;
 	
 	template<class Uu>
-	operator SharedPointer<Uu> () {static_pointer_cast<Uu>(*this)};
+	operator SharedPointer<Uu> () {return static_pointer_cast<Uu>(*this);}
 };
 
 template<class T, class ... Ts>

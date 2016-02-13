@@ -12,8 +12,6 @@ class UniquePointer : public BasicPointer<T>
 {
 	UniquePointer(const UniquePointer &pointer);
 	
-	using BasicPointer<T>::operator BasicPointer<Uu>;
-	
 protected:
 	inline void set(UniquePointer &pointer);
 	using BasicPointer<T>::inc_pointer;
@@ -37,7 +35,7 @@ public:
 	UniquePointer<Tt> dynamic_pointer_cast(UniquePointer<Uu>& pointer) noexcept;
 	
 	template<class Uu>
-	operator UniquePointer<Uu> () {static_pointer_cast<Uu>(*this)};
+	operator UniquePointer<Uu> () {return static_pointer_cast<Uu>(*this);}
 };
 
 template<class T, class ... Ts>
