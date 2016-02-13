@@ -251,8 +251,8 @@ Test::Templates::ArrayBlocks()
 	using flame_ide::templates::ArrayBlocks;
 	
 	ArrayBlocks<long> empty_block;
-	ArrayBlocks<long> back_add_block(5);
-	ArrayBlocks<long> front_add_block(true, 5);
+	ArrayBlocks<long> back_add_block(6);
+	ArrayBlocks<long> front_add_block(true, 6);
 	
 //	long test_obj = 111;
 	
@@ -267,6 +267,12 @@ Test::Templates::ArrayBlocks()
 		for(long i = 0; i < 11; ++i)
 		{
 			block.pushBack(i);
+			if(i == 4)
+			{
+				i += 100 - 4;
+				block.insert(size_t(2), i);
+				i -= 100 - 4;
+			}
 		}
 		block.pushBack(11);
 		
@@ -295,6 +301,12 @@ Test::Templates::ArrayBlocks()
 		for(long i = 0; i < 11; ++i)
 		{
 			block.pushBack(i);
+			if(i == 4)
+			{
+				i += 100 - 4;
+				block.insert(size_t(2), i);
+				i -= 100 - 4;
+			}
 		}
 		block.pushBack(11);
 		
@@ -591,7 +603,7 @@ Test::Templates::ArrayBlocks()
 	}
 	
 	{
-		ArrayBlocks<long> &block = back_add_block;
+		ArrayBlocks<long> &block = front_add_block;
 		std::cout << "Result all (iterators: reverse, reverse back, "
 					 "simple, simple back; operators ++/--(int)):" "\n";
 		auto r_it = block.rbegin(),

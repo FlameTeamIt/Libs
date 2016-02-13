@@ -21,7 +21,6 @@
 
 */
 
-const size_t DEFAULT_CAPACITY = size_t(32);
 
 namespace flame_ide
 {namespace templates
@@ -37,21 +36,33 @@ typedef enum
 template<typename T>
 struct BlockIndex
 {
-	ArrayBlocks<T> *p_block;
 	size_t index;
+	ArrayBlocks<T> *p_block;
+	typename ArrayBlocks<T>::iterator         it_front;
+	typename ArrayBlocks<T>::reverse_iterator it_back;
 	
 	BlockIndex() : p_block(nullptr), index(0) {}
+	BlockIndex<T> const & operator =(BlockIndex<T> const & block_index)
+	{
+		this->p_block  = block_index.p_block;
+		this->index    = block_index.index;
+		this->it_front = block_index.it_front;
+		this->it_back  = block_index.it_back;
+		return *this;
+	}
 };
 
 template<typename T>
 class ArrayBlocks : protected SimpleArray<T>
 {
+	static size_t const DEFAULT_CAPACITY = size_t(32);
+	
 public:
 	typedef ArrayBlocksIterator<T>        iterator;
 	typedef ArrayBlocksReverseIterator<T> reverse_iterator;
 	
-	typedef const ArrayBlocksIterator<T>        const_iterator;
-	typedef const ArrayBlocksReverseIterator<T> const_reverse_iterator;
+	typedef ArrayBlocksIterator<T>        const const_iterator;
+	typedef ArrayBlocksReverseIterator<T> const const_reverse_iterator;
 	
 private:
 	inline void __block_setCopy(const ArrayBlocks<T> &block);
@@ -93,8 +104,17 @@ protected:
 	SimpleArrayReverseIterator<T> _block_simple_rbegin();
 	SimpleArrayReverseIterator<T> _block_simple_rend();
 	
-	BlockIndex<T> _block_findBlockByIndex(size_t index) const;
-	BlockIndex<T> _block_findBlockByElement(const T *&element_address) const;
+	inline ArrayBlocks<T> * _block_getFirstBlock();
+	inline ArrayBlocks<T> * _block_getLastBlock();
+	
+	BlockIndex<T> _block_findBlockByIndex(size_t index);
+	BlockIndex<T> _block_findBlockByElement(const T *&element_address);
+	
+	template<typename TInputIt, typename TOutIt>
+	inline void _block_move_elements(size_t new_cells,
+	                                 TInputIt const & source_start,
+	                                 TInputIt const & source_end,
+	                                 TOutIt & target);
 	
 public:
 	friend class ArrayBlocksIterator<T>;
@@ -138,10 +158,10 @@ public:
 	int insert(TArrayBlockIterator pos_index, T &&obj);
 	template<typename TArrayBlockIterator>
 	int insert(TArrayBlockIterator pos_index, const T &obj);
-	template<typename TArrayBlockIterator, typename TInputIterator>
+	template<typename TArrayBlockIterator, typename TInputIt>
 	int insert(TArrayBlockIterator position,
-	           TInputIterator start,
-	           TInputIterator end);
+	           TInputIt start,
+	           TInputIt end);
 	
 	void popFront(size_t count = 1);
 	void popBack(size_t count = 1);
@@ -702,14 +722,37 @@ ArrayBlocks<T>::_block_simple_rend()
 }
 
 template<typename T>
-BlockIndex<T>
-ArrayBlocks<T>::_block_findBlockByIndex(size_t index) const
+ArrayBlocks<T> *
+ArrayBlocks<T>::_block_getFirstBlock()
 {
-	BlockIndex<T> block_index;
 	ArrayBlocks<T> *p_block = this;
 	
 	while(p_block->prev_block.isInitialized())
 	{ p_block = p_block->prev_block.operator ->(); }
+	
+	return p_block;
+}
+
+template<typename T>
+ArrayBlocks<T> *
+ArrayBlocks<T>::_block_getLastBlock()
+{
+	ArrayBlocks<T> *p_block = this;
+	
+	while(p_block->next_block.isInitialized())
+	{ p_block = p_block->next_block.operator ->(); }
+	
+	return p_block;
+}
+
+template<typename T>
+BlockIndex<T>
+ArrayBlocks<T>::_block_findBlockByIndex(size_t index)
+{
+	BlockIndex<T> block_index;
+	ArrayBlocks<T> *p_block = this->_block_getFirstBlock();
+	iterator it_front;
+	reverse_iterator it_back;
 	
 	size_t tmp_size = p_block->_block_simple_getSize();
 	while(index > tmp_size)
@@ -729,31 +772,70 @@ ArrayBlocks<T>::_block_findBlockByIndex(size_t index) const
 	block_index.p_block = p_block;
 	block_index.index = index;
 	
+	block_index.it_front.inc_block = p_block;
+	block_index.it_front.inc_data_iterator = p_block->_block_simple_begin()
+	                                         + index - 1;
+	
+	block_index.it_back.inc_block = p_block;
+	block_index.it_back.inc_data_iterator = p_block->_block_simple_rbegin()
+	                                        + (p_block->arr_size - index - 1);
+	
 	return block_index;
 }
 
 template<typename T>
 BlockIndex<T>
-ArrayBlocks<T>::_block_findBlockByElement(const T *&element_address) const
+ArrayBlocks<T>::_block_findBlockByElement(const T *&element_address)
 {
 	BlockIndex<T> block_index;
 	
-	for(auto iterator = this->begin(), iterator_end = this->end();
-	    iterator != iterator_end; ++iterator)
+	auto it = this->begin();
+	auto it_end = this->end();
+	for(; it != it_end; ++it)
 	{
-		if(iterator.operator ->() == element_address)
+		if(it.operator ->() == element_address)
 		{
-			block_index.p_block = iterator.inc_block;
-			block_index.index = iterator.operator ->()
-			                    - iterator.inc_block->inc_arr;
+			block_index.p_block = it.inc_block;
+			block_index.index = it.operator ->()
+			                    - it.inc_block->inc_arr;
 			
-			iterator = iterator_end;
+			block_index.it_front.inc_block = it.inc_block;
+			block_index.it_front.inc_data_iterator = it.inc_data_iterator;
+			
+			block_index.it_back.inc_block = it.inc_block;
+			block_index.it_back.inc_data_iterator = 
+			    it.inc_block->_block_simple_rbegin()
+			     + (it.inc_block->arr_size - block_index.index - 1);
+			
+			(block_index.it_back.operator ->() == block_index.it_front)
+			    ? std::printf("\nArrayBlocks<T>::_block_findBlockByIndex : true\n")
+			    : std::printf("\nArrayBlocks<T>::_block_findBlockByIndex : false\n");
+			
+			it = it_end;
 		}
 	}
 	
 	return block_index;
 }
 
+template<typename T>
+template<typename TInputIt, typename TOutIt>
+inline void 
+ArrayBlocks<T>::_block_move_elements(size_t new_cells,
+                                     TInputIt const & source_first,
+                                     TInputIt const & source_last,
+                                     TOutIt & target_it)
+{
+	auto source_it = source_first;
+	for(auto i = new_cells; i != 0; --i, ++source_it, ++target_it)
+	{
+		placement_new(target_it.operator ->(), *source_it);
+	}
+	for(; target_it != source_last; ++source_it, ++target_it)
+	{
+		*target_it = *source_it;
+	}
+}
 
 // public
 
@@ -895,6 +977,76 @@ ArrayBlocks<T>::pushBack(T &&obj)
 	}
 	_block_init_spNextBlock();
 	return next_block->pushBack(obj);
+}
+
+template<typename T>
+int
+ArrayBlocks<T>::insert(size_t pos_index, const T &obj)
+{
+	size_t current_arr_size;
+	BlockIndex<T> block_index;
+	
+	// очевидные варианты
+	if(pos_index == 0)
+	{
+		return this->pushFront(obj);
+	}
+	
+	current_arr_size = this->getSize();
+	if(pos_index == current_arr_size)
+	{
+		return this->pushBack(obj);
+	}
+	
+	block_index = this->_block_findBlockByIndex(pos_index);
+	if(!block_index.p_block)
+	{
+		return -1;
+	}
+	
+	// неочевидные
+	// перемещаем элементы
+	ArrayBlocks<T> *p_block = _block_getFirstBlock();
+	if(p_block->_block_simple_getSize() < p_block->_block_simple_getCapacity())
+	{
+		if(p_block->is_front_adding)
+		{
+			iterator it_target;
+			iterator it_source;
+			
+			p_block->arr_size++;
+			p_block->arr_first_index--;
+			
+			it_target.inc_block = p_block;
+			it_target.inc_data_iterator = p_block->_block_simple_begin();
+			
+			it_source = it_target; ++it_source;
+			
+			
+			_block_move_elements(1, it_source, block_index.it_front, it_target);
+			block_index.it_front.operator *() = obj;
+		}
+		else
+		{
+			reverse_iterator it_target;
+			reverse_iterator it_source;
+			
+			p_block->arr_size++;
+			p_block->arr_last_index++;
+			
+			it_target.inc_block = p_block;
+			it_target.inc_data_iterator = p_block->_block_simple_rbegin();
+			
+			it_source = it_target; ++it_source;
+			
+			_block_move_elements(1, it_source, block_index.it_back, it_target);
+			block_index.it_back.operator *() = obj;
+		}
+	}
+	else
+	{
+		
+	}
 }
 
 template<typename T>

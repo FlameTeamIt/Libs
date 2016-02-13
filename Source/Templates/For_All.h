@@ -73,6 +73,12 @@ void copy(TIteratorInput &&start, TIteratorInput &&end,
 template<typename TIterator>
 unsigned long count_iterations(const TIterator &start, const TIterator &end);
 
+template<typename T>
+void placement_new(T * const addr, const T & obj);
+
+template<typename T>
+void placement_new(T * const addr, T && obj);
+
 }}
 
 template<typename Tt> inline constexpr
@@ -180,5 +186,20 @@ count_iterations(const TIterator &start, const TIterator &end)
 	
 	return count;
 }
+
+template<typename T>
+void flame_ide::templates::
+placement_new(T * const addr, const T &obj)
+{
+	new (addr) T(obj);
+}
+
+template<typename T>
+void flame_ide::templates::
+placement_new(T * const addr, T && obj)
+{
+	new (addr) T(obj);
+}
+
 
 #endif // TEMPLATES_FOR_ALL
