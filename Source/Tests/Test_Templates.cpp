@@ -277,6 +277,15 @@ Test::Templates::ArrayBlocks()
 			{
 				block.insert(size_t(4), 200);
 			}
+			if(i == 9)
+			{
+				auto iterator = block.begin();
+				for(auto j = 0; j < 7; ++j, ++iterator);
+				
+				i += 300 - 9;
+				block.insert(iterator, i);
+				i -= 300 - 9;
+			}
 		}
 		block.pushBack(11);
 		
@@ -314,6 +323,15 @@ Test::Templates::ArrayBlocks()
 			if(i == 5)
 			{
 				block.insert(size_t(4), 200);
+			}
+			if(i == 9)
+			{
+				auto iterator = block.begin();
+				for(auto j = 0; j < 7; ++j, ++iterator);
+				
+				i += 300 - 9;
+				block.insert(iterator, i);
+				i -= 300 - 9;
 			}
 		}
 		block.pushBack(11);
@@ -390,6 +408,25 @@ Test::Templates::ArrayBlocks()
 		for(long i = -1; i > -11; --i)
 		{
 			block.pushFront(i);
+			if(i == -3)
+			{
+				i += 100 + 3;
+				block.insert(size_t(2), i);
+				i -= 100 + 3;
+			}
+			if(i == -5)
+			{
+				block.insert(size_t(4), 200);
+			}
+			if(i == -9)
+			{
+				auto iterator = block.begin();
+				for(auto j = 0; j < 7; ++j, ++iterator);
+				
+				i += 300 + 9;
+				block.insert(iterator, i);
+				i -= 300 + 9;
+			}
 		}
 		block.pushFront(-11);
 		
@@ -418,6 +455,25 @@ Test::Templates::ArrayBlocks()
 		for(long i = -1; i > -11; --i)
 		{
 			block.pushFront(i);
+			if(i == -3)
+			{
+				i += 100 + 3;
+				block.insert(size_t(2), i);
+				i -= 100 + 3;
+			}
+			if(i == -5)
+			{
+				block.insert(size_t(4), 200);
+			}
+			if(i == -9)
+			{
+				auto iterator = block.begin();
+				for(auto j = 0; j < 7; ++j, ++iterator);
+				
+				i += 300 + 9;
+				block.insert(iterator, i);
+				i -= 300 + 9;
+			}
 		}
 		block.pushFront(-11);
 		
