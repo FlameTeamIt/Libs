@@ -16,14 +16,14 @@
 4. Реализация итераторов       -> done and tested
 
 5. insert()/erase() (включая итераторы)   -- start
-   5.1. insert()                             -- not full done, not full tested
-   5.1.1. insert(index)                         -- done, not full tested
-   5.1.2. insert(iterator)                      -- done, not full tested
-   5.1.3. insert(diaposon)                      -- not done
-   5.2 erase()                               -- not done
-   5.2.1. erase(index)                          -- not done
-   5.2.2. insert(iterator)                      -- not done
-   5.2.3. insert(diaposon)                      -- not done
+      5.1. insert()                          -- not full done, not full tested
+         5.1.1. insert(index)                   -- done, not full tested
+         5.1.2. insert(iterator)                -- done, not full tested
+         5.1.3. insert(range)                   -- not done
+      5.2 erase()                            -- not done
+         5.2.1. erase(index)                    -- not done
+         5.2.2. insert(iterator)                -- not done
+         5.2.3. insert(range)                   -- not done
 
 6. begin()/end()                          -> done and tested
 7. rbegin()/rend()                        -> done and tested
@@ -932,6 +932,7 @@ template<typename T>
 int
 ArrayBlocks<T>::pushFront(T &&obj)
 {
+//	auto p_block = _block_getFirstBlock();
 	if(this->is_front_adding)
 	{
 		if(this->arr_size < this->arr_capacity)
@@ -995,6 +996,7 @@ template<typename T>
 int
 ArrayBlocks<T>::pushBack(T &&obj)
 {
+//	auto p_block = _block_getLastBlock();
 	if(this->is_front_adding)
 	{
 		if(this->arr_size < this->arr_capacity)
@@ -1283,9 +1285,121 @@ template<typename TArrayBlockIterator>
 int
 ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, T &&obj)
 {
+	size_t current_arr_size;
+	BlockIndex<T> block_index = _block_findBlockByElement(pos_it.operator ->());
+	ArrayBlocks<T> *p_block = nullptr;
+	
+	size_t pos_index = block_index.global_index;
+	
+	// очевидные варианты
+	if(pos_index == 0)
+	{
+		return this->pushFront(obj);
+	}
+	
+	current_arr_size = this->getSize();
+	if(pos_index == current_arr_size)
+	{
+		return this->pushBack(obj);
+	}
+	
+	if(!block_index.p_block)
+	{
+		return -1;
+	}
+	
+	// неочевидные
+	// перемещаем элементы
+	
+	(pos_index < current_arr_size/2)
+		? p_block = _block_getFirstBlock()
+		: p_block = _block_getLastBlock();
+	
+	if(p_block->_block_simple_getSize() == p_block->_block_simple_getCapacity())
+	{
+		if(!p_block->next_block.isInitialized())
+		{
+			p_block->_block_init_spNextBlock();
+			p_block = p_block->next_block.operator ->();
+		}
+		else if(!p_block->prev_block.isInitialized())
+		{
+			p_block->_block_init_spPrevBlock();
+			p_block = p_block->prev_block.operator ->();
+		}
+		else return -1;
+	}
+	
+	if(p_block->is_front_adding)
+	{
+		iterator it_target;
+		iterator it_source;
+		
+		p_block->arr_size++;
+		p_block->arr_first_index--;
+		
+		it_target.inc_block = p_block;
+		it_target.inc_data_iterator = p_block->_block_simple_begin();
+		
+		it_source = it_target; ++it_source;
+		
+		_block_move_elements(1, it_source, block_index.it_front, it_target);
+		block_index.it_front.operator *() = obj;
+	}
+	else
+	{
+		reverse_iterator it_target;
+		reverse_iterator it_source;
+		
+		p_block->arr_size++;
+		p_block->arr_last_index++;
+		
+		it_target.inc_block = p_block;
+		it_target.inc_data_iterator = p_block->_block_simple_rbegin();
+		
+		it_source = it_target; ++it_source;
+		
+		_block_move_elements(1, it_source, block_index.it_back, it_target);
+		block_index.it_back.operator *() = obj;
+	}
+		
 	return 1;
 }
 
+template<typename T>
+template<typename TArrayBlockIterator, typename TInputIt>
+int
+ArrayBlocks<T>::insert(TArrayBlockIterator position,
+					   TInputIt start,
+			           TInputIt end)
+{
+	// самое простое -- по хардкору, а именно по одному элементу добавлять.
+	// другой вариант -- считать количество элементов в диапозоне
+	
+	// выбираю второе
+	
+	BlockIndex<T> block_index = _block_findBlockByElement(position->operator ->());
+//	size_t & ref_index = block_index.index;
+	size_t & ref_global_index = block_index.global_index;
+	
+	if(ref_global_index == 0)
+	{
+		// push_front
+	}
+	
+	size_t current_size = getSize();
+	if(ref_global_index == current_size)
+	{
+		// push_back
+	}
+	
+	size_t count_elements = count_iterations(start, end);
+	
+	// делаем тоже самое, что и для одного элемента.
+	// отличие в количестве :)
+	
+	return 1;
+}
 
 template<typename T>
 void
