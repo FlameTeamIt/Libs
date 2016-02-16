@@ -1289,29 +1289,30 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, T &&obj)
 	BlockIndex<T> block_index = _block_findBlockByElement(pos_it.operator ->());
 	ArrayBlocks<T> *p_block = nullptr;
 	
-	size_t pos_index = block_index.global_index;
+	size_t &ref_global_index = block_index.global_index;
 	
 	// очевидные варианты
-	if(pos_index == 0)
-	{
-		return this->pushFront(obj);
-	}
-	
-	current_arr_size = this->getSize();
-	if(pos_index == current_arr_size)
-	{
-		return this->pushBack(obj);
-	}
-	
 	if(!block_index.p_block)
 	{
 		return -1;
 	}
 	
+	if(ref_global_index == 0)
+	{
+		return this->pushFront(obj);
+	}
+	
+	current_arr_size = this->getSize();
+	if(ref_global_index == current_arr_size)
+	{
+		return this->pushBack(obj);
+	}
+	
+	
 	// неочевидные
 	// перемещаем элементы
 	
-	(pos_index < current_arr_size/2)
+	(ref_global_index < current_arr_size/2)
 		? p_block = _block_getFirstBlock()
 		: p_block = _block_getLastBlock();
 	
@@ -1373,30 +1374,61 @@ ArrayBlocks<T>::insert(TArrayBlockIterator position,
 					   TInputIt start,
 			           TInputIt end)
 {
-	// самое простое -- по хардкору, а именно по одному элементу добавлять.
-	// другой вариант -- считать количество элементов в диапозоне
-	
-	// выбираю второе
+	// считаем количество элементов в диапозоне
 	
 	BlockIndex<T> block_index = _block_findBlockByElement(position->operator ->());
-//	size_t & ref_index = block_index.index;
-	size_t & ref_global_index = block_index.global_index;
+	
+	size_t & ref_global_index = block_index.global_index,
+	    count_elements,
+	    current_size;
+	
+	// очевидные варианты
+	
+	ArrayBlocks<T> * p_block = block_index.p_block;
+	if(!block_index.p_block)
+	{
+		return -1;
+	}
 	
 	if(ref_global_index == 0)
 	{
 		// push_front
+		auto it = end; --it;
+		for(; it != start; --it)
+		{
+			p_block->pushFront(it.operator *());
+		}
+		p_block->pushFront(*start);
 	}
 	
-	size_t current_size = getSize();
+	current_size = getSize();
 	if(ref_global_index == current_size)
 	{
 		// push_back
+		for(auto it = start; it != end; ++it)
+		{
+			p_block->pushBack(it.operator *());
+		}
 	}
 	
-	size_t count_elements = count_iterations(start, end);
+	// неочевидные варианты
 	
 	// делаем тоже самое, что и для одного элемента.
 	// отличие в количестве :)
+	count_elements = count_iterations(start, end);
+	
+	(ref_global_index < current_size/2)
+	    ? p_block = _block_getFirstBlock()
+	    : p_block = _block_getLastBlock();
+	
+	// если надо, выделяем новые блоки
+	
+	
+	// перемещаем существующае элементы
+	
+	
+	// копируем/перемещаем элементы из диапозона
+	// если надо, используем placement_new.
 	
 	return 1;
 }
