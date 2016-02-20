@@ -18,11 +18,11 @@ int main(int argc, char** argv)
 	    ? std::cout << "true\n"
 	    : std::cout << "false\n";
     
-    (flame_ide::templates::is_preemptive_type<unsigned char>()) 
+    (flame_ide::templates::is_primetive_type<unsigned char>()) 
 	    ? std::cout << "true\n"
 	    : std::cout << "false\n";
     
-    (flame_ide::templates::is_preemptive_type<std::ostream>()) 
+    (flame_ide::templates::is_primetive_type<std::ostream>()) 
 	    ? std::cout << "true\n"
 	    : std::cout << "false\n";
     
