@@ -7,6 +7,7 @@
 
 #include <Templates/Array_Functions.h>
 #include <Templates/SimpleArray_Iterators.h>
+#include <Templates/For_All.h>
 
 /*
 Что нужно сделать и/или подумать, как сделать:
@@ -395,12 +396,7 @@ int
 SimpleArray<T>::insert(const size_t pos_index,
                        const TIterator &start, const TIterator &end) // tested
 {
-	TIterator it;
-	size_t count_insertion = 0;
-	for(it = start; it != end; ++it)
-	{
-		++count_insertion;
-	}
+	size_t count_insertion = count_iterations(start, end);
 	
 	if(this->arr_size + count_insertion > this->arr_capacity
 		|| this->arr_size < pos_index)
