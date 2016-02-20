@@ -18,20 +18,20 @@ public:
 	virtual std::list< std::string > parceSemantics(std::string&);
 	virtual std::list< std::string > parceSemantics(char*);
 
-	virtual bool isKeyword(std::string&);
-	virtual bool isKeyword(char*);
+	virtual bool isKeyword(std::string&) = 0;
+	virtual bool isKeyword(char*) = 0;
 
-	virtual bool isEarlyType(std::string&);
-	virtual bool isEarlyType(char*);
+	virtual bool isEarlyType(std::string&) = 0;
+	virtual bool isEarlyType(char*) = 0;
 
-	virtual bool isPreprocessor(std::string&);
-	virtual bool isPreprocessor(char*);
+	virtual bool isPreprocessor(std::string&) = 0;
+	virtual bool isPreprocessor(char*) = 0;
 
-	virtual bool isOperator(std::string&);
-	virtual bool isOperator(char*);
+	virtual bool isOperator(std::string&) = 0;
+	virtual bool isOperator(char*) = 0;
 
-	virtual std::list< std::string > getSemanticList (std::string&);
-	virtual std::list< std::string > getSemanticList (char*);
+	virtual std::list< std::string > getSemanticList (std::string&) = 0;
+	virtual std::list< std::string > getSemanticList (char*) = 0;
 };
 
 class CodeParcer_C : public BasicCodeParcer
@@ -45,6 +45,11 @@ public:
 
 };
 
-}
 
+
+class CodeParcer_CPP : public BasicCodeParcer
+{
+};
+
+}
 #endif // CODEPARCER_H
