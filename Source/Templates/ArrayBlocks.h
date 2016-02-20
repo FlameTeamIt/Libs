@@ -1415,15 +1415,20 @@ ArrayBlocks<T>::insert(TArrayBlockIterator position,
 	
 	// делаем тоже самое, что и для одного элемента.
 	// отличие в количестве :)
-	count_elements = count_iterations(start, end);
-	
-	(ref_global_index < current_size/2)
-	    ? p_block = _block_getFirstBlock()
-	    : p_block = _block_getLastBlock();
 	
 	// если надо, выделяем новые блоки
+	count_elements = count_iterations(start, end);
 	
+	// выделяем блоки под нужды, если нужно
+	// нужно найти таргет
+	if(ref_global_index < current_size/2)
+	{
+	}
+	else
+	{
+	}
 	
+	//	q
 	// перемещаем существующае элементы
 	
 	
