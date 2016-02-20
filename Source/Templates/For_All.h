@@ -19,7 +19,7 @@ struct ComparingTypes<Tt, Tt>
 };
 
 template<typename Tt>
-struct TypeSize
+struct ObjectBytes
 {
 	union Bytes
 	{
@@ -34,18 +34,19 @@ struct TypeSize
 		Bytes(Tt const & obj) : r_obj(obj)    {}
 	} bytes;
 	
-	const unsigned long SIZE;
+	static const unsigned long SIZE = sizeof(Tt);
 	
-	TypeSize() = delete;
-	TypeSize(TypeSize &&) = delete;
-	TypeSize(TypeSize const &) = delete;
+	ObjectBytes() = delete;
+	ObjectBytes(ObjectBytes &&) = delete;
+	ObjectBytes(ObjectBytes const &) = delete;
 	
-	TypeSize(Tt * p_obj)     : SIZE(sizeof(Tt)), bytes(p_obj) {}
-	TypeSize(Tt const & obj) : SIZE(sizeof(Tt)), bytes(obj) {}
+	ObjectBytes(Tt * p_obj)     : bytes(p_obj) {}
+	ObjectBytes(Tt & obj)       : bytes(obj) {}
+	ObjectBytes(const Tt & obj) : bytes(static_cast<Tt &>(obj)) {}
 };
 
 template<typename Tt>
-inline constexpr bool is_preemptive_type();
+inline constexpr bool is_primetive_type();
 
 template<typename Tt1, typename Tt2>
 inline constexpr bool is_same_types();
@@ -65,10 +66,12 @@ void copy(const TIteratorInput &start, const TIteratorInput &end,
                 TIteratorOutput &out,
           const TInput &obj_input /*= *start*/, const TOutput &obj_output /*= *out*/);
 template<typename TIteratorInput, typename TIteratorOutput,
-         typename TInput, typename TOutput>
-void copy(TIteratorInput &&start, TIteratorInput &&end,
-          TIteratorOutput &out,
-          TInput &obj_input /*= *start*/, TOutput &obj_output /*= *out*/);
+         typename TInput = decltype(TIteratorInput::operator *()),
+         typename TOutput = decltype(TIteratorOutput::operator *()),
+         bool IS_SAME = (is_same_types<TInput, TOutput>()
+                         || is_same_types<TInput, const TOutput>()) >
+void copy(TIteratorInput &start, TIteratorInput &end,
+          TIteratorOutput &out);
 
 template<typename TIterator>
 unsigned long count_iterations(const TIterator &start, const TIterator &end);
@@ -83,7 +86,7 @@ void placement_new(T * const addr, T && obj);
 
 template<typename Tt> inline constexpr
 bool
-flame_ide::templates::is_preemptive_type()
+flame_ide::templates::is_primetive_type()
 {
 	typedef unsigned char unsigned_char;
 	typedef unsigned short unsigned_short;
