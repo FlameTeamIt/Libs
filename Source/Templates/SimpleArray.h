@@ -399,7 +399,7 @@ SimpleArray<T>::insert(const size_t pos_index,
 	size_t count_insertion = count_iterations(start, end);
 	
 	if(this->arr_size + count_insertion > this->arr_capacity
-		|| this->arr_size < pos_index)
+	   || this->arr_size < pos_index)
 	{
 		return -1;
 	}
@@ -427,9 +427,8 @@ int
 SimpleArray<T>::insert(const iterator it,
                        const TIterator &start, const TIterator &end) // tested
 {
-	size_t index = this->inc_arr - it.inc_data_iterator;
+	size_t index = this->inc_arr - it.operator ->();
 	return this->insert(index, start, end);
-	return 1;
 }
 template<class T>
 template<typename TIterator>
@@ -439,7 +438,6 @@ SimpleArray<T>::insert(const reverse_iterator it,
 {
 	size_t index = this->inc_arr - it.inc_data_iterator;
 	return this->insert(index, start, end);
-	return 1;
 }
 
 template<typename T>
