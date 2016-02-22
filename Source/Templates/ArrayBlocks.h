@@ -134,8 +134,8 @@ protected:
 	
 	template<typename TInputIt, typename TOutIt>
 	inline void _block_move_elements(size_t new_cells,
-	                                 TInputIt const & source_start,
-	                                 TInputIt const & source_end,
+	                                 TInputIt & source_start,
+	                                 TInputIt & source_end,
 	                                 TOutIt & target);
 	
 public:
@@ -842,7 +842,8 @@ ArrayBlocks<T>::_block_findBlockByElement(T *element_address)
 		else if(it_back.operator ->() == element_address)
 		{
 			block_index.p_block = it_back.inc_block;
-			block_index.index   = it_back.operator ->() - it_back.inc_block->inc_arr;
+			block_index.index   = it_back.operator ->()
+			                      - it_back.inc_block->inc_arr;
 			
 			ref_it_front.inc_block         = it_back.inc_block;
 			ref_it_front.inc_data_iterator = it_back.inc_data_iterator;
@@ -866,19 +867,23 @@ template<typename T>
 template<typename TInputIt, typename TOutIt>
 inline void 
 ArrayBlocks<T>::_block_move_elements(size_t new_cells,
-                                     TInputIt const & source_first,
-                                     TInputIt const & source_last,
+                                     TInputIt & source_first,
+                                     TInputIt & source_last,
                                      TOutIt & target_it)
 {
 	auto source_it = source_first;
-	for(auto i = new_cells; i != 0 && target_it != source_last;
+	for(auto i = new_cells;
+	    i != 0 && target_it != source_last;
 	    --i, ++source_it, ++target_it)
 	{
 		placement_new(target_it.operator ->(), *source_it);
+		(*source_it).~T();
 	}
-	for(; target_it != source_last; ++source_it, ++target_it)
+	for(; target_it != source_last;
+	    ++source_it, ++target_it)
 	{
 		*target_it = *source_it;
+		(*source_it).~T();
 	}
 }
 
@@ -1172,7 +1177,7 @@ ArrayBlocks<T>::insert(size_t pos_index, T &&obj)
 		it_source = it_target; ++it_source;
 		
 		_block_move_elements(1, it_source, block_index.it_front, it_target);
-		block_index.it_front.operator *() = obj;
+		placement_new(block_index.it_front.operator ->(), obj);
 	}
 	else
 	{
@@ -1188,7 +1193,7 @@ ArrayBlocks<T>::insert(size_t pos_index, T &&obj)
 		it_source = it_target; ++it_source;
 		
 		_block_move_elements(1, it_source, block_index.it_back, it_target);
-		block_index.it_back.operator *() = obj;
+		placement_new(block_index.it_back.operator ->(), obj);
 	}
 		
 	return 1;
@@ -1258,7 +1263,7 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, const T &obj)
 		it_source = it_target; ++it_source;
 		
 		_block_move_elements(1, it_source, block_index.it_front, it_target);
-		block_index.it_front.operator *() = obj;
+		placement_new(block_index.it_front.operator ->(), obj);
 	}
 	else
 	{
@@ -1274,7 +1279,7 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, const T &obj)
 		it_source = it_target; ++it_source;
 		
 		_block_move_elements(1, it_source, block_index.it_back, it_target);
-		block_index.it_back.operator *() = obj;
+		placement_new(block_index.it_back.operator ->(), obj);
 	}
 		
 	return 1;
@@ -1345,7 +1350,7 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, T &&obj)
 		it_source = it_target; ++it_source;
 		
 		_block_move_elements(1, it_source, block_index.it_front, it_target);
-		block_index.it_front.operator *() = obj;
+		placement_new(block_index.it_front.operator ->(), obj);
 	}
 	else
 	{
@@ -1361,7 +1366,7 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, T &&obj)
 		it_source = it_target; ++it_source;
 		
 		_block_move_elements(1, it_source, block_index.it_back, it_target);
-		block_index.it_back.operator *() = obj;
+		placement_new(block_index.it_back.operator ->(), obj);
 	}
 		
 	return 1;
@@ -1376,7 +1381,8 @@ ArrayBlocks<T>::insert(TArrayBlockIterator position,
 {
 	// считаем количество элементов в диапозоне
 	
-	BlockIndex<T> block_index = _block_findBlockByElement(position->operator ->());
+	BlockIndex<T> block_index
+		= _block_findBlockByElement(position.operator ->());
 	
 	size_t & ref_global_index = block_index.global_index,
 	    count_elements,
@@ -1396,7 +1402,7 @@ ArrayBlocks<T>::insert(TArrayBlockIterator position,
 		auto it = end; --it;
 		for(; it != start; --it)
 		{
-			p_block->pushFront(it.operator *());
+			p_block->pushFront(*it);
 		}
 		p_block->pushFront(*start);
 	}
@@ -1407,7 +1413,7 @@ ArrayBlocks<T>::insert(TArrayBlockIterator position,
 		// push_back
 		for(auto it = start; it != end; ++it)
 		{
-			p_block->pushBack(it.operator *());
+			p_block->pushBack(*it);
 		}
 	}
 	
@@ -1421,19 +1427,119 @@ ArrayBlocks<T>::insert(TArrayBlockIterator position,
 	
 	// выделяем блоки под нужды, если нужно
 	// нужно найти таргет
-	if(ref_global_index < current_size/2)
+	
+	// следующим шагом перемещаем существующае элементы
+	
+	// потом, в конце, копируем/перемещаем элементы из диапозона
+	// если надо, используем placement_new.
+	size_t tmp_count_elements = count_elements;
+	uint16_t ind = (ref_global_index < current_size/2)
+	               + (p_block->is_front_adding
+	                 && (p_block->arr_capacity - p_block->arr_size)
+	                     > count_elements) * 10
+	               + (ref_global_index < current_size/2) * 100
+	               + (p_block->is_front_adding
+					  && (p_block->arr_capacity - p_block->arr_size)
+	                      > count_elements) * 1000;
+	if(ind && ind < 100)
 	{
+		iterator it_target, it_source;
+		
+		switch (ind)
+		{
+		case 1:
+		case 11:
+			// работаем внутри блока
+			it_source.inc_data_iterator = p_block->_block_simple_begin();
+			it_source.inc_block = p_block;
+			
+			p_block->arr_size += count_elements;
+			p_block->arr_first_index += count_elements;
+			
+			it_target.inc_data_iterator = p_block->_block_simple_begin();
+			it_target.inc_block = p_block;
+			
+			break;
+			
+		case 10:
+			p_block   = _block_getFirstBlock();
+			it_source = p_block->begin();
+			
+			while(tmp_count_elements > (p_block->arr_capacity - p_block->arr_size))
+			{
+				tmp_count_elements -= p_block->arr_capacity - p_block->arr_size;
+				
+				p_block->arr_size = p_block->arr_capacity;
+				p_block->arr_first_index = 0;
+				p_block->_block_init_spPrevBlock();
+				
+				p_block = p_block->prev_block.operator ->();
+			}
+			p_block->arr_size = tmp_count_elements;
+			p_block->arr_first_index = p_block->arr_capacity - tmp_count_elements
+			                           - 1;
+			
+			break;
+		}
+		
+		_block_move_elements(count_elements,
+		                     it_source, block_index.it_front,
+		                     it_target);
+		_block_move_elements(count_elements,
+		                     start, end,
+		                     it_target);
+		
+	}
+	else if(ind && ind > 11)
+	{
+		reverse_iterator it_target, it_source;
+		switch (ind)
+		{
+		case 1:
+		case 11:
+			// работаем внутри блока
+			it_source.inc_data_iterator = p_block->_block_simple_rbegin();
+			it_source.inc_block = p_block;
+			
+			p_block->arr_size += count_elements;
+			p_block->arr_last_index += count_elements;
+			
+			it_target.inc_data_iterator = p_block->_block_simple_rbegin();
+			it_target.inc_block = p_block;
+			
+			break;
+			
+		case 10:
+			p_block = _block_getLastBlock();
+			it_source = p_block->rbegin();
+			
+			while(tmp_count_elements > (p_block->arr_capacity - p_block->arr_size))
+			{
+				tmp_count_elements -= p_block->arr_capacity - p_block->arr_size;
+				
+				p_block->arr_size       = p_block->arr_capacity;
+				p_block->arr_last_index = p_block->arr_capacity;
+				p_block->_block_init_spNextBlock();
+				
+				p_block = p_block->next_block.operator ->();
+			}
+			p_block->arr_size = tmp_count_elements;
+			p_block->arr_last_index = tmp_count_elements;
+			
+			break;
+		}
+		
+		_block_move_elements(count_elements,
+		                     it_source, block_index.it_back,
+		                     it_target);
+		_block_move_elements(count_elements,
+		                     start, end,
+		                     it_target);
 	}
 	else
 	{
+		return -1;
 	}
-	
-	//	q
-	// перемещаем существующае элементы
-	
-	
-	// копируем/перемещаем элементы из диапозона
-	// если надо, используем placement_new.
 	
 	return 1;
 }
