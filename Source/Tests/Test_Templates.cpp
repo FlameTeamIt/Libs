@@ -288,6 +288,10 @@ Test::Templates::ArrayBlocks()
 			}
 		}
 		block.pushBack(11);
+		long arr_long[] = {1000, 2000, 3000, 4000, 5000};
+		auto iterator = block.begin();
+		for(auto j = 0; j < 9; ++j, ++iterator);
+		block.insert(iterator, &arr_long[0], &arr_long[5]);
 		
 		std::cout
 			<< "Code (back adding block):" "\n"
