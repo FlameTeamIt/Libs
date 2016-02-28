@@ -46,13 +46,12 @@ template<typename T>
 struct BlockIndex
 {
 	ArrayBlocks<T> *p_block;
-	size_t index;
 	size_t global_index;
 	
 	typename ArrayBlocks<T>::iterator         it_front;
 	typename ArrayBlocks<T>::reverse_iterator it_back;
 	
-	BlockIndex() : index(0), global_index(0) {p_block = nullptr;}
+	BlockIndex() : global_index(0) {p_block = nullptr;}
 	BlockIndex(const BlockIndex<T> & block_index)
 	{
 		assign(block_index);
@@ -67,7 +66,6 @@ private:
 	inline void assign(const BlockIndex<T> & block_index)
 	{
 		this->p_block      = block_index.p_block;
-		this->index        = block_index.index;
 		this->global_index = block_index.global_index;
 		this->it_front     = block_index.it_front;
 		this->it_back      = block_index.it_back;
@@ -137,6 +135,10 @@ protected:
 	                                 TInputIt & source_start,
 	                                 TInputIt & source_end,
 	                                 TOutIt & target);
+	
+	template<typename TInputIt>
+	inline void _block_insert(BlockIndex<T> &block_index,
+	                          TInputIt &start, TInputIt &end);
 	
 public:
 	friend class ArrayBlocksIterator<T>;
@@ -772,35 +774,18 @@ BlockIndex<T>
 ArrayBlocks<T>::_block_findBlockByIndex(size_t index)
 {
 	BlockIndex<T> block_index;
-	ArrayBlocks<T> *p_block = this->_block_getFirstBlock();
-	iterator it_front;
-	reverse_iterator it_back;
 	
-	size_t tmp_size = p_block->_block_simple_getSize();
-	while(index > tmp_size)
-	{
-		index -= tmp_size;
-		if(p_block->next_block.isInitialized())
-		{
-			p_block = p_block->next_block.operator ->();
-		}
-		else
-		{
-			index = 0;
-			p_block = nullptr;
-		}
-	}
+	iterator it = this->begin();
+	for(size_t i = 0; i != index; ++i, ++it);
 	
-	block_index.p_block = p_block;
-	block_index.index = index;
+	block_index.p_block
+	  = block_index.it_back.inc_block
+	    = it.inc_block;
 	
-	block_index.it_front.inc_block = p_block;
-	block_index.it_front.inc_data_iterator = p_block->_block_simple_begin()
-	                                         + index - 1;
+	block_index.it_front = it;
+	block_index.it_back.inc_data_iterator = it.inc_data_iterator;
 	
-	block_index.it_back.inc_block = p_block;
-	block_index.it_back.inc_data_iterator = p_block->_block_simple_rbegin()
-	                                        + (p_block->arr_size - index - 1);
+	block_index.global_index = index;
 	
 	return block_index;
 }
@@ -824,16 +809,12 @@ ArrayBlocks<T>::_block_findBlockByElement(T *element_address)
 		if(it.operator ->() == element_address)
 		{
 			block_index.p_block = it.inc_block;
-			block_index.index   = it.operator ->() - it.inc_block->inc_arr;
 			
 			ref_it_front.inc_block         = it.inc_block;
 			ref_it_front.inc_data_iterator = it.inc_data_iterator;
-			--ref_it_front;
 			
 			ref_it_back.inc_block = it.inc_block;
-			ref_it_back.inc_data_iterator = 
-			    it.inc_block->_block_simple_rbegin()
-			     + (it.inc_block->arr_size - block_index.index - 1);
+			ref_it_back.inc_data_iterator = it.inc_data_iterator;
 			
 			block_index.global_index = global_index_front;
 			
@@ -842,17 +823,12 @@ ArrayBlocks<T>::_block_findBlockByElement(T *element_address)
 		else if(it_back.operator ->() == element_address)
 		{
 			block_index.p_block = it_back.inc_block;
-			block_index.index   = it_back.operator ->()
-			                      - it_back.inc_block->inc_arr;
 			
 			ref_it_front.inc_block         = it_back.inc_block;
 			ref_it_front.inc_data_iterator = it_back.inc_data_iterator;
-			--ref_it_front;
 			
 			ref_it_back.inc_block         = it_back.inc_block;
-			ref_it_back.inc_data_iterator = 
-			    it_back.inc_block->_block_simple_rbegin()
-			    + (it_back.inc_block->arr_size - block_index.index - 1);
+			ref_it_back.inc_data_iterator = it_back.inc_data_iterator;
 			
 			block_index.global_index = global_index_back;
 			
@@ -873,17 +849,17 @@ ArrayBlocks<T>::_block_move_elements(size_t new_cells,
 {
 	auto source_it = source_first;
 	for(auto i = new_cells;
-	    i != 0 && target_it != source_last;
+	    i != 0 && &(*source_it) != &(*source_last);
 	    --i, ++source_it, ++target_it)
 	{
-		placement_new(target_it.operator ->(), *source_it);
-		(*source_it).~T();
+		placement_new(&(*target_it), *source_it);
+//		(*source_it).~T();
 	}
-	for(; target_it != source_last;
+	for(; &(*source_it) != &(*source_last);
 	    ++source_it, ++target_it)
 	{
 		*target_it = *source_it;
-		(*source_it).~T();
+//		(*source_it).~T();
 	}
 }
 
@@ -1092,8 +1068,9 @@ ArrayBlocks<T>::insert(size_t pos_index, const T &obj)
 		
 		it_source = it_target; ++it_source;
 		
+		++block_index.it_front;
 		_block_move_elements(1, it_source, block_index.it_front, it_target);
-		block_index.it_front.operator *() = obj;
+		block_index.it_back.operator *() = obj;
 	}
 	else
 	{
@@ -1108,8 +1085,9 @@ ArrayBlocks<T>::insert(size_t pos_index, const T &obj)
 		
 		it_source = it_target; ++it_source;
 		
+		++block_index.it_back;
 		_block_move_elements(1, it_source, block_index.it_back, it_target);
-		block_index.it_back.operator *() = obj;
+		block_index.it_front.operator *() = obj;
 	}
 		
 	return 1;
@@ -1176,8 +1154,9 @@ ArrayBlocks<T>::insert(size_t pos_index, T &&obj)
 		
 		it_source = it_target; ++it_source;
 		
+		++block_index.it_front;
 		_block_move_elements(1, it_source, block_index.it_front, it_target);
-		placement_new(block_index.it_front.operator ->(), obj);
+		placement_new(block_index.it_back.operator ->(), obj);
 	}
 	else
 	{
@@ -1192,8 +1171,9 @@ ArrayBlocks<T>::insert(size_t pos_index, T &&obj)
 		
 		it_source = it_target; ++it_source;
 		
+		++block_index.it_back;
 		_block_move_elements(1, it_source, block_index.it_back, it_target);
-		placement_new(block_index.it_back.operator ->(), obj);
+		placement_new(block_index.it_front.operator ->(), obj);
 	}
 		
 	return 1;
@@ -1208,16 +1188,16 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, const T &obj)
 	BlockIndex<T> block_index = _block_findBlockByElement(pos_it.operator ->());
 	ArrayBlocks<T> *p_block = nullptr;
 	
-	size_t pos_index = block_index.global_index;
+	size_t &ref_pos_index = block_index.global_index;
 	
 	// очевидные варианты
-	if(pos_index == 0)
+	if(ref_pos_index == 0)
 	{
 		return this->pushFront(obj);
 	}
 	
 	current_arr_size = this->getSize();
-	if(pos_index == current_arr_size)
+	if(ref_pos_index == current_arr_size)
 	{
 		return this->pushBack(obj);
 	}
@@ -1230,7 +1210,7 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, const T &obj)
 	// неочевидные
 	// перемещаем элементы
 	
-	(pos_index < current_arr_size/2)
+	(ref_pos_index < current_arr_size/2)
 		? p_block = _block_getFirstBlock()
 		: p_block = _block_getLastBlock();
 	
@@ -1262,8 +1242,9 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, const T &obj)
 		
 		it_source = it_target; ++it_source;
 		
+		++block_index.it_front;
 		_block_move_elements(1, it_source, block_index.it_front, it_target);
-		placement_new(block_index.it_front.operator ->(), obj);
+		placement_new(block_index.it_back.operator ->(), obj);
 	}
 	else
 	{
@@ -1278,8 +1259,9 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, const T &obj)
 		
 		it_source = it_target; ++it_source;
 		
+		++block_index.it_back;
 		_block_move_elements(1, it_source, block_index.it_back, it_target);
-		placement_new(block_index.it_back.operator ->(), obj);
+		placement_new(block_index.it_front.operator ->(), obj);
 	}
 		
 	return 1;
@@ -1349,8 +1331,9 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, T &&obj)
 		
 		it_source = it_target; ++it_source;
 		
+		++block_index.it_front;
 		_block_move_elements(1, it_source, block_index.it_front, it_target);
-		placement_new(block_index.it_front.operator ->(), obj);
+		placement_new(block_index.it_back.operator ->(), obj);
 	}
 	else
 	{
@@ -1365,8 +1348,9 @@ ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, T &&obj)
 		
 		it_source = it_target; ++it_source;
 		
+		++block_index.it_back;
 		_block_move_elements(1, it_source, block_index.it_back, it_target);
-		placement_new(block_index.it_back.operator ->(), obj);
+		placement_new(block_index.it_front.operator ->(), obj);
 	}
 		
 	return 1;
@@ -1437,7 +1421,7 @@ ArrayBlocks<T>::insert(TArrayBlockIterator position,
 	               + (p_block->is_front_adding
 	                 && (p_block->arr_capacity - p_block->arr_size)
 	                     > count_elements) * 10
-	               + (ref_global_index < current_size/2) * 100
+	               + (ref_global_index >= current_size/2) * 100
 	               + (p_block->is_front_adding
 					  && (p_block->arr_capacity - p_block->arr_size)
 	                      > count_elements) * 1000;
@@ -1478,10 +1462,11 @@ ArrayBlocks<T>::insert(TArrayBlockIterator position,
 			p_block->arr_size = tmp_count_elements;
 			p_block->arr_first_index = p_block->arr_capacity - tmp_count_elements
 			                           - 1;
-			
+		default :	
 			break;
 		}
 		
+		++block_index.it_front;
 		_block_move_elements(count_elements,
 		                     it_source, block_index.it_front,
 		                     it_target);
@@ -1526,9 +1511,11 @@ ArrayBlocks<T>::insert(TArrayBlockIterator position,
 			p_block->arr_size = tmp_count_elements;
 			p_block->arr_last_index = tmp_count_elements;
 			
+		default :
 			break;
 		}
 		
+		++block_index.it_back;
 		_block_move_elements(count_elements,
 		                     it_source, block_index.it_back,
 		                     it_target);
