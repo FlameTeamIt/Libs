@@ -1,6 +1,9 @@
 #ifndef TEMPLATES_FOR_ALL
 #define TEMPLATES_FOR_ALL
 
+#include <stdint.h>
+#include <vector>
+
 namespace flame_ide
 
 {namespace templates
@@ -23,26 +26,35 @@ struct ObjectBytes
 {
 	union Bytes
 	{
-		Tt &r_obj;
-		unsigned char array[sizeof(Tt)];
+		Tt *r_obj;
+		uint8_t *array;
 		
-		Bytes() = delete;
+		Bytes() : r_obj(nullptr) {};
+
 		Bytes(Bytes &&) = delete;
 		Bytes(Bytes const &) = delete;
 		
-		Bytes(Tt * p_obj)     : r_obj(*p_obj) {}
-		Bytes(Tt const & obj) : r_obj(obj)    {}
+		Bytes(Tt * p_obj)     : r_obj(p_obj) {}
 	} bytes;
 	
 	static const unsigned long SIZE = sizeof(Tt);
 	
-	ObjectBytes() = delete;
+	ObjectBytes() : bytes() {};
+	
 	ObjectBytes(ObjectBytes &&) = delete;
 	ObjectBytes(ObjectBytes const &) = delete;
 	
 	ObjectBytes(Tt * p_obj)     : bytes(p_obj) {}
-	ObjectBytes(Tt & obj)       : bytes(obj) {}
-	ObjectBytes(const Tt & obj) : bytes(static_cast<Tt &>(obj)) {}
+	ObjectBytes(Tt & obj)       : bytes(&obj) {}
+	
+	void nulling()
+	{
+		unsigned char *& ref_iterator = bytes.array;
+		for(unsigned long i = 0; i < SIZE; ++i)
+		{
+			ref_iterator[i] = 0;
+		}
+	}
 };
 
 template<typename Tt>
