@@ -2,12 +2,64 @@
 #define TEMPLATES_FOR_ALL
 
 #include <stdint.h>
-#include <vector>
 
 namespace flame_ide
-
 {namespace templates
 {
+
+template<typename T>
+struct RemoveReference
+{
+	typedef T type;
+};
+
+template<typename T>
+struct RemoveReference<T&>
+{
+	typedef T type;
+};
+
+template<typename T>
+struct RemoveReference<T&&>
+{
+	typedef T type;
+};
+
+template<typename T>
+struct Traits
+{
+	typedef T         type;
+	
+	typedef T       & reference;
+	typedef T const & const_reference;
+	
+	typedef T		* pointer;
+	typedef T const * const_pointer;
+};
+
+template<typename T>
+struct Traits<T&>
+{
+	typedef T         type;
+	
+	typedef T       & reference;
+	typedef T const & const_reference;
+	
+	typedef T		* pointer;
+	typedef T const * const_pointer;
+};
+
+template<typename T>
+struct Traits<T&&>
+{
+	typedef T         type;
+	
+	typedef T       & reference;
+	typedef T const & const_reference;
+	
+	typedef T		* pointer;
+	typedef T const * const_pointer;
+};
 
 template<typename Tt1, typename Tt2>
 struct ComparingTypes
@@ -29,7 +81,7 @@ struct ObjectBytes
 		Tt *r_obj;
 		uint8_t *array;
 		
-		Bytes() : r_obj(nullptr) {};
+		Bytes() : r_obj(nullptr) {}
 
 		Bytes(Bytes &&) = delete;
 		Bytes(Bytes const &) = delete;
@@ -39,7 +91,7 @@ struct ObjectBytes
 	
 	static const unsigned long SIZE = sizeof(Tt);
 	
-	ObjectBytes() : bytes() {};
+	ObjectBytes() : bytes() {}
 	
 	ObjectBytes(ObjectBytes &&) = delete;
 	ObjectBytes(ObjectBytes const &) = delete;
@@ -58,20 +110,20 @@ struct ObjectBytes
 };
 
 template<typename Tt>
-inline constexpr bool is_primetive_type();
+inline constexpr bool is_primitive_type();
 
 template<typename Tt1, typename Tt2>
-inline constexpr bool is_same_types();
+inline constexpr bool is_same_types() noexcept;
+
+
+template<typename T> constexpr
+typename RemoveReference<T>::type&& move(T &&reference) noexcept;
 
 template<class T> inline
-T&& move(T &reference) noexcept;
-template<class T> inline
-T&& move(const T &reference) noexcept;
-
-template<class T> inline
-const T& not_move(T &&reference) noexcept;
+T&& foward(T &&reference) noexcept;
 
 // obj_input and obj_output not using!
+#ifdef FUTURE
 template<typename TIteratorInput, typename TIteratorOutput,
          typename TInput, typename TOutput>
 void copy(const TIteratorInput &start, const TIteratorInput &end,
@@ -84,6 +136,7 @@ template<typename TIteratorInput, typename TIteratorOutput,
                          || is_same_types<TInput, const TOutput>()) >
 void copy(TIteratorInput &start, TIteratorInput &end,
           TIteratorOutput &out);
+#endif
 
 template<typename TIterator>
 unsigned long count_iterations(const TIterator &start, const TIterator &end);
@@ -97,8 +150,8 @@ void placement_new(T * const addr, T && obj);
 }}
 
 template<typename Tt> inline constexpr
-bool
-flame_ide::templates::is_primetive_type()
+bool flame_ide::templates::
+is_primitive_type()
 {
 	typedef unsigned char unsigned_char;
 	typedef unsigned short unsigned_short;
@@ -137,32 +190,29 @@ flame_ide::templates::is_primetive_type()
 
 template<typename Tt1, typename Tt2> inline constexpr
 bool flame_ide::templates::
-is_same_types()
+is_same_types() noexcept
 {
 	return (ComparingTypes<Tt1, Tt2>::IS_SAME);
 }
 
-template<class T>
-T&& flame_ide::templates::
-move(T &reference) noexcept
+
+template<typename T>
+constexpr
+typename flame_ide::templates::RemoveReference<T>::type&&
+flame_ide::templates::
+move(T &&reference) noexcept
 {
-	return static_cast<T &&>(reference);
+	return static_cast<typename RemoveReference<T>::type&&>(reference);
 }
 
 template<class T>
 T&& flame_ide::templates::
-move(const T &reference) noexcept
+foward(T &&reference) noexcept
 {
 	return static_cast<T &&>(reference);
 }
 
-template<class T>
-const T& flame_ide::templates::
-not_move(T &&reference) noexcept
-{
-	return static_cast<const T &>(reference);
-}
-
+#ifdef FUTURE
 template<typename TIteratorInput, typename TIteratorOutput,
          typename TInput,         typename TOutput>
 void flame_ide::templates::
@@ -176,7 +226,9 @@ copy(const TIteratorInput &start, const TIteratorInput &end,
 		new (out.operator ->()) TInput(*iterator);
 	}
 }
+#endif
 
+#ifdef FUTURE
 template<typename TIteratorInput, typename TIteratorOutput,
          typename TInput,         typename TOutput>
 void flame_ide::templates::
@@ -190,6 +242,7 @@ copy(TIteratorInput &&start, TIteratorInput &&end,
 		new (out.operator ->()) TInput(move(*iterator));
 	}
 }
+#endif
 
 template<typename TIterator>
 unsigned long flame_ide::templates::

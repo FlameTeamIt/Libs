@@ -14,9 +14,6 @@ class SharedPointer;
 template<class T>
 class UniquePointer;
 
-template<class T> inline
-T&& move(T &reference) noexcept;
-
 template<class T, class U> inline
 BasicPointer<T> static_pointer_cast(const BasicPointer<U>& pointer) noexcept;
 template<class T, class U> inline
