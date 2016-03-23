@@ -2,7 +2,7 @@
 #define POINTERS_FUNCTIONS
 
 #include <Templates/Pointers.h>
-#include <Templates/For_All.h>
+#include <Templates/ForAll.h>
 
 namespace flame_ide
 {namespace templates

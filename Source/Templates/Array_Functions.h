@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <algorithm>
 
-#include <Templates/For_All.h>
+#include <Templates/ForAll.h>
 
 namespace flame_ide
 {namespace templates

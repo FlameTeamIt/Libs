@@ -3,7 +3,7 @@
 #include <About/About.h>
 #include <Tests/Test.h>
 
-#include <Templates/For_All.h>
+#include <Templates/ForAll.h>
 
 int main(int argc, char** argv)
 {
@@ -18,11 +18,11 @@ int main(int argc, char** argv)
 	    ? std::cout << "true\n"
 	    : std::cout << "false\n";
     
-    (flame_ide::templates::is_primetive_type<unsigned char>()) 
+    (flame_ide::templates::is_primitive_type<unsigned char>()) 
 	    ? std::cout << "true\n"
 	    : std::cout << "false\n";
     
-    (flame_ide::templates::is_primetive_type<std::ostream>()) 
+    (flame_ide::templates::is_primitive_type<std::ostream>()) 
 	    ? std::cout << "true\n"
 	    : std::cout << "false\n";
     

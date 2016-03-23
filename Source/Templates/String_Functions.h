@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-#include "For_All.h"
+#include "ForAll.h"
 
 
 namespace flame_ide

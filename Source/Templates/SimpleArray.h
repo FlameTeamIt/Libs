@@ -7,7 +7,7 @@
 
 #include <Templates/Array_Functions.h>
 #include <Templates/SimpleArray_Iterators.h>
-#include <Templates/For_All.h>
+#include <Templates/ForAll.h>
 
 /*
 Что нужно сделать и/или подумать, как сделать:

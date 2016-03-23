@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_STRING_TSTRING
 #define TEMPLATES_STRING_TSTRING
 
-#include <Templates/For_All.h>
+#include <Templates/ForAll.h>
 #include <Templates/Array.h>
 #include <Templates/String_Functions.h>
 
