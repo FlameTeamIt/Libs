@@ -1,11 +1,13 @@
 #ifndef TEMPLATES_FOR_ALL
 #define TEMPLATES_FOR_ALL
 
-#include <stdint.h>
+#include <Others/PrimitiveTypes.h>
 
 namespace flame_ide
 {namespace templates
 {
+
+using namespace flame_ide::types::primitive;
 
 template<typename T>
 struct RemoveReference
@@ -79,7 +81,7 @@ struct ObjectBytes
 	union Bytes
 	{
 		Tt *r_obj;
-		uint8_t *array;
+		uchar_t *array;
 		
 		Bytes() : r_obj(nullptr) {}
 
