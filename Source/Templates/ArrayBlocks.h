@@ -1,9 +1,12 @@
 #ifndef TEMPLATES_ArrayBlocks
 #define TEMPLATES_ArrayBlocks
 
+#include <Others/Bits.h>
+
 #include <Templates/Pointers.h>
 #include <Templates/SimpleArray.h>
 #include <Templates/ArrayBlocks_Iterators.h>
+
 
 /*
 
@@ -15,10 +18,10 @@
 
 4. Реализация итераторов       -> done and tested
 
-5. insert()/erase() (включая итераторы)   -- start
-      5.1. insert()                          -- not full done, not full tested
-         5.1.1. insert(index)                   -- done, not full tested
-         5.1.2. insert(iterator)                -- done, not full tested
+5. insert()/erase() (включая итераторы)   -- not done
+      5.1. insert()                          -- not done
+         5.1.1. insert(index)                   -- not done
+         5.1.2. insert(iterator)                -- not done
          5.1.3. insert(range)                   -- not done
       5.2 erase()                            -- not done
          5.2.1. erase(index)                    -- not done
@@ -93,6 +96,34 @@ private:
 	inline void __block_setMove(ArrayBlocks<T> &block);
 	
 protected:
+	using parent = SimpleArray<T>;
+	
+	using parent::_simple_getArrayCopy;
+	
+	using parent::getSize;
+	using parent::getCapacity;
+	
+	using parent::at;
+	
+	using parent::pushBack;
+	using parent::popBack;
+
+	using parent::insert;
+	using parent::erase;
+	
+	using parent::isEmpty;
+	using parent::rewrite;
+	using parent::clear;
+	
+	using parent::operator = ;
+	using parent::operator [];
+	
+	using parent::begin;
+	using parent::end;
+	using parent::rbegin;
+	using parent::rend;
+
+protected:	
 	bool is_front_adding;
 	
 	size_t block_number; // start/end index in block list
@@ -122,17 +153,19 @@ protected:
     
 	inline bool _block_simple_isEmpty() const;
 	
-	SimpleArrayIterator<T> _block_simple_begin();
-	SimpleArrayIterator<T> _block_simple_end();
+	typename parent::iterator _block_simple_begin();
+	typename parent::iterator _block_simple_end();
 	
-	SimpleArrayReverseIterator<T> _block_simple_rbegin();
-	SimpleArrayReverseIterator<T> _block_simple_rend();
+	typename parent::reverse_iterator _block_simple_rbegin();
+	typename parent::reverse_iterator _block_simple_rend();
 	
 	inline ArrayBlocks<T> * _block_getFirstBlock();
 	inline ArrayBlocks<T> * _block_getLastBlock();
 	
-	BlockIndex<T> _block_findBlockByIndex(size_t index);
-	BlockIndex<T> _block_findBlockByElement(T *element_address);
+	BlockIndex<T> _block_findBlock(size_t index);
+	
+	template<typename TArrayBlockIterator>
+	BlockIndex<T> _block_findBlock(const TArrayBlockIterator &element_iterator);
 	
 	template<typename TInputIt, typename TOutIt>
 	inline void _block_move_elements(size_t new_cells,
@@ -140,10 +173,15 @@ protected:
 	                                 TInputIt & source_end,
 	                                 TOutIt & target);
 	
-	template<typename TInputIt>
-	inline void _block_insert(BlockIndex<T> &block_index,
-	                          TInputIt &start, TInputIt &end);
+	template<bool is_insert,
+	         typename TIndexType, typename TConcrete>
+	inline int _block_generic_change_size(TIndexType &index_type,
+	                                      TConcrete *obj = nullptr);
 	
+	template<bool is_insert, typename TConcrete>
+	inline int _block_generic_change_size_option(BlockIndex<T> &block_index,
+	                                             size_t current_size,
+	                                             TConcrete *obj);
 public:
 	friend class ArrayBlocksIterator<T>;
 	friend class ArrayBlocksReverseIterator<T>;
@@ -227,43 +265,13 @@ public:
 //	const_iterator& end() const;
 //	const_reverse_iterator& rbegin() const;
 //	const_reverse_iterator& rend() const;
-	
-protected:
-	using SimpleArray<T>::_simple_getArrayCopy;
-	
-	using SimpleArray<T>::getSize;
-	using SimpleArray<T>::getCapacity;
-	
-	using SimpleArray<T>::at;
-	
-	using SimpleArray<T>::pushBack;
-	using SimpleArray<T>::popBack;
-
-	using SimpleArray<T>::insert;
-	using SimpleArray<T>::erase;
-	
-	using SimpleArray<T>::isEmpty;
-	using SimpleArray<T>::rewrite;
-	using SimpleArray<T>::clear;
-	
-	using SimpleArray<T>::operator = ;
-	using SimpleArray<T>::operator [];
-	
-	using SimpleArray<T>::begin;
-	using SimpleArray<T>::end;
-	using SimpleArray<T>::rbegin;
-	using SimpleArray<T>::rend;
 };
 
 }}
 
 using flame_ide::templates::SimpleArray;
-using flame_ide::templates::SimpleArrayIterator;
-using flame_ide::templates::SimpleArrayReverseIterator;
 
 using flame_ide::templates::ArrayBlocks;
-using flame_ide::templates::ArrayBlocksIterator;
-using flame_ide::templates::ArrayBlocksReverseIterator;
 
 template<typename T>
 ArrayBlocks<T>::ArrayBlocks()
@@ -526,8 +534,10 @@ ArrayBlocks<T>::_block_popFront(size_t count)
 	{
 		if(this->arr_size < count)
 		{
-			array_call_distructors(this->arr_size,
-			                       this->inc_arr + this->arr_first_index);
+			array_call_distructors(
+			    this->arr_size,
+			    this->inc_arr + this->arr_first_index
+			);
 			if(this->next_block.isInitialized())
 			{
 				this->next_block->_block_popFront(count - this->arr_size);
@@ -575,8 +585,10 @@ ArrayBlocks<T>::_block_popBack(size_t count)
 	{
 		if(this->arr_size < count)
 		{
-			array_call_distructors(this->arr_size,
-			                       this->inc_arr + this->arr_first_index);
+			array_call_distructors(
+			    this->arr_size,
+			    this->inc_arr + this->arr_first_index
+			);
 			if(this->prev_block.isInitialized())
 			{
 				this->prev_block->_block_popBack(count - this->arr_size);
@@ -587,19 +599,21 @@ ArrayBlocks<T>::_block_popBack(size_t count)
 		else
 		{
 			array_call_distructors(
-			                       count,
-			                       this->inc_arr + (this->arr_last_index-1) - count);
+			    count,
+			    this->inc_arr + (this->arr_last_index-1) - count
+			);
 			this->arr_size -= count;
 			
 			// move elements
 			for(size_t i = 0; i < this->arr_size; ++i)
 			{
-				array_rewrite(this->inc_arr, this->arr_capacity - 1 - i,
-				              this->inc_arr[this->arr_first_index
-				                            + this->arr_size - 1 - i]);
+				array_rewrite(
+				    this->inc_arr, this->arr_capacity - 1 - i,
+				    this->inc_arr[this->arr_first_index + this->arr_size - 1 - i]
+				);
 				array_call_distructors(1,
-				                       this->inc_arr + this->arr_first_index
-				                       + this->arr_size - 1 - i);
+				    this->inc_arr + this->arr_first_index + this->arr_size - 1 - i
+				);
 				
 			}
 			this->arr_first_index += count;
@@ -661,8 +675,10 @@ ArrayBlocks<T>::_block_at(TSize_Type index, FromBlock from_block)
 			{
 				if(next_block.isInitialized())
 				{
-					return next_block->_block_at(local_index - this->arr_size,
-					                             FROM_FRONT);
+					return next_block->_block_at(
+					           local_index - this->arr_size,
+					           FROM_FRONT
+					       );
 				}
 				else
 				{
@@ -720,33 +736,33 @@ template<typename T>
 bool
 ArrayBlocks<T>::_block_simple_isEmpty() const
 {
-	return this->SimpleArray<T>::isEmpty();
+	return parent::isEmpty();
 }
 
 template<typename T>
-SimpleArrayIterator<T>
+typename ArrayBlocks<T>::parent::iterator
 ArrayBlocks<T>::_block_simple_begin()
 {
-	return this->SimpleArray<T>::begin();
+	return parent::begin();
 }
 template<typename T>
-SimpleArrayIterator<T>
+typename ArrayBlocks<T>::parent::iterator
 ArrayBlocks<T>::_block_simple_end()
 {
-	return this->SimpleArray<T>::end();
+	return parent::end();
 }
 
 template<typename T>
-SimpleArrayReverseIterator<T>
+typename ArrayBlocks<T>::parent::reverse_iterator
 ArrayBlocks<T>::_block_simple_rbegin()
 {
-	return this->SimpleArray<T>::rbegin();
+	return parent::rbegin();
 }
 template<typename T>
-SimpleArrayReverseIterator<T>
+typename ArrayBlocks<T>::parent::reverse_iterator
 ArrayBlocks<T>::_block_simple_rend()
 {
-	return this->SimpleArray<T>::rend();
+	return parent::rend();
 }
 
 template<typename T>
@@ -775,7 +791,7 @@ ArrayBlocks<T>::_block_getLastBlock()
 
 template<typename T>
 BlockIndex<T>
-ArrayBlocks<T>::_block_findBlockByIndex(size_t index)
+ArrayBlocks<T>::_block_findBlock(size_t index)
 {
 	BlockIndex<T> block_index;
 	
@@ -816,9 +832,11 @@ ArrayBlocks<T>::_block_findBlockByIndex(size_t index)
 }
 
 template<typename T>
+template<typename TArrayBlockIterator>
 BlockIndex<T>
-ArrayBlocks<T>::_block_findBlockByElement(T *element_address)
+ArrayBlocks<T>::_block_findBlock(const TArrayBlockIterator &element_iterator)
 {
+	T *element_address = &(*element_iterator);
 	BlockIndex<T> block_index;
 	size_t global_index_front(0), global_index_back = this->getSize() -	1;
 	
@@ -886,6 +904,240 @@ ArrayBlocks<T>::_block_move_elements(size_t new_cells,
 		*target_it = *source_it;
 //		(*source_it).~T();
 	}
+}
+
+template<typename T>
+template<bool is_insert,
+         typename TIndexType, typename TConcrete>
+inline int
+ArrayBlocks<T>::_block_generic_change_size(TIndexType &index_type,
+                                           TConcrete *obj)
+{
+	BlockIndex<T> block_index = _block_findBlock(index_type);
+	
+	size_t current_size;
+	
+	if(block_index.global_index == 0)
+	{
+		if(is_insert)
+		{
+			this->pushFront(
+			    is_same_types<TConcrete, T>()
+			    ?
+			        move(*obj)
+			    :
+			        *(obj)
+			);
+		}
+		else
+		{
+			this->popFront();
+		}
+		return 1;
+	}
+	
+	current_size = this->getSize();
+	if(block_index.global_index == current_size - is_insert)
+	{
+		if(is_insert)
+		{
+			this->pushBack(
+			    is_same_types<TConcrete, T>()
+			    ?
+			        move(*obj)
+			    :
+			        *(obj)
+			);
+		}
+		else
+		{
+			this->popBack();
+		}
+		return 1;
+	}
+	
+	return _block_generic_change_size_option<is_insert, TConcrete>
+	           (block_index, current_size, obj);
+}
+
+
+template<typename T>
+template<bool is_insert,
+         typename TConcrete>
+inline int
+ArrayBlocks<T>::_block_generic_change_size_option(BlockIndex<T> &block_index,
+                                                  size_t current_size,
+                                                  TConcrete *obj)
+{
+	using namespace flame_ide;
+	using namespace flame_ide::types::primitive;
+	
+	// Тут описаны нюансы
+	typedef ArrayBlocks<T> * ArrayBlocksPointer;
+	ArrayBlocksPointer &ref_p_block = block_index.p_block;
+	
+	size_t current_capacity = this->getCapacity();
+	
+	/*
+	 situations:
+	        _      _    _     _
+	       |1|    |2|  |3|   |4|
+	  |____+x++| |+x++++x+| |+x++____|
+			_      _
+		   |1|    |4|
+	  |____+x++| |+x++____|
+		   
+	  1 -- mark
+           & (bits::BIT8_1 | bits::BIT8_5)
+		   
+	  2 -- mark
+           & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_4)
+		   
+	  3 -- mark
+           & (bits::BIT8_2 | bits::BIT8_5)
+		   
+	  4 -- mark
+           & (bits::BIT8_4)
+	        _
+		   |5|
+	  |____+x++|
+	  
+	  5 -- mark
+           & (bits::BIT8_1 | bits::BIT8_3)
+		   
+	    _    _
+	   |6|  |7| 
+	  |+x++++x+|
+	  
+	  6 -- mark
+           & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_3)
+		   
+	  7 -- mark
+           & (bits::BIT8_2 | bits::BIT8_3)
+		_
+	   |8|
+	  |+x++____|
+	  
+	  8 -- mark
+           & (bits::BIT8_3)
+	*/
+	uchar_t mark = uchar_t(0)
+	    + bits::BIT8_0
+	       * (block_index.global_index + 1 < current_size/2) ? true : false
+	
+	    + bits::BIT8_1
+	       * (ref_p_block->is_front_adding) ? true : false
+	
+		+ bits::BIT8_2
+	       * (ref_p_block->arr_capacity == ref_p_block->arr_size) ? true : false
+	
+	    + bits::BIT8_3
+	       * (ref_p_block->arr_capacity == current_capacity) ? true : false
+	
+	    + bits::BIT8_4
+	       * (ref_p_block->prev_block.isInitialized()) ? true : false
+	
+	    + bits::BIT8_5
+	       * (ref_p_block->next_block.isInitialized()) ? true : false
+		;
+	
+	auto situation1 = +[](const u_char &bit_mask) -> bool
+	{
+		return bit_mask
+		    & (bits::BIT8_1 | bits::BIT8_5)
+				;
+	};
+
+	auto situation2 = +[](const u_char &bit_mask) -> bool
+	{
+		return bit_mask
+		    & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_4)
+		;
+	};
+	
+	auto situation3 = +[](const u_char &bit_mask) -> bool
+	{
+		return bit_mask
+		    & (bits::BIT8_2 | bits::BIT8_5)
+		;
+	};
+	
+	auto situation4 = +[](const u_char &bit_mask) -> bool
+	{
+		return bit_mask
+		    & (bits::BIT8_4)
+		;
+	};
+	
+	auto situation5 = +[](const u_char &bit_mask) -> bool
+	{
+		return bit_mask
+		    & (bits::BIT8_1 | bits::BIT8_3)
+		;
+	};
+	
+	auto situation6 = +[](const u_char &bit_mask) -> bool
+	{
+		return bit_mask
+		    & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_3)
+		;
+	};
+	
+	auto situation7 = +[](const u_char &bit_mask) -> bool
+	{
+		return bit_mask
+		    & (bits::BIT8_2 | bits::BIT8_3)
+		;
+	};
+	
+	auto situation8 = +[](const u_char &bit_mask) -> bool
+	{
+		return bit_mask
+		    & (bits::BIT8_3)
+		;
+	};
+	
+	
+	
+	if( (is_insert && (situation1(mark) || situation2(mark)
+	                   || situation5(mark) || situation6(mark)))
+	    || (!is_insert && (situation3(mark) || situation4(mark)
+	                       || situation7(mark) || situation8(mark))) )
+	{
+		iterator it_source;
+		iterator it_target;
+		
+		if(is_insert)
+		{
+			
+		}
+		else // erase
+		{
+			
+		}
+	}
+	
+	/*
+	if( (!is_insert && (situation1(mark) || situation2(mark)
+	                    || situation5(mark) || situation6(mark)))
+	    || (is_insert && (situation3(mark) || situation4(mark)
+	                       || situation7(mark) || situation8(mark))) )
+	{
+		reverse_iterator it_source;
+		reverse_iterator it_target;
+		
+		if(is_insert)
+		{
+			
+		}
+		else //erase
+		{
+			
+		}
+	}
+	*/
+	
+	return 1;
 }
 
 // public
@@ -1036,14 +1288,16 @@ template<typename T>
 int
 ArrayBlocks<T>::insert(size_t pos_index, const T &obj)
 {
-	return 1;
+	return _block_generic_change_size
+	    <true, size_t, const T>(pos_index, &obj);
 }
 
 template<typename T>
 int
 ArrayBlocks<T>::insert(size_t pos_index, T &&obj)
 {
-	return 1;
+	return _block_generic_change_size
+	    <true, size_t, T>(pos_index, &obj);
 }
 
 template<typename T>
@@ -1051,8 +1305,8 @@ template<typename TArrayBlockIterator>
 int
 ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, const T &obj)
 {
-		
-	return 1;
+	return _block_generic_change_size
+	    <true, TArrayBlockIterator, const T>(pos_it, &obj);
 }
 
 template<typename T>
@@ -1060,7 +1314,8 @@ template<typename TArrayBlockIterator>
 int
 ArrayBlocks<T>::insert(TArrayBlockIterator pos_it, T &&obj)
 {
-	return 1;
+	return _block_generic_change_size
+	    <true, TArrayBlockIterator, T> (pos_it, &obj);
 }
 
 template<typename T>
@@ -1107,6 +1362,8 @@ template<typename T>
 int
 ArrayBlocks<T>::erase(size_t pos_index)
 {
+	return _block_generic_change_size
+			<false, size_t, void>(pos_index);
 }
 
 template<typename T>
@@ -1114,6 +1371,8 @@ template<typename TArrayBlockIterator>
 int
 ArrayBlocks<T>::erase(TArrayBlockIterator &pos_it)
 {
+	return _block_generic_change_size
+			<false, TArrayBlockIterator, void>(pos_it);
 }
 
 template<typename T>
@@ -1121,6 +1380,7 @@ template<typename TArrayBlockIterator>
 int
 ArrayBlocks<T>::erase(TArrayBlockIterator &start, TArrayBlockIterator &end)
 {
+	return 1;
 }
 
 template<typename T>
@@ -1204,7 +1464,7 @@ ArrayBlocks<T>::operator [](size_t index) noexcept
 }
 
 template<typename T>
-ArrayBlocksIterator<T>
+typename ArrayBlocks<T>::iterator
 ArrayBlocks<T>::begin()
 {
 	if(prev_block.isInitialized()
@@ -1222,7 +1482,7 @@ ArrayBlocks<T>::begin()
 }
 
 template<typename T>
-ArrayBlocksIterator<T>
+typename ArrayBlocks<T>::iterator
 ArrayBlocks<T>::end()
 {
 	if(next_block.isInitialized()
@@ -1240,7 +1500,7 @@ ArrayBlocks<T>::end()
 }
 
 template<typename T>
-ArrayBlocksReverseIterator<T>
+typename ArrayBlocks<T>::reverse_iterator
 ArrayBlocks<T>::rbegin()
 {
 	if(next_block.isInitialized()
@@ -1258,7 +1518,7 @@ ArrayBlocks<T>::rbegin()
 }
 
 template<typename T>
-ArrayBlocksReverseIterator<T>
+typename ArrayBlocks<T>::reverse_iterator
 ArrayBlocks<T>::rend()
 {
 	if(prev_block.isInitialized()
