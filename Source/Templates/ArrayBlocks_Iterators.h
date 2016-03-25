@@ -29,24 +29,24 @@ public:
 	
 	~ArrayBlocksIterator() = default;
 	
-	inline const my_type& operator =(const my_type &iterator);
-	inline const my_type& operator =(my_type &&iterator);
+	inline my_type& operator =(const my_type &iterator);
+	inline my_type& operator =(my_type &&iterator);
 	
 	inline const my_type& operator =(const my_type &iterator) const;
 	inline const my_type& operator =(my_type &&iterator)      const;
 	
-	virtual T&  operator *()  const noexcept;
-	virtual T*& operator ->() const noexcept;
+	virtual T& operator *()  const noexcept;
+	virtual T* operator ->() const noexcept;
 	
-	inline const my_type& operator ++();
-	inline const my_type& operator --();
+	inline my_type& operator ++();
+	inline my_type& operator --();
 	
 	inline const my_type& operator ++() const;
 	inline const my_type& operator --() const;
 	
 	
-	inline const my_type& operator ++(int);
-	inline const my_type& operator --(int);
+	inline my_type& operator ++(int);
+	inline my_type& operator --(int);
 	
 	inline const my_type& operator ++(int) const;
 	inline const my_type& operator --(int) const;
@@ -111,8 +111,8 @@ public:
 	inline const my_type& operator =(const my_type &iterator) const;
 	inline const my_type& operator =(my_type &&iterator)      const;
 	
-	virtual T&  operator *()  const noexcept;
-	virtual T*& operator ->() const noexcept;
+	virtual T& operator *()  const noexcept;
+	virtual T* operator ->() const noexcept;
 	
 	inline const my_type& operator ++();
 	inline const my_type& operator --();
@@ -188,7 +188,7 @@ ArrayBlocksIterator<T>::ArrayBlocksIterator(
 {}
 
 template<class T>
-const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator =(ArrayBlocksIterator<T> &&iterator)
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
@@ -197,7 +197,7 @@ ArrayBlocksIterator<T>::operator =(ArrayBlocksIterator<T> &&iterator)
 }
 
 template<class T>
-const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator =(const ArrayBlocksIterator<T> &iterator)
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
@@ -231,14 +231,14 @@ ArrayBlocksIterator<T>::operator *() const noexcept
 }
 
 template<typename T>
-T*&
+T*
 ArrayBlocksIterator<T>::operator ->() const noexcept
 {
 	return this->inc_data_iterator.operator ->();
 }
 
 template<typename T>
-const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator ++()
 {
 	++(this->inc_data_iterator);
@@ -252,7 +252,7 @@ ArrayBlocksIterator<T>::operator ++()
 	return *this;
 }
 template<typename T>
-const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator --()
 {
 	--(this->inc_data_iterator);
@@ -296,7 +296,7 @@ ArrayBlocksIterator<T>::operator --() const
 }
 
 template<typename T>
-const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator ++(int)
 {
 	this->inc_data_iterator++;
@@ -310,7 +310,7 @@ ArrayBlocksIterator<T>::operator ++(int)
 	return *this;
 }
 template<typename T>
-const ArrayBlocksIterator<T>&
+ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator --(int)
 {
 	this->inc_data_iterator--;
@@ -424,7 +424,7 @@ ArrayBlocksReverseIterator<T>::operator *() const noexcept
 }
 
 template<typename T>
-T*&
+T*
 ArrayBlocksReverseIterator<T>::operator ->() const noexcept
 {
 	return this->inc_data_iterator.operator ->();

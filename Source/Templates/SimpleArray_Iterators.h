@@ -31,43 +31,43 @@ public:
 	typedef SimpleArrayReverseIterator<T> friend_type;
 	
 	
-	inline const my_type& operator =(const my_type &iterator) noexcept;
-	inline const my_type& operator =(my_type &&iterator)      noexcept;
+	inline my_type& operator =(const my_type &iterator) noexcept;
+	inline my_type& operator =(my_type &&iterator)      noexcept;
 	
 	inline const my_type& operator =(const my_type &iterator) const noexcept;
 	inline const my_type& operator =(my_type &&iterator)      const noexcept;
 	
 	
-	inline const my_type& operator =(const friend_type &iterator) noexcept;
-	inline const my_type& operator =(friend_type &&iterator)      noexcept;
+	inline my_type& operator =(const friend_type &iterator) noexcept;
+	inline my_type& operator =(friend_type &&iterator)      noexcept;
 	
 	inline const my_type& operator =(const friend_type &iterator) const noexcept;
 	inline const my_type& operator =(friend_type &&iterator)      const noexcept;
 	
 	
-	virtual T&  operator *()  const noexcept;
-	virtual T*& operator ->() const noexcept;
+	virtual T& operator *()  const noexcept;
+	virtual T* operator ->() const noexcept;
 	
-	inline const my_type& operator ++();
-	inline const my_type& operator --();
+	inline my_type& operator ++();
+	inline my_type& operator --();
 	
 	inline const my_type& operator ++() const;
 	inline const my_type& operator --() const;
 	
 	
-	inline const my_type& operator ++(int);
-	inline const my_type& operator --(int);
+	inline my_type& operator ++(int);
+	inline my_type& operator --(int);
 	
 	inline const my_type& operator ++(int) const;
 	inline const my_type& operator --(int) const;
 	
 	template<typename TSizeType>
-	inline const my_type& operator -(TSizeType dimer);
+	inline my_type& operator -(TSizeType dimer);
 	template<typename TSizeType>
 	inline const my_type& operator -(TSizeType dimer) const;
 	
 	template<typename TSizeType>
-	inline const my_type& operator +(TSizeType adder);
+	inline my_type& operator +(TSizeType adder);
 	template<typename TSizeType>
 	inline const my_type& operator +(TSizeType adder) const;
 	
@@ -127,30 +127,30 @@ public:
 	inline const my_type& operator =(friend_type &&iterator)      const noexcept;
 	
 	
-	virtual inline T&  operator *()  const noexcept;
-	virtual inline T*& operator ->() const noexcept;
+	virtual inline T& operator *()  const noexcept;
+	virtual inline T* operator ->() const noexcept;
 	
-	inline const my_type& operator ++();
-	inline const my_type& operator --();
+	inline my_type& operator ++();
+	inline my_type& operator --();
 	
 	inline const my_type& operator ++() const;
 	inline const my_type& operator --() const;
 	
 	
-	inline const my_type& operator ++(int);
-	inline const my_type& operator --(int);
+	inline my_type& operator ++(int);
+	inline my_type& operator --(int);
 	
 	inline const my_type& operator ++(int) const;
 	inline const my_type& operator --(int) const;
 	
 	
 	template<typename TSizeType>
-	inline const my_type& operator -(TSizeType dimer);
+	inline my_type& operator -(TSizeType dimer);
 	template<typename TSizeType>
 	inline const my_type& operator -(TSizeType dimer) const;
 	
 	template<typename TSizeType>
-	inline const my_type& operator +(TSizeType adder);
+	inline my_type& operator +(TSizeType adder);
 	template<typename TSizeType>
 	inline const my_type& operator +(TSizeType adder) const;
 	
@@ -264,7 +264,7 @@ SimpleArrayIterator<T>
 {}
 
 template<typename T>
-const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator =(SimpleArrayIterator<T> &&iterator) noexcept
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
@@ -272,7 +272,7 @@ SimpleArrayIterator<T>::operator =(SimpleArrayIterator<T> &&iterator) noexcept
 }
 
 template<typename T>
-const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator =(const SimpleArrayIterator<T> &iterator) noexcept
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
@@ -297,7 +297,7 @@ const noexcept
 }
 
 template<typename T>
-const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator =(SimpleArrayReverseIterator<T> &&iterator)
 noexcept
 {
@@ -306,7 +306,7 @@ noexcept
 }
 
 template<typename T>
-const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator =(const SimpleArrayReverseIterator<T> &iterator)
 noexcept
 {
@@ -340,14 +340,14 @@ SimpleArrayIterator<T>::operator *() const noexcept
 }
 
 template<typename T>
-T*&
+T*
 SimpleArrayIterator<T>::operator ->() const noexcept
 {
 	return this->inc_data_iterator;
 }
 
 template<typename T>
-const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++()
 {
 	this->BasicIterator<T*,T>::operator ++();
@@ -369,7 +369,7 @@ SimpleArrayIterator<T>::operator --() const
 	return *this;
 }
 template<typename T>
-const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --()
 {
 	this->BasicIterator<T*,T>::operator --();
@@ -377,7 +377,7 @@ SimpleArrayIterator<T>::operator --()
 }
 
 template<typename T>
-const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++(int)
 {
 	this->BasicIterator<T*,T>::operator ++();
@@ -392,7 +392,7 @@ SimpleArrayIterator<T>::operator ++(int) const
 }
 
 template<typename T>
-const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --(int)
 {
 	this->BasicIterator<T*,T>::operator --();
@@ -522,14 +522,14 @@ SimpleArrayReverseIterator<T>::operator *() const noexcept
 }
 
 template<typename T>
-T*&
+T*
 SimpleArrayReverseIterator<T>::operator ->() const noexcept
 {
 	return (this->inc_data_iterator);
 }
 
 template<typename T>
-const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++()
 {
 	this->BasicReverseIterator<T*,T>::operator ++();
@@ -537,7 +537,7 @@ SimpleArrayReverseIterator<T>::operator ++()
 }
 
 template<typename T>
-const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --()
 {
 	this->BasicReverseIterator<T*,T>::operator --();
@@ -561,7 +561,7 @@ SimpleArrayReverseIterator<T>::operator --() const
 }
 
 template<typename T>
-const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++(int)
 {
 	this->BasicReverseIterator<T*,T>::operator ++();
@@ -569,7 +569,7 @@ SimpleArrayReverseIterator<T>::operator ++(int)
 }
 
 template<typename T>
-const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --(int)
 {
 	this->BasicReverseIterator<T*,T>::operator --();
@@ -650,7 +650,7 @@ operator !=(const SimpleArrayReverseIterator<T> &iter1,
 
 template<typename T>
 template<typename TSizeType>
-const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator +(TSizeType adder)
 {
 	this->inc_data_iterator += adder;
@@ -669,7 +669,7 @@ SimpleArrayIterator<T>::operator +(TSizeType adder) const
 
 template<typename T>
 template<typename TSizeType>
-const SimpleArrayIterator<T>&
+SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator -(TSizeType dimer)
 {
 	this->inc_data_iterator -= dimer;
@@ -689,7 +689,7 @@ SimpleArrayIterator<T>::operator -(TSizeType dimer) const
 
 template<typename T>
 template<typename TSizeType>
-const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator +(TSizeType adder)
 {
 	this->inc_data_iterator -= adder;
@@ -708,7 +708,7 @@ SimpleArrayReverseIterator<T>::operator +(TSizeType adder) const
 
 template<typename T>
 template<typename TSizeType>
-const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator -(TSizeType dimer)
 {
 	this->inc_data_iterator += dimer;
