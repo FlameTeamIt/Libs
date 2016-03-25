@@ -10,8 +10,6 @@ namespace flame_ide
 
 #if defined __x86_64__ && !defined __ILP32__
 
-typedef std::uint64_t size_t;
-
 typedef std::uint8_t uchar_t;
 typedef  std::int8_t  char_t;
 
@@ -29,11 +27,13 @@ typedef std::uint64_t ullong_t;
 typedef  std::int64_t  llong_t;
 
 typedef std::uint64_t ptr_t;
+
+typedef std::uint64_t size_t;
+#else
+typedef std::uint32_t size_t;
 #endif
 
 #elif defined __x86__ && defined __ILP32__
-
-typedef std::uint32_t size_t;
 
 typedef std::uint8_t uchar_t;
 typedef  std::int8_t  char_t;
@@ -50,6 +50,10 @@ typedef  std::int32_t  long_t;
 #if __WORDSIZE == 64
 typedef std::uint64_t ullong_t;
 typedef  std::int64_t  llong_t;
+
+typedef std::uint64_t size_t;
+#else
+typedef std::uint32_t size_t;
 #endif
 
 typdef uint32_t ptr_t;
