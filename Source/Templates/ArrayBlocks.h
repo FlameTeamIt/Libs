@@ -1,5 +1,5 @@
-#ifndef TEMPLATES_ArrayBlocks
-#define TEMPLATES_ArrayBlocks
+#ifndef TEMPLATES_ARRAYBLOCKS
+#define TEMPLATES_ARRAYBLOCKS
 
 #include <Others/Bits.h>
 
@@ -38,6 +38,8 @@ namespace flame_ide
 {namespace templates
 {
 
+using namespace flame_ide::types::primitive;
+
 typedef enum
 {
 	FROM_NULL  = char(0),
@@ -50,6 +52,9 @@ struct BlockIndex
 {
 	ArrayBlocks<T> *p_block;
 	size_t global_index;
+	
+	size_t current_size;
+	size_t current_capacity;
 	
 	typename ArrayBlocks<T>::iterator         it_front;
 	typename ArrayBlocks<T>::reverse_iterator it_back;
@@ -72,10 +77,12 @@ struct BlockIndex
 private:
 	inline void assign(const BlockIndex<T> & block_index)
 	{
-		this->p_block      = block_index.p_block;
-		this->global_index = block_index.global_index;
-		this->it_front     = block_index.it_front;
-		this->it_back      = block_index.it_back;
+		this->p_block          = block_index.p_block;
+		this->global_index     = block_index.global_index;
+		this->it_front         = block_index.it_front;
+		this->it_back          = block_index.it_back;
+		this->current_size     = block_index.current_size;
+		this->current_capacity = block_index.current_capacity;
 	}
 };
 
@@ -95,7 +102,17 @@ private:
 	inline void __block_setCopy(const ArrayBlocks<T> &block);
 	inline void __block_setMove(ArrayBlocks<T> &block);
 	
-protected:
+	inline static uchar_t __block_generateBitMask(const BlockIndex<T> &block_index);
+	inline bool __block_isSituation1(const uchar_t bit_mask);
+	inline bool __block_isSituation2(const uchar_t bit_mask);
+	inline bool __block_isSituation3(const uchar_t bit_mask);
+	inline bool __block_isSituation4(const uchar_t bit_mask);
+	inline bool __block_isSituation5(const uchar_t bit_mask);
+	inline bool __block_isSituation6(const uchar_t bit_mask);
+	inline bool __block_isSituation7(const uchar_t bit_mask);
+	inline bool __block_isSituation8(const uchar_t bit_mask);
+	
+private:
 	using parent = SimpleArray<T>;
 	
 	using parent::_simple_getArrayCopy;
@@ -180,7 +197,6 @@ protected:
 	
 	template<bool is_insert, typename TConcrete>
 	inline int _block_generic_change_size_option(BlockIndex<T> &block_index,
-	                                             size_t current_size,
 	                                             TConcrete *obj);
 public:
 	friend class ArrayBlocksIterator<T>;
@@ -424,6 +440,212 @@ ArrayBlocks<T>::__block_setMove(ArrayBlocks<T> &block)
 		this->next_block = move(block.next_block);
 		this->next_block->prev_block = SharedPointer<ArrayBlocks>(this);
 	}
+}
+
+/*
+ situations:
+        _      _    _     _
+       |1|    |2|  |3|   |4|
+  |____+x++| |+x++++x+| |+x++____|
+        _         _            _     _
+       |1|       |2|          |3|   |4|
+  |____+x++| |++++x+++| |++++++x+| |+x++____|
+        _                 _               _                _
+       |1|               |2|             |3|              |4|
+  |____+x++| |++++++++| |+x++++++| |++++++x+| |++++++++| |+x++____|
+               _               _
+              |2|             |3|             
+  |++++++++| |+x++++++| |++++++x+| |++++++++|
+        _      _
+       |1|    |4|
+  |____+x++| |+x++____|
+
+  1 -- mark & (bits::BIT8_1 | bits::BIT8_5)
+  2 -- mark & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_4)
+  3 -- mark & (bits::BIT8_2 | bits::BIT8_5)
+  4 -- mark & (bits::BIT8_4)
+        _
+       |5|
+  |____+x++|
+  
+  5 -- mark & (bits::BIT8_1 | bits::BIT8_3)
+    _    _
+   |6|  |7| 
+  |+x++++x+|
+  
+  6 -- mark & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_3)
+  7 -- mark & (bits::BIT8_2 | bits::BIT8_3)
+	_
+   |8|
+  |+x++____|
+  
+  8 -- mark & (bits::BIT8_3)
+*/
+template<typename T> uchar_t
+ArrayBlocks<T>::__block_generateBitMask(const BlockIndex<T> &block_index)
+{
+	typedef ArrayBlocks<T> * ArrayBlocksPointer;
+	const ArrayBlocksPointer &refp_block = block_index.p_block;
+	const flame_ide::types::primitive::size_t &
+			ref_current_size = block_index.current_size;
+	const flame_ide::types::primitive::size_t &
+			ref_current_capacity = block_index.current_capacity;
+	
+#ifdef DEBUG
+	uchar_t mark = uchar_t(0);
+	if(block_index.global_index + 1 < ref_current_size/2)
+	{
+		mark = static_cast<uchar_t>(mark + bits::BIT8_0);
+	}
+	
+	if(refp_block->is_front_adding)
+	{
+		mark = static_cast<uchar_t>(mark + bits::BIT8_1);
+	}
+	
+	if(refp_block->arr_capacity == refp_block->arr_size)
+	{
+		mark = static_cast<uchar_t>(mark + bits::BIT8_2);
+	}
+	
+	if(refp_block->arr_capacity == ref_current_capacity)
+	{
+		mark = static_cast<uchar_t>(mark + bits::BIT8_3);
+	}
+	
+	if(refp_block->prev_block.isInitialized())
+	{
+		mark = static_cast<uchar_t>(mark + bits::BIT8_4);
+	}
+	
+	if(refp_block->next_block.isInitialized())
+	{
+		mark = static_cast<uchar_t>(mark + bits::BIT8_5);
+	}
+	
+#else
+	uchar_t mark = uchar_t(0)
+	    + bits::BIT8_0
+	       * (block_index.global_index + 1 < ref_current_size/2) ? uchar_t(1) : uchar_t(0)
+	    + bits::BIT8_1
+	       * (refp_block->is_front_adding) ? uchar_t(1) : uchar_t(0)
+		+ bits::BIT8_2
+	       * (refp_block->arr_capacity == refp_block->arr_size) ? uchar_t(1) : uchar_t(0)
+	    + bits::BIT8_3
+	       * (refp_block->arr_capacity == ref_current_capacity) ? uchar_t(1) : uchar_t(0)
+	    + bits::BIT8_4
+	       * (refp_block->prev_block.isInitialized()) ? uchar_t(1) : uchar_t(0)
+	    + bits::BIT8_5
+	       * (refp_block->next_block.isInitialized()) ? uchar_t(1) : uchar_t(0)
+	;
+#endif
+	return mark;
+}
+
+template<typename T> bool
+ArrayBlocks<T>::__block_isSituation1(const uchar_t bit_mask)
+{
+#ifdef DEBUG
+	bool result = bit_mask == (bits::BIT8_1 | bits::BIT8_5);
+	return result;
+#else
+	return bit_mask & (bits::BIT8_1 | bits::BIT8_5);
+#endif
+}
+
+template<typename T> bool
+ArrayBlocks<T>::__block_isSituation2(const uchar_t bit_mask)
+{
+#ifdef DEBUG
+	bool result
+	= ( bit_mask == (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_4)
+	    || bit_mask == (bits::BIT8_0 | bits::BIT8_1 | bits::BIT8_2 | bits::BIT8_4)
+	    || bit_mask == (bits::BIT8_0 | bits::BIT8_1 | bits::BIT8_2 | bits::BIT8_4
+	                    | bits::BIT8_5) );
+	return result;
+#else
+	return bit_mask & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_4);
+#endif
+}
+
+template<typename T> bool
+ArrayBlocks<T>::__block_isSituation3(const uchar_t bit_mask)
+{
+#ifdef DEBUG
+	bool result
+	= (bit_mask == (bits::BIT8_2 | bits::BIT8_5)
+	   || bit_mask == (bits::BIT8_2 | bits::BIT8_4 | bits::BIT8_5)
+	   || bit_mask == (bits::BIT8_1 | bits::BIT8_2 | bits::BIT8_4 | bits::BIT8_5));
+	return result;
+#else
+	return bit_mask & (bits::BIT8_2 | bits::BIT8_5);
+#endif
+}
+
+template<typename T> bool
+ArrayBlocks<T>::__block_isSituation4(const uchar_t bit_mask)
+{
+#ifdef DEBUG
+	bool result = bit_mask == (bits::BIT8_4);
+	return result;
+#else
+	return bit_mask & (bits::BIT8_4);
+#endif
+}
+
+template<typename T> bool
+ArrayBlocks<T>::__block_isSituation5(const uchar_t bit_mask)
+{
+#ifdef DEBUG
+	bool result = (bit_mask == (bits::BIT8_1 | bits::BIT8_3));
+	return result;
+#else
+	return bit_mask & (bits::BIT8_1 | bits::BIT8_3);
+#endif
+}
+
+template<typename T> bool
+ArrayBlocks<T>::__block_isSituation6(const uchar_t bit_mask)
+{
+#ifdef DEBUG
+	bool result
+	= (bit_mask == (bits::BIT8_0 | bits::BIT8_2)
+	|| bit_mask == (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_3)
+	|| bit_mask == (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_5)
+	|| bit_mask == (bits::BIT8_0 | bits::BIT8_1 | bits::BIT8_2)
+	|| bit_mask == (bits::BIT8_0 | bits::BIT8_1 | bits::BIT8_2 | bits::BIT8_3)
+	|| bit_mask == (bits::BIT8_0 | bits::BIT8_1 | bits::BIT8_2 | bits::BIT8_5));
+	return result;
+#else
+	return bit_mask & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_3);
+#endif
+}
+
+template<typename T> bool
+ArrayBlocks<T>::__block_isSituation7(const uchar_t bit_mask)
+{
+#ifdef DEBUG
+	bool result = (bit_mask == (bits::BIT8_2)
+	            || bit_mask == (bits::BIT8_2 | bits::BIT8_3)
+	            || bit_mask == (bits::BIT8_2 | bits::BIT8_4)
+	            || bit_mask == (bits::BIT8_1 | bits::BIT8_2)
+	            || bit_mask == (bits::BIT8_1 | bits::BIT8_2 | bits::BIT8_3)
+	            || bit_mask == (bits::BIT8_1 | bits::BIT8_2 | bits::BIT8_4));
+	return result;
+#else
+	return bit_mask & (bits::BIT8_2 | bits::BIT8_3);
+#endif
+}
+
+template<typename T> bool
+ArrayBlocks<T>::__block_isSituation8(const uchar_t bit_mask)
+{
+#ifdef DEBUG
+	bool result = bit_mask == (bits::BIT8_3);
+	return result;
+#else
+	return bit_mask & (bits::BIT8_3);
+#endif
 }
 
 // protected
@@ -797,7 +1019,10 @@ ArrayBlocks<T>::_block_findBlock(size_t index)
 	
 	iterator it = this->begin();
 	reverse_iterator rev_it = this->rbegin();
-	auto last_index = getSize() - 1;
+	
+	block_index.current_size = this->getSize();
+	block_index.current_capacity = this->getCapacity();
+	auto last_index = block_index.current_size - 1;
 	
 	size_t i = 0, j = last_index;
 	
@@ -838,7 +1063,11 @@ ArrayBlocks<T>::_block_findBlock(const TArrayBlockIterator &element_iterator)
 {
 	T *element_address = &(*element_iterator);
 	BlockIndex<T> block_index;
-	size_t global_index_front(0), global_index_back = this->getSize() -	1;
+	
+	block_index.current_size = this->getSize();
+	block_index.current_capacity = this->getCapacity();
+	
+	size_t global_index_front(0), global_index_back(block_index.current_size - 1);
 	
 	iterator         & ref_it_front = block_index.it_front;
 	reverse_iterator & ref_it_back  = block_index.it_back;
@@ -895,14 +1124,12 @@ ArrayBlocks<T>::_block_move_elements(size_t new_cells,
 	    i != 0 && &(*source_it) != &(*source_last);
 	    --i, ++source_it, ++target_it)
 	{
-		placement_new(&(*target_it), *source_it);
-//		(*source_it).~T();
+		placement_new(&(*target_it), move(*source_it));
 	}
 	for(; &(*source_it) != &(*source_last);
 	    ++source_it, ++target_it)
 	{
-		*target_it = *source_it;
-//		(*source_it).~T();
+		*target_it = move(*source_it);
 	}
 }
 
@@ -914,8 +1141,6 @@ ArrayBlocks<T>::_block_generic_change_size(TIndexType &index_type,
                                            TConcrete *obj)
 {
 	BlockIndex<T> block_index = _block_findBlock(index_type);
-	
-	size_t current_size;
 	
 	if(block_index.global_index == 0)
 	{
@@ -936,8 +1161,7 @@ ArrayBlocks<T>::_block_generic_change_size(TIndexType &index_type,
 		return 1;
 	}
 	
-	current_size = this->getSize();
-	if(block_index.global_index == current_size - is_insert)
+	if(block_index.global_index == block_index.current_size - is_insert)
 	{
 		if(is_insert)
 		{
@@ -957,7 +1181,7 @@ ArrayBlocks<T>::_block_generic_change_size(TIndexType &index_type,
 	}
 	
 	return _block_generic_change_size_option<is_insert, TConcrete>
-	           (block_index, current_size, obj);
+	           (block_index, obj);
 }
 
 
@@ -966,176 +1190,107 @@ template<bool is_insert,
          typename TConcrete>
 inline int
 ArrayBlocks<T>::_block_generic_change_size_option(BlockIndex<T> &block_index,
-                                                  size_t current_size,
                                                   TConcrete *obj)
 {
 	using namespace flame_ide;
 	using namespace flame_ide::types::primitive;
 	
-	// Тут описаны нюансы
 	typedef ArrayBlocks<T> * ArrayBlocksPointer;
-	ArrayBlocksPointer &ref_p_block = block_index.p_block;
+	ArrayBlocksPointer &p_block = block_index.p_block;
 	
-	size_t current_capacity = this->getCapacity();
-	
-	/*
-	 situations:
-	        _      _    _     _
-	       |1|    |2|  |3|   |4|
-	  |____+x++| |+x++++x+| |+x++____|
-			_      _
-		   |1|    |4|
-	  |____+x++| |+x++____|
-		   
-	  1 -- mark
-           & (bits::BIT8_1 | bits::BIT8_5)
-		   
-	  2 -- mark
-           & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_4)
-		   
-	  3 -- mark
-           & (bits::BIT8_2 | bits::BIT8_5)
-		   
-	  4 -- mark
-           & (bits::BIT8_4)
-	        _
-		   |5|
-	  |____+x++|
-	  
-	  5 -- mark
-           & (bits::BIT8_1 | bits::BIT8_3)
-		   
-	    _    _
-	   |6|  |7| 
-	  |+x++++x+|
-	  
-	  6 -- mark
-           & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_3)
-		   
-	  7 -- mark
-           & (bits::BIT8_2 | bits::BIT8_3)
-		_
-	   |8|
-	  |+x++____|
-	  
-	  8 -- mark
-           & (bits::BIT8_3)
-	*/
-	uchar_t mark = uchar_t(0)
-	    + bits::BIT8_0
-	       * (block_index.global_index + 1 < current_size/2) ? true : false
-	
-	    + bits::BIT8_1
-	       * (ref_p_block->is_front_adding) ? true : false
-	
-		+ bits::BIT8_2
-	       * (ref_p_block->arr_capacity == ref_p_block->arr_size) ? true : false
-	
-	    + bits::BIT8_3
-	       * (ref_p_block->arr_capacity == current_capacity) ? true : false
-	
-	    + bits::BIT8_4
-	       * (ref_p_block->prev_block.isInitialized()) ? true : false
-	
-	    + bits::BIT8_5
-	       * (ref_p_block->next_block.isInitialized()) ? true : false
-		;
-	
-	auto situation1 = +[](const u_char &bit_mask) -> bool
-	{
-		return bit_mask
-		    & (bits::BIT8_1 | bits::BIT8_5)
-				;
-	};
-
-	auto situation2 = +[](const u_char &bit_mask) -> bool
-	{
-		return bit_mask
-		    & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_4)
-		;
-	};
-	
-	auto situation3 = +[](const u_char &bit_mask) -> bool
-	{
-		return bit_mask
-		    & (bits::BIT8_2 | bits::BIT8_5)
-		;
-	};
-	
-	auto situation4 = +[](const u_char &bit_mask) -> bool
-	{
-		return bit_mask
-		    & (bits::BIT8_4)
-		;
-	};
-	
-	auto situation5 = +[](const u_char &bit_mask) -> bool
-	{
-		return bit_mask
-		    & (bits::BIT8_1 | bits::BIT8_3)
-		;
-	};
-	
-	auto situation6 = +[](const u_char &bit_mask) -> bool
-	{
-		return bit_mask
-		    & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_3)
-		;
-	};
-	
-	auto situation7 = +[](const u_char &bit_mask) -> bool
-	{
-		return bit_mask
-		    & (bits::BIT8_2 | bits::BIT8_3)
-		;
-	};
-	
-	auto situation8 = +[](const u_char &bit_mask) -> bool
-	{
-		return bit_mask
-		    & (bits::BIT8_3)
-		;
-	};
-	
-	
-	
-	if( (is_insert && (situation1(mark) || situation2(mark)
-	                   || situation5(mark) || situation6(mark)))
-	    || (!is_insert && (situation3(mark) || situation4(mark)
-	                       || situation7(mark) || situation8(mark))) )
+	// Тут описаны нюансы
+	// при добавлении в конец неправильно срабатывает
+	uchar_t b_mask = this->__block_generateBitMask(block_index);
+	if( (is_insert
+	     && (__block_isSituation1(b_mask) || __block_isSituation2(b_mask)
+	         || __block_isSituation5(b_mask) || __block_isSituation6(b_mask)))
+	    || (!is_insert
+	        && (__block_isSituation3(b_mask) || __block_isSituation4(b_mask)
+	            || __block_isSituation7(b_mask) || __block_isSituation8(b_mask))) )
 	{
 		iterator it_source;
 		iterator it_target;
 		
 		if(is_insert)
 		{
+			it_source = p_block->begin();
+			if(__block_isSituation6(b_mask))
+			{
+				p_block->_block_init_spPrevBlock();
+				p_block = p_block->prev_block.operator ->();
+			}
+			else
+			{
+				p_block = p_block->_block_getFirstBlock();
+				if(p_block->arr_size == p_block->arr_capacity)
+				{
+					p_block->_block_init_spPrevBlock();
+					p_block = p_block->prev_block.operator ->();
+				}
+			}
+			p_block->arr_first_index--;
+			p_block->arr_size++;
 			
+			it_target = p_block->begin();
+			
+			// всё готово для перемещения и вставки
+			_block_move_elements(1, it_source, block_index.it_front, it_target);
+			--block_index.it_front;
+			(is_same_types<T, TConcrete>())
+				? *block_index.it_front = move(*obj)
+				: *block_index.it_front = *obj;
 		}
 		else // erase
 		{
 			
 		}
 	}
-	
-	/*
-	if( (!is_insert && (situation1(mark) || situation2(mark)
-	                    || situation5(mark) || situation6(mark)))
-	    || (is_insert && (situation3(mark) || situation4(mark)
-	                       || situation7(mark) || situation8(mark))) )
+	else
+	if( (!is_insert
+	     && (__block_isSituation1(b_mask) || __block_isSituation2(b_mask)
+	         || __block_isSituation5(b_mask) || __block_isSituation6(b_mask)))
+	    || (is_insert
+	        && (__block_isSituation3(b_mask) || __block_isSituation4(b_mask)
+	            || __block_isSituation7(b_mask) || __block_isSituation8(b_mask))) )
 	{
 		reverse_iterator it_source;
 		reverse_iterator it_target;
 		
 		if(is_insert)
 		{
+			it_source = p_block->rbegin();
+			if(__block_isSituation7(b_mask))
+			{
+				p_block->_block_init_spNextBlock();
+				p_block = p_block->next_block.operator ->();
+			}
+			else
+			{
+				p_block = p_block->_block_getLastBlock();
+				if(p_block->arr_size == p_block->arr_capacity)
+				{
+					p_block->_block_init_spNextBlock();
+					p_block = p_block->next_block.operator ->();
+				}
+			}
+			p_block->arr_last_index++;
+			p_block->arr_size++;
 			
+			it_target = p_block->rbegin();
+			
+			// всё готово для перемещения и вставки
+			_block_move_elements(1, it_source, block_index.it_back, it_target);
+			--block_index.it_back;
+			(is_same_types<T, TConcrete>())
+				? *block_index.it_back = move(*obj)
+				: *block_index.it_back = *obj;
 		}
 		else //erase
 		{
 			
 		}
 	}
-	*/
+	
 	
 	return 1;
 }
@@ -1534,4 +1689,4 @@ ArrayBlocks<T>::rend()
 		return it;
 	}
 }
-#endif // TEMPLATES_ArrayBlocks
+#endif // TEMPLATES_ARRAYBLOCKS

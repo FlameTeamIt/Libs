@@ -471,67 +471,35 @@ Test::Templates::ArrayBlocks()
 	{
 		ArrayBlocks<long> &block = back_add_block;
 		
-		auto current_size = block.getSize();
-		
 		long insert1[] = {101, 102};
 		long insert2[] = {-101, -102};
 		
 		
 		// 1. insert by index
 		{
-			size_t indexes1[] = {block.getSize()/3, block.getSize()/4};
-			block.insert(indexes1[0], insert1[0]);
-			block.insert(indexes1[1], move(insert1[1]));
-			
-			current_size += 2;
-			
-			size_t indexes2[] = {2*block.getSize()/3, 3*block.getSize()/4};
-			block.insert(indexes2[0], insert2[0]);
-			block.insert(indexes2[1], move(insert2[1]));
-			
-			current_size += 2;
-		}
-		std::cout
-			<< "Code (back adding block):" "\n"
-				<< "\t" "block.insert(index, elem);" "\n"
-			<< "Result:" "\n";
-		std::for_each
-		(
-			block.begin(), block.end(),
-			[](const long &out)
+			size_t indexes[] = {0, block.getSize()};
+			for(unsigned int i = 0; i < 6; ++i)
 			{
-				std::cout << '\t' << out << '\n';
+				block.insert(indexes[0]++, insert1[0]++);
+				block.insert(indexes[1]++, insert2[0]--);
 			}
-		);
-		std::cout << '\n';
+			
+			std::cout
+				<< "Code (back adding block):" "\n"
+					<< "\t" "block.insert(index, elem);" "\n"
+				<< "Result:" "\n";
+			std::for_each
+			(
+				block.begin(), block.end(),
+				[](const long &out)
+				{
+					std::cout << '\t' << out << '\n';
+				}
+			);
+			std::cout << '\n';
+		}
 		
 		// 2. insert by iterator
-		{
-			size_t indexes1[] = {block.getSize()/3, block.getSize()/4};
-			
-			ArrayBlocks<long>::iterator iterators1[] = { block.begin(),
-			                                             block.begin() };
-			ArrayBlocks<long>::reverse_iterator iterators2[] = { block.rbegin(),
-			                                                     block.rbegin() };
-			
-			for(auto i = indexes1[0]; i > 0; --i, ++iterators1[0]);
-			block.insert(iterators1[0], insert1[0]);
-		}
-		std::cout
-			<< "Code (back adding block):" "\n"
-				<< "\t" "block.insert(iterator, elem);" "\n"
-			<< "Result:" "\n";
-		std::for_each
-		(
-			block.begin(), block.end(),
-			[](const long &out)
-			{
-				std::cout << '\t' << out << '\n';
-			}
-		);
-		std::cout << '\n';
-		
-		
 		// 3. insert range
 		
 	}
@@ -539,72 +507,36 @@ Test::Templates::ArrayBlocks()
 	{
 		ArrayBlocks<long> &block = front_add_block;
 		
-		auto current_size = block.getSize();
-		
 		long insert1[] = {101, 102};
 		long insert2[] = {-101, -102};
 		
 		
 		// 1. insert by index
 		{
-			size_t indexes1[] = {block.getSize()/3, block.getSize()/4};
-			block.insert(indexes1[0], insert1[0]);
-			block.insert(indexes1[1], move(insert1[1]));
-			
-			current_size += 2;
-			
-			size_t indexes2[] = {2*block.getSize()/3, 3*block.getSize()/4};
-			block.insert(indexes2[0], insert2[0]);
-			block.insert(indexes2[1], move(insert2[1]));
-			
-			current_size += 2;
-		}
-		std::cout
-			<< "Code (back adding block):" "\n"
-				<< "\t" "block.insert(index, elem);" "\n"
-			<< "Result:" "\n";
-		std::for_each
-		(
-			block.begin(), block.end(),
-			[](const long &out)
+			size_t indexes[] = {0, block.getSize()};
+			for(unsigned int i = 0; i < 6; ++i)
 			{
-				std::cout << '\t' << out << '\n';
+				block.insert(indexes[0]++, insert1[0]++);
+				block.insert(indexes[1]++, insert2[0]--);
 			}
-		);
-		std::cout << '\n';
+			
+			std::cout
+				<< "Code (back adding block):" "\n"
+					<< "\t" "block.insert(index, elem);" "\n"
+				<< "Result:" "\n";
+			std::for_each
+			(
+				block.begin(), block.end(),
+				[](const long &out)
+				{
+					std::cout << '\t' << out << '\n';
+				}
+			);
+			std::cout << '\n';
+		}
 		
 		// 2. insert by iterator
-		{
-			size_t indexes1[] = {block.getSize()/3, block.getSize()/4};
-			
-			ArrayBlocks<long>::iterator iterators1[] = { block.begin(),
-			                                             block.begin() };
-			ArrayBlocks<long>::reverse_iterator iterators2[] = { block.rbegin(),
-			                                                     block.rbegin() };
-			
-			
-//			for(auto i = indexes1[0]; i > 0; --i, ++iterators1[0]);
-//			block.insert(iterators1[0], insert1[0]);
-//			for(auto i = indexes1[1]; i > 0; --i, ++iterators1[1]);
-//			block.insert(iterators1[1], move(insert1[1]));
-		}
-		std::cout
-			<< "Code (back adding block):" "\n"
-				<< "\t" "block.insert(iterator, elem);" "\n"
-			<< "Result:" "\n";
-		std::for_each
-		(
-			block.begin(), block.end(),
-			[](const long &out)
-			{
-				std::cout << '\t' << out << '\n';
-			}
-		);
-		std::cout << '\n';
-		
-		
 		// 3. insert range
-		
 	}
 	
 // at()
