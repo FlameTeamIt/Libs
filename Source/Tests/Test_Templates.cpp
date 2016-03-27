@@ -471,8 +471,8 @@ Test::Templates::ArrayBlocks()
 	{
 		ArrayBlocks<long> &block = back_add_block;
 		
-		long insert1[] = {101, 102};
-		long insert2[] = {-101, -102};
+		long insert1[] = {101/*, 102*/};
+		long insert2[] = {-101/*, -102*/};
 		
 		
 		// 1. insert by index

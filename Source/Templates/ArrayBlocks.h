@@ -20,13 +20,13 @@
 
 5. insert()/erase() (включая итераторы)   -- not done
       5.1. insert()                          -- not done
-         5.1.1. insert(index)                   -- not done
-         5.1.2. insert(iterator)                -- not done
+         5.1.1. insert(index)                   -- not full done, testing
+         5.1.2. insert(iterator)                -- not full done, testing
          5.1.3. insert(range)                   -- not done
       5.2 erase()                            -- not done
          5.2.1. erase(index)                    -- not done
-         5.2.2. insert(iterator)                -- not done
-         5.2.3. insert(range)                   -- not done
+         5.2.2. erase(iterator)                 -- not done
+         5.2.3. erase(range)                    -- not done
 
 6. begin()/end()                          -> done and tested
 7. rbegin()/rend()                        -> done and tested
@@ -257,6 +257,7 @@ public:
 	          TArrayBlockIterator &end);
 	
 	void clear();
+	void optimize();
 	
 	template<typename TSize_Type> const T& at(TSize_Type index) const;
 	template<typename TSize_Type>       T& at(TSize_Type index);
@@ -453,33 +454,41 @@ ArrayBlocks<T>::__block_setMove(ArrayBlocks<T> &block)
         _                 _               _                _
        |1|               |2|             |3|              |4|
   |____+x++| |++++++++| |+x++++++| |++++++x+| |++++++++| |+x++____|
-               _               _
-              |2|             |3|             
+
+
+               _    _
+              |2|  |2|
+  |++++++++| |+x++++x+| |++++++++| |++++++++|
+			              _    _
+                         |3|  |3|
+  |__++++++| |++++++++| |+x++++x+| |++++++__|
+			   _               _
+              |2|             |3|
   |++++++++| |+x++++++| |++++++x+| |++++++++|
+  
+  
         _      _
        |1|    |4|
   |____+x++| |+x++____|
-
-  1 -- mark & (bits::BIT8_1 | bits::BIT8_5)
-  2 -- mark & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_4)
-  3 -- mark & (bits::BIT8_2 | bits::BIT8_5)
-  4 -- mark & (bits::BIT8_4)
+		 _     _
+        |1|   |4|
+  |_+++++x+| |+x+_____|
+		 _     _
+        |1|   |4|
+  |_____+x+| |+x+++++_|
+  
         _
        |5|
   |____+x++|
   
-  5 -- mark & (bits::BIT8_1 | bits::BIT8_3)
     _    _
    |6|  |7| 
   |+x++++x+|
   
-  6 -- mark & (bits::BIT8_0 | bits::BIT8_2 | bits::BIT8_3)
-  7 -- mark & (bits::BIT8_2 | bits::BIT8_3)
 	_
    |8|
   |+x++____|
   
-  8 -- mark & (bits::BIT8_3)
 */
 template<typename T> uchar_t
 ArrayBlocks<T>::__block_generateBitMask(const BlockIndex<T> &block_index)
@@ -546,7 +555,8 @@ template<typename T> bool
 ArrayBlocks<T>::__block_isSituation1(const uchar_t bit_mask)
 {
 #ifdef DEBUG
-	bool result = bit_mask == (bits::BIT8_1 | bits::BIT8_5);
+	bool result = (bit_mask == (bits::BIT8_1 | bits::BIT8_5)
+				   || bit_mask == (bits::BIT8_0 | bits::BIT8_1 | bits::BIT8_5));
 	return result;
 #else
 	return bit_mask & (bits::BIT8_1 | bits::BIT8_5);
@@ -586,7 +596,8 @@ template<typename T> bool
 ArrayBlocks<T>::__block_isSituation4(const uchar_t bit_mask)
 {
 #ifdef DEBUG
-	bool result = bit_mask == (bits::BIT8_4);
+	bool result = (bit_mask == (bits::BIT8_4)
+	               || bit_mask == (bits::BIT8_0 | bits::BIT8_4));
 	return result;
 #else
 	return bit_mask & (bits::BIT8_4);
