@@ -1093,7 +1093,7 @@ ArrayBlocks<T>::_block_generic_change_size_option(BlockIndex<T> &block_index,
 			it_source = it_target; ++it_source;
 			
 			// всё готово для перемещения и удаления
-			_block_move_elements(1, it_source, it_source_last, it_target);
+			_block_move_elements(0, it_source, it_source_last, it_target);
 			it_source_last->~T();
 			
 			p_block = it_source_last.inc_block;
@@ -1101,7 +1101,7 @@ ArrayBlocks<T>::_block_generic_change_size_option(BlockIndex<T> &block_index,
 			--p_block->arr_size;
 		}
 	}
-	else if(__block_isRevIterator(is_insert, block_index))
+	else //if(__block_isRevIterator(is_insert, block_index))
 	{
 		reverse_iterator it_source;
 		reverse_iterator it_target;
@@ -1122,7 +1122,7 @@ ArrayBlocks<T>::_block_generic_change_size_option(BlockIndex<T> &block_index,
 			it_target = p_block->rbegin();
 			
 			// всё готово для перемещения и вставки
-			_block_move_elements(1, it_source, block_index.it_back, it_target);
+			_block_move_elements(0, it_source, block_index.it_back, it_target);
 			--block_index.it_back;
 			(is_same_types<T, TConcrete>())
 				? *block_index.it_back = move(*obj)
