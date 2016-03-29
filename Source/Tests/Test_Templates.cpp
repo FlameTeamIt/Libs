@@ -500,7 +500,14 @@ Test::Templates::ArrayBlocks()
 		}
 		
 		// 2. insert by iterator
+		{
+			
+		}
+		
 		// 3. insert range
+		{
+			
+		}
 		
 	}
 	// front adding block
@@ -536,7 +543,14 @@ Test::Templates::ArrayBlocks()
 		}
 		
 		// 2. insert by iterator
+		{
+			
+		}
+		
 		// 3. insert range
+		{
+			
+		}
 	}
 	
 // at()
