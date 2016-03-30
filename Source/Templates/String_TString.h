@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_STRING_TSTRING
 #define TEMPLATES_STRING_TSTRING
 
-#include <Templates/For_All.h>
+#include <Templates/ForAll.h>
 #include <Templates/Array.h>
 #include <Templates/String_Functions.h>
 
@@ -12,6 +12,7 @@ namespace flame_ide
 template<typename T>
 class TString : public Array<T>
 {
+	size_t real_size;
 protected:
 	mutable bool is_actual_hash;
 	
@@ -21,10 +22,13 @@ protected:
 	inline void set(const size_t length, T* arr);
 	
 	// присваивание
+	void assign(T* c_tstr);
 	void assign(const T* c_tstr);
 	void assign(const TString<T> &tstring);
 	
 	// сложение строк
+	void concatenation(T* c_tstr
+				       ,bool to_right = true);
 	void concatenation(const T* c_tstr
 					   ,bool to_right = true);
 	void concatenation(const TString<T> &str
@@ -43,6 +47,7 @@ public:
 	
 	~TString();
 	
+	virtual size_t getCStrLength(const T* c_tstr) = 0;
 	virtual size_t getCStrLength(const T* c_tstr) const = 0;
 	
 	inline const T* getCString() const;
@@ -100,6 +105,22 @@ TString<T>::computeHash()
 
 template<typename T>
 void
+TString<T>::assign(T *c_tstr)
+{
+	size_t length_c_tstr = getCStrLength(c_tstr);
+	
+	if(length_c_tstr)
+	{
+		this->clear();
+		this->inc_arr = c_tstr;
+		this->arr_size = length_c_tstr;
+		this->is_initialised = true;
+		
+		is_actual_hash = false;
+	}
+}
+template<typename T>
+void
 TString<T>::assign(const T *c_tstr)
 {
 	size_t length_c_tstr = getCStrLength(c_tstr);
@@ -112,7 +133,6 @@ TString<T>::assign(const T *c_tstr)
 		array_copying(length_c_tstr, c_tstr, this->inc_arr);
 		
 		this->arr_size = length_c_tstr;
-		this->is_initialised = true;
 		
 		is_actual_hash = false;
 	}
@@ -123,17 +143,8 @@ TString<T>::assign(const TString<T> &tstring)
 {
 	if(tstring.getSize())
 	{
-		this->clear();
-		if(tstring.isTemporary())
-		{
-			this->inc_arr = tstring.inc_arr;
-		}
-		else
-		{
-			this->inc_arr = tstring.getPCopy();
-		}
+		this->inc_arr = tstring._getArrayCopy();
 		this->arr_size = tstring.arr_size;
-		this->is_initialised = true;
 		
 //		if(tstring.is_actual_hash)
 //		{
@@ -146,7 +157,7 @@ TString<T>::assign(const TString<T> &tstring)
 
 template<typename T>
 void
-TString<T>::concatenation(const T* c_tstr, bool to_right)
+TString<T>::concatenation(T* c_tstr, bool to_right)
 {
 	size_t length_c_tstr = getCStrLength(c_tstr);
 	T* tmp_inc_arr = nullptr;
@@ -160,6 +171,7 @@ TString<T>::concatenation(const T* c_tstr, bool to_right)
 		tmp_inc_arr = string_compose(length_c_tstr, c_tstr,
 									 this->arr_size, this->inc_arr);
 	}
+	delete[] c_tstr;
 	
 	if(this->arr_size)
 	{
@@ -168,6 +180,31 @@ TString<T>::concatenation(const T* c_tstr, bool to_right)
 	this->inc_arr = tmp_inc_arr;
 	this->arr_size += length_c_tstr;
 	this->is_initialised = true;
+	this->is_actual_hash = false;
+}
+template<typename T>
+void
+TString<T>::concatenation(const T* c_tstr, bool to_right)
+{
+	size_t length_c_tstr = getCStrLength(c_tstr);
+	T* tmp_inc_arr = nullptr;
+	if(to_right)
+	{
+		tmp_inc_arr = string_compose(this->arr_size, this->inc_arr,
+									 length_c_tstr, c_tstr);
+	}
+	else
+	{
+		tmp_inc_arr = string_compose(length_c_tstr, c_tstr,
+									 this->arr_size, this->inc_arr);
+	}
+	
+	if(this->arr_size)
+	{
+		array_delete<T>(this->inc_arr);
+	}
+	this->inc_arr = tmp_inc_arr;
+	this->arr_size += length_c_tstr;
 	this->is_actual_hash = false;
 }
 template<typename T>
@@ -192,7 +229,6 @@ TString<T>::concatenation(const TString<T> &str, bool to_right)
 	}
 	this->inc_arr = tmp_inc_arr;
 	this->arr_size += str.arr_size;
-	this->is_initialised = true;
 	this->is_actual_hash = false;
 }
 

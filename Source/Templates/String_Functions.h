@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-#include "For_All.h"
+#include "ForAll.h"
 
 
 namespace flame_ide
@@ -85,6 +85,7 @@ string_get_substr(const Tt* str, const size_t &pos, const size_t &length)
 	Tt* result_str = new Tt[length];
 	
 	std::copy_n(str+pos, length, result_str);
+//	result_str[length] = NULL;
 	
 	return result_str;
 }

@@ -11,12 +11,12 @@ using namespace flame_ide;
 void
 Test::Analyzers::JSONLib::all()
 {
-	using namespace JSON;
+//	using namespace JSON;
 	std::cout << "Test::Analyzers::JSONLib::all()\n";
 	
-	this->count_success_tests =
-			this->Single() + this->Pair()
-			+ this->Array() + this->Object();
+//	this->count_success_tests =
+//			this->Single() + this->Pair()
+//			+ this->Array() + this->Object();
 
 	// stress test
 //	BasicFile basic_file("BigJSON.json");
@@ -44,7 +44,7 @@ Test::Analyzers::JSONLib::all()
 	
 	std::cout << '\n';
 }
-
+/*
 unsigned int
 Test::Analyzers::JSONLib::Single()
 {
@@ -268,3 +268,4 @@ Test::Analyzers::JSONLib::Object()
 	
 	return 1;
 }
+*/

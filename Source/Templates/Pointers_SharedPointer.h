@@ -10,32 +10,37 @@ namespace flame_ide
 template<class T>
 class SharedPointer : public BasicPointer<T>
 {
-	unsigned long counter;
+	bool is_shared;
 	
 protected:
 	inline void set(SharedPointer<T> &pointer);
+	
+	virtual inline void _clear();
 	
 public:
 	SharedPointer();
 	SharedPointer(const T &object);
 	SharedPointer(SharedPointer<T> &&pointer);
+	SharedPointer(T* obj);
 	explicit SharedPointer(const SharedPointer<T> &pointer);
 	
-	~SharedPointer();
-	
-	inline void clear();
-	
-	inline T& operator *();
-	inline T* operator ->();
-	
-	inline const T& operator *() const;
-	inline const T* operator ->() const;
+	virtual ~SharedPointer();
 	
 	inline const SharedPointer& operator =(const SharedPointer<T> &arg);
 	inline const SharedPointer& operator =(SharedPointer<T> &&arg);
 	inline const SharedPointer& operator =(const T &arg);
 	
 	inline const SharedPointer& operator =(const BasicPointer<T> &arg);
+	
+	friend class BasicPointer<T>;
+
+	template<class Tt, class Uu> friend
+	SharedPointer<Tt> static_pointer_cast(const SharedPointer<Uu>& pointer) noexcept;
+	template<class Tt, class Uu> friend
+	SharedPointer<Tt> dynamic_pointer_cast(const SharedPointer<Uu>& pointer) noexcept;
+	
+	template<class Uu>
+	operator SharedPointer<Uu> () {return static_pointer_cast<Uu>(*this);}
 };
 
 template<class T, class ... Ts>
@@ -54,18 +59,16 @@ using namespace flame_ide::templates;
 template<class T>
 SharedPointer<T>::SharedPointer()
 	: BasicPointer<T>()
-	, counter(0)
-{
-}
+	, is_shared(false)
+{}
 template<class T>
 SharedPointer<T>::SharedPointer(const T &object)
 	: BasicPointer<T>(object)
-	, counter(0)
-{
-}
+	, is_shared(false)
+{}
 template<class T>
 SharedPointer<T>::SharedPointer(SharedPointer<T> &&pointer)
-	: counter(0)
+	: is_shared(false)
 {
 	set(pointer);
 }
@@ -74,16 +77,39 @@ SharedPointer<T>::SharedPointer(const SharedPointer<T> &pointer)
 	: SharedPointer<T>()
 {
 	this->inc_pointer = pointer.inc_pointer;
-	this->counter = pointer.counter + 1;
+	this->is_shared = true;
+}
+template<class T>
+SharedPointer<T>::SharedPointer(T *obj)
+	: BasicPointer<T>()
+	, is_shared(true)
+{
+	this->inc_pointer = obj;
 }
 
 template<class T>
 SharedPointer<T>::~SharedPointer()
 {
-	if(!counter && this->inc_pointer != nullptr)
+	if(!is_shared && this->inc_pointer != nullptr)
 	{
 		delete this->inc_pointer;
 	}
+	this->inc_pointer = nullptr;
+}
+
+template<class T>
+void
+SharedPointer<T>::_clear()
+{
+	if(!is_shared && this->inc_pointer != nullptr)
+	{
+		delete this->inc_pointer;
+	}
+	else
+	{
+		is_shared = false;
+	}
+	this->inc_pointer = nullptr;
 }
 
 template<class T>
@@ -95,57 +121,14 @@ SharedPointer<T>::set(SharedPointer<T> &pointer)
 }
 
 template<class T>
-void
-SharedPointer<T>::clear()
-{
-	if(!counter && this->inc_pointer != nullptr)
-	{
-		delete this->inc_pointer;
-	}
-	else
-	{
-		counter = 0;
-	}
-	this->inc_pointer = nullptr;
-}
-
-// operators
-
-template<class T>
-T&
-SharedPointer<T>::operator *()
-{
-	return this->get_reference();
-}
-template<class T>
-T*
-SharedPointer<T>::operator ->()
-{
-	return this->get_pointer();
-}
-
-template<class T>
-const T&
-SharedPointer<T>::operator *() const
-{
-	return this->get_reference();
-}
-template<class T>
-const T*
-SharedPointer<T>::operator ->() const
-{
-	return this->get_pointer();
-}
-
-template<class T>
 const SharedPointer<T>&
 SharedPointer<T>::operator =(const SharedPointer<T> &pointer)
 {
 	if(pointer.isInitialized())
 	{
-		clear();
+		this->clear();
 		this->inc_pointer = pointer.inc_pointer;
-		counter = pointer.counter + 1;
+		is_shared = true;
 	}
 	
 	return *this;
@@ -156,8 +139,12 @@ SharedPointer<T>::operator =(SharedPointer<T> &&pointer)
 {
 	if(pointer.isInitialized())
 	{
-		clear();
+		this->clear();
 		this->inc_pointer = pointer.inc_pointer;
+		if(pointer.is_shared)
+		{
+			this->is_shared = true;
+		}
 		pointer.inc_pointer = nullptr;
 	}
 	
@@ -167,7 +154,7 @@ template<class T>
 const SharedPointer<T>&
 SharedPointer<T>::operator =(const T &arg)
 {
-	clear();
+	this->clear();
 	this->make(arg);
 	
 	return *this;
@@ -178,7 +165,7 @@ const SharedPointer<T>&
 SharedPointer<T>::operator =(const BasicPointer<T> &arg)
 {
 	this->inc_pointer = arg.inc_pointer;
-	this->counter = 1;
+	this->is_shared = true;
 	
 	return *this;
 }

@@ -32,19 +32,19 @@ Array::Array(const std::string &json_array)
 JSON::
 Array::~Array()
 {
-	if(!isTemporary())
-	{
-		for(size_t i = 0, arr_length = inc_arr.getSize();
-			i < arr_length;
-			++i)
-		{ delete inc_arr[i]; }
+//	if(!isTemporary())
+//	{
+//		for(size_t i = 0, arr_length = inc_arr.getSize();
+//			i < arr_length;
+//			++i)
+//		{ delete inc_arr[i]; }
 	
-		inc_arr.clear();
-	}
-	else
-	{
-		setTemporary(false);
-	}
+//		inc_arr.clear();
+//	}
+//	else
+//	{
+//		setTemporary(false);
+//	}
 }
 
 void
@@ -62,27 +62,27 @@ void
 JSON::
 Array::set(const Array &array)
 {
-	const size_t &array_length = array.inc_arr.getSize();
-	this->inc_arr = array.inc_arr;
+//	const size_t &array_length = array.inc_arr.getSize();
+//	this->inc_arr = array.inc_arr;
 	
-	for(size_t i = 0; i < array_length; ++i)
-	{
-		this->inc_arr[i] = array.inc_arr[i]->getCopy();
-	}
+//	for(size_t i = 0; i < array_length; ++i)
+//	{
+//		this->inc_arr[i] = array.inc_arr[i]->getCopy();
+//	}
 }
 	
 void
 JSON::
 Array::setSize(const size_t &new_size)
 {
-	inc_arr.setSize(new_size);
+//	inc_arr.setSize(new_size);
 }
 
 size_t
 JSON::
 Array::getSize()
 {
-	return inc_arr.getSize();
+//	return inc_arr.getSize();
 }
 
 void
@@ -92,7 +92,7 @@ Array::pushBack(const Data *data)
 	Data *new_data = data->getCopy();
 	new_data->setLevel(this->level+1);
 	
-	inc_arr.pushBack(new_data);
+//	inc_arr.pushBack(new_data);
 }
 
 void
@@ -102,7 +102,7 @@ Array::pushFront(const Data *data)
 	Data *new_data = data->getCopy();
 	new_data->setLevel(this->level+1);
 	
-	inc_arr.pushFront(new_data);
+//	inc_arr.pushFront(new_data);
 }
 
 void
@@ -112,7 +112,7 @@ Array::insert(const size_t &index, const Data *data)
 	Data *new_data = data->getCopy();
 	new_data->setLevel(this->level+1);
 	
-	inc_arr.insert(index, new_data);
+//	inc_arr.insert(index, new_data);
 }
 
 void 
@@ -126,74 +126,74 @@ Array::insert(const size_t &index, const size_t &count, const Data **data)
 		new_data[i]->setLevel(this->level+1);
 	}
 	
-	inc_arr.insert(index, count, new_data);
+//	inc_arr.insert(index, count, new_data);
 }
 
 JSON::Data*
 JSON::
 Array::at(const size_t &index)
 {
-	return (inc_arr.getSize()) ? inc_arr[index] : nullptr;
+//	return (inc_arr.getSize()) ? inc_arr[index] : nullptr;
 }
 
 JSON::Data*
 JSON::
 Array::operator [](const size_t &index)
 {
-	return inc_arr[index];
+//	return inc_arr[index];
 }
 
 void
 JSON::
 Array::popBack()
 {
-	delete inc_arr[inc_arr.getSize()-1];
-	inc_arr.popBack();
+//	delete inc_arr[inc_arr.getSize()-1];
+//	inc_arr.popBack();
 }
 
 void
 JSON::
 Array::popFront()
 {
-	delete inc_arr[0];
-	inc_arr.popFront();
+//	delete inc_arr[0];
+//	inc_arr.popFront();
 }
 
 void
 JSON::
 Array::erase(const size_t &index)
 {
-	if(index > inc_arr.getSize()) return;
-	delete inc_arr[index];
+//	if(index > inc_arr.getSize()) return;
+//	delete inc_arr[index];
 	
-	inc_arr.erase(index);
+//	inc_arr.erase(index);
 }
 
 void
 JSON::
 Array::erase(const size_t &index, const size_t &count)
 {
-	size_t max = index+count;
-	if(max > inc_arr.getSize()) return;
-	for(size_t i = index; i < max; i++)
-	{
-		delete inc_arr[i];
-	}
+//	size_t max = index+count;
+//	if(max > inc_arr.getSize()) return;
+//	for(size_t i = index; i < max; i++)
+//	{
+//		delete inc_arr[i];
+//	}
 	
-	inc_arr.erase(index, count);
+//	inc_arr.erase(index, count);
 }
 
 void
 JSON::
 Array::clear()
 {
-	size_t length = inc_arr.getSize();
-	for(size_t i = 0; i < length; i++)
-	{
-		delete inc_arr[i];
-	}
+//	size_t length = inc_arr.getSize();
+//	for(size_t i = 0; i < length; i++)
+//	{
+//		delete inc_arr[i];
+//	}
 	
-	inc_arr.clear();
+//	inc_arr.clear();
 }
 
 JSON::Data*
@@ -207,74 +207,74 @@ std::string
 JSON::
 Array::getAsString() const
 {
-	std::string out_json_str("[");
-	size_t length = inc_arr.getSize();
+//	std::string out_json_str("[");
+//	size_t length = inc_arr.getSize();
 	
-	// пока без форматирования
-	if(length)
-	{
-		length--;
+//	// пока без форматирования
+//	if(length)
+//	{
+//		length--;
 		
-		for(size_t i = 0; i < length; i++)
-		{
-			if(inc_arr[i]->getType() == PAIR)
-			{ out_json_str += '{' + inc_arr[i]->getAsString() + '}'; }
-			else
-			{ out_json_str += inc_arr[i]->getAsString(); }
+//		for(size_t i = 0; i < length; i++)
+//		{
+//			if(inc_arr[i]->getType() == PAIR)
+//			{ out_json_str += '{' + inc_arr[i]->getAsString() + '}'; }
+//			else
+//			{ out_json_str += inc_arr[i]->getAsString(); }
 				
-			out_json_str += ",";
-		}
+//			out_json_str += ",";
+//		}
 		
-		if(inc_arr[length]->getType() == PAIR)
-		{ out_json_str += '{' + inc_arr[length]->getAsString() + '}'; }
-		else
-		{ out_json_str += inc_arr[length]->getAsString(); }
-	}
+//		if(inc_arr[length]->getType() == PAIR)
+//		{ out_json_str += '{' + inc_arr[length]->getAsString() + '}'; }
+//		else
+//		{ out_json_str += inc_arr[length]->getAsString(); }
+//	}
 	
-	out_json_str += "]";
+//	out_json_str += "]";
 	
-	return out_json_str;
+//	return out_json_str;
 }
 
 void
 JSON::
 Array::setAsString(const std::string &json_array)
 {
-	if(getDataType(json_array) != ARRAY)
-	{ return; }
+//	if(getDataType(json_array) != ARRAY)
+//	{ return; }
 	
-	templates::List<std::string> &&arr_json_str = split(json_array);
+//	templates::List<std::string> &&arr_json_str = split(json_array);
 	
-	const size_t &length = arr_json_str.getSize();
-	inc_arr.setSize(length);
+//	const size_t &length = arr_json_str.getSize();
+////	inc_arr.setSize(length);
 	
-	size_t i = 0;
-	for(templates::List<std::string>::iterator it = arr_json_str.begin();
-		!it.isEnd();
-		++it)
-	{
-		Data *data = getData(it.getData());
+//	size_t i = 0;
+//	for(templates::List<std::string>::iterator it = arr_json_str.begin();
+//		!it.isEnd();
+//		++it)
+//	{
+//		Data *data = getData(it.getData());
 		
-		if(data != nullptr)
-		{
-			inc_arr[i] = data;
-			i++;
-		}
+//		if(data != nullptr)
+//		{
+//			inc_arr[i] = data;
+//			i++;
+//		}
 		
-	}
+//	}
 }
 
 void
 JSON::
 Array::setTemporary(bool is_temp) const
 {
-	this->inc_arr.setTemporary(is_temp);
+//	this->inc_arr.setTemporary(is_temp);
 }
 
 bool
 JSON::
 Array::isTemporary() const
 {
-	return inc_arr.isTemporary();
+//	return inc_arr.isTemporary();
 }
 

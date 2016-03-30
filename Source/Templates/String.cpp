@@ -1,10 +1,26 @@
 #include <Templates/String.h>
 
+/*
 namespace flame_ide
 {namespace templates
 {
-
 // concatenation
+String
+operator +(char ch, const String& tstring)
+{
+	String tmp_str = tstring;
+	tmp_str.pushFront(ch);
+	
+	return tmp_str;
+}
+String
+operator +(const String& tstring, char ch)
+{
+	String tmp_str = tstring;
+	tmp_str.pushBack(ch);
+	
+	return tmp_str;
+}
 String
 operator +(const char *c_tstr, const String& tstring)
 {
@@ -68,9 +84,9 @@ std::ostream&
 operator<<(std::ostream &output_stream,
 		   const String &str)
 {
-	for(size_t i = 0; i < str.getSize(); ++i)
+	for(size_t i = 0, length = str.getSize(); i < length; ++i)
 	{
-		output_stream << str.at(i);
+		output_stream << str.inc_arr[i];
 	}
 	return output_stream;
 }
@@ -85,8 +101,8 @@ operator>>(std::istream &input_stream,
 	}
 	
 	unsigned int buffer_count = 0;
-	char buffer_c_str[String::max_buffer_size];
-	for(size_t i = 0; i < String::max_buffer_size; i++)
+	char buffer_c_str[String::_MAX_BUFFER_SIZE];
+	for(size_t i = 0; i < String::_MAX_BUFFER_SIZE; i++)
 	{
 		buffer_c_str[i] = '\0';
 	}
@@ -96,10 +112,10 @@ operator>>(std::istream &input_stream,
 		   && (buffer_c_str[buffer_count] != ' '))
 	{
 		buffer_count++;
-		if(buffer_count == String::max_buffer_size)
+		if(buffer_count == String::_MAX_BUFFER_SIZE)
 		{
 			str += buffer_c_str;
-			for(size_t i = 0; i < String::max_buffer_size; i++)
+			for(size_t i = 0; i < String::_MAX_BUFFER_SIZE; i++)
 			{
 				buffer_c_str[i] = '\0';
 			}
@@ -137,6 +153,11 @@ String::~String()
 // methods
 
 size_t
+String::getCStrLength(const char *c_str)
+{
+	return strlen(c_str);
+}
+size_t
 String::getCStrLength(const char *c_str) const
 {
 	return strlen(c_str);
@@ -145,23 +166,27 @@ String::getCStrLength(const char *c_str) const
 String
 String::getSubstr(size_t pos, size_t length)
 {
-	String str; str = "";
+	String str;
+	char *arr_ch = nullptr;
 	if(pos + length < this->arr_size)
 	{
-		str.set(length, string_get_substr(this->inc_arr, pos, length));
+		// leak -- double 'new char[length]'
+		arr_ch = string_get_substr(this->inc_arr, pos, length);
+		str = arr_ch;
 	}
 	
 	return str;
 }
 
-const String
+String
 String::getSubstr(size_t pos, size_t length) const
 {
 	String str;
-	if(pos + length < this->arr_size)
+	if(pos + length <= this->arr_size)
 	{
 		// leak -- double 'new char[length]'
-		str = string_get_substr(this->inc_arr, pos, length);
+		str.inc_arr = string_get_substr(this->inc_arr, pos, length);
+		str.arr_size = length;
 	}
 	
 	return str;
@@ -211,30 +236,65 @@ String::getHash(const char *c_str)
 
 // operators
 
-String& 
+const String& 
 String::operator =(const char *c_str)
 {
 	this->assign(c_str);
 	return *this;
 }
 
-String&
-String::operator =(const String& string)
+const String& 
+String::operator =(char ch)
+{
+	this->pushBack(ch);
+	return *this;
+}
+
+const String&
+String::operator =(const String &string)
 {
 	this->assign(string);
 	return *this;
 }
 
-String& 
+const String&
+String::operator =(String &&string)
+{
+	clear();
+	this->inc_arr = string.inc_arr;
+	this->arr_size = string.arr_size;
+	
+	string.arr_size = 0;
+	
+	return *this;
+}
+
+const String& 
 String::operator +=(const char *c_str)
 {
 	this->concatenation(c_str);
 	return *this;
 }
 
-String&
-String::operator +=(const String& string)
+const String& 
+String::operator +=(char ch)
+{
+	this->pushBack(ch);
+	return *this;
+}
+
+const String&
+String::operator +=(const String &string)
 {
 	this->concatenation(string);
 	return *this;
 }
+
+const String&
+String::operator +=(String &&string)
+{
+	this->concatenation(string);
+	string.clear();
+	return *this;
+}
+*/

@@ -13,14 +13,20 @@ class BasicPointer
 	BasicPointer(const BasicPointer<T> &pointer);
 	BasicPointer(BasicPointer<T> &&pointer);
 	
+	const BasicPointer<T>& operator =(const BasicPointer<T> &pointer);
+	const BasicPointer<T>& operator =(BasicPointer<T> &&pointer);
+	
+	
 protected:
 	mutable T *inc_pointer;
-		
-	inline       T* get_pointer();
-	inline       T& get_reference();
 	
-	inline const T* get_pointer() const;
-	inline const T& get_reference() const;
+	inline       T* _get_pointer();
+	inline       T& _get_reference();
+	
+	inline const T* _get_pointer() const;
+	inline const T& _get_reference() const;
+	
+	inline virtual void _clear();
 	
 public:
 	BasicPointer();
@@ -33,26 +39,30 @@ public:
 	template<class ... Ts>
 	inline void make(Ts ... args) const;
 	
-	inline virtual void clear();
-	inline T* get() const;
+	inline void clear();
+	inline const T* get() const;
 	inline SharedPointer<T> getShared() const;
 	
 	inline bool isInitialized() const;
 	
 	inline operator bool() const;
 	
-	inline       T& operator *();
-	inline       T* operator ->();
+	virtual inline       T& operator *();
+	virtual inline       T* operator ->();
 	
-	inline const T& operator *() const;
-	inline const T* operator ->() const;
-	
-	inline const BasicPointer<T>&
-	operator =(BasicPointer<T> &&pointer);
+	virtual inline const T& operator *() const;
+	virtual inline const T* operator ->() const;
 	
 	friend class SharedPointer<T>;
 	friend class UniquePointer<T>;
 	
+	template<class Tt, class Uu> friend
+	BasicPointer<Tt> static_pointer_cast(const BasicPointer<Uu>& pointer) noexcept;
+	template<class Tt, class Uu> friend
+	BasicPointer<Tt> dynamic_pointer_cast(const BasicPointer<Uu>& pointer) noexcept;
+	
+	template<class Uu>
+	operator BasicPointer<Uu>() {return static_pointer_cast<Uu>(*this);}
 };
 
 }}
@@ -80,27 +90,42 @@ BasicPointer<T>::~BasicPointer()
 }
 
 template<class T>
-T* BasicPointer<T>::get_pointer()
+T*
+BasicPointer<T>::_get_pointer()
 {
 	return inc_pointer;
 }
 
 template<class T>
-T& BasicPointer<T>::get_reference()
+T&
+BasicPointer<T>::_get_reference()
 {
 	return *inc_pointer;
 }
 
 template<class T>
-const T* BasicPointer<T>::get_pointer() const
+const T*
+BasicPointer<T>::_get_pointer() const
 {
 	return inc_pointer;
 }
 
 template<class T>
-const T& BasicPointer<T>::get_reference() const
+const T&
+BasicPointer<T>::_get_reference() const
 {
 	return *inc_pointer;
+}
+
+template<class T>
+void
+BasicPointer<T>::_clear()
+{
+	if(inc_pointer != nullptr)
+	{
+		delete inc_pointer;
+		inc_pointer = nullptr;
+	}
 }
 
 template<class T>
@@ -122,18 +147,14 @@ template<class T>
 void
 BasicPointer<T>::clear()
 {
-	if(inc_pointer != nullptr)
-	{
-		delete inc_pointer;
-		inc_pointer = nullptr;
-	}
+	this->_clear();
 }
 
 template<class T>
-T*
+const T*
 BasicPointer<T>::get() const
 {
-	return get_pointer();
+	return inc_pointer;
 }
 
 template<class T>
@@ -141,6 +162,8 @@ SharedPointer<T>
 BasicPointer<T>::getShared() const
 {
 	SharedPointer<T> pointer;
+	pointer.inc_pointer = this->inc_pointer;
+	pointer.is_shared = true;
 	
 	return pointer;
 }
@@ -164,36 +187,38 @@ template<class T>
 T*
 BasicPointer<T>::operator ->()
 {
-	return get_pointer();
+	return _get_pointer();
 }
 
 template<class T>
 T&
 BasicPointer<T>::operator *()
 {
-	return get_reference();
+	return _get_reference();
 }
 
 template<class T>
-const T* BasicPointer<T>::operator ->() const
+const T*
+BasicPointer<T>::operator ->() const
 {
-	return get_pointer();
+	return _get_pointer();
 }
 
 template<class T>
-const T& BasicPointer<T>::operator *() const
+const T&
+BasicPointer<T>::operator *() const
 {
-	return get_reference();
+	return _get_reference();
 }
 
-template<class T>
-const BasicPointer<T>&
-BasicPointer<T>::operator =(BasicPointer<T> &&pointer)
-{
-	this->inc_pointer = pointer.inc_pointer;
-	pointer.inc_pointer = nullptr;
-	
-	return *this;
-}
+/* ----- private ----- */
+//template<class T>
+//const BasicPointer<T>&
+//BasicPointer<T>::operator =(const BasicPointer<T> &pointer)
+//{
+//	this->inc_pointer = pointer.inc_pointer;
+//	
+//	return *this;
+//}
 
 #endif // POINTERS_BASICPOINTER
