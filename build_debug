@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TypeBuild="Debug"
+TypeBuild="debug"
 case "$1" in
 "")
     make -j4 -f Makefile BUILD=$TypeBuild

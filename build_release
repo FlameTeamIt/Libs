@@ -1,6 +1,6 @@
 #!/bin/bash
 
-build_type=Release
+build_type=release
 
 case "$1" in
 "")

@@ -7,22 +7,21 @@ endif
 ifdef BUILD
 override TypeBuild := $(BUILD)
 else
-override TypeBuild := Release
+override TypeBuild := release
 endif
 
-Path := Source/
-BuildPath := $(TypeBuild)
-
-DepPath := $(BuildPath)/dep
-ObjPath := $(BuildPath)/obj
-BinPath := $(BuildPath)/bin
-LibPath := $(BuildPath)/lib
+Path := src
+override BuildPath := $(TypeBuild)
+ 
+override DepPath := $(BuildPath)/dep
+override ObjPath := $(BuildPath)/obj
+override BinPath := $(BuildPath)/bin
+override LibPath := $(BuildPath)/lib
 
 Dirs := $(DepPath) $(ObjPath) $(BinPath) $(LibPath) $(TypeBuild)
 
 override Libs :=
 
-#override Warn_flags := -Wall -Wextra #-Werror
 override Warn_flags := \
 			-Wall \
 			-Wextra \
@@ -49,12 +48,12 @@ Defines_Release :=
 override Flags_Debug :=-pg -O0 -fno-inline-functions $(Warn_flags) #-fno-rtti  $(Warn_flags) 
 override Flags_Release :=-O2 -finline-functions  $(Warn_flags) #-nostdlib -ffreestanding
 
-ifeq ($(TypeBuild),Release)
+ifeq ($(TypeBuild),release)
 override Defines := $(Defines_Release)
 override Flags :=-std=c++14 -pipe $(Defines_Release) $(Flags_Release) -I$(Path)
 endif
 
-ifeq ($(TypeBuild),Debug)
+ifeq ($(TypeBuild),debug)
 override Defines := $(Defines_Debug)
 override Flags :=-std=c++14 -pipe $(Defines_Debug) $(Flags_Debug) -I$(Path)
 endif
