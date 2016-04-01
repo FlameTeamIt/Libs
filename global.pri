@@ -1,0 +1,22 @@
+!include(../global.pri) {
+    ROOT_DIRECTORY = $$PWD
+    BASE_BUILD_DIRECTORY = $${ROOT_DIRECTORY}/build
+}
+
+CONFIG(debug, debug|release) {
+    BUILD_DIRECTORY = $${BASE_BUILD_DIRECTORY}/debug
+} else {
+    BUILD_DIRECTORY = $${BASE_BUILD_DIRECTORY}/release
+}
+
+EXEC_DIRECTORY     = $${BUILD_DIRECTORY}/bin
+LIB_DIRECTORY      = $${BUILD_DIRECTORY}/lib
+
+TESTS_DIRECTORY    = $${EXEC_DIRECTORY}/tests
+
+
+DESTDIR     = $${LIB_DIRECTORY}
+OBJECTS_DIR = $${LIB_DIRECTORY}/../obj
+#MOC_DIR     = $${LIB_DIRECTORY}/moc
+#RCC_DIR     = $${LIB_DIRECTORY}/rcc
+
