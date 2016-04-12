@@ -149,6 +149,10 @@ void placement_new(T * const addr, const T & obj);
 template<typename T>
 void placement_new(T * const addr, T && obj);
 
+template<typename TIterator1 , typename TIterator2>
+bool is_equal(const TIterator1 &start1, const TIterator1 &end1,
+              const TIterator2 &start2, const TIterator2 &end2);
+
 }}
 
 template<typename Tt> inline constexpr
@@ -271,5 +275,46 @@ placement_new(T * const addr, T && obj)
 	new (addr) T(obj);
 }
 
+template<typename TIterator1, typename TIterator2>
+bool flame_ide::templates::
+is_equal(const TIterator1 &start1, const TIterator1 &end1,
+         const TIterator2 &start2, const TIterator2 &end2)
+{
+	bool b_is_equal;
+	
+	if(is_same_types<decltype(*start1), decltype(*start2)>())
+	{
+		b_is_equal = true;
+		auto iterator1 = start1;
+		auto iterator2 = start2;
+		
+		for(; iterator1 != end1 && iterator2 != end2; ++iterator1, ++iterator2)
+		{
+			b_is_equal = (b_is_equal && *iterator1 == *iterator2);
+		}
+		
+		if(iterator1 == end1)
+		{
+			if(iterator2 == end2)
+			{
+				return b_is_equal;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		b_is_equal = false;
+	}
+	
+	return b_is_equal;
+}
 
 #endif // TEMPLATES_FOR_ALL

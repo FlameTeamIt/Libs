@@ -554,9 +554,9 @@ operator ==(const ArrayBlocksIterator<T> &it1,
 			const ArrayBlocksIterator<T> &it2)
 {
 	return
-		(it1.inc_data_iterator == it2.inc_data_iterator)
-		 &&
-		(it1.inc_block == it2.inc_block);
+		(it1.inc_data_iterator == it2.inc_data_iterator);
+//		 &&
+//		(it1.inc_block == it2.inc_block);
 }
 
 template<typename T> inline
@@ -565,9 +565,9 @@ operator !=(const ArrayBlocksIterator<T> &it1,
 			const ArrayBlocksIterator<T> &it2)
 {
 	return
-		(it1.inc_data_iterator != it2.inc_data_iterator)
-		 ||
-		(it1.inc_block != it2.inc_block);
+		(it1.inc_data_iterator != it2.inc_data_iterator);
+//		 ||
+//		(it1.inc_block != it2.inc_block);
 }
 
 template<typename T> inline
@@ -576,9 +576,9 @@ operator ==(const ArrayBlocksReverseIterator<T> &it1,
 			const ArrayBlocksReverseIterator<T> &it2)
 {
 	return
-		(it1.inc_data_iterator == it2.inc_data_iterator)
-		 &&
-		(it1.inc_block == it2.inc_block);
+		(it1.inc_data_iterator == it2.inc_data_iterator);
+//		 &&
+//		(it1.inc_block == it2.inc_block);
 }
 
 template<typename T> inline
@@ -587,9 +587,9 @@ operator !=(const ArrayBlocksReverseIterator<T> &it1,
 			const ArrayBlocksReverseIterator<T> &it2)
 {
 	return
-		(it1.inc_data_iterator != it2.inc_data_iterator)
-		 ||
-		(it1.inc_block != it2.inc_block);
+		(it1.inc_data_iterator != it2.inc_data_iterator);
+//		 ||
+//		(it1.inc_block != it2.inc_block);
 }
 
 // hybrid operators
@@ -600,9 +600,9 @@ operator ==(const ArrayBlocksIterator<T> &it1,
 			const ArrayBlocksReverseIterator<T> &it2)
 {
 	return
-		(it1.inc_data_iterator == it2.inc_data_iterator)
-		 &&
-		(it1.inc_block == it2.inc_block);
+		(it1.inc_data_iterator == it2.inc_data_iterator);
+//		 &&
+//		(it1.inc_block == it2.inc_block);
 }
 
 template<typename T> inline
@@ -611,9 +611,9 @@ operator !=(const ArrayBlocksIterator<T> &it1,
 			const ArrayBlocksReverseIterator<T> &it2)
 {
 	return
-		(it1.inc_data_iterator != it2.inc_data_iterator)
-		 ||
-		(it1.inc_block != it2.inc_block);
+		(it1.inc_data_iterator != it2.inc_data_iterator);
+//		 ||
+//		(it1.inc_block != it2.inc_block);
 }
 
 template<typename T> inline
@@ -622,9 +622,9 @@ operator ==(const ArrayBlocksReverseIterator<T> &it1,
 			const ArrayBlocksIterator<T> &it2)
 {
 	return
-		(it1.inc_data_iterator == it2.inc_data_iterator)
-		 &&
-		(it1.inc_block == it2.inc_block);
+		(it1.inc_data_iterator == it2.inc_data_iterator);
+//		 &&
+//		(it1.inc_block == it2.inc_block);
 }
 
 template<typename T> inline
@@ -633,9 +633,9 @@ operator !=(const ArrayBlocksReverseIterator<T> &it1,
 			const ArrayBlocksIterator<T> &it2)
 {
 	return
-		(it1.inc_data_iterator != it2.inc_data_iterator)
-		 ||
-		(it1.inc_block != it2.inc_block);
+		(it1.inc_data_iterator != it2.inc_data_iterator);
+//		 ||
+//		(it1.inc_block != it2.inc_block);
 }
 
 }}
