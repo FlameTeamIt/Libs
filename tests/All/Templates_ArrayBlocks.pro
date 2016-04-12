@@ -12,3 +12,6 @@ INCLUDEPATH += ../../src
 
 QMAKE_CXXFLAGS += -std=c++14
 
+HEADERS += \
+    ../Test.h
+
