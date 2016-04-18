@@ -6,7 +6,7 @@
 #include <iostream>
 
 template<typename T>
-struct BaseTest
+struct BaseTests
 {
 //------------------------------------------------------------
 // Data
@@ -22,12 +22,12 @@ struct BaseTest
 	int current_test_return_code;
 	
 //------------------------------------------------------------
-	BaseTest();
+	BaseTests();
 	
-	BaseTest(const BaseTest&) = delete;
-	BaseTest(BaseTest&&) = delete;
+	BaseTests(const BaseTests&) = delete;
+	BaseTests(BaseTests&&) = delete;
 	
-	virtual ~BaseTest();
+	virtual ~BaseTests();
 //------------------------------------------------------------
 // Functions
 	
@@ -70,34 +70,34 @@ struct BaseTest
 //------------------------------------------------------------
 
 template<typename T>
-BaseTest<T>::BaseTest() {}
+BaseTests<T>::BaseTests() {}
 
 template<typename T>
-BaseTest<T>::~BaseTest() {}
+BaseTests<T>::~BaseTests() {}
 
 //------------------------------------------------------------
 
 template<typename T>
 void
-BaseTest<T>::print_start() {std::cout << "-> Start test\n";}
+BaseTests<T>::print_start() {std::cout << "-> Start test\n";}
 
 template<typename T>
 void
-BaseTest<T>::print_end() {std::cout << "\n\n-> End test\n";}
+BaseTests<T>::print_end() {std::cout << "\n\n-> End test\n";}
 
 template<typename T>
 void
-BaseTest<T>::print_test_start(int _number)
+BaseTests<T>::print_test_start(int _number)
 { std::cout << "\n\n--> Start " << v_names_of_tests[_number] << "\n"; }
 
 template<typename T>
 void
-BaseTest<T>::print_test_end(int _number)
+BaseTests<T>::print_test_end(int _number)
 { std::cout << "--> End " << v_names_of_tests[_number] << "\n"; }
 
 template<typename T>
 void
-BaseTest<T>::print_test_list()
+BaseTests<T>::print_test_list()
 {
 	std::cout << "--> Print list of tests\n";
 	for(int test_number = 0; test_number < this->get_count_all_tests(); ++test_number)
@@ -111,7 +111,7 @@ BaseTest<T>::print_test_list()
 
 template<typename T>
 void
-BaseTest<T>::set_count_all_tests(int _count_all_tests)
+BaseTests<T>::set_count_all_tests(int _count_all_tests)
 {
 	this->count_all_tests = _count_all_tests;
 	this->v_names_of_tests.resize(_count_all_tests);
@@ -120,14 +120,14 @@ BaseTest<T>::set_count_all_tests(int _count_all_tests)
 
 template<typename T>
 void
-BaseTest<T>::set_count_successed_tests(int _count_success_tests)
+BaseTests<T>::set_count_successed_tests(int _count_success_tests)
 {
 	this->count_successed_tests = _count_success_tests;
 }
 
 template<typename T>
 void
-BaseTest<T>::set_count_failed_tests(int _count_all_tests)
+BaseTests<T>::set_count_failed_tests(int _count_all_tests)
 {
 	this->count_failed_tests = _count_all_tests;
 }
@@ -136,21 +136,21 @@ BaseTest<T>::set_count_failed_tests(int _count_all_tests)
 
 template<typename T>
 int
-BaseTest<T>::get_count_all_tests()
+BaseTests<T>::get_count_all_tests()
 {
 	return this->count_all_tests;
 }
 
 template<typename T>
 int
-BaseTest<T>::get_count_successed_tests()
+BaseTests<T>::get_count_successed_tests()
 {
 	return this->count_successed_tests;
 }
 
 template<typename T>
 int
-BaseTest<T>::get_count_failed_tests()
+BaseTests<T>::get_count_failed_tests()
 {
 	return this->count_failed_tests;
 }
@@ -159,14 +159,14 @@ BaseTest<T>::get_count_failed_tests()
 
 template<typename T>
 void
-BaseTest<T>::inc_count_success_tests()
+BaseTests<T>::inc_count_success_tests()
 {
 	++this->count_successed_tests;
 }
 
 template<typename T>
 void
-BaseTest<T>::inc_count_failed_tests()
+BaseTests<T>::inc_count_failed_tests()
 {
 	++this->count_failed_tests;
 }
@@ -175,14 +175,14 @@ BaseTest<T>::inc_count_failed_tests()
 
 template<typename T>
 void
-BaseTest<T>::set_name_test(int _number, std::string &&_name)
+BaseTests<T>::set_name_test(int _number, std::string &&_name)
 {
 	v_names_of_tests[_number] = _name;
 }
 
 template<typename T>
 void
-BaseTest<T>::set_test_return_code(int _number, int _return_code)
+BaseTests<T>::set_test_return_code(int _number, int _return_code)
 {
 	v_tests_return_codes[_number] = _return_code;
 }
@@ -191,14 +191,14 @@ BaseTest<T>::set_test_return_code(int _number, int _return_code)
 
 template<typename T>
 std::string
-BaseTest<T>::get_name_test(int _number)
+BaseTests<T>::get_name_test(int _number)
 {
 	return *(v_names_of_tests.begin() + _number);
 }
 
 template<typename T>
 int
-BaseTest<T>::get_test_return_code(int _number)
+BaseTests<T>::get_test_return_code(int _number)
 {
 	return *(v_tests_return_codes.begin() + _number);
 }
@@ -207,14 +207,14 @@ BaseTest<T>::get_test_return_code(int _number)
 
 template<typename T>
 void
-BaseTest<T>::set_current_test_number(int _number)
+BaseTests<T>::set_current_test_number(int _number)
 {
 	this->current_test_number = _number;
 }
 
 template<typename T>
 void
-BaseTest<T>::set_current_test_return_code(int _return_code)
+BaseTests<T>::set_current_test_return_code(int _return_code)
 {
 	this->current_test_return_code = _return_code;
 }
@@ -223,14 +223,14 @@ BaseTest<T>::set_current_test_return_code(int _return_code)
 
 template<typename T>
 int
-BaseTest<T>::get_current_test_number()
+BaseTests<T>::get_current_test_number()
 {
 	return this->current_test_number;
 }
 
 template<typename T>
 int
-BaseTest<T>::get_current_test_return_code()
+BaseTests<T>::get_current_test_return_code()
 {
 	return this->current_test_return_code;
 }
@@ -239,7 +239,7 @@ BaseTest<T>::get_current_test_return_code()
 
 template<typename T>
 void
-BaseTest<T>::test_start(int _number)
+BaseTests<T>::test_start(int _number)
 {
 	print_test_start(_number);
 	set_current_test_number(_number);
@@ -247,7 +247,7 @@ BaseTest<T>::test_start(int _number)
 
 template<typename T>
 void
-BaseTest<T>::test_end(int _number, int _return_code)
+BaseTests<T>::test_end(int _number, int _return_code)
 {
 	set_current_test_return_code(_return_code);
 	set_test_return_code(_number, _return_code);
@@ -263,5 +263,122 @@ BaseTest<T>::test_end(int _number, int _return_code)
 	}
 	print_test_end(_number);
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
+
+
+template<typename T>
+class VirtualTest
+{
+	std::string _name;
+	
+	virtual int _start() = 0;
+	
+	void _print_start()
+	{
+		std::cout << "--> Start " << _name << '\n';
+	}
+
+	void _print_end()
+	{
+		std::cout << "--> End " << _name << "\n\n";
+	}
+	
+public:
+	VirtualTest() : _name("Null test") {}
+	VirtualTest(const VirtualTest &) = delete;
+	VirtualTest(VirtualTest &&) = delete;
+	
+	VirtualTest(std::string const &  name) :  _name(name)       {}
+	VirtualTest(std::string       && name) :  _name(name)       {}
+	VirtualTest(char const * name_c_str)   :  _name(name_c_str) {}
+	
+	int start()
+	{
+		int return_code;
+		
+		_print_start();
+		return_code = _start();
+		_print_end();
+		
+		return return_code;
+	}
+};
+		
+
+template<typename T>
+class VirtualTestAggregator
+{
+	std::string _name;
+	std::vector<VirtualTest *> _v_vtests;
+	
+protected:
+	std::vector<int> _v_return_codes;
+	std::vector<int> _v_enable_tests;
+	
+	virtual void _start()
+	{
+		VirtualTest *test;
+		for(auto it = _v_vtests.begin(); it != _v_vtests.end(); ++it)
+		{
+			test = *it;
+			_v_return_codes.push_back(test->start());
+		}
+	}
+	
+	void _print_start()
+	{
+		std::cout << "---------- " << _name << " ----------\n";
+	}
+					 
+	void _print_end()
+	{
+		std::cout << "---------- " "END" " ----------" "\n\n";
+	}
+	
+	virtual void _print_statistic() const {}
+	
+	std::string  _get_name() const { return _name; }
+	std::string& _get_name()	   { return _name; }
+	
+	void _set_name(const std::string  & new_name) { _name = new_name; }
+	void _set_name(      std::string && new_name) { _name = new_name; }
+	
+public:
+	VirtualTestAggregator() : _name("NONAME") {}
+	VirtualTestAggregator(const VirtualTest &) = delete;
+	VirtualTestAggregator(VirtualTest &&)      = delete;
+	
+	VirtualTestAggregator(char const * name_c_str)   :  _name(name_c_str) {}
+	VirtualTestAggregator(std::string const &  name) :  _name(name)       {}
+	VirtualTestAggregator(std::string       && name) :  _name(name)       {}
+	
+	~VirtualTestAggregator()
+	{
+		for(auto it = _v_vtests.begin();
+		    it != _v_vtests.end();
+		    ++it)
+		{ delete *it; }
+	}
+	
+	void start()
+	{
+		_print_start();
+		_start();
+		_print_end();
+	}
+	
+	void push_back_test(VirtualTest *test, int is_enable=1)
+	{
+		_v_vtests.push_back(test);
+		_v_enable_tests.push_back(is_enable);
+	}
+	void print_statistic()
+	{
+		_print_statistic();
+	}
+};
 
 #endif // TEST_BASETEST_H

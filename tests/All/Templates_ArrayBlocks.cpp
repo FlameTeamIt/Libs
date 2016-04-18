@@ -4,7 +4,7 @@
 
 using namespace flame_ide::templates;
 
-struct ArrayBlocksTest : public BaseTest<void>
+struct ArrayBlocksTest : public BaseTests<void>
 {
 	typedef ArrayBlocks<long> ArrayBlocks_long;
 	
@@ -22,7 +22,7 @@ struct ArrayBlocksTest : public BaseTest<void>
 	int all();
 //--------------------------------------------------
 	int constructs(ArrayBlocks_long &blocks);
-//--------------------------------------------------
+
 	int push_back(ArrayBlocks_long &blocks);
 	int pop_back(ArrayBlocks_long &blocks);
 	
@@ -31,7 +31,8 @@ struct ArrayBlocksTest : public BaseTest<void>
 	
 	int insert(ArrayBlocks_long &blocks);
 	int erase(ArrayBlocks_long &blocks);
-//--------------------------------------------------
+	int clearing(ArrayBlocks_long &blocks);
+
 	int indexing(ArrayBlocks_long &blocks);
 //--------------------------------------------------
 	int print_all(ArrayBlocks_long &blocks);
@@ -66,8 +67,11 @@ ArrayBlocksTest::ArrayBlocksTest()
 	/*  3 */ set_name_test(test_number++, std::string("push_front"));
 	/*  4 */ set_name_test(test_number++, std::string("pop_front"));
 	
-	/*  5 */ set_name_test(test_number++, std::string("insert_erase"));
-	/*  6 */ set_name_test(test_number++, std::string("indexing"));
+	/*  5 */ set_name_test(test_number++, std::string("insert"));
+	/*  6 */ set_name_test(test_number++, std::string("erase"));
+	/*  7 */ set_name_test(test_number++, std::string("clearing"));
+	
+	/*  8 */ set_name_test(test_number++, std::string("indexing"));
 	
 	print_test_list();
 }
@@ -88,6 +92,9 @@ ArrayBlocksTest::all()
 	
 	this->push_back(back_add_blocks);
 	this->pop_back(back_add_blocks);
+	
+	this->push_front(back_add_blocks);
+	this->pop_front(back_add_blocks);
 	
 	this->print_end();
 	
@@ -181,10 +188,32 @@ ArrayBlocksTest::pop_back(ArrayBlocks_long &blocks)
 int
 ArrayBlocksTest::push_front(ArrayBlocks_long &blocks)
 {
-	int test_number = 0;
+	int test_number = 3;
 	int return_code;
 	
 	test_start(test_number);
+	
+	long arr[] = {0,1,2,3,4,5,6,7,8};
+	
+	for(long i = 0; i < 8; ++i)
+	{
+		blocks.pushFront(arr[8-i]);
+	}
+	blocks.pushFront(0);
+	
+	std::cout << "Result (pop):\n";
+	print_all(blocks);
+	if(is_equal(&arr[0], &arr[9], blocks.begin(), blocks.end()))
+	{
+		std::cout << "IS TRUE EQUAL\n";
+		return_code = 0;
+	}
+	else
+	{
+		std::cout << "IS FALSE EQUAL\n";
+		return_code = 1;
+	}
+	
 	test_end(test_number, return_code);
 	return return_code;
 }
@@ -192,10 +221,29 @@ ArrayBlocksTest::push_front(ArrayBlocks_long &blocks)
 int
 ArrayBlocksTest::pop_front(ArrayBlocks_long &blocks)
 {
-	int test_number = 0;
+	int test_number = 4;
 	int return_code;
 	
 	test_start(test_number);
+	
+	long arr[] = {0,1,2,3,4,5,6,7,8};
+	
+	blocks.popFront(2);
+	blocks.popFront();
+	
+	std::cout << "Result (pop):\n";
+	print_all(blocks);
+	if(is_equal(&arr[3], &arr[9], blocks.begin(), blocks.end()))
+	{
+		std::cout << "IS TRUE EQUAL\n";
+		return_code = 0;
+	}
+	else
+	{
+		std::cout << "IS FALSE EQUAL\n";
+		return_code = 1;
+	}
+	
 	test_end(test_number, return_code);
 	return return_code;
 }
@@ -205,7 +253,7 @@ ArrayBlocksTest::pop_front(ArrayBlocks_long &blocks)
 int
 ArrayBlocksTest::insert(ArrayBlocks_long &blocks)
 {
-	int test_number = 0;
+	int test_number = 5;
 	int return_code;
 	
 	test_start(test_number);
@@ -216,7 +264,18 @@ ArrayBlocksTest::insert(ArrayBlocks_long &blocks)
 int
 ArrayBlocksTest::erase(ArrayBlocks_long &blocks)
 {
-	int test_number = 0;
+	int test_number = 6;
+	int return_code;
+	
+	test_start(test_number);
+	test_end(test_number, return_code);
+	return return_code;
+}
+
+int
+ArrayBlocksTest::clearing(ArrayBlocks_long &blocks)
+{
+	int test_number = 7;
 	int return_code;
 	
 	test_start(test_number);
@@ -230,7 +289,7 @@ ArrayBlocksTest::erase(ArrayBlocks_long &blocks)
 int
 ArrayBlocksTest::indexing(ArrayBlocks_long &blocks)
 {
-	int test_number = 0;
+	int test_number = 8;
 	int return_code;
 	
 	test_start(test_number);
@@ -244,15 +303,10 @@ ArrayBlocksTest::indexing(ArrayBlocks_long &blocks)
 int
 ArrayBlocksTest::print_all(ArrayBlocks_long &blocks)
 {
-//	int test_number = 9;
-	int return_code = 1;
-	
-//	test_start(test_number);
 	for(auto it = blocks.begin(); it != blocks.end(); ++it)
 	{
 		std::cout << '\t' << *it << '\n';
 	}
-//	test_end(test_number, return_code);
-	return return_code;
+	return 0;
 }
 
