@@ -274,8 +274,6 @@ class VirtualTest
 {
 	std::string _name;
 	
-	virtual int _start() = 0;
-	
 	void _print_start()
 	{
 		std::cout << "--> Start " << _name << '\n';
@@ -285,6 +283,9 @@ class VirtualTest
 	{
 		std::cout << "--> End " << _name << "\n\n";
 	}
+
+protected:
+	virtual int _start() = 0;
 	
 public:
 	VirtualTest() : _name("Null test") {}
@@ -294,6 +295,8 @@ public:
 	VirtualTest(std::string const &  name) :  _name(name)       {}
 	VirtualTest(std::string       && name) :  _name(name)       {}
 	VirtualTest(char const * name_c_str)   :  _name(name_c_str) {}
+	
+	virtual ~VirtualTest() {}
 	
 	int start()
 	{
@@ -312,7 +315,7 @@ template<typename T>
 class VirtualTestAggregator
 {
 	std::string _name;
-	std::vector<VirtualTest *> _v_vtests;
+	std::vector<VirtualTest<T> *> _v_vtests;
 	
 protected:
 	std::vector<int> _v_return_codes;
@@ -320,7 +323,7 @@ protected:
 	
 	virtual void _start()
 	{
-		VirtualTest *test;
+		VirtualTest<T> *test;
 		for(auto it = _v_vtests.begin(); it != _v_vtests.end(); ++it)
 		{
 			test = *it;
@@ -348,8 +351,8 @@ protected:
 	
 public:
 	VirtualTestAggregator() : _name("NONAME") {}
-	VirtualTestAggregator(const VirtualTest &) = delete;
-	VirtualTestAggregator(VirtualTest &&)      = delete;
+	VirtualTestAggregator(const VirtualTestAggregator<T> &) = delete;
+	VirtualTestAggregator(VirtualTestAggregator<T> &&)      = delete;
 	
 	VirtualTestAggregator(char const * name_c_str)   :  _name(name_c_str) {}
 	VirtualTestAggregator(std::string const &  name) :  _name(name)       {}
@@ -370,7 +373,7 @@ public:
 		_print_end();
 	}
 	
-	void push_back_test(VirtualTest *test, int is_enable=1)
+	void push_back_test(VirtualTest<T> *test, int is_enable=1)
 	{
 		_v_vtests.push_back(test);
 		_v_enable_tests.push_back(is_enable);

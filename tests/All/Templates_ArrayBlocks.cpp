@@ -1,8 +1,85 @@
 #include <iostream>
 #include <Templates/ArrayBlocks.h>
 #include "../Test.h"
+#include "Templates_ArrayBlocks.h"
 
 using namespace flame_ide::templates;
+
+void
+print_all(ArrayBlocks<long> &blocks)
+{
+	for(auto it = blocks.begin(); it != blocks.end(); ++it)
+	{
+		std::cout << '\t' << *it << '\n';
+	}
+}
+
+arrblocks_constructs_empty::arrblocks_constructs_empty(
+		ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "constructs_empty") {}
+arrblocks_constructs_back_adding::arrblocks_constructs_back_adding(
+		ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "constructs_back_adding") {}
+arrblocks_constructs_front_adding::arrblocks_constructs_front_adding(
+		ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "constructs_front_adding") {}
+
+
+arrblocks_push_back::arrblocks_push_back(ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "push_back") {}
+arrblocks_pop_back::arrblocks_pop_back(ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "pop_back") {}
+
+
+arrblocks_push_front::arrblocks_push_front(ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "push_front") {}
+arrblocks_pop_front::arrblocks_pop_front(ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "pop_front") {}
+
+
+arrblocks_insert::arrblocks_insert(ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "insert") {}
+arrblocks_insert_range::arrblocks_insert_range(ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "insert_range") {}
+
+
+arrblocks_erase::arrblocks_erase(ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "erase") {}
+arrblocks_erase_range::arrblocks_erase_range(ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "erase_range") {}
+
+
+
+
+int
+arrblocks_push_back::_start()
+{
+	int return_code;
+	long arr[] = {0,1,2,3,4,5,6,7,8};
+	
+	for(long i = 0; i < 8; ++i)
+	{
+		_blocks.pushBack(arr[i]);
+	}
+	_blocks.pushBack(8);
+	
+	std::cout << "Result (push):\n";
+	print_all(_blocks);
+	if(is_equal(&arr[0], &arr[9], _blocks.begin(), _blocks.end()))
+	{
+		std::cout << "IS TRUE EQUAL\n";
+		return_code = 0;
+	}
+	else
+	{
+		std::cout << "IS FALSE EQUAL\n";
+		return_code = 1;
+	}
+	return return_code;
+}
+
+//--------------------------------------------------
+//--------------------------------------------------
 
 struct ArrayBlocksTest : public BaseTests<void>
 {
@@ -41,9 +118,18 @@ struct ArrayBlocksTest : public BaseTests<void>
 
 int main()
 {
-	ArrayBlocksTest test;
+//	ArrayBlocksTest test;
 	
-	test.all();
+//	test.all();
+	
+	typedef ArrayBlocks<long> ArrayBlocks_long;
+	
+//	ArrayBlocks_long empty_block;
+	ArrayBlocks<long> back_add_blocks(5);
+//	ArrayBlocks_long front_add_blocks(true, 5);
+	
+	arrblocks_push_back test_push_back(back_add_blocks);
+	test_push_back.start();
 	
 	return 0;
 }
@@ -310,3 +396,6 @@ ArrayBlocksTest::print_all(ArrayBlocks_long &blocks)
 	return 0;
 }
 
+
+//--------------------------------------------------
+//--------------------------------------------------

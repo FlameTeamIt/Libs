@@ -1,7 +1,7 @@
 include(global.pri)
 
 TEMPLATE = app
-CONFIG += console
+CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
@@ -13,5 +13,6 @@ INCLUDEPATH += ../../src
 QMAKE_CXXFLAGS += -std=c++14
 
 HEADERS += \
-    ../Test.h
+    ../Test.h \
+    Templates_ArrayBlocks.h
 
