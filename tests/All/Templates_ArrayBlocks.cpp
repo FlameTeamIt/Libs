@@ -14,15 +14,28 @@ print_all(ArrayBlocks<long> &blocks)
 	}
 }
 
-arrblocks_constructs_empty::arrblocks_constructs_empty(
-		ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "constructs_empty") {}
-arrblocks_constructs_back_adding::arrblocks_constructs_back_adding(
-		ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "constructs_back_adding") {}
-arrblocks_constructs_front_adding::arrblocks_constructs_front_adding(
-		ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "constructs_front_adding") {}
+arrblocks_constructs_empty::arrblocks_constructs_empty()
+	: 
+	  __empty_blocks()
+	  ,virtual_arrblocks_test<void>(__empty_blocks,
+	                                "constructs_empty") {}
+
+arrblocks_constructs_back_adding::arrblocks_constructs_back_adding()
+	:
+	  __back_adding_blocks(5)
+	  ,virtual_arrblocks_test<void>(__back_adding_blocks,
+	                                "constructs_back_adding") {}
+
+arrblocks_constructs_front_adding::arrblocks_constructs_front_adding()
+	: 
+	  __front_adding_blocks(true, 5)
+	  ,virtual_arrblocks_test<void>(__front_adding_blocks,
+	                                "constructs_front_adding") {}
+
+arrblocks_constructs_empty::~arrblocks_constructs_empty() {};
+arrblocks_constructs_back_adding::~arrblocks_constructs_back_adding() {};
+arrblocks_constructs_front_adding::~arrblocks_constructs_front_adding() {};
+
 
 
 arrblocks_push_back::arrblocks_push_back(ArrayBlocks<long> &blocks)
@@ -30,11 +43,19 @@ arrblocks_push_back::arrblocks_push_back(ArrayBlocks<long> &blocks)
 arrblocks_pop_back::arrblocks_pop_back(ArrayBlocks<long> &blocks)
 	: virtual_arrblocks_test<void>(blocks, "pop_back") {}
 
+arrblocks_push_back::~arrblocks_push_back() {}
+arrblocks_pop_back::~arrblocks_pop_back() {}
+
+
 
 arrblocks_push_front::arrblocks_push_front(ArrayBlocks<long> &blocks)
 	: virtual_arrblocks_test<void>(blocks, "push_front") {}
 arrblocks_pop_front::arrblocks_pop_front(ArrayBlocks<long> &blocks)
 	: virtual_arrblocks_test<void>(blocks, "pop_front") {}
+
+arrblocks_push_front::~arrblocks_push_front() {}
+arrblocks_pop_front::~arrblocks_pop_front() {}
+
 
 
 arrblocks_insert::arrblocks_insert(ArrayBlocks<long> &blocks)
@@ -42,14 +63,89 @@ arrblocks_insert::arrblocks_insert(ArrayBlocks<long> &blocks)
 arrblocks_insert_range::arrblocks_insert_range(ArrayBlocks<long> &blocks)
 	: virtual_arrblocks_test<void>(blocks, "insert_range") {}
 
+arrblocks_insert::~arrblocks_insert() {}
+arrblocks_insert_range::~arrblocks_insert_range() {}
+
+
 
 arrblocks_erase::arrblocks_erase(ArrayBlocks<long> &blocks)
 	: virtual_arrblocks_test<void>(blocks, "erase") {}
 arrblocks_erase_range::arrblocks_erase_range(ArrayBlocks<long> &blocks)
 	: virtual_arrblocks_test<void>(blocks, "erase_range") {}
 
+arrblocks_erase::~arrblocks_erase() {};
+arrblocks_erase_range::~arrblocks_erase_range() {}
 
 
+arrblocks_clearing::arrblocks_clearing(ArrayBlocks<long> &blocks)
+	: virtual_arrblocks_test<void>(blocks, "clearing") {}
+
+arrblocks_clearing::~arrblocks_clearing() {}
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+int
+arrblocks_constructs_empty::_start()
+{
+	int return_code;
+	
+	if(this->_blocks.getSize() == DEF_DEFAULT_CAPACITY)
+	{
+		std::cout << "IS TRUE\n";
+		return_code = 1;
+	}
+	else
+	{
+		std::cout << "IS FALSE\n";
+		return_code = 0;
+	}
+	
+	return return_code;
+}
+
+int
+arrblocks_constructs_front_adding::_start()
+{
+	int return_code;
+	
+	if(_blocks.getSize() == 5
+	   && _blocks.isFrontAdding())
+	{
+		std::cout << "IS TRUE\n";
+		return_code = 1;
+	}
+	else
+	{
+		std::cout << "IS FALSE\n";
+		return_code = 0;
+	}
+	
+	return return_code;
+}
+
+int
+arrblocks_constructs_back_adding::_start()
+{
+	int return_code;
+	
+	if(_blocks.getSize() == 5
+	   && !_blocks.isFrontAdding())
+	{
+		std::cout << "IS TRUE\n";
+		return_code = 1;
+	}
+	else
+	{
+		std::cout << "IS FALSE\n";
+		return_code = 0;
+	}
+	
+	return return_code;
+}
+
+//--------------------------------------------------
+//--------------------------------------------------
 
 int
 arrblocks_push_back::_start()
