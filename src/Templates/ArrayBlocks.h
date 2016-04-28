@@ -7,6 +7,9 @@
 #include <Templates/SimpleArray.h>
 #include <Templates/ArrayBlocks_Iterators.h>
 
+#ifndef DEF_DEFAULT_CAPACITY
+#define DEF_DEFAULT_CAPACITY 32
+#endif
 
 /*
 
@@ -89,7 +92,7 @@ private:
 template<typename T>
 class ArrayBlocks : protected SimpleArray<T>
 {
-	static size_t const DEFAULT_CAPACITY = size_t(32);
+	static size_t const DEFAULT_CAPACITY = size_t(DEF_DEFAULT_CAPACITY);
 	
 public:
 	using         iterator = ArrayBlocksIterator<T>;
@@ -213,6 +216,9 @@ public:
 	
 	virtual ~ArrayBlocks();
 	
+	bool isFrontAdding() const;
+	bool isEmpty() const;
+	
 	size_t getSize() const; // new - not in plan
 	size_t getCapacity() const; // new - not in plan
 	
@@ -270,7 +276,7 @@ public:
 	iterator end();
 	reverse_iterator rbegin(); // tested
 	reverse_iterator rend(); // tested
-
+	
 //	const_iterator& begin() const;
 //	const_iterator& end() const;
 //	const_reverse_iterator& rbegin() const;
@@ -1151,6 +1157,20 @@ ArrayBlocks<T>::_block_generic_change_size_option(BlockIndex<T> &block_index,
 }
 
 // public
+
+template<typename T>
+bool
+ArrayBlocks<T>::isEmpty() const
+{
+	return (getSize() == 0);
+}
+
+template<typename T>
+bool
+ArrayBlocks<T>::isFrontAdding() const
+{
+	return is_front_adding;
+}
 
 template<typename T>
 size_t
