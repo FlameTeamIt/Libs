@@ -11,18 +11,18 @@ print_all(ArrayBlocks<long> &blocks);
 
 
 template<typename T>
-class virtual_arrblocks_test : public VirtualTest<void>
+class abstract_arrblocks_test : public AbstractTest<void>
 {
 protected:
 	ArrayBlocks<long> & _blocks;
 	
 public:
-	virtual_arrblocks_test() = delete;
-	virtual_arrblocks_test(const virtual_arrblocks_test &) = delete;
-	virtual_arrblocks_test(virtual_arrblocks_test &&) = delete;
+	abstract_arrblocks_test() = delete;
+	abstract_arrblocks_test(const abstract_arrblocks_test &) = delete;
+	abstract_arrblocks_test(abstract_arrblocks_test &&) = delete;
 	
-	virtual_arrblocks_test(ArrayBlocks<long> & blocks, const char *cstr_name)
-	    : VirtualTest<void>(cstr_name)
+	abstract_arrblocks_test(ArrayBlocks<long> & blocks, const char *cstr_name)
+	    : AbstractTest<void>(cstr_name)
 	      , _blocks(blocks) {}
 	
 	ArrayBlocks<long> & get_blocks() {return _blocks;}
@@ -52,7 +52,7 @@ class arrblocks_clearing;
 
 
 
-class arrblocks_constructs_empty : public virtual_arrblocks_test<void>
+class arrblocks_constructs_empty : public abstract_arrblocks_test<void>
 {
 	ArrayBlocks<long> __empty_blocks;
 	
@@ -69,7 +69,7 @@ protected:
 };
 
 
-class arrblocks_constructs_front_adding : public virtual_arrblocks_test<void>
+class arrblocks_constructs_front_adding : public abstract_arrblocks_test<void>
 {
 	ArrayBlocks<long> __front_adding_blocks;
 	
@@ -86,7 +86,7 @@ protected:
 };
 
 
-class arrblocks_constructs_back_adding : public virtual_arrblocks_test<void>
+class arrblocks_constructs_back_adding : public abstract_arrblocks_test<void>
 {
 	ArrayBlocks<long> __back_adding_blocks;
 	
@@ -106,7 +106,7 @@ protected:
 
 
 
-class arrblocks_push_back : public virtual_arrblocks_test<void>
+class arrblocks_push_back : public abstract_arrblocks_test<void>
 {
 public:
 	typedef arrblocks_push_back this_type;
@@ -124,7 +124,7 @@ protected:
 };
 
 
-class arrblocks_pop_back : public virtual_arrblocks_test<void>
+class arrblocks_pop_back : public abstract_arrblocks_test<void>
 {
 public:
 	typedef arrblocks_pop_back this_type;
@@ -144,7 +144,7 @@ protected:
 
 
 
-class arrblocks_push_front : public virtual_arrblocks_test<void>
+class arrblocks_push_front : public abstract_arrblocks_test<void>
 {
 public:
 	typedef arrblocks_push_front this_type;
@@ -162,7 +162,7 @@ protected:
 };
 
 
-class arrblocks_pop_front : public virtual_arrblocks_test<void>
+class arrblocks_pop_front : public abstract_arrblocks_test<void>
 {
 public:
 	typedef arrblocks_pop_front this_type;
@@ -182,7 +182,7 @@ protected:
 
 
 
-class arrblocks_insert : public virtual_arrblocks_test<void>
+class arrblocks_insert : public abstract_arrblocks_test<void>
 {
 public:
 	typedef arrblocks_insert this_type;
@@ -200,7 +200,7 @@ protected:
 };
 
 
-class arrblocks_insert_range : public virtual_arrblocks_test<void>
+class arrblocks_insert_range : public abstract_arrblocks_test<void>
 {
 public:
 	typedef arrblocks_insert_range this_type;
@@ -220,7 +220,7 @@ protected:
 
 
 
-class arrblocks_erase : public virtual_arrblocks_test<void>
+class arrblocks_erase : public abstract_arrblocks_test<void>
 {
 public:
 	typedef arrblocks_erase this_type;
@@ -238,7 +238,7 @@ protected:
 };
 
 
-class arrblocks_erase_range : public virtual_arrblocks_test<void>
+class arrblocks_erase_range : public abstract_arrblocks_test<void>
 {
 public:
 	typedef arrblocks_erase_range this_type;
@@ -258,7 +258,7 @@ protected:
 
 
 
-class arrblocks_clearing : public virtual_arrblocks_test<void>
+class arrblocks_clearing : public abstract_arrblocks_test<void>
 {
 public:
 	typedef arrblocks_clearing this_type;

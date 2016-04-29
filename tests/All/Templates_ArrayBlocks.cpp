@@ -16,21 +16,22 @@ print_all(ArrayBlocks<long> &blocks)
 
 arrblocks_constructs_empty::arrblocks_constructs_empty()
 	: 
-	  __empty_blocks()
-	  ,virtual_arrblocks_test<void>(__empty_blocks,
-	                                "constructs_empty") {}
+	  abstract_arrblocks_test<void>(__empty_blocks,
+	                                "constructs_empty")
+	  ,__empty_blocks() {}
 
 arrblocks_constructs_back_adding::arrblocks_constructs_back_adding()
 	:
-	  __back_adding_blocks(5)
-	  ,virtual_arrblocks_test<void>(__back_adding_blocks,
-	                                "constructs_back_adding") {}
+	  abstract_arrblocks_test<void>(__back_adding_blocks,
+	                                "constructs_back_adding")
+	  ,__back_adding_blocks(5) {}
 
 arrblocks_constructs_front_adding::arrblocks_constructs_front_adding()
 	: 
-	  __front_adding_blocks(true, 5)
-	  ,virtual_arrblocks_test<void>(__front_adding_blocks,
-	                                "constructs_front_adding") {}
+	  
+	  abstract_arrblocks_test<void>(__front_adding_blocks,
+	                                "constructs_front_adding")
+	  ,__front_adding_blocks(true, 5) {}
 
 arrblocks_constructs_empty::~arrblocks_constructs_empty() {};
 arrblocks_constructs_back_adding::~arrblocks_constructs_back_adding() {};
@@ -39,9 +40,9 @@ arrblocks_constructs_front_adding::~arrblocks_constructs_front_adding() {};
 
 
 arrblocks_push_back::arrblocks_push_back(ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "push_back") {}
+	: abstract_arrblocks_test<void>(blocks, "push_back") {}
 arrblocks_pop_back::arrblocks_pop_back(ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "pop_back") {}
+	: abstract_arrblocks_test<void>(blocks, "pop_back") {}
 
 arrblocks_push_back::~arrblocks_push_back() {}
 arrblocks_pop_back::~arrblocks_pop_back() {}
@@ -49,9 +50,9 @@ arrblocks_pop_back::~arrblocks_pop_back() {}
 
 
 arrblocks_push_front::arrblocks_push_front(ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "push_front") {}
+	: abstract_arrblocks_test<void>(blocks, "push_front") {}
 arrblocks_pop_front::arrblocks_pop_front(ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "pop_front") {}
+	: abstract_arrblocks_test<void>(blocks, "pop_front") {}
 
 arrblocks_push_front::~arrblocks_push_front() {}
 arrblocks_pop_front::~arrblocks_pop_front() {}
@@ -59,9 +60,9 @@ arrblocks_pop_front::~arrblocks_pop_front() {}
 
 
 arrblocks_insert::arrblocks_insert(ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "insert") {}
+	: abstract_arrblocks_test<void>(blocks, "insert") {}
 arrblocks_insert_range::arrblocks_insert_range(ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "insert_range") {}
+	: abstract_arrblocks_test<void>(blocks, "insert_range") {}
 
 arrblocks_insert::~arrblocks_insert() {}
 arrblocks_insert_range::~arrblocks_insert_range() {}
@@ -69,16 +70,16 @@ arrblocks_insert_range::~arrblocks_insert_range() {}
 
 
 arrblocks_erase::arrblocks_erase(ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "erase") {}
+	: abstract_arrblocks_test<void>(blocks, "erase") {}
 arrblocks_erase_range::arrblocks_erase_range(ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "erase_range") {}
+	: abstract_arrblocks_test<void>(blocks, "erase_range") {}
 
 arrblocks_erase::~arrblocks_erase() {};
 arrblocks_erase_range::~arrblocks_erase_range() {}
 
 
 arrblocks_clearing::arrblocks_clearing(ArrayBlocks<long> &blocks)
-	: virtual_arrblocks_test<void>(blocks, "clearing") {}
+	: abstract_arrblocks_test<void>(blocks, "clearing") {}
 
 arrblocks_clearing::~arrblocks_clearing() {}
 
@@ -174,324 +175,193 @@ arrblocks_push_back::_start()
 	return return_code;
 }
 
-//--------------------------------------------------
-//--------------------------------------------------
-
-struct ArrayBlocksTest : public BaseTests<void>
+int
+arrblocks_pop_back::_start()
 {
-	typedef ArrayBlocks<long> ArrayBlocks_long;
+	int return_code;
 	
-	ArrayBlocks_long empty_block;
-	ArrayBlocks_long back_add_blocks;
-	ArrayBlocks_long front_add_blocks;
+	long arr[] = {0,1,2,3,4,5,6,7,8};
 	
-	ArrayBlocksTest();
-	ArrayBlocksTest(const ArrayBlocksTest &) = delete;
-	ArrayBlocksTest(ArrayBlocksTest &&) = delete;
+	_blocks.popBack(2);
+	_blocks.popBack();
 	
-	~ArrayBlocksTest();
+	std::cout << "Result (pop):\n";
+	print_all(_blocks);
+	if(is_equal(&arr[0], &arr[6], _blocks.begin(), _blocks.end()))
+	{
+		std::cout << "IS TRUE EQUAL\n";
+		return_code = 0;
+	}
+	else
+	{
+		std::cout << "IS FALSE EQUAL\n";
+		return_code = 1;
+	}
 	
-//--------------------------------------------------
-	int all();
-//--------------------------------------------------
-	int constructs(ArrayBlocks_long &blocks);
+	return return_code;
+}
 
-	int push_back(ArrayBlocks_long &blocks);
-	int pop_back(ArrayBlocks_long &blocks);
-	
-	int push_front(ArrayBlocks_long &blocks);
-	int pop_front(ArrayBlocks_long &blocks);
-	
-	int insert(ArrayBlocks_long &blocks);
-	int erase(ArrayBlocks_long &blocks);
-	int clearing(ArrayBlocks_long &blocks);
+//--------------------------------------------------
+//--------------------------------------------------
 
-	int indexing(ArrayBlocks_long &blocks);
+int
+arrblocks_push_front::_start()
+{
+	int return_code = 0;
+	
+	return return_code;
+}
+
+int
+arrblocks_pop_front::_start()
+{
+	int return_code = 0;
+	
+	return return_code;
+}
+
 //--------------------------------------------------
-	int print_all(ArrayBlocks_long &blocks);
 //--------------------------------------------------
-};
+
+int
+arrblocks_insert::_start()
+{
+	int return_code = 0;
+	
+	return return_code;
+}
+
+int
+arrblocks_insert_range::_start()
+{
+	int return_code = 0;
+	
+	return return_code;
+}
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+int
+arrblocks_erase::_start()
+{
+	int return_code = 0;
+	
+	return return_code;
+}
+
+int
+arrblocks_erase_range::_start()
+{
+	int return_code = 0;
+	
+	return return_code;
+}
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+int
+arrblocks_clearing::_start()
+{
+	int return_code = 1;
+	
+	_blocks.clear();
+	
+	if(_blocks.getSize() == 0)
+	{
+		std::cout << "IS TRUE\n";
+	}
+	else
+	{
+		std::cout << "IS FALSE\n";
+		return_code = 0;
+	}
+	
+	return return_code;
+}
+
+//--------------------------------------------------
+//--------------------------------------------------
 
 int main()
 {
-//	ArrayBlocksTest test;
+	AbstractTestAggregator<void> test_aggregator_empty("Empty Array Blocks");
+	AbstractTestAggregator<void> test_aggregator_front_add("Front-add Array Blocks");
+	AbstractTestAggregator<void> test_aggregator_back_add( "Back-add Array Blocks");
 	
-//	test.all();
+	abstract_arrblocks_test<void> *tests_empty[10] =
+	{
+		new arrblocks_constructs_empty(),
+		
+		new arrblocks_push_back(tests_empty[0]->get_blocks()),
+		new arrblocks_pop_back(tests_empty[0]->get_blocks()),
+		
+		new arrblocks_push_front(tests_empty[0]->get_blocks()),
+		new arrblocks_pop_front(tests_empty[0]->get_blocks()),
+		
+		new arrblocks_insert(tests_empty[0]->get_blocks()),
+		new arrblocks_erase(tests_empty[0]->get_blocks()),
+		
+		new arrblocks_insert_range(tests_empty[0]->get_blocks()),
+		new arrblocks_erase_range(tests_empty[0]->get_blocks()),
+		
+		new arrblocks_clearing(tests_empty[0]->get_blocks()),
+	};
 	
-	typedef ArrayBlocks<long> ArrayBlocks_long;
+	for(unsigned int i = 0; i < 10; ++i)
+	{ test_aggregator_empty.push_back_test(tests_empty[i]); }
+	test_aggregator_empty.start();
 	
-//	ArrayBlocks_long empty_block;
-	ArrayBlocks<long> back_add_blocks(5);
-//	ArrayBlocks_long front_add_blocks(true, 5);
 	
-	arrblocks_push_back test_push_back(back_add_blocks);
-	test_push_back.start();
+	abstract_arrblocks_test<void> *tests_front_add[10] =
+	{
+		new arrblocks_constructs_front_adding(),
+		
+		new arrblocks_push_back(tests_front_add[0]->get_blocks()),
+		new arrblocks_pop_back(tests_front_add[0]->get_blocks()),
+		
+		new arrblocks_push_front(tests_front_add[0]->get_blocks()),
+		new arrblocks_pop_front(tests_front_add[0]->get_blocks()),
+		
+		new arrblocks_insert(tests_front_add[0]->get_blocks()),
+		new arrblocks_erase(tests_front_add[0]->get_blocks()),
+		
+		new arrblocks_insert_range(tests_front_add[0]->get_blocks()),
+		new arrblocks_erase_range(tests_front_add[0]->get_blocks()),
+		
+		new arrblocks_clearing(tests_front_add[0]->get_blocks()),
+	};
+	
+	for(unsigned int i = 0; i < 10; ++i)
+	{ test_aggregator_front_add.push_back_test(tests_front_add[i]); }
+	test_aggregator_front_add.start();
+	
+	
+	abstract_arrblocks_test<void> *tests_back_add[10] =
+	{
+		new arrblocks_constructs_front_adding(),
+		
+		new arrblocks_push_back(tests_back_add[0]->get_blocks()),
+		new arrblocks_pop_back(tests_back_add[0]->get_blocks()),
+		
+		new arrblocks_push_front(tests_back_add[0]->get_blocks()),
+		new arrblocks_pop_front(tests_back_add[0]->get_blocks()),
+		
+		new arrblocks_insert(tests_back_add[0]->get_blocks()),
+		new arrblocks_erase(tests_back_add[0]->get_blocks()),
+		
+		new arrblocks_insert_range(tests_back_add[0]->get_blocks()),
+		new arrblocks_erase_range(tests_back_add[0]->get_blocks()),
+		
+		new arrblocks_clearing(tests_back_add[0]->get_blocks()),
+	};
+	
+	for(unsigned int i = 0; i < 10; ++i)
+	{ test_aggregator_back_add.push_back_test(tests_back_add[i]); }
+	test_aggregator_back_add.start();
 	
 	return 0;
 }
 
-//--------------------------------------------------
-
-ArrayBlocksTest::ArrayBlocksTest()
-	:
-	  back_add_blocks(5)
-	,front_add_blocks(true, 5)
-{
-	int test_number = 0;
-	
-	set_count_all_tests(7);
-	
-	/*  0 */ set_name_test(test_number++, std::string("cunstructs"));
-	
-	/*  1 */ set_name_test(test_number++, std::string("push_back"));
-	/*  2 */ set_name_test(test_number++, std::string("pop_back"));
-	
-	/*  3 */ set_name_test(test_number++, std::string("push_front"));
-	/*  4 */ set_name_test(test_number++, std::string("pop_front"));
-	
-	/*  5 */ set_name_test(test_number++, std::string("insert"));
-	/*  6 */ set_name_test(test_number++, std::string("erase"));
-	/*  7 */ set_name_test(test_number++, std::string("clearing"));
-	
-	/*  8 */ set_name_test(test_number++, std::string("indexing"));
-	
-	print_test_list();
-}
-
-ArrayBlocksTest::~ArrayBlocksTest() {}
-
-//--------------------------------------------------
-//--------------------------------------------------
-
-int
-ArrayBlocksTest::all()
-{
-	std::cout <<
-	    "---------- ArrayBlocks test ----------"
-	    "\n";
-	
-	this->print_start();
-	
-	this->push_back(back_add_blocks);
-	this->pop_back(back_add_blocks);
-	
-	this->push_front(back_add_blocks);
-	this->pop_front(back_add_blocks);
-	
-	this->print_end();
-	
-	return 1;
-}
-
-//--------------------------------------------------
-
-int
-ArrayBlocksTest::constructs(ArrayBlocks_long &blocks)
-{
-	int test_number = 0;
-	print_test_start(test_number);
-	print_test_end(test_number);
-	return 1;
-}
-
-//--------------------------------------------------
-//--------------------------------------------------
-
-int
-ArrayBlocksTest::push_back(ArrayBlocks_long &blocks)
-{
-	int test_number = 1;
-	int return_code;
-	
-	test_start(test_number);
-	
-	long arr[] = {0,1,2,3,4,5,6,7,8};
-	
-	for(long i = 0; i < 8; ++i)
-	{
-		blocks.pushBack(arr[i]);
-	}
-	blocks.pushBack(8);
-	
-	std::cout << "Result (push):\n";
-	print_all(blocks);
-	if(is_equal(&arr[0], &arr[9], blocks.begin(), blocks.end()))
-	{
-		std::cout << "IS TRUE EQUAL\n";
-		return_code = 0;
-	}
-	else
-	{
-		std::cout << "IS FALSE EQUAL\n";
-		return_code = 1;
-	}
-	
-	test_end(test_number, return_code);
-	
-	return return_code;
-}
-
-int
-ArrayBlocksTest::pop_back(ArrayBlocks_long &blocks)
-{
-	int test_number = 2;
-	int return_code;
-	
-	test_start(test_number);
-	
-	long arr[] = {0,1,2,3,4,5,6,7,8};
-	
-	blocks.popBack(2);
-	blocks.popBack();
-	
-	std::cout << "Result (pop):\n";
-	print_all(blocks);
-	if(is_equal(&arr[0], &arr[6], blocks.begin(), blocks.end()))
-	{
-		std::cout << "IS TRUE EQUAL\n";
-		return_code = 0;
-	}
-	else
-	{
-		std::cout << "IS FALSE EQUAL\n";
-		return_code = 1;
-	}
-	
-	test_end(test_number, return_code);
-	
-	return return_code;
-}
-
-//--------------------------------------------------
-
-
-//--------------------------------------------------
-
-int
-ArrayBlocksTest::push_front(ArrayBlocks_long &blocks)
-{
-	int test_number = 3;
-	int return_code;
-	
-	test_start(test_number);
-	
-	long arr[] = {0,1,2,3,4,5,6,7,8};
-	
-	for(long i = 0; i < 8; ++i)
-	{
-		blocks.pushFront(arr[8-i]);
-	}
-	blocks.pushFront(0);
-	
-	std::cout << "Result (pop):\n";
-	print_all(blocks);
-	if(is_equal(&arr[0], &arr[9], blocks.begin(), blocks.end()))
-	{
-		std::cout << "IS TRUE EQUAL\n";
-		return_code = 0;
-	}
-	else
-	{
-		std::cout << "IS FALSE EQUAL\n";
-		return_code = 1;
-	}
-	
-	test_end(test_number, return_code);
-	return return_code;
-}
-
-int
-ArrayBlocksTest::pop_front(ArrayBlocks_long &blocks)
-{
-	int test_number = 4;
-	int return_code;
-	
-	test_start(test_number);
-	
-	long arr[] = {0,1,2,3,4,5,6,7,8};
-	
-	blocks.popFront(2);
-	blocks.popFront();
-	
-	std::cout << "Result (pop):\n";
-	print_all(blocks);
-	if(is_equal(&arr[3], &arr[9], blocks.begin(), blocks.end()))
-	{
-		std::cout << "IS TRUE EQUAL\n";
-		return_code = 0;
-	}
-	else
-	{
-		std::cout << "IS FALSE EQUAL\n";
-		return_code = 1;
-	}
-	
-	test_end(test_number, return_code);
-	return return_code;
-}
-
-//--------------------------------------------------
-
-int
-ArrayBlocksTest::insert(ArrayBlocks_long &blocks)
-{
-	int test_number = 5;
-	int return_code;
-	
-	test_start(test_number);
-	test_end(test_number, return_code);
-	return return_code;
-}
-
-int
-ArrayBlocksTest::erase(ArrayBlocks_long &blocks)
-{
-	int test_number = 6;
-	int return_code;
-	
-	test_start(test_number);
-	test_end(test_number, return_code);
-	return return_code;
-}
-
-int
-ArrayBlocksTest::clearing(ArrayBlocks_long &blocks)
-{
-	int test_number = 7;
-	int return_code;
-	
-	test_start(test_number);
-	test_end(test_number, return_code);
-	return return_code;
-}
-
-//--------------------------------------------------
-//--------------------------------------------------
-
-int
-ArrayBlocksTest::indexing(ArrayBlocks_long &blocks)
-{
-	int test_number = 8;
-	int return_code;
-	
-	test_start(test_number);
-	test_end(test_number, return_code);
-	return return_code;
-}
-
-//--------------------------------------------------
-//--------------------------------------------------
-
-int
-ArrayBlocksTest::print_all(ArrayBlocks_long &blocks)
-{
-	for(auto it = blocks.begin(); it != blocks.end(); ++it)
-	{
-		std::cout << '\t' << *it << '\n';
-	}
-	return 0;
-}
-
-
-//--------------------------------------------------
 //--------------------------------------------------
