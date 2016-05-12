@@ -199,14 +199,14 @@ test_arrblocks_push_front::_start()
 {
 	int return_code;
 	
-	long arr[] = {8, 7, 6, 5, 4, 3, 2, 1,
+	long arr[] = {-8, -7, -6, -5, -4, -3, -2, -1,
 	              0, 1, 2, 3, 4, 5};
 	
 	for(long i = 0; i < 7; ++i)
 	{
 		_blocks.pushFront(arr[7 - i]);
 	}
-	_blocks.pushFront(8);
+	_blocks.pushFront(-8);
 	
 	std::cout << "Result (pushFront):\n";
 	print_all(_blocks);
@@ -227,11 +227,13 @@ test_arrblocks_pop_front::_start()
 	int return_code;
 	
 	long arr[] = {/*8, 7, 6, */
-	              5, 4, 3, 2, 1,
+	              -5, -4, -3, -2, -1,
 	              0, 1, 2, 3, 4, 5};
 	
 	_blocks.popFront();
 	_blocks.popFront(2);
+	
+	std::cout << "Blocks size: " << _blocks.getSize() << '\n';
 	
 	std::cout << "Result (popFront):\n";
 	print_all(_blocks);
@@ -257,14 +259,15 @@ test_arrblocks_insert::_start()
 	
 //	long arr[] = {5, 4, 3, 2, 1,
 //	              0, 1, 2, 3, 4, 5};
-	long arr[] = {5, -105, 4, -104, 3, -103, 2, -102, 1, -101,
-	              0, -100, 1, -101, 2, -102, 3, -101, 4, -104, 5 -105};
+	long arr[] = {-5, 105, -4, 104, -3, 103, -2, 102, -1, 101,
+	              0, -100, 1, -101, 2, -102, 3, -101, 4, -104, 5, -105};
 	
 	for(auto it = _blocks.begin(); it != _blocks.end(); ++it)
 	{
-		if(*it >= 0)
+		if((*it >= 0 && *it < 100) || (*it < 0 && *it > -100))
 		{
-			_blocks.insert(it, -100 - *it);
+			_blocks.insert(it, ((*it >= 0) ? -100 : 100) - *it);
+			++it;
 		}
 	}
 	std::cout << "Result (insert):\n";
@@ -296,13 +299,14 @@ int
 test_arrblocks_erase::_start()
 {
 	int return_code = 1;
-	long arr[] = {5, 4, 3, 2, 1,
+	long arr[] = {-5, -4, -3, -2, -1,
 	              0, 1, 2, 3, 4, 5};
 		
 	for(auto it = _blocks.begin(); it != _blocks.end(); ++it)
 	{
-		if(*it < 0)
+		if((*it < 0 && *it <= -100) || (*it > 0 && *it > 100))
 		{
+			auto l = *it;
 			_blocks.erase(it);
 			it = _blocks.begin();
 		}
@@ -356,8 +360,8 @@ test_arrblocks_clearing::_start()
 int main()
 {
 	TestAggregator<void> test_aggregator_empty("Empty Array Blocks");
-	TestAggregator<void> test_aggregator_front_add("Front-add Array Blocks");
-	TestAggregator<void> test_aggregator_back_add( "Back-add Array Blocks");
+//	TestAggregator<void> test_aggregator_front_add("Front-add Array Blocks");
+//	TestAggregator<void> test_aggregator_back_add( "Back-add Array Blocks");
 	
 	auto init_and_start_tests =
 	+[](TestAggregator<void> &test_aggregator, int type)

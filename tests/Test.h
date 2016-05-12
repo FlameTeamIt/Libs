@@ -5,7 +5,9 @@
 #include <vector>
 #include <iostream>
 
+#ifdef __linux
 #include <Others/TextStyle.h>
+#endif
 //------------------------------------------------------------
 //------------------------------------------------------------
 
@@ -17,17 +19,25 @@ class AbstractTest
 	
 	void __print_start()
 	{
+#if defined(__linux)
+		std::cout << "> " TEXT_STYLE_BOLD TEXT_STYLE_CYAN "Start" TEXT_STYLE_NULL " " << __name << '\n';
+#else
 		std::cout << "> Start " << __name << '\n';
+#endif
 	}
 
 	void __print_end()
 	{
+#if defined(__linux)
+		std::cout << "> " TEXT_STYLE_BOLD TEXT_STYLE_CYAN "End" TEXT_STYLE_NULL " " << __name << "\n\n";
+#else
 		std::cout << "> End " << __name << "\n\n";
+#endif
 	}
 	
 	void __print_message_true()
 	{
-#ifdef __linux__
+#if defined(__linux)
 		std::cout << "----> " TEXT_STYLE_BOLD TEXT_STYLE_GREEN "SUCCESS TEST\n" TEXT_STYLE_NULL;
 #else
 		std::cout << "----> SUCCESS TEST\n";
@@ -36,7 +46,7 @@ class AbstractTest
 
 	void __print_message_false()
 	{
-#ifdef __linux__
+#if defined(__linux)
 		std::cout << "----> " TEXT_STYLE_BOLD TEXT_STYLE_RED "FAILED TEST\n" TEXT_STYLE_NULL;
 #else
 		std::cout << "----> FAILED TEST\n";
@@ -102,12 +112,24 @@ protected:
 	
 	void _print_start()
 	{
+#if defined(__linux)
+		std::cout << TEXT_STYLE_BOLD TEXT_STYLE_YELLOW "-------------------- " TEXT_STYLE_NULL
+				  << __name
+				  << TEXT_STYLE_BOLD TEXT_STYLE_YELLOW " --------------------" TEXT_STYLE_NULL "\n";
+#else
 		std::cout << "-------------------- " << __name << " --------------------" "\n";
+#endif
 	}
 					 
 	void _print_end()
 	{
+#if defined(__linux)
+		std::cout << TEXT_STYLE_BOLD TEXT_STYLE_YELLOW "-------------------- " TEXT_STYLE_NULL
+					 "END"
+					 TEXT_STYLE_BOLD TEXT_STYLE_YELLOW " --------------------" TEXT_STYLE_NULL "\n\n";
+#else
 		std::cout << "-------------------- "    "END"     " --------------------" "\n\n";
+#endif
 	}
 	
 	virtual void _print_statistic() const {}
