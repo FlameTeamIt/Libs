@@ -31,7 +31,7 @@ public:
 
 
 
-class test_arrblocks_constructs_empty;
+class test_arrblocks_constructs_empty_back_adding;
 class test_arrblocks_constructs_back_adding;
 class test_arrblocks_constructs_front_adding;
 
@@ -52,18 +52,35 @@ class test_arrblocks_clearing;
 
 
 
-class test_arrblocks_constructs_empty : public abstract_arrblocks_test<void>
+class test_arrblocks_constructs_empty_back_adding : public abstract_arrblocks_test<void>
 {
 	ArrayBlocks<long> __empty_blocks;
 	
 public:
-	typedef test_arrblocks_constructs_empty this_type;
+	typedef test_arrblocks_constructs_empty_back_adding this_type;
 	
-	test_arrblocks_constructs_empty();
-	test_arrblocks_constructs_empty(const test_arrblocks_constructs_empty &) = delete;
-	test_arrblocks_constructs_empty(test_arrblocks_constructs_empty &&) = delete;
+	test_arrblocks_constructs_empty_back_adding();
+	test_arrblocks_constructs_empty_back_adding(const test_arrblocks_constructs_empty_back_adding &) = delete;
+	test_arrblocks_constructs_empty_back_adding(test_arrblocks_constructs_empty_back_adding &&) = delete;
 	
-	~test_arrblocks_constructs_empty();
+	~test_arrblocks_constructs_empty_back_adding();
+protected:
+	virtual int _start();
+};
+
+
+class test_arrblocks_constructs_empty_front_adding : public abstract_arrblocks_test<void>
+{
+	ArrayBlocks<long> __empty_blocks;
+	
+public:
+	typedef test_arrblocks_constructs_empty_front_adding this_type;
+	
+	test_arrblocks_constructs_empty_front_adding();
+	test_arrblocks_constructs_empty_front_adding(const test_arrblocks_constructs_empty_front_adding &) = delete;
+	test_arrblocks_constructs_empty_front_adding(test_arrblocks_constructs_empty_front_adding &&) = delete;
+	
+	~test_arrblocks_constructs_empty_front_adding();
 protected:
 	virtual int _start();
 };

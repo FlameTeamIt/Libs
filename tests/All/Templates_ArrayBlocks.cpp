@@ -14,11 +14,17 @@ print_all(ArrayBlocks<long> &blocks)
 	}
 }
 
-test_arrblocks_constructs_empty::test_arrblocks_constructs_empty()
+test_arrblocks_constructs_empty_back_adding::test_arrblocks_constructs_empty_back_adding()
 	: 
 	  abstract_arrblocks_test<void>(__empty_blocks,
-	                                "constructs_empty")
+	                                "constructs_empty_back_adding")
 	  ,__empty_blocks() {}
+
+test_arrblocks_constructs_empty_front_adding::test_arrblocks_constructs_empty_front_adding()
+	: 
+	  abstract_arrblocks_test<void>(__empty_blocks,
+	                                "constructs_empty_front_adding")
+	  ,__empty_blocks(true) {}
 
 test_arrblocks_constructs_back_adding::test_arrblocks_constructs_back_adding()
 	:
@@ -33,7 +39,8 @@ test_arrblocks_constructs_front_adding::test_arrblocks_constructs_front_adding()
 	                                "constructs_front_adding")
 	  ,__front_adding_blocks(true, 5) {}
 
-test_arrblocks_constructs_empty::~test_arrblocks_constructs_empty() {};
+test_arrblocks_constructs_empty_back_adding::~test_arrblocks_constructs_empty_back_adding() {};
+test_arrblocks_constructs_empty_front_adding::~test_arrblocks_constructs_empty_front_adding() {};
 test_arrblocks_constructs_back_adding::~test_arrblocks_constructs_back_adding() {};
 test_arrblocks_constructs_front_adding::~test_arrblocks_constructs_front_adding() {};
 
@@ -87,7 +94,25 @@ test_arrblocks_clearing::~test_arrblocks_clearing() {}
 //--------------------------------------------------
 
 int
-test_arrblocks_constructs_empty::_start()
+test_arrblocks_constructs_empty_back_adding::_start()
+{
+	int return_code;
+	
+	if(this->_blocks.getCapacity() == DEF_DEFAULT_CAPACITY)
+	{
+		return_code = 0;
+	}
+	else
+	{
+		return_code = 1;
+	}
+	
+	return return_code;
+}
+
+
+int
+test_arrblocks_constructs_empty_front_adding::_start()
 {
 	int return_code;
 	
@@ -252,6 +277,10 @@ test_arrblocks_pop_front::_start()
 //--------------------------------------------------
 //--------------------------------------------------
 
+/*
+ * FAIL
+ * bad insertig
+ */
 int
 test_arrblocks_insert::_start()
 {
@@ -306,7 +335,7 @@ test_arrblocks_erase::_start()
 	{
 		if((*it < 0 && *it <= -100) || (*it > 0 && *it > 100))
 		{
-			auto l = *it;
+//			auto l = *it;
 			_blocks.erase(it);
 			it = _blocks.begin();
 		}
@@ -359,51 +388,76 @@ test_arrblocks_clearing::_start()
 
 int main()
 {
-	TestAggregator<void> test_aggregator_empty("Empty Array Blocks");
+	TestAggregator<void> test_aggregator_empty_back("Empty Array Blocks (back)");
+	TestAggregator<void> test_aggregator_empty_front("Empty Array Blocks (front)");
 //	TestAggregator<void> test_aggregator_front_add("Front-add Array Blocks");
-//	TestAggregator<void> test_aggregator_back_add( "Back-add Array Blocks");
+//	TestAggregator<void> test_aggregator_back_add("Back-add Array Blocks");
 	
 	auto init_and_start_tests =
 	+[](TestAggregator<void> &test_aggregator, int type)
 	{
-		abstract_arrblocks_test<void> *tests[10];
+		abstract_arrblocks_test<void> *test_construct;
 		switch (type)
 		{
 		case 1:
-			tests[0] = new test_arrblocks_constructs_empty();
+			test_construct = new test_arrblocks_constructs_empty_back_adding();
 			break;
 		case 2:
-			tests[0] = new test_arrblocks_constructs_front_adding();
+			test_construct = new test_arrblocks_constructs_empty_front_adding();
 			break;
 		case 3:
-			tests[0] = new test_arrblocks_constructs_back_adding();
+			test_construct = new test_arrblocks_constructs_front_adding();
+			break;
+		case 4:
+			test_construct = new test_arrblocks_constructs_back_adding();
 			break;
 		default:
 			return;
 		}
 		
-		tests[1] = new test_arrblocks_push_back(tests[0]->get_blocks());
-		tests[2] = new test_arrblocks_pop_back(tests[0]->get_blocks());
+		test_aggregator.push_back_test(
+			new test_arrblocks_push_back(test_construct->get_blocks())
+		);
+		test_aggregator.push_back_test(
+			new test_arrblocks_pop_back(test_construct->get_blocks())
+		);
 		
-		tests[3] = new test_arrblocks_push_front(tests[0]->get_blocks());
-		tests[4] = new test_arrblocks_pop_front(tests[0]->get_blocks());
+
+		test_aggregator.push_back_test(
+			new test_arrblocks_push_front(test_construct->get_blocks())
+		);
+		test_aggregator.push_back_test(
+			new test_arrblocks_pop_front(test_construct->get_blocks())
+		);
 		
-		tests[5] = new test_arrblocks_insert(tests[0]->get_blocks());
-		tests[6] = new test_arrblocks_erase(tests[0]->get_blocks());
 		
-		tests[7] = new arrblocks_insert_range(tests[0]->get_blocks());
-		tests[8] = new test_arrblocks_erase_range(tests[0]->get_blocks());
+		test_aggregator.push_back_test(
+			new test_arrblocks_insert(test_construct->get_blocks())
+		);
+		test_aggregator.push_back_test(
+			new test_arrblocks_erase(test_construct->get_blocks())
+		);
 		
-		tests[9] = new test_arrblocks_clearing(tests[0]->get_blocks());
 		
-		for(unsigned int i = 0; i < 10; ++i)
-		{ test_aggregator.push_back_test(tests[i]); }
+//		test_aggregator.push_back_test(
+//			new arrblocks_insert_range(test_construct->get_blocks())
+//		);
+//		test_aggregator.push_back_test(
+//			new test_arrblocks_erase_range(test_construct->get_blocks())
+//		);
+		
+		
+		test_aggregator.push_back_test(
+			new test_arrblocks_clearing(test_construct->get_blocks())
+		);
+		
 		test_aggregator.start();
 	};
 	
-	init_and_start_tests(test_aggregator_empty,     1);
-//	init_and_start_tests(test_aggregator_front_add, 2);
-//	init_and_start_tests(test_aggregator_back_add,  3);
+	init_and_start_tests(test_aggregator_empty_back,  1);
+	init_and_start_tests(test_aggregator_empty_front, 2);
+//	init_and_start_tests(test_aggregator_front_add,   3);
+//	init_and_start_tests(test_aggregator_back_add,    4);
 	
 	return 0;
 }
