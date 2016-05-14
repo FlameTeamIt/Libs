@@ -182,8 +182,8 @@ protected:
 	
 	template<typename TInputIt, typename TOutIt>
 	inline void _block_move_elements(size_t new_cells,
-	                                 TInputIt & source_start,
-	                                 TInputIt & source_end,
+	                                 const TInputIt & source_start,
+	                                 const TInputIt & source_end,
 	                                 TOutIt & target);
 	
 	template<bool is_insert,
@@ -316,7 +316,10 @@ ArrayBlocks<T>::ArrayBlocks(bool front_adding)
 	: SimpleArray<T>(DEFAULT_CAPACITY)
 	,is_front_adding(front_adding)
 	,block_number(0)
-{}
+{
+	this->arr_first_index = front_adding ? DEFAULT_CAPACITY : 0;
+	this->arr_last_index = front_adding ? DEFAULT_CAPACITY : 0;
+}
 
 template<typename T>
 ArrayBlocks<T>::ArrayBlocks(bool front_adding, size_t init_size)
@@ -982,13 +985,13 @@ template<typename T>
 template<typename TInputIt, typename TOutIt>
 inline void 
 ArrayBlocks<T>::_block_move_elements(size_t new_cells,
-                                     TInputIt & source_first,
-                                     TInputIt & source_last,
+                                     const TInputIt & source_first,
+                                     const TInputIt & source_last,
                                      TOutIt & target_it)
 {
-	auto source_it = source_first;
+	TInputIt source_it = source_first;
 	for(auto i = new_cells;
-	    i != 0 && &(*source_it) != &(*source_last);
+	    i != 0 && (*source_it) != (*source_last);
 	    --i, ++source_it, ++target_it)
 	{
 		placement_new(&(*target_it), move(*source_it));
@@ -1015,10 +1018,8 @@ ArrayBlocks<T>::_block_generic_change_size(TIndexType &index_type,
 		{
 			this->pushFront(
 			    is_same_types<TConcrete, T>()
-			    ?
-			        move(*obj)
-			    :
-			        *(obj)
+					? move(*obj)
+					: *(obj)
 			);
 		}
 		else
@@ -1030,21 +1031,11 @@ ArrayBlocks<T>::_block_generic_change_size(TIndexType &index_type,
 	
 	if(block_index.global_index == block_index.current_size - is_insert)
 	{
-		if(is_insert)
-		{
-			this->pushBack(
-			    is_same_types<TConcrete, T>()
-			    ?
-			        move(*obj)
-			    :
-			        *(obj)
-			);
-		}
-		else
+		if(!is_insert)
 		{
 			this->popBack();
+			return 1;
 		}
-		return 1;
 	}
 	
 	return _block_generic_change_size_option<is_insert, TConcrete>
@@ -1064,6 +1055,7 @@ ArrayBlocks<T>::_block_generic_change_size_option(BlockIndex<T> &block_index,
 	
 	ArrayBlocks<T> * p_block = block_index.p_block;
 	
+	// что использую -- "прямой" или "обратный" итератор
 	if(__block_isIterator(is_insert, block_index))
 	{
 		iterator it_source;
@@ -1128,7 +1120,7 @@ ArrayBlocks<T>::_block_generic_change_size_option(BlockIndex<T> &block_index,
 			it_target = p_block->rbegin();
 			
 			// всё готово для перемещения и вставки
-			_block_move_elements(0, it_source, block_index.it_back, it_target);
+			_block_move_elements(1, it_source, block_index.it_back, it_target);
 			--block_index.it_back;
 			(is_same_types<T, TConcrete>())
 				? *block_index.it_back = move(*obj)
@@ -1142,7 +1134,7 @@ ArrayBlocks<T>::_block_generic_change_size_option(BlockIndex<T> &block_index,
 			it_source = it_target; ++it_source;
 			
 			// всё готово для перемещения и удаления
-			_block_move_elements(1, it_source, it_source_last, it_target);
+			_block_move_elements(0, it_source, it_source_last, it_target);
 			
 			it_source_last->~T();
 			
@@ -1228,7 +1220,7 @@ ArrayBlocks<T>::pushFront(T &&obj)
 			--this->arr_first_index;
 			++this->arr_size;
 			
-			this->inc_arr[this->arr_first_index] = obj;
+			placement_new(this->inc_arr + this->arr_first_index, move(obj));
 			
 			return 1;
 		}
@@ -1256,11 +1248,22 @@ ArrayBlocks<T>::pushBack(const T &obj)
 		// нужно сдвинуть массив на один элемент влево
 		if(this->arr_size < this->arr_capacity)
 		{
-			std::copy(this->inc_arr + this->arr_first_index,
-			          this->inc_arr + this->arr_capacity,
-			          this->inc_arr + this->arr_first_index - 1);
-			
-			array_copying(1, &obj, this->inc_arr + this->arr_capacity - 1);
+			if(this->arr_size)
+			{
+				placement_new(this->inc_arr + this->arr_first_index - 1,
+				              *(this->inc_arr + this->arr_first_index));
+				
+				copy(this->inc_arr + this->arr_first_index + 1,
+				     this->inc_arr + this->arr_last_index,
+				     this->inc_arr + this->arr_first_index);
+				
+				this->inc_arr[this->arr_last_index - 1] = obj;
+			}
+			else
+			{
+				placement_new(this->inc_arr + this->arr_first_index - 1,
+				              obj);
+			}
 			
 			--this->arr_first_index;
 			++this->arr_size;
@@ -1289,12 +1292,23 @@ ArrayBlocks<T>::pushBack(T &&obj)
 	{
 		if(this->arr_size < this->arr_capacity)
 		{
-			std::copy(this->inc_arr + this->arr_first_index,
-			          this->inc_arr + this->arr_capacity,
-			          this->inc_arr + this->arr_first_index - 1);
+			if(this->arr_size)
+			{
+				placement_new(this->inc_arr + this->arr_first_index - 1,
+				              *(this->inc_arr + this->arr_first_index));
+				
+				copy(this->inc_arr + this->arr_first_index + 1,
+				     this->inc_arr + this->arr_last_index,
+				     this->inc_arr + this->arr_first_index);
+				
+				this->inc_arr[this->arr_last_index - 1] = move(obj);
+			}
+			else
+			{
+				placement_new(this->inc_arr + this->arr_first_index - 1,
+				              move(obj));
+			}
 			
-			this->inc_arr[this->arr_capacity - 1].~T();
-			this->inc_arr[this->arr_capacity - 1] = obj;
 			
 			--this->arr_first_index;
 			++this->arr_size;
@@ -1321,6 +1335,10 @@ ArrayBlocks<T>::insert(size_t pos_index, const T &obj)
 	return _block_generic_change_size
 	    <true, size_t, const T>(pos_index, &obj);
 }
+
+// -------------------------------------------------------------------
+// TODO: Неправильная логика добавления. Нужно переделать.
+// TODO: Новый элемент должен оказываться перед старым. 
 
 template<typename T>
 int
@@ -1358,6 +1376,8 @@ ArrayBlocks<T>::insert(TArrayBlockIterator position,
 	return 1;
 }
 
+// -------------------------------------------------------------------
+
 template<typename T>
 void
 ArrayBlocks<T>::popFront(size_t count)
@@ -1393,7 +1413,7 @@ int
 ArrayBlocks<T>::erase(size_t pos_index)
 {
 	return _block_generic_change_size
-			<false, size_t, void>(pos_index);
+			<false, size_t, T>(pos_index);
 }
 
 template<typename T>
@@ -1402,7 +1422,7 @@ int
 ArrayBlocks<T>::erase(TArrayBlockIterator &pos_it)
 {
 	return _block_generic_change_size
-			<false, TArrayBlockIterator, void>(pos_it);
+			<false, TArrayBlockIterator, T>(pos_it);
 }
 
 template<typename T>
@@ -1428,6 +1448,22 @@ ArrayBlocks<T>::clear()
 		ref_object = &(*it);
 		_t_bytes.nulling();
 	}
+	
+	auto p_blocks = this->_block_getFirstBlock();
+	while(p_blocks != nullptr)
+	{
+		p_blocks->arr_size = 0;
+		if(p_blocks->isFrontAdding())
+		{
+			p_blocks->arr_first_index = p_blocks->arr_last_index;
+		}
+		else
+		{
+			p_blocks->arr_last_index = p_blocks->arr_first_index;
+		}
+		p_blocks = p_blocks->next_block.operator ->();
+	}
+	
 }
 
 template<typename T>
