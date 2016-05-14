@@ -125,20 +125,9 @@ template<class T> inline
 T&& foward(T &&reference) noexcept;
 
 // obj_input and obj_output not using!
-#ifdef FUTURE
-template<typename TIteratorInput, typename TIteratorOutput,
-         typename TInput, typename TOutput>
-void copy(const TIteratorInput &start, const TIteratorInput &end,
-                TIteratorOutput &out,
-          const TInput &obj_input /*= *start*/, const TOutput &obj_output /*= *out*/);
-template<typename TIteratorInput, typename TIteratorOutput,
-         typename TInput = decltype(TIteratorInput::operator *()),
-         typename TOutput = decltype(TIteratorOutput::operator *()),
-         bool IS_SAME = (is_same_types<TInput, TOutput>()
-                         || is_same_types<TInput, const TOutput>()) >
-void copy(TIteratorInput &start, TIteratorInput &end,
-          TIteratorOutput &out);
-#endif
+template<typename TIteratorInput, typename TIteratorOutput>
+void copy(TIteratorInput start, TIteratorInput end,
+          TIteratorOutput out);
 
 template<typename TIterator>
 unsigned long count_iterations(const TIterator &start, const TIterator &end);
@@ -218,37 +207,16 @@ foward(T &&reference) noexcept
 	return static_cast<T &&>(reference);
 }
 
-#ifdef FUTURE
-template<typename TIteratorInput, typename TIteratorOutput,
-         typename TInput,         typename TOutput>
+template<typename TIteratorInput, typename TIteratorOutput>
 void flame_ide::templates::
-copy(const TIteratorInput &start, const TIteratorInput &end,
-           TIteratorOutput &out,
-     const TInput &, const TOutput &)
+copy(TIteratorInput start, TIteratorInput end,
+     TIteratorOutput out)
 {
-	if(is_same_types<TInput, TOutput>)
 	for(auto iterator = start; iterator != end; ++iterator, ++out)
 	{
-		new (out.operator ->()) TInput(*iterator);
+		*out = *iterator;
 	}
 }
-#endif
-
-#ifdef FUTURE
-template<typename TIteratorInput, typename TIteratorOutput,
-         typename TInput,         typename TOutput>
-void flame_ide::templates::
-copy(TIteratorInput &&start, TIteratorInput &&end,
-     TIteratorOutput &out,
-     TInput &, TOutput &)
-{
-	if(is_same_types<TInput, TOutput>)
-	for(auto iterator = start; iterator != end; ++iterator, ++out)
-	{
-		new (out.operator ->()) TInput(move(*iterator));
-	}
-}
-#endif
 
 template<typename TIterator>
 unsigned long flame_ide::templates::

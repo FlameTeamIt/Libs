@@ -7,32 +7,32 @@ namespace flame_ide
 {namespace templates
 {
 
+template<typename T>
+class InterfaceAllocator
+{
+	virtual void* __allocate();
+	virtual void  __deallocate(void* pointer, unsigned long size);
+	
+	virtual T*   __construct();
+	virtual void __destroy(T* t_pointer);
+public:
+	void* allocate();
+	void  deallocate(void* pointer, unsigned long size);
+	
+	T* construct();
+	template<class ... TArgs>
+	T* construct();
+	
+	void destroy(T* t_pointer);
+}
 
 template<typename T>
-struct Allocator
-{
-	static void* allocate();
-	static void  deallocate(void* pointer, unsigned long size);
-	
-	static T* construct();
-	template<class ... TArgs>
-	static T* construct();
-	
-	static void destroy(T* t_pointer);
-};
+class Allocator : public InterfaceAllocator<T>
+{};
 
 template<typename T>
-struct StackAllocator
-{
-	static void* allocate();
-	static void  deallocate(void* pointer, unsigned long size);
-	
-	static T construct();
-	template<class ... TArgs>
-	static T construct(TArgs && ... args);
-	
-	static void destroy(T* t_pointer);
-};
+class StackAllocator : public InterfaceAllocator
+{};
 
 }}
 

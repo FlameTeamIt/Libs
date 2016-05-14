@@ -271,7 +271,7 @@ SimpleArray<T>::pushBack(const T &obj)
 	}
 	else
 	{
-		inc_arr[arr_size] = obj;
+		placement_new(this->inc_arr + this->arr_size, obj);
 		arr_size++;
 		arr_last_index++;
 	}
@@ -283,7 +283,7 @@ SimpleArray<T>::pushBack(T &&obj)
 {
 	if(arr_size < arr_capacity)
 	{
-		inc_arr[arr_size] = obj;
+		placement_new(this->inc_arr + this->arr_size, move(obj));
 		arr_size++;
 		arr_last_index++;
 	}
@@ -465,18 +465,15 @@ SimpleArray<T>::erase(size_t pos_index, size_t count)
 	auto tmp_size = pos_index + count;
 	if(this->arr_size >= tmp_size)
 	{
-		array_call_distructors(count, this->inc_arr + pos_index);
-		
 		//нужно сдвинуть по необходимости
 		if(this->arr_size > tmp_size)
 		{
 			// сдвиг
-			for(auto i = tmp_size; i < this->arr_size; ++i)
-			{
-				std::copy(this->inc_arr+tmp_size,
-						  this->inc_arr+this->arr_size,
-						  this->inc_arr+pos_index);
-			}
+			copy(this->inc_arr + tmp_size,
+			     this->inc_arr + this->arr_size,
+			     this->inc_arr + pos_index);
+			
+			array_call_distructors(count, this->inc_arr + this->arr_size - count);
 		}
 		this->arr_size -= count;
 		this->arr_last_index = this->arr_size;
