@@ -31,22 +31,26 @@ public:
 	typedef SimpleArrayReverseIterator<T> friend_type;
 	
 	
-	inline my_type& operator =(const my_type &iterator) noexcept;
-	inline my_type& operator =(my_type &&iterator)      noexcept;
+	inline my_type& operator =(my_type &iterator)  noexcept;
+	inline my_type& operator =(my_type &&iterator) noexcept;
 	
 	inline const my_type& operator =(const my_type &iterator) const noexcept;
 	inline const my_type& operator =(my_type &&iterator)      const noexcept;
 	
 	
-	inline my_type& operator =(const friend_type &iterator) noexcept;
-	inline my_type& operator =(friend_type &&iterator)      noexcept;
+	inline my_type& operator =(friend_type &iterator)  noexcept;
+	inline my_type& operator =(friend_type &&iterator) noexcept;
 	
 	inline const my_type& operator =(const friend_type &iterator) const noexcept;
 	inline const my_type& operator =(friend_type &&iterator)      const noexcept;
 	
 	
-	virtual T& operator *()  const noexcept;
-	virtual T* operator ->() const noexcept;
+	virtual T& operator *()  noexcept;
+	virtual T* operator ->() noexcept;
+	
+	virtual const T& operator *()  const noexcept;
+	virtual const T* operator ->() const noexcept;
+	
 	
 	inline my_type& operator ++();
 	inline my_type& operator --();
@@ -113,22 +117,26 @@ public:
 	typedef SimpleArrayIterator<T> friend_type;
 	
 	
-	inline const my_type& operator =(const my_type &iterator) noexcept;
-	inline const my_type& operator =(my_type &&iterator) noexcept;
+	inline my_type& operator =(my_type &iterator) noexcept;
+	inline my_type& operator =(my_type &&iterator) noexcept;
 	
 	inline const my_type& operator =(const my_type &iterator) const noexcept;
 	inline const my_type& operator =(my_type &&iterator)      const noexcept;
 	
 	
-	inline const my_type& operator =(const friend_type &iterator) noexcept;
-	inline const my_type& operator =(friend_type &&iterator) noexcept;
+	inline my_type& operator =(friend_type &iterator) noexcept;
+	inline my_type& operator =(friend_type &&iterator) noexcept;
 	
 	inline const my_type& operator =(const friend_type &iterator) const noexcept;
 	inline const my_type& operator =(friend_type &&iterator)      const noexcept;
 	
 	
-	virtual inline T& operator *()  const noexcept;
-	virtual inline T* operator ->() const noexcept;
+	virtual T& operator *()  noexcept;
+	virtual T* operator ->() noexcept;
+	
+	virtual const T& operator *()  const noexcept;
+	virtual const T* operator ->() const noexcept;
+	
 	
 	inline my_type& operator ++();
 	inline my_type& operator --();
@@ -273,7 +281,7 @@ SimpleArrayIterator<T>::operator =(SimpleArrayIterator<T> &&iterator) noexcept
 
 template<typename T>
 SimpleArrayIterator<T>&
-SimpleArrayIterator<T>::operator =(const SimpleArrayIterator<T> &iterator) noexcept
+SimpleArrayIterator<T>::operator =(SimpleArrayIterator<T> &iterator) noexcept
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	return *this;
@@ -307,7 +315,7 @@ noexcept
 
 template<typename T>
 SimpleArrayIterator<T>&
-SimpleArrayIterator<T>::operator =(const SimpleArrayReverseIterator<T> &iterator)
+SimpleArrayIterator<T>::operator =(SimpleArrayReverseIterator<T> &iterator)
 noexcept
 {
 	this->inc_data_iterator = iterator.operator ->();
@@ -334,13 +342,27 @@ noexcept
 
 template<typename T>
 T&
-SimpleArrayIterator<T>::operator *() const noexcept
+SimpleArrayIterator<T>::operator *() noexcept
 {
 	return *(this->inc_data_iterator);
 }
 
 template<typename T>
 T*
+SimpleArrayIterator<T>::operator ->() noexcept
+{
+	return this->inc_data_iterator;
+}
+
+template<typename T>
+const T&
+SimpleArrayIterator<T>::operator *() const noexcept
+{
+	return *(this->inc_data_iterator);
+}
+
+template<typename T>
+const T*
 SimpleArrayIterator<T>::operator ->() const noexcept
 {
 	return this->inc_data_iterator;
@@ -443,7 +465,7 @@ SimpleArrayReverseIterator<T>
 {}
 
 template<typename T>
-const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator =(
 	SimpleArrayReverseIterator<T> &&iterator) noexcept
 {
@@ -452,9 +474,9 @@ SimpleArrayReverseIterator<T>::operator =(
 }
 
 template<typename T>
-const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator =(
-	const SimpleArrayReverseIterator<T> &iterator) noexcept
+	SimpleArrayReverseIterator<T> &iterator) noexcept
 {
 	this->inc_data_iterator = iterator.inc_data_iterator;
 	return *this;
@@ -479,7 +501,7 @@ SimpleArrayReverseIterator<T>::operator =(
 }
 
 template<typename T>
-const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator =(
 		SimpleArrayIterator<T> &&iterator) noexcept
 {
@@ -488,9 +510,9 @@ SimpleArrayReverseIterator<T>::operator =(
 }
 
 template<typename T>
-const SimpleArrayReverseIterator<T>&
+SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator =(
-		const SimpleArrayIterator<T> &iterator) noexcept
+		SimpleArrayIterator<T> &iterator) noexcept
 {
 	this->inc_data_iterator = iterator.operator ->();
 	return *this;
@@ -516,13 +538,27 @@ SimpleArrayReverseIterator<T>::operator =(
 
 template<typename T>
 T&
-SimpleArrayReverseIterator<T>::operator *() const noexcept
+SimpleArrayReverseIterator<T>::operator *() noexcept
 {
 	return *(this->inc_data_iterator);
 }
 
 template<typename T>
 T*
+SimpleArrayReverseIterator<T>::operator ->() noexcept
+{
+	return (this->inc_data_iterator);
+} 
+
+template<typename T>
+const T&
+SimpleArrayReverseIterator<T>::operator *() const noexcept
+{
+	return *(this->inc_data_iterator);
+}
+
+template<typename T>
+const T*
 SimpleArrayReverseIterator<T>::operator ->() const noexcept
 {
 	return (this->inc_data_iterator);

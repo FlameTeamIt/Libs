@@ -19,24 +19,12 @@ public:
 	
 	typedef IteratorInterface<TIterator, TData> my_type;
 	
-	virtual TData& operator *() const noexcept = 0;
-	virtual TData* operator ->() const noexcept = 0;
-	
-//	template<TIterator, TData> friend
-//	bool operator ==(const IteratorInterface<TIterator, TData>& iiterator1,
-//					 const IteratorInterface<TIterator, TData>& iiterator2);
-//	template<TIterator, TData> friend
-//	bool operator !=(const IteratorInterface<TIterator, TData>& iiterator1,
-//					 const IteratorInterface<TIterator, TData>& iiterator2);
+	virtual TData& operator *() noexcept = 0;
+	virtual TData* operator ->() noexcept = 0;
+	virtual const TData& operator *() const noexcept = 0;
+	virtual const TData* operator ->() const noexcept = 0;
 };
 
-
-//template<class TIterator, class TData>
-//bool operator ==(const IteratorInterface<TIterator, TData>& iiterator1,
-//				 const IteratorInterface<TIterator, TData>& iiterator2);
-//template<class TIterator, class TData>
-//bool operator !=(const IteratorInterface<TIterator, TData>& iiterator1,
-//				 const IteratorInterface<TIterator, TData>& iiterator2);
 
 template<class TIterator, class TData>
 class BasicIterator : public IteratorInterface<TIterator, TData>
@@ -71,24 +59,6 @@ public:
 	inline const BasicReverseIterator<TIterator, TData>& operator ++() const;
 	inline const BasicReverseIterator<TIterator, TData>& operator --() const;
 };
-
-
-// operators
-
-//template<class TIterator, class TData>
-//bool operator ==(const IteratorInterface<TIterator, TData>& iiterator1,
-//				 const IteratorInterface<TIterator, TData>& iiterator2)
-//{
-//	return iiterator1.inc_data_iterator == iiterator2.inc_data_iterator;
-//}
-
-//template<class TIterator, class TData>
-//bool operator !=(const IteratorInterface<TIterator, TData>& iiterator1,
-//				 const IteratorInterface<TIterator, TData>& iiterator2)
-//{
-//	return iiterator1.inc_data_iterator != iiterator2.inc_data_iterator;
-//}
-
 
 
 }}

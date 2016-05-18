@@ -931,7 +931,7 @@ template<typename TArrayBlockIterator>
 BlockIndex<T>
 ArrayBlocks<T>::_block_findBlock(const TArrayBlockIterator &element_iterator)
 {
-	T *element_address = &(*element_iterator);
+	const T *element_address = &(*element_iterator);
 	BlockIndex<T> block_index;
 	
 	block_index.current_size = this->getSize();
