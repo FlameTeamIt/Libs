@@ -39,10 +39,10 @@ test_arrblocks_constructs_front_adding::test_arrblocks_constructs_front_adding()
 	                                "constructs_front_adding")
 	  ,__front_adding_blocks(true, 5) {}
 
-test_arrblocks_constructs_empty_back_adding::~test_arrblocks_constructs_empty_back_adding() {};
-test_arrblocks_constructs_empty_front_adding::~test_arrblocks_constructs_empty_front_adding() {};
-test_arrblocks_constructs_back_adding::~test_arrblocks_constructs_back_adding() {};
-test_arrblocks_constructs_front_adding::~test_arrblocks_constructs_front_adding() {};
+test_arrblocks_constructs_empty_back_adding::~test_arrblocks_constructs_empty_back_adding() {}
+test_arrblocks_constructs_empty_front_adding::~test_arrblocks_constructs_empty_front_adding() {}
+test_arrblocks_constructs_back_adding::~test_arrblocks_constructs_back_adding() {}
+test_arrblocks_constructs_front_adding::~test_arrblocks_constructs_front_adding() {}
 
 
 
