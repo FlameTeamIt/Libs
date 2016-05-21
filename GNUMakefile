@@ -84,7 +84,6 @@ Flag_Lib :=-shared
 
 Target_lib := $(LibPath)/lib$(Name).so
 Target_lib_static := $(LibPath)/lib$(Name).a
-Target_bin_test := $(BinPath)/tests/test_$(Name)
 
 Path_ALL := \
 	$(shell find $(Path) -type d)
@@ -127,7 +126,7 @@ $(Objects) : $(ObjPath)/%.o : $(Path)/%.cpp
 #
 # Для сборки статичной и динамической библиотек
 #
-.link: .compile .link_libs .link_test
+.link: .compile .link_libs 
 
 .link_libs: \
 	$(Target_lib) \
@@ -143,12 +142,6 @@ $(Target_lib_static): $(Objects)
 
 .link_test: .compile $(Target_bin_test)
 
-# видно с коммандной строки
-$(Target_bin_test): .compile .link_libs
-	$(CC) $(Flags) $(Defines) $(Define_BuildNumber) $(Target_lib) $(Sources_Test) -o $(Target_bin_test)
-#--------------------
-exec_test:
-	./$(Target_bin_test)
 #--------------------
 #
 # Для установки $(Name) как библиотеки
