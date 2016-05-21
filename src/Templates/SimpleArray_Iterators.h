@@ -372,14 +372,14 @@ template<typename T>
 SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++()
 {
-	this->BasicIterator<T*,T>::operator ++();
+	this->operator ++();
 	return *this;
 }
 template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++() const
 {
-	this->BasicIterator<T*,T>::operator ++();
+	this->operator ++();
 	return *this;
 }
 
@@ -387,14 +387,14 @@ template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --() const
 {
-	this->BasicIterator<T*,T>::operator --();
+	this->operator --();
 	return *this;
 }
 template<typename T>
 SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --()
 {
-	this->BasicIterator<T*,T>::operator --();
+	this->operator --();
 	return *this;
 }
 
@@ -402,14 +402,14 @@ template<typename T>
 SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++(int)
 {
-	this->BasicIterator<T*,T>::operator ++();
+	this->operator ++();
 	return *this;
 }
 template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator ++(int) const
 {
-	this->BasicIterator<T*,T>::operator ++();
+	this->operator ++();
 	return *this;
 }
 
@@ -417,14 +417,14 @@ template<typename T>
 SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --(int)
 {
-	this->BasicIterator<T*,T>::operator --();
+	this->operator --();
 	return *this;
 }
 template<typename T>
 const SimpleArrayIterator<T>&
 SimpleArrayIterator<T>::operator --(int) const
 {
-	this->BasicIterator<T*,T>::operator --();
+	this->operator --();
 	return *this;
 }
 
@@ -568,7 +568,7 @@ template<typename T>
 SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++()
 {
-	this->BasicReverseIterator<T*,T>::operator ++();
+	this->operator ++();
 	return *this;
 }
 
@@ -576,7 +576,7 @@ template<typename T>
 SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --()
 {
-	this->BasicReverseIterator<T*,T>::operator --();
+	this->operator --();
 	return *this;
 }
 
@@ -584,7 +584,7 @@ template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++() const
 {
-	this->BasicReverseIterator<T*,T>::operator ++();
+	this->operator ++();
 	return *this;
 }
 
@@ -592,7 +592,7 @@ template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --() const
 {
-	this->BasicReverseIterator<T*,T>::operator --();
+	this->operator --();
 	return *this;
 }
 
@@ -600,7 +600,7 @@ template<typename T>
 SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++(int)
 {
-	this->BasicReverseIterator<T*,T>::operator ++();
+	this->operator ++();
 	return *this;
 }
 
@@ -608,7 +608,7 @@ template<typename T>
 SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --(int)
 {
-	this->BasicReverseIterator<T*,T>::operator --();
+	this->operator --();
 	return *this;
 }
 
@@ -616,7 +616,7 @@ template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator ++(int) const
 {
-	this->BasicReverseIterator<T*,T>::operator ++();
+	this->operator ++();
 	return *this;
 }
 
@@ -624,7 +624,7 @@ template<typename T>
 const SimpleArrayReverseIterator<T>&
 SimpleArrayReverseIterator<T>::operator --(int) const
 {
-	this->BasicReverseIterator<T*,T>::operator --();
+	this->operator --();
 	return *this;
 }
 
