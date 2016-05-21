@@ -81,7 +81,7 @@ test_arrblocks_erase::test_arrblocks_erase(ArrayBlocks<long> &blocks)
 test_arrblocks_erase_range::test_arrblocks_erase_range(ArrayBlocks<long> &blocks)
 	: abstract_arrblocks_test<void>(blocks, "erase_range") {}
 
-test_arrblocks_erase::~test_arrblocks_erase() {};
+test_arrblocks_erase::~test_arrblocks_erase() {}
 test_arrblocks_erase_range::~test_arrblocks_erase_range() {}
 
 
@@ -289,14 +289,14 @@ test_arrblocks_insert::_start()
 //	long arr[] = {5, 4, 3, 2, 1,
 //	              0, 1, 2, 3, 4, 5};
 	long arr[] = {-5, 105, -4, 104, -3, 103, -2, 102, -1, 101,
-	              0, -100, 1, -101, 2, -102, 3, -101, 4, -104, 5, -105};
+	              0, -100, 1, -101, 2, -102, 3, -103, 4, -104, 5, -105};
 	
 	for(auto it = _blocks.begin(); it != _blocks.end(); ++it)
 	{
 		if((*it >= 0 && *it < 100) || (*it < 0 && *it > -100))
 		{
+			auto l = *it;
 			_blocks.insert(it, ((*it >= 0) ? -100 : 100) - *it);
-			++it;
 		}
 	}
 	std::cout << "Result (insert):\n";
@@ -335,7 +335,6 @@ test_arrblocks_erase::_start()
 	{
 		if((*it < 0 && *it <= -100) || (*it > 0 && *it > 100))
 		{
-//			auto l = *it;
 			_blocks.erase(it);
 			it = _blocks.begin();
 		}
@@ -390,8 +389,8 @@ int main()
 {
 	TestAggregator<void> test_aggregator_empty_back("Empty Array Blocks (back)");
 	TestAggregator<void> test_aggregator_empty_front("Empty Array Blocks (front)");
-//	TestAggregator<void> test_aggregator_front_add("Front-add Array Blocks");
-//	TestAggregator<void> test_aggregator_back_add("Back-add Array Blocks");
+	TestAggregator<void> test_aggregator_front_add("Front-add Array Blocks");
+	TestAggregator<void> test_aggregator_back_add("Back-add Array Blocks");
 	
 	auto init_and_start_tests =
 	+[](TestAggregator<void> &test_aggregator, int type)
@@ -456,8 +455,8 @@ int main()
 	
 	init_and_start_tests(test_aggregator_empty_back,  1);
 	init_and_start_tests(test_aggregator_empty_front, 2);
-//	init_and_start_tests(test_aggregator_front_add,   3);
-//	init_and_start_tests(test_aggregator_back_add,    4);
+	init_and_start_tests(test_aggregator_front_add,   3);
+	init_and_start_tests(test_aggregator_back_add,    4);
 	
 	return 0;
 }
