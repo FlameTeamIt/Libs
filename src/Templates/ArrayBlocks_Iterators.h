@@ -19,10 +19,10 @@ class ArrayBlocksIterator
 protected:
 	mutable ArrayBlocks<T> *inc_block;
 	
-	virtual void operator_inc(); // ++
-	virtual void operator_dec(); // --
-	virtual void operator_inc() const; // ++
-	virtual void operator_dec() const; // --
+	virtual void __operator_inc(); // ++
+	virtual void __operator_dec(); // --
+	virtual void __operator_inc() const; // ++
+	virtual void __operator_dec() const; // --
 	
 public:
 	friend class ArrayBlocks<T>;
@@ -110,10 +110,10 @@ class ArrayBlocksReverseIterator
 protected:
 	mutable ArrayBlocks<T> *inc_block;
 	
-	virtual void operator_inc(); // ++
-	virtual void operator_dec(); // --
-	virtual void operator_inc() const; // ++
-	virtual void operator_dec() const; // --
+	virtual void __operator_inc(); // ++
+	virtual void __operator_dec(); // --
+	virtual void __operator_inc() const; // ++
+	virtual void __operator_dec() const; // --
 	
 public:
 	friend class ArrayBlocks<T>;
@@ -219,7 +219,7 @@ ArrayBlocksIterator<T>::ArrayBlocksIterator(
 
 template<class T>
 void
-ArrayBlocksIterator<T>::operator_inc() // ++
+ArrayBlocksIterator<T>::__operator_inc() // ++
 {
 	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -233,7 +233,7 @@ ArrayBlocksIterator<T>::operator_inc() // ++
 
 template<class T>
 void
-ArrayBlocksIterator<T>::operator_dec() // --
+ArrayBlocksIterator<T>::__operator_dec() // --
 {
 	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -247,7 +247,7 @@ ArrayBlocksIterator<T>::operator_dec() // --
 
 template<class T>
 void
-ArrayBlocksIterator<T>::operator_inc() const // ++
+ArrayBlocksIterator<T>::__operator_inc() const // ++
 {
 	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -261,7 +261,7 @@ ArrayBlocksIterator<T>::operator_inc() const // ++
 
 template<class T>
 void
-ArrayBlocksIterator<T>::operator_dec() const // --
+ArrayBlocksIterator<T>::__operator_dec() const // --
 {
 	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -378,14 +378,14 @@ template<typename T>
 ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator ++()
 {
-	operator_inc();
+	__operator_inc();
 	return *this;
 }
 template<typename T>
 ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator --()
 {
-	operator_dec();
+	__operator_dec();
 	return *this;
 }
 
@@ -393,14 +393,14 @@ template<typename T>
 const ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator ++() const
 {
-	operator_inc();
+	__operator_inc();
 	return *this;
 }
 template<typename T>
 const ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator --() const
 {
-	operator_dec();
+	__operator_dec();
 	return *this;
 }
 
@@ -408,14 +408,14 @@ template<typename T>
 ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator ++(int)
 {
-	operator_inc();
+	__operator_inc();
 	return *this;
 }
 template<typename T>
 ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator --(int)
 {
-	operator_dec();
+	__operator_dec();
 	return *this;
 }
 
@@ -423,14 +423,14 @@ template<typename T>
 const ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator ++(int) const
 {
-	operator_inc();
+	__operator_inc();
 	return *this;
 }
 template<typename T>
 const ArrayBlocksIterator<T>&
 ArrayBlocksIterator<T>::operator --(int) const
 {
-	operator_dec();
+	__operator_dec();
 	return *this;
 }
 
@@ -459,7 +459,7 @@ ArrayBlocksReverseIterator<T>::ArrayBlocksReverseIterator(
 
 template<class T>
 void
-ArrayBlocksReverseIterator<T>::operator_inc() // ++
+ArrayBlocksReverseIterator<T>::__operator_inc() // ++
 {
 	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -473,7 +473,7 @@ ArrayBlocksReverseIterator<T>::operator_inc() // ++
 
 template<class T>
 void
-ArrayBlocksReverseIterator<T>::operator_dec() // --
+ArrayBlocksReverseIterator<T>::__operator_dec() // --
 {
 	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -487,7 +487,7 @@ ArrayBlocksReverseIterator<T>::operator_dec() // --
 
 template<class T>
 void
-ArrayBlocksReverseIterator<T>::operator_inc() const // ++
+ArrayBlocksReverseIterator<T>::__operator_inc() const // ++
 {
 	++(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_rend()
@@ -501,7 +501,7 @@ ArrayBlocksReverseIterator<T>::operator_inc() const // ++
 
 template<class T>
 void
-ArrayBlocksReverseIterator<T>::operator_dec() const // --
+ArrayBlocksReverseIterator<T>::__operator_dec() const // --
 {
 	--(this->inc_data_iterator);
 	if(this->inc_data_iterator == inc_block->_block_simple_end()
@@ -626,14 +626,14 @@ template<typename T>
 const ArrayBlocksReverseIterator<T>&
 ArrayBlocksReverseIterator<T>::operator ++()
 {
-	operator_inc();
+	__operator_inc();
 	return *this;
 }
 template<typename T>
 const ArrayBlocksReverseIterator<T>&
 ArrayBlocksReverseIterator<T>::operator --()
 {
-	operator_dec();
+	__operator_dec();
 	return *this;
 }
 
@@ -641,14 +641,14 @@ template<typename T>
 const ArrayBlocksReverseIterator<T>&
 ArrayBlocksReverseIterator<T>::operator ++() const
 {
-	operator_inc();
+	__operator_inc();
 	return *this;
 }
 template<typename T>
 const ArrayBlocksReverseIterator<T>&
 ArrayBlocksReverseIterator<T>::operator --() const
 {
-	operator_dec();
+	__operator_dec();
 	return *this;
 }
 
@@ -656,14 +656,14 @@ template<typename T>
 const ArrayBlocksReverseIterator<T>&
 ArrayBlocksReverseIterator<T>::operator ++(int)
 {
-	operator_inc();
+	__operator_inc();
 	return *this;
 }
 template<typename T>
 const ArrayBlocksReverseIterator<T>&
 ArrayBlocksReverseIterator<T>::operator --(int)
 {
-	operator_dec();
+	__operator_dec();
 	return *this;
 }
 
@@ -671,14 +671,14 @@ template<typename T>
 const ArrayBlocksReverseIterator<T>&
 ArrayBlocksReverseIterator<T>::operator ++(int) const
 {
-	operator_inc();
+	__operator_inc();
 	return *this;
 }
 template<typename T>
 const ArrayBlocksReverseIterator<T>&
 ArrayBlocksReverseIterator<T>::operator --(int) const
 {
-	operator_dec();
+	__operator_dec();
 	return *this;
 }
 
