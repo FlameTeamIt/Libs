@@ -931,7 +931,7 @@ template<typename TArrayBlockIterator>
 BlockIndex<T>
 ArrayBlocks<T>::_block_findBlock(const TArrayBlockIterator &element_iterator)
 {
-	T *element_address = &(*element_iterator);
+	const T *element_address = &(*element_iterator);
 	BlockIndex<T> block_index;
 	
 	block_index.current_size = this->getSize();
@@ -991,7 +991,7 @@ ArrayBlocks<T>::_block_move_elements(size_t new_cells,
 {
 	TInputIt source_it = source_first;
 	for(auto i = new_cells;
-	    i != 0 && (*source_it) != (*source_last);
+	    i != 0 && &(*source_it) != &(*source_last);
 	    --i, ++source_it, ++target_it)
 	{
 		placement_new(&(*target_it), move(*source_it));
@@ -1011,33 +1011,6 @@ ArrayBlocks<T>::_block_generic_change_size(TIndexType &index_type,
                                            TConcrete *obj)
 {
 	BlockIndex<T> block_index = _block_findBlock(index_type);
-	
-	if(block_index.global_index == 0)
-	{
-		if(is_insert)
-		{
-			this->pushFront(
-			    is_same_types<TConcrete, T>()
-					? move(*obj)
-					: *(obj)
-			);
-		}
-		else
-		{
-			this->popFront();
-		}
-		return 1;
-	}
-	
-	if(block_index.global_index == block_index.current_size - is_insert)
-	{
-		if(!is_insert)
-		{
-			this->popBack();
-			return 1;
-		}
-	}
-	
 	return _block_generic_change_size_option<is_insert, TConcrete>
 	           (block_index, obj);
 }
@@ -1077,7 +1050,7 @@ ArrayBlocks<T>::_block_generic_change_size_option(BlockIndex<T> &block_index,
 			it_target = p_block->begin();
 			
 			// всё готово для перемещения и вставки
-			_block_move_elements(1, it_source, block_index.it_front, it_target);
+			_block_move_elements(1, it_source, ++block_index.it_front, it_target);
 			--block_index.it_front;
 			(is_same_types<T, TConcrete>())
 				? *block_index.it_front = move(*obj)

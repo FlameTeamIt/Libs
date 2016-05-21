@@ -190,7 +190,6 @@ is_same_types() noexcept
 	return (ComparingTypes<Tt1, Tt2>::IS_SAME);
 }
 
-
 template<typename T>
 constexpr
 typename flame_ide::templates::RemoveReference<T>::type&&
@@ -240,7 +239,7 @@ template<typename T>
 void flame_ide::templates::
 placement_new(T * const addr, T && obj)
 {
-	new (addr) T(obj);
+	new (addr) T(move(obj));
 }
 
 template<typename TIterator1, typename TIterator2>
@@ -248,29 +247,20 @@ bool flame_ide::templates::
 is_equal(const TIterator1 &start1, const TIterator1 &end1,
          const TIterator2 &start2, const TIterator2 &end2)
 {
-	bool b_is_equal;
+	bool b_is_equal = true;
+	auto iterator1 = start1;
+	auto iterator2 = start2;
 	
-	if(is_same_types<decltype(*start1), decltype(*start2)>())
+	for(; iterator1 != end1 && iterator2 != end2; ++iterator1, ++iterator2)
 	{
-		b_is_equal = true;
-		auto iterator1 = start1;
-		auto iterator2 = start2;
-		
-		for(; iterator1 != end1 && iterator2 != end2; ++iterator1, ++iterator2)
+		b_is_equal = (b_is_equal && *iterator1 == *iterator2);
+	}
+	
+	if(iterator1 == end1)
+	{
+		if(iterator2 == end2)
 		{
-			b_is_equal = (b_is_equal && *iterator1 == *iterator2);
-		}
-		
-		if(iterator1 == end1)
-		{
-			if(iterator2 == end2)
-			{
-				return b_is_equal;
-			}
-			else
-			{
-				return false;
-			}
+			return b_is_equal;
 		}
 		else
 		{
@@ -279,7 +269,7 @@ is_equal(const TIterator1 &start1, const TIterator1 &end1,
 	}
 	else
 	{
-		b_is_equal = false;
+		return false;
 	}
 	
 	return b_is_equal;
