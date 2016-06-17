@@ -30,37 +30,66 @@ struct RemoveReference<T&&>
 template<typename T>
 struct Traits
 {
-	typedef T         type;
+	typedef T          type;
 	
-	typedef T       & reference;
-	typedef T const & const_reference;
+	typedef T       &  reference;
+	typedef T       && move_reference;
+	typedef T const &  const_reference;
 	
-	typedef T		* pointer;
-	typedef T const * const_pointer;
+	typedef T       *  pointer;
+	typedef T const *  const_pointer;
 };
 
 template<typename T>
 struct Traits<T&>
 {
-	typedef T         type;
+	typedef T          type;
 	
-	typedef T       & reference;
-	typedef T const & const_reference;
+	typedef T       &  reference;
+	typedef T       && move_reference;
+	typedef T const &  const_reference;
 	
-	typedef T		* pointer;
-	typedef T const * const_pointer;
+	typedef T       *  pointer;
+	typedef T const *  const_pointer;
 };
 
 template<typename T>
 struct Traits<T&&>
 {
-	typedef T         type;
+	typedef T          type;
 	
-	typedef T       & reference;
-	typedef T const & const_reference;
+	typedef T       &  reference;
+	typedef T       && move_reference;
+	typedef T const &  const_reference;
 	
-	typedef T		* pointer;
-	typedef T const * const_pointer;
+	typedef T       *  pointer;
+	typedef T const *  const_pointer;
+};
+
+template<typename T>
+struct Traits<const T>
+{
+	typedef T          type;
+	
+	typedef T       &  reference;
+	typedef T       && move_reference;
+	typedef T const &  const_reference;
+	
+	typedef T       *  pointer;
+	typedef T const *  const_pointer;
+};
+
+template<typename T>
+struct Traits<const T&>
+{
+	typedef T          type;
+	
+	typedef T       &  reference;
+	typedef T       && move_reference;
+	typedef T const &  const_reference;
+	
+	typedef T       *  pointer;
+	typedef T const *  const_pointer;
 };
 
 template<typename Tt1, typename Tt2>
