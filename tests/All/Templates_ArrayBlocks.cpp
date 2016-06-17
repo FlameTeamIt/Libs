@@ -279,7 +279,7 @@ test_arrblocks_pop_front::_start()
 
 /*
  * FAIL
- * bad insertig
+ * Не работает вставка в конец
  */
 int
 test_arrblocks_insert::_start()
@@ -288,17 +288,24 @@ test_arrblocks_insert::_start()
 	
 //	long arr[] = {5, 4, 3, 2, 1,
 //	              0, 1, 2, 3, 4, 5};
-	long arr[] = {-5, 105, -4, 104, -3, 103, -2, 102, -1, 101,
-	              0, -100, 1, -101, 2, -102, 3, -103, 4, -104, 5, -105};
+	long arr[] = { 105, -5, 104, -4, 103, -3, 102, -2, 101, -1,
+	              -100, 0, -101, 1, -102, 2, -103, 3, -104, 4, -105, 5};
 	
 	for(auto it = _blocks.begin(); it != _blocks.end(); ++it)
 	{
-		if((*it >= 0 && *it < 100) || (*it < 0 && *it > -100))
+		Traits<decltype(*it)>::type l;
+		if(((*it >= 0 && *it < 100) || (*it < 0 && *it > -100)) && *it != l)
 		{
-			auto l = *it;
-			_blocks.insert(it, ((*it >= 0) ? -100 : 100) - *it);
+			l = ((*it >= 0) ? -100 : 100) - *it;
+			_blocks.insert(it, l);
+			if(*it == l)
+			{
+				++it;
+			}
 		}
 	}
+	_blocks.insert(_blocks.end(), -106); // don't work
+	
 	std::cout << "Result (insert):\n";
 	print_all(_blocks);
 	if(is_equal(&arr[0], &arr[22], _blocks.begin(), _blocks.end()))
