@@ -1,7 +1,7 @@
 #include <iostream>
 #include <Templates/ArrayBlocks.h>
 #include "../Test.h"
-#include "Templates_ArrayBlocks.h"
+#include "ArrayBlocks.h"
 
 using namespace flame_ide::templates;
 

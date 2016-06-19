@@ -8,7 +8,7 @@ CONFIG -= qt
 SOURCES += \
     ArrayBlocks.cpp
 
-INCLUDEPATH += ../../../src
+INCLUDEPATH += ../../src
 
 QMAKE_CXXFLAGS += -std=c++14
 

@@ -1,7 +1,7 @@
-#ifndef TEMPLATES_ARRAYBLOCKS_H
-#define TEMPLATES_ARRAYBLOCKS_H
+#ifndef TEST_ARRAYBLOCKS_H
+#define TEST_ARRAYBLOCKS_H
 
-#include "../../Test.h"
+#include "../Test.h"
 #include <Templates/ArrayBlocks.h>
 
 void
@@ -293,4 +293,4 @@ protected:
 };
 
 
-#endif // TEMPLATES_ARRAYBLOCKS_H
+#endif // TEST_ARRAYBLOCKS_H
