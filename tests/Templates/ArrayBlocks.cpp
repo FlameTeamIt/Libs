@@ -345,11 +345,6 @@ test_arrblocks_reverse_insert::_start()
 	}
 	_blocks.insert(_blocks.rend(), 106);
 	
-	/*
-	 * FAIL : Не там оказывается 106.
-	 * При этом, если использовать без предварительного (insert+erase)-теста, то всё работает.
-	 * Подозреваю ошибку в erase
-	 */
 	std::cout << "Result (insert):\n";
 	print_all(_blocks);
 	if(is_equal(&arr[0], &arr[sizeof(arr)/sizeof(long)], _blocks.begin(), _blocks.end()))
