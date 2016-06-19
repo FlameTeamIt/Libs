@@ -271,6 +271,7 @@ placement_new(T * const addr, T && obj)
 	new (addr) T(move(obj));
 }
 
+#include <iostream>
 template<typename TIterator1, typename TIterator2>
 bool flame_ide::templates::
 is_equal(const TIterator1 &start1, const TIterator1 &end1,
@@ -280,7 +281,7 @@ is_equal(const TIterator1 &start1, const TIterator1 &end1,
 	auto iterator1 = start1;
 	auto iterator2 = start2;
 	
-	for(; iterator1 != end1 && iterator2 != end2; ++iterator1, ++iterator2)
+	for(; iterator1 != end1 && iterator2 != end2 && b_is_equal; ++iterator1, ++iterator2)
 	{
 		b_is_equal = (b_is_equal && *iterator1 == *iterator2);
 	}
