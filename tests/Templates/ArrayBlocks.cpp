@@ -74,6 +74,14 @@ arrblocks_insert_range::arrblocks_insert_range(ArrayBlocks<long> &blocks)
 test_arrblocks_insert::~test_arrblocks_insert() {}
 arrblocks_insert_range::~arrblocks_insert_range() {}
 
+test_arrblocks_reverse_insert::test_arrblocks_reverse_insert(ArrayBlocks<long> &blocks)
+	: abstract_arrblocks_test<void>(blocks, "reverse_insert") {}
+arrblocks_reverse_insert_range::arrblocks_reverse_insert_range(ArrayBlocks<long> &blocks)
+	: abstract_arrblocks_test<void>(blocks, "reverse_insert_range") {}
+
+test_arrblocks_reverse_insert::~test_arrblocks_reverse_insert() {}
+arrblocks_reverse_insert_range::~arrblocks_reverse_insert_range() {}
+
 
 
 test_arrblocks_erase::test_arrblocks_erase(ArrayBlocks<long> &blocks)
@@ -83,6 +91,7 @@ test_arrblocks_erase_range::test_arrblocks_erase_range(ArrayBlocks<long> &blocks
 
 test_arrblocks_erase::~test_arrblocks_erase() {}
 test_arrblocks_erase_range::~test_arrblocks_erase_range() {}
+
 
 
 test_arrblocks_clearing::test_arrblocks_clearing(ArrayBlocks<long> &blocks)
@@ -212,7 +221,6 @@ test_arrblocks_pop_back::_start()
 	{
 		return_code = 1;
 	}
-	
 	return return_code;
 }
 
@@ -270,26 +278,19 @@ test_arrblocks_pop_front::_start()
 	{
 		return_code = 1;
 	}
-	
 	return return_code;
 }
 
 //--------------------------------------------------
 //--------------------------------------------------
 
-/*
- * FAIL
- * Не работает вставка в конец
- */
 int
 test_arrblocks_insert::_start()
 {
 	int return_code = 1;
 	
-//	long arr[] = {5, 4, 3, 2, 1,
-//	              0, 1, 2, 3, 4, 5};
 	long arr[] = { 105, -5, 104, -4, 103, -3, 102, -2, 101, -1,
-	              -100, 0, -101, 1, -102, 2, -103, 3, -104, 4, -105, 5};
+	              -100, 0, -101, 1, -102, 2, -103, 3, -104, 4, -105, 5, -106};
 	
 	for(auto it = _blocks.begin(); it != _blocks.end(); ++it)
 	{
@@ -304,11 +305,11 @@ test_arrblocks_insert::_start()
 			}
 		}
 	}
-	_blocks.insert(_blocks.end(), -106); // don't work
+	_blocks.insert(_blocks.end(), -106);
 	
 	std::cout << "Result (insert):\n";
 	print_all(_blocks);
-	if(is_equal(&arr[0], &arr[22], _blocks.begin(), _blocks.end()))
+	if(is_equal(&arr[0], &arr[sizeof(arr)/sizeof(long)], _blocks.begin(), _blocks.end()))
 	{
 		return_code = 0;
 	}
@@ -316,13 +317,61 @@ test_arrblocks_insert::_start()
 	{
 		return_code = 1;
 	}
+	return return_code;
+}
+
+int
+test_arrblocks_reverse_insert::_start()
+{
+	int return_code = 1;
 	
+//	long arr[] = {5, 4, 3, 2, 1,
+//	              0, 1, 2, 3, 4, 5};
+	long arr[] = { 106, -5, 105, -4, 104, -3, 103, -2, 102, -1,
+	              101, 0, -100, 1, -101, 2, -102, 3, -103, 4, -104, 5, -105};
 	
+	for(auto it = _blocks.rbegin(); it != _blocks.rend(); ++it)
+	{
+		Traits<decltype(*it)>::type l;
+		if(((*it >= 0 && *it < 100) || (*it < 0 && *it > -100)) && *it != l)
+		{
+			l = ((*it >= 0) ? -100 : 100) - *it;
+			_blocks.insert(it, l);
+			if(*it == l)
+			{
+				++it;
+			}
+		}
+	}
+	_blocks.insert(_blocks.rend(), 106);
+	
+	/*
+	 * FAIL : Не там оказывается 106.
+	 * При этом, если использовать без предварительного (insert+erase)-теста, то всё работает.
+	 * Подозреваю ошибку в erase
+	 */
+	std::cout << "Result (insert):\n";
+	print_all(_blocks);
+	if(is_equal(&arr[0], &arr[sizeof(arr)/sizeof(long)], _blocks.begin(), _blocks.end()))
+	{
+		return_code = 0;
+	}
+	else
+	{
+		return_code = 1;
+	}
 	return return_code;
 }
 
 int
 arrblocks_insert_range::_start()
+{
+	int return_code = 1;
+	return return_code;
+}
+
+int
+arrblocks_reverse_insert_range::_start()
 {
 	int return_code = 1;
 	return return_code;
@@ -385,15 +434,16 @@ test_arrblocks_clearing::_start()
 	{
 		return_code = 1;
 	}
-	
 	return return_code;
 }
 
 //--------------------------------------------------
 //--------------------------------------------------
 
-int main()
+int main(int argc, char** argv)
 {
+	std::cout << argv[0] << "'\n\n";
+	
 	TestAggregator<void> test_aggregator_empty_back("Empty Array Blocks (back)");
 	TestAggregator<void> test_aggregator_empty_front("Empty Array Blocks (front)");
 	TestAggregator<void> test_aggregator_front_add("Front-add Array Blocks");
@@ -420,6 +470,7 @@ int main()
 		default:
 			return;
 		}
+		test_aggregator.push_back_test(test_construct);
 		
 		test_aggregator.push_back_test(
 			new test_arrblocks_push_back(test_construct->get_blocks())
@@ -439,6 +490,14 @@ int main()
 		
 		test_aggregator.push_back_test(
 			new test_arrblocks_insert(test_construct->get_blocks())
+		);
+		test_aggregator.push_back_test(
+			new test_arrblocks_erase(test_construct->get_blocks())
+		);
+		
+		
+		test_aggregator.push_back_test(
+			new test_arrblocks_reverse_insert(test_construct->get_blocks())
 		);
 		test_aggregator.push_back_test(
 			new test_arrblocks_erase(test_construct->get_blocks())
