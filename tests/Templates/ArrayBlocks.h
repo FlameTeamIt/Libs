@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_ARRAYBLOCKS_H
 #define TEMPLATES_ARRAYBLOCKS_H
 
-#include "../Test.h"
+#include "../../Test.h"
 #include <Templates/ArrayBlocks.h>
 
 void
