@@ -21,13 +21,13 @@ void array_copying(const size_t &length, const Tt *old_array, Tt *new_array);
 
 template<class Tt> inline
 void array_copying(const size_t &length
-				   ,const Tt *old_array, const size_t &start_index_old
-				   ,Tt *new_array, const size_t &start_index_new);
+                   ,const Tt *old_array, const size_t &start_index_old
+                   ,Tt *new_array, const size_t &start_index_new);
 
 template<class Tt> inline
 void array_insert_element(const size_t &length, Tt *&array
-						  ,const size_t &index
-						  ,const Tt &insert_elem);
+                          ,const size_t &index
+                          ,const Tt &insert_elem);
 
 template<class Tt> inline
 void array_rewrite(Tt *array, size_t pos, const Tt &object);
@@ -35,14 +35,14 @@ void array_rewrite(Tt *array, size_t pos, const Tt &object);
 // no implementation
 template<class Tt> inline
 void array_insert_array(const size_t &length, Tt *&array
-						,const size_t &index
-						,const size_t &length_insert, const Tt *insert_array);
+                        ,const size_t &index
+                        ,const size_t &length_insert, const Tt *insert_array);
 
 // no implementation
 template<class Tt> inline
 void array_erase(size_t &length, Tt *&array
-				 ,const size_t &index
-				 ,const size_t &count = 1);
+                 ,const size_t &index
+                 ,const size_t &count = 1);
 
 template<class Tt> inline
 void array_call_distructors(size_t length, Tt *array);
@@ -103,8 +103,8 @@ array_copying(const size_t &length, const Tt *old_array, Tt *new_array)
 template<class Tt>
 void
 array_copying(const size_t &length
-			  ,const Tt *old_array, const size_t &start_index_old
-			  ,Tt *new_array, const size_t &start_index_new)
+              ,const Tt *old_array, const size_t &start_index_old
+              ,Tt *new_array, const size_t &start_index_new)
 {
 }
 
@@ -118,8 +118,8 @@ array_rewrite(Tt *array, size_t pos, const Tt &object)
 template<class Tt>
 void
 array_insert_element(const size_t &length, Tt *&array
-					 ,const size_t &index
-					 ,const Tt &insert_elem)
+                     ,const size_t &index
+                     ,const Tt &insert_elem)
 {
 }
 
@@ -127,16 +127,16 @@ array_insert_element(const size_t &length, Tt *&array
 template<class Tt>
 void
 array_insert_array(const size_t &length, Tt *&array
-				   ,const size_t &index
-				   ,const size_t &length_insert, const Tt *insert_array)
+                   ,const size_t &index
+                   ,const size_t &length_insert, const Tt *insert_array)
 {
 }
 
 // no implementation
 template<class Tt> inline
 void array_erase(size_t &length, Tt *&array
-				 ,const size_t &index
-				 ,const size_t &count)
+                 ,const size_t &index
+                 ,const size_t &count)
 {
 }
 
