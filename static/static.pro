@@ -29,7 +29,8 @@ SOURCES += \
     ../src/Filesystem/Project.cpp \
     ../src/Filesystem/Session.cpp \
     ../src/Process/CommandLine.cpp \
-    ../src/Templates/String.cpp
+    ../src/Templates/String.cpp \
+    ../src/Others/Bits.cpp
 
 HEADERS += \
     ../src/About/About.h \
