@@ -24,5 +24,4 @@ shared/Makefile
 static/Makefile
 tests/Makefile
 tests/All/Makefile*
-Makefile
 
