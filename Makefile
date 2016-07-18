@@ -1,42 +1,43 @@
 # control Makefile
 include Makefile.config
 
+MAKE_LIBS := ./src/Makefile
+MAKE_TESTS := ./tests/Makefile
 
 all   : .mkdirs .libs .tests
-	@echo $@ : $^
 
 tests : .mkdirs .libs .tests
-	@echo $@ : $^
 
 libs  : .mkdirs .libs
-	@echo $@ : $^
 
 clean :
 	@echo $@
-	rm -rf $(BUILD_PATH)
+	rm -rf $(ALL_PATHS)
 
 .PHONY : clean
 
 # --------------------------------------------------
 
 .mkdirs :
-	@echo $@
+	@echo MAKEFLAGS = $(MAKEFLAGS)
+	@echo MFLAGS = $(MFLAGS)
 	mkdir -p $(ALL_PATHS)
 
 # --------------------------------------------------
 
 .libs : .mkdirs
 	@echo $@ : $^
-
-.compile_libs : .libs
-	@echo $@ : $^
-	make -f $(MAKE_LIBS) BUILD_PATH=$(BUILD_PATH)
+	$(MAKE) \
+	    CONFIG_FILE=$(LOCAL_PATH)/Makefile.config \
+	    SOURCE_PATH=src \
+	    -w $(MFLAGS) \
+	    -f $(MAKE_LIBS)
 
 # --------------------------------------------------
 
 .tests: .mkdirs
 	@echo $@ : $^
-	
-.compile_tests : .mkdirs
-	@echo $@ : $^
-	make -f $(MAKE_TESTS) BUILD_PATH=$(BUILD_PATH)
+# 	$(MAKE) \
+# 	    CONFIG_FILE=$(shell pwd)/Makefile.config \
+# 	    -w $(MFLAGS) \
+# 	    -f $(MAKE_TESTS)
