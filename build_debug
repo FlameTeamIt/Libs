@@ -1,27 +1,29 @@
 #!/bin/bash
 
-TypeBuild="debug"
+TypeBuild=debug
+Makefile="Makefile"
+
 case "$1" in
 "")
-    make -j4 -f GNUMakefile BUILD=$TypeBuild
+    make -j4 -f $Makefile BUILD=$TypeBuild
     ;;
 
 "clean")
-    make -j4 -f GNUMakefile BUILD=$TypeBuild clean
+    make -j4 -f $Makefile BUILD=$TypeBuild clean
     ;;
 
 "exec")
-    make -f GNUMakefile BUILD=$TypeBuild exec_test
+    make -f $Makefile BUILD=$TypeBuild exec_test
     ;;
 
 "leak")
     valgrind --leak-check=full --show-leak-kinds=all ./Debug/bin/test_FlameIDE
     ;;
 "mingw32")
-    make -j4 -f GNUMakefile CC=i686-w64-mingw32-g++ BUILD=$TypeBuild
+    make -j4 -f $Makefile CC=i686-w64-mingw32-g++ BUILD=$TypeBuild
     ;;
 "mingw64")
-    make -j4 -f GNUMakefile CC=x86_64-w64-mingw32-g++ BUILD=$TypeBuild
+    make -j4 -f $Makefile CC=x86_64-w64-mingw32-g++ BUILD=$TypeBuild
     ;;
 esac
 exit
