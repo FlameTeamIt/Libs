@@ -14,15 +14,18 @@ OBJECTS := $(addprefix $(OBJ_PATH)/,$(SOURCES:.cpp=.o))
 # 
 # .link
 all : .mkdirs .dependences .compile
-# 
+
 clean :
 	rm -rf $(ALL_PATHS)
-# 
-# .PHONY : clean
-# 	
-# 
-# # --------------------------------------------------
-# 
+
+static :
+shared :
+
+.PHONY : all clean static shared
+	
+
+# --------------------------------------------------
+
 .mkdirs :
 	@mkdir -p $(ALL_PATHS)
  
