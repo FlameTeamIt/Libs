@@ -25,14 +25,25 @@ clean :
 
 # --------------------------------------------------
 
-.libs : .mkdirs
+.libs : .lib_static .lib_shared
 	@echo $@ : $^
-	$(MAKE) \
+
+.lib_static : .mkdirs
+	@echo $@ : $^
+	$(MAKE) static \
 	    CONFIG_FILE=$(LOCAL_PATH)/Makefile.config \
 	    SOURCE_PATH=src \
 	    -w $(MFLAGS) \
 	    -f $(MAKE_LIBS)
-
+	
+.lib_shared : .mkdirs
+	@echo $@ : $^
+	$(MAKE) shared \
+	    CONFIG_FILE=$(LOCAL_PATH)/Makefile.config \
+	    SOURCE_PATH=src \
+	    -w $(MFLAGS) \
+	    -f $(MAKE_LIBS)
+	
 # --------------------------------------------------
 
 .tests: .mkdirs
