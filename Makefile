@@ -1,8 +1,10 @@
 # control Makefile
-include Makefile.config
+MAKEFILE_PATH := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 
-MAKE_LIBS := $(LOCAL_PATH)/src/Makefile
-MAKE_TESTS := $(LOCAL_PATH)/tests/Makefile
+include $(MAKEFILE_PATH)/Makefile.config
+
+MAKE_LIBS := $(MAKEFILE_PATH)/src/Makefile
+MAKE_TESTS := $(MAKEFILE_PATH)/tests/Makefile
 
 all   : .mkdirs .libs .tests
 
@@ -22,11 +24,9 @@ clean :
 
 # --------------------------------------------------
 
-.mkdirs :
-	@echo MAKEFLAGS = $(MAKEFLAGS)
-	@echo MFLAGS = $(MFLAGS)
-	@echo BUILD_TYPE = $(BUILD_TYPE)
-	mkdir -p $(ALL_PATHS)
+.mkdirs : $(ALL_PATHS)
+$(ALL_PATHS) :
+	mkdir -p $@
 
 # --------------------------------------------------
 
@@ -36,16 +36,16 @@ clean :
 .lib_static : .mkdirs
 	@echo $@ : $^
 	$(MAKE) static \
-	    CONFIG_FILE=$(LOCAL_PATH)/Makefile.config \
-	    SOURCE_PATH=src \
+	    CONFIG_FILE=$(MAKEFILE_PATH)/Makefile.config \
+	    SOURCE_PATH=$(MAKEFILE_PATH)/src \
 	    -w $(MFLAGS) \
 	    -f $(MAKE_LIBS)
 	
 .lib_shared : .mkdirs
 	@echo $@ : $^
 	$(MAKE) shared \
-	    CONFIG_FILE=$(LOCAL_PATH)/Makefile.config \
-	    SOURCE_PATH=src \
+	    CONFIG_FILE=$(MAKEFILE_PATH)/Makefile.config \
+	    SOURCE_PATH=$(MAKEFILE_PATH)/src \
 	    -w $(MFLAGS) \
 	    -f $(MAKE_LIBS)
 	
