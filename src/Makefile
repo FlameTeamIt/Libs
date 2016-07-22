@@ -7,6 +7,10 @@ ifeq ($(SOURCE_PATH),)
     SOURCE_PATH := $(LOCAL_PATH)
 endif
 
+ifeq ($(INCLUDE_PATH),)
+    INCLUDE_PATH := $(LOCAL_PATH)
+endif
+
 SOURCES := $(shell find $(SOURCE_PATH) -name *.cpp | grep -v Tests | grep -v tests)
 
 DEPENDS := $(subst $(SOURCE_PATH),$(DEP_PATH),$(SOURCES:.cpp=.d))
@@ -43,10 +47,10 @@ $(ALL_PATHS) :
 .make_depends : $(DEPENDS)
 $(DEP_PATH)/%.d : $(SOURCE_PATH)/%.cpp
 	@mkdir -p $(shell dirname $@)
-	$(CC) $(CXX_FLAGS) -I$(SOURCE_PATH) -MM -c $< > $@
+	$(CC) $(CXX_FLAGS) -I$(INCLUDE_PATH) -MM -c $< > $@
 $(DEP_PATH)/%_shared.d : $(SOURCE_PATH)/%.cpp
 	@mkdir -p $(shell dirname $@)
-	$(CC) $(CXX_FLAGS) -I$(SOURCE_PATH) -MM -c $< > $@
+	$(CC) $(CXX_FLAGS) -I$(INCLUDE_PATH) -MM -c $< > $@
 include $(wildcard $(DEP_PATH)/*.d)
 
 # --------------------------------------------------
@@ -55,7 +59,7 @@ include $(wildcard $(DEP_PATH)/*.d)
 .make_obj : $(OBJECTS)
 $(OBJ_PATH)/%.o : $(SOURCE_PATH)/%.cpp
 	@mkdir -p $(shell dirname $@)
-	$(CC) $(CXX_FLAGS) -I$(SOURCE_PATH) -c $< -o $@
+	$(CC) $(CXX_FLAGS) -I$(INCLUDE_PATH) -c $< -o $@
 
 # --------------------------------------------------
 
@@ -69,7 +73,7 @@ $(TARGET_LIB) : .compile
 .make_depends_shared   : $(DEPENDS_SHARED)
 $(DEP_PATH)/%_shared.d : $(SOURCE_PATH)/%.cpp
 	@mkdir -p $(shell dirname $@)
-	$(CC) $(CXX_FLAGS) -I$(SOURCE_PATH) -MM -c $< > $@
+	$(CC) $(CXX_FLAGS) -I$(INCLUDE_PATH) -MM -c $< > $@
 include $(wildcard $(DEP_PATH)/*_shared.d)
 
 # --------------------------------------------------
@@ -78,7 +82,7 @@ include $(wildcard $(DEP_PATH)/*_shared.d)
 .make_obj_shared : $(OBJECTS_SHARED)
 $(OBJ_PATH)/%_shared.o : $(SOURCE_PATH)/%.cpp
 	@mkdir -p $(shell dirname $@)
-	$(CC) $(CXX_FLAGS) -I$(SOURCE_PATH) -fpic -c $< -o $@
+	$(CC) $(CXX_FLAGS) -I$(INCLUDE_PATH) -fpic -c $< -o $@
 
 # --------------------------------------------------
 

@@ -20,8 +20,3 @@ BigJSON.json
 *.o
 *.so*
 
-shared/Makefile
-static/Makefile
-tests/Makefile
-tests/All/Makefile*
-

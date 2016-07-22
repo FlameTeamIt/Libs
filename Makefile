@@ -38,6 +38,7 @@ $(ALL_PATHS) :
 	$(MAKE) static \
 	    CONFIG_FILE=$(MAKEFILE_PATH)/Makefile.config \
 	    SOURCE_PATH=$(MAKEFILE_PATH)/src \
+	    INCLUDE_PATH=$(MAKEFILE_PATH)/src \
 	    -w $(MFLAGS) \
 	    -f $(MAKE_LIBS)
 	
@@ -46,6 +47,7 @@ $(ALL_PATHS) :
 	$(MAKE) shared \
 	    CONFIG_FILE=$(MAKEFILE_PATH)/Makefile.config \
 	    SOURCE_PATH=$(MAKEFILE_PATH)/src \
+	    INCLUDE_PATH=$(MAKEFILE_PATH)/src \
 	    -w $(MFLAGS) \
 	    -f $(MAKE_LIBS)
 	
@@ -53,7 +55,9 @@ $(ALL_PATHS) :
 
 .tests: .mkdirs
 	@echo $@ : $^
-# 	$(MAKE) \
-# 	    CONFIG_FILE=$(shell pwd)/Makefile.config \
-# 	    -w $(MFLAGS) \
-# 	    -f $(MAKE_TESTS)
+	$(MAKE) \
+	    CONFIG_FILE=$(MAKEFILE_PATH)/Makefile.config \
+	    INCLUDE_PATH=$(MAKEFILE_PATH)/src \
+	    SOURCE_PATH=$(MAKEFILE_PATH)/tests \
+	    -w $(MFLAGS) \
+	    -f $(MAKE_TESTS)
