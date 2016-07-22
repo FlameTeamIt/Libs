@@ -27,10 +27,6 @@ clean :
 # --------------------------------------------------
 
 .mkdirs : $(ALL_PATHS)
-	@echo SOURCES: $(SOURCES)
-	@echo OBJECTS: $(OBJECTS)
-	@echo DEPENDS: $(DEPENDS)
-	@echo TARGETS_BIN: $(TARGETS_BIN)
 $(ALL_PATHS) :
 	mkdir -p $@
 
