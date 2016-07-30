@@ -151,10 +151,8 @@ public:
 	
 	~TestAggregator()
 	{
-		for(auto it = __v_vtests.begin();
-		    it != __v_vtests.end();
-		    ++it)
-		{ delete *it; }
+		for(auto it : __v_vtests)
+		{ delete it; }
 	}
 	
 	void start()

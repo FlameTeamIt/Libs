@@ -9,6 +9,25 @@ namespace flame_ide
 
 using namespace flame_ide::types::primitive;
 
+struct TypeTraits
+{
+	typedef flame_ide::types::primitive::char_t   char_t;
+	typedef flame_ide::types::primitive::short_t  short_t;
+	typedef flame_ide::types::primitive::int_t    int_t;
+	typedef flame_ide::types::primitive::long_t   long_t;
+	typedef flame_ide::types::primitive::llong_t  llong_t;
+	
+	typedef flame_ide::types::primitive::uchar_t   uchar_t;
+	typedef flame_ide::types::primitive::ushort_t  ushort_t;
+	typedef flame_ide::types::primitive::uint_t    uint_t;
+	typedef flame_ide::types::primitive::ullong_t  ullong_t;
+	
+	typedef flame_ide::types::primitive::size_t size_t;
+	typedef flame_ide::types::primitive::ptr_t  ptr_t;
+};
+
+typedef TypeTraits TT;
+
 template<typename T>
 struct RemoveReference
 {
@@ -92,6 +111,45 @@ struct Traits<const T&>
 	typedef T const *  const_pointer;
 };
 
+template<typename T>
+struct Traits<T *>
+{
+	typedef T          type;
+	
+	typedef T       &  reference;
+	typedef T       && move_reference;
+	typedef T const &  const_reference;
+	
+	typedef T       *  pointer;
+	typedef T const *  const_pointer;
+};
+
+template<typename T>
+struct Traits<const T *>
+{
+	typedef T          type;
+	
+	typedef T       &  reference;
+	typedef T       && move_reference;
+	typedef T const &  const_reference;
+	
+	typedef T       *  pointer;
+	typedef T const *  const_pointer;
+};
+
+template<typename T>
+struct Traits<T * const>
+{
+	typedef T          type;
+	
+	typedef T       &  reference;
+	typedef T       && move_reference;
+	typedef T const &  const_reference;
+	
+	typedef T       *  pointer;
+	typedef T const *  const_pointer;
+};
+
 template<typename Tt1, typename Tt2>
 struct ComparingTypes
 {
@@ -157,9 +215,13 @@ T&& foward(T &&reference) noexcept;
 template<typename TIteratorInput, typename TIteratorOutput>
 void copy(TIteratorInput start, TIteratorInput end,
           TIteratorOutput out);
+template<typename TIteratorInput, typename TIteratorOutput>
+void copy_n(TIteratorInput start, TIteratorInput end,
+          TIteratorOutput out);
 
 template<typename TIterator>
-unsigned long count_iterations(const TIterator &start, const TIterator &end);
+flame_ide::types::primitive::ulong_t
+count_iterations(const TIterator &start, const TIterator &end);
 
 template<typename T>
 void placement_new(T * const addr, const T & obj);
@@ -247,7 +309,8 @@ copy(TIteratorInput start, TIteratorInput end,
 }
 
 template<typename TIterator>
-unsigned long flame_ide::templates::
+flame_ide::types::primitive::ulong_t
+flame_ide::templates::
 count_iterations(const TIterator &start, const TIterator &end)
 {
 	unsigned long count = 0;
@@ -271,6 +334,7 @@ placement_new(T * const addr, T && obj)
 	new (addr) T(move(obj));
 }
 
+//#include <iostream>
 template<typename TIterator1, typename TIterator2>
 bool flame_ide::templates::
 is_equal(const TIterator1 &start1, const TIterator1 &end1,
@@ -280,7 +344,7 @@ is_equal(const TIterator1 &start1, const TIterator1 &end1,
 	auto iterator1 = start1;
 	auto iterator2 = start2;
 	
-	for(; iterator1 != end1 && iterator2 != end2; ++iterator1, ++iterator2)
+	for(; iterator1 != end1 && iterator2 != end2 && b_is_equal; ++iterator1, ++iterator2)
 	{
 		b_is_equal = (b_is_equal && *iterator1 == *iterator2);
 	}

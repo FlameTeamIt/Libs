@@ -1,5 +1,5 @@
-#ifndef TEMPLATES_ARRAYBLOCKS_H
-#define TEMPLATES_ARRAYBLOCKS_H
+#ifndef TEST_ARRAYBLOCKS_H
+#define TEST_ARRAYBLOCKS_H
 
 #include "../Test.h"
 #include <Templates/ArrayBlocks.h>
@@ -216,6 +216,25 @@ protected:
 	virtual int _start();
 };
 
+class test_arrblocks_reverse_insert : public abstract_arrblocks_test<void>
+{
+public:
+	typedef test_arrblocks_reverse_insert this_type;
+	
+	test_arrblocks_reverse_insert() = delete;
+	test_arrblocks_reverse_insert(const this_type &) = delete;
+	test_arrblocks_reverse_insert(this_type &&) = delete;
+	
+	test_arrblocks_reverse_insert(ArrayBlocks<long> & blocks);
+	
+	~test_arrblocks_reverse_insert();
+	
+protected:
+	virtual int _start();
+};
+
+
+
 
 class arrblocks_insert_range : public abstract_arrblocks_test<void>
 {
@@ -229,6 +248,23 @@ public:
 	arrblocks_insert_range(ArrayBlocks<long> & blocks);
 	
 	~arrblocks_insert_range();
+	
+protected:
+	virtual int _start();
+};
+
+class arrblocks_reverse_insert_range : public abstract_arrblocks_test<void>
+{
+public:
+	typedef arrblocks_reverse_insert_range this_type;
+	
+	arrblocks_reverse_insert_range() = delete;
+	arrblocks_reverse_insert_range(const this_type &) = delete;
+	arrblocks_reverse_insert_range(this_type &&) = delete;
+	
+	arrblocks_reverse_insert_range(ArrayBlocks<long> & blocks);
+	
+	~arrblocks_reverse_insert_range();
 	
 protected:
 	virtual int _start();
@@ -293,4 +329,4 @@ protected:
 };
 
 
-#endif // TEMPLATES_ARRAYBLOCKS_H
+#endif // TEST_ARRAYBLOCKS_H
