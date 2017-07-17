@@ -1,6 +1,0 @@
-#!/bin/bash
-
-BUILD_NUMBER=`cat buildnumber`;
-BUILD_NUMBER=$(bc <<< "$BUILD_NUMBER+1");
-echo $BUILD_NUMBER > buildnumber
-
