@@ -20,3 +20,7 @@ BigJSON.json
 *.o
 *.so*
 
+doxygen/html/*
+build/*
+src/Templates/Tests/build/*
+
