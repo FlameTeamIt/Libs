@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-#include "ForAll.h"
+#include <Templates/Traits.hpp>
 
 
 namespace flame_ide
@@ -25,7 +25,7 @@ Tt* string_get_substr(const Tt* str, const size_t &pos, const size_t &length);
 //		if(Types<char, Tt>::isSame)
 //		{
 //			return strlen(c_tstr);
-//		} 
+//		}
 //		if(Types<wchar_t, Tt>::isSame)
 //		{
 //			return wcslen();
@@ -42,7 +42,7 @@ Tt* string_get_substr(const Tt* str, const size_t &pos, const size_t &length);
 //		if(Types<char, T>::isSame)
 //		{
 //			return &strlen;
-//		} 
+//		}
 //		if(Types<wchar_t, T>::isSame)
 //		{
 //			return &wcslen;
@@ -50,10 +50,10 @@ Tt* string_get_substr(const Tt* str, const size_t &pos, const size_t &length);
 
 //		return nullptr;
 //	}
-	
+
 //public:
 //	StrLenFunc() { str_len = set(); }
-	
+
 //	size_t operator ()(const T* c_tstr)
 //	{
 //		return str_len(c_tstr);
@@ -70,10 +70,10 @@ string_compose(const size_t &length_first, const Tt* str_first
 			   ,const size_t &length_last, const Tt* str_last)
 {
 	Tt* result_str = new Tt[length_first + length_last]();
-	
+
 	std::copy_n(str_first, length_first, result_str);
 	std::copy_n(str_last, length_last, result_str+length_first);
-	
+
 	return result_str;
 }
 
@@ -83,10 +83,10 @@ flame_ide::templates::
 string_get_substr(const Tt* str, const size_t &pos, const size_t &length)
 {
 	Tt* result_str = new Tt[length];
-	
+
 	std::copy_n(str+pos, length, result_str);
 //	result_str[length] = NULL;
-	
+
 	return result_str;
 }
 

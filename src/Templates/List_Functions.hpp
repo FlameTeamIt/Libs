@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_LIST_FUNCTIONS
 #define TEMPLATES_LIST_FUNCTIONS
 
-#include <Templates/List_Container.h>
+#include <Templates/List_Container.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -52,19 +52,19 @@ list_insert_default(Container<Tt> *start_container, size_t count)
 {
 	Container<Tt> *run_pointer = start_container;
 	Container<Tt> *end_container = start_container->next;
-	
+
 	for(size_t i = 0; i < count; i++)
 	{
 		Container<Tt> *new_elem = new Container<Tt>;
-		
+
 		new_elem->pos_type = CENTRAL;
-		
+
 		run_pointer->next = new_elem;
 		new_elem->prev = run_pointer;
-		
+
 		run_pointer = run_pointer->next;
 	}
-	
+
 	run_pointer->next = end_container;
 	end_container->prev = run_pointer;
 }
@@ -76,24 +76,24 @@ list_insert_array_after(Container<Tt> *start_container, size_t count, const Tt *
 {
 	Container<Tt> *run_pointer = start_container;
 	Container<Tt> *end_container = start_container->next;
-	
+
 	for(size_t i = 0; i < count; i++)
 	{
 		Container<Tt> *new_elem = new Container<Tt>;
-		
+
 		new_elem->pos_type = CENTRAL;
-		
+
 		std::copy(array+i, array+(i+1), &new_elem->inc_data);
-		
+
 		new_elem->prev = run_pointer;
 
 		run_pointer->next = new_elem;
-		
+
 		run_pointer = run_pointer->next;
 	}
-	
+
 	run_pointer->next = end_container;
-	
+
 	end_container->prev = run_pointer;
 }
 
@@ -104,24 +104,24 @@ list_insert_array_before(Container<Tt> *start_container, size_t count, const Tt 
 {
 	Container<Tt> *run_pointer = start_container->prev;
 	Container<Tt> *end_container = start_container;
-	
+
 	for(size_t i = 0; i < count; i++)
 	{
 		Container<Tt> *new_elem = new Container<Tt>;
-		
+
 		new_elem->pos_type = CENTRAL;
-		
+
 		std::copy(array+i, array+(i+1), &new_elem->inc_data);
-		
+
 		new_elem->prev = run_pointer;
-		
+
 		run_pointer->next = new_elem;
-		
+
 		run_pointer = run_pointer->next;
 	}
-	
+
 	run_pointer->next = end_container;
-	
+
 	end_container->prev = run_pointer;
 }
 
@@ -134,7 +134,7 @@ list_insert_elem_after(Container<Tt> *container, const Tt &element)
 	Container<Tt> *old_next_container = container->next;
 	Container<Tt> *new_elem = new Container<Tt>(old_next_container, container,
 												element, CENTRAL);
-	
+
 	container->next = new_elem;
 	old_next_container->prev = new_elem;
 }
@@ -148,7 +148,7 @@ list_insert_elem_before(Container<Tt> *container, const Tt &element)
 	Container<Tt> *old_prev_container = container->prev;
 	Container<Tt> *new_elem = new Container<Tt>(container, old_prev_container,
 												element, CENTRAL);
-	
+
 	container->prev = new_elem;
 	old_prev_container->next = new_elem;
 }
@@ -160,9 +160,9 @@ list_erase_elem(Container<Tt> *container)
 {
 	Container<Tt> *prev_container = container->prev;
 	Container<Tt> *next_container = container->next;
-	
+
 	list_link_containers<Tt>(prev_container, next_container);
-	
+
 	delete container;
 }
 
@@ -173,13 +173,13 @@ list_erase_some_elements(Container<Tt> *start_container, size_t count)
 {
 	Container<Tt> *end_container, *run_pointer = start_container;
 	count++;
-	
+
 	for(size_t i = 0; (i < count) && (run_pointer->pos_type != LAST); i++)
 	{
 		run_pointer = run_pointer->next;
 	}
 	end_container = run_pointer;
-	
+
 	return list_erase_some_elements<Tt>(start_container, end_container);
 }
 
@@ -190,13 +190,13 @@ list_erase_some_elements_end(Container<Tt> *end_container, size_t count)
 {
 	Container<Tt> *start_container, *run_pointer = end_container;
 	count++;
-	
+
 	for(size_t i = 0; (i < count) && (run_pointer->pos_type != FIRST); i++)
 	{
 		run_pointer = run_pointer->prev;
 	}
 	start_container = run_pointer;
-	
+
 	return list_erase_some_elements<Tt>(start_container, end_container);
 }
 
@@ -212,10 +212,10 @@ list_erase_some_elements(Container<Tt> *start_container,
 	{
 		run_pointer = run_pointer->next;
 		delete run_pointer->prev;
-		
+
 		count_deleted++;
 	}
-	
+
 	if(start_container->next != end_container
 	  && end_container->prev != start_container)
 	{
@@ -232,17 +232,17 @@ list_copy(const Container<Tt> *start_from, const Container<Tt> *end_from,
 {
 	Container<Tt> *run_pointer_from = start_from->next,
 			*run_pointer_to = start_to;
-	
+
 	while(run_pointer_from != end_from)
 	{
 		Container<Tt> *new_elem = new Container<Tt>(*run_pointer_from);
-		
+
 		list_link_containers<Tt>(run_pointer_to, new_elem);
-		
+
 		run_pointer_to = run_pointer_to->next;
 		run_pointer_from = run_pointer_from->next;
 	}
-	
+
 	list_link_containers<Tt>(run_pointer_to, end_to);
 }
 

@@ -1,11 +1,13 @@
 #ifndef TEMPLATES_ARRAYBLOCKS
 #define TEMPLATES_ARRAYBLOCKS
 
-#include <Others/Bits.h>
+#include <Others/Bits.hpp>
 
-#include <Templates/Pointers.h>
-#include <Templates/SimpleArray.h>
-#include <Templates/ArrayBlocks_Iterators.h>
+#include <Templates/Utils.hpp>
+#include <Templates/ObjectViewer.hpp>
+#include <Templates/Pointers.hpp>
+#include <Templates/SimpleArray.hpp>
+#include <Templates/ArrayBlocks_Iterators.hpp>
 
 #ifndef DEF_DEFAULT_CAPACITY
 #define DEF_DEFAULT_CAPACITY 32
@@ -55,13 +57,13 @@ struct BlockIndex
 {
 	ArrayBlocks<T> *p_block;
 	size_t global_index;
-	
+
 	size_t current_size;
 	size_t current_capacity;
-	
+
 	typename ArrayBlocks<T>::iterator         it_front;
 	typename ArrayBlocks<T>::reverse_iterator it_back;
-	
+
 	BlockIndex() : global_index(0) {p_block = nullptr;}
 	BlockIndex(const BlockIndex<T> & block_index)
 	{
@@ -76,7 +78,7 @@ struct BlockIndex
 		assign(block_index);
 		return *this;
 	}
-	
+
 private:
 	inline void assign(const BlockIndex<T> & block_index)
 	{
@@ -93,45 +95,45 @@ template<typename T>
 class ArrayBlocks : protected SimpleArray<T>
 {
 	static size_t const DEFAULT_CAPACITY = size_t(DEF_DEFAULT_CAPACITY);
-	
+
 public:
 	using         iterator = ArrayBlocksIterator<T>;
 	using reverse_iterator = ArrayBlocksReverseIterator<T>;
-	
+
 	using         const_iterator = ArrayBlocksIterator<T>        const;
 	using const_reverse_iterator = ArrayBlocksReverseIterator<T> const;
-	
+
 	using tblock_index = BlockIndex<T>;
 private:
 	inline void __block_setCopy(const ArrayBlocks<T> &block);
 	inline void __block_setMove(ArrayBlocks<T> &block);
-	
+
 	inline bool __block_isIterator(bool is_insert, const tblock_index &block_index);
 	inline bool __block_isRevIterator(bool is_insert, const tblock_index &block_index);
-	
+
 private:
 	using parent = SimpleArray<T>;
-	
+
 	using parent::_simple_getArrayCopy;
-	
+
 	using parent::getSize;
 	using parent::getCapacity;
-	
+
 	using parent::at;
-	
+
 	using parent::pushBack;
 	using parent::popBack;
 
 	using parent::insert;
 	using parent::erase;
-	
+
 	using parent::isEmpty;
 	using parent::rewrite;
 	using parent::clear;
-	
+
 	using parent::operator = ;
 	using parent::operator [];
-	
+
 	using parent::begin;
 	using parent::end;
 	using parent::rbegin;
@@ -139,59 +141,59 @@ private:
 
 protected:
 	bool is_front_adding;
-	
+
 	size_t block_number; // start/end index in block list
-	
+
 	SharedPointer<ArrayBlocks<T>> prev_block;
 	SharedPointer<ArrayBlocks<T>> next_block;
-	
+
 	inline void _block_init_spNextBlock();
 	inline void _block_init_spPrevBlock();
-	
+
 	size_t _block_getSize(FromBlock from_block) const;
 	size_t _block_getCapacity(FromBlock from_block) const;
 
 	void _block_popFront(size_t count);
 	void _block_popBack(size_t count);
-	
+
 	SharedPointer<ArrayBlocks<T>>& _block_getNext();
 	SharedPointer<ArrayBlocks<T>>& _block_getPrev();
-	
+
 	template<typename TSize_Type> T& _block_at(TSize_Type index,
 	                                           FromBlock from_back);
-	
+
 	inline T* _block_simple_getArrayCopy() const;
-	
+
 	inline size_t _block_simple_getSize() const;
     inline size_t _block_simple_getCapacity() const;
-    
+
 	inline bool _block_simple_isEmpty() const;
-	
+
 	typename parent::iterator _block_simple_begin();
 	typename parent::iterator _block_simple_end();
-	
+
 	typename parent::reverse_iterator _block_simple_rbegin();
 	typename parent::reverse_iterator _block_simple_rend();
-	
+
 	inline ArrayBlocks<T> * _block_getFirstBlock();
 	inline ArrayBlocks<T> * _block_getLastBlock();
-	
+
 	tblock_index _block_findBlock(size_t index);
-	
+
 	template<typename TArrayBlockIterator>
 	tblock_index _block_findBlock(const TArrayBlockIterator &element_iterator);
-	
+
 	template<typename TInputIt, typename TOutIt>
 	inline void _block_move_elements(size_t new_cells,
 	                                 const TInputIt & source_start,
 	                                 const TInputIt & source_end,
 	                                 TOutIt & target);
-	
+
 	template<bool is_insert, bool is_reverse_iterator,
 	         typename TIndexType, typename TConcrete>
 	inline int _block_generic_change_size(TIndexType &index_type,
 	                                      TConcrete *obj = nullptr);
-	
+
 	template<bool is_insert, bool is_reverse_iterator, typename TConcrete>
 	inline int _block_generic_change_size_option(tblock_index &block_index,
 	                                             TConcrete *obj = nullptr);
@@ -202,38 +204,38 @@ protected:
 public:
 	friend class ArrayBlocksIterator<T>;
 	friend class ArrayBlocksReverseIterator<T>;
-	
+
 	ArrayBlocks();
 	explicit ArrayBlocks(size_t init_size);
-	
+
 	template<typename TSize_Type>
 	explicit ArrayBlocks(TSize_Type init_size);
-	
+
 	explicit ArrayBlocks(bool is_front_adding);
 	ArrayBlocks(bool is_front_adding, size_t init_size);
-	
+
 	template<typename TSize_Type>
 	ArrayBlocks(bool is_front_adding,
 	            TSize_Type init_size);
-	
+
 	ArrayBlocks(const ArrayBlocks<T> &block);
 	ArrayBlocks(ArrayBlocks<T> &&block);
-	
+
 	virtual ~ArrayBlocks();
-	
+
 	bool isFrontAdding() const;
 	bool isEmpty() const;
-	
+
 	size_t getSize() const;
 	size_t getCapacity() const;
-	
+
 	int pushFront(const T &obj);
 	int pushFront(T &&obj);
-	
+
 	int pushBack(const T &obj);
 	int pushBack(T &&obj);
-	
-	
+
+
 	// in plan, but not implemented
 	int insert(size_t pos_index, const T &obj);
 	int insert(size_t pos_index, T &&obj);
@@ -241,7 +243,7 @@ public:
 	int insert(const_iterator pos_it, const T &obj);
 	int insert(const_reverse_iterator pos_it, T &&obj);
 	int insert(const_reverse_iterator pos_it, const T &obj);
-	
+
 	// TODO : implement
 	template<typename TInputIt>
 	int insert(iterator pos_it,
@@ -251,47 +253,47 @@ public:
 	int insert(reverse_iterator pos_it,
 	           TInputIt start,
 	           TInputIt end);
-	
+
 	void popFront(size_t count = 1);
 	void popBack(size_t count = 1);
-	
+
 	int erase(size_t pos_index);
 	template<typename TArrayBlockIterator>
 	int erase(TArrayBlockIterator &pos_it);
-	
+
 	// TODO : implement
 	template<typename TArrayBlockIterator>
 	int erase(TArrayBlockIterator &start,
 	          TArrayBlockIterator &end);
-	
+
 	void clear();
 	void optimize();
-	
+
 	template<typename TSize_Type> const T& at(TSize_Type index) const;
 	template<typename TSize_Type>       T& at(TSize_Type index);
-	
+
 	const ArrayBlocks<T>& operator =(const ArrayBlocks<T> &block);
 	const ArrayBlocks<T>& operator =(ArrayBlocks<T> &&block);
-	
-	template<typename TSize_Type> 
+
+	template<typename TSize_Type>
 	const T& operator [](TSize_Type index) const noexcept;
-	template<typename TSize_Type> 
+	template<typename TSize_Type>
 	      T& operator [](TSize_Type index)       noexcept;
-	
+
 	const T& operator [](size_t index) const noexcept;
 	      T& operator [](size_t index)       noexcept;
-	
+
 	iterator begin();
 	iterator end();
 	reverse_iterator rbegin(); // tested
 	reverse_iterator rend(); // tested
-	
+
 	// TODO : implement
 	const_iterator begin() const;
 	const_iterator end() const;
 	const_reverse_iterator rbegin() const;
 	const_reverse_iterator& rend() const;
-	
+
 #ifdef DEBUG
 	void printState()
 	{
@@ -393,12 +395,12 @@ ArrayBlocks<T>::__block_setCopy(const ArrayBlocks<T> &block)
 {
 	this->block_number = block.block_number;
 	this->is_front_adding = block.is_front_adding;
-	
+
 	SharedPointer<ArrayBlocks<T>> const *sp_block = nullptr;
 	SharedPointer<ArrayBlocks<T>> *my_sp_block = nullptr;
 	ArrayBlocks<T> *my_p_block = nullptr,
 	        *p_initing_block = nullptr;
-	
+
 	// циклы инициализации
 	for(sp_block = &block.prev_block
 	       ,my_p_block = this
@@ -413,17 +415,17 @@ ArrayBlocks<T>::__block_setCopy(const ArrayBlocks<T> &block)
 	{
 		(*my_sp_block) = make_shared<ArrayBlocks>(true, 0);
 		(*my_sp_block)->next_block = SharedPointer<ArrayBlocks>(my_p_block);
-		
+
 		p_initing_block = my_sp_block->operator ->();
 		p_initing_block->arr_capacity = (*sp_block)->arr_capacity;
 		p_initing_block->arr_size     = (*sp_block)->arr_size;
 		p_initing_block->arr_first_index  = (*sp_block)->arr_first_index;
 		p_initing_block->arr_last_index   = (*sp_block)->arr_last_index;
 		p_initing_block->block_number = (*sp_block)->block_number;
-		
+
 		p_initing_block->inc_arr = (*sp_block)->_block_simple_getArrayCopy();
 	}
-	
+
 	for(sp_block = &block.next_block
 	       ,my_p_block = this
 	       ,my_sp_block = &this->next_block
@@ -437,14 +439,14 @@ ArrayBlocks<T>::__block_setCopy(const ArrayBlocks<T> &block)
 	{
 		(*my_sp_block) = make_shared<ArrayBlocks>(false, 0);
 		(*my_sp_block)->prev_block = SharedPointer<ArrayBlocks>(my_p_block);
-		
+
 		p_initing_block = my_sp_block->operator ->();
 		p_initing_block->arr_capacity = (*sp_block)->arr_capacity;
 		p_initing_block->arr_size     = (*sp_block)->arr_size;
 		p_initing_block->arr_first_index  = (*sp_block)->arr_first_index;
 		p_initing_block->arr_last_index   = (*sp_block)->arr_last_index;
 		p_initing_block->block_number = (*sp_block)->block_number;
-		
+
 		p_initing_block->inc_arr = (*sp_block)->_block_simple_getArrayCopy();
 	}
 }
@@ -455,7 +457,7 @@ ArrayBlocks<T>::__block_setMove(ArrayBlocks<T> &block)
 {
 	this->block_number = block.block_number;
 	this->is_front_adding = block.is_front_adding;
-	
+
 	if(block.prev_block.isInitialized())
 	{
 		this->prev_block = move(block.prev_block);
@@ -469,14 +471,14 @@ ArrayBlocks<T>::__block_setMove(ArrayBlocks<T> &block)
 }
 
 template<typename T> bool
-ArrayBlocks<T>::__block_isIterator(bool is_insert, const tblock_index &block_index) 
+ArrayBlocks<T>::__block_isIterator(bool is_insert, const tblock_index &block_index)
 {
 	typedef ArrayBlocks<T> * ArrayBlocksPointer;
 	const ArrayBlocksPointer &refp_block = block_index.p_block;
 	const ArrayBlocksPointer &refp_next_block = refp_block->next_block.operator ->();
 	const size_t &ref_current_size = block_index.current_size;
 	const size_t &ref_global_index = block_index.global_index;
-	
+
 	return
 	(is_insert
 	 && (
@@ -506,14 +508,14 @@ ArrayBlocks<T>::__block_isIterator(bool is_insert, const tblock_index &block_ind
 
 template<typename T> bool
 ArrayBlocks<T>::__block_isRevIterator(bool is_insert,
-                                      const tblock_index &block_index) 
+                                      const tblock_index &block_index)
 {
 	typedef ArrayBlocks<T> * ArrayBlocksPointer;
 	const ArrayBlocksPointer &refp_block = block_index.p_block;
 	const ArrayBlocksPointer &refp_prev_block = refp_block->prev_block.operator ->();
 	const size_t &ref_current_size = block_index.current_size;
 	const size_t &ref_global_index = block_index.global_index;
-	
+
 	return
 	(is_insert
 	&&  (
@@ -552,7 +554,7 @@ ArrayBlocks<T>::_block_init_spNextBlock()
 		this->next_block = make_shared<ArrayBlocks>(this->arr_capacity);
 		this->next_block->prev_block = SharedPointer<ArrayBlocks>(this);
 		this->next_block->block_number = this->block_number + 1;
-	}	
+	}
 }
 
 template<typename T>
@@ -563,14 +565,14 @@ ArrayBlocks<T>::_block_init_spPrevBlock()
 	{
 		this->prev_block = make_shared<ArrayBlocks>(true, this->arr_capacity);
 		this->prev_block->next_block = SharedPointer<ArrayBlocks>(this);
-		
+
 		SharedPointer<ArrayBlocks<T>> *p_sp_block = &(this->prev_block->next_block);
 		while(p_sp_block->isInitialized())
 		{
 			(*p_sp_block)->block_number++;
 			p_sp_block = &((*p_sp_block)->next_block);
 		}
-	}	
+	}
 }
 
 template<typename T>
@@ -688,7 +690,7 @@ ArrayBlocks<T>::_block_popFront(size_t count)
 		{
 			this->SimpleArray<T>::erase(0, count);
 		}
-		
+
 	}
 }
 
@@ -718,7 +720,7 @@ ArrayBlocks<T>::_block_popBack(size_t count)
 			    this->inc_arr + (this->arr_last_index-1) - count
 			);
 			this->arr_size -= count;
-			
+
 			// move elements
 			for(size_t i = 0; i < this->arr_size; ++i)
 			{
@@ -729,11 +731,11 @@ ArrayBlocks<T>::_block_popBack(size_t count)
 				array_call_distructors(1,
 				    this->inc_arr + this->arr_first_index + this->arr_size - 1 - i
 				);
-				
+
 			}
 			this->arr_first_index += count;
 		}
-		
+
 	}
 	else
 	{
@@ -749,7 +751,7 @@ ArrayBlocks<T>::_block_popBack(size_t count)
 		{
 			this->SimpleArray<T>::popBack(count);
 		}
-		
+
 	}
 }
 
@@ -801,8 +803,8 @@ ArrayBlocks<T>::_block_at(TSize_Type index, FromBlock from_block)
 				}
 			}
 		}
-	
-	
+
+
 	case FROM_FRONT:
 		if(local_index < this->arr_size)
 		{
@@ -822,7 +824,7 @@ ArrayBlocks<T>::_block_at(TSize_Type index, FromBlock from_block)
 		}
 	default : break;
 	}
-	
+
 	return this->SimpleArray<T>::at(size_t(0));
 }
 
@@ -885,12 +887,12 @@ ArrayBlocks<T> *
 ArrayBlocks<T>::_block_getFirstBlock()
 {
 	ArrayBlocks<T> *p_block = this;
-	
+
 	while(p_block->prev_block.isInitialized() && p_block->arr_size == p_block->arr_capacity)
 	{
 		p_block = p_block->prev_block.operator ->();
 	}
-	
+
 	return p_block;
 }
 
@@ -899,10 +901,10 @@ ArrayBlocks<T> *
 ArrayBlocks<T>::_block_getLastBlock()
 {
 	ArrayBlocks<T> *p_block = this;
-	
+
 	while(p_block->next_block.isInitialized() && p_block->arr_size == p_block->arr_capacity)
 	{ p_block = p_block->next_block.operator ->(); }
-	
+
 	return p_block;
 }
 
@@ -911,16 +913,16 @@ typename ArrayBlocks<T>::tblock_index
 ArrayBlocks<T>::_block_findBlock(size_t index)
 {
 	tblock_index block_index;
-	
+
 	iterator it = this->begin();
 	reverse_iterator rev_it = this->rbegin();
-	
+
 	block_index.current_size = this->getSize();
 	block_index.current_capacity = this->getCapacity();
 	auto last_index = block_index.current_size - 1;
-	
+
 	size_t i = 0, j = last_index;
-	
+
 	block_index.global_index = index;
 	for(; i <= last_index; ++i, --j, ++it, ++rev_it)
 	{
@@ -929,25 +931,25 @@ ArrayBlocks<T>::_block_findBlock(size_t index)
 			block_index.p_block
 			  = block_index.it_back.inc_block
 			    = it.inc_block;
-			
+
 			block_index.it_front = it;
 			block_index.it_back.inc_data_iterator = it.inc_data_iterator;
-			
+
 			i = last_index + 1;
-			
+
 		} else if(j == index)
 		{
 			block_index.p_block
 			  = block_index.it_back.inc_block
 			    = rev_it.inc_block;
-			
+
 			block_index.it_front.inc_data_iterator = rev_it.inc_data_iterator;
 			block_index.it_back = rev_it;
-			
+
 			i = last_index + 1;
 		}
 	}
-	
+
 	return block_index;
 }
 
@@ -958,59 +960,59 @@ ArrayBlocks<T>::_block_findBlock(const TArrayBlockIterator &element_iterator)
 {
 	const T *element_address = &(*element_iterator);
 	tblock_index block_index;
-	
+
 	block_index.current_size = this->getSize();
 	block_index.current_capacity = this->getCapacity();
-	
+
 	size_t global_index_front(0), global_index_back(block_index.current_size - 1);
-	
+
 	iterator         & ref_it_front = block_index.it_front;
 	reverse_iterator & ref_it_back  = block_index.it_back;
-	
+
 	bool stop = false;
-	
+
 	auto it     = this->begin(); auto it_back     = this->rbegin();
 	auto it_end = this->end();   auto it_back_end = this->rend();
-	
+
 	for(; (it != it_end) && (it_back != it_back_end) && !stop;
 	    ++it, ++it_back, ++global_index_front, --global_index_back)
 	{
 		if(it.operator ->() == element_address)
 		{
 			block_index.p_block = it.inc_block;
-			
+
 			ref_it_front.inc_block         = it.inc_block;
 			ref_it_front.inc_data_iterator = it.inc_data_iterator;
-			
+
 			ref_it_back.inc_block = it.inc_block;
 			ref_it_back.inc_data_iterator = it.inc_data_iterator;
-			
+
 			block_index.global_index = global_index_front;
-			
+
 			stop = true;
 		}
 		else if(it_back.operator ->() == element_address)
 		{
 			block_index.p_block = it_back.inc_block;
-			
+
 			ref_it_front.inc_block         = it_back.inc_block;
 			ref_it_front.inc_data_iterator = it_back.inc_data_iterator;
-			
+
 			ref_it_back.inc_block         = it_back.inc_block;
 			ref_it_back.inc_data_iterator = it_back.inc_data_iterator;
-			
+
 			block_index.global_index = global_index_back;
-			
+
 			stop = true;
 		}
 	}
-	
+
 	return block_index;
 }
 
 template<typename T>
 template<typename TInputIt, typename TOutIt>
-inline void 
+inline void
 ArrayBlocks<T>::_block_move_elements(size_t new_cells,
                                      const TInputIt & source_first,
                                      const TInputIt & source_last,
@@ -1052,19 +1054,19 @@ ArrayBlocks<T>::_block_generic_change_size_option(typename ArrayBlocks<T>::tbloc
 {
 	using namespace flame_ide;
 	using namespace flame_ide::types::primitive;
-	
+
 	ArrayBlocks<T> * p_block = block_index.p_block;
-	
+
 	// что использую -- "прямой" или "обратный" итератор
 	if(__block_isIterator(is_insert, block_index))
 	{
 		iterator it_source;
 		iterator it_target;
-		
+
 		if(is_insert)
 		{
 			it_source = p_block->begin();
-			
+
 			p_block = p_block->_block_getFirstBlock();
 			if(p_block->arr_size == p_block->arr_capacity)
 			{
@@ -1073,15 +1075,15 @@ ArrayBlocks<T>::_block_generic_change_size_option(typename ArrayBlocks<T>::tbloc
 			}
 			--p_block->arr_first_index;
 			++p_block->arr_size;
-			
+
 			it_target = p_block->begin();
-			
+
 			// всё готово для перемещения и вставки
 			if(!is_reverse_iterator)
 			{
 				_block_move_elements(1, it_source, block_index.it_front, it_target);
 				--block_index.it_front;
-				(is_same_types<T, TConcrete>())
+				(isSameTypes<T, TConcrete>())
 					? *block_index.it_front = move(*obj)
 					: *block_index.it_front = *obj;
 			}
@@ -1090,7 +1092,7 @@ ArrayBlocks<T>::_block_generic_change_size_option(typename ArrayBlocks<T>::tbloc
 				++block_index.it_front;
 				_block_move_elements(1, it_source, block_index.it_front, it_target);
 				--block_index.it_front;
-				(is_same_types<T, TConcrete>())
+				(isSameTypes<T, TConcrete>())
 					? *block_index.it_front = move(*obj)
 					: *block_index.it_front = *obj;
 			}
@@ -1098,14 +1100,14 @@ ArrayBlocks<T>::_block_generic_change_size_option(typename ArrayBlocks<T>::tbloc
 		else // erase
 		{
 			iterator it_source_last = end();
-			
+
 			it_target = block_index.it_front;
 			it_source = it_target; ++it_source;
-			
+
 			// всё готово для перемещения и удаления
 			_block_move_elements(0, it_source, it_source_last, it_target);
 			it_source_last->~T();
-			
+
 			p_block = it_source_last.inc_block;
 			--p_block->arr_last_index;
 			--p_block->arr_size;
@@ -1115,11 +1117,11 @@ ArrayBlocks<T>::_block_generic_change_size_option(typename ArrayBlocks<T>::tbloc
 	{
 		reverse_iterator it_source;
 		reverse_iterator it_target;
-		
+
 		if(is_insert)
 		{
 			it_source = p_block->rbegin();
-			
+
 			p_block = p_block->_block_getLastBlock();
 			if(p_block->arr_size == p_block->arr_capacity)
 			{
@@ -1128,16 +1130,16 @@ ArrayBlocks<T>::_block_generic_change_size_option(typename ArrayBlocks<T>::tbloc
 			}
 			p_block->arr_last_index++;
 			p_block->arr_size++;
-			
+
 			it_target = p_block->rbegin();
-			
+
 			// всё готово для перемещения и вставки
 			if(!is_reverse_iterator)
 			{
 				++block_index.it_back;
 				_block_move_elements(1, it_source, block_index.it_back, it_target);
 				--block_index.it_back;
-				(is_same_types<T, TConcrete>())
+				(isSameTypes<T, TConcrete>())
 					? *block_index.it_back = move(*obj)
 					: *block_index.it_back = *obj;
 			}
@@ -1145,7 +1147,7 @@ ArrayBlocks<T>::_block_generic_change_size_option(typename ArrayBlocks<T>::tbloc
 			{
 				_block_move_elements(1, it_source, block_index.it_back, it_target);
 				--block_index.it_back;
-				(is_same_types<T, TConcrete>())
+				(isSameTypes<T, TConcrete>())
 					? *block_index.it_back = move(*obj)
 					: *block_index.it_back = *obj;
 			}
@@ -1153,22 +1155,22 @@ ArrayBlocks<T>::_block_generic_change_size_option(typename ArrayBlocks<T>::tbloc
 		else //erase
 		{
 			reverse_iterator it_source_last = rend();
-			
+
 			it_target = block_index.it_back;
 			it_source = it_target; ++it_source;
-			
+
 			// всё готово для перемещения и удаления
 			_block_move_elements(0, it_source, it_source_last, it_target);
-			
+
 			it_source_last->~T();
-			
+
 			p_block = it_source_last.inc_block;
 			++p_block->arr_first_index;
 			--p_block->arr_size;
 		}
 	}
-	
-	
+
+
 	return 1;
 }
 
@@ -1187,11 +1189,11 @@ ArrayBlocks<T>::_block_generic_change_size_option(typename ArrayBlocks<T>::tbloc
 		iterator it_target;
 		if(is_insert)
 		{
-			
+
 		}
 		else
 		{
-			
+
 		}
 	}
 	else
@@ -1200,11 +1202,11 @@ ArrayBlocks<T>::_block_generic_change_size_option(typename ArrayBlocks<T>::tbloc
 		reverse_iterator it_target;
 		if(is_insert)
 		{
-			
+
 		}
 		else
 		{
-			
+
 		}
 	}
 }
@@ -1249,9 +1251,9 @@ ArrayBlocks<T>::pushFront(const T &obj)
 		{
 			--this->arr_first_index;
 			++this->arr_size;
-			
+
 			this->inc_arr[this->arr_first_index] = obj;
-			
+
 			return 1;
 		}
 	}
@@ -1263,10 +1265,10 @@ ArrayBlocks<T>::pushFront(const T &obj)
 			return return_code;
 		}
 	}
-	
+
 	_block_init_spPrevBlock();
 	return prev_block->pushFront(obj);
-	
+
 }
 
 template<typename T>
@@ -1279,9 +1281,9 @@ ArrayBlocks<T>::pushFront(T &&obj)
 		{
 			--this->arr_first_index;
 			++this->arr_size;
-			
+
 			placement_new(this->inc_arr + this->arr_first_index, move(obj));
-			
+
 			return 1;
 		}
 	}
@@ -1293,10 +1295,10 @@ ArrayBlocks<T>::pushFront(T &&obj)
 			return return_code;
 		}
 	}
-	
+
 	_block_init_spPrevBlock();
 	return prev_block->pushFront(obj);
-	
+
 }
 
 template<typename T>
@@ -1312,11 +1314,11 @@ ArrayBlocks<T>::pushBack(const T &obj)
 			{
 				placement_new(this->inc_arr + this->arr_first_index - 1,
 				              *(this->inc_arr + this->arr_first_index));
-				
+
 				copy(this->inc_arr + this->arr_first_index + 1,
 				     this->inc_arr + this->arr_last_index,
 				     this->inc_arr + this->arr_first_index);
-				
+
 				this->inc_arr[this->arr_last_index - 1] = obj;
 			}
 			else
@@ -1324,10 +1326,10 @@ ArrayBlocks<T>::pushBack(const T &obj)
 				placement_new(this->inc_arr + this->arr_first_index - 1,
 				              obj);
 			}
-			
+
 			--this->arr_first_index;
 			++this->arr_size;
-			
+
 			return 1;
 		}
 	}
@@ -1356,11 +1358,11 @@ ArrayBlocks<T>::pushBack(T &&obj)
 			{
 				placement_new(this->inc_arr + this->arr_first_index - 1,
 				              *(this->inc_arr + this->arr_first_index));
-				
+
 				copy(this->inc_arr + this->arr_first_index + 1,
 				     this->inc_arr + this->arr_last_index,
 				     this->inc_arr + this->arr_first_index);
-				
+
 				this->inc_arr[this->arr_last_index - 1] = move(obj);
 			}
 			else
@@ -1368,11 +1370,11 @@ ArrayBlocks<T>::pushBack(T &&obj)
 				placement_new(this->inc_arr + this->arr_first_index - 1,
 				              move(obj));
 			}
-			
-			
+
+
 			--this->arr_first_index;
 			++this->arr_size;
-			
+
 			return 1;
 		}
 	}
@@ -1495,7 +1497,7 @@ ArrayBlocks<T>::insert(ArrayBlocks<T>::iterator pos_it,
 {
 	// тут поступаем так же, как и при вставке одного элемента
 	// отличия только с количеством новых элементов.
-	
+
 	if(pos_it == this->end())
 	{
 		ArrayBlocks<T> *pblock = _block_getLastBlock();
@@ -1515,7 +1517,7 @@ ArrayBlocks<T>::insert(ArrayBlocks<T>::iterator pos_it,
 		tblock_index block_index = _block_findBlock(pos_it);
 		this->_block_generic_change_size_option<true, false>(block_index, &start, &end);
 	}
-	
+
 	return 1;
 }
 
@@ -1528,9 +1530,9 @@ ArrayBlocks<T>::insert(ArrayBlocks<T>::reverse_iterator pos_it,
 {
 	// тут поступаем так же, как и при вставке одного элемента
 	// отличия только с количеством новых элементов.
-	
+
 	size_t range_size = count_iterations(start, end);
-	
+
 	return 1;
 }
 
@@ -1599,18 +1601,18 @@ template<typename T>
 void
 ArrayBlocks<T>::clear()
 {
-	ObjectBytes<T> _t_bytes;
-	T *& ref_object = _t_bytes.bytes.r_obj;
-	
+	ObjectViewer<T> _t_bytes;
+	T *& ref_object = _t_bytes.bytes.object;
+
 	auto it = begin();
 	auto it_end = end();
 	for(; it != it_end; ++it)
 	{
 		(*it).~T();
 		ref_object = &(*it);
-		_t_bytes.nulling();
+		_t_bytes.clean();
 	}
-	
+
 	auto p_blocks = this->_block_getFirstBlock();
 	while(p_blocks != nullptr)
 	{
@@ -1625,7 +1627,7 @@ ArrayBlocks<T>::clear()
 		}
 		p_blocks = p_blocks->next_block.operator ->();
 	}
-	
+
 }
 
 template<typename T>

@@ -1,7 +1,7 @@
 #ifndef POINTERS_BASICPOINTER
 #define POINTERS_BASICPOINTER
 
-#include <Templates/Pointers.h>
+#include <Templates/Pointers.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -12,62 +12,62 @@ class BasicPointer
 {
 	BasicPointer(const BasicPointer<T> &pointer);
 	BasicPointer(BasicPointer<T> &&pointer);
-	
+
 	const BasicPointer<T>& operator =(const BasicPointer<T> &pointer);
 	const BasicPointer<T>& operator =(BasicPointer<T> &&pointer);
-	
-	
+
+
 protected:
 	mutable T *inc_pointer;
-	
+
 	inline       T* _get_pointer();
 	inline       T& _get_reference();
-	
+
 	inline const T* _get_pointer() const;
 	inline const T& _get_reference() const;
-	
+
 	inline virtual void _clear();
-	
+
 public:
 	BasicPointer();
 	BasicPointer(const T &object);
-	
+
 	virtual ~BasicPointer();
-	
+
 	template<class ... Ts>
 	inline void make(Ts ... args);
 	template<class ... Ts>
 	inline void make(Ts ... args) const;
-	
+
 	inline void clear();
 	inline const T* get() const;
 	inline SharedPointer<T> getShared() const;
-	
+
 	inline bool isInitialized() const;
-	
+
 	inline operator bool() const;
-	
+
 	virtual inline       T& operator *();
 	virtual inline       T* operator ->();
-	
+
 	virtual inline const T& operator *() const;
 	virtual inline const T* operator ->() const;
-	
+
 	friend class SharedPointer<T>;
 	friend class UniquePointer<T>;
-	
+
 	template<class Tt, class Uu> friend
 	BasicPointer<Tt> static_pointer_cast(const BasicPointer<Uu>& pointer) noexcept;
 	template<class Tt, class Uu> friend
 	BasicPointer<Tt> dynamic_pointer_cast(const BasicPointer<Uu>& pointer) noexcept;
-	
+
 	template<class Uu>
 	operator BasicPointer<Uu>() {return static_pointer_cast<Uu>(*this);}
 };
 
 }}
 
-using namespace flame_ide::templates;
+using namespace flame_ide::template;
 
 template<class T>
 BasicPointer<T>::BasicPointer()
@@ -164,7 +164,7 @@ BasicPointer<T>::getShared() const
 	SharedPointer<T> pointer;
 	pointer.inc_pointer = this->inc_pointer;
 	pointer.is_shared = true;
-	
+
 	return pointer;
 }
 
@@ -217,7 +217,7 @@ BasicPointer<T>::operator *() const
 //BasicPointer<T>::operator =(const BasicPointer<T> &pointer)
 //{
 //	this->inc_pointer = pointer.inc_pointer;
-//	
+//
 //	return *this;
 //}
 

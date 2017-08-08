@@ -1,8 +1,8 @@
-#include <Templates/String.h>
+#include <Templates/String.hpp>
 
 /*
 namespace flame_ide
-{namespace templates
+{namespace templatess
 {
 // concatenation
 String
@@ -10,7 +10,7 @@ operator +(char ch, const String& tstring)
 {
 	String tmp_str = tstring;
 	tmp_str.pushFront(ch);
-	
+
 	return tmp_str;
 }
 String
@@ -18,7 +18,7 @@ operator +(const String& tstring, char ch)
 {
 	String tmp_str = tstring;
 	tmp_str.pushBack(ch);
-	
+
 	return tmp_str;
 }
 String
@@ -26,7 +26,7 @@ operator +(const char *c_tstr, const String& tstring)
 {
 	String tmp_str = tstring;
 	tmp_str.concatenation(c_tstr, false);
-	
+
 	return tmp_str;
 }
 String
@@ -34,7 +34,7 @@ operator +(const String& tstring, const char *c_tstr)
 {
 	String tmp_str = tstring;
 	tmp_str.concatenation(c_tstr);
-	
+
 	return tmp_str;
 }
 String
@@ -42,7 +42,7 @@ operator +(const String& tstring1, const String& tstring2)
 {
 	String tmp_str = tstring1;
 	tmp_str.concatenation(tstring2);
-	
+
 	return tmp_str;
 }
 
@@ -99,14 +99,14 @@ operator>>(std::istream &input_stream,
 	{
 		str.clear();
 	}
-	
+
 	unsigned int buffer_count = 0;
 	char buffer_c_str[String::_MAX_BUFFER_SIZE];
 	for(size_t i = 0; i < String::_MAX_BUFFER_SIZE; i++)
 	{
 		buffer_c_str[i] = '\0';
 	}
-	
+
 	input_stream.get(buffer_c_str[buffer_count]);
 	while((buffer_c_str[buffer_count] != '\n')
 		   && (buffer_c_str[buffer_count] != ' '))
@@ -121,13 +121,13 @@ operator>>(std::istream &input_stream,
 			}
 			buffer_count = 0;
 		}
-		
+
 		input_stream.get(buffer_c_str[buffer_count]);
 	}
 	buffer_c_str[buffer_count] = '\0';
-	
+
 	str += buffer_c_str;
-	
+
 	return input_stream;
 }
 
@@ -174,7 +174,7 @@ String::getSubstr(size_t pos, size_t length)
 		arr_ch = string_get_substr(this->inc_arr, pos, length);
 		str = arr_ch;
 	}
-	
+
 	return str;
 }
 
@@ -188,7 +188,7 @@ String::getSubstr(size_t pos, size_t length) const
 		str.inc_arr = string_get_substr(this->inc_arr, pos, length);
 		str.arr_size = length;
 	}
-	
+
 	return str;
 }
 
@@ -208,10 +208,10 @@ String::getHash() const
 		this->hash += (this->hash << 3);
 		this->hash ^= (this->hash >> 11);
 		this->hash += (this->hash << 15);
-		
+
 		this->is_actual_hash = true;
 	}
-	
+
 	return this->hash;
 }
 
@@ -230,20 +230,20 @@ String::getHash(const char *c_str)
 	hash += (hash << 3);
 	hash ^= (hash >> 11);
 	hash += (hash << 15);
-	
+
 	return hash;
 }
 
 // operators
 
-const String& 
+const String&
 String::operator =(const char *c_str)
 {
 	this->assign(c_str);
 	return *this;
 }
 
-const String& 
+const String&
 String::operator =(char ch)
 {
 	this->pushBack(ch);
@@ -263,20 +263,20 @@ String::operator =(String &&string)
 	clear();
 	this->inc_arr = string.inc_arr;
 	this->arr_size = string.arr_size;
-	
+
 	string.arr_size = 0;
-	
+
 	return *this;
 }
 
-const String& 
+const String&
 String::operator +=(const char *c_str)
 {
 	this->concatenation(c_str);
 	return *this;
 }
 
-const String& 
+const String&
 String::operator +=(char ch)
 {
 	this->pushBack(ch);

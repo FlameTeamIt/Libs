@@ -9,7 +9,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "ArgsParser.h"
+#include "ArgsParser.hpp"
 
 ArgsParser::ArgsParser(){}
 ArgsParser::ArgsParser(const int argc, const char*argv[])

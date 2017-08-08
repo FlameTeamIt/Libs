@@ -1,8 +1,8 @@
 #ifndef POINTERS_FUNCTIONS
 #define POINTERS_FUNCTIONS
 
-#include <Templates/Pointers.h>
-#include <Templates/ForAll.h>
+#include <Templates/Pointers.hpp>
+#include <Templates/Traits.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -17,7 +17,7 @@ static_pointer_cast(const BasicPointer<U>& pointer) noexcept
 	{
 		ret_pointer.inc_pointer = static_cast<T*>(pointer.inc_pointer);
 	}
-	
+
 	return ret_pointer;
 }
 template<class T, class U>
@@ -33,7 +33,7 @@ static_pointer_cast(const SharedPointer<U>& pointer) noexcept
 			ret_pointer.is_shared = true;
 		}
 	}
-	
+
 	return ret_pointer;
 }
 template<class T, class U>
@@ -49,7 +49,7 @@ static_pointer_cast(UniquePointer<U>& pointer) noexcept
 			pointer.inc_pointer	= nullptr;
 		}
 	}
-	
+
 	return ret_pointer;
 }
 
@@ -62,7 +62,7 @@ dynamic_pointer_cast(const BasicPointer<U>& pointer) noexcept
 	{
 		ret_pointer.inc_pointer = dynamic_cast<T*>(pointer.inc_pointer);
 	}
-	
+
 	return ret_pointer;
 }
 template<class T, class U>
@@ -78,7 +78,7 @@ dynamic_pointer_cast(const SharedPointer<U>& pointer) noexcept
 			ret_pointer.is_shared = true;
 		}
 	}
-	
+
 	return ret_pointer;
 }
 template<class T, class U>
@@ -94,7 +94,7 @@ dynamic_pointer_cast(UniquePointer<U>& pointer) noexcept
 			pointer.inc_pointer = nullptr;
 		}
 	}
-	
+
 	return ret_pointer;
 }
 

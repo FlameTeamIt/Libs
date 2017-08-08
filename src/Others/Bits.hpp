@@ -1,7 +1,7 @@
 #ifndef BITS_H
 #define BITS_H
 
-#include <Others/PrimitiveTypes.h>
+#include <Others/PrimitiveTypes.hpp>
 
 namespace flame_ide
 {

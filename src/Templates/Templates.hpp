@@ -1,14 +1,14 @@
 #ifndef TEMPLATES_H
 #define TEMPLATES_H
 
-#include <Templates/Allocator.h>
-#include <Templates/Array.h>
-#include <Templates/ArrayBlocks.h>
-#include <Templates/BasicIterator.h>
-#include <Templates/ForAll.h>
-#include <Templates/List.h>
-#include <Templates/Pointers.h>
-#include <Templates/SimpleArray.h>
-#include <Templates/String.h>
+#include <Templates/Allocator.hpp>
+#include <Templates/Array.hpp>
+#include <Templates/ArrayBlocks.hpp>
+#include <Templates/BasicIterator.hpp>
+#include <Templates/Traits.hpp>
+#include <Templates/List.hpp>
+#include <Templates/Pointers.hpp>
+#include <Templates/SimpleArray.hpp>
+#include <Templates/String.hpp>
 
 #endif // TEMPLATES_H

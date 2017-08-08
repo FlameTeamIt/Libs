@@ -1,7 +1,7 @@
 #include <iostream>
-#include <Others/TextStyle.h>
+#include <Others/TextStyle.hpp>
 
-#include <Tests/Test.h>
+#include <Tests/Test.hpp>
 
 struct Kilobyte
 {
@@ -21,14 +21,14 @@ Test::all()
 {
 	std::cout << TEXT_STYLE_CYAN << TEXT_STYLE_BOLD
 			  << "Test::all()" << TEXT_STYLE_NULL << '\n';
-	
+
 //	analyzers.all();
 //	bus.all();
 //	filesystem.all();
 	template_classes.all();
-	
+
 	others.all();
-	
+
 	std::cout << '\n';
 }
 

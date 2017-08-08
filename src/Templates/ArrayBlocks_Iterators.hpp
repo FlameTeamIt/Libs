@@ -1,8 +1,8 @@
 #ifndef TEMPLATES_ArrayBlocks_ITERATORS
 #define TEMPLATES_ArrayBlocks_ITERATORS
 
-#include <Templates/BasicIterator.h>
-#include <Templates/SimpleArray.h>
+#include <Templates/BasicIterator.hpp>
+#include <Templates/SimpleArray.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -18,83 +18,83 @@ class ArrayBlocksIterator
 {
 protected:
 	mutable ArrayBlocks<T> *inc_block;
-	
+
 	virtual void __operator_inc(); // ++
 	virtual void __operator_dec(); // --
 	virtual void __operator_inc() const; // ++
 	virtual void __operator_dec() const; // --
-	
+
 public:
 	friend class ArrayBlocks<T>;
 	typedef ArrayBlocksIterator<T> my_type;
 	typedef ArrayBlocksReverseIterator<T> friend_type;
-	
+
 	ArrayBlocksIterator();
 	ArrayBlocksIterator(ArrayBlocksIterator<T> &&iterator);
 	ArrayBlocksIterator(const ArrayBlocksIterator<T> &iterator);
-	
+
 	~ArrayBlocksIterator() = default;
-	
+
 	inline my_type& operator =(my_type &iterator)  noexcept;
 	inline my_type& operator =(my_type &&iterator) noexcept;
-	
+
 	inline const my_type& operator =(const my_type &iterator) const noexcept;
 	inline const my_type& operator =(my_type &&iterator)      const noexcept;
-	
+
 	inline my_type& operator =(friend_type &iterator)  noexcept;
 	inline my_type& operator =(friend_type &&iterator) noexcept;
-	
+
 	inline const my_type& operator =(const friend_type &iterator) const noexcept;
 	inline const my_type& operator =(friend_type &&iterator)      const noexcept;
-	
-	
+
+
 	virtual T& operator *()  noexcept;
 	virtual T* operator ->() noexcept;
-	
+
 	virtual const T& operator *()  const noexcept;
 	virtual const T* operator ->() const noexcept;
-	
+
 	inline my_type& operator ++();
 	inline my_type& operator --();
-	
+
 	inline const my_type& operator ++() const;
 	inline const my_type& operator --() const;
-	
-	
+
+
 	inline my_type& operator ++(int);
 	inline my_type& operator --(int);
-	
+
 	inline const my_type& operator ++(int) const;
 	inline const my_type& operator --(int) const;
-	
+
 	// надо подумать, как с ними быть
 //	template<class TSizeType>
 //	inline const my_type& operator -(TSizeType dimer);
 //	template<class TSizeType>
 //	inline const my_type& operator -(TSizeType dimer) const;
-	
-	
+
+
 //	template<class TSizeType>
 //	inline const my_type& operator +(TSizeType adder);
 //	template<class TSizeType>
 //	inline const my_type& operator +(TSizeType adder) const;
-	
+
 	template<typename Tt> friend
 	bool operator ==(const ArrayBlocksIterator<Tt> &iter1,
 	                 const ArrayBlocksIterator<Tt> &iter2);
 	template<typename Tt> friend
 	bool operator !=(const ArrayBlocksIterator<Tt> &iter1,
 	                 const ArrayBlocksIterator<Tt> &iter2);
-	
-	
+
+
 	template<typename Tt> friend
 	bool operator ==(const ArrayBlocksIterator<Tt> &iter1,
 	                 const ArrayBlocksReverseIterator<Tt> &iter2);
 	template<typename Tt> friend
 	bool operator !=(const ArrayBlocksIterator<Tt> &iter1,
 	                 const ArrayBlocksReverseIterator<Tt> &iter2);
-	
-	
+
+
 	template<typename Tt> friend
 	bool operator ==(const ArrayBlocksReverseIterator<Tt> &iter1,
 	                 const ArrayBlocksIterator<Tt> &iter2);
@@ -109,90 +109,90 @@ class ArrayBlocksReverseIterator
 {
 protected:
 	mutable ArrayBlocks<T> *inc_block;
-	
+
 	virtual void __operator_inc(); // ++
 	virtual void __operator_dec(); // --
 	virtual void __operator_inc() const; // ++
 	virtual void __operator_dec() const; // --
-	
+
 public:
 	friend class ArrayBlocks<T>;
 	typedef ArrayBlocksReverseIterator<T> my_type;
 	typedef ArrayBlocksIterator<T> friend_type;
-	
+
 	ArrayBlocksReverseIterator();
 	ArrayBlocksReverseIterator(ArrayBlocksReverseIterator<T> &&iterator);
 	ArrayBlocksReverseIterator(const ArrayBlocksReverseIterator<T> &iterator);
-	
+
 	~ArrayBlocksReverseIterator() = default;
-	
+
 	inline my_type& operator =(my_type &iterator)  noexcept;
 	inline my_type& operator =(my_type &&iterator) noexcept;
-	
+
 	inline const my_type& operator =(const my_type &iterator) const noexcept;
 	inline const my_type& operator =(my_type &&iterator)      const noexcept;
-	
+
 	inline my_type& operator =(friend_type &iterator)  noexcept;
 	inline my_type& operator =(friend_type &&iterator) noexcept;
-	
+
 	inline const my_type& operator =(const friend_type &iterator) const noexcept;
 	inline const my_type& operator =(friend_type &&iterator)      const noexcept;
-	
+
 	virtual T& operator *()  noexcept;
 	virtual T* operator ->() noexcept;
-	
+
 	virtual const T& operator *()  const noexcept;
 	virtual const T* operator ->() const noexcept;
-	
+
 	inline const my_type& operator ++();
 	inline const my_type& operator --();
-	
+
 	inline const my_type& operator ++() const;
 	inline const my_type& operator --() const;
-	
-	
+
+
 	inline const my_type& operator ++(int);
 	inline const my_type& operator --(int);
-	
+
 	inline const my_type& operator ++(int) const;
 	inline const my_type& operator --(int) const;
-	
-	
-	// надо подумать, как с ними быть	
+
+
+	// надо подумать, как с ними быть
 //	template<class TSizeType>
 //	inline const my_type& operator -(TSizeType dimer);
 //	template<class TSizeType>
 //	inline const my_type& operator -(TSizeType dimer) const;
-	
-	
+
+
 //	template<class TSizeType>
 //	inline const my_type& operator +(TSizeType adder);
 //	template<class TSizeType>
 //	inline const my_type& operator +(TSizeType adder) const;
-	
-	
+
+
 	template<typename Tt> friend
 	bool operator ==(const ArrayBlocksReverseIterator<Tt> &iter1,
 	                 const ArrayBlocksReverseIterator<Tt> &iter2);
 	template<typename Tt> friend
 	bool operator !=(const ArrayBlocksReverseIterator<Tt> &iter1,
 	                 const ArrayBlocksReverseIterator<Tt> &iter2);
-	
-	
+
+
 	template<typename Tt> friend
 	bool operator ==(const ArrayBlocksReverseIterator<Tt> &iter1,
 	                 const ArrayBlocksIterator<Tt> &iter2);
 	template<typename Tt> friend
 	bool operator !=(const ArrayBlocksReverseIterator<Tt> &iter1,
 	                 const ArrayBlocksIterator<Tt> &iter2);
-	
-	
+
+
 	template<typename Tt> friend
 	bool operator ==(const ArrayBlocksIterator<Tt> &iter1,
 	                 const ArrayBlocksReverseIterator<Tt> &iter2);
 	template<typename Tt> friend
 	bool operator !=(const ArrayBlocksIterator<Tt> &iter1,
-	                 const ArrayBlocksReverseIterator<Tt> &iter2);	
+	                 const ArrayBlocksReverseIterator<Tt> &iter2);
 };
 
 // ArrayBlocksIterator

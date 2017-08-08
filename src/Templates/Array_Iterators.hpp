@@ -1,7 +1,7 @@
 #ifndef ARRAY_ITERATORS
 #define ARRAY_ITERATORS
 
-#include <Templates/BasicIterator.h>
+#include <Templates/BasicIterator.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -17,7 +17,7 @@ class ArrayIterator : public BasicIterator<T, TData>
 public:
 	virtual const TData& operator *() const noexcept;
 	virtual       TData& operator *()       noexcept;
-		  
+
 	virtual const TData* operator ->() const noexcept;
 	virtual       TData* operator ->()       noexcept;
 };
@@ -28,7 +28,7 @@ class ArrayReverseIterator : public BasicReverseIterator<T, T>
 public:
 	virtual const TData& operator *() const noexcept;
 	virtual       TData& operator *()       noexcept;
-		  
+
 	virtual const TData* operator ->() const noexcept;
 	virtual       TData* operator ->()       noexcept;
 };

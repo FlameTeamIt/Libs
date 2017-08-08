@@ -30,9 +30,9 @@ UniquePointer<T> dynamic_pointer_cast(UniquePointer<U>& pointer) noexcept;
 
 }}
 
-#include <Templates/Pointers_BasicPointer.h>
-#include <Templates/Pointers_SharedPointer.h>
-#include <Templates/Pointers_UniquePointer.h>
-#include <Templates/Pointers_Functions.h>
+#include <Templates/Pointers_BasicPointer.hpp>
+#include <Templates/Pointers_SharedPointer.hpp>
+#include <Templates/Pointers_UniquePointer.hpp>
+#include <Templates/Pointers_Functions.hpp>
 
 #endif // POINTERS

@@ -5,9 +5,9 @@
 #define OBJ_BLOCK_SIZE 64
 #endif
 
-#include <Templates/Array_Functions.h>
-#include <Templates/SimpleArray_Iterators.h>
-#include <Templates/ForAll.h>
+#include <Templates/Array_Functions.hpp>
+#include <Templates/SimpleArray_Iterators.hpp>
+#include <Templates/Traits.hpp>
 
 /*
 Что нужно сделать и/или подумать, как сделать:
@@ -27,54 +27,54 @@ class SimpleArray
 	inline void __simple_setInit(size_t init_size); // tested
 	inline void __simple_setCopy(const SimpleArray<T> &array); // tested
 	inline void __simple_setMove(SimpleArray<T> &array); // tested
-	
+
 protected:
 	size_t arr_first_index, arr_last_index;
-	
+
 	size_t arr_capacity;
 	size_t arr_size;
-	
+
 	T* inc_arr;
-	
+
 	inline T* _simple_getArrayCopy() const; // tested
-	
+
 public:
 	typedef SimpleArrayIterator<T>        iterator; // tested
 	typedef SimpleArrayReverseIterator<T> reverse_iterator; // tested
-	
+
 	typedef const SimpleArrayIterator<T>        const_iterator; // tested
 	typedef const SimpleArrayReverseIterator<T> const_reverse_iterator; //tested
-	
+
 	SimpleArray(); // tested
 	SimpleArray(size_t init_size); // tested
-	
+
 	template<typename TSize_Type>
 	SimpleArray(TSize_Type init_size); // tested
-	
+
 	SimpleArray(const SimpleArray<T> &array); // tested
 	SimpleArray(SimpleArray<T> &&array); // tested
-	
+
 	virtual ~SimpleArray(); // tested
-	
+
 	size_t getSize() const noexcept; // tested
 	size_t getCapacity() const noexcept; // tested
-	
+
 	const T& at(size_t index) const;
 	      T& at(size_t index);
-	
+
 	int pushBack(const T &obj); // tested
 	int pushBack(T &&obj); // tested
-	
+
 	// insertion after
 	int insert(size_t pos_index, T &&obj); // tested
 	int insert(size_t pos_index, const T &obj);
-	
+
 	int insert(const_iterator &it, T &&obj); // tested
 	int insert(const_iterator &it, const T &obj);
-	
+
 	int insert(const_reverse_iterator &it, T &&obj);
 	int insert(const_reverse_iterator &it, const T &obj);
-	
+
 	template<typename TIterator>
 	int insert(const size_t pos_index,
 	           const TIterator &start, const TIterator &end);  // tested
@@ -84,32 +84,32 @@ public:
 	template<typename TIterator>
 	int insert(const reverse_iterator pos_index,
 	           const TIterator &start, const TIterator &end);
-	
+
 	int popBack(size_t count = 1); // tested
-	
+
 	int erase(size_t pos_index, size_t count = 1); // tested
 	int erase(const_iterator &it, size_t count = 1);
 	int erase(const_reverse_iterator &it, size_t count = 1);
-	
+
 	void rewrite(size_t pos, const T &object); // tested
 	void rewrite(const_iterator &it, const T &object);
 	void rewrite(const_reverse_iterator &it, const T &object);
-	
+
 	void clear(); // tested
-	
+
 	bool isEmpty() const noexcept;
-	
+
 	const SimpleArray<T>& operator =(const SimpleArray<T> &array); // tested
 	const SimpleArray<T>& operator =(SimpleArray<T> &&array); // tested
-	
+
 	template<typename TSize_Type>
 	const T& operator [](TSize_Type index) const noexcept; // tested
 	template<typename TSize_Type>
 	      T& operator [](TSize_Type index)       noexcept; // tested
-	
+
 	const T& operator [](size_t index) const noexcept; // tested
 	      T& operator [](size_t index)       noexcept; // tested
-	
+
 	iterator begin(); //tested
 	iterator end(); // tested
 	reverse_iterator rbegin(); // tested
@@ -119,7 +119,7 @@ public:
 	const_iterator end() const;
 	const_reverse_iterator rbegin() const;
 	const_reverse_iterator rend() const;
-	
+
 };
 
 }}
@@ -205,7 +205,7 @@ SimpleArray<T>::__simple_setCopy(const SimpleArray<T> &array)
 	this->arr_capacity = array.arr_capacity;
 	this->arr_size = array.arr_size;
 	this->inc_arr = array._simple_getArrayCopy();
-	
+
 	this->arr_last_index = array.arr_last_index;
 	this->arr_first_index = array.arr_first_index;
 }
@@ -216,9 +216,9 @@ SimpleArray<T>::__simple_setMove(SimpleArray<T> &array)
 	this->arr_capacity = array.arr_capacity;
 	this->arr_size = array.arr_size;
 	this->inc_arr = array.inc_arr;
-	
+
 	array.arr_capacity = 0;
-	
+
 	this->arr_last_index = array.arr_last_index;
 	this->arr_first_index = array.arr_first_index;
 }
@@ -291,7 +291,7 @@ SimpleArray<T>::pushBack(T &&obj)
 	{
 		return -1;
 	}
-	
+
 	return 1;
 }
 
@@ -324,7 +324,7 @@ SimpleArray<T>::insert(size_t pos_index, const T &obj)
 	{
 		return -1;
 	}
-	
+
 	return 1;
 }
 template<class T>
@@ -356,7 +356,7 @@ SimpleArray<T>::insert(size_t pos_index, T &&obj)
 	{
 		return -1;
 	}
-	
+
 	return 1;
 }
 
@@ -397,16 +397,16 @@ SimpleArray<T>::insert(const size_t pos_index,
                        const TIterator &start, const TIterator &end) // tested
 {
 	size_t count_insertion = count_iterations(start, end);
-	
+
 	if(this->arr_size + count_insertion > this->arr_capacity
 	   || this->arr_size < pos_index)
 	{
 		return -1;
 	}
-	
+
 	// далее нужно понять, на сколько нужно сдвинуть элементы, чтобы вместить
 	// диапозон.
-	
+
 	// сдвигаем
 	if(pos_index < this->arr_size)
 	{
@@ -414,11 +414,11 @@ SimpleArray<T>::insert(const size_t pos_index,
 				  this->inc_arr + this->arr_size,
 				  this->inc_arr + (pos_index + count_insertion));
 	}
-	
+
 	std::copy(start, end, this->inc_arr+pos_index);
 	this->arr_size = this->arr_size + count_insertion;
 	this->arr_last_index = this->arr_size;
-	
+
 	return 1;
 }
 template<class T>
@@ -454,7 +454,7 @@ SimpleArray<T>::popBack(size_t count) //tested
 	{
 		return -1;
 	}
-	
+
 	return 1;
 }
 
@@ -472,7 +472,7 @@ SimpleArray<T>::erase(size_t pos_index, size_t count)
 			copy(this->inc_arr + tmp_size,
 			     this->inc_arr + this->arr_size,
 			     this->inc_arr + pos_index);
-			
+
 			array_call_distructors(count, this->inc_arr + this->arr_size - count);
 		}
 		this->arr_size -= count;
@@ -482,7 +482,7 @@ SimpleArray<T>::erase(size_t pos_index, size_t count)
 	{
 		return -1;
 	}
-	
+
 	return 1;
 }
 
@@ -554,7 +554,7 @@ SimpleArray<T>::operator =(SimpleArray<T> &&array) // tested
 }
 
 template<class T>
-template<typename TSize_Type> 
+template<typename TSize_Type>
 const T&
 SimpleArray<T>::operator [](TSize_Type index) const noexcept
 {
@@ -562,7 +562,7 @@ SimpleArray<T>::operator [](TSize_Type index) const noexcept
 }
 
 template<class T>
-template<typename TSize_Type> 
+template<typename TSize_Type>
 T&
 SimpleArray<T>::operator [](TSize_Type index) noexcept
 {
@@ -589,7 +589,7 @@ SimpleArray<T>::begin() // tested
 {
 	iterator it;
 	it.inc_data_iterator = this->inc_arr + this->arr_first_index;
-	
+
 	return it;
 }
 
@@ -599,7 +599,7 @@ SimpleArray<T>::end() // tested
 {
 	iterator it;
 	it.inc_data_iterator = this->inc_arr + this->arr_last_index;
-	
+
 	return it;
 }
 
@@ -609,7 +609,7 @@ SimpleArray<T>::rbegin()
 {
 	reverse_iterator it;
 	it.inc_data_iterator = this->inc_arr + this->arr_last_index - 1;
-	
+
 	return it;
 }
 
@@ -619,7 +619,7 @@ SimpleArray<T>::rend()
 {
 	reverse_iterator it;
 	it.inc_data_iterator = this->inc_arr + this->arr_first_index - 1;
-	
+
 	return it;
 }
 
@@ -629,7 +629,7 @@ SimpleArray<T>::begin() const
 {
 	const_iterator it;
 	it.inc_data_iterator = this->inc_arr + this->arr_first_index;
-	
+
 	return it;
 }
 
@@ -639,7 +639,7 @@ SimpleArray<T>::end() const
 {
 	const_iterator it;
 	it.inc_data_iterator = this->inc_arr + this->arr_last_index;
-	
+
 	return it;
 }
 
@@ -649,7 +649,7 @@ SimpleArray<T>::rbegin() const
 {
 	const_reverse_iterator it;
 	it.inc_data_iterator = this->inc_arr + this->arr_last_index - 1;
-	
+
 	return it;
 }
 
@@ -659,7 +659,7 @@ SimpleArray<T>::rend() const
 {
 	const_reverse_iterator it;
 	it.inc_data_iterator = this->inc_arr + this->arr_first_index - 1;
-	
+
 	return it;
 }
 

@@ -1,15 +1,21 @@
-/*
- * file:       %{Cpp:License:FileName}
- *
- * created:    17.07.2017
- * author:     kachsheev
- */
-#include <iostream>
+#include <Templates/Tests/Allocator.hpp>
 
-using namespace std;
-
-int main()
+int main(int /*argc*/, char */*argv*/[])
 {
-	cout << "Hello World!" << endl;
+	using namespace flame_ide::test;
+	using namespace flame_ide::templates;
+
+	ArrayAllocator arrayAlloc;
+	ObjectAllocator objectAlloc;
+
+	arrayAlloc.start();
+	objectAlloc.start();
+
+	int *p = (int *) malloc(sizeof(int));
+	int i = 10;
+	const int &ri = i;
+	placementNew<int>(p, ri);
+
 	return 0;
 }
+

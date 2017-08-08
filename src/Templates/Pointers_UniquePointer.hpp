@@ -1,7 +1,7 @@
 #ifndef POINTERS_UNIQUEPOINTER
 #define POINTERS_UNIQUEPOINTER
 
-#include <Templates/Pointers.h>
+#include <Templates/Pointers.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -11,18 +11,18 @@ template<class T>
 class UniquePointer : public BasicPointer<T>
 {
 	UniquePointer(const UniquePointer &pointer);
-	
+
 protected:
 	inline void set(UniquePointer &pointer);
 	using BasicPointer<T>::inc_pointer;
-	
+
 public:
 	UniquePointer();
 	UniquePointer(const T &object);
 	UniquePointer(UniquePointer &&pointer);
-	
+
 	virtual ~UniquePointer();
-	
+
 	inline const UniquePointer& operator =(UniquePointer<T> &arg);
 	inline const UniquePointer& operator =(UniquePointer<T> &&arg);
 	inline const UniquePointer& operator =(const T &arg);
@@ -33,7 +33,7 @@ public:
 	UniquePointer<Tt> static_pointer_cast(UniquePointer<Uu>& pointer) noexcept;
 	template<class Tt, class Uu> friend
 	UniquePointer<Tt> dynamic_pointer_cast(UniquePointer<Uu>& pointer) noexcept;
-	
+
 	template<class Uu>
 	operator UniquePointer<Uu> () {return static_pointer_cast<Uu>(*this);}
 };
@@ -43,13 +43,13 @@ UniquePointer<T> make_unique(Ts&& ... args)
 {
 	UniquePointer<T> pointer;
 	pointer.make(args ...);
-	
+
 	return pointer;
 }
 
 }}
 
-using namespace flame_ide::templates;
+using namespace flame_ide::template;
 
 template<class T>
 UniquePointer<T>::UniquePointer()
@@ -94,42 +94,42 @@ UniquePointer<T>::set(UniquePointer &pointer)
 // operators
 
 template<class T>
-const UniquePointer<T>& 
+const UniquePointer<T>&
 UniquePointer<T>::operator =(UniquePointer<T> &arg)
 {
 	this->clear();
 	this->set(arg);
-	
+
 	return *this;
 }
 template<class T>
-const UniquePointer<T>& 
+const UniquePointer<T>&
 UniquePointer<T>::operator =(UniquePointer<T> &&arg)
 {
 	this->clear();
 	this->set(arg);
-	
+
 	return *this;
 }
 template<class T>
-const UniquePointer<T>& 
+const UniquePointer<T>&
 UniquePointer<T>::operator =(const T &arg)
 {
 	this->clear();
 	this->make(arg);
-	
+
 	return *this;
 }
 
 template<class T>
-const UniquePointer<T>& 
+const UniquePointer<T>&
 UniquePointer<T>::operator =(BasicPointer<T> &arg)
 {
 	this->clear();
-	
+
 	this->inc_pointer = arg.inc_pointer;
 	arg.inc_pointer = nullptr;
-	
+
 	return *this;
 }
 
