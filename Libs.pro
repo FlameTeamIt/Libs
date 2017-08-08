@@ -80,4 +80,7 @@ HEADERS += \
     src/Templates/Templates.hpp \
     src/Tests/Test.hpp \
     tests/Templates/ArrayBlocks.hpp \
-    tests/Test.hpp
+    tests/Test.hpp \
+    src/Templates/Utils.hpp \
+    src/Templates/ObjectViewer.hpp \
+    src/Templates/IntializerList.hpp
