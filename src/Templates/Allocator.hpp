@@ -161,7 +161,7 @@ public:
 	 * @param pointer
 	 * Pointer to object which can be removed
 	 */
-	void destruct(Pointer pointer) noexcept;
+	void destruct(Pointer &pointer) noexcept;
 };
 
 /**
@@ -213,7 +213,7 @@ public:
 	 * @param count
 	 * Count exist elemets in array
 	 */
-	void destruct(Pointer pointer, SizeType count) noexcept;
+	void destruct(Pointer &pointer, SizeType count) noexcept;
 
 private:
 	using ParentType::allocate;
@@ -282,16 +282,17 @@ ObjectAllocator<T, Traits>::construct(Args &&...args) noexcept
 	Pointer pointer = reinterpret_cast<Pointer>(
 			this->allocate(SizeType(sizeof(Type))));
 	if (pointer)
-		placementNew<T>(pointer, forward(args)...);
+		placementNew<Type>(pointer, forward(args)...);
 	return pointer;
 }
 
 template<typename T, typename Traits>
 void ObjectAllocator<T, Traits>::destruct(
-		typename ObjectAllocator<T, Traits>::Pointer pointer) noexcept
+		typename ObjectAllocator<T, Traits>::Pointer &pointer) noexcept
 {
 	(*pointer).~T();
 	this->deallocate(pointer);
+	pointer = nullptr;
 }
 
 // ArrayAllocator
@@ -308,19 +309,20 @@ ArrayAllocator<T, Traits>::construct(
 	if (pointer)
 	{
 		for (Pointer iterator = pointer; SizeType(iterator - pointer) < count; ++iterator)
-			placementNew<T>(iterator, forward(args)...);
+			placementNew<Type>(iterator, forward(args)...);
 	}
 	return pointer;
 }
 
 template<typename T, typename Traits>
 void ArrayAllocator<T, Traits>::destruct(
-		typename ArrayAllocator<T, Traits>::Pointer pointer
+		typename ArrayAllocator<T, Traits>::Pointer &pointer
 		, typename ArrayAllocator<T, Traits>::SizeType count) noexcept
 {
 	for (Pointer iterator = pointer; iterator - pointer < SizeTraits::SsizeType(count); ++iterator)
 		(*iterator).~T();
 	deallocate(pointer);
+	pointer = nullptr;
 }
 
 }}}

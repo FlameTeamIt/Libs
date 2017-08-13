@@ -230,14 +230,14 @@ template<typename Iterator, typename Traits> inline
 typename ReverseIterator<Iterator, Traits>::Pointer
 ReverseIterator<Iterator, Traits>::operator->()
 {
-	return wrappedIterator.operator->();
+	return &(*wrappedIterator);
 }
 
 template<typename Iterator, typename Traits> inline
 typename ReverseIterator<Iterator, Traits>::PointerToConst
 ReverseIterator<Iterator, Traits>::operator->() const
 {
-	return wrappedIterator.operator->();
+	return &(*wrappedIterator);
 }
 
 // RaReverseIterator
@@ -251,7 +251,7 @@ template<typename Iterator, typename Traits> inline
 bool RaReverseIterator<Iterator, Traits>::operator==(
 		const RaReverseIterator<Iterator, Traits> &revIt) const
 {
-	return wrappedIterator = revIt.wrappedIterator;
+	return wrappedIterator == revIt.wrappedIterator;
 }
 
 template<typename Iterator, typename Traits> inline
@@ -380,14 +380,14 @@ template<typename Iterator, typename Traits> inline
 typename RaReverseIterator<Iterator, Traits>::Pointer
 RaReverseIterator<Iterator, Traits>::operator->()
 {
-	return wrappedIterator.operator->();
+	return &(*wrappedIterator);
 }
 
 template<typename Iterator, typename Traits> inline
 typename RaReverseIterator<Iterator, Traits>::PointerToConst
 RaReverseIterator<Iterator, Traits>::operator->() const
 {
-	return wrappedIterator.operator->();
+	return &(*wrappedIterator);
 }
 
 template<typename Iterator, typename Traits>
