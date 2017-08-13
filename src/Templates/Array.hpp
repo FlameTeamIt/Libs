@@ -3,6 +3,7 @@
 
 #include <Templates/InitializerList.hpp>
 #include <Templates/Iterator.hpp>
+#include <Templates/View.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -16,6 +17,7 @@ class Array
 {
 public:
 	using Me = Array<T, SIZE, Traits>;
+
 	using SizeType = typename Traits::SizeType;
 	using Type = typename Traits::Type;
 	using Pointer = typename Traits::Pointer;
@@ -70,6 +72,20 @@ public:
 	 */
 	template<SizeTraits::SizeType SIZE1, typename Traits1>
 	Me &operator=(Array<T, SIZE1, Traits1> &&objects);
+
+	/**
+	 * @brief operator[]
+	 * @param index
+	 * @return
+	 */
+	inline Reference operator[](SizeType index) noexcept;
+
+	/**
+	 * @brief operator[]
+	 * @param index
+	 * @return
+	 */
+	inline ConstReference operator[](SizeType index) const noexcept;
 
 	/**
 	 * @brief size
@@ -227,7 +243,10 @@ public:
 	void erase(Iterator itBegin, Iterator itEnd);
 
 private:
-	Type objects[SIZE];
+	inline Pointer head();
+	inline PointerToConst head() const;
+
+	Types::byte_t bytes[sizeof(Type) * SIZE];
 	Pointer tail;
 };
 
@@ -240,7 +259,7 @@ namespace flame_ide
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 Array<T, SIZE, Traits>::Array()
 {
-	tail = objects;
+	tail = head();
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
@@ -264,7 +283,7 @@ Array<T, SIZE, Traits>::Array(Array<T, SIZE1, Traits1> &&array)
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 Array<T, SIZE, Traits>::Array(InitializerList<T, SIZE> list)
 {
-	Pointer pointer = objects;
+	Pointer pointer = head();
 	for (auto it : list)
 	{
 		new(pointer++) T(move(it));
@@ -310,10 +329,24 @@ Array<T, SIZE, Traits>::operator=(Array<T, SIZE1, Traits1> &&array)
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+typename Array<T, SIZE, Traits>::Reference
+Array<T, SIZE, Traits>::operator[](typename Array<T, SIZE, Traits>::SizeType index) noexcept
+{
+	return head()[index];
+}
+
+template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+typename Array<T, SIZE, Traits>::ConstReference
+Array<T, SIZE, Traits>::operator[](typename Array<T, SIZE, Traits>::SizeType index) const noexcept
+{
+	return head()[index];
+}
+
+template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 typename Traits::SizeType
 Array<T, SIZE, Traits>::size() const noexcept
 {
-	return SizeType(tail - objects);
+	return SizeType(tail - head());
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> constexpr
@@ -355,14 +388,14 @@ template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 typename Array<T, SIZE, Traits>::Iterator
 Array<T, SIZE, Traits>::begin() noexcept
 {
-	return objects;
+	return head();
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 typename Array<T, SIZE, Traits>::ConstIterator
 Array<T, SIZE, Traits>::begin() const noexcept
 {
-	return objects.array;
+	return head();
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
@@ -458,11 +491,17 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 		else
 		{
 			placementNew<Type>(tail);
-			for (ReverseIterator run(tail); run != it; ++run)
-				run = move(*(run + 1));
-			++tail;
+			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it));
+			View<Me, ReverseIterator> viewNew(--viewOld.begin(), --viewOld.end());
+
+			for (auto itOld = viewOld.begin(), itNew = viewNew.begin();
+					itNew != viewNew.end() - 1; ++itOld, ++itNew)
+			{
+				*itNew = move(*itOld);
+			}
 
 			*it = object;
+			++tail;
 		}
 	}
 }
@@ -478,13 +517,34 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 		else
 		{
 			placementNew<Type>(tail);
-			for (ReverseIterator run(tail); run != it; ++run)
-				run = move(*(run + 1));
-			++tail;
+			View<Me> viewOld(rbegin(), ReverseIterator(it + 1));
+			View<Me> viewNew(--viewOld.begin(), --viewOld.end());
 
-			*it = object;
+			for (ReverseIterator itOld = viewOld.begin()
+					, itNew = viewNew.begin(); itOld != viewOld.end();
+					++itOld, ++itNew)
+			{
+				*itNew = move(*itOld);
+			}
+
+			*it = move(object);
+			++tail;
 		}
 	}
+}
+
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
+typename Array<T, SIZE, Traits>::Pointer
+Array<T, SIZE, Traits>::head()
+{
+	return reinterpret_cast<Pointer>(bytes);
+}
+
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
+typename Array<T, SIZE, Traits>::PointerToConst
+Array<T, SIZE, Traits>::head() const
+{
+	return reinterpret_cast<PointerToConst>(bytes);
 }
 
 }}

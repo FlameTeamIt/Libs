@@ -23,12 +23,13 @@ Array::~Array()
 
 int Array::vStart()
 {
+	constexpr size_t SIZE = 5;
 	std::cout << "Test initializing size:" << std::endl;
-	if (array.size() == array.capacity())
-		std::cout << array.size() << " == " << array.capacity() << std::endl;
+	if (array.size() == SIZE)
+		std::cout << array.size() << " == " << SIZE << std::endl;
 	else
 	{
-		std::cout << array.size() << " != " << array.capacity() << std::endl;
+		std::cout << array.size() << " != " << SIZE << std::endl;
 		return 1;
 	}
 	std::cout << std::endl;
@@ -49,25 +50,59 @@ int Array::vStart()
 				<< ' ' << it->getChar() << std::endl;
 	std::cout << std::endl;
 
-	TestClass testObject;
-//	std::cout << "Test last():" << std::endl;
-//	testObject = array.last();
-//	std::cout << testObject.getLong()
-//			<< ' ' << testObject.getInt()
-//			<< ' ' << testObject.getShort()
-//			<< ' ' << testObject.getChar() << std::endl;
-//	std::cout << std::endl;
+	TestClass testLastObject;
+	std::cout << "Test last():" << std::endl;
+	testLastObject = array.last();
+	std::cout << testLastObject.getLong()
+			<< ' ' << testLastObject.getInt()
+			<< ' ' << testLastObject.getShort()
+			<< ' ' << testLastObject.getChar() << std::endl;
+	std::cout << std::endl;
 
+	TestClass testFirstObject;
 	std::cout << "Test first():" << std::endl;
-	testObject = array.first();
-	std::cout << testObject.getLong()
-			<< ' ' << testObject.getInt()
-			<< ' ' << testObject.getShort()
-			<< ' ' << testObject.getChar() << std::endl;
+	testFirstObject = array.first();
+	std::cout << testFirstObject.getLong()
+			<< ' ' << testFirstObject.getInt()
+			<< ' ' << testFirstObject.getShort()
+			<< ' ' << testFirstObject.getChar() << std::endl;
 	std::cout << std::endl;
 
 	std::cout << "Test popBack():" << std::endl;
 	array.popBack();
+	for (TestClass &i : array)
+		std::cout << i.getLong()
+				<< ' ' << i.getInt()
+				<< ' ' << i.getShort()
+				<< ' ' << i.getChar() << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Test pushBack():" << std::endl;
+	array.pushBack(testLastObject);
+	for (TestClass &i : array)
+		std::cout << i.getLong()
+				<< ' ' << i.getInt()
+				<< ' ' << i.getShort()
+				<< ' ' << i.getChar() << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Test insert()" << std::endl;
+	TestClass testMiddleObject(-2500, -250, -25, 'M');
+
+	testFirstObject.getChar() = 'F';
+	testFirstObject.getShort() = -10;
+	testFirstObject.getInt() = -100;
+	testFirstObject.getLong() = -1000;
+
+	testLastObject.getChar() = 'L';
+	testLastObject.getShort() = -50;
+	testLastObject.getInt() = -500;
+	testLastObject.getLong() = -5000;
+
+	array.insert(array.begin(), testFirstObject);
+	array.insert(array.begin() + 3, testMiddleObject);
+	array.insert(array.end(), testLastObject);
+
 	for (TestClass &i : array)
 		std::cout << i.getLong()
 				<< ' ' << i.getInt()

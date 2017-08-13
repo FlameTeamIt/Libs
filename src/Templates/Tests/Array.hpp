@@ -25,7 +25,7 @@ public:
 private:
 	virtual int vStart();
 
-	flame_ide::templates::Array<TestClass, 5> array;
+	flame_ide::templates::Array<TestClass, 10> array;
 };
 
 }}

@@ -55,16 +55,37 @@ TestClass::~TestClass()
 
 TestClass &TestClass::operator=(const TestClass &object)
 {
-	getLong() = object.getLong();
-	getInt() = object.getInt();
-	getShort() = object.getShort();
-	getChar() = object.getChar();
+	if (this == &object)
+		return *this;
+
+	if (l)
+		getLong() = object.getLong();
+	else
+		l = ObjectAllocator<long>().construct(object.getLong());
+
+	if (i)
+		getInt() = object.getInt();
+	else
+		i = ObjectAllocator<int>().construct(object.getInt());
+
+	if (s)
+		getShort() = object.getShort();
+	else
+		s = ObjectAllocator<short>().construct(object.getShort());
+
+	if (c)
+		getChar() = object.getChar();
+	else
+		c = ObjectAllocator<char>().construct(object.getChar());
 
 	return *this;
 }
 
 TestClass &TestClass::operator=(TestClass &&object)
 {
+	if (this == &object)
+		return *this;
+
 	ObjectAllocator<long>().destruct(l);
 	ObjectAllocator<int>().destruct(i);
 	ObjectAllocator<short>().destruct(s);
@@ -122,4 +143,3 @@ const char &TestClass::getChar() const
 {
 	return *c;
 }
-
