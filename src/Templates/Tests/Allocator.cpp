@@ -18,7 +18,7 @@ ObjectAllocator::ObjectAllocator() : AbstractTest("ObjectAllocator")
 ObjectAllocator::~ObjectAllocator()
 {}
 
-int ObjectAllocator::_start()
+int ObjectAllocator::vStart()
 {
 	TestClass *object = allocator.construct();
 	object->getChar() = '1';
@@ -45,7 +45,7 @@ ArrayAllocator::ArrayAllocator() : AbstractTest("ArrayAllocator")
 ArrayAllocator::~ArrayAllocator()
 {}
 
-int ArrayAllocator::_start()
+int ArrayAllocator::vStart()
 {
 	using SizeType = flame_ide::templates::SizeTraits::SizeType;
 	constexpr SizeType SIZE = 6;

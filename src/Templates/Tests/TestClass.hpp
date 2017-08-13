@@ -13,6 +13,8 @@ public:
 	TestClass();
 	TestClass(const TestClass &object);
 	TestClass(TestClass &&object);
+	TestClass(long initL, int initI
+			, short initS, char initC);
 	~TestClass();
 	TestClass &operator=(const TestClass &object);
 	TestClass &operator=(TestClass &&object);

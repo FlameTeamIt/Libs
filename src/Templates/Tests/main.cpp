@@ -1,21 +1,29 @@
 #include <Templates/Tests/Allocator.hpp>
+#include <Templates/Tests/Array.hpp>
+
+void testAllocator()
+{
+	using namespace flame_ide::test;
+
+	ArrayAllocator arrayAlloc;
+	arrayAlloc.start();
+
+	ObjectAllocator objectAlloc;
+	objectAlloc.start();
+}
+
+void testArray()
+{
+	using namespace flame_ide::test;
+
+	Array array;
+	array.start();
+}
 
 int main(int /*argc*/, char */*argv*/[])
 {
-	using namespace flame_ide::test;
-	using namespace flame_ide::templates;
-
-	ArrayAllocator arrayAlloc;
-	ObjectAllocator objectAlloc;
-
-	arrayAlloc.start();
-	objectAlloc.start();
-
-	int *p = (int *) malloc(sizeof(int));
-	int i = 10;
-	const int &ri = i;
-	placementNew<int>(p, ri);
-
+	testAllocator();
+	testArray();
 	return 0;
 }
 

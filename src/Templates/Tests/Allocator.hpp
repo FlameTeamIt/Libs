@@ -23,7 +23,7 @@ public:
 	virtual ~ObjectAllocator();
 
 private:
-	virtual int _start();
+	virtual int vStart();
 
 	flame_ide::templates::allocator::ObjectAllocator<TestClass> allocator;
 };
@@ -35,7 +35,7 @@ public:
 	virtual ~ArrayAllocator();
 
 private:
-	virtual int _start();
+	virtual int vStart();
 
 	flame_ide::templates::allocator::ArrayAllocator<TestClass> allocator;
 };

@@ -7,16 +7,25 @@
 #ifndef ARRAY_HPP
 #define ARRAY_HPP
 
+#include <tests/Test.hpp>
 #include <Templates/Array.hpp>
+
+#include "TestClass.hpp"
 
 namespace flame_ide
 {namespace test
 {
 
-class Array
+class Array: public AbstractTest
 {
 public:
 	Array();
+	virtual ~Array();
+
+private:
+	virtual int vStart();
+
+	flame_ide::templates::Array<TestClass, 5> array;
 };
 
 }}
