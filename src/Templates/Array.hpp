@@ -328,91 +328,91 @@ Array<T, SIZE, Traits>::operator=(Array<T, SIZE1, Traits1> &&array)
 	return *this;
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::Reference
 Array<T, SIZE, Traits>::operator[](typename Array<T, SIZE, Traits>::SizeType index) noexcept
 {
 	return head()[index];
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ConstReference
 Array<T, SIZE, Traits>::operator[](typename Array<T, SIZE, Traits>::SizeType index) const noexcept
 {
 	return head()[index];
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Traits::SizeType
 Array<T, SIZE, Traits>::size() const noexcept
 {
 	return SizeType(tail - head());
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> constexpr
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> constexpr inline
 typename Traits::SizeType
 Array<T, SIZE, Traits>::capacity() const noexcept
 {
 	return SIZE;
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::Reference
 Array<T, SIZE, Traits>::first()
 {
 	return *begin();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ConstReference
 Array<T, SIZE, Traits>::first() const
 {
 	return *begin();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::Reference
 Array<T, SIZE, Traits>::last()
 {
 	return *rbegin();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ConstReference
 Array<T, SIZE, Traits>::last() const
 {
 	return *rbegin();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::Iterator
 Array<T, SIZE, Traits>::begin() noexcept
 {
 	return head();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ConstIterator
 Array<T, SIZE, Traits>::begin() const noexcept
 {
 	return head();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::Iterator
 Array<T, SIZE, Traits>::end() noexcept
 {
 	return tail;
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ConstIterator
 Array<T, SIZE, Traits>::end() const noexcept
 {
 	return tail;
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ReverseIterator
 Array<T, SIZE, Traits>::rbegin() noexcept
 {
@@ -420,7 +420,7 @@ Array<T, SIZE, Traits>::rbegin() noexcept
 	return ReverseIterator(--it);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ConstReverseIterator
 Array<T, SIZE, Traits>::rbegin() const noexcept
 {
@@ -428,7 +428,7 @@ Array<T, SIZE, Traits>::rbegin() const noexcept
 	return ReverseIterator(--it);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ReverseIterator
 Array<T, SIZE, Traits>::rend() noexcept
 {
@@ -436,7 +436,7 @@ Array<T, SIZE, Traits>::rend() noexcept
 	return ReverseIterator(--it);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ConstReverseIterator
 Array<T, SIZE, Traits>::rend() const noexcept
 {
