@@ -384,6 +384,15 @@ Array<T, SIZE, Traits>::last() const
 	return *rbegin();
 }
 
+// TODO
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
+void Array<T, SIZE, Traits>::clean()
+{
+	for (auto &it : *this)
+		it.~T();
+	tail = head();
+}
+
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::Iterator
 Array<T, SIZE, Traits>::begin() noexcept
@@ -494,7 +503,7 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it));
 			View<Me, ReverseIterator> viewNew(--viewOld.begin(), --viewOld.end());
 
-			for (auto itOld = viewOld.begin(), itNew = viewNew.begin();
+			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
 					itNew != viewNew.end() - 1; ++itOld, ++itNew)
 			{
 				*itNew = move(*itOld);
@@ -530,6 +539,96 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 			*it = move(object);
 			++tail;
 		}
+	}
+}
+
+// TODO
+template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename InputIterator>
+void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
+		, InputIterator itBegin, InputIterator itEnd)
+{
+	if (itBegin == itEnd)
+		return;
+
+	auto rangeSize = countIterations(itBegin, itEnd);
+	if (rangeSize + size() <= capacity())
+	{
+		Pointer headPointer = head();
+		Range<InputIterator> range(itBegin, itEnd);
+		if (it == end())
+			for (Reference itInsert : range)
+				pushBack(itInsert);
+		else
+		{
+			View<Me> initView(end(), end() + rangeSize);
+			for (Reference it : initView)
+				placementNew<Type>(&it);
+
+			// [000i00____] < [000111i00_]
+			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1));
+			View<Me, ReverseIterator> viewNew(viewOld.begin() + rangeSize
+					, viewOld.end() + rangeSize);
+			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
+					itOld != viewOld.end(); ++itOld, ++itNew)
+				*itNew = move(*itOld);
+
+			for (auto &itInsert : range)
+			{
+				*it = itInsert;
+				++it;
+			}
+			tail += rangeSize;
+		}
+	}
+}
+
+// TODO
+template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+void Array<T, SIZE, Traits>::erase(Array<T, SIZE, Traits>::Iterator it)
+{
+	if (it == end())
+		return;
+	else if (it == end() - 1)
+		popBack();
+	else
+	{
+		View<Me> viewOld(it + 1, end());
+		View<Me> viewNew(viewOld.begin() - 1, viewOld.end() - 1);
+		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
+				itOld != viewNew.end(); ++itOld, ++itNew)
+		{
+			*itNew = *itOld;
+		}
+		--tail;
+	}
+}
+
+// TODO
+template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+void Array<T, SIZE, Traits>::erase(Array<T, SIZE, Traits>::Iterator itBegin
+		, Array<T, SIZE, Traits>::Iterator itEnd)
+{
+	if (itBegin >= itEnd)
+		return;
+
+	if (SizeType(itEnd - itBegin) == size())
+		clean();
+	else
+	{
+		Pointer headPointer = head();
+
+		View<Me> viewErasing(itBegin, itEnd);
+		for (auto &i : viewErasing)
+			i.~T();
+
+		View<Me> viewOld(itEnd, end());
+		View<Me> viewNew(itBegin, itBegin + (end() - itEnd));
+		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
+				itOld != viewOld.end(); ++itNew, ++itOld)
+			*itNew = move(*itOld);
+
+		tail -= SizeType(viewErasing.end() - viewErasing.begin());
 	}
 }
 
