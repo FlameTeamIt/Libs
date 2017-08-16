@@ -554,7 +554,6 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 	auto rangeSize = countIterations(itBegin, itEnd);
 	if (rangeSize + size() <= capacity())
 	{
-		Pointer headPointer = head();
 		Range<InputIterator> range(itBegin, itEnd);
 		if (it == end())
 			for (Reference itInsert : range)
@@ -616,8 +615,6 @@ void Array<T, SIZE, Traits>::erase(Array<T, SIZE, Traits>::Iterator itBegin
 		clean();
 	else
 	{
-		Pointer headPointer = head();
-
 		View<Me> viewErasing(itBegin, itEnd);
 		for (auto &i : viewErasing)
 			i.~T();

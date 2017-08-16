@@ -205,6 +205,8 @@ public:
 	template<typename ...Args>
 	Pointer construct(SizeType count, Args &&...args) noexcept;
 
+	Pointer createArray(SizeType count);
+
 	/**
 	 * @brief Call destructors and free memory in array
 	 *
@@ -214,6 +216,8 @@ public:
 	 * Count exist elemets in array
 	 */
 	void destruct(Pointer &pointer, SizeType count) noexcept;
+
+	void freeArray(Pointer pointer);
 
 private:
 	using ParentType::allocate;
@@ -315,6 +319,13 @@ ArrayAllocator<T, Traits>::construct(
 }
 
 template<typename T, typename Traits>
+typename ArrayAllocator<T, Traits>::Pointer
+ArrayAllocator<T, Traits>::createArray(SizeType count)
+{
+	return reinterpret_cast<Pointer>(this->allocate(SizeType(sizeof(Type) * count)));
+}
+
+template<typename T, typename Traits>
 void ArrayAllocator<T, Traits>::destruct(
 		typename ArrayAllocator<T, Traits>::Pointer &pointer
 		, typename ArrayAllocator<T, Traits>::SizeType count) noexcept
@@ -323,6 +334,13 @@ void ArrayAllocator<T, Traits>::destruct(
 		(*iterator).~T();
 	deallocate(pointer);
 	pointer = nullptr;
+}
+
+template<typename T, typename Traits>
+void ArrayAllocator<T, Traits>::freeArray(
+		typename ArrayAllocator<T, Traits>::Pointer pointer)
+{
+	this->deallocate(pointer);
 }
 
 }}}
