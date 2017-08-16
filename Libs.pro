@@ -85,4 +85,5 @@ HEADERS += \
     src/Templates/ObjectViewer.hpp \
     src/Templates/IntializerList.hpp \
     src/Templates/Iterator.hpp \
-    src/Templates/View.hpp
+    src/Templates/View.hpp \
+    src/Templates/Vector.hpp

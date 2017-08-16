@@ -4,7 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 QMAKE_CXXFLAGS += -std=c++14
-#QMAKE_CXXFLAGS += -fno-exceptions
+QMAKE_CXXFLAGS += -fno-exceptions
 
 INCLUDEPATH += ../../
 INCLUDEPATH += ../../../
@@ -25,11 +25,11 @@ HEADERS += \
 	../Traits.hpp \
 	../Utils.hpp \
 	../InitializerList.hpp
+	../Vector.hpp
 
 SOURCES += \
 	Allocator.cpp \
 	Array.cpp \
 	main.cpp \
-	TestClass.cpp \
-	../String.cpp
+	TestClass.cpp
 
