@@ -3,16 +3,19 @@
 
 #include <Templates/Utils.hpp>
 #include <Templates/Iterator.hpp>
+#include <Templates/Allocator.hpp>
 
 namespace flame_ide
 { namespace templates
 {
 
-template<typename T, typename Traits = ContainerTraits<T>>
+template<typename T, typename Traits = ContainerTraits<T>
+	, typename Allocator = allocator::ObjectAllocator<typename Node, Traits>
+>
 class List
 {
 public:
-
+	// TODO: typedefs
 
 	struct Node
 	{
@@ -40,11 +43,11 @@ public:
 
 		Iterator &operator++();
 		Iterator operator++(int) const;
-		Iterator &operator++() const;
+		const Iterator &operator++() const;
 
 		Iterator &operator--();
 		Iterator operator--(int) const;
-		Iterator &operator--() const;
+		const Iterator &operator--() const;
 
 	private:
 		Node *node;
@@ -55,6 +58,7 @@ public:
 private:
 	Node *head;
 	Node *tail;
+	Allocator<Node> allocator;
 };
 
 }}
