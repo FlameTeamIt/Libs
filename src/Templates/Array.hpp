@@ -473,9 +473,7 @@ template<typename ...Args>
 void Array<T, SIZE, Traits>::emplaceBack(Args &&...args)
 {
 	if (size() < capacity())
-	{
 		new (tail++) Type(forward(args)...);
-	}
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
@@ -504,9 +502,7 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 
 			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
 					itNew != viewNew.end() - 1; ++itOld, ++itNew)
-			{
 				*itNew = move(*itOld);
-			}
 
 			*it = object;
 			++tail;
@@ -531,9 +527,7 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 			for (ReverseIterator itOld = viewOld.begin()
 					, itNew = viewNew.begin(); itOld != viewOld.end();
 					++itOld, ++itNew)
-			{
 				*itNew = move(*itOld);
-			}
 
 			*it = move(object);
 			++tail;
@@ -563,7 +557,6 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 			for (Reference it : initView)
 				placementNew<Type>(&it);
 
-			// [000i00____] < [000111i00_]
 			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1));
 			View<Me, ReverseIterator> viewNew(viewOld.begin() + rangeSize
 					, viewOld.end() + rangeSize);
@@ -605,12 +598,10 @@ template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 void Array<T, SIZE, Traits>::erase(Array<T, SIZE, Traits>::Iterator itBegin
 		, Array<T, SIZE, Traits>::Iterator itEnd)
 {
-	if (itBegin >= itEnd)
-		return;
-
 	if (SizeType(itEnd - itBegin) == size())
 		clean();
-	else
+	else if (itEnd - itBegin < SizeTraits::SsizeType(size())
+			&& itEnd - itBegin > SizeTraits::SsizeType(0))
 	{
 		View<Me> viewErasing(itBegin, itEnd);
 		for (auto &i : viewErasing)

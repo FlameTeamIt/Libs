@@ -58,25 +58,30 @@ public:
 			InitializerList<U, SIZE1> list) noexcept;
 
 private:
-	template<typename U, typename ... Args>
+	template<typename ... Args>
 	struct Helper;
 
-	template<typename U, typename ArgHead, typename... Args>
-	struct Helper<U, ArgHead, Args...>: public NonCreational
+	template<typename ArgHead, typename... Args>
+	struct Helper<ArgHead, Args...>: public NonCreational
 	{
-		static inline void init(typename DefaultTraits<U>::Pointer iterator
-				, ArgHead &&argHead, Args &&...args)
+		static inline void init(Pointer iterator, ArgHead &&argHead, Args &&...args)
 		{
-			*iterator = static_cast<Type &&>(argHead);
-			Helper<U, Args...>::init(++iterator, forward(args)...);
+			// TODO: добавить проверку на соотвествие ожидаемого типа
+//			using ArgHeadType = decltype(argHead);
+//			static_assert(
+//					, "Include type error.");
+			*iterator = forward(argHead);
+			Helper<Args...>::init(++iterator, forward(args)...);
 		}
 	};
 
-	template<typename U>
-	struct Helper<U>: public NonCreational
+	template<typename Arg>
+	struct Helper<Arg>: public NonCreational
 	{
-		static inline void init(Pointer)
-		{}
+		static inline void init(Pointer iterator, Arg &&arg)
+		{
+			*iterator = forward(arg);
+		}
 	};
 
 	SizeType listSize;
@@ -95,7 +100,7 @@ template<typename ...Args>
 InitializerList<T, SIZE>::InitializerList(Args &&...args) : listSize(sizeof...(Args))
 {
 	static_assert(SIZE >= sizeof...(Args), "ERROR: Illegal count of arguments");
-	Helper<T, Args...>::init(list, forward(args)...);
+	Helper<Args...>::init(list, forward(args)...);
 }
 
 template<typename T, SizeTraits::SizeType SIZE> constexpr

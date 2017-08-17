@@ -25,12 +25,13 @@ HEADERS += \
 	../Traits.hpp \
 	../Utils.hpp \
 	../InitializerList.hpp \
-	../Vector.hpp
+	../Vector.hpp \
+	../View.hpp
 
 SOURCES += \
 	Allocator.cpp \
 	Array.cpp \
 	main.cpp \
 	TestClass.cpp \
-    Vector.cpp
+	Vector.cpp
 

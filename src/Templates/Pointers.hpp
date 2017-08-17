@@ -1,5 +1,5 @@
-#ifndef POINTERS
-#define POINTERS
+#ifndef TEMPLATES_POINTERS
+#define TEMPLATES_POINTERS
 
 namespace flame_ide
 {namespace templates
@@ -28,11 +28,13 @@ SharedPointer<T> dynamic_pointer_cast(const SharedPointer<U>& pointer) noexcept;
 template<class T, class U> inline
 UniquePointer<T> dynamic_pointer_cast(UniquePointer<U>& pointer) noexcept;
 
+template<class T, class U> inline
+BasicPointer<T> reiterpret_pointer_cast(const BasicPointer<U>& pointer) noexcept;
+template<class T, class U> inline
+SharedPointer<T> reiterpret_pointer_cast(const SharedPointer<U>& pointer) noexcept;
+template<class T, class U> inline
+UniquePointer<T> reiterpret_pointer_cast(UniquePointer<U>& pointer) noexcept;
+
 }}
 
-#include <Templates/Pointers_BasicPointer.hpp>
-#include <Templates/Pointers_SharedPointer.hpp>
-#include <Templates/Pointers_UniquePointer.hpp>
-#include <Templates/Pointers_Functions.hpp>
-
-#endif // POINTERS
+#endif // TEMPLATES_POINTERS
