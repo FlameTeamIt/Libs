@@ -55,51 +55,50 @@ TestClass::~TestClass()
 
 TestClass &TestClass::operator=(const TestClass &object)
 {
-	if (this == &object)
-		return *this;
+	if (this != &object)
+	{
+		if (l)
+			getLong() = object.getLong();
+		else
+			l = ObjectAllocator<long>().construct(object.getLong());
 
-	if (l)
-		getLong() = object.getLong();
-	else
-		l = ObjectAllocator<long>().construct(object.getLong());
+		if (i)
+			getInt() = object.getInt();
+		else
+			i = ObjectAllocator<int>().construct(object.getInt());
 
-	if (i)
-		getInt() = object.getInt();
-	else
-		i = ObjectAllocator<int>().construct(object.getInt());
+		if (s)
+			getShort() = object.getShort();
+		else
+			s = ObjectAllocator<short>().construct(object.getShort());
 
-	if (s)
-		getShort() = object.getShort();
-	else
-		s = ObjectAllocator<short>().construct(object.getShort());
-
-	if (c)
-		getChar() = object.getChar();
-	else
-		c = ObjectAllocator<char>().construct(object.getChar());
-
+		if (c)
+			getChar() = object.getChar();
+		else
+			c = ObjectAllocator<char>().construct(object.getChar());
+	}
 	return *this;
 }
 
 TestClass &TestClass::operator=(TestClass &&object)
 {
-	if (this == &object)
-		return *this;
+	if (this != &object)
+	{
+		ObjectAllocator<long>().destruct(l);
+		ObjectAllocator<int>().destruct(i);
+		ObjectAllocator<short>().destruct(s);
+		ObjectAllocator<char>().destruct(c);
 
-	ObjectAllocator<long>().destruct(l);
-	ObjectAllocator<int>().destruct(i);
-	ObjectAllocator<short>().destruct(s);
-	ObjectAllocator<char>().destruct(c);
+		l = object.l;
+		i = object.i;
+		s = object.s;
+		c = object.c;
 
-	l = object.l;
-	i = object.i;
-	s = object.s;
-	c = object.c;
-
-	object.l = nullptr;
-	object.i = nullptr;
-	object.s = nullptr;
-	object.c = nullptr;
+		object.l = nullptr;
+		object.i = nullptr;
+		object.s = nullptr;
+		object.c = nullptr;
+	}
 
 	return *this;
 }

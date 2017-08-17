@@ -68,7 +68,7 @@ private:
 				, ArgHead &&argHead, Args &&...args)
 		{
 			*iterator = static_cast<Type &&>(argHead);
-			Helper<U, Args...>::init(++iterator, move(args)...);
+			Helper<U, Args...>::init(++iterator, forward(args)...);
 		}
 	};
 
@@ -95,7 +95,7 @@ template<typename ...Args>
 InitializerList<T, SIZE>::InitializerList(Args &&...args) : listSize(sizeof...(Args))
 {
 	static_assert(SIZE >= sizeof...(Args), "ERROR: Illegal count of arguments");
-	Helper<T, Args...>::init(list, move(args)...);
+	Helper<T, Args...>::init(list, forward(args)...);
 }
 
 template<typename T, SizeTraits::SizeType SIZE> constexpr

@@ -395,15 +395,19 @@ template<typename T
 	, typename Traits::SizeType RESIZE_FACTOR_DIV>
 template<typename ...Args>
 Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Vector(Args &&...args) :
-		head(allocator.createArray(sizeof...(Args)))
-		, tail(head + sizeof...(Args))
-		, vectorCapacity(sizeof...(Args))
+		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Vector(Args &&...args)
 {
-	InitializerList<Type, sizeof...(Args)> list(args...);
+	head = allocator.createArray(sizeof...(Args) * sizeof(Type));
+	tail = head + sizeof...(Args);
+	vectorCapacity = sizeof...(Args);
+
+	InitializerList<Type, sizeof...(Args)> list(forward(args)...);
 	auto itList = list.begin();
 	for (auto &i : *this)
-		placementNew<Type>(&i, *itList);
+	{
+		placementNew<Type>(&i, move(*itList));
+		++itList;
+	}
 }
 
 template<typename T

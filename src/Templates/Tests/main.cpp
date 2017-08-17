@@ -1,5 +1,6 @@
 #include <Templates/Tests/Allocator.hpp>
 #include <Templates/Tests/Array.hpp>
+#include <Templates/Tests/Vector.hpp>
 
 void testAllocator()
 {
@@ -18,6 +19,9 @@ void testArray()
 
 	Array array;
 	array.start();
+
+	Vector vector;
+	vector.start();
 }
 
 int main(int /*argc*/, char */*argv*/[])

@@ -9,13 +9,13 @@
 using namespace flame_ide::test;
 
 Array::Array() : AbstractTest("Array")
-		, array({
+		, array{
 				TestClass{1000, 100, 10, '1'}
 				, TestClass{2000, 200, 20, '2'}
 				, TestClass{3000, 300, 30, '3'}
 				, TestClass{4000, 400, 40, '4'}
 				, TestClass{5000, 500, 50, '5'}
-		})
+		}
 {}
 
 Array::~Array()
@@ -104,7 +104,6 @@ int Array::vStart()
 		testFirstObject, testMiddleObject, testLastObject
 	};
 
-	//
 	std::cout << "> Test insert(range)/erase(range) <" << std::endl;
 
 	std::cout << "Insert to begin()" << std::endl;

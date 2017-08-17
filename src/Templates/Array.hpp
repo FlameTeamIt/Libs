@@ -51,9 +51,10 @@ public:
 
 	/**
 	 * @brief Array
-	 * @param list
+	 * @param args
 	 */
-	Array(InitializerList<T, SIZE> list);
+	template<typename ...Args>
+	Array(Args &&...args);
 
 	~Array();
 
@@ -281,23 +282,21 @@ Array<T, SIZE, Traits>::Array(Array<T, SIZE1, Traits1> &&array)
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-Array<T, SIZE, Traits>::Array(InitializerList<T, SIZE> list)
+template<typename ...Args>
+Array<T, SIZE, Traits>::Array(Args &&...args)
 {
+	InitializerList<T, sizeof...(Args)> list(args...);
 	Pointer pointer = head();
 	for (auto it : list)
-	{
 		new(pointer++) T(move(it));
-	}
 	tail = pointer;
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 Array<T, SIZE, Traits>::~Array()
 {
-	for (auto &i : *this)
-	{
+	for (Type &i : *this)
 		i.~T();
-	}
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
@@ -595,10 +594,8 @@ void Array<T, SIZE, Traits>::erase(Array<T, SIZE, Traits>::Iterator it)
 		View<Me> viewOld(it + 1, end());
 		View<Me> viewNew(viewOld.begin() - 1, viewOld.end() - 1);
 		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
-				itOld != viewNew.end(); ++itOld, ++itNew)
-		{
-			*itNew = *itOld;
-		}
+				itOld != viewOld.end(); ++itOld, ++itNew)
+			*itNew = move(*itOld);
 		--tail;
 	}
 }
