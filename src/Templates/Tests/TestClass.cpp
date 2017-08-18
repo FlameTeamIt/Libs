@@ -47,10 +47,10 @@ TestClass::TestClass(long initL, int initI
 
 TestClass::~TestClass()
 {
-	ObjectAllocator<long>().destruct(l);
-	ObjectAllocator<int>().destruct(i);
-	ObjectAllocator<short>().destruct(s);
-	ObjectAllocator<char>().destruct(c);
+	ObjectAllocator<long>().destroy(l);
+	ObjectAllocator<int>().destroy(i);
+	ObjectAllocator<short>().destroy(s);
+	ObjectAllocator<char>().destroy(c);
 }
 
 TestClass &TestClass::operator=(const TestClass &object)
@@ -84,10 +84,10 @@ TestClass &TestClass::operator=(TestClass &&object)
 {
 	if (this != &object)
 	{
-		ObjectAllocator<long>().destruct(l);
-		ObjectAllocator<int>().destruct(i);
-		ObjectAllocator<short>().destruct(s);
-		ObjectAllocator<char>().destruct(c);
+		ObjectAllocator<long>().destroy(l);
+		ObjectAllocator<int>().destroy(i);
+		ObjectAllocator<short>().destroy(s);
+		ObjectAllocator<char>().destroy(c);
 
 		l = object.l;
 		i = object.i;

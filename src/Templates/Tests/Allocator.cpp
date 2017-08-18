@@ -32,7 +32,7 @@ int ObjectAllocator::vStart()
 			<< ' ' << object->getLong()
 			<< std::endl;
 
-	allocator.destruct(object);
+	allocator.destroy(object);
 
 	return 0;
 }
@@ -68,7 +68,7 @@ int ArrayAllocator::vStart()
 				<< std::endl;
 	}
 
-	allocator.destruct(array, SIZE);
+	allocator.destroy(array, SIZE);
 
 	return 0;
 }

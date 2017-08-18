@@ -161,7 +161,7 @@ public:
 	 * @param pointer
 	 * Pointer to object which can be removed
 	 */
-	void destruct(Pointer &pointer) noexcept;
+	void destroy(Pointer &pointer) noexcept;
 };
 
 /**
@@ -205,6 +205,11 @@ public:
 	template<typename ...Args>
 	Pointer construct(SizeType count, Args &&...args) noexcept;
 
+	/**
+	 * @brief createArray
+	 * @param count
+	 * @return
+	 */
 	Pointer createArray(SizeType count);
 
 	/**
@@ -215,8 +220,12 @@ public:
 	 * @param count
 	 * Count exist elemets in array
 	 */
-	void destruct(Pointer &pointer, SizeType count) noexcept;
+	void destroy(Pointer &pointer, SizeType count) noexcept;
 
+	/**
+	 * @brief freeArray
+	 * @param pointer
+	 */
 	void freeArray(Pointer pointer);
 
 private:
@@ -291,7 +300,7 @@ ObjectAllocator<T, Traits>::construct(Args &&...args) noexcept
 }
 
 template<typename T, typename Traits>
-void ObjectAllocator<T, Traits>::destruct(
+void ObjectAllocator<T, Traits>::destroy(
 		typename ObjectAllocator<T, Traits>::Pointer &pointer) noexcept
 {
 	(*pointer).~T();
@@ -326,7 +335,7 @@ ArrayAllocator<T, Traits>::createArray(SizeType count)
 }
 
 template<typename T, typename Traits>
-void ArrayAllocator<T, Traits>::destruct(
+void ArrayAllocator<T, Traits>::destroy(
 		typename ArrayAllocator<T, Traits>::Pointer &pointer
 		, typename ArrayAllocator<T, Traits>::SizeType count) noexcept
 {
