@@ -23,4 +23,7 @@ BigJSON.json
 doxygen/html/*
 build/*
 src/Templates/Tests/build/*
+src/Templates/build/*
+
+*.pro.*
 
