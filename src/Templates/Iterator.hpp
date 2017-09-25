@@ -1,418 +1,777 @@
 #ifndef ITERATOR_HPP
 #define ITERATOR_HPP
 
+#include <iterator>
 #include <Templates/Traits.hpp>
+
+// defined classes and types
+
+#define OPERATOR_INC_PREFIX \
+Me &operator++() \
+{ \
+	++this->wrappedIterator; \
+	return *this; \
+}
+
+#define OPERATOR_INC_POSTFIX \
+Me operator++(int) \
+{ \
+	auto copy = *this;\
+	++this->wrappedIterator; \
+	return copy; \
+}
+
+#define OPERATOR_DEC_PREFIX \
+Me &operator--() \
+{ \
+	--this->wrappedIterator; \
+	return *this; \
+}
+
+#define OPERATOR_DEC_POSTFIX \
+Me operator--(int) \
+{ \
+	auto copy = *this; \
+	--this->wrappedIterator; \
+	return copy; \
+}
+
+#define OPERATOR_INC_PREFIX_REVERSED \
+Me &operator++() \
+{ \
+	--this->wrappedIterator; \
+	return *this; \
+}
+
+#define OPERATOR_INC_POSTFIX_REVERSED \
+Me operator++(int) \
+{ \
+	auto copy = *this;\
+	--this->wrappedIterator; \
+	return copy; \
+}
+
+#define OPERATOR_DEC_PREFIX_REVERSED \
+Me &operator--() \
+{ \
+	++this->wrappedIterator; \
+	return *this; \
+}
+
+#define OPERATOR_DEC_POSTFIX_REVERSED \
+Me operator--(int) \
+{ \
+	auto copy = *this; \
+	++this->wrappedIterator; \
+	return copy; \
+}
+
+#define OPERATOR_DEREF \
+typename Traits::Reference operator*() \
+{ \
+	return *(this->wrappedIterator); \
+}
+
+#define OPERATOR_ARROW \
+typename Traits::Pointer operator->() \
+{ \
+	return &(*(this->wrappedIterator)); \
+}
+
+#define OPERATOR_DEREF_CONST \
+typename Traits::ConstReference operator*() const \
+{ \
+	return *(this->wrappedIterator); \
+}
+
+#define OPERATOR_ARROW_CONST \
+typename Traits::PointerToConst operator->() const \
+{ \
+	return &(*(this->wrappedIterator)); \
+}
+
+#define OPERATOR_PLUS \
+template<typename IntType> Me operator+(IntType value) \
+{ \
+	Me copy = *this; \
+	copy += value; \
+	return copy; \
+} \
+\
+template<typename IntType> friend Me operator+(IntType value, const Me &iterator) \
+{ \
+	return iterator + value; \
+}
+
+#define OPERATOR_MINUS \
+template<typename IntType> Me operator-(IntType value) \
+{ \
+	Me copy = *this; \
+	copy -= value; \
+	return copy; \
+} \
+\
+typename Traits::SsizeType operator-(const Me &iterator) \
+{ \
+	return this->wrappedIterator - iterator.wrappedIterator; \
+}
+
+#define OPERATOR_PLUS_ASSIGN \
+template<typename IntType> Me &operator+=(IntType value) \
+{ \
+	this->wrappedIterator += value; \
+	return *this; \
+}
+
+#define OPERATOR_MINUS_ASSIGN \
+template<typename IntType> Me &operator-=(IntType value) \
+{ \
+	this->wrappedIterator -= value; \
+	return *this; \
+}
+
+#define OPERATOR_PLUS_REVERSED \
+template<typename IntType> Me operator+(IntType value) \
+{ \
+	Me copy = *this; \
+	copy += value; \
+	return copy; \
+} \
+\
+template<typename IntType> friend Me operator+(IntType value, const Me &iterator) \
+{ \
+	return iterator + value; \
+}
+
+#define OPERATOR_MINUS_REVERSED \
+template<typename IntType> Me operator-(IntType value) \
+{ \
+	Me copy = *this; \
+	copy -= value; \
+	return copy; \
+} \
+\
+typename Traits::SsizeType operator-(const Me &iterator) \
+{ \
+	return this->wrappedIterator - iterator.wrappedIterator; \
+}
+
+#define OPERATOR_PLUS_ASSIGN_REVERSED \
+template<typename IntType> Me &operator+=(IntType value) \
+{ \
+	this->wrappedIterator -= value; \
+	return *this; \
+}
+
+#define OPERATOR_MINUS_ASSIGN_REVERSED \
+template<typename IntType> Me &operator-=(IntType value) \
+{ \
+	this->wrappedIterator += value; \
+	return *this; \
+}
+
+#define OPERATOR_MORE \
+bool operator>(const Me &iterator) \
+{ \
+	return this->wrappedIterator > iterator.wrappedIterator; \
+}
+
+#define OPERATOR_LESS \
+bool operator<(const Me &iterator) \
+{ \
+	return this->wrappedIterator < iterator; \
+}
+
+#define OPERATOR_MORE_EQUAL \
+bool operator>=(const Me &iterator) \
+{ \
+	return this->wrappedIterator >= iterator.wrappedIterator; \
+}
+
+#define OPERATOR_LESS_EQUAL \
+bool operator<=(const Me &iterator) \
+{ \
+	return this->wrappedIterator <= iterator.wrappedIterator; \
+}
+
+#define OPERATOR_OFFSET_DEREF \
+template<typename IntType> typename Traits::Reference operator[](IntType value) \
+{ \
+	return this->wrappedIterator[value]; \
+}
+
+#define OPERATOR_OFFSET_DEREF_CONST \
+template<typename IntType> typename Traits::ConstReference operator[](IntType value) \
+{ \
+	return this->wrappedIterator[value]; \
+}
+
+#define OPERATOR_MORE_REVERSED \
+bool operator>(const Me &iterator) \
+{ \
+	return this->wrappedIterator <= iterator.wrappedIterator; \
+}
+
+#define OPERATOR_LESS_REVERSED \
+bool operator<(const Me &iterator) \
+{ \
+	return this->wrappedIterator >= iterator; \
+}
+
+#define OPERATOR_MORE_EQUAL_REVERSED \
+bool operator>=(const Me &iterator) \
+{ \
+	return this->wrappedIterator < iterator.wrappedIterator; \
+}
+
+#define OPERATOR_LESS_EQUAL_REVERSED \
+bool operator<=(const Me &iterator) \
+{ \
+	return this->wrappedIterator > iterator.wrappedIterator; \
+}
+
+#define OPERATOR_OFFSET_DEREF_REVERSED \
+template<typename IntType> typename Traits::Reference operator[](IntType value) \
+{ \
+	return *(this->wrappedIterator - value); \
+}
+
+#define OPERATOR_OFFSET_DEREF_CONST_REVERSED \
+template<typename IntType> typename Traits::ConstReference operator[](IntType value) const \
+{ \
+	return *(this->wrappedIterator - value); \
+}
 
 namespace flame_ide
 {namespace templates
 {
 
-template<typename Iterator, typename Traits = DefaultTraits<typename Iterator::Type>>
-class ReverseIterator
+enum class IteratorCategory
 {
-public:
-	using Me = ReverseIterator<Iterator, Traits>;
-	using Type = typename Traits::Type;
-	using Pointer = typename Traits::Pointer;
-	using PointerToConst = typename Traits::PointerToConst;
-	using Reference = typename Traits::Reference;
-	using ConstReference = typename Traits::ConstReference;
-
-	ReverseIterator() = default;
-	ReverseIterator(const Me &iterator) = default;
-	ReverseIterator(Me &&iterator) = default;
-
-	ReverseIterator(Iterator it);
-
-	~ReverseIterator() = default;
-
-	inline Me &operator=(const Me &revIt) = default;
-	inline Me &operator=(Me &&revIt) = default;
-
-	inline bool operator==(const Me &revIt) const;
-	inline bool operator!=(const Me &revIt) const;
-
-	inline Me &operator++();
-	inline Me operator++(int);
-
-	inline const Me &operator++() const;
-	inline const Me operator++(int) const;
-
-	inline Me &operator--();
-	inline Me operator--(int);
-
-	inline const Me &operator--() const;
-	inline const Me operator--(int) const;
-
-	inline Reference operator*();
-	inline ConstReference operator*() const;
-
-	inline Pointer operator->();
-	inline PointerToConst operator->() const;
-
-private:
-	Iterator wrappedIterator;
+	OUTPUT
+	, INPUT
+	, FORWARD
+	, BIDIRECTIONAL
+	, RANDOM_ACCESS
 };
 
-template<typename Iterator, typename Traits = DefaultTraits<typename Iterator::Type>>
-class RaReverseIterator
+enum class IteratorSuccess
 {
-public:
-	using Me = RaReverseIterator<Iterator, Traits>;
-	using Type = typename Traits::Type;
-	using Pointer = typename Traits::Pointer;
-	using PointerToConst = typename Traits::PointerToConst;
-	using Reference = typename Traits::Reference;
-	using ConstReference = typename Traits::ConstReference;
-
-	RaReverseIterator() = default;
-	RaReverseIterator(const RaReverseIterator<Iterator, Traits> &) = default;
-	RaReverseIterator(RaReverseIterator<Iterator, Traits> &&) = default;
-	~RaReverseIterator() = default;
-
-	RaReverseIterator(Iterator it);
-
-	Me &operator=(const Me &) = default;
-	Me &operator=(Me &&) = default;
-
-	inline bool operator==(const Me &revIt) const;
-	inline bool operator!=(const Me &revIt) const;
-
-	inline Me &operator++();
-	inline Me operator++(int);
-	inline const Me &operator++() const;
-	inline const Me operator++(int) const;
-
-	inline Me &operator--();
-	inline Me operator--(int);
-	inline const Me &operator--() const;
-	inline const Me operator--(int) const;
-
-	inline Me &operator+=(SizeTraits::SsizeType size);
-	inline const Me &operator+=(SizeTraits::SsizeType size) const;
-
-	inline Me &operator-=(SizeTraits::SsizeType size);
-	inline const Me &operator-=(SizeTraits::SsizeType size) const;
-
-	inline Reference operator*();
-	inline ConstReference operator*() const;
-
-	inline Pointer operator->();
-	inline PointerToConst operator->() const;
-
-private:
-	Iterator wrappedIterator;
+	NON_CONSTANT
+	, CONSTANT
 };
 
-template<typename Iterator, typename Traits>
-RaReverseIterator<Iterator, Traits> operator+(
-		RaReverseIterator<Iterator, Traits> it, SizeTraits::SsizeType size);
+namespace iterator_utils
+{
 
-template<typename Iterator, typename Traits>
-RaReverseIterator<Iterator, Traits> operator+(
-		SizeTraits::SsizeType size, RaReverseIterator<Iterator, Traits> it);
+template<typename IteratorType>
+struct GetType
+{
+	using Type = typename IteratorType::Type;
+};
 
-template<typename Iterator, typename Traits>
-RaReverseIterator<Iterator, Traits> operator-(
-		RaReverseIterator<Iterator, Traits> it, SizeTraits::SsizeType size);
+template<typename IteratorType>
+struct GetType<IteratorType *>
+{
+	using Type = IteratorType;
+};
+
+template<typename IteratorType>
+struct IteratorTraits: public ContainerTraits<typename GetType<IteratorType>::Type>
+{};
+
+}
+
+template<typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, typename Traits>
+class BaseIterator;
+
+template<typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>::Type>
+class Iterator;
+
+template<typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>::Type>
+class ReverseIterator;
+
+template<typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>::Type>
+class ConstIterator;
 
 }}
 
+// define interfaces
+
 namespace flame_ide
 {namespace templates
 {
+
+// BaseIterator
+
+template<typename IteratorType, IteratorCategory ITERATOR_CATEGORY, typename Traits>
+class BaseIterator
+{
+public:
+	using Me = BaseIterator<IteratorType, ITERATOR_CATEGORY, Traits>;
+
+	BaseIterator(const Me &) = default;
+	Me &operator=(const Me &) = default;
+	~BaseIterator() = default;
+
+	bool operator==(const Me &iterator)
+	{
+		return wrappedIterator == iterator.wrappedIterator;
+	}
+
+	bool operator!=(const Me &iterator)
+	{
+		return wrappedIterator != iterator.wrappedIterator;
+	}
+
+	static constexpr IteratorCategory CATEGORY = ITERATOR_CATEGORY;
+
+protected:
+	BaseIterator(IteratorType iterator) : wrappedIterator(iterator)
+	{}
+
+	mutable IteratorType wrappedIterator;
+};
+
+// Iterator
+
+template<typename IteratorType
+	, typename Traits>
+class Iterator<IteratorType, IteratorCategory::OUTPUT, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::OUTPUT, Traits>
+{
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::OUTPUT, Traits>;
+	using Me = Iterator<IteratorType, IteratorCategory::OUTPUT, Traits>;
+
+	Iterator(const Me &) = default;
+	Iterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~Iterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX
+	OPERATOR_INC_POSTFIX
+
+	OPERATOR_DEREF
+	OPERATOR_ARROW
+
+private:
+	using Parent::wrappedIterator;
+};
+
+template<typename IteratorType, typename Traits>
+class Iterator<IteratorType, IteratorCategory::INPUT, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::INPUT, Traits>
+{
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::INPUT, Traits>;
+	using Me = Iterator<IteratorType, IteratorCategory::INPUT, Traits>;
+
+	Iterator(const Me &) = default;
+	Iterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~Iterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX
+	OPERATOR_INC_POSTFIX
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
+
+template<typename IteratorType, typename Traits>
+class Iterator<IteratorType, IteratorCategory::FORWARD, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::FORWARD, Traits>
+{
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::FORWARD, Traits>;
+	using Me = Iterator<IteratorType, IteratorCategory::FORWARD, Traits>;
+
+	Iterator() = default;
+	Iterator(const Me &) = default;
+	Iterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~Iterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX
+	OPERATOR_INC_POSTFIX
+
+	OPERATOR_DEREF
+	OPERATOR_ARROW
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
+
+template<typename IteratorType, typename Traits>
+class Iterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>
+{
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
+	using Me = Iterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
+
+	Iterator() = default;
+	Iterator(const Me &) = default;
+	Iterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~Iterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX
+	OPERATOR_INC_POSTFIX
+
+	OPERATOR_DEC_PREFIX
+	OPERATOR_DEC_POSTFIX
+
+	OPERATOR_DEREF
+	OPERATOR_ARROW
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
+
+template<typename IteratorType, typename Traits>
+class Iterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>
+{
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using Me = Iterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
+
+	Iterator() = default;
+	Iterator(const Me &) = default;
+	Iterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~Iterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX
+	OPERATOR_INC_POSTFIX
+
+	OPERATOR_DEC_PREFIX
+	OPERATOR_DEC_POSTFIX
+
+	OPERATOR_DEREF
+	OPERATOR_ARROW
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+	OPERATOR_PLUS
+	OPERATOR_MINUS
+
+	OPERATOR_PLUS_ASSIGN
+	OPERATOR_MINUS_ASSIGN
+
+	OPERATOR_MORE
+	OPERATOR_LESS
+
+	OPERATOR_MORE_EQUAL
+	OPERATOR_LESS_EQUAL
+
+	OPERATOR_OFFSET_DEREF
+	OPERATOR_OFFSET_DEREF_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
 
 // ReverseIterator
 
-template<typename Iterator, typename Traits>
-ReverseIterator<Iterator, Traits>::ReverseIterator(Iterator it)
-		: wrappedIterator(it)
-{}
-
-template<typename Iterator, typename Traits> inline
-bool ReverseIterator<Iterator, Traits>::operator==(
-		const ReverseIterator<Iterator, Traits> &revIt) const
+template<typename IteratorType, typename Traits>
+class ReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>
 {
-	return wrappedIterator = revIt.wrappedIterator;
-}
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
+	using Me = ReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
 
-template<typename Iterator, typename Traits> inline
-bool ReverseIterator<Iterator, Traits>::operator!=(
-		const ReverseIterator<Iterator, Traits> &revIt) const
+	ReverseIterator(const Me &) = default;
+	ReverseIterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~ReverseIterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX_REVERSED
+	OPERATOR_INC_POSTFIX_REVERSED
+
+	OPERATOR_DEC_PREFIX_REVERSED
+	OPERATOR_DEC_POSTFIX_REVERSED
+
+	OPERATOR_DEREF
+	OPERATOR_ARROW
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
+
+template<typename IteratorType, typename Traits>
+class ReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>
 {
-	return !(*this == revIt);
-}
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using Me = ReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
 
-template<typename Iterator, typename Traits> inline
-ReverseIterator<Iterator, Traits> &
-ReverseIterator<Iterator, Traits>::operator++()
+	ReverseIterator(const Me &) = default;
+	ReverseIterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~ReverseIterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX_REVERSED
+	OPERATOR_INC_POSTFIX_REVERSED
+
+	OPERATOR_DEC_PREFIX_REVERSED
+	OPERATOR_DEC_POSTFIX_REVERSED
+
+	OPERATOR_DEREF
+	OPERATOR_ARROW
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+	OPERATOR_PLUS_REVERSED
+	OPERATOR_MINUS_REVERSED
+
+	OPERATOR_PLUS_ASSIGN_REVERSED
+	OPERATOR_MINUS_ASSIGN_REVERSED
+
+	OPERATOR_MORE_REVERSED
+	OPERATOR_LESS_REVERSED
+
+	OPERATOR_MORE_EQUAL_REVERSED
+	OPERATOR_LESS_EQUAL_REVERSED
+
+	OPERATOR_OFFSET_DEREF_REVERSED
+	OPERATOR_OFFSET_DEREF_CONST_REVERSED
+
+private:
+	using Parent::wrappedIterator;
+};
+
+// ConstIterator
+
+template<typename IteratorType, typename Traits>
+class ConstIterator<IteratorType, IteratorCategory::OUTPUT, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::OUTPUT, Traits>
 {
-	--wrappedIterator;
-	return *this;
-}
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::OUTPUT, Traits>;
+	using Me = ConstIterator<IteratorType, IteratorCategory::OUTPUT, Traits>;
 
-template<typename Iterator, typename Traits> inline
-ReverseIterator<Iterator, Traits>
-ReverseIterator<Iterator, Traits>::operator++(int)
+	ConstIterator(const Me &) = default;
+	ConstIterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~ConstIterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX
+	OPERATOR_INC_POSTFIX
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
+
+template<typename IteratorType, typename Traits>
+class ConstIterator<IteratorType, IteratorCategory::INPUT, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::INPUT, Traits>
 {
-	ReverseIterator returnIt = *this;
-	--wrappedIterator;
-	return returnIt;
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::INPUT, Traits>;
+	using Me = ConstIterator<IteratorType, IteratorCategory::INPUT, Traits>;
 
-}
+	ConstIterator(const Me &) = default;
+	ConstIterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~ConstIterator() = default;
+	Me& operator=(const Me &) = default;
 
-template<typename Iterator, typename Traits> inline
-const ReverseIterator<Iterator, Traits> &
-ReverseIterator<Iterator, Traits>::operator++() const
+	OPERATOR_INC_PREFIX
+	OPERATOR_INC_POSTFIX
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
+
+template<typename IteratorType, typename Traits>
+class ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::FORWARD, Traits>
 {
-	--wrappedIterator;
-	return *this;
-}
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::FORWARD, Traits>;
+	using Me = ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits>;
 
-template<typename Iterator, typename Traits> inline
-const ReverseIterator<Iterator, Traits>
-ReverseIterator<Iterator, Traits>::operator++(int) const
+	ConstIterator(const Me &) = default;
+	ConstIterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~ConstIterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX
+	OPERATOR_INC_POSTFIX
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
+
+template<typename IteratorType, typename Traits>
+class ConstIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>
 {
-	ReverseIterator returnIt = *this;
-	--wrappedIterator;
-	return returnIt;
-}
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
+	using Me = ConstIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
 
-template<typename Iterator, typename Traits> inline
-ReverseIterator<Iterator, Traits> &
-ReverseIterator<Iterator, Traits>::operator--()
+	ConstIterator(const Me &) = default;
+	ConstIterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~ConstIterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX
+	OPERATOR_INC_POSTFIX
+
+	OPERATOR_DEC_PREFIX
+	OPERATOR_DEC_POSTFIX
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
+
+template<typename IteratorType, typename Traits>
+class ConstIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
+		public BaseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>
 {
-	++wrappedIterator;
-	return *this;
-}
+public:
+	using Parent = BaseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using Me = ConstIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
 
-template<typename Iterator, typename Traits> inline
-ReverseIterator<Iterator, Traits>
-ReverseIterator<Iterator, Traits>::operator--(int)
-{
-	ReverseIterator returnIt = *this;
-	++wrappedIterator;
-	return returnIt;
-}
+	ConstIterator(const Me &) = default;
+	ConstIterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~ConstIterator() = default;
+	Me& operator=(const Me &) = default;
 
-template<typename Iterator, typename Traits> inline
-const ReverseIterator<Iterator, Traits> &
-ReverseIterator<Iterator, Traits>::operator--() const
-{
-	++wrappedIterator;
-	return *this;
-}
+	OPERATOR_INC_PREFIX
+	OPERATOR_INC_POSTFIX
 
-template<typename Iterator, typename Traits> inline
-const ReverseIterator<Iterator, Traits>
-ReverseIterator<Iterator, Traits>::operator--(int) const
-{
-	ReverseIterator returnIt = *this;
-	++wrappedIterator;
-	return returnIt;
-}
+	OPERATOR_DEC_PREFIX
+	OPERATOR_DEC_POSTFIX
 
-template<typename Iterator, typename Traits> inline
-typename ReverseIterator<Iterator, Traits>::Reference
-ReverseIterator<Iterator, Traits>::operator*()
-{
-	return *wrappedIterator;
-}
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
 
-template<typename Iterator, typename Traits> inline
-typename ReverseIterator<Iterator, Traits>::ConstReference
-ReverseIterator<Iterator, Traits>::operator*() const
-{
-	return *wrappedIterator;
-}
+	OPERATOR_PLUS
+	OPERATOR_MINUS
 
-template<typename Iterator, typename Traits> inline
-typename ReverseIterator<Iterator, Traits>::Pointer
-ReverseIterator<Iterator, Traits>::operator->()
-{
-	return &(*wrappedIterator);
-}
+	OPERATOR_PLUS_ASSIGN
+	OPERATOR_MINUS_ASSIGN
 
-template<typename Iterator, typename Traits> inline
-typename ReverseIterator<Iterator, Traits>::PointerToConst
-ReverseIterator<Iterator, Traits>::operator->() const
-{
-	return &(*wrappedIterator);
-}
+	OPERATOR_MORE
+	OPERATOR_LESS
 
-// RaReverseIterator
+	OPERATOR_MORE_EQUAL
+	OPERATOR_LESS_EQUAL
 
-template<typename Iterator, typename Traits>
-RaReverseIterator<Iterator, Traits>::RaReverseIterator(Iterator it)
-		: wrappedIterator(it)
-{}
+	OPERATOR_OFFSET_DEREF_CONST
 
-template<typename Iterator, typename Traits> inline
-bool RaReverseIterator<Iterator, Traits>::operator==(
-		const RaReverseIterator<Iterator, Traits> &revIt) const
-{
-	return wrappedIterator == revIt.wrappedIterator;
-}
-
-template<typename Iterator, typename Traits> inline
-bool RaReverseIterator<Iterator, Traits>::operator!=(
-		const RaReverseIterator<Iterator, Traits> &revIt) const
-{
-	return !(*this == revIt);
-}
-
-template<typename Iterator, typename Traits> inline
-RaReverseIterator<Iterator, Traits> &
-RaReverseIterator<Iterator, Traits>::operator++()
-{
-	--wrappedIterator;
-	return *this;
-}
-
-template<typename Iterator, typename Traits> inline
-RaReverseIterator<Iterator, Traits>
-RaReverseIterator<Iterator, Traits>::operator++(int)
-{
-	RaReverseIterator returnIt = *this;
-	--wrappedIterator;
-	return returnIt;
-
-}
-
-template<typename Iterator, typename Traits> inline
-const RaReverseIterator<Iterator, Traits> &
-RaReverseIterator<Iterator, Traits>::operator++() const
-{
-	--wrappedIterator;
-	return *this;
-}
-
-template<typename Iterator, typename Traits> inline
-const RaReverseIterator<Iterator, Traits>
-RaReverseIterator<Iterator, Traits>::operator++(int) const
-{
-	RaReverseIterator returnIt = *this;
-	--wrappedIterator;
-	return returnIt;
-}
-
-template<typename Iterator, typename Traits> inline
-RaReverseIterator<Iterator, Traits> &
-RaReverseIterator<Iterator, Traits>::operator--()
-{
-	++wrappedIterator;
-	return *this;
-}
-
-template<typename Iterator, typename Traits> inline
-RaReverseIterator<Iterator, Traits>
-RaReverseIterator<Iterator, Traits>::operator--(int)
-{
-	RaReverseIterator returnIt = *this;
-	++wrappedIterator;
-	return returnIt;
-}
-
-template<typename Iterator, typename Traits> inline
-const RaReverseIterator<Iterator, Traits> &
-RaReverseIterator<Iterator, Traits>::operator--() const
-{
-	++wrappedIterator;
-	return *this;
-}
-
-template<typename Iterator, typename Traits> inline
-const RaReverseIterator<Iterator, Traits>
-RaReverseIterator<Iterator, Traits>::operator--(int) const
-{
-	RaReverseIterator returnIt = *this;
-	++wrappedIterator;
-	return returnIt;
-}
-
-template<typename Iterator, typename Traits> inline
-RaReverseIterator<Iterator, Traits> &
-RaReverseIterator<Iterator, Traits>::operator+=(SizeTraits::SsizeType size)
-{
-	wrappedIterator -= size;
-	return *this;
-}
-
-template<typename Iterator, typename Traits> inline
-const RaReverseIterator<Iterator, Traits> &
-RaReverseIterator<Iterator, Traits>::operator+=(SizeTraits::SsizeType size) const
-{
-	wrappedIterator -= size;
-	return *this;
-}
-
-template<typename Iterator, typename Traits> inline
-RaReverseIterator<Iterator, Traits> &
-RaReverseIterator<Iterator, Traits>::operator-=(SizeTraits::SsizeType size)
-{
-	wrappedIterator += size;
-	return *this;
-}
-
-template<typename Iterator, typename Traits> inline
-const RaReverseIterator<Iterator, Traits> &
-RaReverseIterator<Iterator, Traits>::operator-=(SizeTraits::SsizeType size) const
-{
-	wrappedIterator += size;
-	return *this;
-}
-
-template<typename Iterator, typename Traits> inline
-typename RaReverseIterator<Iterator, Traits>::Reference
-RaReverseIterator<Iterator, Traits>::operator*()
-{
-	return *wrappedIterator;
-}
-
-template<typename Iterator, typename Traits> inline
-typename RaReverseIterator<Iterator, Traits>::ConstReference
-RaReverseIterator<Iterator, Traits>::operator*() const
-{
-	return *wrappedIterator;
-}
-
-template<typename Iterator, typename Traits> inline
-typename RaReverseIterator<Iterator, Traits>::Pointer
-RaReverseIterator<Iterator, Traits>::operator->()
-{
-	return &(*wrappedIterator);
-}
-
-template<typename Iterator, typename Traits> inline
-typename RaReverseIterator<Iterator, Traits>::PointerToConst
-RaReverseIterator<Iterator, Traits>::operator->() const
-{
-	return &(*wrappedIterator);
-}
-
-template<typename Iterator, typename Traits>
-RaReverseIterator<Iterator, Traits> operator+(
-		RaReverseIterator<Iterator, Traits> it, SizeTraits::SsizeType size)
-{
-	it -= size;
-	return it;
-}
-
-template<typename Iterator, typename Traits>
-RaReverseIterator<Iterator, Traits> operator+(
-		SizeTraits::SsizeType size, RaReverseIterator<Iterator, Traits> it)
-{
-	it -= size;
-	return it;
-}
-
-template<typename Iterator, typename Traits>
-RaReverseIterator<Iterator, Traits> operator-(
-		RaReverseIterator<Iterator, Traits> it, SizeTraits::SsizeType size)
-{
-	it += size;
-	return it;
-}
+private:
+	using Parent::wrappedIterator;
+};
 
 }}
+
+// implementation
+
+namespace flame_ide
+{namespace templates
+{
+
+}}
+
+#undef OPERATOR_OFFSET_DEREF_CONST_REVERSED
+#undef OPERATOR_OFFSET_DEREF_REVERSED
+
+#undef OPERATOR_LESS_EQUAL_REVERSED
+#undef OPERATOR_MORE_EQUAL_REVERSED
+
+#undef OPERATOR_LESS_REVERSED
+#undef OPERATOR_MORE_REVERSED
+
+#undef OPERATOR_OFFSET_DEREF_CONST
+#undef OPERATOR_OFFSET_DEREF
+
+#undef OPERATOR_LESS_EQUAL
+#undef OPERATOR_MORE_EQUAL
+
+#undef OPERATOR_LESS
+#undef OPERATOR_MORE
+
+#undef OPERATOR_MINUS_ASSIGN_REVERSED
+#undef OPERATOR_PLUS_ASSIGN_REVERSED
+
+#undef OPERATOR_MINUS_REVERSED
+#undef OPERATOR_PLUS_REVERSED
+
+#undef OPERATOR_MINUS_ASSIGN
+#undef OPERATOR_PLUS_ASSIGN
+
+#undef OPERATOR_MINUS
+#undef OPERATOR_PLUS
+
+#undef OPERATOR_ARROW_CONST
+#undef OPERATOR_DEREF_CONST
+
+#undef OPERATOR_ARROW
+#undef OPERATOR_DEREF
+
+#undef OPERATOR_DEC_POSTFIX_REVERSED
+#undef OPERATOR_DEC_PREFIX_REVERSED
+
+#undef OPERATOR_INC_POSTFIX_REVERSED
+#undef OPERATOR_INC_PREFIX_REVERSED
+
+#undef OPERATOR_DEC_POSTFIX
+#undef OPERATOR_DEC_PREFIX
+
+#undef OPERATOR_INC_POSTFIX
+#undef OPERATOR_INC_PREFIX
+
 #endif // ITERATOR_HPP

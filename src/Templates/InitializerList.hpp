@@ -70,8 +70,8 @@ private:
 //			using ArgHeadType = decltype(argHead);
 //			static_assert(
 //					, "Include type error.");
-			*iterator = forward(argHead);
-			Helper<Args...>::init(++iterator, forward(args)...);
+			*iterator = forward<decltype(argHead)>(argHead);
+			Helper<Args...>::init(++iterator, forward<decltype(args)>(args)...);
 		}
 	};
 
@@ -80,7 +80,7 @@ private:
 	{
 		static inline void init(Pointer iterator, Arg &&arg)
 		{
-			*iterator = forward(arg);
+			*iterator = forward<decltype(arg)>(arg);
 		}
 	};
 
@@ -100,7 +100,7 @@ template<typename ...Args>
 InitializerList<T, SIZE>::InitializerList(Args &&...args) : listSize(sizeof...(Args))
 {
 	static_assert(SIZE >= sizeof...(Args), "ERROR: Illegal count of arguments");
-	Helper<Args...>::init(list, forward(args)...);
+	Helper<Args...>::init(list, forward<decltype(args)>(args)...);
 }
 
 template<typename T, SizeTraits::SizeType SIZE> constexpr
@@ -141,9 +141,7 @@ template<typename T, SizeTraits::SizeType SIZE>
 InitializerList<T, SIZE>::~InitializerList()
 {
 	for (auto &it : *this)
-	{
 		it.~T();
-	}
 }
 
 }}

@@ -71,58 +71,11 @@ struct Types: public NonCreational
 };
 
 /**
- * @brief Removing pointer from type.
- * @tparam Raw type.
- */
-template<typename T>
-struct RemovePointer: public NonCreational
-{
-	using Type = T;
-};
-
-/**
- * @brief View RemovePointer
- */
-template<typename T>
-struct RemovePointer<T *>: public NonCreational
-{
-	using Type = T;
-};
-
-/**
- * @brief Removing reference from type.
- * @tparam Raw type.
- */
-template<typename T>
-struct RemoveReference: public NonCreational
-{
-	using Type = T;
-};
-
-/**
- * @brief View RemoveReference
- */
-template<typename T>
-struct RemoveReference<T &>: public NonCreational
-{
-	using Type = T;
-};
-
-/**
- * @brief View RemoveReference
- */
-template<typename T>
-struct RemoveReference<T &&>: public NonCreational
-{
-	using Type = T;
-};
-
-/**
  * @brief Default type traits
  * @tparam Raw type.
  */
 template<typename T>
-struct DefaultTraits: public NonCreational
+struct DefaultTraits
 {
 	using Type = T;
 	using ConstType = Type const;
@@ -141,7 +94,7 @@ struct DefaultTraits: public NonCreational
 /**
  * @brief Default size, diff  traits.
  */
-struct SizeTraits: public NonCreational
+struct SizeTraits
 {
 	using SizeType = Types::size_t ;
 	using SsizeType = Types::ssize_t;
@@ -162,7 +115,7 @@ struct ContainerTraits: public DefaultTraits<T>, public SizeTraits
  * @tparam Raw type value.
  */
 template<typename T, T v>
-struct IntegralConstant: public NonCreational
+struct IntegralConstant
 {
 	using Type = T;
 	static constexpr Type VALUE = v;
@@ -178,9 +131,7 @@ struct TrueType: public IntegralConstant<bool, true>
  * @brief Compile time false constant.
  */
 struct FalseType: public IntegralConstant<bool, false>
-{
-	static constexpr bool VALUE = false;
-};
+{};
 
 /**
  * @brief Comparing different types.
@@ -199,6 +150,8 @@ template<typename T>
 struct ComparingTypes<T, T>: public TrueType
 {};
 
+// Checking types
+
 /**
  * @brief Get info is type pointer.
  * @tparam Type.
@@ -213,22 +166,6 @@ struct IsPointer: public FalseType
  */
 template<typename T>
 struct IsPointer<T *>: public TrueType
-{};
-
-/**
- * @brief Get info is type pointer.
- * @tparam Type.
- */
-template<typename T>
-struct IsPointer<const T *>: public TrueType
-{};
-
-/**
- * @brief Get info is type pointer.
- * @tparam Type.
- */
-template<typename T>
-struct IsPointer<T *const>: public TrueType
 {};
 
 /**
@@ -252,16 +189,212 @@ struct IsReference<T &>: public TrueType
  * @tparam Type.
  */
 template<typename T>
-struct IsReference<T const &>: public TrueType
+struct IsReference<T &&>: public TrueType
 {};
 
 /**
- * @brief Get info is type reference.
+ * @brief Get info is const type.
  * @tparam Type.
  */
 template<typename T>
-struct IsReference<T &&>: public TrueType
+struct IsConst: public FalseType
 {};
+
+/**
+ * @brief Get info is const type.
+ * @tparam Type.
+ */
+template<typename T>
+struct IsConst<const T>: public TrueType
+{};
+
+/**
+ * @brief Get info is volatile type.
+ * @tparam Type.
+ */
+template<typename T>
+struct IsVolatile: public FalseType
+{};
+
+/**
+ * @brief Get info is volatile type.
+ * @tparam Type.
+ */
+template<typename T>
+struct IsVolatile<volatile T>: public TrueType
+{};
+
+/**
+ * @brief Get info about lvalue/rvalue.
+ * @tparam Type.
+ */
+template<typename T>
+struct IsLvalue: public FalseType
+{};
+
+/**
+ * @brief View IsLvalue
+ */
+template<typename T>
+struct IsLvalue<T &>: public TrueType
+{};
+
+/**
+ * @brief Get info about lvalue/rvalue.
+ * @tparam Type.
+ */
+template<typename T>
+struct IsRvalue: public FalseType
+{};
+
+/**
+ * @brief View IsRvalue
+ */
+template<typename T>
+struct IsRvalue<T &&>: public TrueType
+{};
+
+
+// Removing
+
+/**
+ * @brief Removing pointer from type.
+ * @tparam Raw type.
+ */
+template<typename T>
+struct RemovePointer
+{
+	using Type = T;
+};
+
+/**
+ * @brief View RemovePointer
+ */
+template<typename T>
+struct RemovePointer<T *>
+{
+	using Type = T;
+};
+
+/**
+ * @brief Removing reference from type.
+ * @tparam Raw type.
+ */
+template<typename T>
+struct RemoveReference
+{
+	using Type = T;
+};
+
+/**
+ * @brief View RemoveReference
+ */
+template<typename T>
+struct RemoveReference<T &>
+{
+	using Type = T;
+};
+
+/**
+ * @brief View RemoveReference
+ */
+template<typename T>
+struct RemoveReference<T &&>
+{
+	using Type = T;
+};
+
+/**
+ * @brief View RemoveConst
+ */
+template<typename T>
+struct RemoveConst
+{
+	using Type = T;
+};
+
+/**
+ * @brief View RemoveConst
+ */
+template<typename T>
+struct RemoveConst<const T>
+{
+	using Type = T;
+};
+
+/**
+ * @brief Removing volatile from type.
+ * @tparam Raw type.
+ */
+template<typename T>
+struct RemoveVolatile
+{
+	using Type = T;
+};
+
+/**
+ * @brief View RemoveVolatile.
+ */
+template<typename T>
+struct RemoveVolatile<volatile T>
+{
+	using Type = T;
+};
+
+/**
+ * @brief Removing all modificators for getting
+ * @tparam Raw type.
+ */
+template<typename T>
+struct RemoveAll
+{
+	using Type = T;
+};
+
+/**
+ * @brief View RemoveAll.
+ */
+template<typename T>
+struct RemoveAll<volatile T>
+{
+	using Type = typename RemoveAll<typename RemoveVolatile<T>::Type>::Type;
+};
+
+/**
+ * @brief View RemoveAll.
+ */
+template<typename T>
+struct RemoveAll<T *>
+{
+	using Type = typename RemoveAll<typename RemovePointer<T>::Type>::Type;
+};
+
+/**
+ * @brief View RemoveAll.
+ */
+template<typename T>
+struct RemoveAll<T const>
+{
+	using Type = typename RemoveAll<typename RemoveConst<T>::Type>::Type;
+};
+
+/**
+ * @brief View RemoveAll.
+ */
+template<typename T>
+struct RemoveAll<T &>
+{
+	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
+};
+
+/**
+ * @brief View RemoveAll.
+ */
+template<typename T>
+struct RemoveAll<T &&>
+{
+	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
+};
 
 }}
 

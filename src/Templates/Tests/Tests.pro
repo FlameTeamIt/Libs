@@ -26,7 +26,8 @@ HEADERS += \
 	../Utils.hpp \
 	../InitializerList.hpp \
 	../Vector.hpp \
-	../View.hpp
+	../View.hpp \
+	../Iterator.hpp
 
 SOURCES += \
 	Allocator.cpp \

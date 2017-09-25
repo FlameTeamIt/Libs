@@ -52,7 +52,7 @@ private:
 #if defined(__linux)
 		std::cout << "> " TEXT_STYLE_BOLD TEXT_STYLE_CYAN "Start" TEXT_STYLE_NULL " " << testName << '\n';
 #else
-		std::cout << "> Start " << __name << '\n';
+		std::cout << "> Start " << testName << '\n';
 #endif
 	}
 
@@ -61,7 +61,7 @@ private:
 #if defined(__linux)
 		std::cout << "> " TEXT_STYLE_BOLD TEXT_STYLE_CYAN "End" TEXT_STYLE_NULL " " << testName << "\n\n";
 #else
-		std::cout << "> End " << __name << "\n\n";
+		std::cout << "> End " << testName << "\n\n";
 #endif
 	}
 
@@ -114,7 +114,7 @@ protected:
 				TEXT_STYLE_NULL
 				"\n";
 #else
-		std::cout << "-------------------- " << __name << " --------------------" "\n";
+		std::cout << "-------------------- " << aggregatorName << " --------------------" "\n";
 #endif
 	}
 
@@ -170,7 +170,7 @@ public:
 	TestAggregator(std::string&& name) : aggregatorName(name)
 	{}
 
-	~TestAggregator()
+	virtual ~TestAggregator()
 	{
 		for (auto it : vectorTests)
 			delete it;
@@ -183,7 +183,7 @@ public:
 		printEnd();
 	}
 
-	void push_back_test(AbstractTest *test, int is_enable=1)
+	void pushBackTest(AbstractTest *test, int is_enable=1)
 	{
 		vectorTests.push_back(test);
 		vectorEnableTests.push_back(is_enable);

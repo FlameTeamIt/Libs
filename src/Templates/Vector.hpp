@@ -1,11 +1,34 @@
-#ifndef TEMPLATES_VECTOR
-#define TEMPLATES_VECTOR
+#ifndef TEMPLATES_VECTOR_HPP
+#define TEMPLATES_VECTOR_HPP
 
 #include <Templates/Utils.hpp>
 #include <Templates/Iterator.hpp>
 #include <Templates/Allocator.hpp>
 #include <Templates/InitializerList.hpp>
 #include <Templates/View.hpp>
+
+#define TEMPLATE_DEFINE \
+template<typename T \
+	, typename Traits \
+	, typename Allocator \
+	, typename Traits::SizeType START_SIZE \
+	, typename Traits::SizeType RESIZE_FACTOR_MULT \
+	, typename Traits::SizeType RESIZE_FACTOR_DIV>
+
+#define TEMPLATE_DEFINE_1 \
+template<typename Traits1 \
+	, typename Allocator1 \
+	, typename Traits::SizeType START_SIZE1 \
+	, typename Traits::SizeType RESIZE_FACTOR_MULT1 \
+	, typename Traits::SizeType RESIZE_FACTOR_DIV1>
+
+#define VECTOR_TYPE \
+	Vector<T, Traits, Allocator \
+		, START_SIZE, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>
+
+#define VECTOR_TYPE_1 \
+	Vector<T, Traits1, Allocator1 \
+		, START_SIZE1, RESIZE_FACTOR_MULT1, RESIZE_FACTOR_DIV1>
 
 namespace flame_ide
 {namespace templates
@@ -39,7 +62,7 @@ public:
 	using MoveReference = typename Traits::MoveReference;
 	using Iterator = Pointer;
 	using ConstIterator = PointerToConst;
-	using ReverseIterator = flame_ide::templates::RaReverseIterator<Iterator, Traits>;
+	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator, IteratorCategory::RANDOM_ACCESS, Traits>;
 	using ConstReverseIterator = const ReverseIterator;
 
 	/**
@@ -284,7 +307,16 @@ public:
 	 * @param end
 	 */
 	template<typename InputIterator>
-	void insert(Iterator it, InputIterator begin, InputIterator end);
+	void insert(Iterator it, InputIterator itBegin, InputIterator intEnd);
+
+	// TODO
+	/**
+	 * @brief emplace
+	 * @param it
+	 * @param args
+	 */
+	template<typename ...Args>
+	void emplace(Iterator it, Args &&...args);
 
 	/**
 	 * @brief erase
@@ -300,7 +332,8 @@ public:
 	void erase(Iterator itBegin, Iterator itEnd);
 
 private:
-	SizeType nextCapacity() const
+	// TODO: перенести в отдельную реализацию
+	inline SizeType nextCapacity() const
 	{
 		return ((capacity() * RESIZE_FACTOR_MULT) / RESIZE_FACTOR_DIV);
 	}
@@ -317,35 +350,16 @@ namespace flame_ide
 {namespace templates
 {
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV
->::Vector() : head(nullptr), tail(nullptr), vectorCapacity(0), allocator()
+TEMPLATE_DEFINE
+VECTOR_TYPE::Vector() :
+		head(nullptr), tail(nullptr)
+		, vectorCapacity(0)
+		, allocator()
 {}
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV
->
-template<typename Traits1
-	, typename Allocator1
-	, typename Traits::SizeType START_SIZE1
-	, typename Traits::SizeType RESIZE_FACTOR_MULT1
-	, typename Traits::SizeType RESIZE_FACTOR_DIV1>
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Vector(
-		const Vector<T, Traits1, Allocator1
-		, START_SIZE1, RESIZE_FACTOR_MULT1
-		, RESIZE_FACTOR_DIV1> &vector)
-		: head(vector.allocator.createArray(vector.size()))
+TEMPLATE_DEFINE TEMPLATE_DEFINE_1
+VECTOR_TYPE::Vector(const VECTOR_TYPE_1 &vector) :
+		head(vector.allocator.createArray(vector.size()))
 		, tail(head + vector.size())
 		, vectorCapacity(vector.size())
 {
@@ -354,22 +368,8 @@ Vector<T, Traits, Allocator, START_SIZE
 		placementNew<Type>(it, i);
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-template<typename Traits1
-	, typename Allocator1
-	, typename Traits::SizeType START_SIZE1
-	, typename Traits::SizeType RESIZE_FACTOR_MULT1
-	, typename Traits::SizeType RESIZE_FACTOR_DIV1>
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Vector(
-		Vector<T, Traits1, Allocator1
-		, START_SIZE1, RESIZE_FACTOR_MULT1
-		, RESIZE_FACTOR_DIV1> &&vector) noexcept
+TEMPLATE_DEFINE TEMPLATE_DEFINE_1
+VECTOR_TYPE::Vector(VECTOR_TYPE_1 &&vector) noexcept
 		: head(vector.head)
 		, tail(vector.tail)
 		, vectorCapacity(vector.vectorCapacity)
@@ -378,35 +378,26 @@ Vector<T, Traits, Allocator, START_SIZE
 	vector.tail = nullptr;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Vector(
-		typename Traits::SizeType size)
+TEMPLATE_DEFINE
+VECTOR_TYPE::Vector(typename VECTOR_TYPE::SizeType size) : Vector()
 {
-	head = allocator.createArray((size * RESIZE_FACTOR_MULT) / RESIZE_FACTOR_DIV);
+	vectorCapacity = size;
+
+	head = allocator.createArray(nextCapacity());
 	tail = head + size;
+
+	vectorCapacity = nextCapacity();
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
+TEMPLATE_DEFINE
 template<typename ...Args>
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Vector(Args &&...args)
+VECTOR_TYPE::Vector(Args &&...args)
 {
 	head = allocator.createArray(sizeof...(Args) * sizeof(Type));
 	tail = head + sizeof...(Args);
 	vectorCapacity = sizeof...(Args);
 
-	InitializerList<Type, sizeof...(Args)> list(forward(args)...);
+	InitializerList<Type, sizeof...(Args)> list(forward<decltype(args)>(args)...);
 	auto itList = list.begin();
 	for (auto &i : *this)
 	{
@@ -415,38 +406,16 @@ Vector<T, Traits, Allocator, START_SIZE
 	}
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-Vector<T, Traits, Allocator, START_SIZE
-	, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::~Vector()
+TEMPLATE_DEFINE
+VECTOR_TYPE::~Vector()
 {
 	for (auto &i : *this)
 		i.~T();
 	allocator.freeArray(head);
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-template<typename Traits1
-	, typename Allocator1
-	, typename Traits::SizeType START_SIZE1
-	, typename Traits::SizeType RESIZE_FACTOR_MULT1
-	, typename Traits::SizeType RESIZE_FACTOR_DIV1>
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV> &
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::operator=(
-		const Vector<T, Traits1, Allocator1
-		, START_SIZE1, RESIZE_FACTOR_MULT1
-		, RESIZE_FACTOR_DIV1> &vector)
+TEMPLATE_DEFINE TEMPLATE_DEFINE_1
+VECTOR_TYPE &VECTOR_TYPE::operator=(const VECTOR_TYPE_1 &vector)
 {
 	auto tempHead = allocator.createArray(vector.size());
 	auto it = tempHead;
@@ -462,24 +431,8 @@ Vector<T, Traits, Allocator, START_SIZE
 	tail = head + vectorCapacity;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-template<typename Traits1
-	, typename Allocator1
-	, typename Traits::SizeType START_SIZE1
-	, typename Traits::SizeType RESIZE_FACTOR_MULT1
-	, typename Traits::SizeType RESIZE_FACTOR_DIV1>
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV> &
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::operator=(
-		Vector<T, Traits1, Allocator1
-		, START_SIZE1, RESIZE_FACTOR_MULT1
-		, RESIZE_FACTOR_DIV1> &&vector) noexcept
+TEMPLATE_DEFINE TEMPLATE_DEFINE_1
+VECTOR_TYPE &VECTOR_TYPE::operator=(VECTOR_TYPE_1 &&vector) noexcept
 {
 	head = vector.head;
 	tail = vector.tail;
@@ -489,76 +442,34 @@ Vector<T, Traits, Allocator, START_SIZE
 	vector.tail = nullptr;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Reference
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::operator[](
-		Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::SizeType index)
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::Reference VECTOR_TYPE::operator[](
+		typename VECTOR_TYPE::SizeType index) noexcept
 {
 	return *(head + index);
 }
 
-template<typename T
-		 , typename Traits
-		 , typename Allocator
-		 , typename Traits::SizeType START_SIZE
-		 , typename Traits::SizeType RESIZE_FACTOR_MULT
-		 , typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-	, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::ConstReference
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::operator[](
-		Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::SizeType index) const
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ConstReference VECTOR_TYPE::operator[](
+		typename VECTOR_TYPE::SizeType index) const noexcept
 {
 	return *(head + index);
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::SizeType
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::size() const
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::SizeType VECTOR_TYPE::size() const noexcept
 {
 	return SizeType(tail - head);
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::SizeType
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::capacity() const
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::SizeType VECTOR_TYPE::capacity() const noexcept
 {
 	return vectorCapacity;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-void Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::resize(
-		Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::SizeType newSize)
+TEMPLATE_DEFINE
+void VECTOR_TYPE::resize(typename VECTOR_TYPE::SizeType newSize)
 {
 	if (size() < newSize)
 	{
@@ -575,16 +486,8 @@ void Vector<T, Traits, Allocator, START_SIZE
 	}
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-void Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::reserve(
-				Vector<T, Traits, Allocator, START_SIZE
-				, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::SizeType newCapacity)
+TEMPLATE_DEFINE
+void VECTOR_TYPE::reserve(typename VECTOR_TYPE::SizeType newCapacity)
 {
 	if (capacity() < newCapacity)
 	{
@@ -610,198 +513,88 @@ void Vector<T, Traits, Allocator, START_SIZE
 	}
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Reference
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::first()
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::Reference VECTOR_TYPE::first()
 {
 	return *head;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::ConstReference
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::first() const
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ConstReference VECTOR_TYPE::first() const
 {
 	return *head;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Reference
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::last()
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::Reference VECTOR_TYPE::last()
 {
 	return *(tail - 1);
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::ConstReference
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::last() const
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ConstReference VECTOR_TYPE::last() const
 {
 	return *(tail - 1);
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-void Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::clean()
+TEMPLATE_DEFINE
+void VECTOR_TYPE::clean()
 {
 	for (auto &i : *this)
 		i.~T();
 	tail = head;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Iterator
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::begin()
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::Iterator VECTOR_TYPE::begin()
 {
 	return head;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::ConstIterator
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::begin() const
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::begin() const
 {
 	return head;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::Iterator
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::end()
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::Iterator VECTOR_TYPE::end()
 {
 	return tail;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::ConstIterator
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::end() const
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::end() const
 {
 	return tail;
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::ReverseIterator
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::rbegin()
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ReverseIterator VECTOR_TYPE::rbegin()
 {
 	return ReverseIterator(end() - 1);
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::ConstReverseIterator
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::rbegin() const
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::rbegin() const
 {
 	return ConstReverseIterator(end() - 1);
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::ReverseIterator
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::rend()
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ReverseIterator VECTOR_TYPE::rend()
 {
 	return ReverseIterator(begin() - 1);
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::ConstReverseIterator
-Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::rend() const
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::rend() const
 {
 	return ConstReverseIterator(begin() - 1);
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-void Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::pushBack(
-		typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::ConstReference object)
+TEMPLATE_DEFINE
+void VECTOR_TYPE::pushBack(typename VECTOR_TYPE::ConstReference object)
 {
 	if (tail != head + capacity())
 		placementNew<Type>(tail++, object);
@@ -812,16 +605,8 @@ void Vector<T, Traits, Allocator, START_SIZE
 	}
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-void Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::pushBack(
-		typename Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::MoveReference object)
+TEMPLATE_DEFINE
+void VECTOR_TYPE::pushBack(typename VECTOR_TYPE::MoveReference object)
 {
 	if (tail != head + capacity())
 		placementNew<Type>(tail++, move(object));
@@ -832,15 +617,9 @@ void Vector<T, Traits, Allocator, START_SIZE
 	}
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
+TEMPLATE_DEFINE
 template<typename ...Args>
-void Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::emplaceBack(Args &&...args)
+void VECTOR_TYPE::emplaceBack(Args &&...args)
 {
 	if (tail != head + capacity())
 		placementNew<Type>(tail++, forward(args)...);
@@ -851,19 +630,161 @@ void Vector<T, Traits, Allocator, START_SIZE
 	}
 }
 
-template<typename T
-	, typename Traits
-	, typename Allocator
-	, typename Traits::SizeType START_SIZE
-	, typename Traits::SizeType RESIZE_FACTOR_MULT
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
-void Vector<T, Traits, Allocator, START_SIZE
-		, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>::popBack()
+TEMPLATE_DEFINE
+void VECTOR_TYPE::popBack()
 {
 	if (tail != head)
 		(--tail)->~T();
 }
 
+TEMPLATE_DEFINE
+void VECTOR_TYPE::insert(typename VECTOR_TYPE::Iterator it
+		, typename VECTOR_TYPE::ConstReference object)
+{
+	if (size() < capacity())
+	{
+		if (it == end())
+			pushBack(object);
+		else
+		{
+			placementNew<Type>(tail);
+			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it));
+			View<Me, ReverseIterator> viewNew(--viewOld.begin(), --viewOld.end());
+
+			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
+					itNew != viewNew.end() - 1; ++itOld, ++itNew)
+				*itNew = move(*itOld);
+
+			*it = object;
+			++tail;
+		}
+	}
+	else
+	{
+		reserve(nextCapacity());
+		insert(it, object);
+	}
+}
+
+TEMPLATE_DEFINE
+void VECTOR_TYPE::insert(
+		typename VECTOR_TYPE::Iterator it
+		, typename VECTOR_TYPE::MoveReference object)
+{
+	if (size() < capacity())
+	{
+		if (it == end())
+			pushBack(move(object));
+		else
+		{
+			placementNew<Type>(tail);
+			View<Me> viewOld(rbegin(), ReverseIterator(it + 1));
+			View<Me> viewNew(--viewOld.begin(), --viewOld.end());
+
+			for (ReverseIterator itOld = viewOld.begin()
+					, itNew = viewNew.begin(); itOld != viewOld.end();
+					++itOld, ++itNew)
+				*itNew = move(*itOld);
+
+			*it = move(object);
+			++tail;
+		}
+	}
+	else
+	{
+		reserve(nextCapacity());
+		insert(it, object);
+	}
+}
+
+TEMPLATE_DEFINE
+template<typename InputIterator>
+void VECTOR_TYPE::insert(VECTOR_TYPE::Iterator it
+		, InputIterator itBegin, InputIterator itEnd)
+{
+	auto rangeSize = countIterations(itBegin, itEnd);
+	if (!rangeSize)
+		return;
+	else if (rangeSize + size() <= capacity())
+	{
+		Range<InputIterator> range(itBegin, itEnd);
+		if (it == end())
+			for (Reference itInsert : range)
+				pushBack(itInsert);
+		else
+		{
+			View<Me> initView(end(), end() + rangeSize);
+			for (Reference it : initView)
+				placementNew<Type>(&it);
+
+			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1));
+			View<Me, ReverseIterator> viewNew(viewOld.begin() + rangeSize
+					, viewOld.end() + rangeSize);
+			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
+					itOld != viewOld.end(); ++itOld, ++itNew)
+				*itNew = move(*itOld);
+
+			for (auto &itInsert : range)
+				*it = itInsert
+				, ++it;
+			tail += rangeSize;
+		}
+	}
+}
+
+// TODO: add implementation
+TEMPLATE_DEFINE
+template<typename ...Args>
+void VECTOR_TYPE::emplace(typename VECTOR_TYPE::Iterator it, Args &&...args)
+{
+}
+
+TEMPLATE_DEFINE
+void VECTOR_TYPE::erase(VECTOR_TYPE::Iterator it)
+{
+	if (it == end())
+		return;
+	else if (it == end() - 1)
+		popBack();
+	else
+	{
+		View<Me> viewOld(it + 1, end());
+		View<Me> viewNew(viewOld.begin() - 1, viewOld.end() - 1);
+		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
+				itOld != viewOld.end(); ++itOld, ++itNew)
+			*itNew = move(*itOld);
+		--tail;
+	}
+}
+
+TEMPLATE_DEFINE
+void VECTOR_TYPE::erase(typename VECTOR_TYPE::Iterator itBegin
+		, typename VECTOR_TYPE::Iterator itEnd)
+{
+	if (SizeType(itEnd - itBegin) == size())
+		clean();
+	else if (itEnd - itBegin < SizeTraits::SsizeType(size())
+			&& itEnd - itBegin > SizeTraits::SsizeType(0))
+	{
+		View<Me> viewErasing(itBegin, itEnd);
+		for (auto &i : viewErasing)
+			i.~T();
+
+		View<Me> viewOld(itEnd, end());
+		View<Me> viewNew(itBegin, itBegin + (end() - itEnd));
+		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
+				itOld != viewOld.end(); ++itNew, ++itOld)
+			*itNew = move(*itOld);
+
+		tail -= SizeType(viewErasing.end() - viewErasing.begin());
+	}
+}
+
 }}
 
-#endif // TEMPLATES_VECTOR
+#undef TEMPLATE_DEFINE
+#undef TEMPLATE_DEFINE_1
+#undef VECTOR_TYPE
+#undef VECTOR_TYPE_1
+
+#endif // TEMPLATES_VECTOR_HPP

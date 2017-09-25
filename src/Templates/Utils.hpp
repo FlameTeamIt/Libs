@@ -37,7 +37,13 @@ typename RemoveReference<T>::Type&& move(T &&reference) noexcept;
  * @brief std::forward alternative.
  */
 template<class T> constexpr inline
-T&& forward(T &&reference) noexcept;
+T&& forward(typename RemoveReference<T>::Type &&reference) noexcept;
+
+/**
+ * @brief std::forward alternative.
+ */
+template<class T> constexpr inline
+T&& forward(typename RemoveReference<T>::Type &reference) noexcept;
 
 /**
  * @brief Copying range.
@@ -99,33 +105,34 @@ namespace flame_ide
 template<typename T> inline constexpr
 bool isPrimitiveType() noexcept
 {
-	using IsChar = ComparingTypes<T, Types::char_t>;
-	using IsUchar = ComparingTypes<T, Types::uchar_t>;
+	using ClearType = typename RemoveAll<T>::Type;
+	using IsChar = ComparingTypes<ClearType, Types::char_t>;
+	using IsUchar = ComparingTypes<ClearType, Types::uchar_t>;
 
-	using IsShort = ComparingTypes<T, Types::short_t>;
-	using IsUshort = ComparingTypes<T, Types::ushort_t>;
+	using IsShort = ComparingTypes<ClearType, Types::short_t>;
+	using IsUshort = ComparingTypes<ClearType, Types::ushort_t>;
 
-	using IsInt =ComparingTypes<T, Types::int_t>;
-	using IsUint = ComparingTypes<T, Types::uint_t>;
+	using IsInt =ComparingTypes<ClearType, Types::int_t>;
+	using IsUint = ComparingTypes<ClearType, Types::uint_t>;
 
-	using IsLong = ComparingTypes<T, Types::long_t>;
-	using IsUlong = ComparingTypes<T, Types::ulong_t>;
+	using IsLong = ComparingTypes<ClearType, Types::long_t>;
+	using IsUlong = ComparingTypes<ClearType, Types::ulong_t>;
 
-	using IsLlong = ComparingTypes<T, Types::llong_t>;
-	using IsUllong = ComparingTypes<T, Types::ullong_t>;
+	using IsLlong = ComparingTypes<ClearType, Types::llong_t>;
+	using IsUllong = ComparingTypes<ClearType, Types::ullong_t>;
 
-	using IsFloat = ComparingTypes<T, Types::float_t>;
+	using IsFloat = ComparingTypes<ClearType, Types::float_t>;
 
-	using IsDouble = ComparingTypes<T, Types::double_t>;
-	using IsLdouble = ComparingTypes<T, Types::ldouble_t>;
+	using IsDouble = ComparingTypes<ClearType, Types::double_t>;
+	using IsLdouble = ComparingTypes<ClearType, Types::ldouble_t>;
 
 	return (IsChar::VALUE || IsUchar::VALUE
-			|| IsShort::VALUE || IsUshort::VALUE
-			|| IsInt::VALUE || IsUint::VALUE
-			|| IsLong::VALUE || IsUlong::VALUE
-			|| IsLlong::VALUE || IsUllong::VALUE
-			|| IsFloat::VALUE
-			|| IsDouble::VALUE || IsLdouble::VALUE);
+			|| IsShort::VALUE  || IsUshort::VALUE
+			|| IsInt::VALUE    || IsUint::VALUE
+			|| IsLong::VALUE   || IsUlong::VALUE
+			|| IsLlong::VALUE  || IsUllong::VALUE
+			|| IsFloat::VALUE  || IsDouble::VALUE
+			|| IsLdouble::VALUE);
 }
 
 template<typename T, typename U> inline constexpr
@@ -141,7 +148,14 @@ typename RemoveReference<T>::Type &&move(T &&reference) noexcept
 }
 
 template<class T> constexpr inline
-T&& forward(T &&reference) noexcept
+T&& forward(typename RemoveReference<T>::Type &&reference) noexcept
+{
+	static_assert(IsLvalue<T>::VALUE, "Cannot forward rvalue as lvalue.");
+	return static_cast<T &&>(reference);
+}
+
+template<class T> constexpr inline
+T&& forward(typename RemoveReference<T>::Type &reference) noexcept
 {
 	return static_cast<T &&>(reference);
 }
@@ -156,10 +170,10 @@ void copy(IteratorInput start, IteratorInput end
 		*out = *iterator;
 }
 
-template<typename Iterator, typename SizeTraits>
-typename SizeTraits::SizeType countIterations(Iterator start, Iterator end)
+template<typename Iterator, typename Traits>
+typename Traits::SizeType countIterations(Iterator start, Iterator end)
 {
-	Types::ulong_t count = 0;
+	typename Traits::SizeType count = 0;
 	for(auto iterator = start; iterator != end; ++iterator, ++count)
 	{}
 	return count;
@@ -169,7 +183,7 @@ template<typename T, typename ...Args> inline
 typename DefaultTraits<T>::Pointer
 placementNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcept
 {
-	return new (pointer) typename DefaultTraits<T>::Type(forward(args)...);
+	return new (pointer) typename DefaultTraits<T>::Type(forward<decltype(args)>(args)...);
 }
 
 template<typename Iterator1, typename Iterator2>

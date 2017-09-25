@@ -295,7 +295,7 @@ ObjectAllocator<T, Traits>::construct(Args &&...args) noexcept
 	Pointer pointer = reinterpret_cast<Pointer>(
 			this->allocate(SizeType(sizeof(Type))));
 	if (pointer)
-		placementNew<Type>(pointer, forward(args)...);
+		placementNew<Type>(pointer, forward<decltype(args)>(args)...);
 	return pointer;
 }
 

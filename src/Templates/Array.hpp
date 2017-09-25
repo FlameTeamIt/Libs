@@ -13,22 +13,32 @@ namespace flame_ide
  * @brief Array
  */
 template<class T, SizeTraits::SizeType SIZE, typename Traits = ContainerTraits<T>>
-class Array
+class Array: public Traits
 {
 public:
 	using Me = Array<T, SIZE, Traits>;
 
-	using SizeType = typename Traits::SizeType;
-	using Type = typename Traits::Type;
-	using Pointer = typename Traits::Pointer;
-	using PointerToConst = typename Traits::PointerToConst;
-	using Reference = typename Traits::Reference;
-	using ConstReference = typename Traits::ConstReference;
-	using MoveReference = typename Traits::MoveReference;
-	using Iterator = Pointer;
-	using ConstIterator = PointerToConst;
-	using ReverseIterator = flame_ide::templates::RaReverseIterator<Iterator, Traits>;
-	using ConstReverseIterator = const ReverseIterator;
+	using typename Traits::Type;
+	using typename Traits::ConstType;
+
+	using typename Traits::Reference;
+	using typename Traits::MoveReference;
+	using typename Traits::ConstReference;
+
+	using typename Traits::Pointer;
+	using typename Traits::PointerToConst;
+	using typename Traits::ConstPointer;
+
+	using typename Traits::SizeType;
+	using typename Traits::SsizeType;
+	//using typename Traits::;
+
+	using VoidPointer = void *;
+	using Iterator = flame_ide::templates::Iterator<Pointer, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using ConstIterator = flame_ide::templates::ConstIterator<Iterator, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using ConstReverseIterator = flame_ide::templates::ConstIterator<ReverseIterator
+			, IteratorCategory::RANDOM_ACCESS, Traits>;
 
 	/**
 	 * @brief Array
@@ -230,6 +240,15 @@ public:
 	template<typename InputIterator>
 	void insert(Iterator it, InputIterator begin, InputIterator end);
 
+	// TODO
+	/**
+	 * @brief emplace
+	 * @param it
+	 * @param args
+	 */
+	template<typename ...Args>
+	void emplace(Iterator it, Args &&...args);
+
 	/**
 	 * @brief erase
 	 * @param it
@@ -383,13 +402,19 @@ Array<T, SIZE, Traits>::last() const
 	return *rbegin();
 }
 
-// TODO
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 void Array<T, SIZE, Traits>::clean()
 {
 	for (auto &it : *this)
 		it.~T();
 	tail = head();
+}
+
+// TODO: test
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
+Array<T, SIZE, Traits> Array<T, SIZE, Traits>::clone() const
+{
+	return Me(*this);
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
@@ -457,7 +482,7 @@ void Array<T, SIZE, Traits>::pushBack(
 		typename Array<T, SIZE, Traits>::ConstReference object)
 {
 	if (size() < capacity())
-		placementNew<Type>(tail++, T(forward(object)));
+		placementNew<Type>(tail++, object);
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
@@ -487,7 +512,8 @@ void Array<T, SIZE, Traits>::popBack()
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
+void Array<T, SIZE, Traits>::insert(
+		typename Array<T, SIZE, Traits>::Iterator it
 		, typename Array<T, SIZE, Traits>::ConstReference object)
 {
 	if (size() < capacity())
@@ -497,11 +523,11 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 		else
 		{
 			placementNew<Type>(tail);
-			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it));
-			View<Me, ReverseIterator> viewNew(--viewOld.begin(), --viewOld.end());
+			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1));
+			Range<ReverseIterator> rangeNew(--rangeOld.begin(), --rangeOld.end());
 
-			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
-					itNew != viewNew.end() - 1; ++itOld, ++itNew)
+			for (ReverseIterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+					itNew != rangeNew.end(); ++itOld, ++itNew)
 				*itNew = move(*itOld);
 
 			*it = object;
@@ -511,7 +537,8 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
+void Array<T, SIZE, Traits>::insert(
+		typename Array<T, SIZE, Traits>::Iterator it
 		, typename Array<T, SIZE, Traits>::MoveReference object)
 {
 	if (size() < capacity())
@@ -521,8 +548,8 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 		else
 		{
 			placementNew<Type>(tail);
-			View<Me> viewOld(rbegin(), ReverseIterator(it + 1));
-			View<Me> viewNew(--viewOld.begin(), --viewOld.end());
+			Range<ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1));
+			Range<ReverseIterator> viewNew(--viewOld.begin(), --viewOld.end());
 
 			for (ReverseIterator itOld = viewOld.begin()
 					, itNew = viewNew.begin(); itOld != viewOld.end();
@@ -535,17 +562,17 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 	}
 }
 
-// TODO
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 template<typename InputIterator>
-void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
+void Array<T, SIZE, Traits>::insert(
+		typename Array<T, SIZE, Traits>::Iterator it
 		, InputIterator itBegin, InputIterator itEnd)
 {
-	if (itBegin == itEnd)
-		return;
-
+	Type *head = reinterpret_cast<Type *>(this->bytes);
 	auto rangeSize = countIterations(itBegin, itEnd);
-	if (rangeSize + size() <= capacity())
+	if (!rangeSize)
+		return;
+	else if (rangeSize + size() <= capacity())
 	{
 		Range<InputIterator> range(itBegin, itEnd);
 		if (it == end())
@@ -558,8 +585,8 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 				placementNew<Type>(&it);
 
 			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1));
-			View<Me, ReverseIterator> viewNew(viewOld.begin() + rangeSize
-					, viewOld.end() + rangeSize);
+			View<Me, ReverseIterator> viewNew(viewOld.begin() - rangeSize
+					, viewOld.end() - rangeSize);
 			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
 					itOld != viewOld.end(); ++itOld, ++itNew)
 				*itNew = move(*itOld);
@@ -574,7 +601,35 @@ void Array<T, SIZE, Traits>::insert(typename Array<T, SIZE, Traits>::Iterator it
 	}
 }
 
-// TODO
+// TODO: test
+template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+template<typename ...Args>
+void Array<T, SIZE, Traits>::emplace(
+		typename Array<T, SIZE, Traits>::Iterator it
+		, Args &&...args)
+{
+	if (size() < capacity())
+	{
+		if (it == end())
+			emplaceBack(args...);
+		else
+		{
+			placementNew<Type>(tail);
+			View<Me> viewOld(rbegin(), ReverseIterator(it + 1));
+			View<Me> viewNew(--viewOld.begin(), --viewOld.end());
+
+			for (ReverseIterator itOld = viewOld.begin()
+					, itNew = viewNew.begin(); itOld != viewOld.end();
+					++itOld, ++itNew)
+				*itNew = move(*itOld);
+
+			it->~T();
+			placementNew<Type>(it, args...);
+			++tail;
+		}
+	}
+}
+
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 void Array<T, SIZE, Traits>::erase(Array<T, SIZE, Traits>::Iterator it)
 {
@@ -593,9 +648,9 @@ void Array<T, SIZE, Traits>::erase(Array<T, SIZE, Traits>::Iterator it)
 	}
 }
 
-// TODO
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-void Array<T, SIZE, Traits>::erase(Array<T, SIZE, Traits>::Iterator itBegin
+void Array<T, SIZE, Traits>::erase(
+		Array<T, SIZE, Traits>::Iterator itBegin
 		, Array<T, SIZE, Traits>::Iterator itEnd)
 {
 	if (SizeType(itEnd - itBegin) == size())
