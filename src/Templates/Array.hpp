@@ -568,7 +568,6 @@ void Array<T, SIZE, Traits>::insert(
 		typename Array<T, SIZE, Traits>::Iterator it
 		, InputIterator itBegin, InputIterator itEnd)
 {
-	Type *head = reinterpret_cast<Type *>(this->bytes);
 	auto rangeSize = countIterations(itBegin, itEnd);
 	if (!rangeSize)
 		return;
