@@ -89,13 +89,44 @@ private:
 
 class TestAggregator
 {
-	std::string aggregatorName;
-	std::vector<AbstractTest *> vectorTests;
+public:
+	TestAggregator() : aggregatorName("NONAME")
+	{}
+	TestAggregator(const TestAggregator &) = delete;
+	TestAggregator(TestAggregator &&) = delete;
+
+	TestAggregator(char const *nameCstr) : aggregatorName(nameCstr)
+	{}
+	TestAggregator(std::string const &name) : aggregatorName(name)
+	{}
+	TestAggregator(std::string&& name) : aggregatorName(name)
+	{}
+
+	virtual ~TestAggregator()
+	{
+		for (auto it : vectorTests)
+			delete it;
+	}
+
+	void start()
+	{
+		printStart();
+		vStart();
+		printEnd();
+	}
+
+	void pushBackTest(AbstractTest *test, int is_enable=1)
+	{
+		vectorTests.push_back(test);
+		vectorEnableTests.push_back(is_enable);
+	}
+
+	void printStatistic()
+	{
+		vPrintStatistic();
+	}
 
 protected:
-	std::vector<int> vectorReturnCodes;
-	std::vector<int> vectorEnableTests;
-
 	virtual void vStart()
 	{
 		for (AbstractTest *it : vectorTests)
@@ -157,42 +188,12 @@ protected:
 		aggregatorName = new_name;
 	}
 
-public:
-	TestAggregator() : aggregatorName("NONAME")
-	{}
-	TestAggregator(const TestAggregator &) = delete;
-	TestAggregator(TestAggregator &&) = delete;
+	std::vector<int> vectorReturnCodes;
+	std::vector<int> vectorEnableTests;
 
-	TestAggregator(char const *nameCstr) : aggregatorName(nameCstr)
-	{}
-	TestAggregator(std::string const &name) : aggregatorName(name)
-	{}
-	TestAggregator(std::string&& name) : aggregatorName(name)
-	{}
-
-	virtual ~TestAggregator()
-	{
-		for (auto it : vectorTests)
-			delete it;
-	}
-
-	void start()
-	{
-		printStart();
-		vStart();
-		printEnd();
-	}
-
-	void pushBackTest(AbstractTest *test, int is_enable=1)
-	{
-		vectorTests.push_back(test);
-		vectorEnableTests.push_back(is_enable);
-	}
-
-	void printStatistic()
-	{
-		vPrintStatistic();
-	}
+private:
+	std::string aggregatorName;
+	std::vector<AbstractTest *> vectorTests;
 };
 
 #endif // TEST_BASETEST_H
