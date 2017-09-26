@@ -8,26 +8,32 @@
 #include <Templates/View.hpp>
 
 #define TEMPLATE_DEFINE \
-template<typename T \
-	, typename Traits \
-	, typename Allocator \
-	, typename Traits::SizeType START_SIZE \
-	, typename Traits::SizeType RESIZE_FACTOR_MULT \
-	, typename Traits::SizeType RESIZE_FACTOR_DIV>
+	template< \
+		typename T \
+		, typename Traits \
+		, typename Allocator \
+		, typename Traits::SizeType START_SIZE \
+		, typename Traits::SizeType RESIZE_FACTOR_MULT \
+		, typename Traits::SizeType RESIZE_FACTOR_DIV \
+	>
 
 #define TEMPLATE_DEFINE_1 \
-template<typename Traits1 \
-	, typename Allocator1 \
-	, typename Traits::SizeType START_SIZE1 \
-	, typename Traits::SizeType RESIZE_FACTOR_MULT1 \
-	, typename Traits::SizeType RESIZE_FACTOR_DIV1>
+	template<\
+		typename Traits1 \
+		, typename Allocator1 \
+		, typename Traits::SizeType START_SIZE1 \
+		, typename Traits::SizeType RESIZE_FACTOR_MULT1 \
+		, typename Traits::SizeType RESIZE_FACTOR_DIV1 \
+	>
 
 #define VECTOR_TYPE \
-	Vector<T, Traits, Allocator \
+	Vector< \
+		T, Traits, Allocator \
 		, START_SIZE, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>
 
 #define VECTOR_TYPE_1 \
-	Vector<T, Traits1, Allocator1 \
+	Vector< \
+		T, Traits1, Allocator1 \
 		, START_SIZE1, RESIZE_FACTOR_MULT1, RESIZE_FACTOR_DIV1>
 
 namespace flame_ide
@@ -41,29 +47,30 @@ template<typename T
 	, typename Traits::SizeType RESIZE_FACTOR_MULT = 3
 	, typename Traits::SizeType RESIZE_FACTOR_DIV = 2
 >
-class Vector
+class Vector: public Traits
 {
 public:
 	static_assert(RESIZE_FACTOR_MULT > RESIZE_FACTOR_DIV, "Error");
 
-	using Me = Vector<
-		T, Traits, Allocator
-		, START_SIZE
-		, RESIZE_FACTOR_MULT
-		, RESIZE_FACTOR_DIV
-	>;
+	using Me = VECTOR_TYPE;
 
-	using SizeType = typename Traits::SizeType;
-	using Type = typename Traits::Type;
-	using Pointer = typename Traits::Pointer;
-	using PointerToConst = typename Traits::PointerToConst;
-	using Reference = typename Traits::Reference;
-	using ConstReference = typename Traits::ConstReference;
-	using MoveReference = typename Traits::MoveReference;
-	using Iterator = Pointer;
-	using ConstIterator = PointerToConst;
-	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator, IteratorCategory::RANDOM_ACCESS, Traits>;
-	using ConstReverseIterator = const ReverseIterator;
+	using typename Traits::Type;
+
+	using typename Traits::Reference;
+	using typename Traits::ConstReference;
+	using typename Traits::MoveReference;
+
+	using typename Traits::Pointer;
+
+	using typename Traits::SizeType;
+	using typename Traits::SsizeType;
+
+	using Iterator = flame_ide::templates::Iterator<
+		Pointer, IteratorCategory::RANDOM_ACCESS, Traits
+	>;
+	using ConstIterator = flame_ide::templates::ConstIterator<Iterator>;
+	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator>;
+	using ConstReverseIterator = flame_ide::templates::ConstIterator<ReverseIterator>;
 
 	/**
 	 * @brief Vector
@@ -74,28 +81,15 @@ public:
 	 * @brief Vector
 	 * @param vector
 	 */
-	template<typename Traits1
-		, typename Allocator1
-		, SizeType START_SIZE1
-		, SizeType RESIZE_FACTOR_MULT1
-		, SizeType RESIZE_FACTOR_DIV1>
-	Vector(const Vector<T, Traits1, Allocator1
-			, START_SIZE1, RESIZE_FACTOR_MULT1
-			, RESIZE_FACTOR_DIV1> &vector);
+	TEMPLATE_DEFINE_1
+	Vector(const VECTOR_TYPE_1 &vector);
 
 	/**
 	 * @brief Vector
 	 * @param vector
 	 */
-	template<typename Traits1
-		, typename Allocator1
-		, SizeType START_SIZE1
-		, SizeType RESIZE_FACTOR_MULT1
-		, SizeType RESIZE_FACTOR_DIV1>
-	Vector(Vector<T, Traits1, Allocator1
-			, START_SIZE1
-			, RESIZE_FACTOR_MULT1
-			, RESIZE_FACTOR_DIV1> &&vector) noexcept;
+	TEMPLATE_DEFINE_1
+	Vector(VECTOR_TYPE_1 &&vector) noexcept;
 
 	/**
 	 * @brief Vector
@@ -113,32 +107,16 @@ public:
 	 * @param vector
 	 * @return
 	 */
-	template<typename Traits1
-		, typename Allocator1
-		, SizeType START_SIZE1
-		, SizeType RESIZE_FACTOR_MULT1
-		, SizeType RESIZE_FACTOR_DIV1>
-	Me &operator=(
-			const Vector<T, Traits1, Allocator1
-			, START_SIZE1
-			, RESIZE_FACTOR_MULT1
-			, RESIZE_FACTOR_DIV1> &vector);
+	TEMPLATE_DEFINE_1
+	Me &operator=(const VECTOR_TYPE_1 &vector);
 
 	/**
 	 * @brief operator =
 	 * @param vector
 	 * @return
 	 */
-	template<typename Traits1
-		, typename Allocator1
-		, SizeType START_SIZE1
-		, SizeType RESIZE_FACTOR_MULT1
-		, SizeType RESIZE_FACTOR_DIV1>
-	Me &operator=(
-			Vector<T, Traits1, Allocator1
-			, START_SIZE1
-			, RESIZE_FACTOR_MULT1
-			, RESIZE_FACTOR_DIV1> &&vector) noexcept;
+	TEMPLATE_DEFINE_1
+	Me &operator=(VECTOR_TYPE_1 &&vector) noexcept;
 
 	/**
 	 * @brief operator []
@@ -333,13 +311,10 @@ public:
 
 private:
 	// TODO: перенести в отдельную реализацию
-	inline SizeType nextCapacity() const
-	{
-		return ((capacity() * RESIZE_FACTOR_MULT) / RESIZE_FACTOR_DIV);
-	}
+	inline SizeType nextCapacity() const;
 
-	T *head;
-	T *tail;
+	Pointer head;
+	Pointer tail;
 	SizeType vectorCapacity;
 	Allocator allocator;
 };
@@ -778,6 +753,12 @@ void VECTOR_TYPE::erase(typename VECTOR_TYPE::Iterator itBegin
 
 		tail -= SizeType(viewErasing.end() - viewErasing.begin());
 	}
+}
+
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::SizeType VECTOR_TYPE::nextCapacity() const
+{
+	return ((capacity() * RESIZE_FACTOR_MULT) / RESIZE_FACTOR_DIV);
 }
 
 }}
