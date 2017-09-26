@@ -1,110 +1,74 @@
-#ifndef TEMPLATES_STRING
-#define TEMPLATES_STRING 1
+#ifndef TEMPLATES_STRING_HPP
+#define TEMPLATES_STRING_HPP
 
-//#warning Hello!
+#include <Others/PrimitiveTypes.hpp>
+#include <Templates/Allocator.hpp>
+#include <Templates/Iterator.hpp>
 
-#ifndef MAX_BUFFER_COUNT
-#define MAX_BUFFER_SIZE 1024
-#endif
-/*
-#include <string.h>
-#include <wchar.h>
-#include <iostream>
-
-#include <Templates/String_TString.hpp>
+// Define classes
 
 namespace flame_ide
 {namespace templates
 {
 
-class String : public TString<char>
-{
-	size_t getCStrLength(const char* c_str);
-	size_t getCStrLength(const char* c_str) const;
+template<typename T
+	, typename Traits = ContainerTraits<T>
+	, typename Allocator = allocator::ArrayAllocator<T>>
+class BasicString;
 
-protected:
-//	using TString<char>::concatenation;
-
-//	using TString<char>::assign;
-//	using TString<char>::is_equal;
-//	using TString<char>::is_not_equal;
-
-public:
-	static const unsigned long _MAX_BUFFER_SIZE = MAX_BUFFER_SIZE;
-
-	String();
-	String(const char* c_str);
-	String(const String &str);
-
-	String getSubstr(size_t pos, size_t length);
-	String getSubstr(size_t pos, size_t length) const;
-
-	static unsigned long getHash(const char* c_tstr);
-	unsigned long getHash() const;
-
-	const String& operator =(const char *c_tstr);
-	const String& operator =(char ch);
-	const String& operator =(const String &tstring);
-	const String& operator =(String &&tstring);
-	const String& operator +=(const char *c_tstr);
-	const String& operator +=(char ch);
-	const String& operator +=(const String &tstring);
-	const String& operator +=(String &&tstring);
-
-	// concatenation
-	friend String operator +(char ch, const String& tstring);
-	friend String operator +(const String &tstring, char ch);
-	friend String operator +(const char *c_tstr, const String& tstring);
-	friend String operator +(const String &tstring, const char *c_tstr);
-	friend String operator +(const String &tstring1, const String &tstring2);
-
-	// equal
-	friend bool operator ==(const char *c_tstr, const String &tstring);
-	friend bool operator ==(const String& tstring, const char *c_tstr);
-	friend bool operator ==(const String& tstring1, const String &tstring2);
-
-	// not equal
-	friend bool operator !=(const char *c_tstr, const String &tstring);
-	friend bool operator !=(const String &tstring, const char *c_tstr);
-	friend bool operator !=(const String &tstring1, const String &tstring2);
-
-	// output and input
-	friend
-	std::ostream& operator <<(std::ostream &output_stream,
-							  const String &str);
-	friend
-	std::istream& operator >>(std::istream &input_stream,
-							  String &str);
-
-	~String();
-};
-
-// concatenation
-String operator +(char ch, const String& tstring);
-String operator +(const String& tstring, char ch);
-String operator +(const char *c_tstr, const String& tstring);
-String operator +(const String& tstring, const char *c_tstr);
-String operator +(const String& tstring1, const String& tstring2);
-
-// equal
-bool operator ==(const char *c_tstr, const String& tstring);
-bool operator ==(const String& tstring, const char *c_tstr);
-bool operator ==(const String& tstring1, const String& tstring2);
-
-// not equal
-bool operator !=(const char *c_tstr, const String& tstring);
-bool operator !=(const String& tstring, const char *c_tstr);
-bool operator !=(const String& tstring1, const String& tstring2);
-
-// output and input
-std::ostream& operator <<(std::ostream &output_stream,
-						  const String &str);
-
-std::istream& operator >>(std::istream &input_stream,
-						  String &str);
+using String = BasicString<char>;
+using U8String = BasicString<Types::uchar_t>;
+using U16String = BasicString<Types::ushort_t>;
+using U32String = BasicString<Types::uint_t>;
 
 }}
 
-#undef MAX_BUFFER_SIZE
-*/
-#endif // TEMPLATES_STRING
+// Define types
+
+namespace flame_ide
+{namespace templates
+{
+
+template<typename T
+	, typename Traits = ContainerTraits<T>
+	, typename Allocator = allocator::ArrayAllocator<T>>
+class BasicString: public Traits
+{
+public:
+	using Me = BasicString<T, Traits, Allocator>;
+
+	using typename Traits::Type;
+
+	using typename Traits::Reference;
+	using typename Traits::ConstReference;
+	using typename Traits::MoveReference;
+
+	using typename Traits::Pointer;
+
+	using typename Traits::SizeType;
+	using typename Traits::SsizeType;
+
+	using Iterator = flame_ide::templates::Iterator<Pointer
+			, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using ConstIterator = flame_ide::templates::ConstIterator<Iterator>;
+	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator>;
+	using ConstReverseIterator = flame_ide::templates::ConstIterator<ReverseIterator>;
+
+	BasicString();
+	BasicString(const Me &string);
+	BasicString(Me &&string);
+	~BasicString();
+	Me &operator=(const Me &string);
+	Me &operator=(Me &&string);
+
+	Me &operator+=();
+
+private:
+	T *head;
+	T *tail;
+	SizeType stringCapacity;
+};
+
+}}
+
+#endif // TEMPLATES_STRING_HPP

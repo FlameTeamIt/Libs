@@ -19,7 +19,6 @@ HEADERS += \
 	../List.hpp \
 	../ObjectViewer.hpp \
 	../Pointers.hpp \
-	../SimpleArray.hpp \
 	../String.hpp \
 	../Templates.hpp \
 	../Traits.hpp \
@@ -27,12 +26,14 @@ HEADERS += \
 	../InitializerList.hpp \
 	../Vector.hpp \
 	../View.hpp \
-	../Iterator.hpp
+	../Iterator.hpp \
+    String.hpp
 
 SOURCES += \
 	Allocator.cpp \
 	Array.cpp \
 	main.cpp \
 	TestClass.cpp \
-	Vector.cpp
+	Vector.cpp \
+    String.cpp
 
