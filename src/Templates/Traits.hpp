@@ -1,5 +1,5 @@
-#ifndef TEMPLATES_FOR_ALL
-#define TEMPLATES_FOR_ALL
+#ifndef TEMPLATES_UTILS_HPP
+#define TEMPLATES_UTILS_HPP
 
 #include <Others/PrimitiveTypes.hpp>
 
@@ -398,4 +398,4 @@ struct RemoveAll<T &&>
 
 }}
 
-#endif // TEMPLATES_FOR_ALL
+#endif // TEMPLATES_UTILS_HPP

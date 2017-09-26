@@ -1,5 +1,5 @@
-#ifndef TEMPLATES_LIST
-#define TEMPLATES_LIST
+#ifndef TEMPLATES_LIST_HPP
+#define TEMPLATES_LIST_HPP
 
 #include <Templates/Utils.hpp>
 #include <Templates/Iterator.hpp>
@@ -63,4 +63,4 @@ private:
 
 }}
 
-#endif // TEMPLATES_LIST
+#endif // TEMPLATES_LIST_HPP

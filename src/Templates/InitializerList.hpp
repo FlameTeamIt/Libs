@@ -4,8 +4,8 @@
  * created:    21.07.2017
  * author:     kachsheev
  */
-#ifndef INTIALIZERLIST_HPP
-#define INTIALIZERLIST_HPP
+#ifndef TEMPLATES_INTIALIZERLIST_HPP
+#define TEMPLATES_INTIALIZERLIST_HPP
 
 #include <Templates/Traits.hpp>
 #include <Templates/Utils.hpp>
@@ -146,4 +146,4 @@ InitializerList<T, SIZE>::~InitializerList()
 
 }}
 
-#endif // INTIALIZERLIST_HPP
+#endif // TEMPLATES_INTIALIZERLIST_HPP

@@ -1,5 +1,5 @@
-#ifndef TEMPLATES_ALLOCATOR
-#define TEMPLATES_ALLOCATOR
+#ifndef TEMPLATES_ALLOCATOR_HPP
+#define TEMPLATES_ALLOCATOR_HPP
 
 #include <malloc.h>
 
@@ -354,4 +354,4 @@ void ArrayAllocator<T, Traits>::freeArray(
 
 }}}
 
-#endif // TEMPLATES_ALLOCATOR
+#endif // TEMPLATES_ALLOCATOR_HPP

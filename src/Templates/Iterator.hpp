@@ -1,5 +1,5 @@
-#ifndef ITERATOR_HPP
-#define ITERATOR_HPP
+#ifndef TEMPLATES_ITERATOR_HPP
+#define TEMPLATES_ITERATOR_HPP
 
 #include <iterator>
 #include <Templates/Traits.hpp>
@@ -774,4 +774,4 @@ namespace flame_ide
 #undef OPERATOR_INC_POSTFIX
 #undef OPERATOR_INC_PREFIX
 
-#endif // ITERATOR_HPP
+#endif // TEMPLATES_ITERATOR_HPP

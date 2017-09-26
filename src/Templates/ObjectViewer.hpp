@@ -4,8 +4,8 @@
  * created:    19.07.2017
  * author:     kachsheev
  */
-#ifndef OBJECTVIEWER_HPP
-#define OBJECTVIEWER_HPP
+#ifndef TEMPLATES_OBJECTVIEWER_HPP
+#define TEMPLATES_OBJECTVIEWER_HPP
 
 #include <Templates/Utils.hpp>
 
@@ -75,4 +75,4 @@ ObjectViewer<T, ContainerTraits>::Bytes::Bytes(
 
 }}
 
-#endif // OBJECTVIEWER_HPP
+#endif // TEMPLATES_OBJECTVIEWER_HPP

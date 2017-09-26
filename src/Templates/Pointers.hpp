@@ -1,5 +1,5 @@
-#ifndef TEMPLATES_POINTERS
-#define TEMPLATES_POINTERS
+#ifndef TEMPLATES_POINTERS_HPP
+#define TEMPLATES_POINTERS_HPP
 
 namespace flame_ide
 {namespace templates
@@ -37,4 +37,4 @@ UniquePointer<T> reiterpret_pointer_cast(UniquePointer<U>& pointer) noexcept;
 
 }}
 
-#endif // TEMPLATES_POINTERS
+#endif // TEMPLATES_POINTERS_HPP

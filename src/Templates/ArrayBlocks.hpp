@@ -1,5 +1,5 @@
-#ifndef TEMPLATES_ARRAYBLOCKS
-#define TEMPLATES_ARRAYBLOCKS
+#ifndef TEMPLATES_ARRAYBLOCKS_HPP
+#define TEMPLATES_ARRAYBLOCKS_HPP
 
 namespace flame_ide
 {namespace templates
@@ -19,4 +19,4 @@ class ArrayBlocks
 
 }}
 
-#endif // TEMPLATES_ARRAYBLOCKS
+#endif // TEMPLATES_ARRAYBLOCKS_HPP
