@@ -19,26 +19,24 @@ public:
 	using Me = Array<T, SIZE, Traits>;
 
 	using typename Traits::Type;
-	using typename Traits::ConstType;
 
 	using typename Traits::Reference;
-	using typename Traits::MoveReference;
 	using typename Traits::ConstReference;
+	using typename Traits::MoveReference;
 
 	using typename Traits::Pointer;
 	using typename Traits::PointerToConst;
-	using typename Traits::ConstPointer;
 
 	using typename Traits::SizeType;
 	using typename Traits::SsizeType;
-	//using typename Traits::;
 
-	using VoidPointer = void *;
-	using Iterator = flame_ide::templates::Iterator<Pointer, IteratorCategory::RANDOM_ACCESS, Traits>;
-	using ConstIterator = flame_ide::templates::ConstIterator<Iterator, IteratorCategory::RANDOM_ACCESS, Traits>;
-	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator, IteratorCategory::RANDOM_ACCESS, Traits>;
-	using ConstReverseIterator = flame_ide::templates::ConstIterator<ReverseIterator
+	using typename Traits::VoidPointer;
+
+	using Iterator = flame_ide::templates::Iterator<Pointer
 			, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using ConstIterator = flame_ide::templates::ConstIterator<Iterator>;
+	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator>;
+	using ConstReverseIterator = flame_ide::templates::ConstIterator<ReverseIterator>;
 
 	/**
 	 * @brief Array
