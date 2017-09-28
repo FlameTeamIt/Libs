@@ -34,9 +34,10 @@ public:
 
 	using Iterator = flame_ide::templates::Iterator<Pointer
 			, IteratorCategory::RANDOM_ACCESS, Traits>;
-	using ConstIterator = flame_ide::templates::ConstIterator<Iterator>;
+	using ConstIterator = flame_ide::templates::ConstIterator<PointerToConst
+			, IteratorCategory::RANDOM_ACCESS, Traits>;
 	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator>;
-	using ConstReverseIterator = flame_ide::templates::ConstIterator<ReverseIterator>;
+	using ConstReverseIterator = flame_ide::templates::ConstReverseIterator<ConstIterator>;
 
 	/**
 	 * @brief Array
@@ -49,6 +50,7 @@ public:
 	 */
 	template<SizeTraits::SizeType SIZE1, typename Traits1>
 	Array(const Array<T, SIZE1, Traits1> &objects);
+	Array(const Me &objects);
 
 	/**
 	 * @brief Array
@@ -56,13 +58,13 @@ public:
 	 */
 	template<SizeTraits::SizeType SIZE1, typename Traits1>
 	Array(Array<T, SIZE1, Traits1> &&objects);
+	Array(Me &&objects);
 
 	/**
 	 * @brief Array
 	 * @param args
 	 */
-	template<typename ...Args>
-	Array(Args &&...args);
+	Array(InitializerList<T, SIZE> list);
 
 	~Array();
 
@@ -72,7 +74,7 @@ public:
 	 * @return
 	 */
 	template<SizeTraits::SizeType SIZE1, typename Traits1>
-	Me &operator=(const Array<T, SIZE1, Traits1> &objects);
+	Me &operator=(const Me &objects);
 
 	/**
 	 * @brief operator =
@@ -80,7 +82,7 @@ public:
 	 * @return
 	 */
 	template<SizeTraits::SizeType SIZE1, typename Traits1>
-	Me &operator=(Array<T, SIZE1, Traits1> &&objects);
+	Me &operator=(Me &&objects);
 
 	/**
 	 * @brief operator[]
@@ -192,6 +194,30 @@ public:
 	inline ConstReverseIterator rend() const noexcept;
 
 	/**
+	 * @brief cbegin
+	 * @return
+	 */
+	inline ConstIterator cbegin() const noexcept;
+
+	/**
+	 * @brief cend
+	 * @return
+	 */
+	inline ConstIterator cend() const noexcept;
+
+	/**
+	 * @brief crbegin
+	 * @return
+	 */
+	inline ConstReverseIterator crbegin() const noexcept;
+
+	/**
+	 * @brief end
+	 * @return
+	 */
+	inline ConstReverseIterator crend() const noexcept;
+
+	/**
 	 * @brief pushBack
 	 * @param object
 	 */
@@ -284,29 +310,44 @@ template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 template<SizeTraits::SizeType SIZE1, typename Traits1>
 Array<T, SIZE, Traits>::Array(const Array<T, SIZE1, Traits1> &array)
 {
+	tail = head();
 	if (array.size() <= capacity())
-		for(auto &i : array)
+		for(ConstReference &i : array)
 			pushBack(i);
+}
+
+template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+Array<T, SIZE, Traits>::Array(const Array<T, SIZE, Traits> &array)
+{
+	tail = head();
+	for(ConstReference &i : array)
+		pushBack(i);
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 template<SizeTraits::SizeType SIZE1, typename Traits1>
 Array<T, SIZE, Traits>::Array(Array<T, SIZE1, Traits1> &&array)
 {
+	tail = head();
 	if (array.size() <= capacity())
 		for(auto &&i : array)
-			pushBack(move(i));
+			pushBack(forward<Type>(i));
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-template<typename ...Args>
-Array<T, SIZE, Traits>::Array(Args &&...args)
+Array<T, SIZE, Traits>::Array(Array<T, SIZE, Traits> &&array)
 {
-	InitializerList<T, sizeof...(Args)> list(args...);
-	Pointer pointer = head();
+	tail = head();
+	for(auto &&i : array)
+		pushBack(forward<Type>(i));
+}
+
+template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+Array<T, SIZE, Traits>::Array(InitializerList<T, SIZE> list)
+{
+	tail = head();
 	for (auto it : list)
-		new(pointer++) T(move(it));
-	tail = pointer;
+		pushBack(move(it));
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
@@ -319,28 +360,28 @@ Array<T, SIZE, Traits>::~Array()
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 template<SizeTraits::SizeType SIZE1, typename Traits1>
 Array<T, SIZE, Traits> &
-Array<T, SIZE, Traits>::operator=(const Array<T, SIZE1, Traits1> &array)
+Array<T, SIZE, Traits>::operator=(const Array<T, SIZE, Traits> &array)
 {
-	if (array.size() <= capacity())
-	{
-		clean();
-		for (auto const &i : array)
-			pushBack(i);
-	}
+	if (array.size() > capacity())
+		return *this;
+
+	clean();
+	for (auto const &i : array)
+		pushBack(i);
 	return *this;
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
 template<SizeTraits::SizeType SIZE1, typename Traits1>
 Array<T, SIZE, Traits> &
-Array<T, SIZE, Traits>::operator=(Array<T, SIZE1, Traits1> &&array)
+Array<T, SIZE, Traits>::operator=(Array<T, SIZE, Traits> &&array)
 {
-	if (array.size() <= capacity())
-	{
-		clean();
-		for (auto &&i : array)
-			pushBack(move(i));
-	}
+	if (array.size() > capacity())
+		return *this;
+
+	clean();
+	for (auto &&i : array)
+		pushBack(move(i));
 	return *this;
 }
 
@@ -412,7 +453,10 @@ void Array<T, SIZE, Traits>::clean()
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 Array<T, SIZE, Traits> Array<T, SIZE, Traits>::clone() const
 {
-	return Me(*this);
+	Me copy;
+	for (ConstReference i : *this)
+		copy.pushBack(i);
+	return copy;
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
@@ -422,11 +466,12 @@ Array<T, SIZE, Traits>::begin() noexcept
 	return head();
 }
 
+// FIXME: костыль
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ConstIterator
 Array<T, SIZE, Traits>::begin() const noexcept
 {
-	return head();
+	return ConstIterator(head());
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
@@ -436,11 +481,12 @@ Array<T, SIZE, Traits>::end() noexcept
 	return tail;
 }
 
+// FIXME: костыль
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
 typename Array<T, SIZE, Traits>::ConstIterator
 Array<T, SIZE, Traits>::end() const noexcept
 {
-	return tail;
+	return ConstIterator(tail);
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
@@ -456,7 +502,7 @@ typename Array<T, SIZE, Traits>::ConstReverseIterator
 Array<T, SIZE, Traits>::rbegin() const noexcept
 {
 	auto it = end();
-	return ReverseIterator(--it);
+	return ConstReverseIterator(--it);
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
@@ -472,7 +518,35 @@ typename Array<T, SIZE, Traits>::ConstReverseIterator
 Array<T, SIZE, Traits>::rend() const noexcept
 {
 	auto it = begin();
-	return ReverseIterator(--it);
+	return ConstReverseIterator(--it);
+}
+
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
+typename Array<T, SIZE, Traits>::ConstIterator
+Array<T, SIZE, Traits>::cbegin() const noexcept
+{
+	return begin();
+}
+
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
+typename Array<T, SIZE, Traits>::ConstIterator
+Array<T, SIZE, Traits>::cend() const noexcept
+{
+	return end();
+}
+
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
+typename Array<T, SIZE, Traits>::ConstReverseIterator
+Array<T, SIZE, Traits>::crbegin() const noexcept
+{
+	return rbegin();
+}
+
+template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
+typename Array<T, SIZE, Traits>::ConstReverseIterator
+Array<T, SIZE, Traits>::crend() const noexcept
+{
+	return rend();
 }
 
 template<typename T, SizeTraits::SizeType SIZE, typename Traits>
