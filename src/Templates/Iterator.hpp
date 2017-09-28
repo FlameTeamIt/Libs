@@ -324,6 +324,12 @@ template<typename IteratorType
 	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>>
 class ConstIterator;
 
+template<typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY =
+			iterator_utils::GetIteratorCategory<IteratorType>::CATEGORY
+	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>>
+class ConstReverseIterator;
+
 }}
 
 // define interfaces
@@ -768,6 +774,81 @@ public:
 	OPERATOR_LESS_EQUAL
 
 	OPERATOR_OFFSET_DEREF_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
+
+// ConstReverseIterator
+
+template<typename IteratorType, typename Traits>
+class ConstReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
+		public iterator_utils::BaseIterator<IteratorType
+			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits>
+{
+public:
+	using Parent = iterator_utils::BaseIterator<IteratorType
+		, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits>;
+	using Me = ConstReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
+
+	ConstReverseIterator(const Me &) = default;
+	ConstReverseIterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~ConstReverseIterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX_REVERSED
+	OPERATOR_INC_POSTFIX_REVERSED
+
+	OPERATOR_DEC_PREFIX_REVERSED
+	OPERATOR_DEC_POSTFIX_REVERSED
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+private:
+	using Parent::wrappedIterator;
+};
+
+template<typename IteratorType, typename Traits>
+class ConstReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
+		public iterator_utils::BaseIterator<IteratorType
+			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits>
+{
+public:
+	using Parent = iterator_utils::BaseIterator<IteratorType
+		, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits>;
+	using Me = ConstReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
+
+	ConstReverseIterator(const Me &) = default;
+	ConstReverseIterator(IteratorType iterator) : Parent(iterator)
+	{}
+	~ConstReverseIterator() = default;
+	Me& operator=(const Me &) = default;
+
+	OPERATOR_INC_PREFIX_REVERSED
+	OPERATOR_INC_POSTFIX_REVERSED
+
+	OPERATOR_DEC_PREFIX_REVERSED
+	OPERATOR_DEC_POSTFIX_REVERSED
+
+	OPERATOR_DEREF_CONST
+	OPERATOR_ARROW_CONST
+
+	OPERATOR_PLUS_REVERSED
+	OPERATOR_MINUS_REVERSED
+
+	OPERATOR_PLUS_ASSIGN_REVERSED
+	OPERATOR_MINUS_ASSIGN_REVERSED
+
+	OPERATOR_MORE_REVERSED
+	OPERATOR_LESS_REVERSED
+
+	OPERATOR_MORE_EQUAL_REVERSED
+	OPERATOR_LESS_EQUAL_REVERSED
+
+	OPERATOR_OFFSET_DEREF_REVERSED
+	OPERATOR_OFFSET_DEREF_CONST_REVERSED
 
 private:
 	using Parent::wrappedIterator;
