@@ -58,18 +58,16 @@ public:
 			InitializerList<U, SIZE1> list) noexcept;
 
 private:
-	template<typename ... Args>
+	template<typename ...Args>
 	struct Helper;
 
-	template<typename ArgHead, typename... Args>
-	struct Helper<ArgHead, Args...>: public NonCreational
+	template<typename ArgHead, typename ...Args>
+	struct Helper<ArgHead, Args ...>: public NonCreational
 	{
 		static inline void init(Pointer iterator, ArgHead &&argHead, Args &&...args)
 		{
-			// TODO: добавить проверку на соотвествие ожидаемого типа
-//			using ArgHeadType = decltype(argHead);
-//			static_assert(
-//					, "Include type error.");
+			using ArgHeadType = typename RemoveAll<decltype(argHead)>::Type;
+			static_assert(ComparingTypes<Type, ArgHeadType>::VALUE, "Include type error.");
 			*iterator = forward<decltype(argHead)>(argHead);
 			Helper<Args...>::init(++iterator, forward<decltype(args)>(args)...);
 		}
@@ -80,6 +78,11 @@ private:
 	{
 		static inline void init(Pointer iterator, Arg &&arg)
 		{
+			static_assert(ComparingTypes<
+						typename RemovePointer<Pointer>::Type
+						, typename RemoveAll<Arg>::Type
+					>::VALUE
+					, "no possible to use this ");
 			*iterator = forward<decltype(arg)>(arg);
 		}
 	};
