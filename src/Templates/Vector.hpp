@@ -310,7 +310,6 @@ public:
 	void erase(Iterator itBegin, Iterator itEnd);
 
 private:
-	// TODO: перенести в отдельную реализацию
 	inline SizeType nextCapacity() const;
 
 	Pointer head;
