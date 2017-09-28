@@ -6,16 +6,17 @@
  */
 #include "Array.hpp"
 
+using namespace flame_ide;
 using namespace flame_ide::test;
 
 Array::Array() : AbstractTest("Array")
-		, array{
+		, array{{
 				TestClass{1000, 100, 10, '1'}
 				, TestClass{2000, 200, 20, '2'}
 				, TestClass{3000, 300, 30, '3'}
 				, TestClass{4000, 400, 40, '4'}
 				, TestClass{5000, 500, 50, '5'}
-		}
+		}}
 {}
 
 Array::~Array()
@@ -31,8 +32,13 @@ int Array::vStart()
 				<< ' ' << testObject.getChar() << std::endl;
 	};
 	auto printArray = [&lambdaPrint] (auto &array) {
-		for (auto &i : array)
-			lambdaPrint(i);
+		auto itEnd = array.end();
+		auto it = array.begin();
+		while (it != itEnd)
+		{
+			lambdaPrint(*it);
+			++it;
+		}
 		std::cout << std::endl;
 	};
 
@@ -49,9 +55,21 @@ int Array::vStart()
 	std::cout << "Test initializing:" << std::endl;
 	printArray(array);
 
+	std::cout << "Test cloning:" << std::endl;
+	decltype(array) arrayClone = array.clone();
+	printArray(arrayClone);
+	std::cout << std::endl;
+
+	std::cout << "Test copying:" << std::endl;
+	templates::Array<TestClass, 10> arrayCopy = array;
+
+	printArray(arrayCopy);
+	std::cout << std::endl;
+
 	std::cout << "Test reverse:" << std::endl;
-	for (auto it = array.rbegin(); it != array.rend(); ++it)
-		lambdaPrint(*it);
+	typename flame_ide::templates::ContainerTraits<decltype(array)>::ConstReference crefArray = array;
+	flame_ide::templates::Range<decltype(array)::ConstReverseIterator> range(crefArray.rbegin(), crefArray.rend());
+	printArray(range);
 	std::cout << std::endl;
 
 	TestClass testLastObject;
