@@ -22,7 +22,6 @@ SOURCES += \
     src/Filesystem/Session.cpp \
     src/Others/Bits.cpp \
     src/Process/CommandLine.cpp \
-    src/Templates/String.cpp \
     src/Tests/main.cpp \
     src/Tests/Test.cpp \
     src/Tests/Test_Analyzers.cpp \
