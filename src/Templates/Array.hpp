@@ -1,9 +1,21 @@
-#ifndef TEMPLATES_ARRAY
-#define TEMPLATES_ARRAY
+#ifndef TEMPLATES_ARRAY_HPP
+#define TEMPLATES_ARRAY_HPP
 
 #include <Templates/InitializerList.hpp>
 #include <Templates/Iterator.hpp>
 #include <Templates/View.hpp>
+
+#define TEMPLATE_DEFINE \
+	template <typename T, SizeTraits::SizeType SIZE, typename Traits>
+
+#define TEMPLATE_DEFINE_1 \
+	template <SizeTraits::SizeType SIZE1, typename Traits1>
+
+#define ARRAY_TYPE \
+	Array<T, SIZE, Traits>
+
+#define ARRAY_TYPE_1 \
+	Array<T, SIZE1, Traits1>
 
 namespace flame_ide
 {namespace templates
@@ -12,11 +24,14 @@ namespace flame_ide
 /**
  * @brief Array
  */
-template<class T, SizeTraits::SizeType SIZE, typename Traits = ContainerTraits<T>>
+template <typename T
+	, SizeTraits::SizeType SIZE
+	, typename Traits = ContainerTraits<T>
+>
 class Array: public Traits
 {
 public:
-	using Me = Array<T, SIZE, Traits>;
+	using Me = ARRAY_TYPE;
 
 	using typename Traits::Type;
 
@@ -32,12 +47,18 @@ public:
 
 	using typename Traits::VoidPointer;
 
-	using Iterator = flame_ide::templates::Iterator<Pointer
-			, IteratorCategory::RANDOM_ACCESS, Traits>;
-	using ConstIterator = flame_ide::templates::ConstIterator<PointerToConst
-			, IteratorCategory::RANDOM_ACCESS, Traits>;
-	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator>;
-	using ConstReverseIterator = flame_ide::templates::ConstReverseIterator<ConstIterator>;
+	using Iterator = flame_ide::templates::Iterator<
+		Pointer, IteratorCategory::RANDOM_ACCESS, Traits
+	>;
+	using ConstIterator = flame_ide::templates::ConstIterator<
+		PointerToConst, IteratorCategory::RANDOM_ACCESS, Traits
+	>;
+	using ReverseIterator = flame_ide::templates::ReverseIterator<
+		Iterator
+	>;
+	using ConstReverseIterator = flame_ide::templates::ConstReverseIterator<
+		ConstIterator
+	>;
 
 	/**
 	 * @brief Array
@@ -48,16 +69,16 @@ public:
 	 * @brief Array
 	 * @param array
 	 */
-	template<SizeTraits::SizeType SIZE1, typename Traits1>
-	Array(const Array<T, SIZE1, Traits1> &objects);
+	TEMPLATE_DEFINE_1
+	Array(const ARRAY_TYPE_1 &objects);
 	Array(const Me &objects);
 
 	/**
 	 * @brief Array
 	 * @param array
 	 */
-	template<SizeTraits::SizeType SIZE1, typename Traits1>
-	Array(Array<T, SIZE1, Traits1> &&objects);
+	TEMPLATE_DEFINE_1
+	Array(ARRAY_TYPE_1 &&objects);
 	Array(Me &&objects);
 
 	/**
@@ -73,7 +94,8 @@ public:
 	 * @param array
 	 * @return
 	 */
-	template<SizeTraits::SizeType SIZE1, typename Traits1>
+	TEMPLATE_DEFINE_1
+	Me &operator=(const ARRAY_TYPE_1 &objects);
 	Me &operator=(const Me &objects);
 
 	/**
@@ -81,7 +103,8 @@ public:
 	 * @param array
 	 * @return
 	 */
-	template<SizeTraits::SizeType SIZE1, typename Traits1>
+	TEMPLATE_DEFINE_1
+	Me &operator=(ARRAY_TYPE_1 &&objects);
 	Me &operator=(Me &&objects);
 
 	/**
@@ -89,26 +112,28 @@ public:
 	 * @param index
 	 * @return
 	 */
-	inline Reference operator[](SizeType index) noexcept;
+	template<typename IntType> inline
+	Reference operator[](IntType index) noexcept;
 
 	/**
 	 * @brief operator[]
 	 * @param index
 	 * @return
 	 */
-	inline ConstReference operator[](SizeType index) const noexcept;
+	template<typename IntType> inline
+	ConstReference operator[](IntType index) const noexcept;
 
 	/**
 	 * @brief size
 	 * @return
 	 */
-	inline typename Traits::SizeType size() const noexcept;
+	inline SizeType size() const noexcept;
 
 	/**
 	 * @brief capacity
 	 * @return
 	 */
-	inline constexpr typename Traits::SizeType capacity() const noexcept;
+	inline constexpr SizeType capacity() const noexcept;
 
 	/**
 	 * @brief first
@@ -158,16 +183,10 @@ public:
 	inline ConstIterator begin() const noexcept;
 
 	/**
-	 * @brief end
+	 * @brief cbegin
 	 * @return
 	 */
-	inline Iterator end() noexcept;
-
-	/**
-	 * @brief end
-	 * @return
-	 */
-	inline ConstIterator end() const noexcept;
+	inline ConstIterator cbegin() const noexcept;
 
 	/**
 	 * @brief rbegin
@@ -182,6 +201,24 @@ public:
 	inline ConstReverseIterator rbegin() const noexcept;
 
 	/**
+	 * @brief crbegin
+	 * @return
+	 */
+	inline ConstReverseIterator crbegin() const noexcept;
+
+	/**
+	 * @brief end
+	 * @return
+	 */
+	inline Iterator end() noexcept;
+
+	/**
+	 * @brief end
+	 * @return
+	 */
+	inline ConstIterator end() const noexcept;
+
+	/**
 	 * @brief rend
 	 * @return
 	 */
@@ -194,22 +231,10 @@ public:
 	inline ConstReverseIterator rend() const noexcept;
 
 	/**
-	 * @brief cbegin
-	 * @return
-	 */
-	inline ConstIterator cbegin() const noexcept;
-
-	/**
 	 * @brief cend
 	 * @return
 	 */
 	inline ConstIterator cend() const noexcept;
-
-	/**
-	 * @brief crbegin
-	 * @return
-	 */
-	inline ConstReverseIterator crbegin() const noexcept;
 
 	/**
 	 * @brief end
@@ -290,7 +315,7 @@ private:
 	inline Pointer head();
 	inline PointerToConst head() const;
 
-	Types::byte_t bytes[sizeof(Type) * SIZE];
+	AlignObject<Type> objects[SIZE];
 	Pointer tail;
 };
 
@@ -300,15 +325,14 @@ namespace flame_ide
 {namespace templates
 {
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-Array<T, SIZE, Traits>::Array()
+TEMPLATE_DEFINE
+ARRAY_TYPE::Array()
 {
 	tail = head();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-template<SizeTraits::SizeType SIZE1, typename Traits1>
-Array<T, SIZE, Traits>::Array(const Array<T, SIZE1, Traits1> &array)
+TEMPLATE_DEFINE TEMPLATE_DEFINE_1
+ARRAY_TYPE::Array(const ARRAY_TYPE_1 &array)
 {
 	tail = head();
 	if (array.size() <= capacity())
@@ -316,17 +340,16 @@ Array<T, SIZE, Traits>::Array(const Array<T, SIZE1, Traits1> &array)
 			pushBack(i);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-Array<T, SIZE, Traits>::Array(const Array<T, SIZE, Traits> &array)
+TEMPLATE_DEFINE
+ARRAY_TYPE::Array(const ARRAY_TYPE &array)
 {
 	tail = head();
 	for(ConstReference &i : array)
 		pushBack(i);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-template<SizeTraits::SizeType SIZE1, typename Traits1>
-Array<T, SIZE, Traits>::Array(Array<T, SIZE1, Traits1> &&array)
+TEMPLATE_DEFINE TEMPLATE_DEFINE_1
+ARRAY_TYPE::Array(ARRAY_TYPE_1 &&array)
 {
 	tail = head();
 	if (array.size() <= capacity())
@@ -334,33 +357,31 @@ Array<T, SIZE, Traits>::Array(Array<T, SIZE1, Traits1> &&array)
 			pushBack(forward<Type>(i));
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-Array<T, SIZE, Traits>::Array(Array<T, SIZE, Traits> &&array)
+TEMPLATE_DEFINE
+ARRAY_TYPE::Array(ARRAY_TYPE &&array)
 {
 	tail = head();
 	for(auto &&i : array)
 		pushBack(forward<Type>(i));
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-Array<T, SIZE, Traits>::Array(InitializerList<T, SIZE> list)
+TEMPLATE_DEFINE
+ARRAY_TYPE::Array(InitializerList<T, SIZE> list)
 {
 	tail = head();
 	for (auto it : list)
 		pushBack(move(it));
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-Array<T, SIZE, Traits>::~Array()
+TEMPLATE_DEFINE
+ARRAY_TYPE::~Array()
 {
 	for (Type &i : *this)
 		i.~T();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-template<SizeTraits::SizeType SIZE1, typename Traits1>
-Array<T, SIZE, Traits> &
-Array<T, SIZE, Traits>::operator=(const Array<T, SIZE, Traits> &array)
+TEMPLATE_DEFINE TEMPLATE_DEFINE_1
+ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE_1 &array)
 {
 	if (array.size() > capacity())
 		return *this;
@@ -371,10 +392,18 @@ Array<T, SIZE, Traits>::operator=(const Array<T, SIZE, Traits> &array)
 	return *this;
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-template<SizeTraits::SizeType SIZE1, typename Traits1>
-Array<T, SIZE, Traits> &
-Array<T, SIZE, Traits>::operator=(Array<T, SIZE, Traits> &&array)
+TEMPLATE_DEFINE
+ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE &array)
+{
+	clean();
+	for (auto const &i : array)
+		pushBack(i);
+	return *this;
+}
+
+
+TEMPLATE_DEFINE TEMPLATE_DEFINE_1
+ARRAY_TYPE &ARRAY_TYPE::operator=(ARRAY_TYPE_1 &&array)
 {
 	if (array.size() > capacity())
 		return *this;
@@ -385,64 +414,69 @@ Array<T, SIZE, Traits>::operator=(Array<T, SIZE, Traits> &&array)
 	return *this;
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::Reference
-Array<T, SIZE, Traits>::operator[](typename Array<T, SIZE, Traits>::SizeType index) noexcept
+TEMPLATE_DEFINE
+ARRAY_TYPE &ARRAY_TYPE::operator=(ARRAY_TYPE &&array)
+{
+	clean();
+	for (auto &&i : array)
+		pushBack(move(i));
+	return *this;
+}
+
+TEMPLATE_DEFINE
+template<typename IntType> inline
+typename ARRAY_TYPE::Reference
+ARRAY_TYPE::operator[](IntType index) noexcept
 {
 	return head()[index];
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstReference
-Array<T, SIZE, Traits>::operator[](typename Array<T, SIZE, Traits>::SizeType index) const noexcept
+TEMPLATE_DEFINE
+template<typename IntType> inline
+typename ARRAY_TYPE::ConstReference
+ARRAY_TYPE::operator[](IntType index) const noexcept
 {
 	return head()[index];
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Traits::SizeType
-Array<T, SIZE, Traits>::size() const noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::SizeType ARRAY_TYPE::size() const noexcept
 {
 	return SizeType(tail - head());
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> constexpr inline
-typename Traits::SizeType
-Array<T, SIZE, Traits>::capacity() const noexcept
+TEMPLATE_DEFINE constexpr inline
+typename Traits::SizeType ARRAY_TYPE::capacity() const noexcept
 {
 	return SIZE;
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::Reference
-Array<T, SIZE, Traits>::first()
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::Reference ARRAY_TYPE::first()
 {
 	return *begin();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstReference
-Array<T, SIZE, Traits>::first() const
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ConstReference ARRAY_TYPE::first() const
 {
 	return *begin();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::Reference
-Array<T, SIZE, Traits>::last()
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::Reference ARRAY_TYPE::last()
 {
 	return *rbegin();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstReference
-Array<T, SIZE, Traits>::last() const
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ConstReference ARRAY_TYPE::last() const
 {
 	return *rbegin();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-void Array<T, SIZE, Traits>::clean()
+TEMPLATE_DEFINE inline
+void ARRAY_TYPE::clean()
 {
 	for (auto &it : *this)
 		it.~T();
@@ -450,8 +484,8 @@ void Array<T, SIZE, Traits>::clean()
 }
 
 // TODO: test
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-Array<T, SIZE, Traits> Array<T, SIZE, Traits>::clone() const
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::Me ARRAY_TYPE::clone() const
 {
 	Me copy;
 	for (ConstReference i : *this)
@@ -459,122 +493,109 @@ Array<T, SIZE, Traits> Array<T, SIZE, Traits>::clone() const
 	return copy;
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::Iterator
-Array<T, SIZE, Traits>::begin() noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::Iterator ARRAY_TYPE::begin() noexcept
 {
 	return head();
 }
 
-// FIXME: костыль
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstIterator
-Array<T, SIZE, Traits>::begin() const noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ConstIterator ARRAY_TYPE::begin() const noexcept
 {
 	return ConstIterator(head());
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::Iterator
-Array<T, SIZE, Traits>::end() noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::Iterator ARRAY_TYPE::end() noexcept
 {
 	return tail;
 }
 
-// FIXME: костыль
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstIterator
-Array<T, SIZE, Traits>::end() const noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ConstIterator ARRAY_TYPE::end() const noexcept
 {
 	return ConstIterator(tail);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ReverseIterator
-Array<T, SIZE, Traits>::rbegin() noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ReverseIterator ARRAY_TYPE::rbegin() noexcept
 {
 	auto it = end();
 	return ReverseIterator(--it);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstReverseIterator
-Array<T, SIZE, Traits>::rbegin() const noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ConstReverseIterator ARRAY_TYPE::rbegin() const noexcept
 {
 	auto it = end();
 	return ConstReverseIterator(--it);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ReverseIterator
-Array<T, SIZE, Traits>::rend() noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ReverseIterator ARRAY_TYPE::rend() noexcept
 {
 	auto it = begin();
 	return ReverseIterator(--it);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstReverseIterator
-Array<T, SIZE, Traits>::rend() const noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ConstReverseIterator ARRAY_TYPE::rend() const noexcept
 {
 	auto it = begin();
 	return ConstReverseIterator(--it);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstIterator
-Array<T, SIZE, Traits>::cbegin() const noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ConstIterator ARRAY_TYPE::cbegin() const noexcept
 {
 	return begin();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstIterator
-Array<T, SIZE, Traits>::cend() const noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ConstIterator ARRAY_TYPE::cend() const noexcept
 {
 	return end();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstReverseIterator
-Array<T, SIZE, Traits>::crbegin() const noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ConstReverseIterator ARRAY_TYPE::crbegin() const noexcept
 {
 	return rbegin();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::ConstReverseIterator
-Array<T, SIZE, Traits>::crend() const noexcept
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::ConstReverseIterator ARRAY_TYPE::crend() const noexcept
 {
 	return rend();
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-void Array<T, SIZE, Traits>::pushBack(
-		typename Array<T, SIZE, Traits>::ConstReference object)
+TEMPLATE_DEFINE
+void ARRAY_TYPE::pushBack(typename ARRAY_TYPE::ConstReference object)
 {
 	if (size() < capacity())
-		placementNew<Type>(tail++, object);
+	{
+		placementNew<Type>(tail, object);
+		++tail;
+	}
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-void Array<T, SIZE, Traits>::pushBack(
-		typename Array<T, SIZE, Traits>::MoveReference object)
+TEMPLATE_DEFINE
+void ARRAY_TYPE::pushBack(typename ARRAY_TYPE::MoveReference object)
 {
 	if (size() < capacity())
-		placementNew<Type>(tail++, T(move(object)));
+		placementNew<Type>(tail++, forward<Type>(object));
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+TEMPLATE_DEFINE
 template<typename ...Args>
-void Array<T, SIZE, Traits>::emplaceBack(Args &&...args)
+void ARRAY_TYPE::emplaceBack(Args &&...args)
 {
 	if (size() < capacity())
-		new (tail++) Type(forward(args)...);
+		new (tail++) Type(forward<Args>(args)...);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-void Array<T, SIZE, Traits>::popBack()
+TEMPLATE_DEFINE
+void ARRAY_TYPE::popBack()
 {
 	if (size())
 	{
@@ -583,10 +604,9 @@ void Array<T, SIZE, Traits>::popBack()
 	}
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-void Array<T, SIZE, Traits>::insert(
-		typename Array<T, SIZE, Traits>::Iterator it
-		, typename Array<T, SIZE, Traits>::ConstReference object)
+TEMPLATE_DEFINE
+void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
+		, typename ARRAY_TYPE::ConstReference object)
 {
 	if (size() < capacity())
 	{
@@ -608,10 +628,9 @@ void Array<T, SIZE, Traits>::insert(
 	}
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-void Array<T, SIZE, Traits>::insert(
-		typename Array<T, SIZE, Traits>::Iterator it
-		, typename Array<T, SIZE, Traits>::MoveReference object)
+TEMPLATE_DEFINE
+void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
+		, typename ARRAY_TYPE::MoveReference object)
 {
 	if (size() < capacity())
 	{
@@ -634,10 +653,9 @@ void Array<T, SIZE, Traits>::insert(
 	}
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+TEMPLATE_DEFINE
 template<typename InputIterator>
-void Array<T, SIZE, Traits>::insert(
-		typename Array<T, SIZE, Traits>::Iterator it
+void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 		, InputIterator itBegin, InputIterator itEnd)
 {
 	auto rangeSize = countIterations(itBegin, itEnd);
@@ -673,11 +691,9 @@ void Array<T, SIZE, Traits>::insert(
 }
 
 // TODO: test
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
+TEMPLATE_DEFINE
 template<typename ...Args>
-void Array<T, SIZE, Traits>::emplace(
-		typename Array<T, SIZE, Traits>::Iterator it
-		, Args &&...args)
+void ARRAY_TYPE::emplace(typename ARRAY_TYPE::Iterator it, Args &&...args)
 {
 	if (size() < capacity())
 	{
@@ -686,8 +702,8 @@ void Array<T, SIZE, Traits>::emplace(
 		else
 		{
 			placementNew<Type>(tail);
-			View<Me> viewOld(rbegin(), ReverseIterator(it + 1));
-			View<Me> viewNew(--viewOld.begin(), --viewOld.end());
+			Range<ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1));
+			Range<ReverseIterator> viewNew(--viewOld.begin(), --viewOld.end());
 
 			for (ReverseIterator itOld = viewOld.begin()
 					, itNew = viewNew.begin(); itOld != viewOld.end();
@@ -695,14 +711,14 @@ void Array<T, SIZE, Traits>::emplace(
 				*itNew = move(*itOld);
 
 			it->~T();
-			placementNew<Type>(it, args...);
+			placementNew<Type>(&(*it), forward<decltype(args)>(args)...);
 			++tail;
 		}
 	}
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-void Array<T, SIZE, Traits>::erase(Array<T, SIZE, Traits>::Iterator it)
+TEMPLATE_DEFINE
+void ARRAY_TYPE::erase(ARRAY_TYPE::Iterator it)
 {
 	if (it == end())
 		return;
@@ -719,10 +735,8 @@ void Array<T, SIZE, Traits>::erase(Array<T, SIZE, Traits>::Iterator it)
 	}
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits>
-void Array<T, SIZE, Traits>::erase(
-		Array<T, SIZE, Traits>::Iterator itBegin
-		, Array<T, SIZE, Traits>::Iterator itEnd)
+TEMPLATE_DEFINE
+void ARRAY_TYPE::erase(ARRAY_TYPE::Iterator itBegin, ARRAY_TYPE::Iterator itEnd)
 {
 	if (SizeType(itEnd - itBegin) == size())
 		clean();
@@ -743,20 +757,23 @@ void Array<T, SIZE, Traits>::erase(
 	}
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::Pointer
-Array<T, SIZE, Traits>::head()
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::Pointer ARRAY_TYPE::head()
 {
-	return reinterpret_cast<Pointer>(bytes);
+	return reinterpret_cast<Pointer>(objects);
 }
 
-template<typename T, SizeTraits::SizeType SIZE, typename Traits> inline
-typename Array<T, SIZE, Traits>::PointerToConst
-Array<T, SIZE, Traits>::head() const
+TEMPLATE_DEFINE inline
+typename ARRAY_TYPE::PointerToConst ARRAY_TYPE::head() const
 {
-	return reinterpret_cast<PointerToConst>(bytes);
+	return reinterpret_cast<PointerToConst>(objects);
 }
 
 }}
 
-#endif // TEMPLATES_ARRAY
+#undef ARRAY_TYPE_1
+#undef ARRAY_TYPE
+#undef TEMPLATE_DEFINE_1
+#undef TEMPLATE_DEFINE
+
+#endif // TEMPLATES_ARRAY_HPP

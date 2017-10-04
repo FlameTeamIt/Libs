@@ -11,19 +11,18 @@
 using namespace flame_ide::templates::allocator;
 
 TestClass::TestClass() :
-		l(ObjectAllocator<long>().construct(0))
-		, i(ObjectAllocator<int>().construct(0))
-		, s(ObjectAllocator<short>().construct(0))
-		, c(ObjectAllocator<char>().construct(0))
+		l(nullptr)
+		, i(nullptr)
+		, s(nullptr)
+		, c(nullptr)
 {}
 
-TestClass::TestClass(const TestClass &object) : TestClass()
-{
-	getLong() = object.getLong();
-	getInt() = object.getInt();
-	getShort() = object.getShort();
-	getChar() = object.getChar();
-}
+TestClass::TestClass(const TestClass &object) :
+		l(ObjectAllocator<long>().construct(object.getLong()))
+		, i(ObjectAllocator<int>().construct(object.getInt()))
+		, s(ObjectAllocator<short>().construct(object.getShort()))
+		, c(ObjectAllocator<char>().construct(object.getChar()))
+{}
 
 TestClass::TestClass(TestClass &&object) :
 		l(object.l)
@@ -47,10 +46,7 @@ TestClass::TestClass(long initL, int initI
 
 TestClass::~TestClass()
 {
-	ObjectAllocator<long>().destroy(l);
-	ObjectAllocator<int>().destroy(i);
-	ObjectAllocator<short>().destroy(s);
-	ObjectAllocator<char>().destroy(c);
+	clean();
 }
 
 TestClass &TestClass::operator=(const TestClass &object)
@@ -84,10 +80,7 @@ TestClass &TestClass::operator=(TestClass &&object)
 {
 	if (this != &object)
 	{
-		ObjectAllocator<long>().destroy(l);
-		ObjectAllocator<int>().destroy(i);
-		ObjectAllocator<short>().destroy(s);
-		ObjectAllocator<char>().destroy(c);
+		clean();
 
 		l = object.l;
 		i = object.i;
@@ -141,4 +134,29 @@ char &TestClass::getChar()
 const char &TestClass::getChar() const
 {
 	return *c;
+}
+
+void TestClass::clean()
+{
+	if (l)
+	{
+		ObjectAllocator<long>().destroy(l);
+		l = nullptr;
+	}
+	if (i)
+	{
+		ObjectAllocator<int>().destroy(i);
+		i = nullptr;
+	}
+	if (s)
+	{
+		ObjectAllocator<short>().destroy(s);
+		s = nullptr;
+	}
+	if (c)
+	{
+		ObjectAllocator<char>().destroy(c);
+		c = nullptr;
+	}
+
 }

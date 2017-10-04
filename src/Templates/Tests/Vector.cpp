@@ -9,13 +9,13 @@
 using namespace flame_ide::test;
 
 Vector::Vector() : AbstractTest("Vector")
-		, vector{
+		, vector{{
 				TestClass{1000, 100, 10, '1'}
 				, TestClass{2000, 200, 20, '2'}
 				, TestClass{3000, 300, 30, '3'}
 				, TestClass{4000, 400, 40, '4'}
 				, TestClass{5000, 500, 50, '5'}
-		}
+		}}
 {}
 
 Vector::~Vector()
@@ -37,42 +37,56 @@ int Vector::vStart()
 	};
 
 	std::cout << "Test initializing size:" << std::endl;
-	if (vector.size() == SIZE)
-		std::cout << vector.size() << " == " << SIZE << std::endl;
-	else
 	{
-		std::cout << vector.size() << " != " << SIZE << std::endl;
-		return 1;
+		if (vector.size() == SIZE)
+			std::cout << vector.size() << " == " << SIZE << std::endl;
+		else
+		{
+			std::cout << vector.size() << " != " << SIZE << std::endl;
+			return 1;
+		}
 	}
 	std::cout << std::endl;
 
 	std::cout << "Test initializing:" << std::endl;
-	printArray(vector);
+	{
+		printArray(vector);
+	}
 
 	std::cout << "Test reverse:" << std::endl;
-	for (auto it = vector.rbegin(); it != vector.rend(); ++it)
-		lambdaPrint(*it);
+	{
+		for (auto it = vector.rbegin(); it != vector.rend(); ++it)
+			lambdaPrint(*it);
+	}
 	std::cout << std::endl;
 
 	TestClass testLastObject;
 	std::cout << "Test last():" << std::endl;
-	testLastObject = vector.last();
-	lambdaPrint(testLastObject);
+	{
+		testLastObject = vector.last();
+		lambdaPrint(testLastObject);
+	}
 	std::cout << std::endl;
 
 	TestClass testFirstObject;
 	std::cout << "Test first():" << std::endl;
-	testFirstObject = vector.first();
-	lambdaPrint(testFirstObject);
+	{
+		testFirstObject = vector.first();
+		lambdaPrint(testFirstObject);
+	}
 	std::cout << std::endl;
 
 	std::cout << "Test popBack():" << std::endl;
-	vector.popBack();
-	printArray(vector);
+	{
+		vector.popBack();
+		printArray(vector);
+	}
 
 	std::cout << "Test pushBack():" << std::endl;
-	vector.pushBack(testLastObject);
-	printArray(vector);
+	{
+		vector.pushBack(testLastObject);
+		printArray(vector);
+	}
 
 //	std::cout << "Test insert()" << std::endl;
 //	TestClass testMiddleObject(-2500, -250, -25, 'M');

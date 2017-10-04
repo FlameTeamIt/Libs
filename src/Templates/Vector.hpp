@@ -8,8 +8,7 @@
 #include <Templates/View.hpp>
 
 #define TEMPLATE_DEFINE \
-	template< \
-		typename T \
+	template <typename T \
 		, typename Traits \
 		, typename Allocator \
 		, typename Traits::SizeType START_SIZE \
@@ -18,8 +17,7 @@
 	>
 
 #define TEMPLATE_DEFINE_1 \
-	template<\
-		typename Traits1 \
+	template <typename Traits1 \
 		, typename Allocator1 \
 		, typename Traits::SizeType START_SIZE1 \
 		, typename Traits::SizeType RESIZE_FACTOR_MULT1 \
@@ -40,7 +38,7 @@ namespace flame_ide
 {namespace templates
 {
 
-template<typename T
+template <typename T
 	, typename Traits = ContainerTraits<T>
 	, typename Allocator = allocator::ArrayAllocator<T, Traits>
 	, typename Traits::SizeType START_SIZE = 16
@@ -61,6 +59,7 @@ public:
 	using typename Traits::MoveReference;
 
 	using typename Traits::Pointer;
+	using typename Traits::PointerToConst;
 
 	using typename Traits::SizeType;
 	using typename Traits::SsizeType;
@@ -68,14 +67,20 @@ public:
 	using Iterator = flame_ide::templates::Iterator<
 		Pointer, IteratorCategory::RANDOM_ACCESS, Traits
 	>;
-	using ConstIterator = flame_ide::templates::ConstIterator<Iterator>;
-	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator>;
-	using ConstReverseIterator = flame_ide::templates::ConstIterator<ReverseIterator>;
+	using ConstIterator = flame_ide::templates:: ConstIterator<
+		PointerToConst, IteratorCategory::RANDOM_ACCESS, Traits
+	>;
+	using ReverseIterator = flame_ide::templates::ReverseIterator<
+		Iterator
+	>;
+	using ConstReverseIterator = flame_ide::templates::ConstReverseIterator<
+		ConstIterator
+	>;
 
 	/**
 	 * @brief Vector
 	 */
-	Vector();
+	Vector() noexcept;
 
 	/**
 	 * @brief Vector
@@ -83,6 +88,7 @@ public:
 	 */
 	TEMPLATE_DEFINE_1
 	Vector(const VECTOR_TYPE_1 &vector);
+	Vector(const VECTOR_TYPE &vector);
 
 	/**
 	 * @brief Vector
@@ -90,6 +96,7 @@ public:
 	 */
 	TEMPLATE_DEFINE_1
 	Vector(VECTOR_TYPE_1 &&vector) noexcept;
+	Vector(VECTOR_TYPE &&vector) noexcept;
 
 	/**
 	 * @brief Vector
@@ -97,8 +104,12 @@ public:
 	 */
 	Vector(SizeType size);
 
-	template<typename ...Args>
-	Vector(Args &&...args);
+	/**
+	 * @brief Vector
+	 * @param vector
+	 */
+	template<SizeTraits::SizeType INIT_LIST_SIZE = 64>
+	Vector(InitializerList<T, INIT_LIST_SIZE> list);
 
 	~Vector();
 
@@ -109,6 +120,7 @@ public:
 	 */
 	TEMPLATE_DEFINE_1
 	Me &operator=(const VECTOR_TYPE_1 &vector);
+	Me &operator=(const Me &vector);
 
 	/**
 	 * @brief operator =
@@ -117,20 +129,23 @@ public:
 	 */
 	TEMPLATE_DEFINE_1
 	Me &operator=(VECTOR_TYPE_1 &&vector) noexcept;
+	Me &operator=(Me &&vector);
 
 	/**
 	 * @brief operator []
 	 * @param index
 	 * @return
 	 */
-	Reference operator[](SizeType index) noexcept;
+	template<typename IntType>
+	Reference operator[](IntType index) noexcept;
 
 	/**
 	 * @brief operator []
 	 * @param index
 	 * @return
 	 */
-	ConstReference operator[](SizeType index) const noexcept;
+	template<typename IntType>
+	ConstReference operator[](IntType index) const noexcept;
 
 	/**
 	 * @brief size
@@ -196,49 +211,73 @@ public:
 	 * @brief begin
 	 * @return
 	 */
-	Iterator begin();
+	Iterator begin() noexcept;
 
 	/**
 	 * @brief begin
 	 * @return
 	 */
-	ConstIterator begin() const;
+	ConstIterator begin() const noexcept;
 
 	/**
-	 * @brief end
+	 * @brief cbegin
 	 * @return
 	 */
-	Iterator end();
-
-	/**
-	 * @brief end
-	 * @return
-	 */
-	ConstIterator end() const;
+	ConstIterator cbegin() const noexcept;
 
 	/**
 	 * @brief rbegin
 	 * @return
 	 */
-	ReverseIterator rbegin();
+	ReverseIterator rbegin() noexcept;
 
 	/**
 	 * @brief rbegin
 	 * @return
 	 */
-	ConstReverseIterator rbegin() const;
+	ConstReverseIterator rbegin() const noexcept;
+
+	/**
+	 * @brief crbegin
+	 * @return
+	 */
+	ConstReverseIterator crbegin() const noexcept;
+
+	/**
+	 * @brief end
+	 * @return
+	 */
+	Iterator end() noexcept;
+
+	/**
+	 * @brief end
+	 * @return
+	 */
+	ConstIterator end() const noexcept;
+
+	/**
+	 * @brief cend
+	 * @return
+	 */
+	ConstIterator cend() const noexcept;
 
 	/**
 	 * @brief rend
 	 * @return
 	 */
-	ReverseIterator rend();
+	ReverseIterator rend() noexcept;
 
 	/**
 	 * @brief rend
 	 * @return
 	 */
-	ConstReverseIterator rend() const;
+	ConstReverseIterator rend() const noexcept;
+
+	/**
+	 * @brief crend
+	 * @return
+	 */
+	ConstReverseIterator crend() const noexcept;
 
 	/**
 	 * @brief pushBack
@@ -325,7 +364,7 @@ namespace flame_ide
 {
 
 TEMPLATE_DEFINE
-VECTOR_TYPE::Vector() :
+VECTOR_TYPE::Vector() noexcept :
 		head(nullptr), tail(nullptr)
 		, vectorCapacity(0)
 		, allocator()
@@ -342,9 +381,30 @@ VECTOR_TYPE::Vector(const VECTOR_TYPE_1 &vector) :
 		placementNew<Type>(it, i);
 }
 
+TEMPLATE_DEFINE
+VECTOR_TYPE::Vector(const VECTOR_TYPE &vector) :
+		head(vector.allocator.createArray(vector.size()))
+		, tail(head + vector.size())
+		, vectorCapacity(vector.size())
+{
+	Iterator it = head;
+	for (const Type &i : vector)
+		placementNew<Type>(it, i);
+}
+
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
-VECTOR_TYPE::Vector(VECTOR_TYPE_1 &&vector) noexcept
-		: head(vector.head)
+VECTOR_TYPE::Vector(VECTOR_TYPE_1 &&vector) noexcept :
+		head(vector.head)
+		, tail(vector.tail)
+		, vectorCapacity(vector.vectorCapacity)
+{
+	vector.head = nullptr;
+	vector.tail = nullptr;
+}
+
+TEMPLATE_DEFINE
+VECTOR_TYPE::Vector(VECTOR_TYPE &&vector) :
+		head(vector.head)
 		, tail(vector.tail)
 		, vectorCapacity(vector.vectorCapacity)
 {
@@ -364,14 +424,13 @@ VECTOR_TYPE::Vector(typename VECTOR_TYPE::SizeType size) : Vector()
 }
 
 TEMPLATE_DEFINE
-template<typename ...Args>
-VECTOR_TYPE::Vector(Args &&...args)
+template<SizeTraits::SizeType INIT_LIST_SIZE>
+VECTOR_TYPE::Vector(InitializerList<T, INIT_LIST_SIZE> list)
 {
-	head = allocator.createArray(sizeof...(Args) * sizeof(Type));
-	tail = head + sizeof...(Args);
-	vectorCapacity = sizeof...(Args);
+	head = allocator.createArray(list.size() * sizeof(Type));
+	tail = head + list.size();
+	vectorCapacity = list.size();
 
-	InitializerList<Type, sizeof...(Args)> list(forward<decltype(args)>(args)...);
 	auto itList = list.begin();
 	for (auto &i : *this)
 	{
@@ -417,15 +476,17 @@ VECTOR_TYPE &VECTOR_TYPE::operator=(VECTOR_TYPE_1 &&vector) noexcept
 }
 
 TEMPLATE_DEFINE
+template<typename IntType>
 typename VECTOR_TYPE::Reference VECTOR_TYPE::operator[](
-		typename VECTOR_TYPE::SizeType index) noexcept
+		IntType index) noexcept
 {
 	return *(head + index);
 }
 
 TEMPLATE_DEFINE
+template<typename IntType>
 typename VECTOR_TYPE::ConstReference VECTOR_TYPE::operator[](
-		typename VECTOR_TYPE::SizeType index) const noexcept
+		IntType index) const noexcept
 {
 	return *(head + index);
 }
@@ -520,27 +581,30 @@ void VECTOR_TYPE::clean()
 }
 
 TEMPLATE_DEFINE
-typename VECTOR_TYPE::Iterator VECTOR_TYPE::begin()
+VECTOR_TYPE VECTOR_TYPE::clone()
 {
-	return head;
+	Me clone;
+	clone.reserve(this->size());
+	for (const Type &i : *this)
+		clone.pushBack(i);
 }
 
 TEMPLATE_DEFINE
-typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::begin() const
+typename VECTOR_TYPE::Iterator VECTOR_TYPE::begin() noexcept
 {
-	return head;
+	return Iterator(head);
 }
 
 TEMPLATE_DEFINE
-typename VECTOR_TYPE::Iterator VECTOR_TYPE::end()
+typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::begin() const noexcept
 {
-	return tail;
+	return ConstIterator(head);
 }
 
 TEMPLATE_DEFINE
-typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::end() const
+typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::cbegin() const noexcept
 {
-	return tail;
+	return begin;
 }
 
 TEMPLATE_DEFINE
@@ -556,25 +620,58 @@ typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::rbegin() const
 }
 
 TEMPLATE_DEFINE
-typename VECTOR_TYPE::ReverseIterator VECTOR_TYPE::rend()
+typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::crbegin() const noexcept
+{
+	return rbegin();
+}
+
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::Iterator VECTOR_TYPE::end() noexcept
+{
+	return tail;
+}
+
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::end() const noexcept
+{
+	return tail;
+}
+
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::cend() const noexcept
+{
+	return end();
+}
+
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ReverseIterator VECTOR_TYPE::rend() noexcept
 {
 	return ReverseIterator(begin() - 1);
 }
 
 TEMPLATE_DEFINE
-typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::rend() const
+typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::rend() const noexcept
 {
 	return ConstReverseIterator(begin() - 1);
+}
+
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::crend() const noexcept
+{
+	return rend();
 }
 
 TEMPLATE_DEFINE
 void VECTOR_TYPE::pushBack(typename VECTOR_TYPE::ConstReference object)
 {
 	if (tail != head + capacity())
-		placementNew<Type>(tail++, object);
+	{
+		new (tail) Type(object);
+		++tail;
+	}
 	else
 	{
-		reserve((capacity() * RESIZE_FACTOR_MULT) / RESIZE_FACTOR_DIV);
+		reserve(nextCapacity());
 		pushBack(object);
 	}
 }
@@ -586,7 +683,7 @@ void VECTOR_TYPE::pushBack(typename VECTOR_TYPE::MoveReference object)
 		placementNew<Type>(tail++, move(object));
 	else
 	{
-		reserve((capacity() * RESIZE_FACTOR_MULT) / RESIZE_FACTOR_DIV);
+		reserve(nextCapacity());
 		pushBack(move(object));
 	}
 }
@@ -599,7 +696,7 @@ void VECTOR_TYPE::emplaceBack(Args &&...args)
 		placementNew<Type>(tail++, forward(args)...);
 	else
 	{
-		reserve((capacity() * RESIZE_FACTOR_MULT) / RESIZE_FACTOR_DIV);
+		reserve(nextCapacity());
 		emplaceBack(forward(args...));
 	}
 }
@@ -641,8 +738,7 @@ void VECTOR_TYPE::insert(typename VECTOR_TYPE::Iterator it
 }
 
 TEMPLATE_DEFINE
-void VECTOR_TYPE::insert(
-		typename VECTOR_TYPE::Iterator it
+void VECTOR_TYPE::insert(typename VECTOR_TYPE::Iterator it
 		, typename VECTOR_TYPE::MoveReference object)
 {
 	if (size() < capacity())

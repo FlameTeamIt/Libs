@@ -27,7 +27,7 @@ HEADERS += \
 	../Vector.hpp \
 	../View.hpp \
 	../Iterator.hpp \
-    String.hpp
+	String.hpp
 
 SOURCES += \
 	Allocator.cpp \
@@ -35,5 +35,5 @@ SOURCES += \
 	main.cpp \
 	TestClass.cpp \
 	Vector.cpp \
-    String.cpp
+	String.cpp
 

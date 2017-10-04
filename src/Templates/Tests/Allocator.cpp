@@ -20,11 +20,7 @@ ObjectAllocator::~ObjectAllocator()
 
 int ObjectAllocator::vStart()
 {
-	TestClass *object = allocator.construct();
-	object->getChar() = '1';
-	object->getShort() = 10;
-	object->getInt() = 100;
-	object->getLong() = 1000;
+	TestClass *object = allocator.construct(1000, 10, 1, '1');
 
 	std::cout << object->getChar()
 			<< ' ' << object->getShort()
@@ -53,10 +49,7 @@ int ArrayAllocator::vStart()
 
 	for (SizeType i = 0; i < SIZE; ++i)
 	{
-		array[i].getChar() = '1' + i;
-		array[i].getShort() = 10 + i;
-		array[i].getInt() = i * 100;
-		array[i].getLong() = i * 1000;
+		array[i] = {i * 1000, i * 100, 10 + i, '1' + i};
 	}
 
 	for (SizeType i = 0; i < SIZE; ++i)

@@ -32,6 +32,8 @@ public:
 	const char &getChar() const;
 
 private:
+	void clean();
+
 	long *l;
 	int *i;
 	short *s;
