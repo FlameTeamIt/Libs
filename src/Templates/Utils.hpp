@@ -13,6 +13,22 @@ namespace flame_ide
 {namespace templates
 {
 
+template<typename T>
+struct AlignObject
+{
+	static constexpr Types::size_t ARRAY_SIZE = (sizeof(T) % sizeof(Types::size_t))
+			? sizeof(T) / sizeof(Types::size_t) + 1
+			: sizeof(T) / sizeof(Types::size_t);
+
+	AlignObject()
+	{
+		for (Types::size_t i = 0; i < ARRAY_SIZE; ++i)
+			array[i] = 0u;
+	}
+
+	size_t array[ARRAY_SIZE];
+};
+
 /**
  * @brief Get info about T is a primitive type or not.
  */
@@ -67,12 +83,45 @@ template<typename T, typename ...Args> inline
 typename DefaultTraits<T>::Pointer
 placementNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcept;
 
+template<typename T> inline
+typename DefaultTraits<T>::Pointer
+placementNew(typename DefaultTraits<T>::Pointer pointer
+		, typename DefaultTraits<T>::MoveReference obj) noexcept;
+
+template<typename T> inline
+typename DefaultTraits<T>::Pointer
+placementNew(typename DefaultTraits<T>::Pointer pointer
+		, typename DefaultTraits<T>::ConstReference obj) noexcept;
 /**
  * @brief Comparing ranges.
  */
 template<typename Iterator1 , typename Iterator2>
 bool isEqual(Iterator1 start1, Iterator1 end1,
 		Iterator2 start2, Iterator2 end2);
+
+template<typename Container>
+typename Container::Iterator begin(Container &&container);
+
+template<typename Container>
+typename Container::ConstIterator cbegin(const Container &container);
+
+template<typename Container>
+typename Container::ReverseIterator rbegin(Container &&container);
+
+template<typename Container>
+typename Container::ConstReverseIterator crbegin(const Container &container);
+
+template<typename Container>
+typename Container::Iterator end(Container &&container);
+
+template<typename Container>
+typename Container::ConstIterator cend(const Container &container);
+
+template<typename Container>
+typename Container::ReverseIterator rend(Container &&container);
+
+template<typename Container>
+typename Container::ConstReverseIterator crend(const Container &container);
 
 }}
 
@@ -186,6 +235,22 @@ placementNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcep
 	return new (pointer) typename DefaultTraits<T>::Type(forward<decltype(args)>(args)...);
 }
 
+template<typename T> inline
+typename DefaultTraits<T>::Pointer
+placementNew(typename DefaultTraits<T>::Pointer pointer
+		, typename DefaultTraits<T>::MoveReference obj) noexcept
+{
+	return new (pointer) typename DefaultTraits<T>::Type(forward<T>(obj));
+}
+
+template<typename T> inline
+typename DefaultTraits<T>::Pointer
+placementNew(typename DefaultTraits<T>::Pointer pointer
+		, typename DefaultTraits<T>::ConstReference obj) noexcept
+{
+	return new (pointer) typename DefaultTraits<T>::Type(obj);
+}
+
 template<typename Iterator1, typename Iterator2>
 bool isEqual(Iterator1 start1, Iterator1 end1
 		, Iterator2 start2, Iterator2 end2)
@@ -208,6 +273,55 @@ bool isEqual(Iterator1 start1, Iterator1 end1
 		return false;
 
 	return equal;
+}
+
+template<typename Container>
+typename Container::Iterator begin(Container &&container)
+{
+	return container.begin();
+}
+
+template<typename Container>
+typename Container::ConstIterator cbegin(const Container &container)
+{
+	return container.cbegin();
+}
+
+template<typename Container>
+typename Container::ReverseIterator rbegin(Container &&container)
+{
+	return container.rbegin();
+}
+
+template<typename Container>
+typename Container::ConstReverseIterator crbegin(const Container &container)
+{
+	return container.crbegin();
+}
+
+
+template<typename Container>
+typename Container::Iterator end(Container &&container)
+{
+	return container.end();
+}
+
+template<typename Container>
+typename Container::ConstIterator cend(const Container &container)
+{
+	return container.cend();
+}
+
+template<typename Container>
+typename Container::ReverseIterator rend(Container &&container)
+{
+	return container.rend();
+}
+
+template<typename Container>
+typename Container::ConstReverseIterator crend(const Container &container)
+{
+	return container.crend();
 }
 
 }}

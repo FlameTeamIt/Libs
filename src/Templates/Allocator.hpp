@@ -133,6 +133,8 @@ public:
 	using SizeType = typename MallocAllocator<Traits>::SizeType;
 	using Type = typename Traits::Type;
 	using Pointer = typename Traits::Pointer;
+	using MoveReference = typename Traits::MoveReference;
+	using ConstReference = typename Traits::ConstReference;
 
 	ObjectAllocator() = default;
 	ObjectAllocator(const ObjectAllocator<T, Traits> &) = default;
@@ -154,6 +156,8 @@ public:
 	 */
 	template<typename ...Args>
 	Pointer construct(Args &&...args) noexcept;
+	Pointer construct(MoveReference obj) noexcept;
+	Pointer construct(ConstReference obj) noexcept;
 
 	/**
 	 * @brief Function for destruct object
@@ -296,6 +300,28 @@ ObjectAllocator<T, Traits>::construct(Args &&...args) noexcept
 			this->allocate(SizeType(sizeof(Type))));
 	if (pointer)
 		placementNew<Type>(pointer, forward<decltype(args)>(args)...);
+	return pointer;
+}
+
+template<typename T, typename Traits>
+typename ObjectAllocator<T, Traits>::Pointer
+ObjectAllocator<T, Traits>::construct(typename ObjectAllocator<T, Traits>::MoveReference obj) noexcept
+{
+	Pointer pointer = reinterpret_cast<Pointer>(
+			this->allocate(SizeType(sizeof(Type))));
+	if (pointer)
+		placementNew<Type>(pointer, obj);
+	return pointer;
+}
+
+template<typename T, typename Traits>
+typename ObjectAllocator<T, Traits>::Pointer
+ObjectAllocator<T, Traits>::construct(typename ObjectAllocator<T, Traits>::ConstReference obj) noexcept
+{
+	Pointer pointer = reinterpret_cast<Pointer>(
+			this->allocate(SizeType(sizeof(Type))));
+	if (pointer)
+		placementNew<Type>(pointer, obj);
 	return pointer;
 }
 
