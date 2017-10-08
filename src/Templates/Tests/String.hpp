@@ -2,6 +2,7 @@
 #define TEST_STRING_HPP
 
 #include <tests/Test.hpp>
+#include <Templates/String.hpp>
 
 namespace flame_ide
 {namespace test
