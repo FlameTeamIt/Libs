@@ -43,16 +43,16 @@ ArrayAllocator::~ArrayAllocator()
 
 int ArrayAllocator::vStart()
 {
-	using SizeType = flame_ide::templates::SizeTraits::SizeType;
-	constexpr SizeType SIZE = 6;
+	using SsizeType = flame_ide::templates::SizeTraits::SsizeType;
+	constexpr SsizeType SIZE = 6;
 	TestClass *array = allocator.construct(SIZE);
 
-	for (SizeType i = 0; i < SIZE; ++i)
+	for (SsizeType i = 0; i < SIZE; ++i)
 	{
-		array[i] = {i * 1000, i * 100, 10 + i, '1' + i};
+		array[i] = {long(i * 1000), int(i * 100), short(10 + i), char('1' + i)};
 	}
 
-	for (SizeType i = 0; i < SIZE; ++i)
+	for (SsizeType i = 0; i < SIZE; ++i)
 	{
 		std::cout << array[i].getChar()
 				<< ' ' << array[i].getShort()
