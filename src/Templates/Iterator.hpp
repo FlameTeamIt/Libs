@@ -1,7 +1,6 @@
 #ifndef TEMPLATES_ITERATOR_HPP
 #define TEMPLATES_ITERATOR_HPP
 
-#include <iterator>
 #include <Templates/Traits.hpp>
 
 // defined classes and types
@@ -388,8 +387,9 @@ class Iterator<IteratorType, IteratorCategory::OUTPUT, Traits>:
 			, IteratorCategory::OUTPUT, IteratorAccess::NON_CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::OUTPUT, IteratorAccess::NON_CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::OUTPUT, IteratorAccess::NON_CONSTANT, Traits
+	>;
 	using Me = Iterator<IteratorType, IteratorCategory::OUTPUT, Traits>;
 
 	Iterator(const Me &) = default;
@@ -414,8 +414,9 @@ class Iterator<IteratorType, IteratorCategory::INPUT, Traits>:
 			, IteratorCategory::INPUT, IteratorAccess::NON_CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::INPUT, IteratorAccess::NON_CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::INPUT, IteratorAccess::NON_CONSTANT, Traits
+	>;
 	using Me = Iterator<IteratorType, IteratorCategory::INPUT, Traits>;
 
 	Iterator(const Me &) = default;
@@ -440,8 +441,9 @@ class Iterator<IteratorType, IteratorCategory::FORWARD, Traits>:
 			, IteratorCategory::FORWARD, IteratorAccess::NON_CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::FORWARD, IteratorAccess::NON_CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::FORWARD, IteratorAccess::NON_CONSTANT, Traits
+	>;
 	using Me = Iterator<IteratorType, IteratorCategory::FORWARD, Traits>;
 
 	Iterator() = default;
@@ -470,8 +472,10 @@ class Iterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
 			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT
+		, Traits
+	>;
 	using Me = Iterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
 
 	Iterator() = default;
@@ -503,10 +507,11 @@ class Iterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
 			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT, Traits>;
-	using Me = Iterator<IteratorType
-			, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT
+		, Traits
+	>;
+	using Me = Iterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
 
 	Iterator() = default;
 	Iterator(const Me &) = default;
@@ -554,8 +559,10 @@ class ReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
 			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT
+		, Traits
+	>;
 	using Me = ReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
 
 	ReverseIterator(const Me &) = default;
@@ -586,8 +593,10 @@ class ReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
 			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT
+		, Traits
+	>;
 	using Me = ReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
 
 	ReverseIterator(const Me &) = default;
@@ -635,8 +644,9 @@ class ConstIterator<IteratorType, IteratorCategory::OUTPUT, Traits>:
 			, IteratorCategory::OUTPUT, IteratorAccess::CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::OUTPUT, IteratorAccess::CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::OUTPUT, IteratorAccess::CONSTANT, Traits
+	>;
 	using Me = ConstIterator<IteratorType, IteratorCategory::OUTPUT, Traits>;
 
 	ConstIterator(const Me &) = default;
@@ -661,8 +671,9 @@ class ConstIterator<IteratorType, IteratorCategory::INPUT, Traits>:
 			, IteratorCategory::INPUT, IteratorAccess::CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::INPUT, IteratorAccess::CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::INPUT, IteratorAccess::CONSTANT, Traits
+	>;
 	using Me = ConstIterator<IteratorType, IteratorCategory::INPUT, Traits>;
 
 	ConstIterator(const Me &) = default;
@@ -687,8 +698,9 @@ class ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits>:
 			, IteratorCategory::FORWARD, IteratorAccess::CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::FORWARD, IteratorAccess::CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::FORWARD, IteratorAccess::CONSTANT, Traits
+	>;
 	using Me = ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits>;
 
 	ConstIterator(const Me &) = default;
@@ -713,8 +725,10 @@ class ConstIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
 			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT
+		, Traits
+	>;
 	using Me = ConstIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
 
 	ConstIterator(const Me &) = default;
@@ -742,8 +756,10 @@ class ConstIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
 			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT
+		, Traits
+	>;
 	using Me = ConstIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
 
 	ConstIterator(const Me &) = default;
@@ -787,9 +803,13 @@ class ConstReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits
 			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits>;
-	using Me = ConstReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT
+		, Traits
+	>;
+	using Me = ConstReverseIterator<
+		IteratorType, IteratorCategory::BIDIRECTIONAL, Traits
+	>;
 
 	ConstReverseIterator(const Me &) = default;
 	ConstReverseIterator(IteratorType iterator) : Parent(iterator)
@@ -816,9 +836,13 @@ class ConstReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits
 			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<IteratorType
-		, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits>;
-	using Me = ConstReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using Parent = iterator_utils::BaseIterator<
+		IteratorType, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT
+		, Traits
+	>;
+	using Me = ConstReverseIterator<
+		IteratorType, IteratorCategory::RANDOM_ACCESS, Traits
+	>;
 
 	ConstReverseIterator(const Me &) = default;
 	ConstReverseIterator(IteratorType iterator) : Parent(iterator)
