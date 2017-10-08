@@ -147,6 +147,24 @@ public:
 	template<typename IntType>
 	ConstReference operator[](IntType index) const noexcept;
 
+	// TODO: implement and test
+	Me &operator+=(const Type &object);
+	Me &operator+=(Type &&object);
+	template<typename InputIterator>
+	Me &operator+=(Range<InputIterator> range);
+
+	// TODO: implement and test
+	Me &operator-=(Iterator it);
+	Me &operator-=(ReverseIterator it);
+	Me &operator-=(ConstIterator it);
+	Me &operator-=(ConstReverseIterator it);
+
+	// TODO: implement and test
+	Me &operator-=(Range<Iterator> range);
+	Me &operator-=(Range<ConstIterator> range);
+	Me &operator-=(Range<ReverseIterator> range);
+	Me &operator-=(Range<ConstReverseIterator> range);
+
 	/**
 	 * @brief size
 	 * @return
@@ -326,7 +344,6 @@ public:
 	template<typename InputIterator>
 	void insert(Iterator it, InputIterator itBegin, InputIterator intEnd);
 
-	// TODO
 	/**
 	 * @brief emplace
 	 * @param it
@@ -584,7 +601,7 @@ TEMPLATE_DEFINE
 VECTOR_TYPE VECTOR_TYPE::clone()
 {
 	Me clone;
-	clone.reserve(this->size());
+	clone.reserve(size());
 	for (const Type &i : *this)
 		clone.pushBack(i);
 }
@@ -604,19 +621,19 @@ typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::begin() const noexcept
 TEMPLATE_DEFINE
 typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::cbegin() const noexcept
 {
-	return begin;
+	return begin();
 }
 
 TEMPLATE_DEFINE
 typename VECTOR_TYPE::ReverseIterator VECTOR_TYPE::rbegin()
 {
-	return ReverseIterator(end() - 1);
+	return ReverseIterator(--end());
 }
 
 TEMPLATE_DEFINE
 typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::rbegin() const
 {
-	return ConstReverseIterator(end() - 1);
+	return ConstReverseIterator(--end());
 }
 
 TEMPLATE_DEFINE
@@ -646,13 +663,13 @@ typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::cend() const noexcept
 TEMPLATE_DEFINE
 typename VECTOR_TYPE::ReverseIterator VECTOR_TYPE::rend() noexcept
 {
-	return ReverseIterator(begin() - 1);
+	return ReverseIterator(--begin());
 }
 
 TEMPLATE_DEFINE
 typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::rend() const noexcept
 {
-	return ConstReverseIterator(begin() - 1);
+	return ConstReverseIterator(--begin());
 }
 
 TEMPLATE_DEFINE
@@ -693,11 +710,11 @@ template<typename ...Args>
 void VECTOR_TYPE::emplaceBack(Args &&...args)
 {
 	if (tail != head + capacity())
-		placementNew<Type>(tail++, forward(args)...);
+		placementNew<Type>(tail++, forward<Args>(args)...);
 	else
 	{
 		reserve(nextCapacity());
-		emplaceBack(forward(args...));
+		emplaceBack(forward<Args>(args)...);
 	}
 }
 
@@ -719,11 +736,11 @@ void VECTOR_TYPE::insert(typename VECTOR_TYPE::Iterator it
 		else
 		{
 			placementNew<Type>(tail);
-			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it));
-			View<Me, ReverseIterator> viewNew(--viewOld.begin(), --viewOld.end());
 
-			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
-					itNew != viewNew.end() - 1; ++itOld, ++itNew)
+			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
+					, rangeNew(--rangeOld.begin(), --rangeOld.end());
+			for (ReverseIterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+					itNew != rangeNew.end(); ++itOld, ++itNew)
 				*itNew = move(*itOld);
 
 			*it = object;
@@ -732,8 +749,9 @@ void VECTOR_TYPE::insert(typename VECTOR_TYPE::Iterator it
 	}
 	else
 	{
+		auto newIt = it - begin();
 		reserve(nextCapacity());
-		insert(it, object);
+		insert(begin() + newIt, object);
 	}
 }
 
@@ -748,11 +766,11 @@ void VECTOR_TYPE::insert(typename VECTOR_TYPE::Iterator it
 		else
 		{
 			placementNew<Type>(tail);
-			View<Me> viewOld(rbegin(), ReverseIterator(it + 1));
-			View<Me> viewNew(--viewOld.begin(), --viewOld.end());
 
-			for (ReverseIterator itOld = viewOld.begin()
-					, itNew = viewNew.begin(); itOld != viewOld.end();
+			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
+					, rangeNew(--rangeOld.begin(), --rangeOld.end());
+			for (ReverseIterator itOld = rangeOld.begin()
+					, itNew = rangeNew.begin(); itOld != rangeOld.end();
 					++itOld, ++itNew)
 				*itNew = move(*itOld);
 
@@ -762,8 +780,9 @@ void VECTOR_TYPE::insert(typename VECTOR_TYPE::Iterator it
 	}
 	else
 	{
+		auto newIt = it - begin();
 		reserve(nextCapacity());
-		insert(it, object);
+		insert(begin() + newIt, object);
 	}
 }
 
@@ -779,7 +798,7 @@ void VECTOR_TYPE::insert(VECTOR_TYPE::Iterator it
 	{
 		Range<InputIterator> range(itBegin, itEnd);
 		if (it == end())
-			for (Reference itInsert : range)
+			for (auto &itInsert : range)
 				pushBack(itInsert);
 		else
 		{
@@ -787,26 +806,58 @@ void VECTOR_TYPE::insert(VECTOR_TYPE::Iterator it
 			for (Reference it : initView)
 				placementNew<Type>(&it);
 
-			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1));
-			View<Me, ReverseIterator> viewNew(viewOld.begin() + rangeSize
-					, viewOld.end() + rangeSize);
-			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
-					itOld != viewOld.end(); ++itOld, ++itNew)
+			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
+					, rangeNew(rangeOld.begin() - rangeSize
+							, rangeOld.end() - rangeSize);
+			for (ReverseIterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+					itOld != rangeOld.end(); ++itOld, ++itNew)
 				*itNew = move(*itOld);
 
 			for (auto &itInsert : range)
-				*it = itInsert
-				, ++it;
+			{
+				*it = itInsert;
+				++it;
+			}
 			tail += rangeSize;
 		}
 	}
+	else
+	{
+		auto newIt = it - begin();
+		reserve(capacity() + rangeSize);
+		insert(begin() + newIt, itBegin, itEnd);
+	}
 }
 
-// TODO: add implementation
 TEMPLATE_DEFINE
 template<typename ...Args>
 void VECTOR_TYPE::emplace(typename VECTOR_TYPE::Iterator it, Args &&...args)
 {
+	if (size() < capacity())
+	{
+		if (it == end())
+			emplaceBack(forward<Args>(args)...);
+		else
+		{
+			placementNew<Type>(tail);
+
+			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
+					, rangeNew(--rangeOld.begin(), --rangeOld.end());
+			for (ReverseIterator itOld = rangeOld.begin()
+					, itNew = rangeNew.begin(); itOld != rangeOld.end();
+					++itOld, ++itNew)
+				*itNew = move(*itOld);
+
+			placementNew<Type>(&(*it), forward<Args>(args)...);
+			++tail;
+		}
+	}
+	else
+	{
+		auto newIt = it - begin();
+		reserve(nextCapacity());
+		emplace(begin() + newIt, forward<Args>(args)...);
+	}
 }
 
 TEMPLATE_DEFINE
@@ -818,8 +869,8 @@ void VECTOR_TYPE::erase(VECTOR_TYPE::Iterator it)
 		popBack();
 	else
 	{
-		View<Me> viewOld(it + 1, end());
-		View<Me> viewNew(viewOld.begin() - 1, viewOld.end() - 1);
+		View<Me> viewOld(it + 1, end())
+				, viewNew(viewOld.begin() - 1, viewOld.end() - 1);
 		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
 				itOld != viewOld.end(); ++itOld, ++itNew)
 			*itNew = move(*itOld);
@@ -840,8 +891,8 @@ void VECTOR_TYPE::erase(typename VECTOR_TYPE::Iterator itBegin
 		for (auto &i : viewErasing)
 			i.~T();
 
-		View<Me> viewOld(itEnd, end());
-		View<Me> viewNew(itBegin, itBegin + (end() - itEnd));
+		View<Me> viewOld(itEnd, end())
+				, viewNew(itBegin, itBegin + (end() - itEnd));
 		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
 				itOld != viewOld.end(); ++itNew, ++itOld)
 			*itNew = move(*itOld);

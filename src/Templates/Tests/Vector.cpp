@@ -88,62 +88,92 @@ int Vector::vStart()
 		printArray(vector);
 	}
 
-//	std::cout << "Test insert()" << std::endl;
-//	TestClass testMiddleObject(-2500, -250, -25, 'M');
+	std::cout << "Test emplaceBack():" << std::endl;
+	{
+		vector.emplaceBack(6000, 600, 60, '6');
+		printArray(vector);
+		vector.popBack();
+	}
 
-//	testFirstObject.getChar() = 'F';
-//	testFirstObject.getShort() = -10;
-//	testFirstObject.getInt() = -100;
-//	testFirstObject.getLong() = -1000;
+	TestClass testMiddleObject = {-2500, -250, -25, 'M'};
+	testFirstObject = {-1000, -100, -10, 'F'};
+	testLastObject = {-5000, -500, -50, 'L'};
 
-//	testLastObject.getChar() = 'L';
-//	testLastObject.getShort() = -50;
-//	testLastObject.getInt() = -500;
-//	testLastObject.getLong() = -5000;
+	std::cout << "Test insert()" << std::endl;
+	{
+		vector.insert(vector.begin(), testFirstObject);
+		vector.insert(vector.begin() + 3, testMiddleObject);
+		vector.insert(vector.end(), testLastObject);
 
-//	vector.insert(vector.begin(), testFirstObject);
-//	vector.insert(vector.begin() + 3, testMiddleObject);
-//	vector.insert(vector.end(), testLastObject);
+		printArray(vector);
+	}
 
-//	printArray(vector);
+	std::cout << "Test erase()" << std::endl;
+	{
+		vector.erase(vector.begin() + 3);
+		vector.erase(vector.begin());
+		vector.erase(vector.end() - 1);
 
-//	std::cout << "Test erase()" << std::endl;
-//	vector.erase(vector.begin() + 3);
-//	vector.erase(vector.begin());
-//	vector.erase(vector.end() - 1);
+		printArray(vector);
+	}
 
-//	printArray(vector);
+	std::cout << "Test emplace:" << std::endl;
+	{
+		vector.emplace(vector.begin(), testFirstObject);
+		vector.emplace(vector.begin() + 3, testMiddleObject);
+		vector.emplace(vector.end(), testLastObject);
 
-//	TestClass testArray[] = {
-//		testFirstObject, testMiddleObject, testLastObject
-//	};
+		printArray(vector);
 
-//	//
-//	std::cout << "> Test insert(range)/erase(range) <" << std::endl;
+		vector.erase(vector.begin() + 3);
+		vector.erase(vector.begin());
+		vector.erase(vector.end() - 1);
+	}
 
-//	std::cout << "Insert to begin()" << std::endl;
-//	vector.insert(vector.begin(), testArray, testArray + 3);
-//	printArray(vector);
+	std::cout << ">--- Test insert(range)/erase(range) ---<" << std::endl << std::endl;
+	{
+		TestClass testArray[] = {
+			testFirstObject, testMiddleObject, testLastObject
+		};
 
-//	std::cout << "Erase from begin()" << std::endl;
-//	vector.erase(vector.begin(), vector.begin() + 3);
-//	printArray(vector);
+		std::cout << "Insert to begin()" << std::endl;
+		{
+			vector.insert(vector.begin(), testArray, testArray + 3);
+			printArray(vector);
+		}
 
-//	std::cout << "Insert to begin() + 3" << std::endl;
-//	vector.insert(vector.begin() + 3, testArray, testArray + 3);
-//	printArray(vector);
+		std::cout << "Erase from begin()" << std::endl;
+		{
+			vector.erase(vector.begin(), vector.begin() + 3);
+			printArray(vector);
+		}
 
-//	std::cout << "Erase from begin() + 3" << std::endl;
-//	vector.erase(vector.begin() + 3, vector.begin() + 3 + 3);
-//	printArray(vector);
+		std::cout << "Insert to begin() + 3" << std::endl;
+		{
+			vector.insert(vector.begin() + 3, testArray, testArray + 3);
+			printArray(vector);
+		}
 
-//	std::cout << "Insert to end()" << std::endl;
-//	vector.insert(vector.end(), testArray, testArray + 3);
-//	printArray(vector);
+		std::cout << "Erase from begin() + 3" << std::endl;
+		{
+			vector.erase(vector.begin() + 3, vector.begin() + 3 + 3);
+			printArray(vector);
+		}
 
-//	std::cout << "Erase from end()" << std::endl;
-//	vector.erase(vector.end() - 3, vector.end());
-//	printArray(vector);
+		std::cout << "Insert to end()" << std::endl;
+		{
+			vector.insert(vector.end(), testArray, testArray + 3);
+			printArray(vector);
+		}
+
+		std::cout << "Erase from end()" << std::endl;
+		{
+			vector.erase(vector.end() - 3, vector.end());
+			printArray(vector);
+		}
+	}
+	std::cout << ">--- End test insert(range)/erase(range) ---<" << std::endl << std::endl;
+	/**/
 
 	return 0;
 }
