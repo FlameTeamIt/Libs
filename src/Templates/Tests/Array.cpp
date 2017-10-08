@@ -124,7 +124,7 @@ int Array::vStart()
 
 	std::cout << "Test emplaceBack():" << std::endl;
 	{
-		array.emplaceBack(6000, 600, 60, '6');
+		array.emplaceBack(-6000, -600, -60, '6');
 		printArray(array);
 		array.popBack();
 	}
@@ -162,6 +162,82 @@ int Array::vStart()
 		array.erase(array.begin() + 3);
 		array.erase(array.begin());
 		array.erase(array.end() - 1);
+	}
+
+	std::cout << "Test operator+=() copy" << std::endl;
+	{
+		TestClass testObject {-6000, -600, -60, '6'};
+		array += testObject;
+
+		printArray(array);
+	}
+
+	std::cout << "Test operator-=(Iterator)" << std::endl;
+	{
+		array -= --(array.end());
+
+		printArray(array);
+	}
+
+	std::cout << "Test operator+=() move" << std::endl;
+	{
+		TestClass testObject {-7000, -700, -70, '7'};
+		array += flame_ide::templates::move(testObject);
+
+		printArray(array);
+	}
+
+	std::cout << "Test operator-=(ReverseIterator)" << std::endl;
+	{
+		array -= array.rbegin();
+
+		printArray(array);
+	}
+
+	std::cout << "Test operator+=(Range)" << std::endl;
+	{
+		TestClass testObjects[] = {{6000, 600, 60, '6'}
+				, {-7000, -700, -70, '7'}
+				, {-8000, -800, -80, '8'}
+				, {-8000, -800, -80, '8'}};
+
+		array += flame_ide::templates::Range<TestClass *>{
+				testObjects, testObjects + 4
+		};
+
+		printArray(array);
+	}
+
+	std::cout << "Test operator-=(ForwardRange)" << std::endl;
+	{
+		array -= flame_ide::templates::Range<decltype(array)::Iterator> {
+				array.end() - 4, array.end()
+		};
+
+		printArray(array);
+	}
+
+	std::cout << "Test operator+=(Range)" << std::endl;
+	{
+		TestClass testObjects[] = {{6000, 600, 60, '6'}
+				, {-7000, -700, -70, '7'}
+				, {-8000, -800, -80, '8'}
+				, {-8000, -800, -80, '8'}};
+
+		array += flame_ide::templates::Range<TestClass *>{
+				testObjects, testObjects + 4
+		};
+
+		printArray(array);
+	}
+
+	std::cout << "Test operator-=(ReverseRange)" << std::endl;
+	{
+		array -= flame_ide::templates::Range<decltype(array)::ReverseIterator> {
+				array.rbegin(), array.rbegin() + 4
+		};
+
+		printArray(array);
 	}
 
 	std::cout << ">--- Test insert(range)/erase(range) ---<" << std::endl << std::endl;

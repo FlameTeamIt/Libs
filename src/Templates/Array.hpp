@@ -71,6 +71,11 @@ public:
 	 */
 	TEMPLATE_DEFINE_1
 	Array(const ARRAY_TYPE_1 &objects);
+
+	/**
+	 * @brief Array
+	 * @param objects
+	 */
 	Array(const Me &objects);
 
 	/**
@@ -79,6 +84,11 @@ public:
 	 */
 	TEMPLATE_DEFINE_1
 	Array(ARRAY_TYPE_1 &&objects);
+
+	/**
+	 * @brief Array
+	 * @param objects
+	 */
 	Array(Me &&objects);
 
 	/**
@@ -96,6 +106,12 @@ public:
 	 */
 	TEMPLATE_DEFINE_1
 	Me &operator=(const ARRAY_TYPE_1 &objects);
+
+	/**
+	 * @brief operator =
+	 * @param objects
+	 * @return
+	 */
 	Me &operator=(const Me &objects);
 
 	/**
@@ -105,6 +121,12 @@ public:
 	 */
 	TEMPLATE_DEFINE_1
 	Me &operator=(ARRAY_TYPE_1 &&objects);
+
+	/**
+	 * @brief operator =
+	 * @param objects
+	 * @return
+	 */
 	Me &operator=(Me &&objects);
 
 	/**
@@ -122,6 +144,56 @@ public:
 	 */
 	template<typename IntType> inline
 	ConstReference operator[](IntType index) const noexcept;
+
+	/**
+	 * @brief operator +=
+	 * @param object
+	 * @return
+	 */
+	Me &operator+=(ConstReference object);
+
+	/**
+	 * @brief operator +=
+	 * @param object
+	 * @return
+	 */
+	Me &operator+=(MoveReference object);
+
+	/**
+	 * @brief operator +=
+	 * @param range
+	 * @return
+	 */
+	template<typename InputIterator>
+	Me &operator+=(Range<InputIterator> range);
+
+	/**
+	 * @brief operator -=
+	 * @param it
+	 * @return
+	 */
+	Me &operator-=(Iterator it);
+
+	/**
+	 * @brief operator -=
+	 * @param it
+	 * @return
+	 */
+	Me &operator-=(ReverseIterator it);
+
+	/**
+	 * @brief operator -=
+	 * @param range
+	 * @return
+	 */
+	Me &operator-=(Range<Iterator> range);
+
+	/**
+	 * @brief operator -=
+	 * @param range
+	 * @return
+	 */
+	Me &operator-=(Range<ReverseIterator> range);
 
 	/**
 	 * @brief size
@@ -289,7 +361,6 @@ public:
 	template<typename InputIterator>
 	void insert(Iterator it, InputIterator begin, InputIterator end);
 
-	// TODO
 	/**
 	 * @brief emplace
 	 * @param it
@@ -439,6 +510,58 @@ ARRAY_TYPE::operator[](IntType index) const noexcept
 	return head()[index];
 }
 
+TEMPLATE_DEFINE
+ARRAY_TYPE &ARRAY_TYPE::operator+=(ARRAY_TYPE::ConstReference object)
+{
+	pushBack(object);
+	return *this;
+}
+
+TEMPLATE_DEFINE
+ARRAY_TYPE &ARRAY_TYPE::operator+=(ARRAY_TYPE::MoveReference object)
+{
+	pushBack(move(object));
+	return *this;
+}
+
+TEMPLATE_DEFINE
+template<typename InputIterator>
+ARRAY_TYPE &ARRAY_TYPE::operator+=(Range<InputIterator> range)
+{
+	for (auto &i : range)
+		pushBack(i);
+	return *this;
+}
+
+TEMPLATE_DEFINE
+ARRAY_TYPE &ARRAY_TYPE::operator-=(ARRAY_TYPE::Iterator it)
+{
+	erase(it);
+	return *this;
+}
+
+TEMPLATE_DEFINE
+ARRAY_TYPE &ARRAY_TYPE::operator-=(ARRAY_TYPE::ReverseIterator it)
+{
+	return operator-=(Iterator(&(*it)));
+}
+
+TEMPLATE_DEFINE
+ARRAY_TYPE &ARRAY_TYPE::operator-=(Range<ARRAY_TYPE::Iterator> range)
+{
+	erase(range.begin(), range.end());
+	return *this;
+}
+
+TEMPLATE_DEFINE
+ARRAY_TYPE &ARRAY_TYPE::operator-=(Range<ARRAY_TYPE::ReverseIterator> range)
+{
+	Range<ARRAY_TYPE::Iterator> forwardRange = {
+			&(*(--range.end())), &(*(--range.begin()))
+	};
+	return operator-=(forwardRange);
+}
+
 TEMPLATE_DEFINE inline
 typename ARRAY_TYPE::SizeType ARRAY_TYPE::size() const noexcept
 {
@@ -483,7 +606,6 @@ void ARRAY_TYPE::clean()
 	tail = head();
 }
 
-// TODO: test
 TEMPLATE_DEFINE inline
 typename ARRAY_TYPE::Me ARRAY_TYPE::clone() const
 {
@@ -615,9 +737,9 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 		else
 		{
 			placementNew<Type>(tail);
-			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1));
-			Range<ReverseIterator> rangeNew(--rangeOld.begin(), --rangeOld.end());
 
+			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
+					, rangeNew(--rangeOld.begin(), --rangeOld.end());
 			for (ReverseIterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
 					itNew != rangeNew.end(); ++itOld, ++itNew)
 				*itNew = move(*itOld);
@@ -639,12 +761,11 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 		else
 		{
 			placementNew<Type>(tail);
-			Range<ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1));
-			Range<ReverseIterator> viewNew(--viewOld.begin(), --viewOld.end());
 
-			for (ReverseIterator itOld = viewOld.begin()
-					, itNew = viewNew.begin(); itOld != viewOld.end();
-					++itOld, ++itNew)
+			Range<ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1))
+					, viewNew(--viewOld.begin(), --viewOld.end());
+			for (ReverseIterator itOld = viewOld.begin() , itNew = viewNew.begin();
+					itOld != viewOld.end(); ++itOld, ++itNew)
 				*itNew = move(*itOld);
 
 			*it = move(object);
@@ -673,11 +794,10 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 			for (Reference it : initView)
 				placementNew<Type>(&it);
 
-			View<Me, ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1));
-			View<Me, ReverseIterator> viewNew(viewOld.begin() - rangeSize
-					, viewOld.end() - rangeSize);
-			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
-					itOld != viewOld.end(); ++itOld, ++itNew)
+			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
+					, rangeNew(rangeOld.begin() - rangeSize, rangeOld.end() - rangeSize);
+			for (ReverseIterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+					itOld != rangeOld.end(); ++itOld, ++itNew)
 				*itNew = move(*itOld);
 
 			for (auto &itInsert : range)
@@ -690,7 +810,6 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 	}
 }
 
-// TODO: test
 TEMPLATE_DEFINE
 template<typename ...Args>
 void ARRAY_TYPE::emplace(typename ARRAY_TYPE::Iterator it, Args &&...args)
@@ -698,16 +817,15 @@ void ARRAY_TYPE::emplace(typename ARRAY_TYPE::Iterator it, Args &&...args)
 	if (size() < capacity())
 	{
 		if (it == end())
-			emplaceBack(args...);
+			emplaceBack(forward<Args>(args)...);
 		else
 		{
 			placementNew<Type>(tail);
-			Range<ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1));
-			Range<ReverseIterator> viewNew(--viewOld.begin(), --viewOld.end());
 
-			for (ReverseIterator itOld = viewOld.begin()
-					, itNew = viewNew.begin(); itOld != viewOld.end();
-					++itOld, ++itNew)
+			Range<ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1))
+					, viewNew(--viewOld.begin(), --viewOld.end());
+			for (ReverseIterator itOld = viewOld.begin(), itNew = viewNew.begin();
+					itOld != viewOld.end(); ++itOld, ++itNew)
 				*itNew = move(*itOld);
 
 			it->~T();
@@ -726,8 +844,8 @@ void ARRAY_TYPE::erase(ARRAY_TYPE::Iterator it)
 		popBack();
 	else
 	{
-		View<Me> viewOld(it + 1, end());
-		View<Me> viewNew(viewOld.begin() - 1, viewOld.end() - 1);
+		View<Me> viewOld(it + 1, end())
+				, viewNew(viewOld.begin() - 1, viewOld.end() - 1);
 		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
 				itOld != viewOld.end(); ++itOld, ++itNew)
 			*itNew = move(*itOld);
@@ -738,7 +856,7 @@ void ARRAY_TYPE::erase(ARRAY_TYPE::Iterator it)
 TEMPLATE_DEFINE
 void ARRAY_TYPE::erase(ARRAY_TYPE::Iterator itBegin, ARRAY_TYPE::Iterator itEnd)
 {
-	if (SizeType(itEnd - itBegin) == size())
+	if (itEnd == itBegin + size())
 		clean();
 	else if (itEnd - itBegin < SizeTraits::SsizeType(size())
 			&& itEnd - itBegin > SizeTraits::SsizeType(0))
@@ -747,8 +865,8 @@ void ARRAY_TYPE::erase(ARRAY_TYPE::Iterator itBegin, ARRAY_TYPE::Iterator itEnd)
 		for (auto &i : viewErasing)
 			i.~T();
 
-		View<Me> viewOld(itEnd, end());
-		View<Me> viewNew(itBegin, itBegin + (end() - itEnd));
+		View<Me> viewOld(itEnd, end())
+				, viewNew(itBegin, itBegin + (end() - itEnd));
 		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
 				itOld != viewOld.end(); ++itNew, ++itOld)
 			*itNew = move(*itOld);
