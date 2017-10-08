@@ -85,4 +85,5 @@ HEADERS += \
     src/Templates/IntializerList.hpp \
     src/Templates/Iterator.hpp \
     src/Templates/View.hpp \
-    src/Templates/Vector.hpp
+    src/Templates/Vector.hpp \
+    src/Templates/CircularVector.hpp
