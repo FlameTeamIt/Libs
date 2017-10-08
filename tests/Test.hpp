@@ -86,7 +86,6 @@ private:
 	std::string testName;
 };
 
-
 class TestAggregator
 {
 public:
@@ -99,7 +98,7 @@ public:
 	{}
 	TestAggregator(std::string const &name) : aggregatorName(name)
 	{}
-	TestAggregator(std::string&& name) : aggregatorName(name)
+	TestAggregator(std::string &&name) : aggregatorName(name)
 	{}
 
 	virtual ~TestAggregator()
@@ -179,11 +178,11 @@ protected:
 		return aggregatorName;
 	}
 
-	void setName(const std::string  & new_name)
+	void setName(const std::string &new_name)
 	{
 		aggregatorName = new_name;
 	}
-	void setName(std::string && new_name)
+	void setName(std::string &&new_name)
 	{
 		aggregatorName = new_name;
 	}
