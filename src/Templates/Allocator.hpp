@@ -22,6 +22,7 @@ class BaseAllocator
 {
 public:
 	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 	using VoidPointer = void *;
 
 	BaseAllocator() = default;
@@ -88,6 +89,7 @@ public:
 	using ParentType = BaseAllocator<Traits>;
 	using VoidPointer = typename BaseAllocator<Traits>::VoidPointer;
 	using SizeType = typename BaseAllocator<Traits>::SizeType;
+	using SsizeType = typename BaseAllocator<Traits>::SsizeType;
 
 	MallocAllocator() = default;
 	MallocAllocator(const MallocAllocator<Traits> &) = default;
@@ -131,6 +133,7 @@ public:
 	using ParentType = MallocAllocator<Traits>;
 	using VoidPointer = typename MallocAllocator<Traits>::VoidPointer;
 	using SizeType = typename MallocAllocator<Traits>::SizeType;
+	using SsizeType = typename MallocAllocator<Traits>::SsizeType;
 	using Type = typename Traits::Type;
 	using Pointer = typename Traits::Pointer;
 	using MoveReference = typename Traits::MoveReference;
@@ -183,6 +186,7 @@ public:
 	using ParentType = MallocAllocator<Traits>;
 	using VoidPointer = typename MallocAllocator<Traits>::VoidPointer;
 	using SizeType = typename MallocAllocator<Traits>::SizeType;
+	using SsizeType = typename MallocAllocator<Traits>::SsizeType;
 	using Type = typename Traits::Type;
 	using Pointer = typename Traits::Pointer;
 
@@ -308,7 +312,8 @@ typename ObjectAllocator<T, Traits>::Pointer
 ObjectAllocator<T, Traits>::construct(typename ObjectAllocator<T, Traits>::MoveReference obj) noexcept
 {
 	Pointer pointer = reinterpret_cast<Pointer>(
-			this->allocate(SizeType(sizeof(Type))));
+			this->allocate(SizeType(sizeof(Type)))
+	);
 	if (pointer)
 		placementNew<Type>(pointer, obj);
 	return pointer;
@@ -345,10 +350,12 @@ ArrayAllocator<T, Traits>::construct(
 		, Args &&...args) noexcept
 {
 	Pointer pointer = reinterpret_cast<Pointer>(
-			this->allocate(SizeType(sizeof(Type) * count)));
+			this->allocate(SizeType(sizeof(Type) * count))
+	);
 	if (pointer)
 	{
-		for (Pointer iterator = pointer; SizeType(iterator - pointer) < count; ++iterator)
+		for (Pointer iterator = pointer; SizeType(iterator - pointer) < count;
+				++iterator)
 			emplaceNew<Type>(iterator, forward<Args>(args)...);
 	}
 	return pointer;
@@ -366,7 +373,7 @@ void ArrayAllocator<T, Traits>::destroy(
 		typename ArrayAllocator<T, Traits>::Pointer &pointer
 		, typename ArrayAllocator<T, Traits>::SizeType count) noexcept
 {
-	for (Pointer iterator = pointer; iterator - pointer < SizeTraits::SsizeType(count); ++iterator)
+	for (Pointer iterator = pointer; iterator - pointer < SsizeType(count); ++iterator)
 		(*iterator).~T();
 	deallocate(pointer);
 	pointer = nullptr;
