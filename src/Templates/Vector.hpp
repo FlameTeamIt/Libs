@@ -528,7 +528,7 @@ void VECTOR_TYPE::resize(typename VECTOR_TYPE::SizeType newSize)
 		if (capacity() > newSize)
 		{
 			while (size() != newSize)
-				placementNew<Type>(tail++);
+				emplaceNew<Type>(tail++);
 		}
 		else if (capacity() < newSize)
 		{
@@ -683,7 +683,7 @@ void VECTOR_TYPE::pushBack(typename VECTOR_TYPE::ConstReference object)
 {
 	if (tail != head + capacity())
 	{
-		new (tail) Type(object);
+		placementNew<Type>(tail, object);
 		++tail;
 	}
 	else
@@ -710,7 +710,7 @@ template<typename ...Args>
 void VECTOR_TYPE::emplaceBack(Args &&...args)
 {
 	if (tail != head + capacity())
-		placementNew<Type>(tail++, forward<Args>(args)...);
+		emplaceNew<Type>(tail++, forward<Args>(args)...);
 	else
 	{
 		reserve(nextCapacity());
@@ -735,7 +735,7 @@ void VECTOR_TYPE::insert(typename VECTOR_TYPE::Iterator it
 			pushBack(object);
 		else
 		{
-			placementNew<Type>(tail);
+			emplaceNew<Type>(tail);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
 					, rangeNew(--rangeOld.begin(), --rangeOld.end());
@@ -804,7 +804,7 @@ void VECTOR_TYPE::insert(VECTOR_TYPE::Iterator it
 		{
 			View<Me> initView(end(), end() + rangeSize);
 			for (Reference it : initView)
-				placementNew<Type>(&it);
+				emplaceNew<Type>(&it);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
 					, rangeNew(rangeOld.begin() - rangeSize
@@ -839,7 +839,7 @@ void VECTOR_TYPE::emplace(typename VECTOR_TYPE::Iterator it, Args &&...args)
 			emplaceBack(forward<Args>(args)...);
 		else
 		{
-			placementNew<Type>(tail);
+			emplaceNew<Type>(tail);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
 					, rangeNew(--rangeOld.begin(), --rangeOld.end());

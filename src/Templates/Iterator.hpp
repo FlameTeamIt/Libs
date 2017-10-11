@@ -368,7 +368,7 @@ public:
 	}
 
 	static constexpr IteratorCategory CATEGORY = ITERATOR_CATEGORY;
-	static constexpr IteratorCategory ACCESS = ITERATOR_ACCESS;
+	static constexpr IteratorAccess ACCESS = ITERATOR_ACCESS;
 
 protected:
 	BaseIterator(IteratorType iterator) : wrappedIterator(iterator)

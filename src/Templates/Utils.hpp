@@ -81,7 +81,7 @@ typename SizeTraits::SizeType countIterations(Iterator start, Iterator end);
  */
 template<typename T, typename ...Args> inline
 typename DefaultTraits<T>::Pointer
-placementNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcept;
+emplaceNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcept;
 
 template<typename T> inline
 typename DefaultTraits<T>::Pointer
@@ -230,7 +230,7 @@ typename Traits::SizeType countIterations(Iterator start, Iterator end)
 
 template<typename T, typename ...Args> inline
 typename DefaultTraits<T>::Pointer
-placementNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcept
+emplaceNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcept
 {
 	return new (pointer) typename DefaultTraits<T>::Type(forward<decltype(args)>(args)...);
 }

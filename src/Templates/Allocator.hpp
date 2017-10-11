@@ -299,7 +299,7 @@ ObjectAllocator<T, Traits>::construct(Args &&...args) noexcept
 	Pointer pointer = reinterpret_cast<Pointer>(
 			this->allocate(SizeType(sizeof(Type))));
 	if (pointer)
-		placementNew<Type>(pointer, forward<decltype(args)>(args)...);
+		emplaceNew<Type>(pointer, forward<decltype(args)>(args)...);
 	return pointer;
 }
 
@@ -319,9 +319,10 @@ typename ObjectAllocator<T, Traits>::Pointer
 ObjectAllocator<T, Traits>::construct(typename ObjectAllocator<T, Traits>::ConstReference obj) noexcept
 {
 	Pointer pointer = reinterpret_cast<Pointer>(
-			this->allocate(SizeType(sizeof(Type))));
+			this->allocate(SizeType(sizeof(Type)))
+	);
 	if (pointer)
-		placementNew<Type>(pointer, obj);
+		emplaceNew<Type>(pointer, obj);
 	return pointer;
 }
 
@@ -348,7 +349,7 @@ ArrayAllocator<T, Traits>::construct(
 	if (pointer)
 	{
 		for (Pointer iterator = pointer; SizeType(iterator - pointer) < count; ++iterator)
-			placementNew<Type>(iterator, forward(args)...);
+			emplaceNew<Type>(iterator, forward<Args>(args)...);
 	}
 	return pointer;
 }

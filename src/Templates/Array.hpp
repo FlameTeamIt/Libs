@@ -569,7 +569,7 @@ typename ARRAY_TYPE::SizeType ARRAY_TYPE::size() const noexcept
 }
 
 TEMPLATE_DEFINE constexpr inline
-typename Traits::SizeType ARRAY_TYPE::capacity() const noexcept
+typename ARRAY_TYPE::SizeType ARRAY_TYPE::capacity() const noexcept
 {
 	return SIZE;
 }
@@ -705,7 +705,11 @@ TEMPLATE_DEFINE
 void ARRAY_TYPE::pushBack(typename ARRAY_TYPE::MoveReference object)
 {
 	if (size() < capacity())
-		placementNew<Type>(tail++, forward<Type>(object));
+	{
+		placementNew<Type>(tail, move(object));
+		++tail;
+	}
+
 }
 
 TEMPLATE_DEFINE
@@ -713,7 +717,7 @@ template<typename ...Args>
 void ARRAY_TYPE::emplaceBack(Args &&...args)
 {
 	if (size() < capacity())
-		new (tail++) Type(forward<Args>(args)...);
+		emplaceNew<Type>(tail++, forward<Args>(args)...);
 }
 
 TEMPLATE_DEFINE
@@ -736,7 +740,7 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 			pushBack(object);
 		else
 		{
-			placementNew<Type>(tail);
+			emplaceNew<Type>(tail);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
 					, rangeNew(--rangeOld.begin(), --rangeOld.end());
@@ -792,7 +796,7 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 		{
 			View<Me> initView(end(), end() + rangeSize);
 			for (Reference it : initView)
-				placementNew<Type>(&it);
+				emplaceNew<Type>(&it);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
 					, rangeNew(rangeOld.begin() - rangeSize, rangeOld.end() - rangeSize);
@@ -820,7 +824,7 @@ void ARRAY_TYPE::emplace(typename ARRAY_TYPE::Iterator it, Args &&...args)
 			emplaceBack(forward<Args>(args)...);
 		else
 		{
-			placementNew<Type>(tail);
+			emplaceNew<Type>(tail);
 
 			Range<ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1))
 					, viewNew(--viewOld.begin(), --viewOld.end());
@@ -829,7 +833,7 @@ void ARRAY_TYPE::emplace(typename ARRAY_TYPE::Iterator it, Args &&...args)
 				*itNew = move(*itOld);
 
 			it->~T();
-			placementNew<Type>(&(*it), forward<decltype(args)>(args)...);
+			emplaceNew<Type>(&(*it), forward<decltype(args)>(args)...);
 			++tail;
 		}
 	}
