@@ -38,11 +38,11 @@ namespace flame_ide
 {namespace templates
 {
 
-template<typename T, typename Traits, typename Allocator>
+TEMPLATE_TYPE
 class BasicString: public Traits
 {
 public:
-	using Me = BasicString<T, Traits, Allocator>;
+	using Me = STRING_TYPE;
 
 	using typename Traits::Type;
 

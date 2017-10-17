@@ -99,28 +99,28 @@ template<typename Iterator1 , typename Iterator2>
 bool isEqual(Iterator1 start1, Iterator1 end1,
 		Iterator2 start2, Iterator2 end2);
 
-template<typename Container>
+template<typename Container> inline
 typename Container::Iterator begin(Container &&container);
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ConstIterator cbegin(const Container &container);
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ReverseIterator rbegin(Container &&container);
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ConstReverseIterator crbegin(const Container &container);
 
-template<typename Container>
+template<typename Container> inline
 typename Container::Iterator end(Container &&container);
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ConstIterator cend(const Container &container);
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ReverseIterator rend(Container &&container);
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ConstReverseIterator crend(const Container &container);
 
 }}
@@ -275,50 +275,50 @@ bool isEqual(Iterator1 start1, Iterator1 end1
 	return equal;
 }
 
-template<typename Container>
+template<typename Container> inline
 typename Container::Iterator begin(Container &&container)
 {
 	return container.begin();
 }
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ConstIterator cbegin(const Container &container)
 {
 	return container.cbegin();
 }
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ReverseIterator rbegin(Container &&container)
 {
 	return container.rbegin();
 }
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ConstReverseIterator crbegin(const Container &container)
 {
 	return container.crbegin();
 }
 
 
-template<typename Container>
+template<typename Container> inline
 typename Container::Iterator end(Container &&container)
 {
 	return container.end();
 }
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ConstIterator cend(const Container &container)
 {
 	return container.cend();
 }
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ReverseIterator rend(Container &&container)
 {
 	return container.rend();
 }
 
-template<typename Container>
+template<typename Container> inline
 typename Container::ConstReverseIterator crend(const Container &container)
 {
 	return container.crend();

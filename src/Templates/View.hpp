@@ -1,12 +1,14 @@
 #ifndef VIEW_HPP
 #define VIEW_HPP
 
+#include <Templates/Utils.hpp>
+
 namespace flame_ide
 {namespace templates
 {
 
 template<typename Container
-	, typename InputIterator = typename Container::Iterator>
+	, typename InputIterator = typename Container::ConstIterator>
 class View
 {
 public:
@@ -29,6 +31,18 @@ private:
 	Iterator first;
 	Iterator last;
 };
+
+// View getters
+
+template<typename Container>
+View<Container, typename Container::ConstIterator>
+getView(const Container &container);
+
+template<typename Container>
+View<Container, typename Container::ConstReverseIterator>
+getReverseView(const Container &container);
+
+// Range class
 
 template<typename InputIterator>
 class Range
@@ -53,6 +67,24 @@ private:
 	Iterator first;
 	Iterator last;
 };
+
+// Range getters
+
+template<typename Container>
+Range<typename Container::Iterator>
+getRange(Container &container);
+
+template<typename Container>
+Range<typename Container::ConstIterator>
+getConstRange(const Container &container);
+
+template<typename Container>
+Range<typename Container::ReverseIterator>
+getReverseRange(Container &container);
+
+template<typename Container>
+Range<typename Container::ConstReverseIterator>
+getConstReverseRange(const Container &container);
 
 }}
 
@@ -83,6 +115,26 @@ View<Container, InputIterator>::end()
 	return last;
 }
 
+// View getters
+
+template<typename Container>
+View<Container, typename Container::ConstIterator>
+getView(const Container &container)
+{
+	return View<Container, typename Container::ConstIterator>(
+			cbegin(container), cend(container)
+	);
+}
+
+template<typename Container>
+View<Container, typename Container::ConstReverseIterator>
+getReverseView(const Container &container)
+{
+	return View<Container, typename Container::ConstReverseIterator>(
+			crbegin(container), crend(container)
+	);
+}
+
 // Range
 
 template<typename InputIterator>
@@ -103,6 +155,44 @@ typename Range<InputIterator>::Iterator
 Range<InputIterator>::end()
 {
 	return last;
+}
+
+// Range getters
+
+template<typename Container>
+Range<typename Container::Iterator>
+getRange(Container &container)
+{
+	return Range<typename Container::Iterator>(
+			begin(container), end(container)
+	);
+}
+
+template<typename Container>
+Range<typename Container::ConstIterator>
+getConstRange(const Container &container)
+{
+	return Range<typename Container::ConstIterator>(
+			cbegin(container), cend(container)
+	);
+}
+
+template<typename Container>
+Range<typename Container::ReverseIterator>
+getReverseRange(Container &container)
+{
+	return Range<typename Container::ConstIterator>(
+			rbegin(container), rend(container)
+	);
+}
+
+template<typename Container>
+Range<typename Container::ConstReverseIterator>
+getConstReverseRange(const Container &container)
+{
+	return Range<typename Container::ConstIterator>(
+			crbegin(container), crend(container)
+	);
 }
 
 }}
