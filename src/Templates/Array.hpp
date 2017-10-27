@@ -794,8 +794,8 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 				pushBack(itInsert);
 		else
 		{
-			View<Me> initView(end(), end() + rangeSize);
-			for (Reference it : initView)
+			Range<Iterator> initRange(end(), end() + rangeSize);
+			for (Reference it : initRange)
 				emplaceNew<Type>(&it);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
@@ -848,10 +848,10 @@ void ARRAY_TYPE::erase(ARRAY_TYPE::Iterator it)
 		popBack();
 	else
 	{
-		View<Me> viewOld(it + 1, end())
-				, viewNew(viewOld.begin() - 1, viewOld.end() - 1);
-		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
-				itOld != viewOld.end(); ++itOld, ++itNew)
+		Range<Iterator> rangeOld(it + 1, end())
+				, rangeNew(rangeOld.begin() - 1, rangeOld.end() - 1);
+		for (Iterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+				itOld != rangeOld.end(); ++itOld, ++itNew)
 			*itNew = move(*itOld);
 		--tail;
 	}
@@ -865,17 +865,17 @@ void ARRAY_TYPE::erase(ARRAY_TYPE::Iterator itBegin, ARRAY_TYPE::Iterator itEnd)
 	else if (itEnd - itBegin < SizeTraits::SsizeType(size())
 			&& itEnd - itBegin > SizeTraits::SsizeType(0))
 	{
-		View<Me> viewErasing(itBegin, itEnd);
-		for (auto &i : viewErasing)
+		Range<Iterator> rangeErasing(itBegin, itEnd);
+		for (auto &i : rangeErasing)
 			i.~T();
 
-		View<Me> viewOld(itEnd, end())
-				, viewNew(itBegin, itBegin + (end() - itEnd));
-		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
-				itOld != viewOld.end(); ++itNew, ++itOld)
+		Range<Iterator> rangeOld(itEnd, end())
+				, rangeNew(itBegin, itBegin + (end() - itEnd));
+		for (Iterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+				itOld != rangeOld.end(); ++itNew, ++itOld)
 			*itNew = move(*itOld);
 
-		tail -= SizeType(viewErasing.end() - viewErasing.begin());
+		tail -= SizeType(rangeErasing.end() - rangeErasing.begin());
 	}
 }
 

@@ -547,11 +547,11 @@ void VECTOR_TYPE::reserve(typename VECTOR_TYPE::SizeType newCapacity)
 		if (tempHead)
 		{
 			Range<Pointer> rangeNew(tempHead, tempHead + newCapacity);
-			View<Me> viewOld(begin(), end());
+			Range<Iterator> rangeOld(begin(), end());
 
 			auto itNew = rangeNew.begin();
-			auto itOld = viewOld.begin();
-			for (; itNew != rangeNew.end() && itOld != viewOld.end();
+			auto itOld = rangeOld.begin();
+			for (; itNew != rangeNew.end() && itOld != rangeOld.end();
 					++itNew, ++itOld)
 			{
 				placementNew<Type>(itNew, move(*itOld));
@@ -802,8 +802,8 @@ void VECTOR_TYPE::insert(VECTOR_TYPE::Iterator it
 				pushBack(itInsert);
 		else
 		{
-			View<Me> initView(end(), end() + rangeSize);
-			for (Reference it : initView)
+			Range<Iterator> initRange(end(), end() + rangeSize);
+			for (Reference it : initRange)
 				emplaceNew<Type>(&it);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
@@ -869,10 +869,10 @@ void VECTOR_TYPE::erase(VECTOR_TYPE::Iterator it)
 		popBack();
 	else
 	{
-		View<Me> viewOld(it + 1, end())
-				, viewNew(viewOld.begin() - 1, viewOld.end() - 1);
-		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
-				itOld != viewOld.end(); ++itOld, ++itNew)
+		Range<Iterator> rangeOld(it + 1, end())
+				, rangeNew(rangeOld.begin() - 1, rangeOld.end() - 1);
+		for (Iterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+				itOld != rangeOld.end(); ++itOld, ++itNew)
 			*itNew = move(*itOld);
 		--tail;
 	}
@@ -887,17 +887,17 @@ void VECTOR_TYPE::erase(typename VECTOR_TYPE::Iterator itBegin
 	else if (itEnd - itBegin < SizeTraits::SsizeType(size())
 			&& itEnd - itBegin > SizeTraits::SsizeType(0))
 	{
-		View<Me> viewErasing(itBegin, itEnd);
-		for (auto &i : viewErasing)
+		Range<Iterator> rangeErasing(itBegin, itEnd);
+		for (auto &i : rangeErasing)
 			i.~T();
 
-		View<Me> viewOld(itEnd, end())
-				, viewNew(itBegin, itBegin + (end() - itEnd));
-		for (Iterator itOld = viewOld.begin(), itNew = viewNew.begin();
-				itOld != viewOld.end(); ++itNew, ++itOld)
+		Range<Iterator> rangeOld(itEnd, end())
+				, rangeNew(itBegin, itBegin + (end() - itEnd));
+		for (Iterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+				itOld != rangeOld.end(); ++itNew, ++itOld)
 			*itNew = move(*itOld);
 
-		tail -= SizeType(viewErasing.end() - viewErasing.begin());
+		tail -= SizeType(rangeErasing.end() - rangeErasing.begin());
 	}
 }
 
