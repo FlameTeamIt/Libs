@@ -367,6 +367,16 @@ public:
 		return wrappedIterator != iterator.wrappedIterator;
 	}
 
+	IteratorType &internalData()
+	{
+		return wrappedIterator;
+	}
+
+	const IteratorType &internalData() const
+	{
+		return wrappedIterator;
+	}
+
 	static constexpr IteratorCategory CATEGORY = ITERATOR_CATEGORY;
 	static constexpr IteratorAccess ACCESS = ITERATOR_ACCESS;
 

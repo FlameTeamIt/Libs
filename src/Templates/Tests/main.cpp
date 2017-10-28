@@ -1,6 +1,7 @@
 #include <Templates/Tests/Allocator.hpp>
 #include <Templates/Tests/Array.hpp>
 #include <Templates/Tests/Vector.hpp>
+#include <Templates/Tests/List.hpp>
 
 void testAllocator()
 {
@@ -24,10 +25,19 @@ void testArray()
 	vector.start();
 }
 
+void testList()
+{
+	using namespace flame_ide::test;
+
+	List list;
+	list.start();
+}
+
 int main(int /*argc*/, char */*argv*/[])
 {
 	testAllocator();
 	testArray();
+	testList();
 	return 0;
 }
 

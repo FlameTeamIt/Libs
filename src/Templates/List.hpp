@@ -1,9 +1,11 @@
 #ifndef TEMPLATES_LIST_HPP
 #define TEMPLATES_LIST_HPP
 
-#include <Templates/Utils.hpp>
-#include <Templates/Iterator.hpp>
 #include <Templates/Allocator.hpp>
+#include <Templates/Iterator.hpp>
+#include <Templates/View.hpp>
+#include <Templates/Utils.hpp>
+#include <Templates/InitializerList.hpp>
 
 #define TEMPLATE_DEFINE \
 	template<typename T, typename Traits, typename Allocator>
@@ -49,6 +51,7 @@ struct Node: public Traits
 	Node() = delete;
 	Node(const Me &) = default;
 	Node(Me &&) = default;
+	~Node() = default;
 	Me &operator=(const Me &) = default;
 	Me &operator=(Me &&) = default;
 
@@ -232,8 +235,7 @@ private:
 }
 
 template<typename T, typename Traits = ContainerTraits<T>
-	, typename Allocator =
-			allocator::ObjectAllocator<list_utils::Node<T, Traits>, Traits>
+	, typename Allocator = allocator::ObjectAllocator<list_utils::Node<T, Traits> >
 >
 class List: public Traits
 {
@@ -263,6 +265,7 @@ public:
 	List();
 	List(const Me &list);
 	List(Me &&list);
+	List(InitializerList<Type> list);
 	~List();
 	List &operator=(const Me &list);
 	List &operator=(Me &&list);
@@ -315,7 +318,7 @@ public:
 	void pushFront(MoveReference object);
 
 	template<typename ...Args>
-	void emaplceFront(Args &&...args);
+	void emplaceFront(Args &&...args);
 
 	void insert(Iterator it, ConstReference object);
 
@@ -405,6 +408,15 @@ LIST_TYPE::List(LIST_TYPE &&list) : head(list.head), tail(list.tail), allocator(
 {
 	list.head = nullptr;
 	list.tail = nullptr;
+}
+
+TEMPLATE_DEFINE
+LIST_TYPE::List(InitializerList<typename LIST_TYPE::Type> list) : List()
+{
+	for (auto i : list)
+	{
+		pushBack(i);
+	}
 }
 
 TEMPLATE_DEFINE
@@ -499,7 +511,7 @@ void LIST_TYPE::clean()
 	Node *pointer = head;
 	while (pointer)
 	{
-		list_utils::Node<T, Traits> *pointerPrevious = pointer;
+		Node *pointerPrevious = pointer;
 		allocator.destroy(pointerPrevious);
 		pointer = pointer->next;
 	}
@@ -588,67 +600,302 @@ typename LIST_TYPE::ConstReverseIterator LIST_TYPE::crend() const
 
 TEMPLATE_DEFINE
 void LIST_TYPE::pushBack(typename LIST_TYPE::ConstReference object)
-{}
+{
+	Node *pointer = allocator.construct(object);
+	if (head)
+	{
+		pointer->previous = tail;
+		tail->next = pointer;
+		tail = tail->next;
+	}
+	else
+	{
+		head = tail = pointer;
+	}
+}
 
 TEMPLATE_DEFINE
 void LIST_TYPE::pushBack(typename LIST_TYPE::MoveReference object)
-{}
+{
+	Node *pointer = allocator.construct(object);
+	if (head)
+	{
+		pointer->previous = tail;
+		tail->next = pointer;
+		tail = tail->next;
+	}
+	else
+	{
+		head = tail = pointer;
+	}
+}
 
 TEMPLATE_DEFINE
 template<typename ...Args>
 void LIST_TYPE::emaplceBack(Args &&...args)
-{}
+{
+	Node *pointer = allocator.contruct(forward<Args>(args)...);
+	if (head)
+	{
+		pointer->previous = tail;
+		tail->next = pointer;
+		tail = tail->next;
+	}
+	else
+	{
+		head = tail = pointer;
+	}
+}
 
 TEMPLATE_DEFINE
 void LIST_TYPE::pushFront(typename LIST_TYPE::ConstReference object)
-{}
+{
+	Node *pointer = allocator.contruct(object);
+	if (head)
+	{
+		head->previous = pointer;
+		pointer->next = head;
+		head = head->previous;
+	}
+	else
+	{
+		head = tail = pointer;
+	}
+}
 
 TEMPLATE_DEFINE
 void LIST_TYPE::pushFront(typename LIST_TYPE::MoveReference object)
-{}
+{
+	Node *pointer = allocator.contruct(object);
+	if (head)
+	{
+		head->previous = pointer;
+		pointer->next = head;
+		head = head->previous;
+	}
+	else
+	{
+		head = tail = pointer;
+	}
+}
 
 TEMPLATE_DEFINE
 template<typename ...Args>
-void LIST_TYPE::emaplceFront(Args &&...args)
-{}
+void LIST_TYPE::emplaceFront(Args &&...args)
+{
+	Node *pointer = allocator.contruct(forward<Args>(args)...);
+	if (head)
+	{
+		head->previous = pointer;
+		pointer->next = head;
+		head = head->previous;
+	}
+	else
+	{
+		head = tail = pointer;
+	}
+}
 
 TEMPLATE_DEFINE
 void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 		, typename LIST_TYPE::ConstReference object)
-{}
+{
+	if (!size())
+	{
+		Node *pointer = allocator.contruct(object);
+		head = tail = pointer;
+	}
+	else if (it == begin())
+	{
+		pushFront(object);
+	}
+	else if (it == end())
+	{
+		pushBack(object);
+	}
+	else
+	{
+		Node *pointer = allocator.contruct(object);
+
+	}
+}
 
 TEMPLATE_DEFINE
 void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 		, typename LIST_TYPE::MoveReference object)
-{}
+{
+	if (!size())
+	{
+		Node *pointer = allocator.contruct(move(object));
+		head = tail = pointer;
+	}
+	else if (it == begin())
+	{
+		pushFront(move(object));
+	}
+	else if (it == end())
+	{
+		pushBack(move(object));
+	}
+	else
+	{
+		Node *pointer = allocator.contruct(move(object));
+		Node *pointers[] = { it.internalData()->previous, it.internalData() };
+
+		pointers[0]->next = pointer;
+		pointer->previous = pointers[0];
+
+		pointers[1]->previous = pointer;
+		pointer->next = pointers[1];
+	}
+}
 
 TEMPLATE_DEFINE
 template<typename InputIterator>
 void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 		, InputIterator itBegin, InputIterator itEnd)
-{}
+{
+	if (countIterations(itBegin, itEnd))
+	{
+		Node *pointerHead;
+		Node *pointerTail;
+		Range<InputIterator> inputRange(itBegin, itEnd);
+
+		bool first = true;
+		for (auto object : inputRange)
+		{
+			if (first)
+			{
+				pointerHead = allocator.contruct(object);
+				pointerTail = pointerHead;
+				first = false;
+			}
+			else
+			{
+				Node *pointer = allocator.contruct(object);
+				pointerTail->next = pointer;
+				pointer->previous = pointerTail;
+
+				pointerTail = pointer;
+			}
+		}
+
+		if (!size())
+		{
+			head = pointerHead;
+			tail = pointerTail;
+		}
+		else if (it == begin())
+		{
+			pointerTail->next = head;
+			head->previous = pointerTail;
+			head = pointerHead;
+		}
+		else if (it == end())
+		{
+			pointerHead->previous = tail;
+			tail->next = pointerHead;
+			tail = pointerTail;
+		}
+		else
+		{
+			Node *pointers[] = { it.internalData()->previous, it.internalData() };
+
+			pointers[0]->next = pointerHead;
+			pointerHead->previous = pointers[0];
+
+			pointers[1]->previous = pointerTail;
+			pointerTail->next = pointers[1];
+		}
+	}
+}
 
 TEMPLATE_DEFINE
 template<typename ...Args>
 void LIST_TYPE::emplace(typename LIST_TYPE::Iterator it, Args &&...args)
-{}
+{
+	Node *pointer = allocator.contruct(forward<Args>(args)...);
+	if (!size())
+	{
+		head = tail = pointer;
+	}
+	else if (it == begin())
+	{
+		pointer->next = head;
+		head->previous = pointer;
+		head = pointer;
+	}
+	else if (it == end())
+	{
+		tail->next = pointer;
+		pointer->previous = tail;
+		tail = pointer;
+	}
+	else
+	{
+		Node *pointers[] = { it.internalData()->previous, it.internalData() };
+
+		pointers[0]->next = pointer;
+		pointer->previous = pointers[0];
+
+		pointers[1]->previous = pointer;
+		pointer->next = pointers[1];
+	}
+}
 
 TEMPLATE_DEFINE
 void LIST_TYPE::popBack()
-{}
+{
+	if (tail->previous)
+	{
+		auto pointer = tail;
+		tail = tail->previous;
+
+		allocator.destroy(pointer);
+	}
+}
 
 TEMPLATE_DEFINE
 void LIST_TYPE::popFront()
-{}
+{
+	if (head->next)
+	{
+		auto pointer = head;
+		head = head->next;
+
+		allocator.destroy(pointer);
+	}
+}
 
 TEMPLATE_DEFINE
 void LIST_TYPE::erase(typename LIST_TYPE::Iterator it)
-{}
+{
+	if (it == begin())
+	{
+		popFront();
+	}
+	else if (it == end())
+	{
+		popBack();
+	}
+	else
+	{
+		Node *removeNode = it.internalData();
+		Node *previousNode = removeNode->previous;
+		Node *nextNode = removeNode->next;
+
+		previousNode->next = nextNode;
+		nextNode->previous = previousNode;
+
+		allocator.destroy(removeNode);
+	}
+}
 
 TEMPLATE_DEFINE
 void LIST_TYPE::erase(typename LIST_TYPE::Iterator itBegin
 		, typename LIST_TYPE::Iterator itEnd)
-{}
+{
+}
 
 }}
 
