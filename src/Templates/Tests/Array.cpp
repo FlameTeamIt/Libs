@@ -84,7 +84,6 @@ int Array::vStart()
 	}
 	std::cout << std::endl;
 
-
 	std::cout << "Test reverse:" << std::endl;
 	{
 		templates::Range<
