@@ -47,19 +47,17 @@ struct Node: public Traits
 	using Me = Node<T, Traits>;
 
 	using typename Traits::Type;
+	using typename Traits::ConstReference;
+	using typename Traits::MoveReference;
 
-	Node() = delete;
+	Node() = default;
 	Node(const Me &) = default;
 	Node(Me &&) = default;
+	Node(ConstReference object);
+	Node(MoveReference object);
 	~Node() = default;
 	Me &operator=(const Me &) = default;
 	Me &operator=(Me &&) = default;
-
-	template<typename ...Args>
-	Node(Args &&...args);
-
-	template<typename ...Args>
-	Node(Me *initPrevious, Me *initNext, Args &&...args);
 
 	Node *previous;
 	Node *next;
@@ -154,13 +152,13 @@ private:
 };
 
 template<typename T, typename Traits>
-class ListConstIterator: public iterator_utils::BaseIterator<Node<T> *
+class ListConstIterator: public iterator_utils::BaseIterator<const Node<T> *
 	, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits>
 {
 public:
 	using Me = ListConstIterator<T, Traits>;
 	using Parent = iterator_utils::BaseIterator<
-		Node<T> *
+		const Node<T> *
 		, IteratorCategory::BIDIRECTIONAL
 		, IteratorAccess::CONSTANT
 		, Traits
@@ -270,6 +268,20 @@ public:
 	List &operator=(const Me &list);
 	List &operator=(Me &&list);
 
+	// TODO: implement and test
+	Me &operator+=(const Type &object);
+	Me &operator+=(Type &&object);
+	template<typename InputIterator>
+	Me &operator+=(Range<InputIterator> range);
+
+	// TODO: implement and test
+	Me &operator-=(Iterator it);
+	Me &operator-=(ReverseIterator it);
+
+	// TODO: implement and test
+	Me &operator-=(Range<Iterator> range);
+	Me &operator-=(Range<ReverseIterator> range);
+
 	SizeType size() const;
 
 	Reference first();
@@ -283,62 +295,51 @@ public:
 	Me clone() const;
 
 	Iterator begin();
-
 	ConstIterator begin() const;
-
 	ConstIterator cbegin() const;
-
 	ReverseIterator rbegin();
-
 	ConstReverseIterator rbegin() const;
-
 	ConstReverseIterator crbegin() const;
 
 	Iterator end();
-
 	ConstIterator end() const;
-
 	ConstIterator cend() const;
-
 	ReverseIterator rend();
-
 	ConstReverseIterator rend() const;
-
 	ConstReverseIterator crend() const;
 
 	void pushBack(ConstReference object);
-
 	void pushBack(MoveReference object);
-
 	template<typename ...Args>
-	void emaplceBack(Args &&...args);
+	void emplaceBack(Args &&...args);
 
 	void pushFront(ConstReference object);
-
 	void pushFront(MoveReference object);
-
 	template<typename ...Args>
 	void emplaceFront(Args &&...args);
 
 	void insert(Iterator it, ConstReference object);
-
 	void insert(Iterator it, MoveReference object);
-
 	template<typename InputIterator>
 	void insert(Iterator it, InputIterator itBegin, InputIterator itEnd);
-
 	template<typename ...Args>
 	void emplace(Iterator it, Args &&...args);
 
 	void popBack();
-
 	void popFront();
 
 	void erase(Iterator it);
-
 	void erase(Iterator itBegin, Iterator itEnd);
 
 private:
+	inline void updateHeadLinks();
+	inline void updateTailLinks();
+	inline void updateLinks();
+
+	inline void cleanLinks();
+
+	Node postFirst;
+	Node postLast;
 	Node *head;
 	Node *tail;
 	Allocator allocator;
@@ -356,23 +357,25 @@ namespace list_utils
 // Node
 
 template<typename T, typename Traits>
-template<typename ...Args>
-Node<T, Traits>::Node(Args &&...args)
-		: previous(nullptr), next(nullptr), object(forward<Args>(args)...)
+Node<T, Traits>::Node(typename Node<T, Traits>::ConstReference object)
+		: previous(nullptr), next(nullptr), object(object)
 {}
 
 template<typename T, typename Traits>
-template<typename ...Args>
-Node<T, Traits>::Node(Me *initPrevious, Me *initNext, Args &&...args)
-		: previous(initPrevious), next(initNext), object(forward<Args>(args)...)
+Node<T, Traits>::Node(typename Node<T, Traits>::MoveReference object)
+	: previous(nullptr), next(nullptr), object(object)
 {}
+
 
 // ListIterator
 
 }
 
 TEMPLATE_DEFINE
-LIST_TYPE::List() : head(nullptr), tail(nullptr), allocator()
+LIST_TYPE::List()
+		: postFirst(), postLast()
+		, head(nullptr), tail(nullptr)
+		, allocator()
 {}
 
 TEMPLATE_DEFINE
@@ -380,34 +383,25 @@ LIST_TYPE::List(const LIST_TYPE &list) : List()
 {
 	if (list.size())
 	{
-		head = allocator.construct(*list.head);
-		if (list.head != list.tail)
+		for (auto i : list)
 		{
-			tail = head;
+			pushBack(i);
 		}
-		else
-		{
-			Node *listPointer = list.head;
-			Node *pointer = head;
-
-			while (listPointer->next)
-			{
-				pointer->next = allocator.construct(*listPointer->next);
-				pointer->next->previous = pointer;
-
-				listPointer = listPointer->next;
-				pointer = pointer->next;
-			}
-			tail = pointer;
-		}
+		updateHeadLinks();
 	}
 }
 
 TEMPLATE_DEFINE
-LIST_TYPE::List(LIST_TYPE &&list) : head(list.head), tail(list.tail), allocator()
+LIST_TYPE::List(LIST_TYPE &&list)
+		: postFirst(), postLast()
+		, head(list.head), tail(list.tail)
+		, allocator()
 {
 	list.head = nullptr;
 	list.tail = nullptr;
+	list.cleanLinks();
+
+	updateLinks();
 }
 
 TEMPLATE_DEFINE
@@ -417,6 +411,7 @@ LIST_TYPE::List(InitializerList<typename LIST_TYPE::Type> list) : List()
 	{
 		pushBack(i);
 	}
+	updateHeadLinks();
 }
 
 TEMPLATE_DEFINE
@@ -428,32 +423,38 @@ LIST_TYPE::~List()
 TEMPLATE_DEFINE
 LIST_TYPE &LIST_TYPE::operator=(const LIST_TYPE &list)
 {
-	clean();
+	size_t mySize = this->size();
+	size_t listSize = list.size();
 
-	if (list.size())
+	if (listSize)
 	{
-		head = allocator.construct(*list.head);
-		if (list.head != list.tail)
+		if (listSize > mySize)
 		{
-			tail = head;
+			Iterator it = list.begin();
+			for (auto &i : *this)
+			{
+				i = *it;
+				++it;
+			}
+			for (; it != list.end(); ++it)
+			{
+				pushBack(*it);
+			}
 		}
 		else
 		{
-			Node *listPointer = list.head;
-			Node *pointer = head;
-
-			while (listPointer->next)
+			Iterator it = this->begin();
+			for (auto &i : list)
 			{
-				pointer->next = allocator.construct(*listPointer->next);
-				pointer->next->previous = pointer;
-
-				listPointer = listPointer->next;
-				pointer = pointer->next;
+				*it = i;
+				++it;
 			}
-			tail = pointer;
+			for (; listSize != mySize; --mySize)
+			{
+				popBack();
+			}
 		}
 	}
-
 	return *this;
 }
 
@@ -461,12 +462,13 @@ TEMPLATE_DEFINE
 LIST_TYPE &LIST_TYPE::operator=(LIST_TYPE &&list)
 {
 	clean();
-
 	head = list.head;
 	tail = list.tail;
+	updateLinks();
 
 	list.head = nullptr;
 	list.tail = nullptr;
+	list.cleanLinks();
 
 	return *this;
 }
@@ -475,7 +477,7 @@ TEMPLATE_DEFINE
 typename LIST_TYPE::SizeType LIST_TYPE::size() const
 {
 	SizeType resultSize = 0;
-	for (Node *pointer = head; pointer; pointer = pointer->next)
+	for (Node *pointer = head; pointer != &postLast; pointer = pointer->next)
 		++resultSize;
 	return resultSize;
 }
@@ -509,14 +511,15 @@ TEMPLATE_DEFINE
 void LIST_TYPE::clean()
 {
 	Node *pointer = head;
-	while (pointer)
+	while (pointer && pointer != &postLast)
 	{
 		Node *pointerPrevious = pointer;
-		allocator.destroy(pointerPrevious);
 		pointer = pointer->next;
+		allocator.destroy(pointerPrevious);
 	}
 
 	head = tail = nullptr;
+	cleanLinks();
 }
 
 TEMPLATE_DEFINE
@@ -565,13 +568,13 @@ typename LIST_TYPE::ConstReverseIterator LIST_TYPE::crbegin() const
 TEMPLATE_DEFINE
 typename LIST_TYPE::Iterator LIST_TYPE::end()
 {
-	return Iterator(nullptr);
+	return Iterator(&postLast);
 }
 
 TEMPLATE_DEFINE
 typename LIST_TYPE::ConstIterator LIST_TYPE::end() const
 {
-	return ConstIterator(nullptr);
+	return ConstIterator(&postLast);
 }
 
 TEMPLATE_DEFINE
@@ -583,13 +586,13 @@ typename LIST_TYPE::ConstIterator LIST_TYPE::cend() const
 TEMPLATE_DEFINE
 typename LIST_TYPE::ReverseIterator LIST_TYPE::rend()
 {
-	return ReverseIterator(Iterator(nullptr));
+	return ReverseIterator(Iterator(&postFirst));
 }
 
 TEMPLATE_DEFINE
 typename LIST_TYPE::ConstReverseIterator LIST_TYPE::rend() const
 {
-	return ConstReverseIterator(ConstIterator(nullptr));
+	return ConstReverseIterator(ConstIterator(&postFirst));
 }
 
 TEMPLATE_DEFINE
@@ -607,10 +610,12 @@ void LIST_TYPE::pushBack(typename LIST_TYPE::ConstReference object)
 		pointer->previous = tail;
 		tail->next = pointer;
 		tail = tail->next;
+		updateTailLinks();
 	}
 	else
 	{
 		head = tail = pointer;
+		updateLinks();
 	}
 }
 
@@ -623,59 +628,67 @@ void LIST_TYPE::pushBack(typename LIST_TYPE::MoveReference object)
 		pointer->previous = tail;
 		tail->next = pointer;
 		tail = tail->next;
+		updateTailLinks();
 	}
 	else
 	{
 		head = tail = pointer;
+		updateLinks();
 	}
 }
 
 TEMPLATE_DEFINE
 template<typename ...Args>
-void LIST_TYPE::emaplceBack(Args &&...args)
+void LIST_TYPE::emplaceBack(Args &&...args)
 {
-	Node *pointer = allocator.contruct(forward<Args>(args)...);
+	Node *pointer = allocator.construct(Type(forward<decltype(args)>(args)...));
 	if (head)
 	{
 		pointer->previous = tail;
 		tail->next = pointer;
 		tail = tail->next;
+		updateTailLinks();
 	}
 	else
 	{
 		head = tail = pointer;
+		updateLinks();
 	}
 }
 
 TEMPLATE_DEFINE
 void LIST_TYPE::pushFront(typename LIST_TYPE::ConstReference object)
 {
-	Node *pointer = allocator.contruct(object);
+	Node *pointer = allocator.construct(object);
 	if (head)
 	{
 		head->previous = pointer;
 		pointer->next = head;
 		head = head->previous;
+		updateHeadLinks();
 	}
 	else
 	{
 		head = tail = pointer;
+		updateLinks();
 	}
 }
 
 TEMPLATE_DEFINE
 void LIST_TYPE::pushFront(typename LIST_TYPE::MoveReference object)
 {
-	Node *pointer = allocator.contruct(object);
+	Node *pointer = allocator.construct(object);
 	if (head)
 	{
 		head->previous = pointer;
 		pointer->next = head;
 		head = head->previous;
+		updateHeadLinks();
 	}
 	else
 	{
 		head = tail = pointer;
+		updateLinks();
 	}
 }
 
@@ -683,16 +696,18 @@ TEMPLATE_DEFINE
 template<typename ...Args>
 void LIST_TYPE::emplaceFront(Args &&...args)
 {
-	Node *pointer = allocator.contruct(forward<Args>(args)...);
+	Node *pointer = allocator.construct(Type(forward<decltype(args)>(args)...));
 	if (head)
 	{
 		head->previous = pointer;
 		pointer->next = head;
 		head = head->previous;
+		updateHeadLinks();
 	}
 	else
 	{
 		head = tail = pointer;
+		updateLinks();
 	}
 }
 
@@ -702,7 +717,7 @@ void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 {
 	if (!size())
 	{
-		Node *pointer = allocator.contruct(object);
+		Node *pointer = allocator.construct(object);
 		head = tail = pointer;
 	}
 	else if (it == begin())
@@ -715,8 +730,14 @@ void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 	}
 	else
 	{
-		Node *pointer = allocator.contruct(object);
+		Node *pointer = allocator.construct(object);
+		Node *pointers[] = { it.internalData()->previous, it.internalData() };
 
+		pointers[0]->next = pointer;
+		pointer->previous = pointers[0];
+
+		pointers[1]->previous = pointer;
+		pointer->next = pointers[1];
 	}
 }
 
@@ -726,7 +747,7 @@ void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 {
 	if (!size())
 	{
-		Node *pointer = allocator.contruct(move(object));
+		Node *pointer = allocator.construct(move(object));
 		head = tail = pointer;
 	}
 	else if (it == begin())
@@ -739,7 +760,7 @@ void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 	}
 	else
 	{
-		Node *pointer = allocator.contruct(move(object));
+		Node *pointer = allocator.construct(move(object));
 		Node *pointers[] = { it.internalData()->previous, it.internalData() };
 
 		pointers[0]->next = pointer;
@@ -766,13 +787,13 @@ void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 		{
 			if (first)
 			{
-				pointerHead = allocator.contruct(object);
+				pointerHead = allocator.construct(object);
 				pointerTail = pointerHead;
 				first = false;
 			}
 			else
 			{
-				Node *pointer = allocator.contruct(object);
+				Node *pointer = allocator.construct(object);
 				pointerTail->next = pointer;
 				pointer->previous = pointerTail;
 
@@ -790,12 +811,14 @@ void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 			pointerTail->next = head;
 			head->previous = pointerTail;
 			head = pointerHead;
+			updateHeadLinks();
 		}
 		else if (it == end())
 		{
 			pointerHead->previous = tail;
 			tail->next = pointerHead;
 			tail = pointerTail;
+			updateTailLinks();
 		}
 		else
 		{
@@ -814,25 +837,22 @@ TEMPLATE_DEFINE
 template<typename ...Args>
 void LIST_TYPE::emplace(typename LIST_TYPE::Iterator it, Args &&...args)
 {
-	Node *pointer = allocator.contruct(forward<Args>(args)...);
 	if (!size())
 	{
+		Node *pointer = allocator.construct(Type(forward<decltype(args)>(args)...));
 		head = tail = pointer;
 	}
 	else if (it == begin())
 	{
-		pointer->next = head;
-		head->previous = pointer;
-		head = pointer;
+		emplaceFront(forward<decltype(args)>(args)...);
 	}
 	else if (it == end())
 	{
-		tail->next = pointer;
-		pointer->previous = tail;
-		tail = pointer;
+		emplaceBack(forward<decltype(args)>(args)...);
 	}
 	else
 	{
+		Node *pointer = allocator.construct(Type(forward<decltype(args)>(args)...));
 		Node *pointers[] = { it.internalData()->previous, it.internalData() };
 
 		pointers[0]->next = pointer;
@@ -850,8 +870,11 @@ void LIST_TYPE::popBack()
 	{
 		auto pointer = tail;
 		tail = tail->previous;
+		tail->next = nullptr;
 
 		allocator.destroy(pointer);
+
+		updateTailLinks();
 	}
 }
 
@@ -862,8 +885,11 @@ void LIST_TYPE::popFront()
 	{
 		auto pointer = head;
 		head = head->next;
+		head->previous = nullptr;
 
 		allocator.destroy(pointer);
+
+		updateHeadLinks();
 	}
 }
 
@@ -895,6 +921,80 @@ TEMPLATE_DEFINE
 void LIST_TYPE::erase(typename LIST_TYPE::Iterator itBegin
 		, typename LIST_TYPE::Iterator itEnd)
 {
+	Types::uchar_t variaint = 10u * (itBegin == begin())
+			+ (itEnd == end());
+
+	switch (variaint)
+	{
+		case 11: // itBegin == begin() && itEnd == end()
+		{
+			clean();
+			break;
+		}
+		case 10: // itBegin == begin()
+		{
+			while (head != itEnd.internalData())
+			{
+				popFront();
+			}
+			break;
+		}
+		case 1: // itEnd == end()
+		{
+			while (tail != itBegin.internalData())
+			{
+				popBack();
+			}
+			popBack();
+			break;
+		}
+		default: // itBegin != begin() && itEnd != end()
+		{
+			Node *previousNode = itBegin.internalData()->previous;
+			previousNode->next = itEnd.internalData();
+			itEnd.internalData()->previous = previousNode;
+
+			for (Node *removingNode = itBegin.internalData();
+					removingNode != itEnd.internalData();)
+			{
+				Node *pointer = removingNode;
+				removingNode = pointer->next;
+				allocator.destroy(pointer);
+			}
+			break;
+		}
+	}
+}
+
+TEMPLATE_DEFINE inline
+void LIST_TYPE::updateHeadLinks()
+{
+	postFirst.next = head;
+	head->previous = &postFirst;
+}
+
+TEMPLATE_DEFINE inline
+void LIST_TYPE::updateTailLinks()
+{
+	postLast.previous = tail;
+	tail->next = &postLast;
+}
+
+TEMPLATE_DEFINE inline
+void LIST_TYPE::updateLinks()
+{
+	updateHeadLinks();
+	updateTailLinks();
+}
+
+TEMPLATE_DEFINE inline
+void LIST_TYPE::cleanLinks()
+{
+	postFirst.previous = nullptr;
+	postFirst.next = nullptr;
+
+	postLast.previous = nullptr;
+	postLast.next = nullptr;
 }
 
 }}
