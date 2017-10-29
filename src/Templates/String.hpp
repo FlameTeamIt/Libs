@@ -73,27 +73,18 @@ public:
 	Me &operator=(const Me &string);
 	Me &operator=(Me &&string);
 
-	// TODO: implement and test
 	Me &operator+=(const T &object);
 	Me &operator+=(T &&object);
 	template<typename IntType>
 	Me &operator+=(IntType integer);
 	Me &operator+=(const Me &string);
-
 	template<typename InputIterator>
 	Me &operator+=(Range<InputIterator> range);
 
-	// TODO: implement and test
 	Me &operator-=(Iterator it);
-	Me &operator-=(ConstIterator it);
 	Me &operator-=(ReverseIterator it);
-	Me &operator-=(ConstReverseIterator it);
-
-	// TODO: implement and test
 	Me &operator-=(Range<Iterator> range);
-	Me &operator-=(Range<ConstIterator> range);
 	Me &operator-=(Range<ReverseIterator> range);
-	Me &operator-=(Range<ConstReverseIterator> range);
 
 	template<typename IntType>
 	const T &operator[](IntType integer);
@@ -140,6 +131,8 @@ public:
 
 	void erase(Iterator it);
 	void erase(Iterator itBegin, Iterator itEnd);
+
+	static constexpr Type NULL_SYMBOL = Type();
 
 private:
 	Pointer head;
