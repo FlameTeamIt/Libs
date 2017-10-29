@@ -625,13 +625,13 @@ typename VECTOR_TYPE::ConstIterator VECTOR_TYPE::cbegin() const noexcept
 }
 
 TEMPLATE_DEFINE
-typename VECTOR_TYPE::ReverseIterator VECTOR_TYPE::rbegin()
+typename VECTOR_TYPE::ReverseIterator VECTOR_TYPE::rbegin() noexcept
 {
 	return ReverseIterator(--end());
 }
 
 TEMPLATE_DEFINE
-typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::rbegin() const
+typename VECTOR_TYPE::ConstReverseIterator VECTOR_TYPE::rbegin() const noexcept
 {
 	return ConstReverseIterator(--end());
 }
