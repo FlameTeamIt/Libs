@@ -103,7 +103,7 @@ template<typename ...Args>
 InitializerList<T, SIZE>::InitializerList(Args &&...args) : listSize(sizeof...(Args))
 {
 	static_assert(SIZE >= sizeof...(Args), "ERROR: Illegal count of arguments");
-	Helper<Args...>::init(list, forward<Args>(args)...);
+	Helper<Args...>::init(list, forward<decltype(args)>(args)...);
 }
 
 template<typename T, SizeTraits::SizeType SIZE> constexpr

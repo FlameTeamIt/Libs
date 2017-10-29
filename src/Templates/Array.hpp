@@ -717,7 +717,7 @@ template<typename ...Args>
 void ARRAY_TYPE::emplaceBack(Args &&...args)
 {
 	if (size() < capacity())
-		emplaceNew<Type>(tail++, forward<Args>(args)...);
+		emplaceNew<Type>(tail++, forward<decltype(args)>(args)...);
 }
 
 TEMPLATE_DEFINE
@@ -821,7 +821,7 @@ void ARRAY_TYPE::emplace(typename ARRAY_TYPE::Iterator it, Args &&...args)
 	if (size() < capacity())
 	{
 		if (it == end())
-			emplaceBack(forward<Args>(args)...);
+			emplaceBack(forward<decltype(args)>(args)...);
 		else
 		{
 			emplaceNew<Type>(tail);

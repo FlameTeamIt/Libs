@@ -356,7 +356,7 @@ ArrayAllocator<T, Traits>::construct(
 	{
 		for (Pointer iterator = pointer; SizeType(iterator - pointer) < count;
 				++iterator)
-			emplaceNew<Type>(iterator, forward<Args>(args)...);
+			emplaceNew<Type>(iterator, forward<decltype(args)>(args)...);
 	}
 	return pointer;
 }

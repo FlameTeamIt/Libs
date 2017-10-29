@@ -710,11 +710,11 @@ template<typename ...Args>
 void VECTOR_TYPE::emplaceBack(Args &&...args)
 {
 	if (tail != head + capacity())
-		emplaceNew<Type>(tail++, forward<Args>(args)...);
+		emplaceNew<Type>(tail++, forward<decltype(args)>(args)...);
 	else
 	{
 		reserve(nextCapacity());
-		emplaceBack(forward<Args>(args)...);
+		emplaceBack(forward<decltype(args)>(args)...);
 	}
 }
 
@@ -836,7 +836,7 @@ void VECTOR_TYPE::emplace(typename VECTOR_TYPE::Iterator it, Args &&...args)
 	if (size() < capacity())
 	{
 		if (it == end())
-			emplaceBack(forward<Args>(args)...);
+			emplaceBack(forward<decltype(args)>(args)...);
 		else
 		{
 			emplaceNew<Type>(tail);
@@ -848,7 +848,7 @@ void VECTOR_TYPE::emplace(typename VECTOR_TYPE::Iterator it, Args &&...args)
 					++itOld, ++itNew)
 				*itNew = move(*itOld);
 
-			placementNew<Type>(&(*it), forward<Args>(args)...);
+			placementNew<Type>(&(*it), forward<decltype(args)>(args)...);
 			++tail;
 		}
 	}
@@ -856,7 +856,7 @@ void VECTOR_TYPE::emplace(typename VECTOR_TYPE::Iterator it, Args &&...args)
 	{
 		auto newIt = it - begin();
 		reserve(nextCapacity());
-		emplace(begin() + newIt, forward<Args>(args)...);
+		emplace(begin() + newIt, forward<decltype(args)>(args)...);
 	}
 }
 
