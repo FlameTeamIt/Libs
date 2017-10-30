@@ -36,11 +36,11 @@ private:
 
 template<typename Container>
 View<Container, typename Container::ConstIterator>
-getView(const Container &container);
+makeView(const Container &container);
 
 template<typename Container>
 View<Container, typename Container::ConstReverseIterator>
-getReverseView(const Container &container);
+makeReverseView(const Container &container);
 
 // Range class
 
@@ -72,19 +72,23 @@ private:
 
 template<typename Container>
 Range<typename Container::Iterator>
-getRange(Container &container);
+makeRange(Container &container);
+
+template<typename InputIterator>
+Range<InputIterator>
+makeRange(InputIterator itBegin, InputIterator itEnd);
 
 template<typename Container>
 Range<typename Container::ConstIterator>
-getConstRange(const Container &container);
+makeConstRange(const Container &container);
 
 template<typename Container>
 Range<typename Container::ReverseIterator>
-getReverseRange(Container &container);
+makeReverseRange(Container &container);
 
 template<typename Container>
 Range<typename Container::ConstReverseIterator>
-getConstReverseRange(const Container &container);
+makeConstReverseRange(const Container &container);
 
 }}
 
@@ -138,9 +142,9 @@ getReverseView(const Container &container)
 // Range
 
 template<typename InputIterator>
-Range<InputIterator>::Range(
-		Range<InputIterator>::Iterator itBegin, Range<InputIterator>::Iterator itEnd) :
-		first(itBegin), last(itEnd)
+Range<InputIterator>::Range(Range<InputIterator>::Iterator itBegin
+		, Range<InputIterator>::Iterator itEnd)
+		: first(itBegin), last(itEnd)
 {}
 
 template<typename InputIterator>
@@ -165,6 +169,15 @@ getRange(Container &container)
 {
 	return Range<typename Container::Iterator>(
 			begin(container), end(container)
+	);
+}
+
+template<typename InputIterator>
+Range<InputIterator>
+getRange(InputIterator itBegin, InputIterator itEnd)
+{
+	return Range<InputIterator> (
+			itBegin, itEnd
 	);
 }
 
