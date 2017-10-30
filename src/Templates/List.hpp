@@ -268,17 +268,14 @@ public:
 	List &operator=(const Me &list);
 	List &operator=(Me &&list);
 
-	// TODO: implement and test
-	Me &operator+=(const Type &object);
-	Me &operator+=(Type &&object);
-	template<typename InputIterator>
-	Me &operator+=(Range<InputIterator> range);
+	// TODO: test
+	Me &operator+=(ConstReference object);
+	Me &operator+=(MoveReference object);
+	template<typename InputIterator> Me &operator+=(Range<InputIterator> range);
 
-	// TODO: implement and test
+	// TODO: test
 	Me &operator-=(Iterator it);
 	Me &operator-=(ReverseIterator it);
-
-	// TODO: implement and test
 	Me &operator-=(Range<Iterator> range);
 	Me &operator-=(Range<ReverseIterator> range);
 
@@ -310,20 +307,17 @@ public:
 
 	void pushBack(ConstReference object);
 	void pushBack(MoveReference object);
-	template<typename ...Args>
-	void emplaceBack(Args &&...args);
+	template<typename ...Args> void emplaceBack(Args &&...args);
 
 	void pushFront(ConstReference object);
 	void pushFront(MoveReference object);
-	template<typename ...Args>
-	void emplaceFront(Args &&...args);
+	template<typename ...Args> void emplaceFront(Args &&...args);
 
 	void insert(Iterator it, ConstReference object);
 	void insert(Iterator it, MoveReference object);
-	template<typename InputIterator>
-	void insert(Iterator it, InputIterator itBegin, InputIterator itEnd);
-	template<typename ...Args>
-	void emplace(Iterator it, Args &&...args);
+	template<typename InputIterator> void insert(Iterator it
+			, InputIterator itBegin, InputIterator itEnd);
+	template<typename ...Args> void emplace(Iterator it, Args &&...args);
 
 	void popBack();
 	void popFront();
@@ -474,6 +468,56 @@ LIST_TYPE &LIST_TYPE::operator=(LIST_TYPE &&list)
 }
 
 TEMPLATE_DEFINE
+LIST_TYPE &LIST_TYPE::operator+=(typename LIST_TYPE::ConstReference object)
+{
+	pushBack(object);
+	return *this;
+}
+
+TEMPLATE_DEFINE
+LIST_TYPE &LIST_TYPE::operator+=(typename LIST_TYPE::MoveReference object)
+{
+	pushBack(move(object));
+	return *this;
+}
+
+TEMPLATE_DEFINE template<typename InputIterator>
+LIST_TYPE &LIST_TYPE::operator+=(Range<InputIterator> range)
+{
+	insert(end(), range.begin(), range.end());
+	return *this;
+}
+
+TEMPLATE_DEFINE
+LIST_TYPE &LIST_TYPE::operator-=(typename LIST_TYPE::Iterator it)
+{
+	erase(it);
+	return *this;
+}
+
+TEMPLATE_DEFINE
+LIST_TYPE &LIST_TYPE::operator-=(typename LIST_TYPE::ReverseIterator it)
+{
+	erase(it.internalData());
+	return *this;
+}
+
+TEMPLATE_DEFINE
+LIST_TYPE &LIST_TYPE::operator-=(Range<typename LIST_TYPE::Iterator> range)
+{
+	erase(range.begin(), range.end());
+	return *this;
+}
+
+TEMPLATE_DEFINE
+LIST_TYPE &LIST_TYPE::operator-=(Range<typename LIST_TYPE::ReverseIterator> range)
+{
+	erase(range.end().operator--().internalData()
+			, range.begin().operator--().internalData());
+	return *this;
+}
+
+TEMPLATE_DEFINE
 typename LIST_TYPE::SizeType LIST_TYPE::size() const
 {
 	SizeType resultSize = 0;
@@ -506,7 +550,6 @@ typename LIST_TYPE::ConstReference LIST_TYPE::last() const
 	return tail->object;
 }
 
-// FIXME
 TEMPLATE_DEFINE
 void LIST_TYPE::clean()
 {
@@ -637,8 +680,7 @@ void LIST_TYPE::pushBack(typename LIST_TYPE::MoveReference object)
 	}
 }
 
-TEMPLATE_DEFINE
-template<typename ...Args>
+TEMPLATE_DEFINE template<typename ...Args>
 void LIST_TYPE::emplaceBack(Args &&...args)
 {
 	Node *pointer = allocator.construct(Type(forward<decltype(args)>(args)...));
@@ -692,8 +734,7 @@ void LIST_TYPE::pushFront(typename LIST_TYPE::MoveReference object)
 	}
 }
 
-TEMPLATE_DEFINE
-template<typename ...Args>
+TEMPLATE_DEFINE template<typename ...Args>
 void LIST_TYPE::emplaceFront(Args &&...args)
 {
 	Node *pointer = allocator.construct(Type(forward<decltype(args)>(args)...));
@@ -771,8 +812,7 @@ void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 	}
 }
 
-TEMPLATE_DEFINE
-template<typename InputIterator>
+TEMPLATE_DEFINE template<typename InputIterator>
 void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 		, InputIterator itBegin, InputIterator itEnd)
 {
@@ -805,6 +845,7 @@ void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 		{
 			head = pointerHead;
 			tail = pointerTail;
+			updateLinks();
 		}
 		else if (it == begin())
 		{
@@ -833,8 +874,7 @@ void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 	}
 }
 
-TEMPLATE_DEFINE
-template<typename ...Args>
+TEMPLATE_DEFINE template<typename ...Args>
 void LIST_TYPE::emplace(typename LIST_TYPE::Iterator it, Args &&...args)
 {
 	if (!size())
