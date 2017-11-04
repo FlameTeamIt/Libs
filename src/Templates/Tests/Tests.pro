@@ -28,7 +28,8 @@ HEADERS += \
 	../View.hpp \
 	../Iterator.hpp \
 	String.hpp \
-    List.hpp
+    List.hpp \
+    SharedPointer.hpp
 
 SOURCES += \
 	Allocator.cpp \
@@ -37,5 +38,6 @@ SOURCES += \
 	TestClass.cpp \
 	Vector.cpp \
 	String.cpp \
-    List.cpp
+    List.cpp \
+    SharedPointer.cpp
 

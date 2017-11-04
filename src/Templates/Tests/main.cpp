@@ -2,6 +2,7 @@
 #include <Templates/Tests/Array.hpp>
 #include <Templates/Tests/Vector.hpp>
 #include <Templates/Tests/List.hpp>
+#include <Templates/Tests/SharedPointer.hpp>
 
 void testAllocator()
 {
@@ -33,11 +34,20 @@ void testList()
 	list.start();
 }
 
+void testPointers()
+{
+	using namespace flame_ide::test;
+
+	SharedPointer pointer;
+	pointer.start();
+}
+
 int main(int /*argc*/, char */*argv*/[])
 {
 	testAllocator();
 	testArray();
 	testList();
+	testPointers();
 	return 0;
 }
 
