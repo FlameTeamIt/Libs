@@ -14,7 +14,7 @@ class SharedPointer: public AbstractTest
 {
 public:
 	SharedPointer();
-	~SharedPointer();
+	virtual ~SharedPointer();
 
 private:
 	virtual int vStart();
