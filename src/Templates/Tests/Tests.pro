@@ -10,9 +10,6 @@ INCLUDEPATH += ../../
 INCLUDEPATH += ../../../
 
 HEADERS += \
-	Allocator.hpp \
-	Array.hpp \
-	TestClass.hpp \
 	../Allocator.hpp \
 	../Array.hpp \
 	../ArrayBlocks.hpp \
@@ -27,17 +24,23 @@ HEADERS += \
 	../Vector.hpp \
 	../View.hpp \
 	../Iterator.hpp \
+	TestClass.hpp \
+	Allocator.hpp \
+	Array.hpp \
+	Vector.hpp \
+	List.hpp \
 	String.hpp \
-    List.hpp \
-    SharedPointer.hpp
+	SharedPointer.hpp \
+	UniquePoiter.hpp
 
 SOURCES += \
-	Allocator.cpp \
-	Array.cpp \
 	main.cpp \
 	TestClass.cpp \
+	Allocator.cpp \
+	Array.cpp \
 	Vector.cpp \
+	List.cpp \
 	String.cpp \
-    List.cpp \
-    SharedPointer.cpp
+	SharedPointer.cpp \
+	UniquePoiter.cpp
 

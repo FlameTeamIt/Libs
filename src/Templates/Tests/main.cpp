@@ -3,6 +3,7 @@
 #include <Templates/Tests/Vector.hpp>
 #include <Templates/Tests/List.hpp>
 #include <Templates/Tests/SharedPointer.hpp>
+#include <Templates/Tests/UniquePoiter.hpp>
 
 void testAllocator()
 {
@@ -38,8 +39,11 @@ void testPointers()
 {
 	using namespace flame_ide::test;
 
-	SharedPointer pointer;
-	pointer.start();
+	SharedPointer sharedPointer;
+	sharedPointer.start();
+
+	UniquePointer uniquePointer;
+	uniquePointer.start();
 }
 
 int main(int /*argc*/, char */*argv*/[])
