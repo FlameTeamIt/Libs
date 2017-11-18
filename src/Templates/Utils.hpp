@@ -148,26 +148,27 @@ namespace flame_ide
 template<typename T> inline constexpr
 bool isPrimitiveType() noexcept
 {
-	using ClearType = typename RemoveAll<T>::Type;
-	using IsChar = ComparingTypes<ClearType, Types::char_t>;
-	using IsUchar = ComparingTypes<ClearType, Types::uchar_t>;
+	using Type = typename RemoveAll<T>::Type;
 
-	using IsShort = ComparingTypes<ClearType, Types::short_t>;
-	using IsUshort = ComparingTypes<ClearType, Types::ushort_t>;
+	using IsChar = ComparingTypes<Type, Types::char_t>;
+	using IsUchar = ComparingTypes<Type, Types::uchar_t>;
 
-	using IsInt =ComparingTypes<ClearType, Types::int_t>;
-	using IsUint = ComparingTypes<ClearType, Types::uint_t>;
+	using IsShort = ComparingTypes<Type, Types::short_t>;
+	using IsUshort = ComparingTypes<Type, Types::ushort_t>;
 
-	using IsLong = ComparingTypes<ClearType, Types::long_t>;
-	using IsUlong = ComparingTypes<ClearType, Types::ulong_t>;
+	using IsInt =ComparingTypes<Type, Types::int_t>;
+	using IsUint = ComparingTypes<Type, Types::uint_t>;
 
-	using IsLlong = ComparingTypes<ClearType, Types::llong_t>;
-	using IsUllong = ComparingTypes<ClearType, Types::ullong_t>;
+	using IsLong = ComparingTypes<Type, Types::long_t>;
+	using IsUlong = ComparingTypes<Type, Types::ulong_t>;
 
-	using IsFloat = ComparingTypes<ClearType, Types::float_t>;
+	using IsLlong = ComparingTypes<Type, Types::llong_t>;
+	using IsUllong = ComparingTypes<Type, Types::ullong_t>;
 
-	using IsDouble = ComparingTypes<ClearType, Types::double_t>;
-	using IsLdouble = ComparingTypes<ClearType, Types::ldouble_t>;
+	using IsFloat = ComparingTypes<Type, Types::float_t>;
+
+	using IsDouble = ComparingTypes<Type, Types::double_t>;
+	using IsLdouble = ComparingTypes<Type, Types::ldouble_t>;
 
 	return (IsChar::VALUE || IsUchar::VALUE
 			|| IsShort::VALUE  || IsUshort::VALUE
@@ -176,6 +177,115 @@ bool isPrimitiveType() noexcept
 			|| IsLlong::VALUE  || IsUllong::VALUE
 			|| IsFloat::VALUE  || IsDouble::VALUE
 			|| IsLdouble::VALUE);
+}
+
+template<typename T> inline constexpr
+bool isFloadType() noexcept
+{
+	using Type = typename RemoveAll<T>::Type;
+
+	using IsFloat = ComparingTypes<Type, Types::float_t>;
+
+	using IsDouble = ComparingTypes<Type, Types::double_t>;
+	using IsLdouble = ComparingTypes<Type, Types::ldouble_t>;
+
+	return (IsFloat::VALUE || IsDouble::VALUE || IsLdouble::VALUE);
+}
+
+template<typename T> inline constexpr
+bool isSigned() noexcept
+{
+	static_assert(isPrimitiveType<typename RemoveAll<T>::Type>()
+			, "It is not a primitive type.");
+
+	using Type = typename RemoveAll<T>::Type;
+
+	using IsChar = ComparingTypes<Type, Types::char_t>;
+	using IsShort = ComparingTypes<Type, Types::short_t>;
+	using IsInt = ComparingTypes<Type, Types::int_t>;
+	using IsLong = ComparingTypes<Type, Types::long_t>;
+	using IsLlong = ComparingTypes<Type, Types::llong_t>;
+
+	return IsChar::VALUE || IsShort::VALUE || IsInt::VALUE
+			|| IsLong::VALUE || IsLlong::VALUE;
+}
+
+template<typename IntType>
+struct MakeSigned
+{
+	static_assert(isPrimitiveType<typename RemoveAll<IntType>::Type>()
+			, "It is not a primitive type.");
+
+	static_assert(!isFloadType<typename RemoveAll<IntType>::Type>()
+			, "It is only for integer types.");
+
+	using Type = IntType;
+};
+
+template<>
+struct MakeSigned<Types::uchar_t>
+{
+	using Type = Types::char_t;
+};
+
+template<>
+struct MakeSigned<Types::ushort_t>
+{
+	using Type = Types::short_t;
+};
+
+template<>
+struct MakeSigned<Types::uint_t>
+{
+	using Type = Types::int_t;
+};
+
+template<>
+struct MakeSigned<Types::ulong_t>
+{
+	using Type = Types::long_t;
+};
+
+template<typename IntType>
+struct MakeUnsigned
+{
+	static_assert(isPrimitiveType<typename RemoveAll<IntType>::Type>()
+			, "It is not a primitive type.");
+
+	static_assert(!isFloadType<typename RemoveAll<IntType>::Type>()
+			, "It is only for integer types.");
+
+	using Type = IntType;
+};
+
+template<>
+struct MakeUnsigned<Types::char_t>
+{
+	using Type = Types::uchar_t;
+};
+
+template<>
+struct MakeUnsigned<Types::short_t>
+{
+	using Type = Types::ushort_t;
+};
+
+template<>
+struct MakeUnsigned<Types::int_t>
+{
+	using Type = Types::uint_t;
+};
+
+template<>
+struct MakeUnsigned<Types::long_t>
+{
+	using Type = Types::ulong_t;
+};
+
+template<typename T> inline constexpr
+bool isUnsigned() noexcept
+{
+	return !isSigned<T>();
 }
 
 template<typename T, typename U> inline constexpr
