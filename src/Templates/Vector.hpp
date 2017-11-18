@@ -7,32 +7,34 @@
 #include <Templates/InitializerList.hpp>
 #include <Templates/View.hpp>
 
+#ifndef VECTOR_RESIZE_FACTOR_MULT
+#define VECTOR_RESIZE_FACTOR_MULT 3
+#endif // VECTOR_RESIZE_FACTOR_MULT
+
+#ifndef VECTOR_RESIZE_FACTOR_DIV
+#define VECTOR_RESIZE_FACTOR_DIV 2
+#endif // VECTOR_RESIZE_FACTOR_DIV
+
 #define TEMPLATE_DEFINE \
 	template <typename T \
 		, typename Traits \
 		, typename Allocator \
-		, typename Traits::SizeType START_SIZE \
-		, typename Traits::SizeType RESIZE_FACTOR_MULT \
-		, typename Traits::SizeType RESIZE_FACTOR_DIV \
 	>
 
 #define TEMPLATE_DEFINE_1 \
 	template <typename Traits1 \
 		, typename Allocator1 \
-		, typename Traits::SizeType START_SIZE1 \
-		, typename Traits::SizeType RESIZE_FACTOR_MULT1 \
-		, typename Traits::SizeType RESIZE_FACTOR_DIV1 \
 	>
 
 #define VECTOR_TYPE \
 	Vector< \
 		T, Traits, Allocator \
-		, START_SIZE, RESIZE_FACTOR_MULT, RESIZE_FACTOR_DIV>
+	>
 
 #define VECTOR_TYPE_1 \
 	Vector< \
 		T, Traits1, Allocator1 \
-		, START_SIZE1, RESIZE_FACTOR_MULT1, RESIZE_FACTOR_DIV1>
+	>
 
 namespace flame_ide
 {namespace templates
@@ -41,14 +43,11 @@ namespace flame_ide
 template <typename T
 	, typename Traits = ContainerTraits<T>
 	, typename Allocator = allocator::ArrayAllocator<T, Traits>
-	, typename Traits::SizeType START_SIZE = 16
-	, typename Traits::SizeType RESIZE_FACTOR_MULT = 3
-	, typename Traits::SizeType RESIZE_FACTOR_DIV = 2
 >
 class Vector: public Traits
 {
 public:
-	static_assert(RESIZE_FACTOR_MULT > RESIZE_FACTOR_DIV, "Error");
+	static_assert(VECTOR_RESIZE_FACTOR_MULT > VECTOR_RESIZE_FACTOR_DIV, "Error");
 
 	using Me = VECTOR_TYPE;
 
@@ -147,19 +146,16 @@ public:
 	template<typename IntType>
 	ConstReference operator[](IntType index) const noexcept;
 
-	// TODO: implement and test
 	Me &operator+=(const Type &object);
 	Me &operator+=(Type &&object);
 	template<typename InputIterator>
 	Me &operator+=(Range<InputIterator> range);
 
-	// TODO: implement and test
 	Me &operator-=(Iterator it);
 	Me &operator-=(ReverseIterator it);
 	Me &operator-=(ConstIterator it);
 	Me &operator-=(ConstReverseIterator it);
 
-	// TODO: implement and test
 	Me &operator-=(Range<Iterator> range);
 	Me &operator-=(Range<ConstIterator> range);
 	Me &operator-=(Range<ReverseIterator> range);
@@ -368,10 +364,10 @@ public:
 private:
 	inline SizeType nextCapacity() const;
 
+	Allocator allocator;
+	SizeType vectorCapacity;
 	Pointer head;
 	Pointer tail;
-	SizeType vectorCapacity;
-	Allocator allocator;
 };
 
 }}
@@ -381,17 +377,17 @@ namespace flame_ide
 {
 
 TEMPLATE_DEFINE
-VECTOR_TYPE::Vector() noexcept :
-		head(nullptr), tail(nullptr)
-		, vectorCapacity(0)
-		, allocator()
+VECTOR_TYPE::Vector() noexcept
+		: allocator()
+		, vectorCapacity()
+		, head(nullptr), tail(nullptr)
 {}
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
-VECTOR_TYPE::Vector(const VECTOR_TYPE_1 &vector) :
-		head(vector.allocator.createArray(vector.size()))
-		, tail(head + vector.size())
+VECTOR_TYPE::Vector(const VECTOR_TYPE_1 &vector)
+		: allocator()
 		, vectorCapacity(vector.size())
+		, head(vector.allocator.createArray(vector.size())), tail(head + vector.size())
 {
 	Iterator it = head;
 	for (const Type &i : vector)
@@ -399,10 +395,10 @@ VECTOR_TYPE::Vector(const VECTOR_TYPE_1 &vector) :
 }
 
 TEMPLATE_DEFINE
-VECTOR_TYPE::Vector(const VECTOR_TYPE &vector) :
-		head(vector.allocator.createArray(vector.size()))
-		, tail(head + vector.size())
+VECTOR_TYPE::Vector(const VECTOR_TYPE &vector)
+		: allocator(vector.allocator)
 		, vectorCapacity(vector.size())
+		, head(vector.allocator.createArray(vector.size())), tail(head + vector.size())
 {
 	Iterator it = head;
 	for (const Type &i : vector)
@@ -410,44 +406,39 @@ VECTOR_TYPE::Vector(const VECTOR_TYPE &vector) :
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
-VECTOR_TYPE::Vector(VECTOR_TYPE_1 &&vector) noexcept :
-		head(vector.head)
-		, tail(vector.tail)
+VECTOR_TYPE::Vector(VECTOR_TYPE_1 &&vector) noexcept
+		: allocator(move(vector.allocator))
 		, vectorCapacity(vector.vectorCapacity)
+		, head(vector.head), tail(vector.tail)
 {
 	vector.head = nullptr;
 	vector.tail = nullptr;
 }
 
 TEMPLATE_DEFINE
-VECTOR_TYPE::Vector(VECTOR_TYPE &&vector) :
-		head(vector.head)
-		, tail(vector.tail)
+VECTOR_TYPE::Vector(VECTOR_TYPE &&vector)
+		: allocator(move(vector.allocator))
 		, vectorCapacity(vector.vectorCapacity)
+		, head(vector.head), tail(vector.tail)
 {
 	vector.head = nullptr;
 	vector.tail = nullptr;
 }
 
 TEMPLATE_DEFINE
-VECTOR_TYPE::Vector(typename VECTOR_TYPE::SizeType size) : Vector()
-{
-	vectorCapacity = size;
-
-	head = allocator.createArray(nextCapacity());
-	tail = head + size;
-
-	vectorCapacity = nextCapacity();
-}
+VECTOR_TYPE::Vector(typename VECTOR_TYPE::SizeType size)
+		: allocator()
+		, vectorCapacity((size * VECTOR_RESIZE_FACTOR_MULT) / VECTOR_RESIZE_FACTOR_DIV)
+		, head(allocator.construct(vectorCapacity)), tail(head + vectorCapacity)
+{}
 
 TEMPLATE_DEFINE
 template<SizeTraits::SizeType INIT_LIST_SIZE>
 VECTOR_TYPE::Vector(InitializerList<T, INIT_LIST_SIZE> list)
+		: allocator()
+		, vectorCapacity(list.size())
+		, head(allocator.createArray(vectorCapacity)), tail(head + vectorCapacity)
 {
-	head = allocator.createArray(list.size() * sizeof(Type));
-	tail = head + list.size();
-	vectorCapacity = list.size();
-
 	auto itList = list.begin();
 	for (auto &i : *this)
 	{
@@ -459,37 +450,50 @@ VECTOR_TYPE::Vector(InitializerList<T, INIT_LIST_SIZE> list)
 TEMPLATE_DEFINE
 VECTOR_TYPE::~Vector()
 {
-	for (auto &i : *this)
-		i.~T();
+	clean();
 	allocator.freeArray(head);
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
 VECTOR_TYPE &VECTOR_TYPE::operator=(const VECTOR_TYPE_1 &vector)
 {
-	auto tempHead = allocator.createArray(vector.size());
-	auto it = tempHead;
-	for (const Type &i : vector)
-		placementNew<Type>(it++, i);
-
-	for (auto &i : *this)
-		i.~T();
-	allocator.freeArray(head);
-
-	vectorCapacity = vector.size();
-	head = tempHead;
-	tail = head + vectorCapacity;
+	if (capacity() < vector.size())
+	{
+		reserve(vector.size() - capacity());
+		operator=(vector);
+	}
+	else
+	{
+		clean();
+		auto it = begin();
+		for(ConstReference i : vector)
+		{
+			*it = i;
+			++it;
+		}
+	}
+	return *this;
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
 VECTOR_TYPE &VECTOR_TYPE::operator=(VECTOR_TYPE_1 &&vector) noexcept
 {
-	head = vector.head;
-	tail = vector.tail;
-	vectorCapacity = vector.vectorCapacity;
+	Pointer tmp;
+	SizeType tmpCapacity;
 
-	vector.head = nullptr;
-	vector.tail = nullptr;
+	tmp = head;
+	head = vector.head;
+	vector.head = tmp;
+
+	tmp = tail;
+	tail = vector.tail;
+	vector.tail = tmp;
+
+	tmpCapacity = vectorCapacity;
+	vectorCapacity = vector.vectorCapacity;
+	vector.vectorCapacity = tmp;
+
+	return *this;
 }
 
 TEMPLATE_DEFINE
@@ -543,23 +547,35 @@ void VECTOR_TYPE::reserve(typename VECTOR_TYPE::SizeType newCapacity)
 {
 	if (capacity() < newCapacity)
 	{
-		Pointer tempHead = allocator.createArray(newCapacity);
-		if (tempHead)
+//		Pointer tempHead = allocator.createArray(newCapacity);
+		Pointer tempHead = allocator.reallocateArray(head, newCapacity);
+		if (!tempHead)
 		{
-			Range<Pointer> rangeNew(tempHead, tempHead + newCapacity);
-			Range<Iterator> rangeOld(begin(), end());
-
-			auto itNew = rangeNew.begin();
-			auto itOld = rangeOld.begin();
-			for (; itNew != rangeNew.end() && itOld != rangeOld.end();
-					++itNew, ++itOld)
+			tempHead = allocator.createArray(newCapacity);
+			if (tempHead)
 			{
-				placementNew<Type>(itNew, move(*itOld));
-				itOld->~T();
+				Range<Pointer> rangeNew(tempHead, tempHead + newCapacity);
+				Range<Iterator> rangeOld(begin(), end());
+
+				auto itNew = rangeNew.begin();
+				auto itOld = rangeOld.begin();
+				for (; itNew != rangeNew.end() && itOld != rangeOld.end();
+						++itNew, ++itOld)
+				{
+					placementNew<Type>(itNew, move(*itOld));
+					itOld->~T();
+				}
+				allocator.freeArray(head);
+				tail = tempHead + size();
+				head = tempHead;
+				vectorCapacity = newCapacity;
 			}
-			allocator.freeArray(head);
-			tail = tempHead + size();
+		}
+		else
+		{
+			auto diff = tail - head;
 			head = tempHead;
+			tail = head + diff;
 			vectorCapacity = newCapacity;
 		}
 	}
@@ -904,7 +920,7 @@ void VECTOR_TYPE::erase(typename VECTOR_TYPE::Iterator itBegin
 TEMPLATE_DEFINE
 typename VECTOR_TYPE::SizeType VECTOR_TYPE::nextCapacity() const
 {
-	return ((capacity() * RESIZE_FACTOR_MULT) / RESIZE_FACTOR_DIV);
+	return ((capacity() * VECTOR_RESIZE_FACTOR_MULT) / VECTOR_RESIZE_FACTOR_DIV);
 }
 
 }}
