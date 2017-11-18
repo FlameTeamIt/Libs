@@ -1,9 +1,3 @@
-/*
- * file:       ObjectViewer.hpp
- *
- * created:    19.07.2017
- * author:     kachsheev
- */
 #ifndef TEMPLATES_OBJECTVIEWER_HPP
 #define TEMPLATES_OBJECTVIEWER_HPP
 

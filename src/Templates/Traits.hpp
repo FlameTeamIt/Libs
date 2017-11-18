@@ -96,7 +96,7 @@ struct DefaultTraits
  */
 struct SizeTraits
 {
-	using SizeType = Types::size_t ;
+	using SizeType = Types::size_t;
 	using SsizeType = Types::ssize_t;
 	using DiffType = Types::diff_t;
 };

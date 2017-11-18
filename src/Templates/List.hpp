@@ -268,12 +268,10 @@ public:
 	List &operator=(const Me &list);
 	List &operator=(Me &&list);
 
-	// TODO: test
 	Me &operator+=(ConstReference object);
 	Me &operator+=(MoveReference object);
 	template<typename InputIterator> Me &operator+=(Range<InputIterator> range);
 
-	// TODO: test
 	Me &operator-=(Iterator it);
 	Me &operator-=(ReverseIterator it);
 	Me &operator-=(Range<Iterator> range);
