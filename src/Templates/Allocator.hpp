@@ -46,6 +46,17 @@ public:
 	}
 
 	/**
+	 * @brief Non-virtual interface for reallocating
+	 *
+	 * @param pointer
+	 * Pointer to raw memory
+	 */
+	inline VoidPointer reallocate(VoidPointer pointer, SizeType size) noexcept
+	{
+		return vReallocate(pointer, size);
+	}
+
+	/**
 	 * @brief Non-virtual interface for freeing
 	 *
 	 * @param pointer
@@ -66,6 +77,16 @@ protected:
 	 * @return Raw pointer to allocated memory or nullptr
 	 */
 	virtual VoidPointer vAllocate(SizeType size) noexcept = 0;
+
+	/**
+	 * @brief Virtual function for reallocating memory
+	 *
+	 * @param pointer Pointer to raw memry
+	 * @param size Count bytes
+	 *
+	 * @return Pointer to reallocated memory or nullptr
+	 */
+	virtual VoidPointer vReallocate(VoidPointer pointer, SizeType size) noexcept = 0;
 
 	/**
 	 * @brief Virtual function for freeing
@@ -108,6 +129,16 @@ protected:
 	 * @return Pointer to raw memory or nullptr
 	 */
 	virtual VoidPointer vAllocate(typename Traits::SizeType size) noexcept;
+
+	/**
+	 * @brief Low-level function for reallocate raw memory. Using realloc()
+	 *
+	 * @param pointer Pointer to raw memry
+	 * @param size Count bytes
+	 *
+	 * @return Pointer to reallocated memory or nullptr
+	 */
+	virtual VoidPointer vReallocate(VoidPointer pointer, typename Traits::SizeType size) noexcept;
 
 	/**
 	 * @brief Low-level function for deallocate raw memory. Using free()
@@ -221,6 +252,13 @@ public:
 	Pointer createArray(SizeType count);
 
 	/**
+	 * @brief reallocateArray
+	 * @param count
+	 * @return
+	 */
+	Pointer reallocateArray(Pointer pointer, SizeType count);
+
+	/**
 	 * @brief Call destructors and free memory in array
 	 *
 	 * @param pointer
@@ -288,7 +326,16 @@ MallocAllocator<Traits>::vAllocate(typename Traits::SizeType size) noexcept
 }
 
 template<typename Traits>
-void MallocAllocator<Traits>::vDeallocate(MallocAllocator<Traits>::VoidPointer pointer) noexcept
+typename MallocAllocator<Traits>::VoidPointer
+MallocAllocator<Traits>::vReallocate(typename MallocAllocator<Traits>::VoidPointer pointer
+		, typename Traits::SizeType size) noexcept
+{
+	return realloc(pointer, size);
+}
+
+template<typename Traits>
+void MallocAllocator<Traits>::vDeallocate(
+		typename MallocAllocator<Traits>::VoidPointer pointer) noexcept
 {
 	free(pointer);
 }
@@ -309,7 +356,8 @@ ObjectAllocator<T, Traits>::construct(Args &&...args) noexcept
 
 template<typename T, typename Traits>
 typename ObjectAllocator<T, Traits>::Pointer
-ObjectAllocator<T, Traits>::construct(typename ObjectAllocator<T, Traits>::MoveReference obj) noexcept
+ObjectAllocator<T, Traits>::construct(
+		typename ObjectAllocator<T, Traits>::MoveReference obj) noexcept
 {
 	Pointer pointer = reinterpret_cast<Pointer>(
 			this->allocate(SizeType(sizeof(Type)))
@@ -369,13 +417,22 @@ ArrayAllocator<T, Traits>::createArray(SizeType count)
 }
 
 template<typename T, typename Traits>
+typename ArrayAllocator<T, Traits>::Pointer
+ArrayAllocator<T, Traits>::reallocateArray(typename ArrayAllocator<T, Traits>::Pointer pointer,
+		SizeType count)
+{
+	return reinterpret_cast<Pointer>(this->reallocate(
+			VoidPointer(pointer), SizeType(sizeof(Type) * count)));
+}
+
+template<typename T, typename Traits>
 void ArrayAllocator<T, Traits>::destroy(
 		typename ArrayAllocator<T, Traits>::Pointer &pointer
 		, typename ArrayAllocator<T, Traits>::SizeType count) noexcept
 {
-	for (Pointer iterator = pointer; iterator - pointer < SsizeType(count); ++iterator)
+	for (Pointer iterator = pointer; SizeType(iterator - pointer) < count; ++iterator)
 		(*iterator).~T();
-	deallocate(pointer);
+	this->deallocate(pointer);
 	pointer = nullptr;
 }
 
