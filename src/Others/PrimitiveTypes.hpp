@@ -23,13 +23,8 @@ typedef int16_t short_t;
 typedef uint32_t uint_t;
 typedef int32_t int_t;
 
-#if defined __x86_64__ && !defined __ILP32__
 typedef uint64_t ulong_t;
 typedef int64_t long_t;
-#else
-typedef uint32_t ulong_t;
-typedef int32_t long_t;
-#endif
 
 typedef uint64_t ullong_t;
 typedef int64_t llong_t;
