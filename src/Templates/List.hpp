@@ -330,11 +330,11 @@ private:
 
 	inline void cleanLinks();
 
+	Allocator allocator;
 	Node postFirst;
 	Node postLast;
 	Node *head;
 	Node *tail;
-	Allocator allocator;
 };
 
 }}
@@ -365,9 +365,9 @@ Node<T, Traits>::Node(typename Node<T, Traits>::MoveReference object)
 
 TEMPLATE_DEFINE
 LIST_TYPE::List()
-		: postFirst(), postLast()
+		: allocator()
+		, postFirst(), postLast()
 		, head(nullptr), tail(nullptr)
-		, allocator()
 {}
 
 TEMPLATE_DEFINE
@@ -385,9 +385,9 @@ LIST_TYPE::List(const LIST_TYPE &list) : List()
 
 TEMPLATE_DEFINE
 LIST_TYPE::List(LIST_TYPE &&list)
-		: postFirst(), postLast()
+		: allocator()
+		, postFirst(), postLast()
 		, head(list.head), tail(list.tail)
-		, allocator()
 {
 	list.head = nullptr;
 	list.tail = nullptr;
