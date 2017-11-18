@@ -177,8 +177,8 @@ public:
 
 	void popBack();
 
-	void insert(Iterator it, const T &object);
-	void insert(Iterator it, T &&object);
+	void insert(Iterator it, ConstReference object);
+	void insert(Iterator it, MoveReference object);
 	template<typename InputIterator>
 	void insert(Iterator it, InputIterator itBegin, InputIterator itEnd);
 
@@ -198,22 +198,20 @@ private:
 	Pointer tail;
 };
 
-TEMPLATE_TYPE
-template<typename IntType>
+template<typename T, typename Traits, typename Allocator, typename IntType>
 STRING_TYPE operator+(const STRING_TYPE &string, IntType integer);
 
-TEMPLATE_TYPE
-template<typename IntType>
+template<typename T, typename Traits, typename Allocator, typename IntType>
 STRING_TYPE operator+(IntType integer, const STRING_TYPE &string);
 
 TEMPLATE_TYPE
 STRING_TYPE operator+(const STRING_TYPE &string1, const STRING_TYPE &string2);
 
 TEMPLATE_TYPE
-STRING_TYPE operator+(const STRING_TYPE &string, typename STRING_TYPE::PointerToConst string);
+STRING_TYPE operator+(const STRING_TYPE &string, typename STRING_TYPE::PointerToConst array);
 
 TEMPLATE_TYPE
-STRING_TYPE operator+(typename STRING_TYPE::PointerToConst string, const STRING_TYPE &string);
+STRING_TYPE operator+(typename STRING_TYPE::PointerToConst array, const STRING_TYPE &string);
 
 
 }}
@@ -264,8 +262,7 @@ STRING_TYPE::BasicString(typename STRING_TYPE::PointerToConst rawString)
 		, tail(head + stringCapacity - SizeType(1))
 {
 	Iterator it = begin();
-	Range<PointerToConst> range(rawString, rawString + stringCapacity - SizeType(1));
-
+	auto range = makeRange(rawString, rawString + stringCapacity - SizeType(1));
 	for (auto i : range)
 	{
 		*(it++) = i;
@@ -524,10 +521,52 @@ STRING_TYPE::crend() const noexcept
 	return rend();
 }
 
+TEMPLATE_TYPE
+void STRING_TYPE::resize(typename STRING_TYPE::SizeType newSize)
+{}
 
+TEMPLATE_TYPE
+void STRING_TYPE::reserve(typename STRING_TYPE::SizeType addSize)
+{}
 
+TEMPLATE_TYPE
+void STRING_TYPE::pushBack(typename STRING_TYPE::ConstReference object)
+{}
 
+TEMPLATE_TYPE
+void STRING_TYPE::pushBack(typename STRING_TYPE::MoveReference object)
+{}
 
+TEMPLATE_TYPE
+void STRING_TYPE::pushBack(typename STRING_TYPE::PointerToConst array)
+{}
+
+TEMPLATE_TYPE
+void STRING_TYPE::popBack()
+{}
+
+TEMPLATE_TYPE
+void STRING_TYPE::insert(Iterator it, typename STRING_TYPE::ConstReference object)
+{}
+
+TEMPLATE_TYPE
+void STRING_TYPE::insert(Iterator it, typename STRING_TYPE::MoveReference object)
+{}
+
+TEMPLATE_TYPE
+template<typename InputIterator>
+void STRING_TYPE::insert(typename STRING_TYPE::Iterator it
+		, InputIterator itBegin, InputIterator itEnd)
+{}
+
+TEMPLATE_TYPE
+void STRING_TYPE::erase(typename STRING_TYPE::Iterator it)
+{}
+
+TEMPLATE_TYPE
+void STRING_TYPE::erase(typename STRING_TYPE::Iterator itBegin
+		, typename STRING_TYPE::Iterator itEnd)
+{}
 
 TEMPLATE_TYPE
 typename STRING_TYPE::SizeType STRING_TYPE::nextCapacity() const noexcept
