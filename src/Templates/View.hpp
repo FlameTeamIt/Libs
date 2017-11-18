@@ -123,7 +123,7 @@ View<Container, InputIterator>::end()
 
 template<typename Container>
 View<Container, typename Container::ConstIterator>
-getView(const Container &container)
+makeView(const Container &container)
 {
 	return View<Container, typename Container::ConstIterator>(
 			cbegin(container), cend(container)
@@ -132,7 +132,7 @@ getView(const Container &container)
 
 template<typename Container>
 View<Container, typename Container::ConstReverseIterator>
-getReverseView(const Container &container)
+makeReverseView(const Container &container)
 {
 	return View<Container, typename Container::ConstReverseIterator>(
 			crbegin(container), crend(container)
@@ -161,11 +161,11 @@ Range<InputIterator>::end()
 	return last;
 }
 
-// Range getters
+// Range makers
 
 template<typename Container>
 Range<typename Container::Iterator>
-getRange(Container &container)
+makeRange(Container &container)
 {
 	return Range<typename Container::Iterator>(
 			begin(container), end(container)
@@ -174,7 +174,7 @@ getRange(Container &container)
 
 template<typename InputIterator>
 Range<InputIterator>
-getRange(InputIterator itBegin, InputIterator itEnd)
+makeRange(InputIterator itBegin, InputIterator itEnd)
 {
 	return Range<InputIterator> (
 			itBegin, itEnd
@@ -183,7 +183,7 @@ getRange(InputIterator itBegin, InputIterator itEnd)
 
 template<typename Container>
 Range<typename Container::ConstIterator>
-getConstRange(const Container &container)
+makeConstRange(const Container &container)
 {
 	return Range<typename Container::ConstIterator>(
 			cbegin(container), cend(container)
@@ -192,7 +192,7 @@ getConstRange(const Container &container)
 
 template<typename Container>
 Range<typename Container::ReverseIterator>
-getReverseRange(Container &container)
+makeReverseRange(Container &container)
 {
 	return Range<typename Container::ConstIterator>(
 			rbegin(container), rend(container)
@@ -201,7 +201,7 @@ getReverseRange(Container &container)
 
 template<typename Container>
 Range<typename Container::ConstReverseIterator>
-getConstReverseRange(const Container &container)
+makeConstReverseRange(const Container &container)
 {
 	return Range<typename Container::ConstIterator>(
 			crbegin(container), crend(container)
