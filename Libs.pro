@@ -86,4 +86,6 @@ HEADERS += \
     src/Templates/Iterator.hpp \
     src/Templates/View.hpp \
     src/Templates/Vector.hpp \
-    src/Templates/CircularVector.hpp
+    src/Templates/CircularVector.hpp \
+    src/Templates/Trees.hpp \
+    src/Templates/Tuple.hpp

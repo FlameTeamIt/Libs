@@ -4,6 +4,7 @@
 #include <Templates/Tests/List.hpp>
 #include <Templates/Tests/SharedPointer.hpp>
 #include <Templates/Tests/UniquePoiter.hpp>
+#include <Templates/Tests/Tuple.hpp>
 
 void testAllocator()
 {
@@ -46,12 +47,21 @@ void testPointers()
 	uniquePointer.start();
 }
 
+void testTuple()
+{
+	using namespace flame_ide::test;
+
+	Tuple tuple;
+	tuple.start();
+}
+
 int main(int /*argc*/, char */*argv*/[])
 {
 	testAllocator();
 	testArray();
 	testList();
 	testPointers();
+	testTuple();
 	return 0;
 }
 

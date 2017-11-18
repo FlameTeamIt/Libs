@@ -31,7 +31,8 @@ HEADERS += \
 	List.hpp \
 	String.hpp \
 	SharedPointer.hpp \
-	UniquePoiter.hpp
+	UniquePoiter.hpp \
+    Tuple.hpp
 
 SOURCES += \
 	main.cpp \
@@ -42,5 +43,6 @@ SOURCES += \
 	List.cpp \
 	String.cpp \
 	SharedPointer.cpp \
-	UniquePoiter.cpp
+	UniquePoiter.cpp \
+    Tuple.cpp
 
