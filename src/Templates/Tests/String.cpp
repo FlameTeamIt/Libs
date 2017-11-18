@@ -3,7 +3,8 @@
 using namespace flame_ide::test;
 
 String::String()
-{}
+{
+}
 
 String::~String()
 {}

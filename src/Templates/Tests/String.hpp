@@ -17,6 +17,7 @@ public:
 	virtual int vStart();
 
 private:
+	templates::String string;
 };
 
 }}
