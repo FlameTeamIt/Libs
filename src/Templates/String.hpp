@@ -39,8 +39,8 @@ template<
 >
 struct NumberChecker;
 
-template<typename T>
-SizeTraits::SizeType bufferSize(T integer);
+template<typename T, bool SIGNED = isSigned<T>()>
+struct BufferSize;
 
 }
 
@@ -49,7 +49,7 @@ template<typename T
 	, typename Allocator = allocator::ArrayAllocator<T>>
 class BasicString;
 
-using String = BasicString<Types::char_t>;
+using String = BasicString<char>;
 using U8String = BasicString<Types::uchar_t>;
 using U16String = BasicString<Types::ushort_t>;
 using U32String = BasicString<Types::uint_t>;
@@ -85,8 +85,17 @@ struct NumberChecker<
 	static inline SizeTraits::SizeType get(IntType value);
 };
 
+template<typename T, bool SIGNED>
+struct BufferSize
+{
+	static inline SizeTraits::SizeType get(T integer);
+};
+
 template<typename T>
-SizeTraits::SizeType bufferSize(T integer);
+struct BufferSize<T, false>
+{
+	static inline SizeTraits::SizeType get(T integer);
+};
 
 }
 
@@ -133,6 +142,7 @@ public:
 	template<typename IntType>
 	Type operator[](IntType integer) const noexcept;
 
+	// TODO: Not implement
 	Me &operator+=(const T &object);
 	Me &operator+=(T &&object);
 	template<typename IntType>
@@ -141,12 +151,13 @@ public:
 	template<typename InputIterator>
 	Me &operator+=(Range<InputIterator> range);
 
+	// TODO: Not implement
 	Me &operator-=(Iterator it);
 	Me &operator-=(ReverseIterator it);
 	Me &operator-=(Range<Iterator> range);
 	Me &operator-=(Range<ReverseIterator> range);
 
-	SizeType size() const noexcept;
+	SizeType length() const noexcept;
 	SizeType capacity() const noexcept;
 	PointerToConst data() const noexcept;
 
@@ -181,6 +192,7 @@ public:
 	void insert(Iterator it, MoveReference object);
 	template<typename InputIterator>
 	void insert(Iterator it, InputIterator itBegin, InputIterator itEnd);
+	void insert(Iterator it, PointerToConst array);
 
 	void erase(Iterator it);
 	void erase(Iterator itBegin, Iterator itEnd);
@@ -220,6 +232,67 @@ namespace flame_ide
 {namespace templates
 {
 
+namespace string_utils
+{
+
+template<Types::ullong_t MIN, Types::ullong_t MAX, SizeTraits::SizeType BUFFER_SIZE>
+template<typename IntType>
+inline SizeTraits::SizeType
+NumberChecker<MIN, MAX, BUFFER_SIZE>::get(IntType value)
+{
+	if (MIN <= value && value <= MAX)
+		return BUFFER_SIZE;
+	else
+		return NumberChecker<
+			MAX, MAX * Types::ullong_t(10) + Types::ullong_t(9)
+			, BUFFER_SIZE + SizeTraits::SizeType(1)
+		>::get(value);
+}
+
+template<SizeTraits::SizeType BUFFER_SIZE>
+template<typename IntType>
+inline SizeTraits::SizeType NumberChecker<
+	Types::ullong_t(999999999999999999ULL), Types::ullong_t(9999999999999999999ULL)
+	, BUFFER_SIZE>::get(IntType value)
+{
+	constexpr Types::ullong_t MIN = Types::ullong_t(999999999999999999ULL);
+	constexpr Types::ullong_t MAX = Types::ullong_t(9999999999999999999ULL);
+
+	if (MIN <= value && value <= MAX)
+		return BUFFER_SIZE;
+	else
+		return BUFFER_SIZE + 1;
+}
+
+template<typename IntType, bool SIGNED>
+SizeTraits::SizeType BufferSize<IntType, SIGNED>::get(IntType integer)
+{
+	SizeTraits::SizeType signedValue = 0;
+	if (integer < 0)
+	{
+		++signedValue;
+		integer *= -1;
+	}
+	typename MakeUnsigned<IntType>::Type value = integer;
+
+	return signedValue + NumberChecker<0ULL, 9ULL, 1>::get(value);
+}
+
+template<typename IntType>
+SizeTraits::SizeType BufferSize<IntType, false>::get(IntType integer)
+{
+	return NumberChecker<0ULL, 9ULL, 1>::get(integer);
+}
+
+template<typename IntType>
+SizeTraits::SizeType bufferSize(IntType integer)
+{
+	return BufferSize<IntType>::get(integer);
+}
+
+
+}
+
 TEMPLATE_TYPE
 STRING_TYPE::BasicString() : allocator()
 		, stringCapacity()
@@ -229,8 +302,8 @@ STRING_TYPE::BasicString() : allocator()
 TEMPLATE_TYPE
 STRING_TYPE::BasicString(const STRING_TYPE &string)
 		: allocator(string.allocator)
-		, stringCapacity(string.size() + SizeType(1))
-		, head(allocator.createArray(string.size()))
+		, stringCapacity(string.length() + SizeType(1))
+		, head(allocator.createArray(stringCapacity))
 		, tail(head + stringCapacity - SizeType(1))
 {
 	Pointer pointer = head;
@@ -280,7 +353,7 @@ STRING_TYPE::~BasicString()
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator=(const STRING_TYPE &string)
 {
-	if (size() >= string.size())
+	if (length() >= string.length())
 	{
 		clean();
 		Iterator it = begin();
@@ -293,7 +366,7 @@ STRING_TYPE &STRING_TYPE::operator=(const STRING_TYPE &string)
 	}
 	else
 	{
-		reserve(string.size() - size());
+		reserve(string.length() - length());
 		operator=(string);
 	}
 	return *this;
@@ -324,7 +397,7 @@ STRING_TYPE &STRING_TYPE::operator=(typename STRING_TYPE::PointerToConst array)
 	clean();
 	const auto arraySize = rawStringLength(array);
 
-	if (size() >= arraySize)
+	if (length() >= arraySize)
 	{
 		Range<decltype(array)> range(array, array + arraySize);
 		auto it = begin();
@@ -337,7 +410,7 @@ STRING_TYPE &STRING_TYPE::operator=(typename STRING_TYPE::PointerToConst array)
 	}
 	else
 	{
-		reserve(arraySize - size());
+		reserve(arraySize - length());
 		operator=(array);
 	}
 
@@ -408,14 +481,16 @@ STRING_TYPE &STRING_TYPE::operator-=(Range<ReverseIterator> range)
 {}
 
 TEMPLATE_TYPE
-typename STRING_TYPE::SizeType STRING_TYPE::size() const noexcept
+typename STRING_TYPE::SizeType STRING_TYPE::length() const noexcept
 {
 	return tail - head;
 }
 
 TEMPLATE_TYPE
 typename STRING_TYPE::SizeType STRING_TYPE::capacity() const noexcept
-{}
+{
+	return stringCapacity;
+}
 
 TEMPLATE_TYPE
 typename STRING_TYPE::PointerToConst STRING_TYPE::data() const noexcept
@@ -426,8 +501,13 @@ typename STRING_TYPE::PointerToConst STRING_TYPE::data() const noexcept
 TEMPLATE_TYPE
 void STRING_TYPE::clean()
 {
-	for(auto &i : *this)
-		i.~T();
+	if (stringCapacity)
+	{
+		for(auto &i : *this)
+			i.~T();
+		tail = head;
+		*head = NULL_SYMBOL;
+	}
 }
 
 TEMPLATE_TYPE
@@ -523,55 +603,314 @@ STRING_TYPE::crend() const noexcept
 
 TEMPLATE_TYPE
 void STRING_TYPE::resize(typename STRING_TYPE::SizeType newSize)
-{}
+{
+	if (head)
+	{
+		if (newSize > stringCapacity)
+		{
+			auto tmp = allocator.reallocateArray(head, newSize);
+			if (tmp != head)
+			{
+				tail = (tail - head) + tmp;
+				head = tmp;
+			}
+			stringCapacity = newSize;
+		}
+	}
+	else
+	{
+		head = allocator.createArray(newSize);
+		*(tail = head) = NULL_SYMBOL;
+		stringCapacity = newSize;
+	}
+}
 
 TEMPLATE_TYPE
 void STRING_TYPE::reserve(typename STRING_TYPE::SizeType addSize)
-{}
+{
+	resize(capacity() + addSize);
+}
 
 TEMPLATE_TYPE
 void STRING_TYPE::pushBack(typename STRING_TYPE::ConstReference object)
-{}
+{
+	if (length() < capacity())
+	{
+		*tail = object;
+		++tail;
+		*tail = NULL_SYMBOL;
+	}
+	else
+	{
+		resize(nextCapacity());
+		pushBack(object);
+	}
+}
 
 TEMPLATE_TYPE
 void STRING_TYPE::pushBack(typename STRING_TYPE::MoveReference object)
-{}
+{
+	if (length() + SizeType(1) < capacity())
+	{
+		*tail = object;
+		++tail;
+		*tail = NULL_SYMBOL;
+	}
+	else
+	{
+		resize(nextCapacity());
+		pushBack(object);
+	}
+}
 
 TEMPLATE_TYPE
 void STRING_TYPE::pushBack(typename STRING_TYPE::PointerToConst array)
-{}
+{
+	auto arraySize = rawStringLength(array);
+	if (length() + arraySize + SizeType(2) < capacity())
+	{
+		auto range = makeRange(tail, tail + arraySize);
+		auto pointer = array;
+		for (auto &i : range)
+		{
+			i = *(pointer++);
+		}
+		tail = tail + arraySize;
+		*range.end() = NULL_SYMBOL;
+	}
+	else
+	{
+		SizeType stringNewCapacity = nextCapacity();
+		if (length() + arraySize + SizeType(2) < stringNewCapacity)
+			resize(stringNewCapacity);
+		else
+			resize(length() + arraySize + SizeType(2));
+
+		pushBack(array);
+	}
+}
 
 TEMPLATE_TYPE
 void STRING_TYPE::popBack()
-{}
+{
+	if (length())
+	{
+		--tail;
+		*tail = NULL_SYMBOL;
+	}
+}
 
 TEMPLATE_TYPE
 void STRING_TYPE::insert(Iterator it, typename STRING_TYPE::ConstReference object)
-{}
+{
+	if (length() + SizeType(1) < capacity())
+	{
+		if (it == end())
+			pushBack(object);
+		else
+		{
+			emplaceNew<Type>(tail);
+
+			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
+					, rangeNew(--rangeOld.begin(), --rangeOld.end());
+			for (ReverseIterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+					itNew != rangeNew.end(); ++itOld, ++itNew)
+				*itNew = move(*itOld);
+
+			*it = object;
+			++tail;
+			*tail = NULL_SYMBOL;
+		}
+	}
+	else
+	{
+		auto newIt = it - begin();
+		reserve(nextCapacity());
+		insert(begin() + newIt, object);
+	}
+}
 
 TEMPLATE_TYPE
 void STRING_TYPE::insert(Iterator it, typename STRING_TYPE::MoveReference object)
-{}
+{
+	if (length() + SizeType(1) < capacity())
+	{
+		if (it == end())
+			pushBack(move(object));
+		else
+		{
+			emplaceNew<Type>(tail);
+
+			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
+					, rangeNew(--rangeOld.begin(), --rangeOld.end());
+			for (ReverseIterator itOld = rangeOld.begin()
+					, itNew = rangeNew.begin(); itOld != rangeOld.end();
+					++itOld, ++itNew)
+				*itNew = move(*itOld);
+
+			*it = move(object);
+			++tail;
+			*tail = NULL_SYMBOL;
+		}
+	}
+	else
+	{
+		auto newIt = it - begin();
+		reserve(nextCapacity());
+		insert(begin() + newIt, object);
+	}
+}
 
 TEMPLATE_TYPE
 template<typename InputIterator>
 void STRING_TYPE::insert(typename STRING_TYPE::Iterator it
 		, InputIterator itBegin, InputIterator itEnd)
-{}
+{
+	auto rangeSize = countIterations(itBegin, itEnd);
+	if (!rangeSize)
+		return;
+	else if (capacity() > rangeSize + length())
+	{
+		Range<InputIterator> range(itBegin, itEnd);
+		if (it == end())
+			for (auto &itInsert : range)
+				pushBack(itInsert);
+		else
+		{
+			Range<Iterator> initRange(end(), end() + rangeSize);
+			for (Reference it : initRange)
+				emplaceNew<Type>(&it);
+
+			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
+					, rangeNew(rangeOld.begin() - rangeSize
+							, rangeOld.end() - rangeSize);
+			for (ReverseIterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+					itOld != rangeOld.end(); ++itOld, ++itNew)
+				*itNew = move(*itOld);
+
+			for (auto &itInsert : range)
+			{
+				*it = itInsert;
+				++it;
+			}
+			tail += rangeSize;
+			*tail = NULL_SYMBOL;
+		}
+	}
+	else
+	{
+		auto newIt = it - begin();
+		reserve(rangeSize - capacity());
+		insert(begin() + newIt, itBegin, itEnd);
+	}
+}
+
+TEMPLATE_TYPE
+void STRING_TYPE::insert(typename STRING_TYPE::Iterator it
+		, typename STRING_TYPE::PointerToConst array)
+{
+	SizeType rawSize = rawStringLength(array);
+	insert(it, array, array + rawSize);
+}
 
 TEMPLATE_TYPE
 void STRING_TYPE::erase(typename STRING_TYPE::Iterator it)
-{}
+{
+	if (it == end())
+		return;
+	else if (it == --end())
+		popBack();
+	else
+	{
+		auto rangeOld = makeRange(it + 1, end());
+		auto rangeNew = makeRange(rangeOld.begin() - 1, rangeOld.end() - 1);
+		for (Iterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+				itOld != rangeOld.end(); ++itOld, ++itNew)
+			*itNew = move(*itOld);
+		--tail;
+		*tail = NULL_SYMBOL;
+	}
+}
 
 TEMPLATE_TYPE
 void STRING_TYPE::erase(typename STRING_TYPE::Iterator itBegin
 		, typename STRING_TYPE::Iterator itEnd)
-{}
+{
+	if (SizeType(itEnd - itBegin) == length())
+		clean();
+	else if (itEnd - itBegin < SizeTraits::SsizeType(length())
+			&& itEnd - itBegin > SizeTraits::SsizeType(0))
+	{
+		auto rangeErasing = makeRange(itBegin, itEnd);
+		for (auto &i : rangeErasing)
+			i.~T();
+
+		auto rangeOld = makeRange(itEnd, end());
+		auto rangeNew = makeRange(itBegin, itBegin + (end() - itEnd));
+		for (Iterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
+				itOld != rangeOld.end(); ++itNew, ++itOld)
+			*itNew = move(*itOld);
+
+		tail -= SizeType(rangeErasing.end() - rangeErasing.begin());
+		*tail = NULL_SYMBOL;
+	}
+}
 
 TEMPLATE_TYPE
 typename STRING_TYPE::SizeType STRING_TYPE::nextCapacity() const noexcept
 {
 	return (capacity() * STRING_RESIZE_FACTOR_MULT) / STRING_RESIZE_FACTOR_DIV;
+}
+
+TEMPLATE_TYPE
+typename STRING_TYPE::SizeType STRING_TYPE::rawStringLength(
+		typename STRING_TYPE::PointerToConst rawString)
+{
+	SizeType length;
+	for (length = 0; rawString[length] != NULL_SYMBOL; ++length);
+	return length;
+}
+
+template<typename IntValue>
+String toString(IntValue value)
+{
+	String string;
+
+	if (isFloatType<IntValue>())
+	{
+		// TODO: implement
+	}
+	else
+	{
+		SizeTraits::SizeType buffer = string_utils::BufferSize<IntValue>::get(value);
+		string.reserve(buffer);
+
+		if (isSigned<IntValue>())
+		{
+			if (value < 0)
+			{
+				string.pushBack('-');
+				value *= -1;
+				--buffer;
+			}
+		}
+
+		SizeTraits::SizeType dec = 1;
+		for (decltype(buffer) i = 1; i < buffer; ++i)
+		{
+			dec *= static_cast<SizeTraits::SizeType>(10);
+		}
+
+		for (decltype(buffer) i = 0; i < buffer; ++i)
+		{
+			auto result = value / dec;
+			string.pushBack(String::Type('0' + result));
+			value %= dec;
+			dec /= static_cast<SizeTraits::SizeType>(10);
+		}
+	}
+
+	return string;
 }
 
 }}
