@@ -881,12 +881,12 @@ void VECTOR_TYPE::erase(VECTOR_TYPE::Iterator it)
 {
 	if (it == end())
 		return;
-	else if (it == end() - 1)
+	else if (it == --end())
 		popBack();
 	else
 	{
-		Range<Iterator> rangeOld(it + 1, end())
-				, rangeNew(rangeOld.begin() - 1, rangeOld.end() - 1);
+		auto rangeOld = makeRange(it + 1, end());
+		auto rangeNew = makeRange(rangeOld.begin() - 1, rangeOld.end() - 1);
 		for (Iterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
 				itOld != rangeOld.end(); ++itOld, ++itNew)
 			*itNew = move(*itOld);
@@ -907,8 +907,8 @@ void VECTOR_TYPE::erase(typename VECTOR_TYPE::Iterator itBegin
 		for (auto &i : rangeErasing)
 			i.~T();
 
-		Range<Iterator> rangeOld(itEnd, end())
-				, rangeNew(itBegin, itBegin + (end() - itEnd));
+		auto rangeOld = makeRange(itEnd, end());
+		auto rangeNew = makeRange(itBegin, itBegin + (end() - itEnd));
 		for (Iterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
 				itOld != rangeOld.end(); ++itNew, ++itOld)
 			*itNew = move(*itOld);

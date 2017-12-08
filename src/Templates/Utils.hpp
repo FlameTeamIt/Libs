@@ -180,7 +180,7 @@ bool isPrimitiveType() noexcept
 }
 
 template<typename T> inline constexpr
-bool isFloadType() noexcept
+bool isFloatType() noexcept
 {
 	using Type = typename RemoveAll<T>::Type;
 
@@ -216,7 +216,7 @@ struct MakeSigned
 	static_assert(isPrimitiveType<typename RemoveAll<IntType>::Type>()
 			, "It is not a primitive type.");
 
-	static_assert(!isFloadType<typename RemoveAll<IntType>::Type>()
+	static_assert(!isFloatType<typename RemoveAll<IntType>::Type>()
 			, "It is only for integer types.");
 
 	using Type = IntType;
@@ -252,7 +252,7 @@ struct MakeUnsigned
 	static_assert(isPrimitiveType<typename RemoveAll<IntType>::Type>()
 			, "It is not a primitive type.");
 
-	static_assert(!isFloadType<typename RemoveAll<IntType>::Type>()
+	static_assert(!isFloatType<typename RemoveAll<IntType>::Type>()
 			, "It is only for integer types.");
 
 	using Type = IntType;
@@ -426,6 +426,18 @@ template<typename Container> inline
 typename Container::ConstReverseIterator crend(const Container &container)
 {
 	return container.crend();
+}
+
+template<typename Container> inline
+typename Container::SizeType capacity(const Container &container)
+{
+	return container.capacity();
+}
+
+template<typename Container> inline
+typename Container::SizeType size(const Container &container)
+{
+	return container.size();
 }
 
 }}
