@@ -1,4 +1,4 @@
-#ifndef TEMPLATES_POINTERS_HPP
+﻿#ifndef TEMPLATES_POINTERS_HPP
 #define TEMPLATES_POINTERS_HPP
 
 #include <Templates/Allocator.hpp>
@@ -444,5 +444,11 @@ void UNIQUE_TYPE::clean()
 }
 
 }}
+
+#undef SHARED_TEMPLATE_DEFINE
+#undef UNIQUE_TEMPLATE_DEFINE
+
+#undef SHARED_TYPE
+#undef UNIQUE_TYPE
 
 #endif // TEMPLATES_POINTERS_HPP
