@@ -2,6 +2,7 @@
 #define TEMPLATES_STRING_HPP
 
 #include <Templates/Traits.hpp>
+#include <Templates/Utils.hpp>
 #include <Templates/Allocator.hpp>
 #include <Templates/Iterator.hpp>
 #include <Templates/View.hpp>
@@ -21,8 +22,6 @@
 
 #define STRING_TYPE \
 	BasicString<T, Traits, Allocator>
-
-#define TO_STRING(VALUE) # VALUE
 
 // Define classes
 
@@ -97,6 +96,35 @@ struct BufferSize<T, false>
 	static inline SizeTraits::SizeType get(T integer);
 };
 
+template<typename IntValue>
+String toString(IntValue value);
+
+template<typename NumberType, bool IS_FLOAT = isFloatType<NumberType>()>
+struct NumberConverter
+{
+	static String convert(NumberType value);
+};
+
+template<typename NumberType>
+struct NumberConverter<NumberType, true>
+{
+	static String convert(NumberType value);
+};
+
+template<typename IntType, typename CharType>
+class IntegerToCharStream
+{
+	static constexpr CharType NULL_SYMBOL = CharType();
+
+	IntegerToCharStream(IntType value);
+
+	CharType get();
+	bool next() const;
+
+private:
+	IntType value;
+};
+
 }
 
 
@@ -140,7 +168,7 @@ public:
 	Reference operator[](IntType integer) noexcept;
 
 	template<typename IntType>
-	Type operator[](IntType integer) const noexcept;
+	ConstReference operator[](IntType integer) const noexcept;
 
 	// TODO: Not implement
 	Me &operator+=(const T &object);
@@ -290,7 +318,6 @@ SizeTraits::SizeType bufferSize(IntType integer)
 	return BufferSize<IntType>::get(integer);
 }
 
-
 }
 
 TEMPLATE_TYPE
@@ -353,7 +380,7 @@ STRING_TYPE::~BasicString()
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator=(const STRING_TYPE &string)
 {
-	if (length() >= string.length())
+	if (capacity() >= string.length())
 	{
 		clean();
 		Iterator it = begin();
@@ -387,6 +414,7 @@ STRING_TYPE &STRING_TYPE::operator=(STRING_TYPE &&string)
 	tail = string.tail;
 
 	string.head = string.tail = nullptr;
+	string.stringCapacity = decltype(string.stringCapacity)();
 
 	return *this;
 }
@@ -395,9 +423,9 @@ TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator=(typename STRING_TYPE::PointerToConst array)
 {
 	clean();
-	const auto arraySize = rawStringLength(array);
+	const auto arraySize = rawStringLength(array) + SizeType(1);
 
-	if (length() >= arraySize)
+	if (capacity() >= arraySize)
 	{
 		Range<decltype(array)> range(array, array + arraySize);
 		auto it = begin();
@@ -411,7 +439,7 @@ STRING_TYPE &STRING_TYPE::operator=(typename STRING_TYPE::PointerToConst array)
 	else
 	{
 		reserve(arraySize - length());
-		operator=(array);
+		return operator=(array);
 	}
 
 	return *this;
@@ -422,37 +450,50 @@ template<typename IntType>
 typename STRING_TYPE::Reference
 STRING_TYPE::operator[](IntType integer) noexcept
 {
+	static_assert( !isFloatType<IntType>(), "Invalid index type." );
 	return head[integer];
 }
 
 TEMPLATE_TYPE
 template<typename IntType>
-typename STRING_TYPE::Type
+typename STRING_TYPE::ConstReference
 STRING_TYPE::operator[](IntType integer) const noexcept
 {
+	static_assert( !isFloatType<IntType>(), "Invalid index type." );
 	return head[integer];
 }
 
 // TODO: implement
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator+=(const T &object)
-{}
+{
+	pushBack(object);
+	return *this;
+}
 
 // TODO: implement
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator+=(T &&object)
-{}
+{
+	pushBack(object);
+	return *this;
+}
 
 // TODO: implement
 TEMPLATE_TYPE
 template<typename IntType>
 STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
-{}
+{
+
+	return *this;
+}
 
 // TODO: implement
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator+=(const Me &string)
-{}
+{
+	return *this;
+}
 
 // TODO: implement
 TEMPLATE_TYPE
@@ -871,46 +912,56 @@ typename STRING_TYPE::SizeType STRING_TYPE::rawStringLength(
 	return length;
 }
 
-template<typename IntValue>
-String toString(IntValue value)
+namespace string_utils
+{
+
+template<typename NumberType, bool IS_FLOAT>
+String NumberConverter<NumberType, IS_FLOAT>::convert(NumberType value)
 {
 	String string;
+	SizeTraits::SizeType buffer = string_utils::BufferSize<NumberType>::get(value);
+	string.reserve(buffer);
 
-	if (isFloatType<IntValue>())
+	if (isSigned<NumberType>())
 	{
-		// TODO: implement
+		if (value < 0)
+		{
+			string.pushBack('-');
+			value *= -1;
+			--buffer;
+		}
 	}
-	else
+
+	SizeTraits::SizeType dec = 1;
+	for (decltype(buffer) i = 1; i < buffer; ++i)
 	{
-		SizeTraits::SizeType buffer = string_utils::BufferSize<IntValue>::get(value);
-		string.reserve(buffer);
+		dec *= static_cast<SizeTraits::SizeType>(10);
+	}
 
-		if (isSigned<IntValue>())
-		{
-			if (value < 0)
-			{
-				string.pushBack('-');
-				value *= -1;
-				--buffer;
-			}
-		}
-
-		SizeTraits::SizeType dec = 1;
-		for (decltype(buffer) i = 1; i < buffer; ++i)
-		{
-			dec *= static_cast<SizeTraits::SizeType>(10);
-		}
-
-		for (decltype(buffer) i = 0; i < buffer; ++i)
-		{
-			auto result = value / dec;
-			string.pushBack(String::Type('0' + result));
-			value %= dec;
-			dec /= static_cast<SizeTraits::SizeType>(10);
-		}
+	for (decltype(buffer) i = 0; i < buffer; ++i)
+	{
+		auto result = value / dec;
+		string.pushBack(String::Type('0' + result));
+		value %= dec;
+		dec /= static_cast<SizeTraits::SizeType>(10);
 	}
 
 	return string;
+}
+
+template<typename NumberType>
+String NumberConverter<NumberType, true>::convert(NumberType)
+{
+	String string;
+	return string;
+}
+
+}
+
+template<typename IntValue>
+String toString(IntValue value)
+{
+	return string_utils::NumberConverter<IntValue, isFloatType<IntValue>()>::convert(value);
 }
 
 }}

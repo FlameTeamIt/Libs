@@ -15,11 +15,12 @@ int String::vStart()
 {
 	auto printString = [] (auto &string, bool endl = false)
 	{
+		std::cout << '"';
 		for (auto i : string)
 		{
 			std::cout << i;
 		}
-		std::cout << std::endl;
+		std::cout << '"' << std::endl;
 
 		if (endl)
 			std::cout << std::endl;
@@ -108,6 +109,30 @@ int String::vStart()
 			auto size = sizeof("Hello") - 1;
 			string.insert(string.begin() + size, ',');
 			printString(string);
+		}
+	}
+	std::cout << std::endl;
+
+	std::cout << "Testing operator=()" << std::endl;
+	{
+		std::cout << "---> operator=(ConstReference)" << std::endl;
+		{
+			templates::String copiedString = string;
+			std::cout << copiedString.data() << std::endl;
+		}
+		std::cout << "---> operator=(MoveReference)" << std::endl;
+		{
+			templates::String movedString = templates::String();
+			movedString = templates::move(string);
+			std::cout << "Moved: " << movedString.data() << std::endl;
+			string = templates::move(movedString);
+			std::cout << "Original: " << string.data() << std::endl;
+		}
+		std::cout << "---> operator=(PointerToConst)" << std::endl;
+		{
+			templates::String stringFromArray = templates::String();
+			stringFromArray = string.data();
+			std::cout << stringFromArray.data() << std::endl;
 		}
 	}
 	std::cout << std::endl;
