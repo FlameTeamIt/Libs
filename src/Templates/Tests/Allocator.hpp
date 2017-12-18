@@ -1,13 +1,8 @@
-/*
- * file:       Allocator.hpp
- *
- * created:    17.07.2017
- * author:     kachsheev
- */
-#ifndef TEST_ALLOCATOR_HPP
+﻿#ifndef TEST_ALLOCATOR_HPP
 #define TEST_ALLOCATOR_HPP
 
 #include <tests/Test.hpp>
+
 #include <Templates/Allocator.hpp>
 
 #include "TestClass.hpp"

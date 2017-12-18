@@ -1,10 +1,4 @@
-/*
- * file:       Allocator.cpp
- *
- * created:    17.07.2017
- * author:     kachsheev
- */
-#include "Allocator.hpp"
+﻿#include "Allocator.hpp"
 
 namespace flame_ide
 {namespace test

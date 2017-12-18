@@ -34,11 +34,8 @@ struct NonCopy
 /**
  * @brief A variable of this struct cannot be define.
  */
-struct NonCreational
+struct NonCreational: public NonDefault, public NonMove, public NonCopy
 {
-	NonCreational() = delete;
-	NonCreational(const NonCreational &) = delete;
-	NonCreational(NonCreational &&) = delete;
 	~NonCreational() = delete;
 };
 
@@ -394,6 +391,22 @@ template<typename T>
 struct RemoveAll<T &&>
 {
 	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
+};
+
+template<bool CONDITION_RESULT, typename T1, typename T2>
+struct ChooseType: public NonCreational
+{};
+
+template<typename T1, typename T2>
+struct ChooseType<true, T1, T2>: public NonCreational
+{
+	using Type = T1;
+};
+
+template<typename T1, typename T2>
+struct ChooseType<false, T1, T2>: public NonCreational
+{
+	using Type = T2;
 };
 
 }}

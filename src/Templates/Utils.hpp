@@ -7,22 +7,6 @@ namespace flame_ide
 {namespace templates
 {
 
-template<typename T>
-struct AlignObject
-{
-	static constexpr Types::size_t ARRAY_SIZE = (sizeof(T) % sizeof(Types::size_t))
-			? sizeof(T) / sizeof(Types::size_t) + 1
-			: sizeof(T) / sizeof(Types::size_t);
-
-	AlignObject()
-	{
-		for (Types::size_t i = 0; i < ARRAY_SIZE; ++i)
-			array[i] = 0u;
-	}
-
-	size_t array[ARRAY_SIZE];
-};
-
 /**
  * @brief Get info about T is a primitive type or not.
  */
@@ -86,6 +70,7 @@ template<typename T> inline
 typename DefaultTraits<T>::Pointer
 placementNew(typename DefaultTraits<T>::Pointer pointer
 		, typename DefaultTraits<T>::ConstReference obj) noexcept;
+
 /**
  * @brief Comparing ranges.
  */
@@ -317,7 +302,7 @@ template<typename IteratorInput, typename IteratorOutput>
 void copy(IteratorInput start, IteratorInput end
 		, IteratorOutput out)
 {
-	static_assert(!isSameTypes<decltype(*start), decltype(*out)>(), "Types is not equal");
+	static_assert(!isSameTypes<decltype(*start), decltype(*out)>(), "Types is not equal.");
 
 	for(auto iterator = start; iterator != end; ++iterator, ++out)
 		*out = *iterator;
@@ -359,7 +344,7 @@ template<typename Iterator1, typename Iterator2>
 bool isEqual(Iterator1 start1, Iterator1 end1
 		, Iterator2 start2, Iterator2 end2)
 {
-	static_assert(!isSameTypes<decltype(*start1), decltype(*start2)>(), "Types is not equal");
+	static_assert(!isSameTypes<decltype(*start1), decltype(*start2)>(), "Types is not equal.");
 
 	bool equal = true;
 	auto iterator1 = start1;
