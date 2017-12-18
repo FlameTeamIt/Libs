@@ -10,39 +10,44 @@ INCLUDEPATH += ../../
 INCLUDEPATH += ../../../
 
 HEADERS += \
-	../Allocator.hpp \
-	../Array.hpp \
-	../ArrayBlocks.hpp \
-	../List.hpp \
-	../ObjectViewer.hpp \
-	../Pointers.hpp \
-	../String.hpp \
-	../Templates.hpp \
-	../Traits.hpp \
-	../Utils.hpp \
-	../InitializerList.hpp \
-	../Vector.hpp \
-	../View.hpp \
-	../Iterator.hpp \
-	TestClass.hpp \
-	Allocator.hpp \
-	Array.hpp \
-	Vector.hpp \
-	List.hpp \
-	String.hpp \
-	SharedPointer.hpp \
-	UniquePoiter.hpp \
-    Tuple.hpp
+    Allocator.hpp \
+    Array.hpp \
+    List.hpp \
+    SharedPointer.hpp \
+    String.hpp \
+    TestClass.hpp \
+    Tuple.hpp \
+    UniquePoiter.hpp \
+    Vector.hpp \
+    ../Allocator.hpp \
+    ../Array.hpp \
+    ../ArrayBlocks.hpp \
+    ../CircularVector.hpp \
+    ../InitializerList.hpp \
+    ../Iterator.hpp \
+    ../List.hpp \
+    ../ObjectViewer.hpp \
+    ../Pointers.hpp \
+    ../SimpleAlgorithms.hpp \
+    ../String.hpp \
+    ../Templates.hpp \
+    ../Traits.hpp \
+    ../Tuple.hpp \
+    ../Utils.hpp \
+    ../Vector.hpp \
+    ../View.hpp \
+    ../WideInt.hpp \
+    ../Bits.hpp
 
 SOURCES += \
-	main.cpp \
-	TestClass.cpp \
-	Allocator.cpp \
-	Array.cpp \
-	Vector.cpp \
-	List.cpp \
-	String.cpp \
-	SharedPointer.cpp \
-	UniquePoiter.cpp \
-    Tuple.cpp
+    Allocator.cpp \
+    Array.cpp \
+    List.cpp \
+    main.cpp \
+    SharedPointer.cpp \
+    String.cpp \
+    TestClass.cpp \
+    Tuple.cpp \
+    UniquePoiter.cpp \
+    Vector.cpp
 
