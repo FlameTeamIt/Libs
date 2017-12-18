@@ -56,16 +56,16 @@ struct FloatBits
 	static_assert(isFloatType<FloatType>(), "This type is not float.");
 };
 
-template<Types::float_t>
-struct FloatBits
+template<>
+struct FloatBits<Types::float_t>
 {
 	static constexpr Types::uchar_t SIGN = 1;
 	static constexpr Types::uchar_t EXPONENT = 8;
 	static constexpr Types::uchar_t MANTISSA = 23;
 };
 
-template<Types::double_t>
-struct FloatBits
+template<>
+struct FloatBits<Types::double_t>
 {
 	static constexpr Types::uchar_t SIGN = 1;
 	static constexpr Types::uchar_t EXPONENT = 11;
@@ -79,11 +79,11 @@ struct FloatViewer
 	{
 		struct
 		{
-			MinimalType<FloatBits<FloatType>::SIGN>::Type SIGN :
+			typename MinimalType<FloatBits<FloatType>::SIGN>::Type SIGN :
 					FloatBits<FloatType>::SIGN;
-			MinimalType<FloatBits<FloatType>::EXPONENT>::Type EXPONENT :
+			typename MinimalType<FloatBits<FloatType>::EXPONENT>::Type EXPONENT :
 					FloatBits<FloatType>::EXPONENT;
-			MinimalType<FloatBits<FloatType>::MANTISSA>::Type MANTISSA :
+			typename MinimalType<FloatBits<FloatType>::MANTISSA>::Type MANTISSA :
 					FloatBits<FloatType>::MANTISSA;
 		};
 		FloatType value;
