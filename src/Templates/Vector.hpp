@@ -1,4 +1,4 @@
-#ifndef TEMPLATES_VECTOR_HPP
+﻿#ifndef TEMPLATES_VECTOR_HPP
 #define TEMPLATES_VECTOR_HPP
 
 #include <Templates/Utils.hpp>
@@ -416,7 +416,7 @@ VECTOR_TYPE::Vector(VECTOR_TYPE_1 &&vector) noexcept
 }
 
 TEMPLATE_DEFINE
-VECTOR_TYPE::Vector(VECTOR_TYPE &&vector)
+VECTOR_TYPE::Vector(VECTOR_TYPE &&vector) noexcept
 		: allocator(move(vector.allocator))
 		, vectorCapacity(vector.vectorCapacity)
 		, head(vector.head), tail(vector.tail)

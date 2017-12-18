@@ -1,7 +1,7 @@
 ﻿#ifndef TEST_ALLOCATOR_HPP
 #define TEST_ALLOCATOR_HPP
 
-#include <tests/Test.hpp>
+#include <Tests/Test.hpp>
 
 #include <Templates/Allocator.hpp>
 

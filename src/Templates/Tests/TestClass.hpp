@@ -1,10 +1,4 @@
-/*
- * file:       TestClass.hpp
- *
- * created:    17.07.2017
- * author:     kachsheev
- */
-#ifndef TEST_TESTCLASS_HPP
+﻿#ifndef TEST_TESTCLASS_HPP
 #define TEST_TESTCLASS_HPP
 
 class TestClass

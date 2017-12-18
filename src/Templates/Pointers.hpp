@@ -179,8 +179,8 @@ public:
 	SharedPointer(ConstReference obj);
 	SharedPointer(MoveReference obj);
 	~SharedPointer();
-	Me &operator=(const Me &);
-	Me &operator=(Me &&);
+	Me &operator=(const Me &) noexcept;
+	Me &operator=(Me &&) noexcept;
 
 	Reference operator*() noexcept;
 	ConstReference operator*() const noexcept;
