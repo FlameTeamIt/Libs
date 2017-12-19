@@ -47,7 +47,8 @@ template <typename T
 class Vector: public Traits
 {
 public:
-	static_assert(VECTOR_RESIZE_FACTOR_MULT > VECTOR_RESIZE_FACTOR_DIV, "Error");
+	static_assert(VECTOR_RESIZE_FACTOR_MULT > VECTOR_RESIZE_FACTOR_DIV,
+			"VECTOR_RESIZE_FACTOR_MULT can be more than VECTOR_RESIZE_FACTOR_DIV.");
 
 	using Me = VECTOR_TYPE;
 
