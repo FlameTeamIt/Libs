@@ -949,9 +949,12 @@ String NumberConverter<NumberType, IS_FLOAT>::convert(NumberType value)
 	return string;
 }
 
+// TODO: Implement
 template<typename NumberType>
 String NumberConverter<NumberType, true>::convert(NumberType)
 {
+	static_assert(!isFloatType<NumberType>(), "Not implemented.");
+
 	String string;
 	return string;
 }
