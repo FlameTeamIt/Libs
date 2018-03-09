@@ -1,8 +1,8 @@
 #ifndef SESSION_H
 #define SESSION_H
 
-#include <Filesystem/BasicFile.h>
-#include <Filesystem/Project.h>
+#include <Filesystem/BasicFile.hpp>
+#include <Filesystem/Project.hpp>
 
 #include <vector>
 
@@ -16,10 +16,10 @@ class Session
 public:
 	Session();
 	~Session();
-	
+
 	void
 	createNew();
-		
+
 };
 
 }

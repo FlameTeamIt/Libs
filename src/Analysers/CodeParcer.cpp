@@ -1,5 +1,5 @@
-#include <Filesystem/BasicFile.h>
-#include <Analysers/CodeParcer.h>
+#include <Filesystem/BasicFile.hpp>
+#include <Analysers/CodeParcer.hpp>
 
 #include <iostream>
 

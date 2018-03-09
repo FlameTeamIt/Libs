@@ -2,6 +2,7 @@
 #define TEMPLATES_ARRAY_HPP
 
 #include <Templates/Bits.hpp>
+#include <Templates/AlignObject.hpp>
 #include <Templates/InitializerList.hpp>
 #include <Templates/Iterator.hpp>
 #include <Templates/View.hpp>
@@ -387,7 +388,7 @@ private:
 	inline Pointer head();
 	inline PointerToConst head() const;
 
-	bits::AlignObject<Type> objects[SIZE];
+	AlignObject<Type> objects[SIZE];
 	Pointer tail;
 };
 

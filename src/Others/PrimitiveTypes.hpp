@@ -33,6 +33,9 @@ typedef float float_t;
 typedef double double_t;
 typedef long double ldouble_t;
 
+enum class byte_t : uchar_t
+{};
+
 }}}
 
 #endif // BASETYPES_H

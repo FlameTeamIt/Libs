@@ -1,4 +1,4 @@
-#include "BasicFile.h"
+#include <Filesystem/BasicFile.hpp>
 
 #include <fstream>
 #include <list>
@@ -46,7 +46,7 @@ BasicFile::parceFullFilename(const std::string &fullfilename,
 	// разделяем на куски путь + имя файла
 	std::string::const_iterator it_end_path;
 	bool is_find = false;
-	
+
 	for(std::string::const_iterator
 			it = fullfilename.begin(),
 			it_end = fullfilename.end();
@@ -59,13 +59,13 @@ BasicFile::parceFullFilename(const std::string &fullfilename,
 		}
 	}
 	it_end_path++;
-	
+
 	if(str_path.length())
 		str_path.clear();
-	
+
 	if(str_filename.length())
 		str_filename.clear();
-	
+
 	if(is_find)
 	{
 		// использовать лябды и std::bind
@@ -76,7 +76,7 @@ BasicFile::parceFullFilename(const std::string &fullfilename,
 		{
 			str_filename += *it;
 		}
-		
+
 		for(std::string::const_iterator
 				it = fullfilename.begin(),
 				it_end = it_end_path;
@@ -84,12 +84,12 @@ BasicFile::parceFullFilename(const std::string &fullfilename,
 		{
 			str_path += *it;
 		}
-		
+
 		return true;
 	}
-	
+
 	str_filename = fullfilename;
-	
+
 	return false;
 }
 
@@ -110,25 +110,25 @@ std::string
 BasicFile::load()
 {
 	// по умолчанию, грузим все посимвольно
-	
+
 	std::ifstream file(this->filename.c_str());
 	std::string out("");
-	
+
 	if(file.is_open())
 	{
 		char temp_char;
-		
+
 		file.get(temp_char);
-		
+
 		while(!file.eof())
 		{
 			out += temp_char;
 			file.get(temp_char);
 		}
 	}
-	
+
 	file.close();
-	
+
 	return out;
 }
 
@@ -136,10 +136,10 @@ void
 BasicFile::save(const std::string &text)
 {
 	std::ofstream file(filename.c_str());
-	
+
 	if(file.is_open())
 	{	file << text;}
-	
+
 	file.close();
 }
 
@@ -166,16 +166,16 @@ BasicFile::remove()
 {
 	std::string fullfilename = filename + path;
 	std::ifstream file(fullfilename.c_str());
-	
+
 	if(file.is_open())
 	{
 		file.close();
-		
+
 		std::remove(fullfilename.c_str());
 	}
-	
+
 	file.close();
-	
+
 }
 
 void

@@ -1,4 +1,4 @@
-#include "CommandLine.h"
+#include <Process/CommandLine.hpp>
 
 #include <cstdio>
 
@@ -23,15 +23,15 @@ CommandLine::getOutput(const std::string& command)
 	char buffer[_BUFFER_SIZE];
 	std::string result = "";
 
-    while(!feof(pipe))
+	while(!feof(pipe))
 	{
 		if(fgets(buffer, _BUFFER_SIZE, pipe) != NULL)
 			result += buffer;
-    }
+	}
 
-    pclose(pipe);
+	pclose(pipe);
 
-    return result;
+	return result;
 }
 
 
@@ -46,15 +46,15 @@ CommandLine::getOutput(char* command)
 	char buffer[32];
 	std::string result = "";
 
-    while(!feof(pipe))
+	while(!feof(pipe))
 	{
 		if(fgets(buffer, 32, pipe) != NULL)
 			result += buffer;
-    }
+	}
 
-    pclose(pipe);
+	pclose(pipe);
 
-    return result;
+	return result;
 }
 
 std::string
@@ -68,13 +68,13 @@ CommandLine::getOutput(const char* command)
 	char buffer[1024];
 	std::string result = "";
 
-    while(!feof(pipe))
+	while(!feof(pipe))
 	{
 		if(fgets(buffer, 32, pipe) != NULL)
 			result += buffer;
-    }
+	}
 
-    pclose(pipe);
+	pclose(pipe);
 
-    return result;
+	return result;
 }

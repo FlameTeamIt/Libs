@@ -3,9 +3,81 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CXXFLAGS += -std=c++14
-INCLUDEPATH += src/
+QMAKE_CXXFLAGS += -std=c++14 -pedantic
+INCLUDEPATH += src/ .
 
-SOURCES += \
+# headers
+HEADERS += ./tests/Test.hpp
+HEADERS += ./src/Others/TextStyle.hpp
+HEADERS += ./src/Others/PrimitiveTypes.hpp
+HEADERS += ./src/Analysers/ArgsParser.hpp
+HEADERS += ./src/Analysers/CodeParcer.hpp
+HEADERS += ./src/Constants/CPP.hpp
+HEADERS += ./src/Constants/C.hpp
+HEADERS += ./src/Bus/MsgInterface.hpp
+HEADERS += ./src/About/About.hpp
+HEADERS += ./src/Process/CommandLine.hpp
+HEADERS += ./src/Filesystem/Project.hpp
+HEADERS += ./src/Filesystem/BasicFile.hpp
+HEADERS += ./src/Filesystem/Session.hpp
+HEADERS += ./src/Templates/CircularVector.hpp
+HEADERS += ./src/Templates/AlignObject.hpp
+HEADERS += ./src/Templates/Vector.hpp
+HEADERS += ./src/Templates/ArrayBits.hpp
+HEADERS += ./src/Templates/Tests/SharedPointer.hpp
+HEADERS += ./src/Templates/Tests/Vector.hpp
+HEADERS += ./src/Templates/Tests/List.hpp
+HEADERS += ./src/Templates/Tests/Bits.hpp
+HEADERS += ./src/Templates/Tests/TestClass.hpp
+HEADERS += ./src/Templates/Tests/Tuple.hpp
+HEADERS += ./src/Templates/Tests/Allocator.hpp
+HEADERS += ./src/Templates/Tests/UniquePoiter.hpp
+HEADERS += ./src/Templates/Tests/TestAggregator.hpp
+HEADERS += ./src/Templates/Tests/String.hpp
+HEADERS += ./src/Templates/Tests/Array.hpp
+HEADERS += ./src/Templates/List.hpp
+HEADERS += ./src/Templates/WideInt.hpp
+HEADERS += ./src/Templates/Templates.hpp
+HEADERS += ./src/Templates/Iterator.hpp
+HEADERS += ./src/Templates/BitSet.hpp
+HEADERS += ./src/Templates/Bits.hpp
+HEADERS += ./src/Templates/View.hpp
+HEADERS += ./src/Templates/FloatViewer.hpp
+HEADERS += ./src/Templates/Pointers.hpp
+HEADERS += ./src/Templates/ArrayBlocks.hpp
+HEADERS += ./src/Templates/Tuple.hpp
+HEADERS += ./src/Templates/Trees.hpp
+HEADERS += ./src/Templates/Allocator.hpp
+HEADERS += ./src/Templates/Byte.hpp
+HEADERS += ./src/Templates/SimpleAlgorithms.hpp
+HEADERS += ./src/Templates/String.hpp
+HEADERS += ./src/Templates/ObjectViewer.hpp
+HEADERS += ./src/Templates/InitializerList.hpp
+HEADERS += ./src/Templates/ByteOrder.hpp
+HEADERS += ./src/Templates/Array.hpp
+HEADERS += ./src/Templates/Utils.hpp
+HEADERS += ./src/Templates/WideFloat.hpp
+HEADERS += ./src/Templates/Traits.hpp
+HEADERS += ./src/Templates/Serialization.hpp
 
-HEADERS += \
+# sources
+SOURCES += ./tests/main.cpp
+SOURCES += ./src/Analysers/ArgsParser.cpp
+SOURCES += ./src/Analysers/CodeParcer.cpp
+SOURCES += ./src/Bus/MsgInterface.cpp
+SOURCES += ./src/Process/CommandLine.cpp
+SOURCES += ./src/Filesystem/BasicFile.cpp
+SOURCES += ./src/Filesystem/Project.cpp
+SOURCES += ./src/Filesystem/Session.cpp
+SOURCES += ./src/Templates/Tests/Array.cpp
+SOURCES += ./src/Templates/Tests/Bits.cpp
+SOURCES += ./src/Templates/Tests/List.cpp
+SOURCES += ./src/Templates/Tests/Allocator.cpp
+SOURCES += ./src/Templates/Tests/SharedPointer.cpp
+SOURCES += ./src/Templates/Tests/Vector.cpp
+SOURCES += ./src/Templates/Tests/TestClass.cpp
+SOURCES += ./src/Templates/Tests/TestAggregator.cpp
+SOURCES += ./src/Templates/Tests/String.cpp
+SOURCES += ./src/Templates/Tests/UniquePoiter.cpp
+SOURCES += ./src/Templates/Tests/Tuple.cpp
+
