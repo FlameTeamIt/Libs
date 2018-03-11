@@ -7,23 +7,29 @@ echo "CONFIG -= qt"
 echo
 
 echo "QMAKE_CXXFLAGS += -std=c++14 -pedantic"
-echo "INCLUDEPATH += src/ ."
+echo "INCLUDEPATH += src/"
+echo "INCLUDEPATH += ."
 echo
 
 echo "#" headers
+echo -n "HEADERS += "
 HEADERS=`find . -type f -name '*.hpp'`
 for header in $HEADERS
 do
-  echo "HEADERS += $header"
+  echo "\\"
+  echo -n "	$header "
 done
+echo
 echo
 
 echo "#" sources
+echo -n "SOURCES += "
 SOURCES=`find . -type f -name '*.cpp'`
 for source in $SOURCES
 do
-  echo "SOURCES += $source"
+  echo "\\"
+  echo -n "	$source "
 done
-
+echo
 echo
 

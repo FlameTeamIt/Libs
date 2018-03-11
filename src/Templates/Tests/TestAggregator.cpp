@@ -1,6 +1,7 @@
 #include <Templates/Tests/Allocator.hpp>
 #include <Templates/Tests/Array.hpp>
 #include <Templates/Tests/Bits.hpp>
+#include <Templates/Tests/ByteOrder.hpp>
 #include <Templates/Tests/List.hpp>
 #include <Templates/Tests/SharedPointer.hpp>
 #include <Templates/Tests/String.hpp>
@@ -27,6 +28,7 @@ TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 	pushBackTest(new test::Tuple());
 	pushBackTest(new test::UniquePointer());
 	pushBackTest(new test::Vector());
+	pushBackTest(new test::ByteOrderTest());
 }
 
 }}

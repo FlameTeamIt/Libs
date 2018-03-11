@@ -409,13 +409,13 @@ struct ChooseType<false, T1, T2>: public NonCreational
 	using Type = T2;
 };
 
-//enum class ByteOrder
-//{
-//	LITTLE_ENDIAN = __ORDER_LITTLE_ENDIAN__,
-//	BIG_ENDIAN = __ORDER_BIG_ENDIAN__,
-//	PDP_ENDIAN = __ORDER_PDP_ENDIAN__,
-//	HOST_ORDER = __BYTE_ORDER__
-//};
+enum class ByteOrder
+{
+	LITTLE_ENDIAN_ORDER = __ORDER_LITTLE_ENDIAN__,
+	BIG_ENDIAN_ORDER = __ORDER_BIG_ENDIAN__,
+	PDP_ENDIAN_ORDER = __ORDER_PDP_ENDIAN__,
+	HOST_ORDER = __BYTE_ORDER__,
+};
 
 }}
 

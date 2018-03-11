@@ -29,6 +29,9 @@ struct Constants: public NonCreational
 	static constexpr auto BIT8_6 = BIT(Types::uchar_t, 6);
 	static constexpr auto BIT8_7 = BIT(Types::uchar_t, 7);
 
+	static constexpr decltype(BIT8_0) BYTE_0F = BIT8_0 | BIT8_1 | BIT8_2 | BIT8_3;
+	static constexpr decltype(BIT8_0) BYTE_FF = BYTE_0F | BIT8_4 | BIT8_5 | BIT8_6 | BIT8_7;
+
 	static constexpr auto BIT16_0 = Types::ushort_t(BIT8_0);
 	static constexpr auto BIT16_1 = Types::ushort_t(BIT8_1);
 	static constexpr auto BIT16_2 = Types::ushort_t(BIT8_2);
