@@ -8,7 +8,7 @@ namespace flame_ide
 
 int Serialization::vStart()
 {
-	if(!le() || !be())
+	if(!le() || !be() || !leSpec() || !beSpec())
 	{
 		return -1;
 	}
@@ -34,7 +34,7 @@ bool Serialization::le16()
 	serializerLe(VALUE);
 	if (vector[0] != BYTES[1] || vector[1] != BYTES[0])
 	{
-		std::cout << std::hex << int(vector[0]) << ' ' << int(vector[1]) << std::endl;
+		log << std::hex << int(vector[0]) << ' ' << int(vector[1]) << std::endl;
 		return false;
 	}
 
@@ -43,7 +43,7 @@ bool Serialization::le16()
 	deserializerLe(value16);
 	if (value16 != VALUE)
 	{
-		std::cout << std::hex << value16 << ' ' << VALUE << std::endl;
+		log << std::hex << value16 << ' ' << VALUE << std::endl;
 		return false;
 	}
 
@@ -65,7 +65,7 @@ bool Serialization::le32()
 	if (vector[0] != BYTES[3] || vector[1] != BYTES[2]
 			|| vector[2] != BYTES[1] || vector[3] != BYTES[0])
 	{
-		std::cout << std::hex
+		log << std::hex
 				<< int(vector[0]) << ' ' << int(vector[1]) << ' '
 				<< int(vector[2]) << ' ' << int(vector[3]) << std::endl;
 		return false;
@@ -76,7 +76,7 @@ bool Serialization::le32()
 	deserializerLe(value);
 	if (value != VALUE)
 	{
-		std::cout << std::hex << value << ' ' << VALUE << std::endl;
+		log << std::hex << value << ' ' << VALUE << std::endl;
 		return false;
 	}
 
@@ -102,7 +102,7 @@ bool Serialization::le64()
 			|| vector[4] != BYTES[3] || vector[5] != BYTES[2]
 			|| vector[6] != BYTES[1] || vector[7] != BYTES[0])
 	{
-		std::cout << std::hex
+		log << std::hex
 				<< int(vector[0]) << ' ' << int(vector[1]) << ' '
 				<< int(vector[2]) << ' ' << int(vector[3]) << ' '
 				<< int(vector[4]) << ' ' << int(vector[5]) << ' '
@@ -115,7 +115,7 @@ bool Serialization::le64()
 	deserializerLe(value);
 	if (value != VALUE)
 	{
-		std::cout << std::hex << value << ' ' << VALUE << std::endl;
+		log << std::hex << value << ' ' << VALUE << std::endl;
 		return false;
 	}
 
@@ -143,7 +143,7 @@ bool Serialization::be16()
 	serializerBe(VALUE);
 	if (vector[0] != BYTES[0] || vector[1] != BYTES[1])
 	{
-		std::cout << std::hex << int(vector[0]) << ' ' << int(vector[1]) << std::endl;
+		log << std::hex << int(vector[0]) << ' ' << int(vector[1]) << std::endl;
 		return false;
 	}
 
@@ -152,7 +152,7 @@ bool Serialization::be16()
 	deserializerBe(value16);
 	if (value16 != VALUE)
 	{
-		std::cout << std::hex << value16 << ' ' << VALUE << std::endl;
+		log << std::hex << value16 << ' ' << VALUE << std::endl;
 		return false;
 	}
 
@@ -174,7 +174,7 @@ bool Serialization::be32()
 	if (vector[0] != BYTES[0] || vector[1] != BYTES[1]
 			|| vector[2] != BYTES[2] || vector[3] != BYTES[3])
 	{
-		std::cout << std::hex
+		log << std::hex
 				<< int(vector[0]) << ' ' << int(vector[1]) << ' '
 				<< int(vector[2]) << ' ' << int(vector[3]) << std::endl;
 		return false;
@@ -185,7 +185,7 @@ bool Serialization::be32()
 	deserializerBe(value);
 	if (value != VALUE)
 	{
-		std::cout << std::hex << value << ' ' << VALUE << std::endl;
+		log << std::hex << value << ' ' << VALUE << std::endl;
 		return false;
 	}
 
@@ -211,7 +211,7 @@ bool Serialization::be64()
 			|| vector[4] != BYTES[4] || vector[5] != BYTES[5]
 			|| vector[6] != BYTES[6] || vector[7] != BYTES[7])
 	{
-		std::cout << std::hex
+		log << std::hex
 				<< int(vector[0]) << ' ' << int(vector[1]) << ' '
 				<< int(vector[2]) << ' ' << int(vector[3]) << ' '
 				<< int(vector[4]) << ' ' << int(vector[5]) << ' '
@@ -224,7 +224,7 @@ bool Serialization::be64()
 	deserializerBe(value);
 	if (value != VALUE)
 	{
-		std::cout << std::hex << value << ' ' << VALUE << std::endl;
+		log << std::hex << value << ' ' << VALUE << std::endl;
 		return false;
 	}
 
@@ -249,21 +249,83 @@ bool Serialization::leSpec32()
 			| Types::uint_t(BYTES[3]);
 
 	templates::Vector<templates::Types::uchar_t> vector(8);
-	auto specValue32Le = templates::makeSpecializedValueLe(VALUE, 3, 1);
-	auto specValue32Be = templates::makeSpecializedValueBe(VALUE, 3, 1);
-	templates::SerializerLe serializer(&vector[0]);
 
-	serializer(specValue32Le);
+
+	{
+		auto specValue32Le = templates::makeSpecializedValueLe(VALUE, 3, 1);
+		auto resultValue32Le = templates::makeSpecializedValueEmptyLe<Types::uint_t>(3, 1);
+
+		auto serializer = templates::SerializerLe(&vector[0]);
+		serializer(specValue32Le);
+		if (vector[0] != BYTES[3] || vector[1] != BYTES[2]
+				|| vector[2] != BYTES[1])
+		{
+			log << std::hex
+					<< int(vector[0]) << ' '
+					<< int(vector[1]) << ' '
+					<< int(vector[2]) << ' '
+					<< std::endl;
+			return false;
+		}
+
+		auto deserializer = templates::DeserializerLe(&vector[0]);
+		deserializer(resultValue32Le);
+
+		using Iterator = decltype(specValue32Le.begin());
+		for (Iterator itValue = specValue32Le.begin(), itResult = resultValue32Le.begin();
+				itValue != specValue32Le.end(); ++itValue, ++itResult)
+		{
+			if (*itValue != *itResult)
+			{
+				log << "*itValue(" << std::hex << (int(*itValue) & 0xFF)
+						<< ") != *itResult(" << (int(*itResult) & 0xFF) << ")"
+						<< std::endl;
+			}
+		}
+	}
+
+	{
+		auto specValue32Be = templates::makeSpecializedValueBe(VALUE, 3, 1);
+		auto resultValue32Be = templates::makeSpecializedValueEmptyBe<Types::uint_t>(3, 1);
+
+		auto serializer = templates::SerializerLe(&vector[0]);
+		serializer(specValue32Be);
+		if (vector[0] != BYTES[3] || vector[1] != BYTES[2]
+				|| vector[2] != BYTES[1])
+		{
+			log << std::hex
+					<< int(vector[0]) << ' '
+					<< int(vector[1]) << ' '
+					<< int(vector[2]) << ' '
+					<< std::endl;
+			return false;
+		}
+
+		auto deserializer = templates::DeserializerLe(&vector[0]);
+		deserializer(resultValue32Be);
+
+		using Iterator = decltype(specValue32Be.begin());
+		for (Iterator itValue = specValue32Be.begin(), itResult = resultValue32Be.begin();
+				itValue != specValue32Be.end(); ++itValue, ++itResult)
+		{
+			if (*itValue != *itResult)
+			{
+				log << "*itValue(" << std::hex << (int(*itValue) & 0xFF)
+						<< ") != *itResult(" << (int(*itResult) & 0xFF) << ")"
+						<< std::endl;
+			}
+		}
+	}
 
 	return true;
 }
 
 bool Serialization::leSpec64()
 {
-
+	return true;
 }
 
-// BIG_ENDIAN spetializeds
+// BIG_ENDIAN spetialized
 
 bool Serialization::beSpec()
 {
@@ -272,12 +334,90 @@ bool Serialization::beSpec()
 
 bool Serialization::beSpec32()
 {
+	constexpr Types::uint_t VALUE = (Types::uint_t(BYTES[0]) << 24)
+			| (Types::uint_t(BYTES[1]) << 16) | (Types::uint_t(BYTES[2]) << 8)
+			| Types::uint_t(BYTES[3]);
 
+	templates::Vector<templates::Types::uchar_t> vector(8);
+
+	// little-endian serialize/deserialize
+	{
+		auto specValue32Le = templates::makeSpecializedValueLe(VALUE, 3, 1);
+		auto resultValue32Le = templates::makeSpecializedValueEmptyLe<Types::uint_t>(3, 1);
+
+		auto serializer = templates::SerializerBe(&vector[0]);
+		serializer(specValue32Le);
+		if (vector[0] != BYTES[1]
+				|| vector[1] != BYTES[2]
+				|| vector[2] != BYTES[3])
+		{
+			log << std::hex
+					<< int(vector[0]) << ' '
+					<< int(vector[1]) << ' '
+					<< int(vector[2]) << ' '
+					<< std::endl;
+			return false;
+		}
+
+		auto deserializer = templates::DeserializerBe(&vector[0]);
+		deserializer(resultValue32Le);
+
+		using Iterator = decltype(specValue32Le.begin());
+		for (Iterator itValue = specValue32Le.begin(), itResult = resultValue32Le.begin();
+				itValue != specValue32Le.end();
+				++itValue, ++itResult)
+		{
+			if (*itValue != *itResult)
+			{
+				log << "*itValue(" << std::hex << (int(*itValue) & 0xFF)
+						<< ") != *itResult(" << (int(*itResult) & 0xFF) << ")"
+						<< std::endl;
+			}
+		}
+	}
+
+	// big-endian serialize/deserialize
+	{
+		auto specValue32Be = templates::makeSpecializedValueBe(VALUE, 3, 1);
+		auto resultValue32Be = templates::makeSpecializedValueEmptyBe<Types::uint_t>(3, 1);
+
+		auto serializer = templates::SerializerBe(&vector[0]);
+		serializer(specValue32Be);
+		if (vector[0] != BYTES[1]
+				|| vector[1] != BYTES[2]
+				|| vector[2] != BYTES[3])
+		{
+			log << std::hex
+					<< int(vector[0]) << ' '
+					<< int(vector[1]) << ' '
+					<< int(vector[2]) << ' '
+					<< std::endl;
+			return false;
+		}
+
+		auto deserializer = templates::DeserializerBe(&vector[0]);
+		deserializer(resultValue32Be);
+
+		using Iterator = decltype(specValue32Be.begin());
+		for (Iterator itValue = specValue32Be.begin(), itResult = resultValue32Be.begin();
+				itValue != specValue32Be.end();
+				++itValue, ++itResult)
+		{
+			if (*itValue != *itResult)
+			{
+				log << "*itValue(" << std::hex << (int(*itValue) & 0xFF)
+						<< ") != *itResult(" << (int(*itResult) & 0xFF) << ")"
+						<< std::endl;
+			}
+		}
+	}
+
+	return true;
 }
 
 bool Serialization::beSpec64()
 {
-
+	return true;
 }
 
 }}

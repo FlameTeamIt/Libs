@@ -10,7 +10,7 @@
 #endif
 
 #define log \
-	std::cout << __FUNCTION__ << "():" << __LINE__
+	std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": "
 
 class AbstractTest
 {
