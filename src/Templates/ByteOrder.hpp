@@ -50,7 +50,7 @@ public:
 		return reverseBytes(value);
 	}
 private:
-	static Types::uchar_t  reverseBytes(Types::uchar_t  value)
+	static Types::uchar_t reverseBytes(Types::uchar_t value)
 	{
 		return value;
 	}
@@ -63,7 +63,7 @@ private:
 
 		return RESULT;
 	}
-	static Types::uint_t   reverseBytes(Types::uint_t   value)
+	static Types::uint_t reverseBytes(Types::uint_t value)
 	{
 		constexpr Types::uint_t BYTE = bits::Constants::BYTE_FF;
 
@@ -78,7 +78,7 @@ private:
 		result |= BYTE4;
 		return result;
 	}
-	static Types::ulong_t  reverseBytes(Types::ulong_t  value)
+	static Types::ulong_t reverseBytes(Types::ulong_t value)
 	{
 		constexpr Types::ulong_t BYTE = bits::Constants::BYTE_FF;
 
@@ -102,12 +102,11 @@ private:
 		return result;
 	}
 
-	static Types::char_t  reverseBytes(Types::char_t  value)
+	static Types::char_t reverseBytes(Types::char_t value)
 	{
 		using ValueType = decltype(value);
 		using ValueUType = typename MakeUnsigned<ValueType>::Type;
-		return static_cast<ValueType>
-		(
+		return static_cast<ValueType>(
 				reverseBytes(static_cast<ValueUType>(value))
 		);
 	}
@@ -115,26 +114,23 @@ private:
 	{
 		using ValueType = decltype(value);
 		using ValueUType = typename MakeUnsigned<ValueType>::Type;
-		return static_cast<ValueType>
-		(
+		return static_cast<ValueType>(
 				reverseBytes(static_cast<ValueUType>(value))
 		);
 	}
-	static Types::int_t   reverseBytes(Types::int_t   value)
+	static Types::int_t reverseBytes(Types::int_t value)
 	{
 		using ValueType = decltype(value);
 		using ValueUType = typename MakeUnsigned<ValueType>::Type;
-		return static_cast<ValueType>
-		(
+		return static_cast<ValueType>(
 				reverseBytes(static_cast<ValueUType>(value))
 		);
 	}
-	static Types::long_t  reverseBytes(Types::long_t  value)
+	static Types::long_t reverseBytes(Types::long_t value)
 	{
 		using ValueType = decltype(value);
 		using ValueUType = typename MakeUnsigned<ValueType>::Type;
-		return static_cast<ValueType>
-		(
+		return static_cast<ValueType>(
 				reverseBytes(static_cast<ValueUType>(value))
 		);
 	}

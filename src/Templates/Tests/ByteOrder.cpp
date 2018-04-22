@@ -24,7 +24,7 @@ int ByteOrderTest::vStart()
 			>::convert(VALUE16);
 	if (VALUE_OTHER16 != valueResult16)
 	{
-		std::cout << std::hex << VALUE_OTHER16 << ' ' << valueResult16 << std::endl;
+		log << std::hex << VALUE_OTHER16 << ' ' << valueResult16 << std::endl;
 		return -1;
 	}
 
@@ -34,7 +34,7 @@ int ByteOrderTest::vStart()
 			>::convert(VALUE16);
 	if (VALUE_OTHER16 != valueResult16)
 	{
-		std::cout << std::hex << VALUE_OTHER16 << ' ' << valueResult16 << std::endl;
+		log << std::hex << VALUE_OTHER16 << ' ' << valueResult16 << std::endl;
 		return -1;
 	}
 
@@ -44,7 +44,7 @@ int ByteOrderTest::vStart()
 			>::convert(VALUE32);
 	if (VALUE_OTHER32 != valueResult32)
 	{
-		std::cout << std::hex << VALUE_OTHER32 << ' ' << valueResult32 << std::endl;
+		log << std::hex << VALUE_OTHER32 << ' ' << valueResult32 << std::endl;
 		return -1;
 	}
 
@@ -54,7 +54,7 @@ int ByteOrderTest::vStart()
 			>::convert(VALUE64);
 	if (VALUE_OTHER64 != valueResult64)
 	{
-		std::cout << std::hex << VALUE_OTHER64 << ' ' << valueResult64 << std::endl;
+		log << std::hex << VALUE_OTHER64 << ' ' << valueResult64 << std::endl;
 		return -1;
 	}
 

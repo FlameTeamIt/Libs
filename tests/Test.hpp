@@ -9,6 +9,9 @@
 #include <Others/TextStyle.hpp>
 #endif
 
+#define log \
+	std::cout << __FUNCTION__ << "():" << __LINE__
+
 class AbstractTest
 {
 public:

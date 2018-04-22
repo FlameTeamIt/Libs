@@ -4,6 +4,7 @@
 #include <Templates/Tests/ByteOrder.hpp>
 #include <Templates/Tests/List.hpp>
 #include <Templates/Tests/SharedPointer.hpp>
+#include <Templates/Tests/Serialization.hpp>
 #include <Templates/Tests/String.hpp>
 #include <Templates/Tests/Tuple.hpp>
 #include <Templates/Tests/UniquePoiter.hpp>
@@ -22,13 +23,14 @@ TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 	pushBackTest(new test::ArrayAllocator);
 	pushBackTest(new test::Array());
 	pushBackTest(new test::Bits());
+	pushBackTest(new test::ByteOrderTest());
 	pushBackTest(new test::List());
 	pushBackTest(new test::SharedPointer());
+	pushBackTest(new test::Serialization());
 	pushBackTest(new test::String());
 	pushBackTest(new test::Tuple());
 	pushBackTest(new test::UniquePointer());
 	pushBackTest(new test::Vector());
-	pushBackTest(new test::ByteOrderTest());
 }
 
 }}

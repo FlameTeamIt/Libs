@@ -22,6 +22,13 @@ template<typename T, typename U>
 inline constexpr bool isSameTypes() noexcept;
 
 /**
+ * @brief Compile time checking const mode/
+ * @tparam Value type.
+ */
+template<typename T> inline constexpr
+bool isConst() noexcept;
+
+/**
  * @brief std::move alternative.
  */
 template<typename T> constexpr inline
@@ -43,8 +50,10 @@ T&& forward(typename RemoveReference<T>::Type &reference) noexcept;
  * @brief Copying range.
  */
 template<typename IteratorInput, typename IteratorOutput>
-void copy(IteratorInput start, IteratorInput end
-		, IteratorOutput out);
+Types::size_t copy(IteratorInput start, IteratorInput end
+        , IteratorOutput out);
+template<typename ContainerInput, typename IteratorOutput>
+Types::size_t copy(const ContainerInput &input, IteratorOutput out);
 
 /**
  * @brief Getting size of range.
@@ -64,19 +73,19 @@ emplaceNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcept;
 template<typename T> inline
 typename DefaultTraits<T>::Pointer
 placementNew(typename DefaultTraits<T>::Pointer pointer
-		, typename DefaultTraits<T>::MoveReference obj) noexcept;
+        , typename DefaultTraits<T>::MoveReference obj) noexcept;
 
 template<typename T> inline
 typename DefaultTraits<T>::Pointer
 placementNew(typename DefaultTraits<T>::Pointer pointer
-		, typename DefaultTraits<T>::ConstReference obj) noexcept;
+        , typename DefaultTraits<T>::ConstReference obj) noexcept;
 
 /**
  * @brief Comparing ranges.
  */
 template<typename Iterator1 , typename Iterator2>
 bool isEqual(Iterator1 start1, Iterator1 end1,
-		Iterator2 start2, Iterator2 end2);
+        Iterator2 start2, Iterator2 end2);
 
 template<typename Container> inline
 typename Container::Iterator begin(Container &&container);
@@ -279,6 +288,12 @@ bool isSameTypes() noexcept
 	return ComparingTypes<T, U>::VALUE;
 }
 
+template<typename T> inline constexpr
+bool isConst() noexcept
+{
+	return IsConst<T>::VALUE;
+}
+
 template<typename T> constexpr inline
 typename RemoveReference<T>::Type &&move(T &&reference) noexcept
 {
@@ -299,14 +314,32 @@ T&& forward(typename RemoveReference<T>::Type &reference) noexcept
 }
 
 template<typename IteratorInput, typename IteratorOutput>
-void copy(IteratorInput start, IteratorInput end
+Types::size_t copy(IteratorInput start, IteratorInput end
 		, IteratorOutput out)
 {
-	static_assert(!isSameTypes<decltype(*start), decltype(*out)>(), "Types is not equal.");
+	static_assert(
+			isSameTypes<
+				typename RemoveAll<decltype(*start)>::Type
+				, typename RemoveAll<decltype(*out)>::Type
+			>()
+			, "Types is not equal."
+	);
 
-	for(auto iterator = start; iterator != end; ++iterator, ++out)
+	static_assert(!isConst<decltype(*out)>(), "Out iterator cannot be const.");
+
+	Types::size_t counter = 0;
+	for (auto iterator = start; iterator != end; ++iterator, ++out, ++counter)
 		*out = *iterator;
+
+	return counter;
 }
+
+template<typename ContainerInput, typename IteratorOutput>
+Types::size_t copy(const ContainerInput &input, IteratorOutput out)
+{
+	return copy(input.begin(), input.end(), out);
+}
+
 
 template<typename Iterator, typename Traits>
 typename Traits::SizeType countIterations(Iterator start, Iterator end)

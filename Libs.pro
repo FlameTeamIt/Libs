@@ -3,7 +3,7 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CXXFLAGS += -std=c++14 -pedantic
+QMAKE_CXXFLAGS = -std=c++14 -pedantic
 INCLUDEPATH += src/
 INCLUDEPATH += .
 
@@ -22,6 +22,9 @@ HEADERS += \
 	./src/Filesystem/Project.hpp \
 	./src/Filesystem/BasicFile.hpp \
 	./src/Filesystem/Session.hpp \
+	./src/Templates/Serialization/Serializer.hpp \
+	./src/Templates/Serialization/SpetializedValue.hpp \
+	./src/Templates/Serialization/Deserializer.hpp \
 	./src/Templates/CircularVector.hpp \
 	./src/Templates/AlignObject.hpp \
 	./src/Templates/Vector.hpp \
@@ -38,6 +41,7 @@ HEADERS += \
 	./src/Templates/Tests/String.hpp \
 	./src/Templates/Tests/ByteOrder.hpp \
 	./src/Templates/Tests/Array.hpp \
+	./src/Templates/Tests/Serialization.hpp \
 	./src/Templates/List.hpp \
 	./src/Templates/WideInt.hpp \
 	./src/Templates/Templates.hpp \
@@ -75,6 +79,7 @@ SOURCES += \
 	./src/Filesystem/Session.cpp \
 	./src/Templates/Tests/Array.cpp \
 	./src/Templates/Tests/Bits.cpp \
+	./src/Templates/Tests/Serialization.cpp \
 	./src/Templates/Tests/List.cpp \
 	./src/Templates/Tests/Allocator.cpp \
 	./src/Templates/Tests/SharedPointer.cpp \

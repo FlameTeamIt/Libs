@@ -1,7 +1,8 @@
-#ifndef VIEW_HPP
-#define VIEW_HPP
+#ifndef TEMPLATES_VIEW_HPP
+#define TEMPLATES_VIEW_HPP
 
 #include <Templates/Utils.hpp>
+#include <Templates/Iterator.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -24,8 +25,8 @@ public:
 	Me &operator=(const Me &) = default;
 	Me &operator=(Me &&) = default;
 
-	Iterator begin();
-	Iterator end();
+	Iterator begin() const;
+	Iterator end() const;
 
 private:
 	Iterator first;
@@ -50,6 +51,7 @@ class Range
 public:
 	using Me = Range<InputIterator>;
 	using Iterator = InputIterator;
+	using ConstIterator = templates::ConstIterator<Iterator>;
 
 	Range() = delete;
 	Range(const Me &) = default;
@@ -62,6 +64,9 @@ public:
 
 	Iterator begin();
 	Iterator end();
+
+	ConstIterator begin() const;
+	ConstIterator end() const;
 
 private:
 	Iterator first;
@@ -107,19 +112,20 @@ View<Container, InputIterator>::
 
 template<typename Container, typename InputIterator>
 typename View<Container, InputIterator>::Iterator
-View<Container, InputIterator>::begin()
+View<Container, InputIterator>::begin() const
 {
 	return first;
 }
 
 template<typename Container, typename InputIterator>
 typename View<Container, InputIterator>::Iterator
-View<Container, InputIterator>::end()
+View<Container, InputIterator>::end() const
 {
 	return last;
 }
 
-// View getters
+
+// View makers
 
 template<typename Container>
 View<Container, typename Container::ConstIterator>
@@ -138,6 +144,7 @@ makeReverseView(const Container &container)
 			crbegin(container), crend(container)
 	);
 }
+
 
 // Range
 
@@ -160,6 +167,21 @@ Range<InputIterator>::end()
 {
 	return last;
 }
+
+template<typename InputIterator>
+typename Range<InputIterator>::ConstIterator
+Range<InputIterator>::begin() const
+{
+	return first;
+}
+
+template<typename InputIterator>
+typename Range<InputIterator>::ConstIterator
+Range<InputIterator>::end() const
+{
+	return last;
+}
+
 
 // Range makers
 
@@ -208,5 +230,29 @@ makeConstReverseRange(const Container &container)
 	);
 }
 
+template<typename T>
+Range<Types::uchar_t*> makeByteRange(T &value)
+{
+	auto begin = [](T &value)
+	{
+		void *pointer = &value;
+		return static_cast<Types::uchar_t *>(pointer);
+	} (value);
+	auto end = begin + sizeof(value);
+	return makeRange(begin, end);
+}
+
+template<typename T>
+Range<const Types::uchar_t*> makeConstByteRange(const T &value)
+{
+	auto begin = [](const T &value)
+	{
+		const void *pointer = &value;
+		return static_cast<const Types::uchar_t *>(pointer);
+	} (value);
+	auto end = begin + sizeof(value);
+	return makeRange(begin, end);
+}
+
 }}
-#endif // VIEW_HPP
+#endif // TEMPLATES_VIEW_HPP
