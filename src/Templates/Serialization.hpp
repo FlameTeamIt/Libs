@@ -837,10 +837,8 @@ template<ByteOrder ORDER>
 template<ByteOrder OTHER_ORDER, typename T>
 Types::size_t Serializer<ORDER>::operator()(const SpecializedValue<OTHER_ORDER, T> &value)
 {
-	SpecializedValue<ORDER, T> serializeValue{
-		toOrder(value.getValue()), value.getSize(), value.getOffset()
-	};
-	auto newOffset = copy(serializeValue, data + offset);
+	auto range = makeRange(value.rbegin(), value.rend());
+	auto newOffset = copy(range, data + offset);
 	offset += newOffset;
 	return newOffset;
 }
@@ -903,16 +901,11 @@ template<ByteOrder ORDER>
 template<ByteOrder OTHER_ORDER, typename T>
 Types::size_t Deserializer<ORDER>::operator()(SpecializedValue<OTHER_ORDER, T> &value)
 {
-	SpecializedValue<ORDER, T> deserializedValue { T(), value.getSize(), value.getOffset() };
-	auto range = makeRange(deserializedValue.begin(), deserializedValue.end());
+	auto range = makeRange(value.rbegin(), value.rend());
 	auto bufferRange = makeRange(data + offset, data + offset + value.getSize());
 
 	auto newOffset = copy(bufferRange, range.begin());
 	offset += newOffset;
-	value = SpecializedValue<OTHER_ORDER, T> {
-		toOrder(deserializedValue.getValue()) , deserializedValue.getSize()
-		, deserializedValue.getOffset()
-	};
 
 	return newOffset;
 }
@@ -921,16 +914,11 @@ template<ByteOrder ORDER>
 template<typename T>
 Types::size_t Deserializer<ORDER>::operator()(SpecializedValue<ORDER, T> &value)
 {
-	SpecializedValue<ORDER, T> deserializedValue { T(), value.getSize(), value.getOffset() };
-	auto range = makeRange(deserializedValue.begin(), deserializedValue.end());
+	auto range = makeRange(value.begin(), value.end());
 	auto bufferRange = makeRange(data + offset, data + offset + value.getSize());
 
 	auto newOffset = copy(bufferRange, range.begin());
 	offset += newOffset;
-	value = SpecializedValue<ORDER, T> {
-			deserializedValue.getValue() , deserializedValue.getSize()
-			, deserializedValue.getOffset()
-	};
 
 	return newOffset;
 }

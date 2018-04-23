@@ -6,6 +6,8 @@ namespace flame_ide
 {namespace test
 {
 
+using templates::CompileTimeReverseBytes;
+
 int Serialization::vStart()
 {
 	if(!le() || !be() || !leSpec() || !beSpec())
@@ -247,6 +249,8 @@ bool Serialization::leSpec32()
 	constexpr Types::uint_t VALUE = (Types::uint_t(BYTES[0]) << 24)
 			| (Types::uint_t(BYTES[1]) << 16) | (Types::uint_t(BYTES[2]) << 8)
 			| Types::uint_t(BYTES[3]);
+	constexpr Types::uint_t VALUE_REVERSED =
+			CompileTimeReverseBytes<Types::uint_t>::ReverseBytes<VALUE>();
 
 	templates::Vector<templates::Types::uchar_t> vector(8);
 
@@ -322,6 +326,20 @@ bool Serialization::leSpec32()
 
 bool Serialization::leSpec64()
 {
+	constexpr Types::ulong_t VALUE = (Types::ulong_t(BYTES[0]) << 24)
+			| (Types::ulong_t(BYTES[1]) << 16) | (Types::ulong_t(BYTES[2]) << 8)
+			| Types::ulong_t(BYTES[3]);
+	constexpr Types::ulong_t VALUE_REVERSED =
+			CompileTimeReverseBytes<Types::ulong_t>::ReverseBytes<VALUE>();
+
+	templates::Vector<templates::Types::uchar_t> vector(8);
+
+	{
+	}
+
+	{
+	}
+
 	return true;
 }
 
@@ -337,6 +355,8 @@ bool Serialization::beSpec32()
 	constexpr Types::uint_t VALUE = (Types::uint_t(BYTES[0]) << 24)
 			| (Types::uint_t(BYTES[1]) << 16) | (Types::uint_t(BYTES[2]) << 8)
 			| Types::uint_t(BYTES[3]);
+	constexpr Types::uint_t VALUE_REVERSED =
+			CompileTimeReverseBytes<Types::uint_t>::ReverseBytes<VALUE>();
 
 	templates::Vector<templates::Types::uchar_t> vector(8);
 
@@ -417,6 +437,12 @@ bool Serialization::beSpec32()
 
 bool Serialization::beSpec64()
 {
+	constexpr Types::ulong_t VALUE = (Types::ulong_t(BYTES[0]) << 24)
+			| (Types::ulong_t(BYTES[1]) << 16) | (Types::ulong_t(BYTES[2]) << 8)
+			| Types::ulong_t(BYTES[3]);
+	constexpr Types::ulong_t VALUE_REVERSED =
+			CompileTimeReverseBytes<Types::ulong_t>::ReverseBytes<VALUE>();
+
 	return true;
 }
 

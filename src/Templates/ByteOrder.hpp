@@ -8,14 +8,110 @@ namespace flame_ide
 {namespace templates
 {
 
+template<typename T>
+struct CompileTimeReverseBytes
+{
+};
+
+template<>
+struct CompileTimeReverseBytes<Types::ushort_t>
+{
+	template<Types::ushort_t VALUE>
+	static constexpr Types::ushort_t ReverseBytes()
+	{
+		constexpr Types::ushort_t BYTE = bits::Constants::BYTE_FF;
+
+		constexpr Types::ushort_t BYTE1 = (VALUE & BYTE) << 8;
+		constexpr Types::ushort_t BYTE2 = (VALUE & (BYTE << 8)) >> 8;
+		constexpr Types::ushort_t RESULT = BYTE1 | BYTE2;
+
+		return RESULT;
+	}
+};
+
+template<>
+struct CompileTimeReverseBytes<Types::uint_t>
+{
+	template<Types::uint_t VALUE>
+	static constexpr Types::uint_t ReverseBytes()
+	{
+		constexpr Types::uint_t BYTE = bits::Constants::BYTE_FF;
+
+		constexpr Types::uint_t BYTE1 = (VALUE & BYTE) << 24;
+		constexpr Types::uint_t BYTE2 = (VALUE & (BYTE << 8)) << 8;
+		constexpr Types::uint_t BYTE3 = (VALUE & (BYTE << 16)) >> 8;
+		constexpr Types::uint_t BYTE4 = (VALUE & (BYTE << 24)) >> 24;
+
+		constexpr Types::uint_t result = BYTE1 | BYTE2 | BYTE3 | BYTE4;
+		return result;
+	}
+};
+
+template<>
+struct CompileTimeReverseBytes<Types::ulong_t>
+{
+	template<Types::ulong_t VALUE>
+	static constexpr Types::ulong_t ReverseBytes()
+	{
+		constexpr Types::ulong_t BYTE = bits::Constants::BYTE_FF;
+
+		constexpr Types::ulong_t BYTE1 = (VALUE & BYTE) << 56;
+		constexpr Types::ulong_t BYTE2 = (VALUE & (BYTE << 8)) << 40;
+		constexpr Types::ulong_t BYTE3 = (VALUE & (BYTE << 16)) << 24;
+		constexpr Types::ulong_t BYTE4 = (VALUE & (BYTE << 24)) << 8;
+		constexpr Types::ulong_t BYTE5 = (VALUE & (BYTE << 32)) >> 8;
+		constexpr Types::ulong_t BYTE6 = (VALUE & (BYTE << 40)) >> 24;
+		constexpr Types::ulong_t BYTE7 = (VALUE & (BYTE << 48)) >> 40;
+		constexpr Types::ulong_t BYTE8 = (VALUE & (BYTE << 56)) >> 56;
+
+		constexpr Types::ulong_t result = BYTE1 | BYTE2 | BYTE3
+				| BYTE4 | BYTE5 | BYTE6 | BYTE7 | BYTE8;
+		return result;
+	}
+};
+
+template<>
+struct CompileTimeReverseBytes<Types::short_t>
+{
+	template<Types::short_t VALUE>
+	static constexpr Types::short_t ReverseBytes()
+	{
+		return static_cast<Types::short_t>(
+			CompileTimeReverseBytes::ReverseBytes<static_cast<Types::ushort_t>(VALUE)>()
+		);
+	}
+};
+
+template<>
+struct CompileTimeReverseBytes<Types::int_t>
+{
+	template<Types::short_t VALUE>
+	static constexpr Types::short_t ReverseBytes()
+	{
+		return static_cast<Types::int_t>(
+			CompileTimeReverseBytes::ReverseBytes<static_cast<Types::uint_t>(VALUE)>()
+		);
+	}
+};
+
+template<>
+struct CompileTimeReverseBytes<Types::long_t>
+{
+	template<Types::short_t VALUE>
+	static constexpr Types::short_t ReverseBytes()
+	{
+		return static_cast<Types::long_t>(
+			CompileTimeReverseBytes::ReverseBytes<static_cast<Types::ulong_t>(VALUE)>()
+		);
+	}
+};
+
 template<ByteOrder CURRENT_ORDER, ByteOrder NEED_ORDER>
 struct ToNeedOrder
 {
-	static_assert(
-			CURRENT_ORDER != ByteOrder::PDP_ENDIAN_ORDER
-			|| NEED_ORDER != ByteOrder::PDP_ENDIAN_ORDER,
-			"PDP endian not support."
-	);
+	static_assert(CURRENT_ORDER != ByteOrder::PDP_ENDIAN_ORDER
+			|| NEED_ORDER != ByteOrder::PDP_ENDIAN_ORDER
+			, "PDP endian not support.");
 };
 
 template<>
