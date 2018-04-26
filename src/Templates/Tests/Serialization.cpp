@@ -326,18 +326,86 @@ bool Serialization::leSpec32()
 
 bool Serialization::leSpec64()
 {
-	constexpr Types::ulong_t VALUE = (Types::ulong_t(BYTES[0]) << 24)
-			| (Types::ulong_t(BYTES[1]) << 16) | (Types::ulong_t(BYTES[2]) << 8)
-			| Types::ulong_t(BYTES[3]);
-	constexpr Types::ulong_t VALUE_REVERSED =
-			CompileTimeReverseBytes<Types::ulong_t>::ReverseBytes<VALUE>();
+	constexpr Types::ulong_t VALUE = (Types::ulong_t(BYTES[0]) << 56)
+			| (Types::ulong_t(BYTES[1]) << 48) | (Types::ulong_t(BYTES[2]) << 40)
+			| (Types::ulong_t(BYTES[3]) << 32) | (Types::ulong_t(BYTES[4]) << 24)
+			| (Types::ulong_t(BYTES[5]) << 16) | (Types::ulong_t(BYTES[6]) << 8)
+			| (Types::ulong_t(BYTES[7]));
 
 	templates::Vector<templates::Types::uchar_t> vector(8);
 
 	{
+		auto specValue64Le = templates::makeSpecializedValueLe(VALUE, 5, 2);
+		auto resultValue64Le = templates::makeSpecializedValueEmptyLe<Types::ulong_t>(5, 2);
+
+		auto serializer = templates::SerializerLe(&vector[0]);
+		serializer(specValue64Le);
+
+		if (vector[0] != BYTES[6] && vector[1] != BYTES[5] && vector[2] != BYTES[4]
+				&& vector[3] != BYTES[3] && vector[4] != BYTES[2])
+		{
+			log;
+			auto range = templates::makeRange(&vector[0], &vector[5]);
+			for (auto i : range)
+			{
+				std::cout << (int(i) & 0xFF) << ' ';
+			}
+			std::cout << std::endl;
+			return false;
+		}
+
+		auto deserializer = templates::DeserializerLe(&vector[0]);
+		deserializer(resultValue64Le);
+
+		using Iterator = decltype(specValue64Le.begin());
+		for (Iterator itValue = specValue64Le.begin(), itResult = resultValue64Le.begin();
+				itValue != specValue64Le.end(); ++itValue, ++itResult)
+		{
+			if (*itValue != *itResult)
+			{
+				log << "*itValue(" << std::hex << (int(*itValue) & 0xFF)
+						<< ") != *itResult(" << (int(*itResult) & 0xFF) << ")"
+						<< std::endl;
+				return false;
+			}
+		}
 	}
 
 	{
+		auto specValue64Be = templates::makeSpecializedValueBe(VALUE, 5, 2);
+		auto resultValue64Be = templates::makeSpecializedValueEmptyBe<Types::ulong_t>(5, 2);
+
+		auto serializer = templates::SerializerLe(&vector[0]);
+		serializer(specValue64Be);
+
+		if (vector[0] != BYTES[6] && vector[1] != BYTES[5] && vector[2] != BYTES[4]
+				&& vector[3] != BYTES[3] && vector[4] != BYTES[2])
+		{
+			log;
+			auto range = templates::makeRange(&vector[0], &vector[5]);
+			for (auto i : range)
+			{
+				std::cout << (int(i) & 0xFF) << ' ';
+			}
+			std::cout << std::endl;
+			return false;
+		}
+
+		auto deserializer = templates::DeserializerLe(&vector[0]);
+		deserializer(resultValue64Be);
+
+		using Iterator = decltype(specValue64Be.begin());
+		for (Iterator itValue = specValue64Be.begin(), itResult = resultValue64Be.begin();
+				itValue != specValue64Be.end(); ++itValue, ++itResult)
+		{
+			if (*itValue != *itResult)
+			{
+				log << "*itValue(" << std::hex << (int(*itValue) & 0xFF)
+						<< ") != *itResult(" << (int(*itResult) & 0xFF) << ")"
+						<< std::endl;
+				return false;
+			}
+		}
 	}
 
 	return true;
@@ -437,11 +505,87 @@ bool Serialization::beSpec32()
 
 bool Serialization::beSpec64()
 {
-	constexpr Types::ulong_t VALUE = (Types::ulong_t(BYTES[0]) << 24)
-			| (Types::ulong_t(BYTES[1]) << 16) | (Types::ulong_t(BYTES[2]) << 8)
-			| Types::ulong_t(BYTES[3]);
-	constexpr Types::ulong_t VALUE_REVERSED =
-			CompileTimeReverseBytes<Types::ulong_t>::ReverseBytes<VALUE>();
+	constexpr Types::ulong_t VALUE = (Types::ulong_t(BYTES[0]) << 56)
+			| (Types::ulong_t(BYTES[1]) << 48) | (Types::ulong_t(BYTES[2]) << 40)
+			| (Types::ulong_t(BYTES[3]) << 32) | (Types::ulong_t(BYTES[4]) << 24)
+			| (Types::ulong_t(BYTES[5]) << 16) | (Types::ulong_t(BYTES[6]) << 8)
+			| (Types::ulong_t(BYTES[7]));
+
+	templates::Vector<templates::Types::uchar_t> vector(8);
+
+	{
+		auto specValue64Le = templates::makeSpecializedValueLe(VALUE, 5, 2);
+		auto resultValue64Le = templates::makeSpecializedValueEmptyLe<Types::ulong_t>(5, 2);
+
+		auto serializer = templates::SerializerBe(&vector[0]);
+		serializer(specValue64Le);
+
+		if (vector[0] != BYTES[2] && vector[1] != BYTES[3] && vector[2] != BYTES[4]
+				&& vector[3] != BYTES[5] && vector[4] != BYTES[6])
+		{
+			log;
+			auto range = templates::makeRange(&vector[0], &vector[5]);
+			for (auto i : range)
+			{
+				std::cout << (int(i) & 0xFF) << ' ';
+			}
+			std::cout << std::endl;
+			return false;
+		}
+
+		auto deserializer = templates::DeserializerBe(&vector[0]);
+		deserializer(resultValue64Le);
+
+		using Iterator = decltype(specValue64Le.begin());
+		for (Iterator itValue = specValue64Le.begin(), itResult = resultValue64Le.begin();
+				itValue != specValue64Le.end(); ++itValue, ++itResult)
+		{
+			if (*itValue != *itResult)
+			{
+				log << "*itValue(" << std::hex << (int(*itValue) & 0xFF)
+						<< ") != *itResult(" << (int(*itResult) & 0xFF) << ")"
+						<< std::endl;
+				return false;
+			}
+		}
+	}
+
+	{
+		auto specValue64Be = templates::makeSpecializedValueBe(VALUE, 5, 2);
+		auto resultValue64Be = templates::makeSpecializedValueEmptyBe<Types::uint_t>(5, 2);
+
+		auto serializer = templates::SerializerBe(&vector[0]);
+		serializer(specValue64Be);
+
+		if (vector[0] != BYTES[2] && vector[1] != BYTES[3] && vector[2] != BYTES[4]
+				&& vector[3] != BYTES[5] && vector[4] != BYTES[6])
+		{
+			log;
+			auto range = templates::makeRange(&vector[0], &vector[5]);
+			for (auto i : range)
+			{
+				std::cout << (int(i) & 0xFF) << ' ';
+			}
+			std::cout << std::endl;
+			return false;
+		}
+
+		auto deserializer = templates::DeserializerBe(&vector[0]);
+		deserializer(resultValue64Be);
+
+		using Iterator = decltype(specValue64Be.begin());
+		for (Iterator itValue = specValue64Be.begin(), itResult = resultValue64Be.begin();
+				itValue != specValue64Be.end(); ++itValue, ++itResult)
+		{
+			if (*itValue != *itResult)
+			{
+				log << "*itValue(" << std::hex << (int(*itValue) & 0xFF)
+						<< ") != *itResult(" << (int(*itResult) & 0xFF) << ")"
+						<< std::endl;
+				return false;
+			}
+		}
+	}
 
 	return true;
 }
