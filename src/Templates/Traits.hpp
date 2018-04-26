@@ -1,4 +1,4 @@
-#ifndef TEMPLATES_UTILS_HPP
+﻿#ifndef TEMPLATES_UTILS_HPP
 #define TEMPLATES_UTILS_HPP
 
 #include <Others/PrimitiveTypes.hpp>
@@ -415,6 +415,26 @@ enum class ByteOrder
 	BIG_ENDIAN_ORDER = __ORDER_BIG_ENDIAN__,
 	PDP_ENDIAN_ORDER = __ORDER_PDP_ENDIAN__,
 	HOST_ORDER = __BYTE_ORDER__,
+};
+
+template<bool IS_VOLATILE>
+struct SerializationTraits
+{
+	using InputStream = void *;
+	using ConstInputStream =  const void *;
+
+	using InternalStream = Types::uchar_t *;
+	using ConstInternalStream =  const Types::uchar_t *;
+};
+
+template<>
+struct SerializationTraits<true>
+{
+	using InputStream = volatile void *;
+	using ConstInputStream =  const volatile void *;
+
+	using InternalStream = volatile Types::uchar_t *;
+	using ConstInternalStream =  const volatile Types::uchar_t *;
 };
 
 }}

@@ -1,4 +1,4 @@
-#include "Serialization.hpp"
+﻿#include "Serialization.hpp"
 
 #include <Templates/Vector.hpp>
 
@@ -249,8 +249,6 @@ bool Serialization::leSpec32()
 	constexpr Types::uint_t VALUE = (Types::uint_t(BYTES[0]) << 24)
 			| (Types::uint_t(BYTES[1]) << 16) | (Types::uint_t(BYTES[2]) << 8)
 			| Types::uint_t(BYTES[3]);
-	constexpr Types::uint_t VALUE_REVERSED =
-			CompileTimeReverseBytes<Types::uint_t>::ReverseBytes<VALUE>();
 
 	templates::Vector<templates::Types::uchar_t> vector(8);
 
@@ -423,8 +421,6 @@ bool Serialization::beSpec32()
 	constexpr Types::uint_t VALUE = (Types::uint_t(BYTES[0]) << 24)
 			| (Types::uint_t(BYTES[1]) << 16) | (Types::uint_t(BYTES[2]) << 8)
 			| Types::uint_t(BYTES[3]);
-	constexpr Types::uint_t VALUE_REVERSED =
-			CompileTimeReverseBytes<Types::uint_t>::ReverseBytes<VALUE>();
 
 	templates::Vector<templates::Types::uchar_t> vector(8);
 

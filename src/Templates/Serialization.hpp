@@ -1,4 +1,4 @@
-#ifndef TEMPLATE_SERIALIZATION_HPP
+﻿#ifndef TEMPLATE_SERIALIZATION_HPP
 #define TEMPLATE_SERIALIZATION_HPP
 
 #include <Templates/Traits.hpp>
@@ -11,9 +11,6 @@
 namespace flame_ide
 {namespace templates
 {
-
-// TODO: вынести реалиацию за пределы классов.
-
 
 ///
 /// @brief The ValueInfo class
@@ -402,17 +399,19 @@ SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueEmptyHost(
 ///
 /// \brief The Serializer class
 ///
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 class Serializer
 {
 public:
+	using InputStream = typename SerializationTraits<IS_VOLATILE>::InputStream;
+	using InternalStream = typename SerializationTraits<IS_VOLATILE>::InternalStream;
 
 	///
 	/// \brief Serializer
 	/// \param initData
 	/// \param initOffset
 	///
-	Serializer(void* initData = nullptr, Types::size_t initOffset = 0);
+	Serializer(InputStream initData = nullptr, Types::size_t initOffset = 0);
 
 	///
 	/// \brief operator ()
@@ -459,21 +458,23 @@ private:
 	template<typename T>
 	static const Types::uchar_t *castToByteArray(const T &value);
 
-	Types::uchar_t* data;
+	InternalStream data;
 	Types::size_t offset;
 };
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 class Deserializer
 {
 public:
+	using ConstInputStream = typename SerializationTraits<IS_VOLATILE>::ConstInputStream;
+	using ConstInternalStream = typename SerializationTraits<IS_VOLATILE>::ConstInternalStream;
 
 	///
 	/// \brief Deserializer
 	/// \param initData
 	/// \param initOffset
 	///
-	Deserializer(const void *initData = nullptr, Types::size_t initOffset = 0);
+	Deserializer(ConstInputStream initData = nullptr, Types::size_t initOffset = 0);
 
 	///
 	/// \brief operator ()
@@ -525,7 +526,7 @@ private:
 	template<typename T>
 	static Types::uchar_t *castToByteArray(T &value);
 
-	const Types::uchar_t* data;
+	ConstInternalStream data;
 	Types::size_t offset;
 };
 
@@ -535,11 +536,11 @@ namespace flame_ide
 {namespace templates
 {
 
-using SerializerLe = Serializer<ByteOrder::LITTLE_ENDIAN_ORDER>;
-using SerializerBe = Serializer<ByteOrder::BIG_ENDIAN_ORDER>;
+using SerializerLe = Serializer<ByteOrder::LITTLE_ENDIAN_ORDER, false>;
+using SerializerBe = Serializer<ByteOrder::BIG_ENDIAN_ORDER, false>;
 
-using DeserializerLe = Deserializer<ByteOrder::LITTLE_ENDIAN_ORDER>;
-using DeserializerBe = Deserializer<ByteOrder::BIG_ENDIAN_ORDER>;
+using DeserializerLe = Deserializer<ByteOrder::LITTLE_ENDIAN_ORDER, false>;
+using DeserializerBe = Deserializer<ByteOrder::BIG_ENDIAN_ORDER, false>;
 
 template<typename T>
 using SpecializedValueLe = SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>;
@@ -816,15 +817,15 @@ SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueEmptyHost(
 
 // Serializer
 
-template<ByteOrder ORDER>
-Serializer<ORDER>::Serializer(void* initData, Types::size_t initOffset)
-		: data(static_cast<Types::uchar_t *>(initData))
+template<ByteOrder ORDER, bool IS_VOLATILE>
+Serializer<ORDER, IS_VOLATILE>::Serializer(InputStream initData, Types::size_t initOffset)
+		: data(static_cast<InternalStream>(initData))
 		, offset(initOffset)
 {}
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-Types::size_t Serializer<ORDER>::operator()(T value)
+Types::size_t Serializer<ORDER, IS_VOLATILE>::operator()(T value)
 {
 	auto serializeValue = toOrder(value);
 	auto range = makeByteRange(serializeValue);
@@ -833,9 +834,9 @@ Types::size_t Serializer<ORDER>::operator()(T value)
 	return newOffset;
 }
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<ByteOrder OTHER_ORDER, typename T>
-Types::size_t Serializer<ORDER>::operator()(const SpecializedValue<OTHER_ORDER, T> &value)
+Types::size_t Serializer<ORDER, IS_VOLATILE>::operator()(const SpecializedValue<OTHER_ORDER, T> &value)
 {
 	auto range = makeRange(value.rbegin(), value.rend());
 	auto newOffset = copy(range, data + offset);
@@ -843,34 +844,34 @@ Types::size_t Serializer<ORDER>::operator()(const SpecializedValue<OTHER_ORDER, 
 	return newOffset;
 }
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-Types::size_t Serializer<ORDER>::operator()(const SpecializedValue<ORDER, T> &value)
+Types::size_t Serializer<ORDER, IS_VOLATILE>::operator()(const SpecializedValue<ORDER, T> &value)
 {
 	auto newOffset = copy(value, data + offset);
 	offset += newOffset;
 	return newOffset;
 }
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-T Serializer<ORDER>::toOrder(T value)
+T Serializer<ORDER, IS_VOLATILE>::toOrder(T value)
 {
 	return ToNeedOrder<ByteOrder::HOST_ORDER, ORDER>()(value);
 }
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-Range<const Types::uchar_t *> Serializer<ORDER>::makeByteRange(const T &value)
+Range<const Types::uchar_t *> Serializer<ORDER, IS_VOLATILE>::makeByteRange(const T &value)
 {
 	auto begin = castToByteArray(value);
 	auto end = begin + sizeof(value);
 	return makeRange(begin, end);
 }
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-const Types::uchar_t *Serializer<ORDER>::castToByteArray(const T &value)
+const Types::uchar_t *Serializer<ORDER, IS_VOLATILE>::castToByteArray(const T &value)
 {
 	const void *pointer = &value;
 	return static_cast<const uint8_t*>(pointer);
@@ -878,28 +879,28 @@ const Types::uchar_t *Serializer<ORDER>::castToByteArray(const T &value)
 
 // Deserializer
 
-template<ByteOrder ORDER>
-Deserializer<ORDER>::Deserializer(const void *initData, Types::size_t initOffset)
-	: data(static_cast<const Types::uchar_t*>(initData))
+template<ByteOrder ORDER, bool IS_VOLATILE>
+Deserializer<ORDER, IS_VOLATILE>::Deserializer(ConstInputStream initData, Types::size_t initOffset)
+	: data(static_cast<ConstInternalStream>(initData))
 	, offset(initOffset)
 {}
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-Types::size_t Deserializer<ORDER>::operator()(T &value)
+Types::size_t Deserializer<ORDER, IS_VOLATILE>::operator()(T &value)
 {
-	T deserializeValue;
-	auto range = makeByteRange(deserializeValue);
+	T DeserializeValue;
+	auto range = makeByteRange(DeserializeValue);
 	auto bufferRange = makeRange(data + offset, data + offset + sizeof(value));
 	auto newOffset = copy(bufferRange, range.begin());
 	offset += newOffset;
-	value = toOrder(deserializeValue);
+	value = toOrder(DeserializeValue);
 	return newOffset;
 }
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<ByteOrder OTHER_ORDER, typename T>
-Types::size_t Deserializer<ORDER>::operator()(SpecializedValue<OTHER_ORDER, T> &value)
+Types::size_t Deserializer<ORDER, IS_VOLATILE>::operator()(SpecializedValue<OTHER_ORDER, T> &value)
 {
 	auto range = makeRange(value.rbegin(), value.rend());
 	auto bufferRange = makeRange(data + offset, data + offset + value.getSize());
@@ -910,9 +911,9 @@ Types::size_t Deserializer<ORDER>::operator()(SpecializedValue<OTHER_ORDER, T> &
 	return newOffset;
 }
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-Types::size_t Deserializer<ORDER>::operator()(SpecializedValue<ORDER, T> &value)
+Types::size_t Deserializer<ORDER, IS_VOLATILE>::operator()(SpecializedValue<ORDER, T> &value)
 {
 	auto range = makeRange(value.begin(), value.end());
 	auto bufferRange = makeRange(data + offset, data + offset + value.getSize());
@@ -923,25 +924,25 @@ Types::size_t Deserializer<ORDER>::operator()(SpecializedValue<ORDER, T> &value)
 	return newOffset;
 }
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-T Deserializer<ORDER>::toOrder(T value)
+T Deserializer<ORDER, IS_VOLATILE>::toOrder(T value)
 {
 	return ToNeedOrder<ORDER, ByteOrder::HOST_ORDER>()(value);
 }
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-Range<Types::uchar_t *> Deserializer<ORDER>::makeByteRange(T &value)
+Range<Types::uchar_t *> Deserializer<ORDER, IS_VOLATILE>::makeByteRange(T &value)
 {
 	auto begin = castToByteArray(value);
 	auto end = begin + sizeof(value);
 	return makeRange(begin, end);
 }
 
-template<ByteOrder ORDER>
+template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-Types::uchar_t *Deserializer<ORDER>::castToByteArray(T &value)
+Types::uchar_t *Deserializer<ORDER, IS_VOLATILE>::castToByteArray(T &value)
 {
 	void *pointer = &value;
 	return static_cast<uint8_t*>(pointer);
