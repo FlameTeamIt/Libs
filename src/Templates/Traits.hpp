@@ -3,6 +3,8 @@
 
 #include <Others/PrimitiveTypes.hpp>
 
+#include <Templates/Macroses.hpp>
+
 namespace flame_ide
 {namespace templates
 {
@@ -411,10 +413,10 @@ struct ChooseType<false, T1, T2>: public NonCreational
 
 enum class ByteOrder
 {
-	LITTLE_ENDIAN_ORDER = __ORDER_LITTLE_ENDIAN__,
-	BIG_ENDIAN_ORDER = __ORDER_BIG_ENDIAN__,
-	PDP_ENDIAN_ORDER = __ORDER_PDP_ENDIAN__,
-	HOST_ORDER = __BYTE_ORDER__,
+	LITTLE_ENDIAN_ORDER = ORDER_LITTLE_ENDIAN,
+	BIG_ENDIAN_ORDER = ORDER_BIG_ENDIAN,
+	PDP_ENDIAN_ORDER = ORDER_PDP_ENDIAN,
+	HOST_ORDER = CURRENT_ORDER,
 };
 
 template<bool IS_VOLATILE>

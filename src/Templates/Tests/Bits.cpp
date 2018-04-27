@@ -1,7 +1,6 @@
 #include "Bits.hpp"
 #include <Templates/ArrayBits.hpp>
 
-#include <endian.h>
 #include <bitset>
 
 namespace flame_ide
