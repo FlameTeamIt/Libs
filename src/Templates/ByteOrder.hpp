@@ -8,6 +8,14 @@ namespace flame_ide
 {namespace templates
 {
 
+enum class ByteOrder
+{
+	LITTLE_ENDIAN_ORDER = ORDER_LITTLE_ENDIAN
+	, BIG_ENDIAN_ORDER = ORDER_BIG_ENDIAN
+	, PDP_ENDIAN_ORDER = ORDER_PDP_ENDIAN
+	, HOST_ORDER = CURRENT_BYTE_ORDER
+};
+
 template<typename T>
 struct CompileTimeReverseBytes
 {

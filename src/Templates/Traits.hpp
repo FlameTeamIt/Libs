@@ -109,6 +109,57 @@ struct ContainerTraits: public DefaultTraits<T>, public SizeTraits
 {};
 
 /**
+ * @brief Default traits for containers such as Array, Vector, etc.
+ * @tparam Is volatile type.
+ */
+template<bool IS_VOLATILE>
+struct SerializationTraits
+{
+	using InputStream = void *;
+	using ConstInputStream =  const void *;
+
+	using InternalStream = Types::uchar_t *;
+	using ConstInternalStream =  const Types::uchar_t *;
+};
+
+template<>
+struct SerializationTraits<true>
+{
+	using InputStream = volatile void *;
+	using ConstInputStream =  const volatile void *;
+
+	using InternalStream = volatile Types::uchar_t *;
+	using ConstInternalStream =  const volatile Types::uchar_t *;
+};
+
+
+/**
+ * @brief
+ * @tparam INDEX.
+ * @tparam Arg.
+ * @tparam Args.
+ */
+template<Types::size_t INDEX, typename Arg, typename ...Args>
+struct TypeGetter
+{
+	using Type = typename TypeGetter<INDEX - 1, Args...>::Type;
+};
+
+template<typename Arg, typename ...Args>
+struct TypeGetter<0, Arg, Args...>
+{
+	using Type = Arg;
+};
+
+template<Types::size_t INDEX, typename Arg>
+struct TypeGetter<INDEX, Arg>
+{
+	static_assert(!(INDEX > 1), "No types.");
+	using Type = Arg;
+};
+
+
+/**
  * @brief Template compile time constant.
  * @tparam Raw type.
  * @tparam Raw type value.
@@ -148,6 +199,24 @@ struct ComparingTypes: public FalseType
 template<typename T>
 struct ComparingTypes<T, T>: public TrueType
 {};
+
+/**
+ * @brief Comparing different types.
+ * @tparam First type.
+ * @tparam Second type.
+ */
+template<typename T, typename Arg, typename ...Args>
+struct ComparingTypeWithPack
+{
+	static constexpr bool VALUE = ComparingTypes<T, Arg>::VALUE
+		|| ComparingTypeWithPack<T, Args...>::VALUE;
+};
+
+template<typename T, typename Arg>
+struct ComparingTypeWithPack<T, Arg>
+{
+	static constexpr bool VALUE = ComparingTypes<T, Arg>::VALUE;
+};
 
 // Checking types
 
@@ -395,48 +464,55 @@ struct RemoveAll<T &&>
 	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
 };
 
+/**
+ * @brief The ChooseType struct
+ */
 template<bool CONDITION_RESULT, typename T1, typename T2>
 struct ChooseType: public NonCreational
 {};
 
+/**
+ * @brief The ChooseType<_Tp1, T1, T2> struct
+ */
 template<typename T1, typename T2>
 struct ChooseType<true, T1, T2>: public NonCreational
 {
 	using Type = T1;
 };
 
+/**
+ * @brief The ChooseType<_Tp1, T1, T2> struct
+ */
 template<typename T1, typename T2>
 struct ChooseType<false, T1, T2>: public NonCreational
 {
 	using Type = T2;
 };
 
-enum class ByteOrder
+/**
+ * @brief The IsUniqueParameterPack struct
+ */
+template<typename ...Args>
+struct IsUniqueParameterPack: public TrueType
+{};
+
+/**
+ * @brief The IsUniqueParameterPack<Arg, Args> struct
+ */
+template<typename Arg, typename ...Args>
+struct IsUniqueParameterPack<Arg, Args...>
 {
-	LITTLE_ENDIAN_ORDER = ORDER_LITTLE_ENDIAN,
-	BIG_ENDIAN_ORDER = ORDER_BIG_ENDIAN,
-	PDP_ENDIAN_ORDER = ORDER_PDP_ENDIAN,
-	HOST_ORDER = CURRENT_ORDER,
+	static constexpr bool VALUE = ComparingTypeWithPack<Arg, Args...>::VALUE
+		|| IsUniqueParameterPack<Args...>::VALUE;
 };
 
-template<bool IS_VOLATILE>
-struct SerializationTraits
+/**
+ * @brief The IsUniqueParameterPack<Arg, Args> struct
+ */
+template<typename Arg, typename Arg1>
+struct IsUniqueParameterPack<Arg, Arg1>
 {
-	using InputStream = void *;
-	using ConstInputStream =  const void *;
-
-	using InternalStream = Types::uchar_t *;
-	using ConstInternalStream =  const Types::uchar_t *;
-};
-
-template<>
-struct SerializationTraits<true>
-{
-	using InputStream = volatile void *;
-	using ConstInputStream =  const volatile void *;
-
-	using InternalStream = volatile Types::uchar_t *;
-	using ConstInternalStream =  const volatile Types::uchar_t *;
+	static constexpr bool VALUE = !ComparingTypeWithPack<Arg, Arg1>::VALUE;
 };
 
 }}
