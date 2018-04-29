@@ -34,6 +34,7 @@ HEADERS += \
 	./src/Templates/Tests/List.hpp \
 	./src/Templates/Tests/Bits.hpp \
 	./src/Templates/Tests/TestClass.hpp \
+	./src/Templates/Tests/Variant.hpp \
 	./src/Templates/Tests/Tuple.hpp \
 	./src/Templates/Tests/Allocator.hpp \
 	./src/Templates/Tests/UniquePoiter.hpp \
@@ -51,6 +52,7 @@ HEADERS += \
 	./src/Templates/View.hpp \
 	./src/Templates/FloatViewer.hpp \
 	./src/Templates/Pointers.hpp \
+	./src/Templates/Variant.hpp \
 	./src/Templates/ArrayBlocks.hpp \
 	./src/Templates/Tuple.hpp \
 	./src/Templates/Trees.hpp \
@@ -60,6 +62,7 @@ HEADERS += \
 	./src/Templates/String.hpp \
 	./src/Templates/ObjectViewer.hpp \
 	./src/Templates/InitializerList.hpp \
+	./src/Templates/Macroses.hpp \
 	./src/Templates/ByteOrder.hpp \
 	./src/Templates/Array.hpp \
 	./src/Templates/Utils.hpp \
@@ -89,5 +92,6 @@ SOURCES += \
 	./src/Templates/Tests/String.cpp \
 	./src/Templates/Tests/UniquePoiter.cpp \
 	./src/Templates/Tests/Tuple.cpp \
-	./src/Templates/Tests/ByteOrder.cpp 
+	./src/Templates/Tests/ByteOrder.cpp \
+	./src/Templates/Tests/Variant.cpp 
 
