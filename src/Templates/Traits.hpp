@@ -1,5 +1,5 @@
-﻿#ifndef TEMPLATES_UTILS_HPP
-#define TEMPLATES_UTILS_HPP
+﻿#ifndef TEMPLATES_TRAITS_HPP
+#define TEMPLATES_TRAITS_HPP
 
 #include <Others/PrimitiveTypes.hpp>
 
@@ -517,4 +517,4 @@ struct IsUniqueParameterPack<Arg, Arg1>
 
 }}
 
-#endif // TEMPLATES_UTILS_HPP
+#endif // TEMPLATES_TRAITS_HPP

@@ -20,6 +20,12 @@ struct VariantStruct
 	} data;
 };
 
+template<typename Arg>
+struct VariantStruct<Arg>
+{
+	Arg arg;
+};
+
 }
 
 template<typename Arg, typename ...Args>
@@ -89,12 +95,6 @@ private:
 		void operator()(Me &me, const T&);
 	};
 
-	struct GetterConst
-	{
-		template<Types::size_t INDEX>
-		typename TypeGetter<INDEX>::Type &operator()(const Me &me);
-	};
-
 	constexpr static bool VALUE = IsUniqueParameterPack<Arg, Args...>::VALUE;
 	static_assert(VALUE, "Paramter pack is not unique.");
 
@@ -107,13 +107,13 @@ class Variant<Arg>
 {
 public:
 	template<typename T>
-	T &get();
+	T *get();
 
 	template<typename T>
-	const T &get() const;
+	const T *get() const;
 
 	template<typename T>
-	T &get();
+	bool get(T& object) const;
 
 	template<typename T>
 	size_t set(const T &);

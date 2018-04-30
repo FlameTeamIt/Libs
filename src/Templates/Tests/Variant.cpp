@@ -15,7 +15,9 @@ int Variant::vStart()
 	using flame_ide::templates::Variant;
 
 	Variant<int, long> variant;
-//	Variant<int, int> variant1;
+//	Variant<int, int> variant1; // static-assert works
+
+	return 0;
 }
 
 }}

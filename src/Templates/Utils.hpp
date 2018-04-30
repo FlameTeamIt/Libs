@@ -1,5 +1,5 @@
-#ifndef UTILS_HPP
-#define UTILS_HPP
+#ifndef TEMPLATES_UTILS_HPP
+#define TEMPLATES_UTILS_HPP
 
 #include <Templates/Traits.hpp>
 
@@ -51,7 +51,7 @@ T&& forward(typename RemoveReference<T>::Type &reference) noexcept;
  */
 template<typename IteratorInput, typename IteratorOutput>
 Types::size_t copy(IteratorInput start, IteratorInput end
-        , IteratorOutput out);
+		, IteratorOutput out);
 template<typename ContainerInput, typename IteratorOutput>
 Types::size_t copy(const ContainerInput &input, IteratorOutput out);
 
@@ -73,19 +73,19 @@ emplaceNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcept;
 template<typename T> inline
 typename DefaultTraits<T>::Pointer
 placementNew(typename DefaultTraits<T>::Pointer pointer
-        , typename DefaultTraits<T>::MoveReference obj) noexcept;
+		, typename DefaultTraits<T>::MoveReference obj) noexcept;
 
 template<typename T> inline
 typename DefaultTraits<T>::Pointer
 placementNew(typename DefaultTraits<T>::Pointer pointer
-        , typename DefaultTraits<T>::ConstReference obj) noexcept;
+		, typename DefaultTraits<T>::ConstReference obj) noexcept;
 
 /**
  * @brief Comparing ranges.
  */
 template<typename Iterator1 , typename Iterator2>
 bool isEqual(Iterator1 start1, Iterator1 end1,
-        Iterator2 start2, Iterator2 end2);
+		Iterator2 start2, Iterator2 end2);
 
 template<typename Container> inline
 typename Container::Iterator begin(Container &&container);
@@ -301,14 +301,14 @@ typename RemoveReference<T>::Type &&move(T &&reference) noexcept
 }
 
 template<class T> constexpr inline
-T&& forward(typename RemoveReference<T>::Type &&reference) noexcept
+T &&forward(typename RemoveReference<T>::Type &&reference) noexcept
 {
 	static_assert(IsLvalue<T>::VALUE, "Cannot forward rvalue as lvalue.");
 	return static_cast<T &&>(reference);
 }
 
 template<class T> constexpr inline
-T&& forward(typename RemoveReference<T>::Type &reference) noexcept
+T &&forward(typename RemoveReference<T>::Type &reference) noexcept
 {
 	return static_cast<T &&>(reference);
 }
@@ -460,4 +460,4 @@ typename Container::SizeType size(const Container &container)
 
 }}
 
-#endif // UTILS_HPP
+#endif // TEMPLATES_UTILS_HPP
