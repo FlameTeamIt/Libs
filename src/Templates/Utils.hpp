@@ -88,25 +88,25 @@ bool isEqual(Iterator1 start1, Iterator1 end1,
 		Iterator2 start2, Iterator2 end2);
 
 template<typename Container> inline
-typename Container::Iterator begin(Container &&container);
+typename Container::Iterator begin(Container &container);
 
 template<typename Container> inline
 typename Container::ConstIterator cbegin(const Container &container);
 
 template<typename Container> inline
-typename Container::ReverseIterator rbegin(Container &&container);
+typename Container::ReverseIterator rbegin(Container &container);
 
 template<typename Container> inline
 typename Container::ConstReverseIterator crbegin(const Container &container);
 
 template<typename Container> inline
-typename Container::Iterator end(Container &&container);
+typename Container::Iterator end(Container &container);
 
 template<typename Container> inline
 typename Container::ConstIterator cend(const Container &container);
 
 template<typename Container> inline
-typename Container::ReverseIterator rend(Container &&container);
+typename Container::ReverseIterator rend(Container &container);
 
 template<typename Container> inline
 typename Container::ConstReverseIterator crend(const Container &container);
@@ -143,143 +143,28 @@ template<typename T> inline constexpr
 bool isPrimitiveType() noexcept
 {
 	using Type = typename RemoveAll<T>::Type;
-
-	using IsChar = ComparingTypes<Type, Types::char_t>;
-	using IsUchar = ComparingTypes<Type, Types::uchar_t>;
-
-	using IsShort = ComparingTypes<Type, Types::short_t>;
-	using IsUshort = ComparingTypes<Type, Types::ushort_t>;
-
-	using IsInt =ComparingTypes<Type, Types::int_t>;
-	using IsUint = ComparingTypes<Type, Types::uint_t>;
-
-	using IsLong = ComparingTypes<Type, Types::long_t>;
-	using IsUlong = ComparingTypes<Type, Types::ulong_t>;
-
-	using IsLlong = ComparingTypes<Type, Types::llong_t>;
-	using IsUllong = ComparingTypes<Type, Types::ullong_t>;
-
-	using IsFloat = ComparingTypes<Type, Types::float_t>;
-
-	using IsDouble = ComparingTypes<Type, Types::double_t>;
-	using IsLdouble = ComparingTypes<Type, Types::ldouble_t>;
-
-	return (IsChar::VALUE || IsUchar::VALUE
-			|| IsShort::VALUE  || IsUshort::VALUE
-			|| IsInt::VALUE    || IsUint::VALUE
-			|| IsLong::VALUE   || IsUlong::VALUE
-			|| IsLlong::VALUE  || IsUllong::VALUE
-			|| IsFloat::VALUE  || IsDouble::VALUE
-			|| IsLdouble::VALUE);
+	return IsPrimitiveType<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isFloatType() noexcept
 {
 	using Type = typename RemoveAll<T>::Type;
-
-	using IsFloat = ComparingTypes<Type, Types::float_t>;
-
-	using IsDouble = ComparingTypes<Type, Types::double_t>;
-	using IsLdouble = ComparingTypes<Type, Types::ldouble_t>;
-
-	return (IsFloat::VALUE || IsDouble::VALUE || IsLdouble::VALUE);
+	return IsFloatType<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isSigned() noexcept
 {
-	static_assert(isPrimitiveType<typename RemoveAll<T>::Type>()
-			, "It is not a primitive type.");
-
 	using Type = typename RemoveAll<T>::Type;
-
-	using IsChar = ComparingTypes<Type, Types::char_t>;
-	using IsShort = ComparingTypes<Type, Types::short_t>;
-	using IsInt = ComparingTypes<Type, Types::int_t>;
-	using IsLong = ComparingTypes<Type, Types::long_t>;
-	using IsLlong = ComparingTypes<Type, Types::llong_t>;
-
-	return IsChar::VALUE || IsShort::VALUE || IsInt::VALUE
-			|| IsLong::VALUE || IsLlong::VALUE;
+	return IsSigned<Type>::VALUE;
 }
-
-template<typename IntType>
-struct MakeSigned
-{
-	static_assert(isPrimitiveType<typename RemoveAll<IntType>::Type>()
-			, "It is not a primitive type.");
-
-	static_assert(!isFloatType<typename RemoveAll<IntType>::Type>()
-			, "It is only for integer types.");
-
-	using Type = IntType;
-};
-
-template<>
-struct MakeSigned<Types::uchar_t>
-{
-	using Type = Types::char_t;
-};
-
-template<>
-struct MakeSigned<Types::ushort_t>
-{
-	using Type = Types::short_t;
-};
-
-template<>
-struct MakeSigned<Types::uint_t>
-{
-	using Type = Types::int_t;
-};
-
-template<>
-struct MakeSigned<Types::ulong_t>
-{
-	using Type = Types::long_t;
-};
-
-template<typename IntType>
-struct MakeUnsigned
-{
-	static_assert(isPrimitiveType<typename RemoveAll<IntType>::Type>()
-			, "It is not a primitive type.");
-
-	static_assert(!isFloatType<typename RemoveAll<IntType>::Type>()
-			, "It is only for integer types.");
-
-	using Type = IntType;
-};
-
-template<>
-struct MakeUnsigned<Types::char_t>
-{
-	using Type = Types::uchar_t;
-};
-
-template<>
-struct MakeUnsigned<Types::short_t>
-{
-	using Type = Types::ushort_t;
-};
-
-template<>
-struct MakeUnsigned<Types::int_t>
-{
-	using Type = Types::uint_t;
-};
-
-template<>
-struct MakeUnsigned<Types::long_t>
-{
-	using Type = Types::ulong_t;
-};
 
 template<typename T> inline constexpr
 bool isUnsigned() noexcept
 {
-	return !isSigned<T>();
+	using Type = typename RemoveAll<T>::Type;
+	return IsUnsigned<Type>::VALUE;
 }
 
 template<typename T, typename U> inline constexpr
@@ -398,7 +283,7 @@ bool isEqual(Iterator1 start1, Iterator1 end1
 }
 
 template<typename Container> inline
-typename Container::Iterator begin(Container &&container)
+typename Container::Iterator begin(Container &container)
 {
 	return container.begin();
 }
@@ -410,7 +295,7 @@ typename Container::ConstIterator cbegin(const Container &container)
 }
 
 template<typename Container> inline
-typename Container::ReverseIterator rbegin(Container &&container)
+typename Container::ReverseIterator rbegin(Container &container)
 {
 	return container.rbegin();
 }
@@ -423,7 +308,7 @@ typename Container::ConstReverseIterator crbegin(const Container &container)
 
 
 template<typename Container> inline
-typename Container::Iterator end(Container &&container)
+typename Container::Iterator end(Container &container)
 {
 	return container.end();
 }
@@ -435,7 +320,7 @@ typename Container::ConstIterator cend(const Container &container)
 }
 
 template<typename Container> inline
-typename Container::ReverseIterator rend(Container &&container)
+typename Container::ReverseIterator rend(Container &container)
 {
 	return container.rend();
 }

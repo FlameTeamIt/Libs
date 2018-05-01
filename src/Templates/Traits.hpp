@@ -41,6 +41,157 @@ struct NonCreational: public NonDefault, public NonMove, public NonCopy
 	~NonCreational() = delete;
 };
 
+
+/**
+ * @brief Template compile time constant.
+ * @tparam Raw type.
+ * @tparam Raw type value.
+ */
+template<typename T, T v>
+struct IntegralConstant
+{
+	using Type = T;
+	static constexpr Type VALUE = v;
+};
+
+/**
+ * @brief Compile time true constant.
+ */
+struct TrueType: public IntegralConstant<bool, true>
+{};
+
+/**
+ * @brief Compile time false constant.
+ */
+struct FalseType: public IntegralConstant<bool, false>
+{};
+
+
+/**
+ * @brief Removing pointer from type.
+ * @tparam Raw type.
+ */
+template<typename T>
+struct RemovePointer
+{
+	using Type = T;
+};
+
+template<typename T>
+struct RemovePointer<T *>
+{
+	using Type = T;
+};
+
+
+/**
+ * @brief Removing reference from type.
+ * @tparam Raw type.
+ */
+template<typename T>
+struct RemoveReference
+{
+	using Type = T;
+};
+
+template<typename T>
+struct RemoveReference<T &>
+{
+	using Type = T;
+};
+
+template<typename T>
+struct RemoveReference<T &&>
+{
+	using Type = T;
+};
+
+
+/**
+ * @brief View RemoveConst
+ */
+template<typename T>
+struct RemoveConst
+{
+	using Type = T;
+};
+
+template<typename T>
+struct RemoveConst<const T>
+{
+	using Type = T;
+};
+
+
+/**
+ * @brief Removing volatile from type.
+ * @tparam Raw type.
+ */
+template<typename T>
+struct RemoveVolatile
+{
+	using Type = T;
+};
+
+template<typename T>
+struct RemoveVolatile<volatile T>
+{
+	using Type = T;
+};
+
+
+/**
+ * @brief Removing all modificators for getting
+ * @tparam Raw type.
+ */
+template<typename T>
+struct RemoveAll
+{
+	using Type = T;
+};
+
+template<typename T>
+struct RemoveAll<volatile T>
+{
+	using Type = typename RemoveAll<typename RemoveVolatile<T>::Type>::Type;
+};
+
+
+/**
+ * @brief View RemoveAll.
+ */
+template<typename T>
+struct RemoveAll<T *>
+{
+	using Type = typename RemoveAll<typename RemovePointer<T>::Type>::Type;
+};
+
+template<typename T>
+struct RemoveAll<T const>
+{
+	using Type = typename RemoveAll<typename RemoveConst<T>::Type>::Type;
+};
+
+
+/**
+ * @brief View RemoveAll.
+ */
+template<typename T>
+struct RemoveAll<T &>
+{
+	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
+};
+
+/**
+ * @brief View RemoveAll.
+ */
+template<typename T>
+struct RemoveAll<T &&>
+{
+	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
+};
+
+
 /**
  * @brief Aliases to primitive fixed size types.
  */
@@ -69,6 +220,168 @@ struct Types: public NonCreational
 	using diff_t = flame_ide::types::primitive::diff_t;
 };
 
+
+/**
+ * @brief The IsPrimitiveType struct
+ */
+template<typename T>
+struct IsPrimitiveType: public FalseType
+{};
+
+template<>
+struct IsPrimitiveType<Types::char_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveType<Types::short_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveType<Types::int_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveType<Types::long_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveType<Types::uchar_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveType<Types::ushort_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveType<Types::uint_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveType<Types::ulong_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveType<Types::float_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveType<Types::double_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveType<Types::ldouble_t>: public TrueType
+{};
+
+/**
+ * @brief The IsFloatType struct
+ */
+template<typename T>
+struct IsFloatType: public FalseType
+{};
+
+template<>
+struct IsFloatType<Types::float_t>: public TrueType
+{};
+
+template<>
+struct IsFloatType<Types::double_t>: public TrueType
+{};
+
+template<>
+struct IsFloatType<Types::ldouble_t>: public TrueType
+{};
+
+
+/**
+ * @brief The IsSigned struct
+ */
+template<typename T>
+struct IsSigned: public FalseType
+{
+	static_assert(IsPrimitiveType<typename RemoveAll<T>::Type>::VALUE
+			, "It is not a primitive type.");
+	static_assert(!IsFloatType<typename RemoveAll<T>::Type>::VALUE
+			, "It's a float type.");
+};
+
+template<>
+struct IsSigned<Types::uchar_t>: public FalseType
+{};
+
+template<>
+struct IsSigned<Types::ushort_t>: public FalseType
+{};
+
+template<>
+struct IsSigned<Types::uint_t>: public FalseType
+{};
+
+template<>
+struct IsSigned<Types::ulong_t>: public FalseType
+{};
+
+template<>
+struct IsSigned<Types::char_t>: public TrueType
+{};
+
+template<>
+struct IsSigned<Types::short_t>: public TrueType
+{};
+
+template<>
+struct IsSigned<Types::int_t>: public TrueType
+{};
+
+template<>
+struct IsSigned<Types::long_t>: public TrueType
+{};
+
+
+/**
+ * @brief The IsUnsigned struct
+ */
+template<typename T>
+struct IsUnsigned: public FalseType
+{
+	static_assert(IsPrimitiveType<typename RemoveAll<T>::Type>::VALUE
+			, "It is not a primitive type.");
+	static_assert(!IsFloatType<typename RemoveAll<T>::Type>::VALUE
+			, "It's a float type.");
+};
+
+template<>
+struct IsUnsigned<Types::uchar_t>: public TrueType
+{};
+
+template<>
+struct IsUnsigned<Types::ushort_t>: public TrueType
+{};
+
+template<>
+struct IsUnsigned<Types::uint_t>: public TrueType
+{};
+
+template<>
+struct IsUnsigned<Types::ulong_t>: public TrueType
+{};
+
+template<>
+struct IsUnsigned<Types::char_t>: public FalseType
+{};
+
+template<>
+struct IsUnsigned<Types::short_t>: public FalseType
+{};
+
+template<>
+struct IsUnsigned<Types::int_t>: public FalseType
+{};
+
+template<>
+struct IsUnsigned<Types::long_t>: public FalseType
+{};
+
+
 /**
  * @brief Default type traits
  * @tparam Raw type.
@@ -90,8 +403,9 @@ struct DefaultTraits
 	using VoidPointer = void *;
 };
 
+
 /**
- * @brief Default size, diff  traits.
+ * @brief Default size, diff and traits.
  */
 struct SizeTraits
 {
@@ -100,6 +414,7 @@ struct SizeTraits
 	using DiffType = Types::diff_t;
 };
 
+
 /**
  * @brief Default traits for containers such as Array, Vector, etc.
  * @tparam Raw type.
@@ -107,6 +422,7 @@ struct SizeTraits
 template<typename T>
 struct ContainerTraits: public DefaultTraits<T>, public SizeTraits
 {};
+
 
 /**
  * @brief Default traits for containers such as Array, Vector, etc.
@@ -160,30 +476,6 @@ struct TypeGetter<INDEX, Arg>
 
 
 /**
- * @brief Template compile time constant.
- * @tparam Raw type.
- * @tparam Raw type value.
- */
-template<typename T, T v>
-struct IntegralConstant
-{
-	using Type = T;
-	static constexpr Type VALUE = v;
-};
-
-/**
- * @brief Compile time true constant.
- */
-struct TrueType: public IntegralConstant<bool, true>
-{};
-
-/**
- * @brief Compile time false constant.
- */
-struct FalseType: public IntegralConstant<bool, false>
-{};
-
-/**
  * @brief Comparing different types.
  * @tparam First type.
  * @tparam Second type.
@@ -192,6 +484,7 @@ template<typename T, typename U>
 struct ComparingTypes: public FalseType
 {};
 
+
 /**
  * @brief Comparing equal types.
  * @tparam Type.
@@ -199,6 +492,7 @@ struct ComparingTypes: public FalseType
 template<typename T>
 struct ComparingTypes<T, T>: public TrueType
 {};
+
 
 /**
  * @brief Comparing different types.
@@ -218,7 +512,6 @@ struct ComparingTypeWithPack<T, Arg>
 	static constexpr bool VALUE = ComparingTypes<T, Arg>::VALUE;
 };
 
-// Checking types
 
 /**
  * @brief Get info is type pointer.
@@ -228,13 +521,10 @@ template<typename T>
 struct IsPointer: public FalseType
 {};
 
-/**
- * @brief Get info is type pointer.
- * @tparam Type.
- */
 template<typename T>
 struct IsPointer<T *>: public TrueType
 {};
+
 
 /**
  * @brief Get info is type reference.
@@ -244,21 +534,14 @@ template<typename T>
 struct IsReference: public FalseType
 {};
 
-/**
- * @brief Get info is type reference.
- * @tparam Type.
- */
 template<typename T>
 struct IsReference<T &>: public TrueType
 {};
 
-/**
- * @brief Get info is type reference.
- * @tparam Type.
- */
 template<typename T>
 struct IsReference<T &&>: public TrueType
 {};
+
 
 /**
  * @brief Get info is const type.
@@ -268,10 +551,6 @@ template<typename T>
 struct IsConst: public FalseType
 {};
 
-/**
- * @brief Get info is const type.
- * @tparam Type.
- */
 template<typename T>
 struct IsConst<const T>: public TrueType
 {};
@@ -284,10 +563,6 @@ template<typename T>
 struct IsVolatile: public FalseType
 {};
 
-/**
- * @brief Get info is volatile type.
- * @tparam Type.
- */
 template<typename T>
 struct IsVolatile<volatile T>: public TrueType
 {};
@@ -300,9 +575,6 @@ template<typename T>
 struct IsLvalue: public FalseType
 {};
 
-/**
- * @brief View IsLvalue
- */
 template<typename T>
 struct IsLvalue<T &>: public TrueType
 {};
@@ -315,153 +587,81 @@ template<typename T>
 struct IsRvalue: public FalseType
 {};
 
-/**
- * @brief View IsRvalue
- */
 template<typename T>
 struct IsRvalue<T &&>: public TrueType
 {};
 
 
-// Removing
-
-/**
- * @brief Removing pointer from type.
- * @tparam Raw type.
- */
-template<typename T>
-struct RemovePointer
+template<typename IntType>
+struct MakeSigned
 {
-	using Type = T;
+	static_assert(IsPrimitiveType<typename RemoveAll<IntType>::Type>::VALUE
+			, "It is not a primitive type.");
+
+	static_assert(!IsFloatType<typename RemoveAll<IntType>::Type>::VALUE
+			, "It is only for integer types.");
+
+	using Type = IntType;
 };
 
-/**
- * @brief View RemovePointer
- */
-template<typename T>
-struct RemovePointer<T *>
+template<>
+struct MakeSigned<Types::uchar_t>
 {
-	using Type = T;
+	using Type = Types::char_t;
 };
 
-/**
- * @brief Removing reference from type.
- * @tparam Raw type.
- */
-template<typename T>
-struct RemoveReference
+template<>
+struct MakeSigned<Types::ushort_t>
 {
-	using Type = T;
+	using Type = Types::short_t;
 };
 
-/**
- * @brief View RemoveReference
- */
-template<typename T>
-struct RemoveReference<T &>
+template<>
+struct MakeSigned<Types::uint_t>
 {
-	using Type = T;
+	using Type = Types::int_t;
 };
 
-/**
- * @brief View RemoveReference
- */
-template<typename T>
-struct RemoveReference<T &&>
+template<>
+struct MakeSigned<Types::ulong_t>
 {
-	using Type = T;
+	using Type = Types::long_t;
 };
 
-/**
- * @brief View RemoveConst
- */
-template<typename T>
-struct RemoveConst
+template<typename IntType>
+struct MakeUnsigned
 {
-	using Type = T;
+	static_assert(IsPrimitiveType<typename RemoveAll<IntType>::Type>::VALUE
+			, "It is not a primitive type.");
+
+	static_assert(!IsFloatType<typename RemoveAll<IntType>::Type>::VALUE
+			, "It is only for integer types.");
+
+	using Type = IntType;
 };
 
-/**
- * @brief View RemoveConst
- */
-template<typename T>
-struct RemoveConst<const T>
+template<>
+struct MakeUnsigned<Types::char_t>
 {
-	using Type = T;
+	using Type = Types::uchar_t;
 };
 
-/**
- * @brief Removing volatile from type.
- * @tparam Raw type.
- */
-template<typename T>
-struct RemoveVolatile
+template<>
+struct MakeUnsigned<Types::short_t>
 {
-	using Type = T;
+	using Type = Types::ushort_t;
 };
 
-/**
- * @brief View RemoveVolatile.
- */
-template<typename T>
-struct RemoveVolatile<volatile T>
+template<>
+struct MakeUnsigned<Types::int_t>
 {
-	using Type = T;
+	using Type = Types::uint_t;
 };
 
-/**
- * @brief Removing all modificators for getting
- * @tparam Raw type.
- */
-template<typename T>
-struct RemoveAll
+template<>
+struct MakeUnsigned<Types::long_t>
 {
-	using Type = T;
-};
-
-/**
- * @brief View RemoveAll.
- */
-template<typename T>
-struct RemoveAll<volatile T>
-{
-	using Type = typename RemoveAll<typename RemoveVolatile<T>::Type>::Type;
-};
-
-/**
- * @brief View RemoveAll.
- */
-template<typename T>
-struct RemoveAll<T *>
-{
-	using Type = typename RemoveAll<typename RemovePointer<T>::Type>::Type;
-};
-
-/**
- * @brief View RemoveAll.
- */
-template<typename T>
-struct RemoveAll<T const>
-{
-	using Type = typename RemoveAll<typename RemoveConst<T>::Type>::Type;
-};
-
-/**
- * @brief View RemoveAll.
- */
-template<typename T>
-struct RemoveAll<T &>
-{
-	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
-};
-
-/**
- * @brief View RemoveAll.
- */
-template<typename T>
-struct RemoveAll<T &&>
-{
-	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
+	using Type = Types::ulong_t;
 };
 
 /**
