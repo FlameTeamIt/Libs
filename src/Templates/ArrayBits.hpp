@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_ARRAYBITS_HPP
 #define TEMPLATES_ARRAYBITS_HPP
 
-#include <Templates/Utils.hpp>
+#include <Templates/SimpleAlgorithms.hpp>
 #include <Templates/Byte.hpp>
 
 namespace flame_ide
@@ -12,7 +12,8 @@ namespace flame_ide
 template<Types::size_t TEMPLATE_COUNT_BITS>
 struct ArrayBits
 {
-	constexpr static Types::size_t COUNT_BYTES = TEMPLATE_COUNT_BITS / 8 + ((TEMPLATE_COUNT_BITS % 8) ? 1 : 0);
+	constexpr static Types::size_t COUNT_BYTES = TEMPLATE_COUNT_BITS / 8
+			+ ((TEMPLATE_COUNT_BITS % 8) ? 1 : 0);
 
 	ArrayBits();
 

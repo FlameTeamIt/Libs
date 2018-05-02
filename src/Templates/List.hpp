@@ -4,7 +4,7 @@
 #include <Templates/Allocator.hpp>
 #include <Templates/Iterator.hpp>
 #include <Templates/View.hpp>
-#include <Templates/Utils.hpp>
+#include <Templates/SimpleAlgorithms.hpp>
 #include <Templates/InitializerList.hpp>
 
 #define TEMPLATE_DEFINE \

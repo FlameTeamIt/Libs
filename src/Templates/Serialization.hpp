@@ -2,7 +2,7 @@
 #define TEMPLATE_SERIALIZATION_HPP
 
 #include <Templates/Traits.hpp>
-#include <Templates/Utils.hpp>
+#include <Templates/SimpleAlgorithms.hpp>
 #include <Templates/ByteOrder.hpp>
 #include <Templates/View.hpp>
 

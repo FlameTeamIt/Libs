@@ -1,7 +1,7 @@
 ﻿#ifndef TEMPLATES_VECTOR_HPP
 #define TEMPLATES_VECTOR_HPP
 
-#include <Templates/Utils.hpp>
+#include <Templates/SimpleAlgorithms.hpp>
 #include <Templates/Iterator.hpp>
 #include <Templates/Allocator.hpp>
 #include <Templates/InitializerList.hpp>

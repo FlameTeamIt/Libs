@@ -6,6 +6,7 @@
 #include <Templates/InitializerList.hpp>
 #include <Templates/Iterator.hpp>
 #include <Templates/View.hpp>
+#include <Templates/SimpleAlgorithms.hpp>
 
 #define TEMPLATE_DEFINE \
 	template <typename T, SizeTraits::SizeType SIZE, typename Traits>

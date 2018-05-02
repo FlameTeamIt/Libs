@@ -47,21 +47,6 @@ template<class T> constexpr inline
 T&& forward(typename RemoveReference<T>::Type &reference) noexcept;
 
 /**
- * @brief Copying range.
- */
-template<typename IteratorInput, typename IteratorOutput>
-Types::size_t copy(IteratorInput start, IteratorInput end
-		, IteratorOutput out);
-template<typename ContainerInput, typename IteratorOutput>
-Types::size_t copy(const ContainerInput &input, IteratorOutput out);
-
-/**
- * @brief Getting size of range.
- */
-template<typename Iterator, typename SizeTraits = flame_ide::templates::SizeTraits>
-typename SizeTraits::SizeType countIterations(Iterator start, Iterator end);
-
-/**
  * @brief Adapter for palcement new operator.
  *
  * Call custom constructors.
@@ -196,43 +181,6 @@ template<class T> constexpr inline
 T &&forward(typename RemoveReference<T>::Type &reference) noexcept
 {
 	return static_cast<T &&>(reference);
-}
-
-template<typename IteratorInput, typename IteratorOutput>
-Types::size_t copy(IteratorInput start, IteratorInput end
-		, IteratorOutput out)
-{
-	static_assert(
-			isSameTypes<
-				typename RemoveAll<decltype(*start)>::Type
-				, typename RemoveAll<decltype(*out)>::Type
-			>()
-			, "Types is not equal."
-	);
-
-	static_assert(!isConst<decltype(*out)>(), "Out iterator cannot be const.");
-
-	Types::size_t counter = 0;
-	for (auto iterator = start; iterator != end; ++iterator, ++out, ++counter)
-		*out = *iterator;
-
-	return counter;
-}
-
-template<typename ContainerInput, typename IteratorOutput>
-Types::size_t copy(const ContainerInput &input, IteratorOutput out)
-{
-	return copy(input.begin(), input.end(), out);
-}
-
-
-template<typename Iterator, typename Traits>
-typename Traits::SizeType countIterations(Iterator start, Iterator end)
-{
-	typename Traits::SizeType count = 0;
-	for(auto iterator = start; iterator != end; ++iterator, ++count)
-	{}
-	return count;
 }
 
 template<typename T, typename ...Args> inline
