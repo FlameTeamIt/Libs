@@ -3,7 +3,7 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CXXFLAGS = -std=c++14 -pedantic
+QMAKE_CXXFLAGS = -std=c++14 -pedantic -fno-rtti
 INCLUDEPATH += src/
 INCLUDEPATH += .
 
