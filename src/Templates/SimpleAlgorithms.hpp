@@ -23,6 +23,25 @@ Types::size_t copy(const ContainerInput &input, IteratorOutput out);
 template<typename Iterator, typename SizeTraits = flame_ide::templates::SizeTraits>
 typename SizeTraits::SizeType countIterations(Iterator start, Iterator end);
 
+
+/**
+ * @brief Iterate from start to end.
+ */
+template<typename IteratorInput, typename FuncObject>
+void foreach(IteratorInput start, IteratorInput end, FuncObject func);
+
+/**
+ * @brief Iterate by all container elements without changing.
+ */
+template<typename ContainerInput, typename FuncObject>
+void foreach(const ContainerInput& container, FuncObject func);
+
+/**
+ * @brief Iterate by all container elements with changing.
+ */
+template<typename ContainerInput, typename FuncObject>
+void foreachChangable(ContainerInput& container, FuncObject func);
+
 }}
 
 namespace flame_ide
@@ -63,6 +82,28 @@ typename Traits::SizeType countIterations(Iterator start, Iterator end)
 	for(auto iterator = start; iterator != end; ++iterator, ++count)
 	{}
 	return count;
+}
+
+
+template<typename IteratorInput, typename FuncObject>
+void foreach(IteratorInput start, IteratorInput end, FuncObject func)
+{
+	for (auto it = start; it != end; ++it)
+	{
+		func(*it);
+	}
+}
+
+template<typename ContainerInput, typename FuncObject>
+void foreach(const ContainerInput& container, FuncObject func)
+{
+	foreach(container.begin(), container.end(), func);
+}
+
+template<typename ContainerInput, typename FuncObject>
+void foreachChangable(ContainerInput& container, FuncObject func)
+{
+	foreach(container.begin(), container.end(), func);
 }
 
 }}
