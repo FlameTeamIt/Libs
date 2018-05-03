@@ -16,13 +16,15 @@
 #endif // VECTOR_RESIZE_FACTOR_DIV
 
 #define TEMPLATE_DEFINE \
-	template <typename T \
+	template < \
+		typename T \
 		, typename Traits \
 		, typename Allocator \
 	>
 
 #define TEMPLATE_DEFINE_1 \
-	template <typename Traits1 \
+	template < \
+		typename Traits1 \
 		, typename Allocator1 \
 	>
 
