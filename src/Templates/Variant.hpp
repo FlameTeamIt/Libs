@@ -106,20 +106,17 @@ template<typename Arg>
 class Variant<Arg>
 {
 public:
-	template<typename T>
-	T *get();
+	using Me = Variant<Arg>;
+	using Struct = variant_utils::VariantStruct<Arg>;
+
+	template<Types::size_t INDEX>
+	using TypeGetter = flame_ide::templates::TypeGetter<INDEX, Arg>;
 
 	template<Types::size_t INDEX>
 	typename TypeGetter<INDEX>::Type *get();
 
 	template<Types::size_t INDEX>
 	const typename TypeGetter<INDEX>::Type *get() const;
-
-	template<typename T>
-	const T *get() const;
-
-	template<typename T>
-	bool get(T &object) const;
 
 	template<typename T>
 	T *get();
