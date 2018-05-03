@@ -38,31 +38,31 @@ public:
 	template<Types::size_t INDEX>
 	using TypeGetter = flame_ide::templates::TypeGetter<INDEX, Arg, Args...>;
 
-	Variant()
+	Variant() noexcept
 	{}
 
-	Variant(const Me&);
-	Variant(Me &&);
+	Variant(const Me&) noexcept;
+	Variant(Me &&) noexcept;
 
 	template<typename T>
-	Variant(const T &value);
+	Variant(const T &initObject) noexcept;
 
 	template<typename T>
-	Variant(T &&value);
+	Variant(T &&initObject);
 
 	template<Types::size_t INDEX>
-	typename TypeGetter<INDEX>::Type &get();
+	typename TypeGetter<INDEX>::Type *get();
 
 	template<Types::size_t INDEX>
-	const typename TypeGetter<INDEX>::Type &get() const;
+	const typename TypeGetter<INDEX>::Type *get() const;
 
 	template<typename T>
-	Types::size_t set(T &&);
+	Types::ssize_t set(T &&object);
 
 	template<typename T>
-	Types::size_t set(const T &);
+	Types::ssize_t set(const T &object);
 
-	Types::size_t getCurrentIndex() const;
+	Types::ssize_t getCurrentIndex() const;
 
 	template<typename T>
 	T *get();
@@ -71,7 +71,7 @@ public:
 	const T *get() const;
 
 	template<typename T>
-	bool get(T& object) const;
+	bool get(T &object) const;
 
 private:
 	struct Getter
@@ -89,17 +89,17 @@ private:
 	struct Setter
 	{
 		template<typename T>
-		void operator()(Me &me, T&&);
+		void operator()(Me &me, T &&);
 
 		template<Types::size_t INDEX, typename T>
-		void operator()(Me &me, const T&);
+		void operator()(Me &me, const T &);
 	};
 
-	constexpr static bool VALUE = IsUniqueParameterPack<Arg, Args...>::VALUE;
+	static constexpr bool VALUE = IsUniqueParameterPack<Arg, Args...>::VALUE;
 	static_assert(VALUE, "Paramter pack is not unique.");
 
 	Struct value;
-	Types::size_t currentIndex;
+	Types::ssize_t currentIndex;
 };
 
 template<typename Arg>
@@ -109,11 +109,26 @@ public:
 	template<typename T>
 	T *get();
 
+	template<Types::size_t INDEX>
+	typename TypeGetter<INDEX>::Type *get();
+
+	template<Types::size_t INDEX>
+	const typename TypeGetter<INDEX>::Type *get() const;
+
 	template<typename T>
 	const T *get() const;
 
 	template<typename T>
-	bool get(T& object) const;
+	bool get(T &object) const;
+
+	template<typename T>
+	T *get();
+
+	template<typename T>
+	const T *get() const;
+
+	template<typename T>
+	bool get(T &object) const;
 
 	template<typename T>
 	size_t set(const T &);
