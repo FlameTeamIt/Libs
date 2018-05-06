@@ -122,6 +122,12 @@ public:
 	 */
 	TEMPLATE_DEFINE_1
 	Me &operator=(const VECTOR_TYPE_1 &vector);
+
+	/**
+	 * @brief operator =
+	 * @param vector
+	 * @return
+	 */
 	Me &operator=(const Me &vector);
 
 	/**
@@ -131,6 +137,12 @@ public:
 	 */
 	TEMPLATE_DEFINE_1
 	Me &operator=(VECTOR_TYPE_1 &&vector) noexcept;
+
+	/**
+	 * @brief operator =
+	 * @param vector
+	 * @return
+	 */
 	Me &operator=(Me &&vector);
 
 	/**
@@ -163,6 +175,18 @@ public:
 	Me &operator-=(Range<ConstIterator> range);
 	Me &operator-=(Range<ReverseIterator> range);
 	Me &operator-=(Range<ConstReverseIterator> range);
+
+	/**
+	 * @brief data
+	 * @return
+	 */
+	Pointer data() noexcept;
+
+	/**
+	 * @brief data
+	 * @return
+	 */
+	PointerToConst data() const noexcept;
 
 	/**
 	 * @brief size
@@ -513,6 +537,18 @@ typename VECTOR_TYPE::ConstReference VECTOR_TYPE::operator[](
 		IntType index) const noexcept
 {
 	return *(head + index);
+}
+
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::Pointer VECTOR_TYPE::data() noexcept
+{
+	return head;
+}
+
+TEMPLATE_DEFINE
+typename VECTOR_TYPE::PointerToConst VECTOR_TYPE::data() const noexcept
+{
+	return head;
 }
 
 TEMPLATE_DEFINE

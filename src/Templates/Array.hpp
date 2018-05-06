@@ -199,6 +199,18 @@ public:
 	Me &operator-=(Range<ReverseIterator> range);
 
 	/**
+	 * @brief data
+	 * @return
+	 */
+	Pointer data() noexcept;
+
+	/**
+	 * @brief data
+	 * @return
+	 */
+	PointerToConst data() const noexcept;
+
+	/**
 	 * @brief size
 	 * @return
 	 */
@@ -563,6 +575,18 @@ ARRAY_TYPE &ARRAY_TYPE::operator-=(Range<ARRAY_TYPE::ReverseIterator> range)
 			&(*(--range.end())), &(*(--range.begin()))
 	};
 	return operator-=(forwardRange);
+}
+
+TEMPLATE_DEFINE
+typename ARRAY_TYPE::Pointer ARRAY_TYPE::data() noexcept
+{
+	return head();
+}
+
+TEMPLATE_DEFINE
+typename ARRAY_TYPE::PointerToConst ARRAY_TYPE::data() const noexcept
+{
+	return head();
 }
 
 TEMPLATE_DEFINE inline
