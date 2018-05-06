@@ -421,8 +421,11 @@ typename ArrayAllocator<T, Traits>::Pointer
 ArrayAllocator<T, Traits>::reallocateArray(typename ArrayAllocator<T, Traits>::Pointer pointer,
 		SizeType count)
 {
-	return reinterpret_cast<Pointer>(this->reallocate(
-			VoidPointer(pointer), SizeType(sizeof(Type) * count)));
+	return reinterpret_cast<Pointer>(
+			this->reallocate(
+					VoidPointer(pointer), SizeType(sizeof(Type) * count)
+			)
+	);
 }
 
 template<typename T, typename Traits>
