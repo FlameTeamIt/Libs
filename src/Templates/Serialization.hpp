@@ -1,5 +1,5 @@
-﻿#ifndef TEMPLATE_SERIALIZATION_HPP
-#define TEMPLATE_SERIALIZATION_HPP
+﻿#ifndef TEMPLATES_SERIALIZATION_HPP
+#define TEMPLATES_SERIALIZATION_HPP
 
 #include <Templates/Traits.hpp>
 #include <Templates/SimpleAlgorithms.hpp>
@@ -950,4 +950,4 @@ Types::uchar_t *Deserializer<ORDER, IS_VOLATILE>::castToByteArray(T &value)
 
 }}
 
-#endif // TEMPLATE_SERIALIZATION_HPP
+#endif // TEMPLATES_SERIALIZATION_HPP
