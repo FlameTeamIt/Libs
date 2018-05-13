@@ -60,6 +60,8 @@ struct VariantStruct<Arg, Args...>
 
 	union VariantUnion
 	{
+		VariantUnion()
+		{}
 		~VariantUnion()
 		{}
 
@@ -99,7 +101,38 @@ struct VariantStruct<>
 	{
 		return false;
 	}
+};
 
+template<bool IS_SAME_TYPES>
+struct VariantStructGetterSetter
+{
+	template<typename T, typename Arg, typename ...Args>
+	static Types::ssize_t set(VariantStruct<Arg, Args...> &me, const T &object);
+
+	template<typename T, typename Arg, typename ...Args>
+	static Types::ssize_t set(VariantStruct<Arg, Args...> &me, T &&object);
+
+	template<typename T, typename Arg, typename ...Args>
+	static T *get(VariantStruct<Arg, Args...> &me);
+
+	template<typename T, typename Arg, typename ...Args>
+	static const T *getConst(const VariantStruct<Arg, Args...> &me);
+};
+
+template<>
+struct VariantStructGetterSetter<false>
+{
+	template<typename T, typename Arg, typename ...Args>
+	static Types::ssize_t set(VariantStruct<Arg, Args...> &me, const T &object);
+
+	template<typename T, typename Arg, typename ...Args>
+	static Types::ssize_t set(VariantStruct<Arg, Args...> &me, T &&object);
+
+	template<typename T, typename Arg, typename ...Args>
+	static T *get(VariantStruct<Arg, Args...> &me);
+
+	template<typename T, typename Arg, typename ...Args>
+	static const T *getConst(const VariantStruct<Arg, Args...> &me);
 };
 
 }
@@ -161,33 +194,6 @@ public:
 	bool get(T &object) const;
 
 private:
-	struct Getter
-	{
-		template<Types::size_t INDEX>
-		typename TypeGetter<INDEX>::Type *data(Me &me) noexcept;
-
-		template<typename T>
-		T *data(Me &me) noexcept;
-	};
-
-	struct GetterConst
-	{
-		template<Types::size_t INDEX>
-		const typename TypeGetter<INDEX>::Type *data(const Me &me) noexcept;
-
-		template<typename T>
-		const T *data(const Me &me) noexcept;
-	};
-
-	struct Setter
-	{
-		template<typename T>
-		bool data(Me &me, T &&) noexcept;
-
-		template<typename T>
-		bool data(Me &me, const T &) noexcept;
-	};
-
 	static constexpr bool VALUE = IsUniqueParameterPack<Arg, Args...>::VALUE;
 	static_assert(VALUE, "Paramter pack is not unique.");
 
@@ -208,62 +214,28 @@ template<typename Arg, typename ...Args>
 template<typename T>
 T *VariantStruct<Arg, Args...>::get()
 {
-	if (isSameTypes<T, Arg>())
-	{
-		return &data.arg;
-	}
-	else
-	{
-		return data.pack.template get<T>();
-	}
+	return VariantStructGetterSetter<isSameTypes<T, Arg>()>::get(*this);
 }
 
 template<typename Arg, typename ...Args>
 template<typename T>
 const T *VariantStruct<Arg, Args...>::get() const
 {
-	if (isSameTypes<T, Arg>())
-	{
-		return &data.arg;
-	}
-	else
-	{
-		return data.pack.template get<T>();
-	}
+	return VariantStructGetterSetter<isSameTypes<T, Arg>()>::getConst(*this);
 }
 
 template<typename Arg, typename ...Args>
 template<typename T>
 Types::ssize_t VariantStruct<Arg, Args...>::set(const T &object)
 {
-	Types::ssize_t result = 0;
-	if (isSameTypes<T, Arg>())
-	{
-		data.arg = object;
-	}
-	else
-	{
-		result = data.pack.template set(object);
-		(result < 0) ? result : ++result;
-	}
-	return result;
+	return VariantStructGetterSetter<isSameTypes<T,Arg>()>::set(*this, object);
 }
 
 template<typename Arg, typename ...Args>
 template<typename T>
 Types::ssize_t VariantStruct<Arg, Args...>::set(T &&object)
 {
-	Types::ssize_t result = 0;
-	if (isSameTypes<T, Arg>())
-	{
-		data.arg = move(object);
-	}
-	else
-	{
-		result = data.pack.template set(move(object));
-		(result < 0) ? result : ++result;
-	}
-	return result;
+	return VariantStructGetterSetter<isSameTypes<T,Arg>()>::set(*this, move(object));
 }
 
 
@@ -334,6 +306,68 @@ template<typename T>
 Types::ssize_t VariantStruct<>::set(T &&)
 {
 	return -1;
+}
+
+template<bool IS_SAME_TYPES>
+template<typename T, typename Arg, typename ...Args> inline
+Types::ssize_t VariantStructGetterSetter<IS_SAME_TYPES>::set(
+		VariantStruct<Arg, Args...> &me , const T &object)
+{
+	placementNew<T>(&me.data.arg, object);
+	return Types::ssize_t(0);
+}
+
+template<bool IS_SAME_TYPES>
+template<typename T, typename Arg, typename ...Args> inline
+Types::ssize_t VariantStructGetterSetter<IS_SAME_TYPES>::set(
+		VariantStruct<Arg, Args...> &me, T &&object)
+{
+	placementNew<T>(&me.data.arg, move(object));
+	return Types::ssize_t(0);
+}
+
+template<bool IS_SAME_TYPES>
+template<typename T, typename Arg, typename ...Args> inline
+T *VariantStructGetterSetter<IS_SAME_TYPES>::get(VariantStruct<Arg, Args...> &me)
+{
+	return &me.data.arg;
+}
+
+template<bool IS_SAME_TYPES>
+template<typename T, typename Arg, typename ...Args> inline
+const T *VariantStructGetterSetter<IS_SAME_TYPES>::getConst(
+		const VariantStruct<Arg, Args...> &me)
+{
+	return &me.data.arg;
+}
+
+template<typename T, typename Arg, typename ...Args> inline
+Types::ssize_t VariantStructGetterSetter<false>::set(
+		VariantStruct<Arg, Args...> &me, const T &object)
+{
+	Types::ssize_t result = me.data.pack.template set(object);
+	return (result < 0) ? result : ++result;
+}
+
+template<typename T, typename Arg, typename ...Args> inline
+Types::ssize_t VariantStructGetterSetter<false>::set(
+		VariantStruct<Arg, Args...> &me, T &&object)
+{
+	Types::ssize_t result = me.data.pack.template set(move(object));
+	return (result < 0) ? result : ++result;
+}
+
+template<typename T, typename Arg, typename ...Args> inline
+T *VariantStructGetterSetter<false>::get(VariantStruct<Arg, Args...> &me)
+{
+	return me.data.pack.template get<T>();
+}
+
+template<typename T, typename Arg, typename ...Args> inline
+const T *VariantStructGetterSetter<false>::getConst(
+		const VariantStruct<Arg, Args...> &me)
+{
+	return me.data.pack.template get<T>();
 }
 
 }
@@ -445,44 +479,6 @@ const T *Variant<Arg, Args...>::get() const
 template<typename Arg, typename ...Args>
 template<typename T>
 bool Variant<Arg, Args...>::get(T &object) const
-{}
-
-// Getter
-
-template<typename Arg, typename ...Args>
-template<Types::size_t INDEX>
-typename TypeGetter<INDEX, Arg, Args...>::Type *
-Variant<Arg, Args...>::Getter::data(Me &me) noexcept
-{}
-
-template<typename Arg, typename ...Args>
-template<typename T>
-T *Variant<Arg, Args...>::Getter::data(Me &me) noexcept
-{}
-
-// GetterConst
-
-template<typename Arg, typename ...Args>
-template<Types::size_t INDEX>
-const typename TypeGetter<INDEX, Arg, Args...>::Type *
-Variant<Arg, Args...>::GetterConst::data(const Me &me) noexcept
-{}
-
-template<typename Arg, typename ...Args>
-template<typename T>
-const T *Variant<Arg, Args...>::GetterConst::data(const Me &me) noexcept
-{}
-
-// Setter
-
-template<typename Arg, typename ...Args>
-template<typename T>
-bool Variant<Arg, Args...>::Setter::data(Me &me, T &&) noexcept
-{}
-
-template<typename Arg, typename ...Args>
-template<typename T>
-bool Variant<Arg, Args...>::Setter::data(Me &me, const T &) noexcept
 {}
 
 }}
