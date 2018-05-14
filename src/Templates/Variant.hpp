@@ -214,14 +214,14 @@ template<typename Arg, typename ...Args>
 template<typename T>
 T *VariantStruct<Arg, Args...>::get()
 {
-	return VariantStructGetterSetter<isSameTypes<T, Arg>()>::get(*this);
+	return VariantStructGetterSetter<isSameTypes<T, Arg>()>::template get<T>(*this);
 }
 
 template<typename Arg, typename ...Args>
 template<typename T>
 const T *VariantStruct<Arg, Args...>::get() const
 {
-	return VariantStructGetterSetter<isSameTypes<T, Arg>()>::getConst(*this);
+	return VariantStructGetterSetter<isSameTypes<T, Arg>()>::template getConst(*this);
 }
 
 template<typename Arg, typename ...Args>
@@ -245,11 +245,11 @@ bool VariantStruct<Arg, Args...>::assign(Types::ssize_t index, const Me &me)
 	bool result = true;
 	if (!index)
 	{
-		data.arg = me.data.arg;
+		placementNew<Arg>(&data.arg, me.data.arg);
 	}
 	else
 	{
-		result = data.template pack.assign(index - 1, me.pack);
+		result = data.template pack.assign(index - 1, me.data.pack);
 	}
 	return result;
 }
@@ -260,7 +260,7 @@ bool VariantStruct<Arg, Args...>::assign(Types::ssize_t index, Me &&me)
 	bool result = true;
 	if (!index)
 	{
-		data.arg = move(me.data.arg);
+		placementNew<Arg>(&data.arg, move(me.data.arg));
 	}
 	else
 	{
@@ -379,31 +379,35 @@ Variant<Arg, Args...>::Variant() noexcept : currentIndex(-1)
 template<typename Arg, typename ...Args>
 Variant<Arg, Args...>::Variant(const Me &me) noexcept
 {
-	// надо рекурсивно спуститься к нужно типу по индексу
-	// и присвоить
+	if (me.getCurrentIndex() >= 0)
+	{
+		value.assign(me.getCurrentIndex(), me.value);
+		currentIndex = me.getCurrentIndex();
+	}
 }
 
 template<typename Arg, typename ...Args>
 Variant<Arg, Args...>::Variant(Me &&me) noexcept
 {
-	// надо рекурсивно спуститься к нужно типу по индексу
-	// и присвоить
+	if (me.getCurrentIndex() >= 0)
+	{
+		value.assign(me.getCurrentIndex(), move(me.value));
+		currentIndex = me.getCurrentIndex();
+	}
 }
 
 template<typename Arg, typename ...Args>
 template<typename T>
 Variant<Arg, Args...>::Variant(const T &initObject) noexcept
 {
-	// надо рекурсивно спуститься к нужно типу по индексу
-	// и присвоить
+	currentIndex = value.set(initObject);
 }
 
 template<typename Arg, typename ...Args>
 template<typename T>
 Variant<Arg, Args...>::Variant(T &&initObject)
 {
-	// надо рекурсивно спуститься к нужно типу по индексу
-	// и присвоить
+	currentIndex = value.set(move(initObject));
 }
 
 template<typename Arg, typename ...Args>
@@ -411,7 +415,9 @@ Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(const Me &me)
 {
 	if (&me != this && me.currentIndex > 0)
 	{
-
+		reset();
+		value.assign(me.getCurrentIndex(), me.value);
+		currentIndex = me.getCurrentIndex();
 	}
 	return *this;
 }
@@ -421,7 +427,9 @@ Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(Me &&me) noexcept
 {
 	if (&me != this && me.currentIndex > 0)
 	{
-
+		reset();
+		value.assign(me.getCurrentIndex(), move(me.value));
+		currentIndex = me.getCurrentIndex();
 	}
 	return *this;
 }
@@ -440,46 +448,85 @@ bool Variant<Arg, Args...>::isSet() const noexcept
 
 template<typename Arg, typename ...Args>
 void Variant<Arg, Args...>::reset() noexcept
-{}
+{
+	if (getCurrentIndex() >= 0)
+	{
+		value.reset(getCurrentIndex());
+		currentIndex = -1;
+	}
+}
 
 template<typename Arg, typename ...Args>
 template<Types::size_t INDEX>
 typename TypeGetter<INDEX, Arg, Args...>::Type *Variant<Arg, Args...>::get()
-{}
+{
+	using Type = typename TypeGetter<INDEX>::Type;
+	return value.template get<Type>();
+}
 
 template<typename Arg, typename ...Args>
 template<Types::size_t INDEX>
 const typename TypeGetter<INDEX, Arg, Args...>::Type *Variant<Arg, Args...>::get() const
-{}
+{
+	using Type = typename TypeGetter<INDEX>::Type;
+	return value.template get<Type>();
+}
 
 template<typename Arg, typename ...Args>
 template<typename T>
 Types::ssize_t Variant<Arg, Args...>::set(T &&object)
-{}
+{
+	if (*this)
+	{
+		reset();
+	}
+	currentIndex = value.template set(move(object));
+	return getCurrentIndex();
+}
 
 template<typename Arg, typename ...Args>
 template<typename T>
 Types::ssize_t Variant<Arg, Args...>::set(const T &object)
-{}
+{
+	if (*this)
+	{
+		reset();
+	}
+	currentIndex = value.template set(object);
+	return getCurrentIndex();
+}
 
 template<typename Arg, typename ...Args>
 Types::ssize_t Variant<Arg, Args...>::getCurrentIndex() const
-{}
+{
+	return currentIndex;
+}
 
 template<typename Arg, typename ...Args>
 template<typename T>
 T *Variant<Arg, Args...>::get()
-{}
+{
+	return value.template get<T>();
+}
 
 template<typename Arg, typename ...Args>
 template<typename T>
 const T *Variant<Arg, Args...>::get() const
-{}
+{
+	return value.template get<T>();
+}
 
 template<typename Arg, typename ...Args>
 template<typename T>
 bool Variant<Arg, Args...>::get(T &object) const
-{}
+{
+	if (get())
+	{
+		object = *get();
+		return true;
+	}
+	return false;
+}
 
 }}
 
