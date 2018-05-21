@@ -106,33 +106,33 @@ struct VariantStruct<>
 template<bool IS_SAME_TYPES>
 struct VariantStructGetterSetter
 {
-	template<typename T, typename Arg, typename ...Args>
-	static Types::ssize_t set(VariantStruct<Arg, Args...> &me, const T &object);
+	template<typename T, typename Arg, typename ...Args> static inline
+	Types::ssize_t set(VariantStruct<Arg, Args...> &me, const T &object);
 
-	template<typename T, typename Arg, typename ...Args>
-	static Types::ssize_t set(VariantStruct<Arg, Args...> &me, T &&object);
+	template<typename T, typename Arg, typename ...Args> static inline
+	Types::ssize_t set(VariantStruct<Arg, Args...> &me, T &&object);
 
-	template<typename T, typename Arg, typename ...Args>
-	static T *get(VariantStruct<Arg, Args...> &me);
+	template<typename T, typename Arg, typename ...Args> static inline
+	T *get(VariantStruct<Arg, Args...> &me);
 
-	template<typename T, typename Arg, typename ...Args>
-	static const T *getConst(const VariantStruct<Arg, Args...> &me);
+	template<typename T, typename Arg, typename ...Args> static inline
+	const T *getConst(const VariantStruct<Arg, Args...> &me);
 };
 
 template<>
 struct VariantStructGetterSetter<false>
 {
-	template<typename T, typename Arg, typename ...Args>
-	static Types::ssize_t set(VariantStruct<Arg, Args...> &me, const T &object);
+	template<typename T, typename Arg, typename ...Args> static inline
+	Types::ssize_t set(VariantStruct<Arg, Args...> &me, const T &object);
 
-	template<typename T, typename Arg, typename ...Args>
-	static Types::ssize_t set(VariantStruct<Arg, Args...> &me, T &&object);
+	template<typename T, typename Arg, typename ...Args> static inline
+	Types::ssize_t set(VariantStruct<Arg, Args...> &me, T &&object);
 
-	template<typename T, typename Arg, typename ...Args>
-	static T *get(VariantStruct<Arg, Args...> &me);
+	template<typename T, typename Arg, typename ...Args> static inline
+	T *get(VariantStruct<Arg, Args...> &me);
 
-	template<typename T, typename Arg, typename ...Args>
-	static const T *getConst(const VariantStruct<Arg, Args...> &me);
+	template<typename T, typename Arg, typename ...Args> static inline
+	const T *getConst(const VariantStruct<Arg, Args...> &me);
 };
 
 }
@@ -149,7 +149,7 @@ public:
 	using VariantStruct = variant_utils::VariantStruct<Arg, Args...>;
 
 	template<Types::size_t INDEX>
-	using TypeGetter = flame_ide::templates::TypeGetter<INDEX, Arg, Args...>;
+	using GetTypeByIndex = flame_ide::templates::GetTypeByIndex<INDEX, Arg, Args...>;
 
 	Variant() noexcept;
 	Variant(const Me &me) noexcept;
@@ -159,9 +159,11 @@ public:
 	explicit Variant(const T &initObject) noexcept;
 
 	template<typename T>
-	explicit Variant(T &&initObject);
+	explicit Variant(T &&initObject) noexcept;
 
-	Me &operator=(const Me &me);
+	~Variant() noexcept;
+
+	Me &operator=(const Me &me) noexcept;
 	Me &operator=(Me &&me) noexcept;
 
 	operator bool() const noexcept;
@@ -171,10 +173,10 @@ public:
 	void reset() noexcept;
 
 	template<Types::size_t INDEX>
-	typename TypeGetter<INDEX>::Type *get();
+	typename GetTypeByIndex<INDEX>::Type *get();
 
 	template<Types::size_t INDEX>
-	const typename TypeGetter<INDEX>::Type *get() const;
+	const typename GetTypeByIndex<INDEX>::Type *get() const;
 
 	template<typename T>
 	Types::ssize_t set(T &&object);
@@ -264,7 +266,7 @@ bool VariantStruct<Arg, Args...>::assign(Types::ssize_t index, Me &&me)
 	}
 	else
 	{
-		result = data.template pack.assign(index - 1, move(me.pack));
+		result = data.template pack.assign(index - 1, move(me.data.pack));
 	}
 	return result;
 }
@@ -405,15 +407,21 @@ Variant<Arg, Args...>::Variant(const T &initObject) noexcept
 
 template<typename Arg, typename ...Args>
 template<typename T>
-Variant<Arg, Args...>::Variant(T &&initObject)
+Variant<Arg, Args...>::Variant(T &&initObject) noexcept
 {
 	currentIndex = value.set(move(initObject));
 }
 
 template<typename Arg, typename ...Args>
-Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(const Me &me)
+Variant<Arg, Args...>::~Variant() noexcept
 {
-	if (&me != this && me.currentIndex > 0)
+	reset();
+}
+
+template<typename Arg, typename ...Args>
+Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(const Me &me) noexcept
+{
+	if (&me != this && me.isSet())
 	{
 		reset();
 		value.assign(me.getCurrentIndex(), me.value);
@@ -425,7 +433,7 @@ Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(const Me &me)
 template<typename Arg, typename ...Args>
 Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(Me &&me) noexcept
 {
-	if (&me != this && me.currentIndex > 0)
+	if (&me != this && me.isSet())
 	{
 		reset();
 		value.assign(me.getCurrentIndex(), move(me.value));
@@ -449,7 +457,7 @@ bool Variant<Arg, Args...>::isSet() const noexcept
 template<typename Arg, typename ...Args>
 void Variant<Arg, Args...>::reset() noexcept
 {
-	if (getCurrentIndex() >= 0)
+	if (isSet())
 	{
 		value.reset(getCurrentIndex());
 		currentIndex = -1;
@@ -458,28 +466,32 @@ void Variant<Arg, Args...>::reset() noexcept
 
 template<typename Arg, typename ...Args>
 template<Types::size_t INDEX>
-typename TypeGetter<INDEX, Arg, Args...>::Type *Variant<Arg, Args...>::get()
+typename GetTypeByIndex<INDEX, Arg, Args...>::Type *Variant<Arg, Args...>::get()
 {
-	using Type = typename TypeGetter<INDEX>::Type;
+	using Type = typename GetTypeByIndex<INDEX>::Type;
 	return value.template get<Type>();
 }
 
 template<typename Arg, typename ...Args>
 template<Types::size_t INDEX>
-const typename TypeGetter<INDEX, Arg, Args...>::Type *Variant<Arg, Args...>::get() const
+const typename GetTypeByIndex<INDEX, Arg, Args...>::Type *Variant<Arg, Args...>::get() const
 {
-	using Type = typename TypeGetter<INDEX>::Type;
-	return value.template get<Type>();
+	using Type = typename GetTypeByIndex<INDEX>::Type;
+	if (isSet())
+	{
+		return value.template get<Type>();
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 template<typename Arg, typename ...Args>
 template<typename T>
 Types::ssize_t Variant<Arg, Args...>::set(T &&object)
 {
-	if (*this)
-	{
-		reset();
-	}
+	reset();
 	currentIndex = value.template set(move(object));
 	return getCurrentIndex();
 }
@@ -488,10 +500,7 @@ template<typename Arg, typename ...Args>
 template<typename T>
 Types::ssize_t Variant<Arg, Args...>::set(const T &object)
 {
-	if (*this)
-	{
-		reset();
-	}
+	reset();
 	currentIndex = value.template set(object);
 	return getCurrentIndex();
 }
@@ -506,23 +515,40 @@ template<typename Arg, typename ...Args>
 template<typename T>
 T *Variant<Arg, Args...>::get()
 {
-	return value.template get<T>();
+	constexpr Types::ssize_t TYPE_INDEX = GetIndexOfType<T, Arg, Args...>::INDEX;
+	if (TYPE_INDEX == getCurrentIndex() && isSet())
+	{
+		return value.template get<T>();
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 template<typename Arg, typename ...Args>
 template<typename T>
 const T *Variant<Arg, Args...>::get() const
 {
-	return value.template get<T>();
+	constexpr Types::ssize_t TYPE_INDEX = GetIndexOfType<T, Arg, Args...>::INDEX;
+	if (TYPE_INDEX == getCurrentIndex() && isSet())
+	{
+		return value.template get<T>();
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 template<typename Arg, typename ...Args>
 template<typename T>
 bool Variant<Arg, Args...>::get(T &object) const
 {
-	if (get())
+	const T *obj = get();
+	if (obj)
 	{
-		object = *get();
+		object = *obj;
 		return true;
 	}
 	return false;

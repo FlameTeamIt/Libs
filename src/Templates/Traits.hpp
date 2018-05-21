@@ -382,6 +382,13 @@ struct IsUnsigned<Types::long_t>: public FalseType
 {};
 
 
+template<typename Type>
+struct IsIntegralType:
+		public IntegralConstant<
+			bool, IsPrimitiveType<Type>::VALUE && !IsFloatType<Type>::VALUE
+		>
+{};
+
 /**
  * @brief Default type traits
  * @tparam Raw type.
@@ -456,19 +463,19 @@ struct SerializationTraits<true>
  * @tparam Args.
  */
 template<Types::size_t INDEX, typename Arg, typename ...Args>
-struct TypeGetter
+struct GetTypeByIndex
 {
-	using Type = typename TypeGetter<INDEX - 1, Args...>::Type;
+	using Type = typename GetTypeByIndex<INDEX - 1, Args...>::Type;
 };
 
 template<typename Arg, typename ...Args>
-struct TypeGetter<0, Arg, Args...>
+struct GetTypeByIndex<0, Arg, Args...>
 {
 	using Type = Arg;
 };
 
 template<Types::size_t INDEX, typename Arg>
-struct TypeGetter<INDEX, Arg>
+struct GetTypeByIndex<INDEX, Arg>
 {
 	static_assert(!(INDEX > 1), "No types.");
 	using Type = Arg;
@@ -713,6 +720,28 @@ template<typename Arg, typename Arg1>
 struct IsUniqueParameterPack<Arg, Arg1>
 {
 	static constexpr bool VALUE = !ComparingTypeWithPack<Arg, Arg1>::VALUE;
+};
+
+template<typename T, typename ...Args>
+struct GetIndexOfType
+{
+	static constexpr Types::ssize_t INDEX = -1;
+};
+
+template<typename T, typename Arg, typename ...Args>
+struct GetIndexOfType<T, Arg, Args...>
+{
+	static constexpr Types::ssize_t INDEX = (ComparingTypes<T, Arg>::VALUE)
+			? Types::ssize_t(0)
+			: (GetIndexOfType<T, Args...>::INDEX < 0)
+					? GetIndexOfType<T, Args...>::INDEX
+					: Types::ssize_t(1) + GetIndexOfType<T, Args...>::INDEX;
+};
+
+template<typename T>
+struct GetIndexOfType<T>
+{
+	static constexpr Types::ssize_t INDEX = -1;
 };
 
 }}

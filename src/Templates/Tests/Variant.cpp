@@ -63,8 +63,36 @@ bool Variant::testVariant()
 {
 	using flame_ide::templates::Variant;
 
-	Variant<int, long> variant;
+	Variant<int, long, TestClass> variant;
 //	Variant<int, int> variant1; // static-assert works
+
+	auto index = variant.set(TestClass(1000L, 100, 10, '1'));
+	if (index < 0 || index != 2)
+	{
+		log << "index = " << index << std::endl;
+		return false;
+	}
+
+	if (variant.get<long>())
+	{
+		log << "variant.get<long>() != nullptr" << std::endl;
+		return false;
+	}
+
+	variant.reset();
+	if (variant.getCurrentIndex() >= 0)
+	{
+		log << "variant.getCurrentIndex() >= 0" << std::endl;
+	}
+
+	variant = decltype(variant)(int(10));
+
+	if (variant.get<TestClass>())
+	{
+		log << "variant.get<TestClass>() != nullptr" << std::endl;
+		log << "variant.getCurrentIndex() = " << variant.getCurrentIndex() << std::endl;
+		return false;
+	}
 
 	return true;
 }
