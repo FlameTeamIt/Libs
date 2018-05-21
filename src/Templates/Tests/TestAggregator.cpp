@@ -8,6 +8,7 @@
 #include <Templates/Tests/String.hpp>
 #include <Templates/Tests/Tuple.hpp>
 #include <Templates/Tests/UniquePoiter.hpp>
+#include <Templates/Tests/Variant.hpp>
 #include <Templates/Tests/Vector.hpp>
 
 #include <tests/Test.hpp>
@@ -31,6 +32,7 @@ TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 	pushBackTest(new test::Tuple());
 	pushBackTest(new test::UniquePointer());
 	pushBackTest(new test::Vector());
+	pushBackTest(new test::Variant());
 }
 
 }}
