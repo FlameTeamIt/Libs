@@ -67,7 +67,8 @@ HEADERS += \
 	./src/Analysers/CodeParcer.hpp \
 	./src/Analysers/ArgsParser.hpp \
 	./src/Others/TextStyle.hpp \
-	./src/Others/PrimitiveTypes.hpp \
+	./src/Common/Byte.hpp \
+	./src/Common/PrimitiveTypes.hpp \
 	./tests/Test.hpp 
 
 # sources
