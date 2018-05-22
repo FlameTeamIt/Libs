@@ -12,7 +12,7 @@ namespace tuple_utils
 {
 
 template<SizeTraits::SizeType INDEX, typename ...Args>
-class Getter;
+struct Getter;
 
 template<SizeTraits::SizeType INDEX, typename ...Args>
 class ConstGetter;
@@ -35,31 +35,34 @@ namespace tuple_utils
 
 template<SizeTraits::SizeType INDEX, typename ...Args>
 struct Getter
-{};
+{
+	static typename GetTypeByIndex<INDEX, Args...>::Type &get();
+};
 
-template<SizeTraits::SizeType INDEX, typename ArgsHead, typename ...Args>
-struct Getter<INDEX, ArgsHead, Args...>
+template<SizeTraits::SizeType INDEX, typename Arg, typename ...Args>
+struct Getter<INDEX, Arg, Args...>
 {
 	using Tuple = typename DefaultTraits<
-		flame_ide::templates::Tuple<ArgsHead, Args...>
+		flame_ide::templates::Tuple<Arg, Args...>
 	>::Type;
 	using TupleReference = typename DefaultTraits<Tuple>::Reference;
+	using Type = typename GetTypeByIndex<INDEX, Arg, Args...>::Type;
 
-	static auto &get(TupleReference tuple) noexcept
+	static Type &get(TupleReference tuple) noexcept
 	{
 		return Getter<INDEX - 1, Args...>::get(tuple);
 	}
 };
 
-template<typename ArgsHead, typename ...Args>
-struct Getter<SizeTraits::SizeType(0), ArgsHead, Args...>
+template<typename Arg, typename ...Args>
+struct Getter<SizeTraits::SizeType(0), Arg, Args...>
 {
 	using Tuple = typename DefaultTraits<
-		flame_ide::templates::Tuple<ArgsHead, Args...>
+		flame_ide::templates::Tuple<Arg, Args...>
 	>::Type;
 	using TupleReference = typename DefaultTraits<Tuple>::Reference;
 
-	static auto &get(TupleReference tuple) noexcept
+	static Arg &get(TupleReference tuple) noexcept
 	{
 		return tuple.get();
 	}
@@ -77,26 +80,23 @@ struct Getter<INDEX>
 template<SizeTraits::SizeType INDEX, typename ...Args>
 class ConstGetter
 {
-	using TupleConstReference = typename DefaultTraits<
-		flame_ide::templates::Tuple<Args...>
-	>::ConstReference;
+	using Tuple = flame_ide::templates::Tuple<Args...>;
+	using TupleConstReference = typename DefaultTraits<Tuple>::ConstReference;
+	using Type = typename GetTypeByIndex<INDEX, Args...>::Type;
 
-	template<SizeTraits::SizeType index>
-	const auto &get(TupleConstReference tuple) const
+	const Type &get(TupleConstReference tuple) const
 	{
 		return Getter<INDEX - 1, Args...>::get(tuple);
 	}
 };
 
-template<typename ArgsHead, typename ...Args>
-struct ConstGetter<SizeTraits::SizeType(0), ArgsHead, Args...>
+template<typename Arg, typename ...Args>
+struct ConstGetter<SizeTraits::SizeType(0), Arg, Args...>
 {
-	using Tuple = typename DefaultTraits<
-		flame_ide::templates::Tuple<ArgsHead, Args...>
-	>::Type;
-	using TupleReference = typename DefaultTraits<Tuple>::ConstReference;
+	using Tuple = flame_ide::templates::Tuple<Arg, Args...>;
+	using TupleConstReference = typename DefaultTraits<Tuple>::ConstReference;
 
-	static auto &get(TupleReference tuple) noexcept
+	static Arg &get(TupleConstReference tuple) noexcept
 	{
 		return tuple.get();
 	}
@@ -108,45 +108,45 @@ template<typename ...Args>
 class Tuple
 {};
 
-template<typename ArgHead, typename ...Args>
-class Tuple<ArgHead, Args...>: public Tuple<Args...>
+template<typename Arg, typename ...Args>
+class Tuple<Arg, Args...>: public Tuple<Args...>
 {
 public:
-	using Me = Tuple<ArgHead, Args ...>;
+	using Me = Tuple<Arg, Args ...>;
 	using Parent = Tuple<Args ...>;
 
 	Tuple() noexcept = default;
 	Tuple(const Me &) noexcept = default;
 	Tuple(Me &&) noexcept = default;
-	Tuple(const ArgHead &argHead, const Args &...args) noexcept;
-	Tuple(ArgHead &&argHead, Args &&...args) noexcept;
+	Tuple(const Arg &argHead, const Args &...args) noexcept;
+	Tuple(Arg &&argHead, Args &&...args) noexcept;
 	~Tuple() noexcept = default;
 	Me &operator=(const Me &) noexcept = default;
 	Me &operator=(Me &&) noexcept = default;
 
-	typename ContainerTraits<ArgHead>::Reference get() noexcept
+	typename DefaultTraits<Arg>::Reference get() noexcept
 	{
 		return object;
 	}
-	typename ContainerTraits<ArgHead>::ConstReference get() const noexcept
+	typename DefaultTraits<Arg>::ConstReference get() const noexcept
 	{
 		return object;
 	}
 
-	template<SizeTraits::SizeType index>
+	template<SizeTraits::SizeType INDEX>
 	auto &get() noexcept
 	{
-		return tuple_utils::Getter<index, ArgHead, Args...>::get(*this);
+		return tuple_utils::Getter<INDEX, Arg, Args...>::get(*this);
 	}
 
-	template<SizeTraits::SizeType index>
+	template<SizeTraits::SizeType INDEX>
 	auto &get() const noexcept
 	{
-		return tuple_utils::ConstGetter<index, ArgHead, Args...>::get(*this);
+		return tuple_utils::ConstGetter<INDEX, Arg, Args...>::get(*this);
 	}
 
 private:
-	ArgHead object;
+	Arg object;
 };
 
 template<>

@@ -462,8 +462,12 @@ struct SerializationTraits<true>
  * @tparam Arg.
  * @tparam Args.
  */
-template<Types::size_t INDEX, typename Arg, typename ...Args>
+template<Types::size_t INDEX, typename ...Args>
 struct GetTypeByIndex
+{};
+
+template<Types::size_t INDEX, typename Arg, typename ...Args>
+struct GetTypeByIndex<INDEX, Arg, Args...>
 {
 	using Type = typename GetTypeByIndex<INDEX - 1, Args...>::Type;
 };
@@ -474,11 +478,16 @@ struct GetTypeByIndex<0, Arg, Args...>
 	using Type = Arg;
 };
 
-template<Types::size_t INDEX, typename Arg>
-struct GetTypeByIndex<INDEX, Arg>
+template<Types::size_t INDEX>
+struct GetTypeByIndex<INDEX>
 {
 	static_assert(!(INDEX > 1), "No types.");
-	using Type = Arg;
+};
+
+template<>
+struct GetTypeByIndex<0>
+{
+	using Type = void;
 };
 
 
