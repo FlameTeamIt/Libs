@@ -1,5 +1,5 @@
-#ifndef BITS_HPP
-#define BITS_HPP
+#ifndef TEST_BITS_HPP
+#define TEST_BITS_HPP
 
 #include <tests/Test.hpp>
 
@@ -24,4 +24,4 @@ private:
 
 }}
 
-#endif // BITS_HPP
+#endif // TEST_BITS_HPP

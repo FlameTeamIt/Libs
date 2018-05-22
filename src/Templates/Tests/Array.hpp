@@ -1,5 +1,5 @@
-#ifndef ARRAY_HPP
-#define ARRAY_HPP
+#ifndef TEST_ARRAY_HPP
+#define TEST_ARRAY_HPP
 
 #include <tests/Test.hpp>
 #include <Templates/Array.hpp>
@@ -24,4 +24,4 @@ private:
 
 }}
 
-#endif // ARRAY_HPP
+#endif // TEST_ARRAY_HPP

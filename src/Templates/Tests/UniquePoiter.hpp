@@ -1,5 +1,5 @@
-#ifndef UNIQUEPOITER_HPP
-#define UNIQUEPOITER_HPP
+#ifndef TEST_UNIQUEPOITER_HPP
+#define TEST_UNIQUEPOITER_HPP
 
 #include <tests/Test.hpp>
 #include <Templates/Pointers.hpp>
@@ -24,4 +24,4 @@ private:
 
 }}
 
-#endif // UNIQUEPOITER_HPP
+#endif // TEST_UNIQUEPOITER_HPP

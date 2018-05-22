@@ -1,11 +1,5 @@
-/*
- * file:       Vector.hpp
- *
- * created:    16.08.2017
- * author:     kachsheev
- */
-#ifndef VECTOR_HPP
-#define VECTOR_HPP
+#ifndef TEST_VECTOR_HPP
+#define TEST_VECTOR_HPP
 
 #include <tests/Test.hpp>
 #include <Templates/Vector.hpp>
@@ -30,4 +24,4 @@ private:
 
 }}
 
-#endif // VECTOR_HPP
+#endif // TEST_VECTOR_HPP

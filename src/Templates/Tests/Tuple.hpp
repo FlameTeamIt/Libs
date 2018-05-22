@@ -1,5 +1,5 @@
-#ifndef TUPLE_HPP
-#define TUPLE_HPP
+#ifndef TEST_TUPLE_HPP
+#define TEST_TUPLE_HPP
 
 #include <tests/Test.hpp>
 
@@ -24,4 +24,4 @@ private:
 
 }}
 
-#endif // TUPLE_HPP
+#endif // TEST_TUPLE_HPP

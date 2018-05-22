@@ -1,5 +1,5 @@
-#ifndef SHAREDPOINTER_HPP
-#define SHAREDPOINTER_HPP
+#ifndef TEST_SHAREDPOINTER_HPP
+#define TEST_SHAREDPOINTER_HPP
 
 #include <tests/Test.hpp>
 #include <Templates/Pointers.hpp>
@@ -24,4 +24,4 @@ private:
 
 }}
 
-#endif // SHAREDPOINTER_HPP
+#endif // TEST_SHAREDPOINTER_HPP

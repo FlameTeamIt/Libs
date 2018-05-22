@@ -1,3 +1,6 @@
+#ifndef TEMPLATES_TESTAGGREGATOR_HPP
+#define TEMPLATES_TESTAGGREGATOR_HPP
+
 #include <tests/Test.hpp>
 
 namespace flame_ide
@@ -12,3 +15,5 @@ public:
 };
 
 }}
+
+#endif // TEMPLATES_TESTAGGREGATOR_HPP
