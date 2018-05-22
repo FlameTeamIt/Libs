@@ -35,7 +35,7 @@ struct Node: public Traits
 	Type object;
 };
 
-template<typename T, typename Traits = ContainerTraits<T>, typename Options>
+template<typename T, typename Options, typename Traits = ContainerTraits<T>>
 struct CustomNode: public Node<T, Traits>
 {
 	using Me = CustomNode<T, Traits, Options>;
@@ -67,23 +67,23 @@ struct RbOptions
 };
 
 template<typename T, typename Traits>
-using RbNode = Node<T, Traits, RbOptions>;
+using RbNode = CustomNode<T, RbOptions, Traits>;
 
 // Iterator
 
-template<typename T, typename Traits, typename Options>
-class TreeIterator: public iterator_utils::BaseIterator<Node<T, Traits, Options> *
+template<typename T, typename Options, typename Traits>
+class TreeIterator: public iterator_utils::BaseIterator<CustomNode<T, Options, Traits> *
 		, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT, Traits>
 {
 public:
-	using Me = TreeIterator<T, Traits>;
+	using Me = flame_ide::templates::tree_utils::TreeIterator<T, Options, Traits>;
 	using Parent = iterator_utils::BaseIterator<
-		Node<T, Traits, Options> *
+		CustomNode<T, Options, Traits> *
 		, IteratorCategory::BIDIRECTIONAL
 		, IteratorAccess::NON_CONSTANT
 		, Traits
 	>;
-	using Node = Node<T, Traits, Options>;
+	using Node = flame_ide::templates::tree_utils::CustomNode<T, Options, Traits>;
 
 	using typename Parent::Type;
 
