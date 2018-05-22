@@ -5,8 +5,6 @@
 #include <stdint.h>
 
 namespace flame_ide
-{namespace types
-{namespace primitive
 {
 
 typedef ptrdiff_t diff_t;
@@ -33,6 +31,6 @@ typedef float float_t;
 typedef double double_t;
 typedef long double ldouble_t;
 
-}}}
+}
 
 #endif // BASETYPES_H

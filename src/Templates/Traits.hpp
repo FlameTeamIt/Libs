@@ -1,7 +1,7 @@
 ﻿#ifndef TEMPLATES_TRAITS_HPP
 #define TEMPLATES_TRAITS_HPP
 
-#include <Others/PrimitiveTypes.hpp>
+#include <Common/PrimitiveTypes.hpp>
 
 #include <Templates/Macroses.hpp>
 
@@ -197,27 +197,27 @@ struct RemoveAll<T &&>
  */
 struct Types: public NonCreational
 {
-	using char_t = flame_ide::types::primitive::char_t;
-	using short_t = flame_ide::types::primitive::short_t;
-	using int_t = flame_ide::types::primitive::int_t;
-	using long_t = flame_ide::types::primitive::long_t;
-	using llong_t = flame_ide::types::primitive::llong_t;
+	using char_t = flame_ide::char_t;
+	using short_t = flame_ide::short_t;
+	using int_t = flame_ide::int_t;
+	using long_t = flame_ide::long_t;
+	using llong_t = flame_ide::llong_t;
 
-	using byte_t = flame_ide::types::primitive::uchar_t;
+	using byte_t = flame_ide::uchar_t;
 
-	using uchar_t = flame_ide::types::primitive::uchar_t;
-	using ushort_t = flame_ide::types::primitive::ushort_t;
-	using uint_t = flame_ide::types::primitive::uint_t;
-	using ulong_t = flame_ide::types::primitive::ulong_t;
-	using ullong_t = flame_ide::types::primitive::ullong_t;
+	using uchar_t = flame_ide::uchar_t;
+	using ushort_t = flame_ide::ushort_t;
+	using uint_t = flame_ide::uint_t;
+	using ulong_t = flame_ide::ulong_t;
+	using ullong_t = flame_ide::ullong_t;
 
-	using float_t = flame_ide::types::primitive::float_t;
-	using double_t = flame_ide::types::primitive::double_t;
-	using ldouble_t = flame_ide::types::primitive::ldouble_t;
+	using float_t = flame_ide::float_t;
+	using double_t = flame_ide::double_t;
+	using ldouble_t = flame_ide::ldouble_t;
 
-	using size_t = flame_ide::types::primitive::size_t;
-	using ssize_t = flame_ide::types::primitive::ssize_t;
-	using diff_t = flame_ide::types::primitive::diff_t;
+	using size_t = flame_ide::size_t;
+	using ssize_t = flame_ide::ssize_t;
+	using diff_t = flame_ide::diff_t;
 };
 
 
