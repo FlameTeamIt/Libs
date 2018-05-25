@@ -65,6 +65,10 @@ HEADERS += \
 	./src/Filesystem/Project.hpp \
 	./src/Filesystem/BasicFile.hpp \
 	./src/Analysers/CodeParcer.hpp \
+	./src/Analysers/Bson/Types.hpp \
+	./src/Analysers/Bson/DefaultAccumulator.hpp \
+	./src/Analysers/Bson/Input.hpp \
+	./src/Analysers/Bson/Stream.hpp \
 	./src/Analysers/ArgsParser.hpp \
 	./src/Others/TextStyle.hpp \
 	./src/Common/Byte.hpp \
@@ -94,5 +98,7 @@ SOURCES += \
 	./src/Filesystem/Project.cpp \
 	./src/Analysers/ArgsParser.cpp \
 	./src/Analysers/CodeParcer.cpp \
+	./src/Analysers/Bson/DefaultAccumulator.cpp \
+	./src/Analysers/Bson/Input.cpp \
 	./tests/main.cpp 
 
