@@ -1,11 +1,11 @@
-#ifndef ANALYSERS_BSON_DEFAULTACCUMULATOR_HPP
-#define ANALYSERS_BSON_DEFAULTACCUMULATOR_HPP
+#ifndef ANALYSERS_UBJSON_DEFAULTACCUMULATOR_HPP
+#define ANALYSERS_UBJSON_DEFAULTACCUMULATOR_HPP
 
 #include <Templates/Vector.hpp>
 #include <Templates/View.hpp>
 
 namespace flame_ide
-{namespace bson
+{namespace ubjson
 {
 
 class DefaultAccumulator
@@ -15,7 +15,7 @@ public:
 	using Range = templates::Range<templates::Types::uchar_t *>;
 	using ConstRange = templates::Range<const templates::Types::uchar_t *>;
 
-	using SizeType = templates::Types::size_t;
+	using SizeType = Container::SizeType;
 
 	// need
 
@@ -50,4 +50,4 @@ private:
 
 }}
 
-#endif // ANALYSERS_BSON_DEFAULTACCUMULATOR_HPP
+#endif // ANALYSERS_UBJSON_DEFAULTACCUMULATOR_HPP

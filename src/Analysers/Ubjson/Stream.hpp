@@ -1,15 +1,13 @@
 #ifndef STREAM_HPP
 #define STREAM_HPP
 
-#include <Analysers/Bson/Types.hpp>
-
-#include <Common/PrimitiveTypes.hpp>
+#include <Analysers/Ubjson/Types.hpp>
 
 namespace flame_ide
-{namespace bson
+{namespace ubjson
 {
 
-template<typename Accumulator>
+template<typename Accumulator = >
 class Stream
 {
 public:

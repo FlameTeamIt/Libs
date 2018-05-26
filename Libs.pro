@@ -61,14 +61,14 @@ HEADERS += \
 	./src/Constants/CPP.hpp \
 	./src/Bus/MsgInterface.hpp \
 	./src/Process/CommandLine.hpp \
+	./src/Streams/StreamBase.hpp \
 	./src/Filesystem/Session.hpp \
 	./src/Filesystem/Project.hpp \
 	./src/Filesystem/BasicFile.hpp \
+	./src/Analysers/Ubjson/Types.hpp \
+	./src/Analysers/Ubjson/DefaultAccumulator.hpp \
+	./src/Analysers/Ubjson/Stream.hpp \
 	./src/Analysers/CodeParcer.hpp \
-	./src/Analysers/Bson/Types.hpp \
-	./src/Analysers/Bson/DefaultAccumulator.hpp \
-	./src/Analysers/Bson/Input.hpp \
-	./src/Analysers/Bson/Stream.hpp \
 	./src/Analysers/ArgsParser.hpp \
 	./src/Others/TextStyle.hpp \
 	./src/Common/Byte.hpp \
@@ -93,12 +93,12 @@ SOURCES += \
 	./src/Templates/Tests/Tuple.cpp \
 	./src/Bus/MsgInterface.cpp \
 	./src/Process/CommandLine.cpp \
+	./src/Streams/StreamBase.cpp \
 	./src/Filesystem/Session.cpp \
 	./src/Filesystem/BasicFile.cpp \
 	./src/Filesystem/Project.cpp \
 	./src/Analysers/ArgsParser.cpp \
+	./src/Analysers/Ubjson/DefaultAccumulator.cpp \
 	./src/Analysers/CodeParcer.cpp \
-	./src/Analysers/Bson/DefaultAccumulator.cpp \
-	./src/Analysers/Bson/Input.cpp \
 	./tests/main.cpp 
 

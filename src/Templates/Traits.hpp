@@ -197,15 +197,15 @@ struct RemoveAll<T &&>
  */
 struct Types: public NonCreational
 {
-	using char_t = flame_ide::char_t;
+	using char_t = flame_ide::ichar_t;
 	using short_t = flame_ide::short_t;
 	using int_t = flame_ide::int_t;
 	using long_t = flame_ide::long_t;
 	using llong_t = flame_ide::llong_t;
 
-	using byte_t = flame_ide::uchar_t;
+	using byte_t = flame_ide::uichar_t;
 
-	using uchar_t = flame_ide::uchar_t;
+	using uchar_t = flame_ide::uichar_t;
 	using ushort_t = flame_ide::ushort_t;
 	using uint_t = flame_ide::uint_t;
 	using ulong_t = flame_ide::ulong_t;

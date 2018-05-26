@@ -1,7 +1,7 @@
-#include <Analysers/Bson/DefaultAccumulator.hpp>
+#include <Analysers/Ubjson/DefaultAccumulator.hpp>
 
 namespace flame_ide
-{namespace bson
+{namespace ubjson
 {
 
 DefaultAccumulator::DefaultAccumulator() noexcept
@@ -31,12 +31,12 @@ DefaultAccumulator::Range DefaultAccumulator::data() noexcept
 DefaultAccumulator::ConstRange DefaultAccumulator::data() const noexcept
 {
 	return templates::makeRange(bytes.data(), bytes.data() + bytes.size());
-
 }
 
 void DefaultAccumulator::putData(DefaultAccumulator::ConstRange &data)
 {
-
+	offset += SizeType(data.end() - data.begin());
+	bytes.insert(bytes.end(), data.begin(), data.end());
 }
 
 }}
