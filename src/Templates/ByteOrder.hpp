@@ -154,7 +154,7 @@ public:
 		return reverseBytes(value);
 	}
 private:
-	static Types::uchar_t reverseBytes(Types::uchar_t value)
+	static Types::uichar_t reverseBytes(Types::uichar_t value)
 	{
 		return value;
 	}
@@ -206,7 +206,7 @@ private:
 		return result;
 	}
 
-	static Types::char_t reverseBytes(Types::char_t value)
+	static Types::ichar_t reverseBytes(Types::ichar_t value)
 	{
 		using ValueType = decltype(value);
 		using ValueUType = typename MakeUnsigned<ValueType>::Type;

@@ -36,7 +36,7 @@ bool Bits::minimalType()
 
 	std::cout << "---> Bits::minimalType()" << std::endl;
 
-	if (!templates::isSameTypes<Type3::Type, Types::uchar_t>())
+	if (!templates::isSameTypes<Type3::Type, Types::uichar_t>())
 	{
 		return false;
 	}

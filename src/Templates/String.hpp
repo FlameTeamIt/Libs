@@ -49,7 +49,7 @@ template<typename T
 class BasicString;
 
 using String = BasicString<char>;
-using U8String = BasicString<Types::uchar_t>;
+using U8String = BasicString<Types::uichar_t>;
 using U16String = BasicString<Types::ushort_t>;
 using U32String = BasicString<Types::uint_t>;
 

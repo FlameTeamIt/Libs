@@ -87,19 +87,6 @@ UNIQUE_TYPE makeUnique(Args &&...args);
 //	, typename Traits = ContainerTraits<T>
 //	, typename Allocator = allocator::ObjectAllocator
 //> inline
-//SHARED_TYPE dynamicPointerCast(SHARED_U_TYPE &pointer) noexcept;
-//template<
-//	typename T, typename U
-//	, typename Traits = ContainerTraits<T>
-//	, typename Allocator = allocator::ObjectAllocator
-//> inline
-//UNIQUE_TYPE dynamicPointerCast(UNIQUE_U_TYPE &pointer) noexcept;
-
-//template<
-//	typename T, typename U
-//	, typename Traits = ContainerTraits<T>
-//	, typename Allocator = allocator::ObjectAllocator
-//> inline
 //SHARED_TYPE reiterpretPointerCast(SHARED_U_TYPE &pointer) noexcept;
 //template<
 //	typename T, typename U

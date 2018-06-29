@@ -53,16 +53,16 @@ T&& forward(typename RemoveReference<T>::Type &reference) noexcept;
  */
 template<typename T, typename ...Args> inline
 typename DefaultTraits<T>::Pointer
-emplaceNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcept;
+emplaceNew(T *pointer, Args &&...args) noexcept;
 
 template<typename T> inline
 typename DefaultTraits<T>::Pointer
-placementNew(typename DefaultTraits<T>::Pointer pointer
+placementNew(T *pointer
 		, typename DefaultTraits<T>::MoveReference obj) noexcept;
 
 template<typename T> inline
 typename DefaultTraits<T>::Pointer
-placementNew(typename DefaultTraits<T>::Pointer pointer
+placementNew(T *pointer
 		, typename DefaultTraits<T>::ConstReference obj) noexcept;
 
 /**
@@ -185,22 +185,21 @@ T &&forward(typename RemoveReference<T>::Type &reference) noexcept
 
 template<typename T, typename ...Args> inline
 typename DefaultTraits<T>::Pointer
-emplaceNew(typename DefaultTraits<T>::Pointer pointer, Args &&...args) noexcept
+emplaceNew(T *pointer, Args &&...args) noexcept
 {
 	return new (pointer) typename DefaultTraits<T>::Type(forward<decltype(args)>(args)...);
 }
 
 template<typename T> inline
 typename DefaultTraits<T>::Pointer
-placementNew(typename DefaultTraits<T>::Pointer pointer
-		, typename DefaultTraits<T>::MoveReference obj) noexcept
+placementNew(T *pointer, typename DefaultTraits<T>::MoveReference obj) noexcept
 {
 	return new (pointer) typename DefaultTraits<T>::Type(forward<T>(obj));
 }
 
 template<typename T> inline
 typename DefaultTraits<T>::Pointer
-placementNew(typename DefaultTraits<T>::Pointer pointer
+placementNew(T *pointer
 		, typename DefaultTraits<T>::ConstReference obj) noexcept
 {
 	return new (pointer) typename DefaultTraits<T>::Type(obj);

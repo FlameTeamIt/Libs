@@ -27,7 +27,7 @@ bool Serialization::le()
 
 bool Serialization::le16()
 {
-	templates::Vector<templates::Types::uchar_t> vector(8);
+	templates::Vector<templates::Types::uichar_t> vector(8);
 
 	constexpr Types::ushort_t VALUE = (Types::ushort_t(BYTES[0]) << 8)
 			| Types::ushort_t(BYTES[1]);
@@ -56,7 +56,7 @@ bool Serialization::le16()
 
 bool Serialization::le32()
 {
-	templates::Vector<templates::Types::uchar_t> vector(8);
+	templates::Vector<templates::Types::uichar_t> vector(8);
 
 	constexpr Types::uint_t VALUE = (Types::uint_t(BYTES[0]) << 24)
 			| (Types::uint_t(BYTES[1]) << 16) | (Types::uint_t(BYTES[2]) << 8)
@@ -89,7 +89,7 @@ bool Serialization::le32()
 
 bool Serialization::le64()
 {
-	templates::Vector<templates::Types::uchar_t> vector(8);
+	templates::Vector<templates::Types::uichar_t> vector(8);
 
 	constexpr Types::ulong_t VALUE = (Types::ulong_t(BYTES[0]) << 56)
 			| (Types::ulong_t(BYTES[1]) << 48) | (Types::ulong_t(BYTES[2]) << 40)
@@ -136,7 +136,7 @@ bool Serialization::be()
 
 bool Serialization::be16()
 {
-	templates::Vector<templates::Types::uchar_t> vector(8);
+	templates::Vector<templates::Types::uichar_t> vector(8);
 
 	constexpr Types::ushort_t VALUE = (Types::ushort_t(BYTES[0]) << 8)
 			| Types::ushort_t(BYTES[1]);
@@ -165,7 +165,7 @@ bool Serialization::be16()
 
 bool Serialization::be32()
 {
-	templates::Vector<templates::Types::uchar_t> vector(8);
+	templates::Vector<templates::Types::uichar_t> vector(8);
 
 	constexpr Types::uint_t VALUE = (Types::uint_t(BYTES[0]) << 24)
 			| (Types::uint_t(BYTES[1]) << 16) | (Types::uint_t(BYTES[2]) << 8)
@@ -198,7 +198,7 @@ bool Serialization::be32()
 
 bool Serialization::be64()
 {
-	templates::Vector<templates::Types::uchar_t> vector(8);
+	templates::Vector<templates::Types::uichar_t> vector(8);
 
 	constexpr Types::ulong_t VALUE = (Types::ulong_t(BYTES[0]) << 56)
 			| (Types::ulong_t(BYTES[1]) << 48) | (Types::ulong_t(BYTES[2]) << 40)
@@ -250,7 +250,7 @@ bool Serialization::leSpec32()
 			| (Types::uint_t(BYTES[1]) << 16) | (Types::uint_t(BYTES[2]) << 8)
 			| Types::uint_t(BYTES[3]);
 
-	templates::Vector<templates::Types::uchar_t> vector(8);
+	templates::Vector<templates::Types::uichar_t> vector(8);
 
 
 	{
@@ -330,7 +330,7 @@ bool Serialization::leSpec64()
 			| (Types::ulong_t(BYTES[5]) << 16) | (Types::ulong_t(BYTES[6]) << 8)
 			| (Types::ulong_t(BYTES[7]));
 
-	templates::Vector<templates::Types::uchar_t> vector(8);
+	templates::Vector<templates::Types::uichar_t> vector(8);
 
 	{
 		auto specValue64Le = templates::makeSpecializedValueLe(VALUE, 5, 2);
@@ -422,7 +422,7 @@ bool Serialization::beSpec32()
 			| (Types::uint_t(BYTES[1]) << 16) | (Types::uint_t(BYTES[2]) << 8)
 			| Types::uint_t(BYTES[3]);
 
-	templates::Vector<templates::Types::uchar_t> vector(8);
+	templates::Vector<templates::Types::uichar_t> vector(8);
 
 	// little-endian serialize/deserialize
 	{
@@ -507,7 +507,7 @@ bool Serialization::beSpec64()
 			| (Types::ulong_t(BYTES[5]) << 16) | (Types::ulong_t(BYTES[6]) << 8)
 			| (Types::ulong_t(BYTES[7]));
 
-	templates::Vector<templates::Types::uchar_t> vector(8);
+	templates::Vector<templates::Types::uichar_t> vector(8);
 
 	{
 		auto specValue64Le = templates::makeSpecializedValueLe(VALUE, 5, 2);

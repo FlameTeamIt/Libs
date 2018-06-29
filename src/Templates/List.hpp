@@ -959,7 +959,7 @@ TEMPLATE_DEFINE
 void LIST_TYPE::erase(typename LIST_TYPE::Iterator itBegin
 		, typename LIST_TYPE::Iterator itEnd)
 {
-	Types::uchar_t variaint = 10u * (itBegin == begin())
+	Types::uichar_t variaint = 10u * (itBegin == begin())
 			+ (itEnd == end());
 
 	switch (variaint)

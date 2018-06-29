@@ -48,7 +48,7 @@ namespace flame_ide
 template<typename IntegerType>
 constexpr byte_t operator<<(byte_t byteValue, IntegerType shiftValue)
 {
-	using uchar_t = templates::Types::uchar_t;
+	using uchar_t = templates::Types::uichar_t;
 	static_assert (templates::IsIntegralType<IntegerType>::VALUE, "Type is not integral.");
 	return static_cast<byte_t>(
 			static_cast<uchar_t>(byteValue) << shiftValue
@@ -64,7 +64,7 @@ constexpr byte_t &operator<<=(byte_t &byteValue, IntegerType shiftValue)
 template<typename IntegerType>
 constexpr byte_t operator>>(byte_t byteValue, IntegerType shiftValue)
 {
-	using uchar_t = templates::Types::uchar_t;
+	using uchar_t = templates::Types::uichar_t;
 	static_assert (templates::IsIntegralType<IntegerType>::VALUE, "Type is not integral.");
 	return static_cast<byte_t>(
 			static_cast<uchar_t>(byteValue) >> shiftValue
@@ -80,7 +80,7 @@ constexpr byte_t &operator>>=(byte_t &byteValue, IntegerType shiftValue)
 template<typename IntegerType>
 constexpr byte_t operator|(byte_t byteValue, IntegerType shiftValue)
 {
-	using uchar_t = templates::Types::uchar_t;
+	using uchar_t = templates::Types::uichar_t;
 	static_assert (templates::IsIntegralType<IntegerType>::VALUE, "Type is not integral.");
 	return static_cast<byte_t>(
 			static_cast<uchar_t>(byteValue) | shiftValue
@@ -96,7 +96,7 @@ constexpr byte_t &operator|=(byte_t &byteValue, IntegerType shiftValue)
 template<typename IntegerType>
 constexpr byte_t operator&(byte_t byteValue, IntegerType shiftValue)
 {
-	using uchar_t = templates::Types::uchar_t;
+	using uchar_t = templates::Types::uichar_t;
 	static_assert (templates::IsIntegralType<IntegerType>::VALUE, "Type is not integral.");
 	return static_cast<byte_t>(
 			static_cast<uchar_t>(byteValue) & shiftValue
@@ -112,7 +112,7 @@ constexpr byte_t &operator&=(byte_t &byteValue, IntegerType shiftValue)
 template<typename IntegerType>
 constexpr byte_t operator^(byte_t byteValue, IntegerType shiftValue)
 {
-	using uchar_t = templates::Types::uchar_t;
+	using uchar_t = templates::Types::uichar_t;
 	static_assert (templates::IsIntegralType<IntegerType>::VALUE, "Type is not integral.");
 	return static_cast<byte_t>(
 			static_cast<uchar_t>(byteValue) ^ shiftValue
@@ -127,7 +127,7 @@ constexpr byte_t &operator^=(byte_t &byteValue, IntegerType shiftValue)
 
 constexpr byte_t operator~(byte_t byteValue)
 {
-	using uchar_t = templates::Types::uchar_t;
+	using uchar_t = templates::Types::uichar_t;
 	return byte_t(~static_cast<uchar_t>(byteValue));
 }
 

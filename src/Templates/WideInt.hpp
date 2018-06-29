@@ -109,7 +109,7 @@ private:
 		? BITS / 8 + 1
 		: BITS / 8;
 
-	Array<Types::uchar_t, COUNT_BYTES> byteArray;
+	Array<Types::uichar_t, COUNT_BYTES> byteArray;
 };
 
 template<Types::size_t COUNT_BITS>

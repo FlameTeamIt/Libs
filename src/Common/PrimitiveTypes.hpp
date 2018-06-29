@@ -12,7 +12,7 @@ typedef diff_t ssize_t;
 
 typedef ::size_t size_t;
 
-typedef char uchar_t;
+typedef char char_t;
 
 typedef uint8_t uichar_t;
 typedef int8_t ichar_t;

@@ -14,26 +14,26 @@ namespace float_utils
 template<typename FloatType>
 struct FloatTraits
 {
-	static constexpr Types::uchar_t SIGN = -1;
-	static constexpr Types::uchar_t EXPONENT = -1;
-	static constexpr Types::uchar_t MANTISSA = -1;
+	static constexpr Types::uichar_t SIGN = -1;
+	static constexpr Types::uichar_t EXPONENT = -1;
+	static constexpr Types::uichar_t MANTISSA = -1;
 	static_assert(isFloatType<FloatType>(), "This type is not float.");
 };
 
 template<>
 struct FloatTraits<Types::float_t>: public NonCreational
 {
-	static constexpr Types::uchar_t SIGN = 1;
-	static constexpr Types::uchar_t EXPONENT = 8;
-	static constexpr Types::uchar_t MANTISSA = 23;
+	static constexpr Types::uichar_t SIGN = 1;
+	static constexpr Types::uichar_t EXPONENT = 8;
+	static constexpr Types::uichar_t MANTISSA = 23;
 };
 
 template<>
 struct FloatTraits<Types::double_t>: public NonCreational
 {
-	static constexpr Types::uchar_t SIGN = 1;
-	static constexpr Types::uchar_t EXPONENT = 11;
-	static constexpr Types::uchar_t MANTISSA = 52;
+	static constexpr Types::uichar_t SIGN = 1;
+	static constexpr Types::uichar_t EXPONENT = 11;
+	static constexpr Types::uichar_t MANTISSA = 52;
 };
 
 }

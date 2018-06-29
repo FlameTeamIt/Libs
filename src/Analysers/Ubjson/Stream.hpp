@@ -1,5 +1,5 @@
-#ifndef STREAM_HPP
-#define STREAM_HPP
+#ifndef ANALYSERS_UBJSON_STREAM_HPP
+#define ANALYSERS_UBJSON_STREAM_HPP
 
 #include <Analysers/Ubjson/Types.hpp>
 
@@ -7,14 +7,18 @@ namespace flame_ide
 {namespace ubjson
 {
 
-template<typename Accumulator = >
+class StreamIn
+{
+};
+
+class StreamOut
+{
+};
+
 class Stream
 {
-public:
-
-private:
 };
 
 }}
 
-#endif // STREAM_HPP
+#endif // ANALYSERS_UBJSON_STREAM_HPP

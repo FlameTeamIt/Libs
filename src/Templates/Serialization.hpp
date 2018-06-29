@@ -20,8 +20,8 @@ template<typename T>
 class ValueInfo
 {
 public:
-	using Iterator = Types::uchar_t*;
-	using ConstIterator = const Types::uchar_t*;
+	using Iterator = Types::uichar_t*;
+	using ConstIterator = const Types::uichar_t*;
 	using ReverseIterator = templates::ReverseIterator<Iterator>;
 	using ConstReverseIterator = templates::ConstReverseIterator<ConstIterator>;
 
@@ -448,7 +448,7 @@ private:
 	/// \return
 	///
 	template<typename T>
-	static Range<const Types::uchar_t *> makeByteRange(const T &value);
+	static Range<const Types::uichar_t *> makeByteRange(const T &value);
 
 	///
 	/// \brief castToByteArray
@@ -456,7 +456,7 @@ private:
 	/// \return
 	///
 	template<typename T>
-	static const Types::uchar_t *castToByteArray(const T &value);
+	static const Types::uichar_t *castToByteArray(const T &value);
 
 	InternalStream data;
 	Types::size_t offset;
@@ -516,7 +516,7 @@ private:
 	/// \return
 	///
 	template<typename T>
-	static Range<Types::uchar_t *> makeByteRange(T &value);
+	static Range<Types::uichar_t *> makeByteRange(T &value);
 
 	///
 	/// \brief castToByteArray
@@ -524,7 +524,7 @@ private:
 	/// \return
 	///
 	template<typename T>
-	static Types::uchar_t *castToByteArray(T &value);
+	static Types::uichar_t *castToByteArray(T &value);
 
 	ConstInternalStream data;
 	Types::size_t offset;
@@ -862,7 +862,7 @@ T Serializer<ORDER, IS_VOLATILE>::toOrder(T value)
 
 template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-Range<const Types::uchar_t *> Serializer<ORDER, IS_VOLATILE>::makeByteRange(const T &value)
+Range<const Types::uichar_t *> Serializer<ORDER, IS_VOLATILE>::makeByteRange(const T &value)
 {
 	auto begin = castToByteArray(value);
 	auto end = begin + sizeof(value);
@@ -871,7 +871,7 @@ Range<const Types::uchar_t *> Serializer<ORDER, IS_VOLATILE>::makeByteRange(cons
 
 template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-const Types::uchar_t *Serializer<ORDER, IS_VOLATILE>::castToByteArray(const T &value)
+const Types::uichar_t *Serializer<ORDER, IS_VOLATILE>::castToByteArray(const T &value)
 {
 	const void *pointer = &value;
 	return static_cast<const uint8_t*>(pointer);
@@ -933,7 +933,7 @@ T Deserializer<ORDER, IS_VOLATILE>::toOrder(T value)
 
 template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-Range<Types::uchar_t *> Deserializer<ORDER, IS_VOLATILE>::makeByteRange(T &value)
+Range<Types::uichar_t *> Deserializer<ORDER, IS_VOLATILE>::makeByteRange(T &value)
 {
 	auto begin = castToByteArray(value);
 	auto end = begin + sizeof(value);
@@ -942,7 +942,7 @@ Range<Types::uchar_t *> Deserializer<ORDER, IS_VOLATILE>::makeByteRange(T &value
 
 template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
-Types::uchar_t *Deserializer<ORDER, IS_VOLATILE>::castToByteArray(T &value)
+Types::uichar_t *Deserializer<ORDER, IS_VOLATILE>::castToByteArray(T &value)
 {
 	void *pointer = &value;
 	return static_cast<uint8_t*>(pointer);

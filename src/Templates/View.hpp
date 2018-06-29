@@ -231,24 +231,24 @@ makeConstReverseRange(const Container &container)
 }
 
 template<typename T>
-Range<Types::uchar_t*> makeByteRange(T &value)
+Range<Types::uichar_t*> makeByteRange(T &value)
 {
 	auto begin = [](T &value)
 	{
 		void *pointer = &value;
-		return static_cast<Types::uchar_t *>(pointer);
+		return static_cast<Types::uichar_t *>(pointer);
 	} (value);
 	auto end = begin + sizeof(value);
 	return makeRange(begin, end);
 }
 
 template<typename T>
-Range<const Types::uchar_t*> makeConstByteRange(const T &value)
+Range<const Types::uichar_t*> makeConstByteRange(const T &value)
 {
 	auto begin = [](const T &value)
 	{
 		const void *pointer = &value;
-		return static_cast<const Types::uchar_t *>(pointer);
+		return static_cast<const Types::uichar_t *>(pointer);
 	} (value);
 	auto end = begin + sizeof(value);
 	return makeRange(begin, end);

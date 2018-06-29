@@ -47,9 +47,9 @@ template<Types::size_t TEMPLATE_COUNT_BITS>
 template<typename T>
 ArrayBits<TEMPLATE_COUNT_BITS>::ArrayBits(const T& object) noexcept
 {
-	copy(reinterpret_cast<const Types::uchar_t*>(&object)
-			, reinterpret_cast<const Types::uchar_t*>(&object) + COUNT_BYTES
-			, reinterpret_cast<Types::uchar_t*>(bytes));
+	copy(reinterpret_cast<const Types::uichar_t*>(&object)
+			, reinterpret_cast<const Types::uichar_t*>(&object) + COUNT_BYTES
+			, reinterpret_cast<Types::uichar_t*>(bytes));
 }
 
 template<Types::size_t TEMPLATE_COUNT_BITS>

@@ -20,14 +20,14 @@ struct UpperedBit: public NonCreational
 
 struct Constants: public NonCreational
 {
-	static constexpr auto BIT8_0 = BIT(Types::uchar_t, 0);
-	static constexpr auto BIT8_1 = BIT(Types::uchar_t, 1);
-	static constexpr auto BIT8_2 = BIT(Types::uchar_t, 2);
-	static constexpr auto BIT8_3 = BIT(Types::uchar_t, 3);
-	static constexpr auto BIT8_4 = BIT(Types::uchar_t, 4);
-	static constexpr auto BIT8_5 = BIT(Types::uchar_t, 5);
-	static constexpr auto BIT8_6 = BIT(Types::uchar_t, 6);
-	static constexpr auto BIT8_7 = BIT(Types::uchar_t, 7);
+	static constexpr auto BIT8_0 = BIT(Types::uichar_t, 0);
+	static constexpr auto BIT8_1 = BIT(Types::uichar_t, 1);
+	static constexpr auto BIT8_2 = BIT(Types::uichar_t, 2);
+	static constexpr auto BIT8_3 = BIT(Types::uichar_t, 3);
+	static constexpr auto BIT8_4 = BIT(Types::uichar_t, 4);
+	static constexpr auto BIT8_5 = BIT(Types::uichar_t, 5);
+	static constexpr auto BIT8_6 = BIT(Types::uichar_t, 6);
+	static constexpr auto BIT8_7 = BIT(Types::uichar_t, 7);
 
 	static constexpr decltype(BIT8_0) BYTE_0F = BIT8_0 | BIT8_1 | BIT8_2 | BIT8_3;
 	static constexpr decltype(BIT8_0) BYTE_FF = BYTE_0F | BIT8_4 | BIT8_5 | BIT8_6 | BIT8_7;

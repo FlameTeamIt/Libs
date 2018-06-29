@@ -197,7 +197,9 @@ struct RemoveAll<T &&>
  */
 struct Types: public NonCreational
 {
-	using char_t = flame_ide::ichar_t;
+	using char_t = flame_ide::char_t;
+
+	using ichar_t = flame_ide::ichar_t;
 	using short_t = flame_ide::short_t;
 	using int_t = flame_ide::int_t;
 	using long_t = flame_ide::long_t;
@@ -205,7 +207,7 @@ struct Types: public NonCreational
 
 	using byte_t = flame_ide::uichar_t;
 
-	using uchar_t = flame_ide::uichar_t;
+	using uichar_t = flame_ide::uichar_t;
 	using ushort_t = flame_ide::ushort_t;
 	using uint_t = flame_ide::uint_t;
 	using ulong_t = flame_ide::ulong_t;
@@ -233,6 +235,10 @@ struct IsPrimitiveType<Types::char_t>: public TrueType
 {};
 
 template<>
+struct IsPrimitiveType<Types::ichar_t>: public TrueType
+{};
+
+template<>
 struct IsPrimitiveType<Types::short_t>: public TrueType
 {};
 
@@ -245,7 +251,7 @@ struct IsPrimitiveType<Types::long_t>: public TrueType
 {};
 
 template<>
-struct IsPrimitiveType<Types::uchar_t>: public TrueType
+struct IsPrimitiveType<Types::uichar_t>: public TrueType
 {};
 
 template<>
@@ -305,7 +311,7 @@ struct IsSigned: public FalseType
 };
 
 template<>
-struct IsSigned<Types::uchar_t>: public FalseType
+struct IsSigned<Types::uichar_t>: public FalseType
 {};
 
 template<>
@@ -321,7 +327,7 @@ struct IsSigned<Types::ulong_t>: public FalseType
 {};
 
 template<>
-struct IsSigned<Types::char_t>: public TrueType
+struct IsSigned<Types::ichar_t>: public TrueType
 {};
 
 template<>
@@ -350,7 +356,7 @@ struct IsUnsigned: public FalseType
 };
 
 template<>
-struct IsUnsigned<Types::uchar_t>: public TrueType
+struct IsUnsigned<Types::uichar_t>: public TrueType
 {};
 
 template<>
@@ -366,7 +372,7 @@ struct IsUnsigned<Types::ulong_t>: public TrueType
 {};
 
 template<>
-struct IsUnsigned<Types::char_t>: public FalseType
+struct IsUnsigned<Types::ichar_t>: public FalseType
 {};
 
 template<>
@@ -441,8 +447,8 @@ struct SerializationTraits
 	using InputStream = void *;
 	using ConstInputStream =  const void *;
 
-	using InternalStream = Types::uchar_t *;
-	using ConstInternalStream =  const Types::uchar_t *;
+	using InternalStream = Types::uichar_t *;
+	using ConstInternalStream =  const Types::uichar_t *;
 };
 
 template<>
@@ -451,8 +457,8 @@ struct SerializationTraits<true>
 	using InputStream = volatile void *;
 	using ConstInputStream =  const volatile void *;
 
-	using InternalStream = volatile Types::uchar_t *;
-	using ConstInternalStream =  const volatile Types::uchar_t *;
+	using InternalStream = volatile Types::uichar_t *;
+	using ConstInternalStream =  const volatile Types::uichar_t *;
 };
 
 
@@ -621,9 +627,9 @@ struct MakeSigned
 };
 
 template<>
-struct MakeSigned<Types::uchar_t>
+struct MakeSigned<Types::uichar_t>
 {
-	using Type = Types::char_t;
+	using Type = Types::ichar_t;
 };
 
 template<>
@@ -657,9 +663,9 @@ struct MakeUnsigned
 };
 
 template<>
-struct MakeUnsigned<Types::char_t>
+struct MakeUnsigned<Types::ichar_t>
 {
-	using Type = Types::uchar_t;
+	using Type = Types::uichar_t;
 };
 
 template<>

@@ -1,5 +1,6 @@
 TEMPLATE = app
 CONFIG += console
+CONFIG += object_parallel_to_source
 CONFIG -= app_bundle
 CONFIG -= qt
 
@@ -52,6 +53,7 @@ HEADERS += \
 	./src/Templates/Iterator.hpp \
 	./src/Templates/Templates.hpp \
 	./src/Templates/Bits.hpp \
+	./src/Templates/Optional.hpp \
 	./src/Templates/CircularVector.hpp \
 	./src/Templates/BitSet.hpp \
 	./src/Templates/WideFloat.hpp \
@@ -66,14 +68,21 @@ HEADERS += \
 	./src/Filesystem/Project.hpp \
 	./src/Filesystem/BasicFile.hpp \
 	./src/Analysers/Ubjson/Types.hpp \
-	./src/Analysers/Ubjson/DefaultAccumulator.hpp \
+	./src/Analysers/Ubjson/Pair.hpp \
+	./src/Analysers/Ubjson/String.hpp \
+	./src/Analysers/Ubjson/Array.hpp \
+	./src/Analysers/Ubjson/Settings.hpp \
 	./src/Analysers/Ubjson/Stream.hpp \
+	./src/Analysers/Ubjson/Traits.hpp \
+	./src/Analysers/Ubjson/Object.hpp \
+	./src/Analysers/Ubjson/Value.hpp \
 	./src/Analysers/CodeParcer.hpp \
 	./src/Analysers/ArgsParser.hpp \
 	./src/Others/TextStyle.hpp \
 	./src/Common/Byte.hpp \
 	./src/Common/PrimitiveTypes.hpp \
-	./tests/Test.hpp 
+	./tests/Test.hpp \
+    src/Analysers/Ubjson/HugeNumeric.hpp
 
 # sources
 SOURCES += \
@@ -99,6 +108,10 @@ SOURCES += \
 	./src/Filesystem/Project.cpp \
 	./src/Analysers/ArgsParser.cpp \
 	./src/Analysers/Ubjson/DefaultAccumulator.cpp \
+	./src/Analysers/Ubjson/String.cpp \
+	./src/Analysers/Ubjson/Array.cpp \
+	./src/Analysers/Ubjson/Object.cpp \
+	./src/Analysers/Ubjson/Pair.cpp \
 	./src/Analysers/CodeParcer.cpp \
-	./tests/main.cpp 
+	./tests/main.cpp
 
