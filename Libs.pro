@@ -12,8 +12,6 @@ INCLUDEPATH += .
 HEADERS += \
 	./tests/Test.hpp \
 	./src/Others/TextStyle.hpp \
-	./src/Analysers/ArgsParser.hpp \
-	./src/Analysers/CodeParcer.hpp \
 	./src/Analysers/Ubjson/Pair.hpp \
 	./src/Analysers/Ubjson/Value.hpp \
 	./src/Analysers/Ubjson/String.hpp \
@@ -88,8 +86,6 @@ HEADERS += \
 # sources
 SOURCES += \
 	./tests/main.cpp \
-	./src/Analysers/ArgsParser.cpp \
-	./src/Analysers/CodeParcer.cpp \
 	./src/Analysers/Ubjson/Array.cpp \
 	./src/Analysers/Ubjson/Pair.cpp \
 	./src/Analysers/Ubjson/String.cpp \
