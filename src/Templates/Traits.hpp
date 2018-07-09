@@ -48,7 +48,7 @@ struct NonCreational: public NonDefault, public NonMove, public NonCopy
  * @tparam Raw type value.
  */
 template<typename T, T v>
-struct IntegralConstant
+struct IntegralConstant: public NonCreational
 {
 	using Type = T;
 	static constexpr Type VALUE = v;
@@ -89,19 +89,19 @@ struct RemovePointer<T *>
  * @tparam Raw type.
  */
 template<typename T>
-struct RemoveReference
+struct RemoveReference: public NonCreational
 {
 	using Type = T;
 };
 
 template<typename T>
-struct RemoveReference<T &>
+struct RemoveReference<T &>: public NonCreational
 {
 	using Type = T;
 };
 
 template<typename T>
-struct RemoveReference<T &&>
+struct RemoveReference<T &&>: public NonCreational
 {
 	using Type = T;
 };
@@ -111,13 +111,13 @@ struct RemoveReference<T &&>
  * @brief View RemoveConst
  */
 template<typename T>
-struct RemoveConst
+struct RemoveConst: public NonCreational
 {
 	using Type = T;
 };
 
 template<typename T>
-struct RemoveConst<const T>
+struct RemoveConst<const T>: public NonCreational
 {
 	using Type = T;
 };
@@ -128,13 +128,13 @@ struct RemoveConst<const T>
  * @tparam Raw type.
  */
 template<typename T>
-struct RemoveVolatile
+struct RemoveVolatile: public NonCreational
 {
 	using Type = T;
 };
 
 template<typename T>
-struct RemoveVolatile<volatile T>
+struct RemoveVolatile<volatile T>: public NonCreational
 {
 	using Type = T;
 };
@@ -145,13 +145,13 @@ struct RemoveVolatile<volatile T>
  * @tparam Raw type.
  */
 template<typename T>
-struct RemoveAll
+struct RemoveAll: public NonCreational
 {
 	using Type = T;
 };
 
 template<typename T>
-struct RemoveAll<volatile T>
+struct RemoveAll<volatile T>: public NonCreational
 {
 	using Type = typename RemoveAll<typename RemoveVolatile<T>::Type>::Type;
 };
@@ -161,13 +161,13 @@ struct RemoveAll<volatile T>
  * @brief View RemoveAll.
  */
 template<typename T>
-struct RemoveAll<T *>
+struct RemoveAll<T *>: public NonCreational
 {
 	using Type = typename RemoveAll<typename RemovePointer<T>::Type>::Type;
 };
 
 template<typename T>
-struct RemoveAll<T const>
+struct RemoveAll<T const>: public NonCreational
 {
 	using Type = typename RemoveAll<typename RemoveConst<T>::Type>::Type;
 };
@@ -177,7 +177,7 @@ struct RemoveAll<T const>
  * @brief View RemoveAll.
  */
 template<typename T>
-struct RemoveAll<T &>
+struct RemoveAll<T &>: public NonCreational
 {
 	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
 };
@@ -186,7 +186,7 @@ struct RemoveAll<T &>
  * @brief View RemoveAll.
  */
 template<typename T>
-struct RemoveAll<T &&>
+struct RemoveAll<T &&>: public NonCreational
 {
 	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
 };
@@ -389,8 +389,7 @@ struct IsUnsigned<Types::long_t>: public FalseType
 
 
 template<typename Type>
-struct IsIntegralType:
-		public IntegralConstant<
+struct IsIntegralType: public IntegralConstant<
 			bool, IsPrimitiveType<Type>::VALUE && !IsFloatType<Type>::VALUE
 		>
 {};
@@ -442,7 +441,7 @@ struct ContainerTraits: public DefaultTraits<T>, public SizeTraits
  * @tparam Is volatile type.
  */
 template<bool IS_VOLATILE>
-struct SerializationTraits
+struct SerializationTraits: public NonCreational
 {
 	using InputStream = void *;
 	using ConstInputStream =  const void *;
@@ -452,7 +451,7 @@ struct SerializationTraits
 };
 
 template<>
-struct SerializationTraits<true>
+struct SerializationTraits<true>: public NonCreational
 {
 	using InputStream = volatile void *;
 	using ConstInputStream =  const volatile void *;
@@ -469,29 +468,29 @@ struct SerializationTraits<true>
  * @tparam Args.
  */
 template<Types::size_t INDEX, typename ...Args>
-struct GetTypeByIndex
+struct GetTypeByIndex: public NonCreational
 {};
 
 template<Types::size_t INDEX, typename Arg, typename ...Args>
-struct GetTypeByIndex<INDEX, Arg, Args...>
+struct GetTypeByIndex<INDEX, Arg, Args...>: public NonCreational
 {
 	using Type = typename GetTypeByIndex<INDEX - 1, Args...>::Type;
 };
 
 template<typename Arg, typename ...Args>
-struct GetTypeByIndex<0, Arg, Args...>
+struct GetTypeByIndex<0, Arg, Args...>: public NonCreational
 {
 	using Type = Arg;
 };
 
 template<Types::size_t INDEX>
-struct GetTypeByIndex<INDEX>
+struct GetTypeByIndex<INDEX>: public NonCreational
 {
 	static_assert(!(INDEX > 1), "No types.");
 };
 
 template<>
-struct GetTypeByIndex<0>
+struct GetTypeByIndex<0>: public NonCreational
 {
 	using Type = void;
 };
@@ -522,14 +521,14 @@ struct ComparingTypes<T, T>: public TrueType
  * @tparam Second type.
  */
 template<typename T, typename Arg, typename ...Args>
-struct ComparingTypeWithPack
+struct ComparingTypeWithPack: public NonCreational
 {
 	static constexpr bool VALUE = ComparingTypes<T, Arg>::VALUE
 		|| ComparingTypeWithPack<T, Args...>::VALUE;
 };
 
 template<typename T, typename Arg>
-struct ComparingTypeWithPack<T, Arg>
+struct ComparingTypeWithPack<T, Arg>: public NonCreational
 {
 	static constexpr bool VALUE = ComparingTypes<T, Arg>::VALUE;
 };
