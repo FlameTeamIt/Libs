@@ -149,10 +149,10 @@ struct SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T> : public ValueInfo<T>
 	using Parent = ValueInfo<T>;
 
 	///
-	/// \brief SpecializedValue
-	/// \param initValue
-	/// \param initSize
-	/// \param initOffset
+	/// @brief SpecializedValue
+	/// @param initValue
+	/// @param initSize
+	/// @param initOffset
 	///
 	SpecializedValue(T initValue, Types::size_t initSize, Types::size_t initOffset);
 
@@ -162,55 +162,55 @@ struct SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T> : public ValueInfo<T>
 	Me &operator=(Me &&) = default;
 
 	///
-	/// \brief operator SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>
+	/// @brief operator SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>
 	///
 	operator SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>() const;
 
 	///
-	/// \brief begin
-	/// \return
+	/// @brief begin
+	/// @return
 	///
 	typename ValueInfo<T>::Iterator begin();
 
 	///
-	/// \brief begin
-	/// \return
+	/// @brief begin
+	/// @return
 	///
 	typename ValueInfo<T>::ConstIterator begin() const;
 
 	///
-	/// \brief rbegin
-	/// \return
+	/// @brief rbegin
+	/// @return
 	///
 	typename ValueInfo<T>::ReverseIterator rbegin();
 
 	///
-	/// \brief rbegin
-	/// \return
+	/// @brief rbegin
+	/// @return
 	///
 	typename ValueInfo<T>::ConstReverseIterator rbegin() const;
 
 	///
-	/// \brief end
-	/// \return
+	/// @brief end
+	/// @return
 	///
 	typename ValueInfo<T>::Iterator end();
 
 	///
-	/// \brief end
-	/// \return
+	/// @brief end
+	/// @return
 	///
 	typename ValueInfo<T>::ConstIterator end() const;
 
 	///
-	/// \brief rend
-	/// \return
+	/// @brief rend
+	/// @return
 	///
 	typename ValueInfo<T>::ReverseIterator rend();
 
 	///
-	/// \brief rend
-	/// \return
+	/// @brief rend
+	/// @return
 	///
 	typename ValueInfo<T>::ConstReverseIterator rend() const;
 
@@ -230,10 +230,10 @@ struct SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T> : public ValueInfo<T>
 	using Parent = ValueInfo<T>;
 
 	///
-	/// \brief SpecializedValue
-	/// \param initValue
-	/// \param initSize
-	/// \param initOffset
+	/// @brief SpecializedValue
+	/// @param initValue
+	/// @param initSize
+	/// @param initOffset
 	///
 	SpecializedValue(T initValue, Types::size_t initSize, Types::size_t initOffset);
 
@@ -243,55 +243,55 @@ struct SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T> : public ValueInfo<T>
 	Me &operator=(Me &&) = default;
 
 	///
-	/// \brief operator SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>
+	/// @brief operator SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>
 	///
 	operator SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>() const;
 
 	///
-	/// \brief begin
-	/// \return
+	/// @brief begin
+	/// @return
 	///
 	typename ValueInfo<T>::Iterator begin();
 
 	///
-	/// \brief begin
-	/// \return
+	/// @brief begin
+	/// @return
 	///
 	typename ValueInfo<T>::ConstIterator begin() const;
 
 	///
-	/// \brief rbegin
-	/// \return
+	/// @brief rbegin
+	/// @return
 	///
 	typename ValueInfo<T>::ReverseIterator rbegin();
 
 	///
-	/// \brief rbegin
-	/// \return
+	/// @brief rbegin
+	/// @return
 	///
 	typename ValueInfo<T>::ConstReverseIterator rbegin() const;
 
 	///
-	/// \brief end
-	/// \return
+	/// @brief end
+	/// @return
 	///
 	typename ValueInfo<T>::Iterator end();
 
 	///
-	/// \brief end
-	/// \return
+	/// @brief end
+	/// @return
 	///
 	typename ValueInfo<T>::ConstIterator end() const;
 
 	///
-	/// \brief rend
-	/// \return
+	/// @brief rend
+	/// @return
 	///
 	typename ValueInfo<T>::ReverseIterator rend();
 
 	///
-	/// \brief rend
-	/// \return
+	/// @brief rend
+	/// @return
 	///
 	typename ValueInfo<T>::ConstReverseIterator rend() const;
 
@@ -314,10 +314,10 @@ SpecializedValue<ORDER, T> makeSpecializedValue(
 		, Types::size_t offset = 0);
 
 ///
-/// \brief makeSpecializedValueEmpty
-/// \param size
-/// \param offset
-/// \return
+/// @brief makeSpecializedValueEmpty
+/// @param size
+/// @param offset
+/// @return
 ///
 template<ByteOrder ORDER, typename T>
 SpecializedValue<ORDER, T> makeSpecializedValueEmpty(
@@ -325,11 +325,11 @@ SpecializedValue<ORDER, T> makeSpecializedValueEmpty(
 		, Types::size_t offset = 0);
 
 ///
-/// \brief makeSpecializedValueLe
-/// \param value
-/// \param size
-/// \param offset
-/// \return
+/// @brief makeSpecializedValueLe
+/// @param value
+/// @param size
+/// @param offset
+/// @return
 ///
 template<typename T>
 SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T> makeSpecializedValueLe(
@@ -338,10 +338,10 @@ SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T> makeSpecializedValueLe(
 		, Types::size_t offset = 0);
 
 ///
-/// \brief makeSpecializedValueEmptyLe
-/// \param size
-/// \param offset
-/// \return
+/// @brief makeSpecializedValueEmptyLe
+/// @param size
+/// @param offset
+/// @return
 ///
 template<typename T>
 SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T> makeSpecializedValueEmptyLe(
@@ -349,11 +349,11 @@ SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T> makeSpecializedValueEmptyLe(
 		, Types::size_t offset = 0);
 
 ///
-/// \brief makeSpecializedValueBe
-/// \param value
-/// \param size
-/// \param offset
-/// \return
+/// @brief makeSpecializedValueBe
+/// @param value
+/// @param size
+/// @param offset
+/// @return
 ///
 template<typename T>
 SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T> makeSpecializedValueBe(
@@ -362,10 +362,10 @@ SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T> makeSpecializedValueBe(
 		, Types::size_t offset = 0);
 
 ///
-/// \brief makeSpecializedValueEmptyBe
-/// \param size
-/// \param offset
-/// \return
+/// @brief makeSpecializedValueEmptyBe
+/// @param size
+/// @param offset
+/// @return
 ///
 template<typename T>
 SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T> makeSpecializedValueEmptyBe(
@@ -373,11 +373,11 @@ SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T> makeSpecializedValueEmptyBe(
 		, Types::size_t offset = 0);
 
 ///
-/// \brief makeSpecifiedValueHost
-/// \param value
-/// \param size
-/// \param offset
-/// \return
+/// @brief makeSpecifiedValueHost
+/// @param value
+/// @param size
+/// @param offset
+/// @return
 ///
 template<typename T>
 SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueHost(
@@ -386,10 +386,10 @@ SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueHost(
 		, Types::size_t offset = 0);
 
 ///
-/// \brief makeSpecifiedValueEmptyHost
-/// \param size
-/// \param offset
-/// \return
+/// @brief makeSpecifiedValueEmptyHost
+/// @param size
+/// @param offset
+/// @return
 ///
 template<typename T>
 SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueEmptyHost(
@@ -397,7 +397,7 @@ SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueEmptyHost(
 		, Types::size_t offset = 0);
 
 ///
-/// \brief The Serializer class
+/// @brief The Serializer class
 ///
 template<ByteOrder ORDER, bool IS_VOLATILE>
 class Serializer
@@ -407,32 +407,32 @@ public:
 	using InternalStream = typename SerializationTraits<IS_VOLATILE>::InternalStream;
 
 	///
-	/// \brief Serializer
-	/// \param initData
-	/// \param initOffset
+	/// @brief Serializer
+	/// @param initData
+	/// @param initOffset
 	///
 	Serializer(InputStream initData = nullptr, Types::size_t initOffset = 0);
 
 	///
-	/// \brief operator ()
-	/// \param value
-	/// \return
+	/// @brief operator ()
+	/// @param value
+	/// @return
 	///
 	template<typename T>
 	Types::size_t operator()(T value);
 
 	///
-	/// \brief operator ()
-	/// \param value
-	/// \return
+	/// @brief operator ()
+	/// @param value
+	/// @return
 	///
 	template<ByteOrder OTHER_ORDER, typename T>
 	Types::size_t operator()(const SpecializedValue<OTHER_ORDER, T> &value);
 
 	///
-	/// \brief operator ()
-	/// \param value
-	/// \return
+	/// @brief operator ()
+	/// @param value
+	/// @return
 	///
 	template<typename T>
 	Types::size_t operator()(const SpecializedValue<ORDER, T> &value);
@@ -443,17 +443,17 @@ public:
 private:
 
 	///
-	/// \brief makeByteRange
-	/// \param value
-	/// \return
+	/// @brief makeByteRange
+	/// @param value
+	/// @return
 	///
 	template<typename T>
 	static Range<const Types::uichar_t *> makeByteRange(const T &value);
 
 	///
-	/// \brief castToByteArray
-	/// \param value
-	/// \return
+	/// @brief castToByteArray
+	/// @param value
+	/// @return
 	///
 	template<typename T>
 	static const Types::uichar_t *castToByteArray(const T &value);
@@ -470,40 +470,40 @@ public:
 	using ConstInternalStream = typename SerializationTraits<IS_VOLATILE>::ConstInternalStream;
 
 	///
-	/// \brief Deserializer
-	/// \param initData
-	/// \param initOffset
+	/// @brief Deserializer
+	/// @param initData
+	/// @param initOffset
 	///
 	Deserializer(ConstInputStream initData = nullptr, Types::size_t initOffset = 0);
 
 	///
-	/// \brief operator ()
-	/// \param value
-	/// \return
+	/// @brief operator ()
+	/// @param value
+	/// @return
 	///
 	template<typename T>
 	Types::size_t operator()(T &value);
 
 	///
-	/// \brief operator ()
-	/// \param value
-	/// \return
+	/// @brief operator ()
+	/// @param value
+	/// @return
 	///
 	template<typename T>
 	Types::size_t operator()(SpecializedValue<ORDER, T> &value);
 
 	///
-	/// \brief operator ()
-	/// \param value
-	/// \return
+	/// @brief operator ()
+	/// @param value
+	/// @return
 	///
 	template<ByteOrder OTHER_ORDER, typename T>
 	Types::size_t operator()(SpecializedValue<OTHER_ORDER, T> &value);
 
 	///
-	/// \brief toOrder
-	/// \param value
-	/// \return
+	/// @brief toOrder
+	/// @param value
+	/// @return
 	///
 	template<typename T>
 	static T toOrder(T value);
@@ -511,17 +511,17 @@ public:
 private:
 
 	///
-	/// \brief makeByteRange
-	/// \param value
-	/// \return
+	/// @brief makeByteRange
+	/// @param value
+	/// @return
 	///
 	template<typename T>
 	static Range<Types::uichar_t *> makeByteRange(T &value);
 
 	///
-	/// \brief castToByteArray
-	/// \param value
-	/// \return
+	/// @brief castToByteArray
+	/// @param value
+	/// @return
 	///
 	template<typename T>
 	static Types::uichar_t *castToByteArray(T &value);
