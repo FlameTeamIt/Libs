@@ -41,6 +41,7 @@ HEADERS += \
 	./src/Templates/Tests/CircularVector.hpp \
 	./src/Templates/Tests/Vector.hpp \
 	./src/Templates/Tests/List.hpp \
+	./src/Templates/Tests/WideInt.hpp \
 	./src/Templates/Tests/Bits.hpp \
 	./src/Templates/Tests/TestClass.hpp \
 	./src/Templates/Tests/Variant.hpp \
@@ -103,6 +104,7 @@ SOURCES += \
 	./src/Templates/Tests/Allocator.cpp \
 	./src/Templates/Tests/SharedPointer.cpp \
 	./src/Templates/Tests/Vector.cpp \
+	./src/Templates/Tests/WideInt.cpp \
 	./src/Templates/Tests/TestClass.cpp \
 	./src/Templates/Tests/TestAggregator.cpp \
 	./src/Templates/Tests/String.cpp \

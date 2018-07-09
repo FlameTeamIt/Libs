@@ -11,6 +11,7 @@
 #include <Templates/Tests/UniquePoiter.hpp>
 #include <Templates/Tests/Variant.hpp>
 #include <Templates/Tests/Vector.hpp>
+#include <Templates/Tests/WideInt.hpp>
 
 #include <tests/Test.hpp>
 #include <Templates/Tests/TestAggregator.hpp>
@@ -21,20 +22,21 @@ namespace flame_ide
 
 TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 {
-//	pushBackTest(new test::ObjectAllocator);
-//	pushBackTest(new test::ArrayAllocator);
-//	pushBackTest(new test::Array());
-//	pushBackTest(new test::Bits());
-//	pushBackTest(new test::ByteOrderTest());
+	pushBackTest(new test::ObjectAllocator);
+	pushBackTest(new test::ArrayAllocator);
+	pushBackTest(new test::Array());
+	pushBackTest(new test::Bits());
+	pushBackTest(new test::ByteOrderTest());
 	pushBackTest(new test::CircularVector());
-//	pushBackTest(new test::List());
-//	pushBackTest(new test::SharedPointer());
-//	pushBackTest(new test::Serialization());
-//	pushBackTest(new test::String());
-//	pushBackTest(new test::Tuple());
-//	pushBackTest(new test::UniquePointer());
-//	pushBackTest(new test::Vector());
-//	pushBackTest(new test::Variant());
+	pushBackTest(new test::List());
+	pushBackTest(new test::SharedPointer());
+	pushBackTest(new test::Serialization());
+	pushBackTest(new test::String());
+	pushBackTest(new test::Tuple());
+	pushBackTest(new test::UniquePointer());
+	pushBackTest(new test::Vector());
+	pushBackTest(new test::Variant());
+	pushBackTest(new test::WideInt());
 }
 
 }}

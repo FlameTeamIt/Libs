@@ -3,29 +3,125 @@
 
 #include <Templates/Utils.hpp>
 #include <Templates/Array.hpp>
-
-#include <Others/Bits.hpp>
+#include <Templates/Serialization.hpp>
 
 #define TEMPLATE_WIDE_INT \
 	template<Types::ullong_t BITS, bool SIGNED>
 #define WIDE_INT \
 	WideInt<BITS, SIGNED>
 
+#define TEMPLATE_WIDE_INT_SIGNED \
+	template<Types::ullong_t BITS>
+#define WIDE_INT_SIGNED \
+	WideInt<BITS, true>
+
 
 namespace flame_ide
 {namespace templates
 {
 
-namespace wide_int_utils
+namespace wideint_utils
 {
 
 }
 
-template<Types::ullong_t BITS, bool SIGNED>
+// class defines
+
+template<Types::ullong_t BITS, bool SIGNED = false>
 class WideInt
 {
 public:
 	using Me = WideInt<BITS, SIGNED>;
+	using MeSigned = WideInt<BITS, !SIGNED>;
+
+	WideInt() = default;
+	WideInt(const Me &integer) = default;
+
+	template<typename IntegerType>
+	WideInt(IntegerType value);
+
+	template<typename IntegerType>
+	Me &operator=(IntegerType value);
+	Me &operator=(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator<<(IntegerType value);
+	Me &operator<<(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator>>(IntegerType value);
+	Me &operator>>(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator+(IntegerType value);
+	Me &operator+(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator+=(IntegerType value);
+	Me &operator+=(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator-(IntegerType value);
+	Me &operator-(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator-=(IntegerType value);
+	Me &operator-=(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator*(IntegerType value);
+	Me &operator*(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator*=(IntegerType value);
+	Me &operator*=(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator/(IntegerType value);
+	Me &operator/(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator/=(IntegerType value);
+	Me &operator/=(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator&(IntegerType value);
+	Me &operator&(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator&=(IntegerType value);
+	Me &operator&=(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator|(IntegerType value);
+	Me &operator|(const Me &value);
+
+	template<typename IntegerType>
+	Me &operator|=(IntegerType value);
+	Me &operator|=(const Me &value);
+
+	Me &operator++();
+	Me operator++(int);
+	Me &operator--();
+	Me operator--(int);
+
+private:
+	template<typename IntegralType>
+	void set(IntegralType value);
+
+	static constexpr Types::size_t COUNT_BYTES = (BITS % 8)
+		? BITS / 8 + 1
+		: BITS / 8;
+
+	Array<Types::uichar_t, COUNT_BYTES> byteArray;
+};
+
+template<Types::ullong_t BITS>
+class WideInt<BITS, true>
+{
+public:
+	using Me = WideInt<BITS, true>;
+	using MeUnsigned = WideInt<BITS, false>;
 
 	WideInt() = default;
 	WideInt(const Me &integer) = default;
@@ -105,10 +201,11 @@ private:
 	template<typename IntegralType>
 	void initInteger();
 
-	constexpr Types::size_t COUNT_BYTES = (BITS % 8)
+	static constexpr Types::size_t COUNT_BYTES = ((BITS - 1) % 8)
 		? BITS / 8 + 1
 		: BITS / 8;
 
+	ichar_t signedByte;
 	Array<Types::uichar_t, COUNT_BYTES> byteArray;
 };
 
@@ -117,6 +214,35 @@ using SignedInt = WideInt<COUNT_BITS, true>;
 
 template<Types::size_t COUNT_BITS>
 using UnsignedInt = WideInt<COUNT_BITS, false>;
+
+
+// traits
+
+template<Types::ullong_t BITS>
+struct MakeSigned<WideInt<BITS, true>>
+{
+	using Type = WideInt<BITS, true>;
+};
+
+template<Types::ullong_t BITS>
+struct MakeSigned<WideInt<BITS, false>>
+{
+	using Type = WideInt<BITS, true>;
+};
+
+template<Types::ullong_t BITS>
+struct MakeUnsigned<WideInt<BITS, true>>
+{
+	using Type = WideInt<BITS, false>;
+};
+
+template<Types::ullong_t BITS>
+struct MakeUnsigned<WideInt<BITS, false>>
+{
+	using Type = WideInt<BITS, false>;
+};
+
+// typedefs
 
 using Int40 = SignedInt<40>;
 using Int80 = SignedInt<80>;
@@ -138,12 +264,45 @@ namespace flame_ide
 {namespace templates
 {
 
-template<typename IntegerType>
 TEMPLATE_WIDE_INT
-WIDE_INT::WideInt(IntegerType integer)
+template<typename PrimitiveType>
+WIDE_INT::WideInt(PrimitiveType value)
 {
+	static_assert(IsPrimitiveType<PrimitiveType>::VALUE, "It is not primitive type");
+
+	using RealType = typename RemoveAll<PrimitiveType>::Type;
+	if (isFloatType<RealType>())
+	{
+		using CastFromFloatType = Types::llong_t;
+		set(static_cast<CastFromFloatType>(value));
+	}
+	else
+	{
+		set(value);
+	}
 }
 
+
+// private
+
+TEMPLATE_WIDE_INT
+template<typename IntegralType>
+void WIDE_INT::set(IntegralType value)
+{
+	static_assert(IsIntegralType<IntegralType>::VALUE, "It is not integral type");
+	SpecializedValue<ByteOrder::HOST_ORDER, IntegralType> specValue(
+		value
+		, (COUNT_BYTES >= sizeof(IntegralType) ? sizeof(IntegralType) : COUNT_BYTES)
+		, (
+				(COUNT_BYTES >= sizeof(IntegralType))
+						? COUNT_BYTES -  sizeof(IntegralType)
+						: sizeof(IntegralType) - COUNT_BYTES
+		)
+	);
+
+	SerializerBe serializer(byteArray.data());
+	serializer(specValue);
+}
 
 }}
 

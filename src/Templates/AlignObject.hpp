@@ -10,13 +10,38 @@ namespace flame_ide
 template<typename T>
 struct AlignObject
 {
-	static constexpr Types::size_t ARRAY_SIZE = (sizeof(T) % sizeof(Types::size_t))
-			? sizeof(T) / sizeof(Types::size_t) + 1
-			: sizeof(T) / sizeof(Types::size_t);
+	using ArrayValueType = typename ChooseType
+	<
+		sizeof(T) <= sizeof(Types::size_t)
+		, typename ChooseType<
+			sizeof(T) <= sizeof(Types::size_t) / 2
+			, typename ChooseType<
+				sizeof(T) <= sizeof(Types::size_t) / 4
+				, typename ChooseType<
+					sizeof(T) <= sizeof(Types::size_t) / 8
+					, Types::uichar_t
+					, void
+				>::Type
+				, typename ChooseType<
+					sizeof(Types::size_t) / 4 == sizeof(Types::ushort_t)
+					, Types::ushort_t
+					, Types::uichar_t
+				>::Type
+			>::Type
+			, typename ChooseType<
+				sizeof(Types::size_t) / 2 == sizeof(Types::uint_t)
+				, Types::uint_t
+				, Types::ushort_t
+			>::Type
+		>::Type
+		, Types::size_t
+	>::Type;
+	static constexpr Types::size_t ARRAY_SIZE = (sizeof(T) % sizeof(ArrayValueType))
+			? sizeof(T) / sizeof(ArrayValueType) + 1
+			: sizeof(T) / sizeof(ArrayValueType);
 
 	AlignObject() noexcept;
-
-	size_t array[ARRAY_SIZE];
+	ArrayValueType array[ARRAY_SIZE];
 };
 
 }}
