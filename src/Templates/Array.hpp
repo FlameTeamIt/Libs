@@ -9,16 +9,16 @@
 #include <Templates/SimpleAlgorithms.hpp>
 
 #define TEMPLATE_DEFINE \
-	template <typename T, SizeTraits::SizeType SIZE, typename Traits>
+	template <typename T, SizeTraits::SizeType ARRAY_SIZE, typename Traits>
 
 #define TEMPLATE_DEFINE_1 \
-	template <SizeTraits::SizeType SIZE1, typename Traits1>
+	template <SizeTraits::SizeType ARRAY_SIZE1, typename Traits1>
 
 #define ARRAY_TYPE \
-	Array<T, SIZE, Traits>
+	Array<T, ARRAY_SIZE, Traits>
 
 #define ARRAY_TYPE_1 \
-	Array<T, SIZE1, Traits1>
+	Array<T, ARRAY_SIZE1, Traits1>
 
 namespace flame_ide
 {namespace templates
@@ -28,7 +28,7 @@ namespace flame_ide
  * @brief Array
  */
 template <typename T
-	, SizeTraits::SizeType SIZE
+	, SizeTraits::SizeType ARRAY_SIZE
 	, typename Traits = ContainerTraits<T>
 >
 class Array: public Traits
@@ -49,6 +49,8 @@ public:
 	using typename Traits::SsizeType;
 
 	using typename Traits::VoidPointer;
+
+	static constexpr SizeType SIZE = ARRAY_SIZE;
 
 	using Iterator = flame_ide::templates::Iterator<
 		Pointer, IteratorCategory::RANDOM_ACCESS, Traits
@@ -98,7 +100,7 @@ public:
 	 * @brief Array
 	 * @param args
 	 */
-	Array(InitializerList<T, SIZE> list);
+	Array(InitializerList<T, ARRAY_SIZE> list);
 
 	~Array();
 
@@ -397,11 +399,16 @@ public:
 	 */
 	void erase(Iterator itBegin, Iterator itEnd);
 
+	/**
+	 * @brief reset
+	 */
+	void reset();
+
 private:
 	inline Pointer head();
 	inline PointerToConst head() const;
 
-	AlignObject<Type> objects[SIZE];
+	AlignObject<Type> objects[ARRAY_SIZE];
 	Pointer tail;
 };
 
@@ -452,7 +459,7 @@ ARRAY_TYPE::Array(ARRAY_TYPE &&array)
 }
 
 TEMPLATE_DEFINE
-ARRAY_TYPE::Array(InitializerList<T, SIZE> list)
+ARRAY_TYPE::Array(InitializerList<T, ARRAY_SIZE> list)
 {
 	tail = head();
 	for (auto it : list)
@@ -598,7 +605,7 @@ typename ARRAY_TYPE::SizeType ARRAY_TYPE::size() const noexcept
 TEMPLATE_DEFINE constexpr inline
 typename ARRAY_TYPE::SizeType ARRAY_TYPE::capacity() const noexcept
 {
-	return SIZE;
+	return ARRAY_SIZE;
 }
 
 TEMPLATE_DEFINE inline
@@ -905,6 +912,18 @@ void ARRAY_TYPE::erase(ARRAY_TYPE::Iterator itBegin, ARRAY_TYPE::Iterator itEnd)
 		tail -= SizeType(rangeErasing.end() - rangeErasing.begin());
 	}
 }
+
+TEMPLATE_DEFINE
+void ARRAY_TYPE::reset()
+{
+	clean();
+	auto range = makeRange(objects, objects + ARRAY_SIZE);
+	for (auto &i : range)
+	{
+		i = AlignObject<Type>();
+	}
+}
+
 
 TEMPLATE_DEFINE inline
 typename ARRAY_TYPE::Pointer ARRAY_TYPE::head()
