@@ -139,6 +139,13 @@ bool isFloatType() noexcept
 }
 
 template<typename T> inline constexpr
+bool isIntegralType() noexcept
+{
+	using Type = typename RemoveAll<T>::Type;
+	return IsIntegralType<Type>::VALUE;
+}
+
+template<typename T> inline constexpr
 bool isSigned() noexcept
 {
 	using Type = typename RemoveAll<T>::Type;
