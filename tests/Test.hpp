@@ -131,7 +131,7 @@ public:
 protected:
 	virtual void vStart()
 	{
-		for (AbstractTest *it : vectorTests)
+		for (auto it : vectorTests)
 			vectorReturnCodes.push_back(it->start());
 	}
 
