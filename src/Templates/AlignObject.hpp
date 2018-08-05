@@ -36,12 +36,15 @@ struct AlignObject
 		>::Type
 		, Types::size_t
 	>::Type;
-	static constexpr Types::size_t ARRAY_SIZE = (sizeof(T) % sizeof(ArrayValueType))
-			? sizeof(T) / sizeof(ArrayValueType) + 1
+	static constexpr Types::size_t SIZE = (sizeof(T) % sizeof(ArrayValueType))
+			? (
+					sizeof(T) / sizeof(ArrayValueType)
+			) + 1
 			: sizeof(T) / sizeof(ArrayValueType);
+	static constexpr auto INIT_VALUE = ArrayValueType();
 
 	AlignObject() noexcept;
-	ArrayValueType array[ARRAY_SIZE];
+	ArrayValueType array[SIZE];
 };
 
 }}
@@ -53,8 +56,10 @@ namespace flame_ide
 template<typename T>
 AlignObject<T>::AlignObject() noexcept
 {
-	for (Types::size_t i = 0; i < ARRAY_SIZE; ++i)
-		array[i] = 0u;
+	for (Types::size_t i = 0; i < SIZE; ++i)
+	{
+		array[i] = INIT_VALUE;
+	}
 }
 
 }}
