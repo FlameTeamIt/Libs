@@ -150,12 +150,14 @@ struct RemoveAll: public NonCreational
 	using Type = T;
 };
 
+/**
+ * @brief View RemoveAll.
+ */
 template<typename T>
 struct RemoveAll<volatile T>: public NonCreational
 {
 	using Type = typename RemoveAll<typename RemoveVolatile<T>::Type>::Type;
 };
-
 
 /**
  * @brief View RemoveAll.
@@ -443,21 +445,21 @@ struct ContainerTraits: public DefaultTraits<T>, public SizeTraits
 template<bool IS_VOLATILE>
 struct SerializationTraits: public NonCreational
 {
-	using InputStream = void *;
-	using ConstInputStream =  const void *;
+	using InputDataBlock = void *;
+	using ConstInputDataBlock =  const void *;
 
-	using InternalStream = Types::uichar_t *;
-	using ConstInternalStream =  const Types::uichar_t *;
+	using InternalDataBlock = Types::uichar_t *;
+	using ConstInternalDataBlock =  const Types::uichar_t *;
 };
 
 template<>
 struct SerializationTraits<true>: public NonCreational
 {
-	using InputStream = volatile void *;
-	using ConstInputStream =  const volatile void *;
+	using InputDataBlock = volatile void *;
+	using ConstInputDataBlock =  const volatile void *;
 
-	using InternalStream = volatile Types::uichar_t *;
-	using ConstInternalStream =  const volatile Types::uichar_t *;
+	using InternalDataBlock = volatile Types::uichar_t *;
+	using ConstInternalDataBlock =  const volatile Types::uichar_t *;
 };
 
 

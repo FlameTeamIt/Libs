@@ -403,15 +403,15 @@ template<ByteOrder ORDER, bool IS_VOLATILE>
 class Serializer
 {
 public:
-	using InputStream = typename SerializationTraits<IS_VOLATILE>::InputStream;
-	using InternalStream = typename SerializationTraits<IS_VOLATILE>::InternalStream;
+	using InputDataBlock = typename SerializationTraits<IS_VOLATILE>::InputDataBlock;
+	using InternalDataBlock = typename SerializationTraits<IS_VOLATILE>::InternalDataBlock;
 
 	///
 	/// @brief Serializer
 	/// @param initData
 	/// @param initOffset
 	///
-	Serializer(InputStream initData = nullptr, Types::size_t initOffset = 0);
+	Serializer(InputDataBlock initData = nullptr, Types::size_t initOffset = 0);
 
 	///
 	/// @brief operator ()
@@ -458,7 +458,7 @@ private:
 	template<typename T>
 	static const Types::uichar_t *castToByteArray(const T &value);
 
-	InternalStream data;
+	InternalDataBlock data;
 	Types::size_t offset;
 };
 
@@ -466,15 +466,15 @@ template<ByteOrder ORDER, bool IS_VOLATILE>
 class Deserializer
 {
 public:
-	using ConstInputStream = typename SerializationTraits<IS_VOLATILE>::ConstInputStream;
-	using ConstInternalStream = typename SerializationTraits<IS_VOLATILE>::ConstInternalStream;
+	using ConstInputDataBlock = typename SerializationTraits<IS_VOLATILE>::ConstInputDataBlock;
+	using ConstInternalDataBlock = typename SerializationTraits<IS_VOLATILE>::ConstInternalDataBlock;
 
 	///
 	/// @brief Deserializer
 	/// @param initData
 	/// @param initOffset
 	///
-	Deserializer(ConstInputStream initData = nullptr, Types::size_t initOffset = 0);
+	Deserializer(ConstInputDataBlock initData = nullptr, Types::size_t initOffset = 0);
 
 	///
 	/// @brief operator ()
@@ -526,7 +526,7 @@ private:
 	template<typename T>
 	static Types::uichar_t *castToByteArray(T &value);
 
-	ConstInternalStream data;
+	ConstInternalDataBlock data;
 	Types::size_t offset;
 };
 
@@ -818,8 +818,8 @@ SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueEmptyHost(
 // Serializer
 
 template<ByteOrder ORDER, bool IS_VOLATILE>
-Serializer<ORDER, IS_VOLATILE>::Serializer(InputStream initData, Types::size_t initOffset)
-		: data(static_cast<InternalStream>(initData))
+Serializer<ORDER, IS_VOLATILE>::Serializer(InputDataBlock initData, Types::size_t initOffset)
+		: data(static_cast<InternalDataBlock>(initData))
 		, offset(initOffset)
 {}
 
@@ -880,8 +880,8 @@ const Types::uichar_t *Serializer<ORDER, IS_VOLATILE>::castToByteArray(const T &
 // Deserializer
 
 template<ByteOrder ORDER, bool IS_VOLATILE>
-Deserializer<ORDER, IS_VOLATILE>::Deserializer(ConstInputStream initData, Types::size_t initOffset)
-	: data(static_cast<ConstInternalStream>(initData))
+Deserializer<ORDER, IS_VOLATILE>::Deserializer(ConstInputDataBlock initData, Types::size_t initOffset)
+	: data(static_cast<ConstInternalDataBlock>(initData))
 	, offset(initOffset)
 {}
 
