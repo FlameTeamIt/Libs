@@ -1,9 +1,8 @@
 ﻿#ifndef TEMPLATES_TRAITS_HPP
 #define TEMPLATES_TRAITS_HPP
 
+#include <Common/Macroses.hpp>
 #include <Common/PrimitiveTypes.hpp>
-
-#include <Templates/Macroses.hpp>
 
 namespace flame_ide
 {namespace templates
