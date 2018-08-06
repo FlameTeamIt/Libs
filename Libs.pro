@@ -74,7 +74,6 @@ HEADERS += \
 	./src/Templates/String.hpp \
 	./src/Templates/ObjectViewer.hpp \
 	./src/Templates/InitializerList.hpp \
-	./src/Templates/Macroses.hpp \
 	./src/Templates/ByteOrder.hpp \
 	./src/Templates/Array.hpp \
 	./src/Templates/Utils.hpp \
@@ -83,6 +82,7 @@ HEADERS += \
 	./src/Templates/Serialization.hpp \
 	./src/Common/PrimitiveTypes.hpp \
 	./src/Common/Byte.hpp \
+	./src/Common/Macroses.hpp \
 	./src/Streams/StreamBase.hpp
 
 # sources

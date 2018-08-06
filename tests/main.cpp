@@ -5,4 +5,3 @@ int main()
 	flame_ide::templates::TestAggregator().start();
 	return 0;
 }
-
