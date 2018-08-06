@@ -8,7 +8,7 @@ namespace flame_ide
 {namespace templates
 {
 
-template<Types::ullong_t BITS>
+template<Types::ulong_t BITS>
 class WideFloat
 {
 public:

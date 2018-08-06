@@ -6,12 +6,12 @@
 #include <Templates/Serialization.hpp>
 
 #define TEMPLATE_WIDE_INT \
-	template<Types::ullong_t BITS, bool SIGNED>
+	template<Types::ulong_t BITS, bool SIGNED>
 #define WIDE_INT \
 	WideInt<BITS, SIGNED>
 
 #define TEMPLATE_WIDE_INT_SIGNED \
-	template<Types::ullong_t BITS>
+	template<Types::ulong_t BITS>
 #define WIDE_INT_SIGNED \
 	WideInt<BITS, true>
 
@@ -22,7 +22,7 @@ namespace flame_ide
 
 // class define
 
-template<Types::ullong_t BITS, bool SIGNED = false>
+template<Types::ulong_t BITS, bool SIGNED = false>
 class WideInt
 {
 public:
@@ -139,7 +139,7 @@ public:
 	const Data &getData() const noexcept;
 
 private:
-	Array<Types::uichar_t, COUNT_BYTES> byteArray;
+	Data byteArray;
 };
 
 template<Types::size_t COUNT_BITS>

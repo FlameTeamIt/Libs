@@ -114,38 +114,38 @@ struct Constants: public NonCreational
 	static constexpr auto BIT64_29 = Types::ulong_t(BIT32_29);
 	static constexpr auto BIT64_30 = Types::ulong_t(BIT32_30);
 	static constexpr auto BIT64_31 = Types::ulong_t(BIT32_31);
-	static constexpr auto BIT64_32 = BIT(Types::ullong_t, 32);
-	static constexpr auto BIT64_33 = BIT(Types::ullong_t, 33);
-	static constexpr auto BIT64_34 = BIT(Types::ullong_t, 34);
-	static constexpr auto BIT64_35 = BIT(Types::ullong_t, 35);
-	static constexpr auto BIT64_36 = BIT(Types::ullong_t, 36);
-	static constexpr auto BIT64_37 = BIT(Types::ullong_t, 37);
-	static constexpr auto BIT64_38 = BIT(Types::ullong_t, 38);
-	static constexpr auto BIT64_39 = BIT(Types::ullong_t, 39);
-	static constexpr auto BIT64_40 = BIT(Types::ullong_t, 40);
-	static constexpr auto BIT64_41 = BIT(Types::ullong_t, 41);
-	static constexpr auto BIT64_42 = BIT(Types::ullong_t, 42);
-	static constexpr auto BIT64_43 = BIT(Types::ullong_t, 43);
-	static constexpr auto BIT64_44 = BIT(Types::ullong_t, 44);
-	static constexpr auto BIT64_45 = BIT(Types::ullong_t, 45);
-	static constexpr auto BIT64_46 = BIT(Types::ullong_t, 46);
-	static constexpr auto BIT64_47 = BIT(Types::ullong_t, 47);
-	static constexpr auto BIT64_48 = BIT(Types::ullong_t, 48);
-	static constexpr auto BIT64_49 = BIT(Types::ullong_t, 49);
-	static constexpr auto BIT64_50 = BIT(Types::ullong_t, 50);
-	static constexpr auto BIT64_51 = BIT(Types::ullong_t, 51);
-	static constexpr auto BIT64_52 = BIT(Types::ullong_t, 52);
-	static constexpr auto BIT64_53 = BIT(Types::ullong_t, 53);
-	static constexpr auto BIT64_54 = BIT(Types::ullong_t, 54);
-	static constexpr auto BIT64_55 = BIT(Types::ullong_t, 55);
-	static constexpr auto BIT64_56 = BIT(Types::ullong_t, 56);
-	static constexpr auto BIT64_57 = BIT(Types::ullong_t, 57);
-	static constexpr auto BIT64_58 = BIT(Types::ullong_t, 58);
-	static constexpr auto BIT64_59 = BIT(Types::ullong_t, 59);
-	static constexpr auto BIT64_60 = BIT(Types::ullong_t, 60);
-	static constexpr auto BIT64_63 = BIT(Types::ullong_t, 61);
-	static constexpr auto BIT64_62 = BIT(Types::ullong_t, 62);
-	static constexpr auto BIT64_61 = BIT(Types::ullong_t, 63);
+	static constexpr auto BIT64_32 = BIT(Types::ulong_t, 32);
+	static constexpr auto BIT64_33 = BIT(Types::ulong_t, 33);
+	static constexpr auto BIT64_34 = BIT(Types::ulong_t, 34);
+	static constexpr auto BIT64_35 = BIT(Types::ulong_t, 35);
+	static constexpr auto BIT64_36 = BIT(Types::ulong_t, 36);
+	static constexpr auto BIT64_37 = BIT(Types::ulong_t, 37);
+	static constexpr auto BIT64_38 = BIT(Types::ulong_t, 38);
+	static constexpr auto BIT64_39 = BIT(Types::ulong_t, 39);
+	static constexpr auto BIT64_40 = BIT(Types::ulong_t, 40);
+	static constexpr auto BIT64_41 = BIT(Types::ulong_t, 41);
+	static constexpr auto BIT64_42 = BIT(Types::ulong_t, 42);
+	static constexpr auto BIT64_43 = BIT(Types::ulong_t, 43);
+	static constexpr auto BIT64_44 = BIT(Types::ulong_t, 44);
+	static constexpr auto BIT64_45 = BIT(Types::ulong_t, 45);
+	static constexpr auto BIT64_46 = BIT(Types::ulong_t, 46);
+	static constexpr auto BIT64_47 = BIT(Types::ulong_t, 47);
+	static constexpr auto BIT64_48 = BIT(Types::ulong_t, 48);
+	static constexpr auto BIT64_49 = BIT(Types::ulong_t, 49);
+	static constexpr auto BIT64_50 = BIT(Types::ulong_t, 50);
+	static constexpr auto BIT64_51 = BIT(Types::ulong_t, 51);
+	static constexpr auto BIT64_52 = BIT(Types::ulong_t, 52);
+	static constexpr auto BIT64_53 = BIT(Types::ulong_t, 53);
+	static constexpr auto BIT64_54 = BIT(Types::ulong_t, 54);
+	static constexpr auto BIT64_55 = BIT(Types::ulong_t, 55);
+	static constexpr auto BIT64_56 = BIT(Types::ulong_t, 56);
+	static constexpr auto BIT64_57 = BIT(Types::ulong_t, 57);
+	static constexpr auto BIT64_58 = BIT(Types::ulong_t, 58);
+	static constexpr auto BIT64_59 = BIT(Types::ulong_t, 59);
+	static constexpr auto BIT64_60 = BIT(Types::ulong_t, 60);
+	static constexpr auto BIT64_63 = BIT(Types::ulong_t, 61);
+	static constexpr auto BIT64_62 = BIT(Types::ulong_t, 62);
+	static constexpr auto BIT64_61 = BIT(Types::ulong_t, 63);
 };
 
 #undef BIT
@@ -156,16 +156,16 @@ struct MinimalType
 	static constexpr auto COUNT_BITS = TEMPLATE_COUNT_BITS;
 
 	using Type = typename ChooseType<
-		TEMPLATE_COUNT_BITS <= sizeof(uint8_t) * 8
+		TEMPLATE_COUNT_BITS <= sizeof(Types::uichar_t) * 8
 		, uint8_t
 		, typename ChooseType<
-			TEMPLATE_COUNT_BITS <= sizeof(uint16_t) * 8
+			TEMPLATE_COUNT_BITS <= sizeof(Types::ushort_t) * 8
 			, uint16_t
 			, typename ChooseType<
-				TEMPLATE_COUNT_BITS <= sizeof(uint32_t) * 8
+				TEMPLATE_COUNT_BITS <= sizeof(Types::uint_t) * 8
 				, uint32_t
 				, typename ChooseType<
-					TEMPLATE_COUNT_BITS <= sizeof(uint64_t) * 8
+					TEMPLATE_COUNT_BITS <= sizeof(Types::ulong_t) * 8
 					, uint64_t
 					, void
 				>::Type

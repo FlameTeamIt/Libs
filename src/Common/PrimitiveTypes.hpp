@@ -26,9 +26,6 @@ typedef ::int32_t int_t;
 typedef ::uint64_t ulong_t;
 typedef ::int64_t long_t;
 
-typedef ::uint64_t ullong_t;
-typedef ::int64_t llong_t;
-
 typedef float float_t;
 typedef double double_t;
 typedef long double ldouble_t;

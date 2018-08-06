@@ -33,7 +33,7 @@ namespace string_utils
 {
 
 template<
-	Types::ullong_t MIN, Types::ullong_t MAX
+	Types::ulong_t MIN, Types::ulong_t MAX
 	, SizeTraits::SizeType BUFFER_SIZE
 >
 struct NumberChecker;
@@ -65,7 +65,7 @@ namespace string_utils
 {
 
 template<
-	Types::ullong_t MIN, Types::ullong_t MAX
+	Types::ulong_t MIN, Types::ulong_t MAX
 	, SizeTraits::SizeType BUFFER_SIZE
 >
 struct NumberChecker
@@ -76,7 +76,7 @@ struct NumberChecker
 
 template<SizeTraits::SizeType BUFFER_SIZE>
 struct NumberChecker<
-	Types::ullong_t(999999999999999999ULL), Types::ullong_t(9999999999999999999ULL)
+	Types::ulong_t(999999999999999999ULL), Types::ulong_t(9999999999999999999ULL)
 	, BUFFER_SIZE
 >
 {
@@ -263,7 +263,7 @@ namespace flame_ide
 namespace string_utils
 {
 
-template<Types::ullong_t MIN, Types::ullong_t MAX, SizeTraits::SizeType BUFFER_SIZE>
+template<Types::ulong_t MIN, Types::ulong_t MAX, SizeTraits::SizeType BUFFER_SIZE>
 template<typename IntType>
 inline SizeTraits::SizeType
 NumberChecker<MIN, MAX, BUFFER_SIZE>::get(IntType value)
@@ -272,7 +272,7 @@ NumberChecker<MIN, MAX, BUFFER_SIZE>::get(IntType value)
 		return BUFFER_SIZE;
 	else
 		return NumberChecker<
-			MAX, MAX * Types::ullong_t(10) + Types::ullong_t(9)
+			MAX, MAX * Types::ulong_t(10) + Types::ulong_t(9)
 			, BUFFER_SIZE + SizeTraits::SizeType(1)
 		>::get(value);
 }
@@ -280,11 +280,11 @@ NumberChecker<MIN, MAX, BUFFER_SIZE>::get(IntType value)
 template<SizeTraits::SizeType BUFFER_SIZE>
 template<typename IntType>
 inline SizeTraits::SizeType NumberChecker<
-	Types::ullong_t(999999999999999999ULL), Types::ullong_t(9999999999999999999ULL)
+	Types::ulong_t(999999999999999999ULL), Types::ulong_t(9999999999999999999ULL)
 	, BUFFER_SIZE>::get(IntType value)
 {
-	constexpr Types::ullong_t MIN = Types::ullong_t(999999999999999999ULL);
-	constexpr Types::ullong_t MAX = Types::ullong_t(9999999999999999999ULL);
+	constexpr Types::ulong_t MIN = Types::ulong_t(999999999999999999ULL);
+	constexpr Types::ulong_t MAX = Types::ulong_t(9999999999999999999ULL);
 
 	if (MIN <= value && value <= MAX)
 		return BUFFER_SIZE;

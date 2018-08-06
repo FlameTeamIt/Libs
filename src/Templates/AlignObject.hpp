@@ -36,7 +36,7 @@ struct AlignObject
 		>::Type
 		, Types::size_t
 	>::Type;
-	static constexpr Types::size_t SIZE = (sizeof(T) % sizeof(ArrayValueType))
+	static constexpr Types::size_t SIZE = (sizeof(T) % sizeof(ArrayValueType) != 0)
 			? (
 					sizeof(T) / sizeof(ArrayValueType)
 			) + 1

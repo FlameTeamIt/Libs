@@ -204,7 +204,6 @@ struct Types: public NonCreational
 	using short_t = flame_ide::short_t;
 	using int_t = flame_ide::int_t;
 	using long_t = flame_ide::long_t;
-	using llong_t = flame_ide::llong_t;
 
 	using byte_t = flame_ide::uichar_t;
 
@@ -212,7 +211,6 @@ struct Types: public NonCreational
 	using ushort_t = flame_ide::ushort_t;
 	using uint_t = flame_ide::uint_t;
 	using ulong_t = flame_ide::ulong_t;
-	using ullong_t = flame_ide::ullong_t;
 
 	using float_t = flame_ide::float_t;
 	using double_t = flame_ide::double_t;
