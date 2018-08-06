@@ -35,7 +35,7 @@ public:
 	using Me = WideInt<BITS, SIGNED>;
 	using MeSigned = WideInt<BITS, (IS_SIGNED) ? SIGNED : !SIGNED>;
 	using MeUnsigned = WideInt<BITS, (IS_SIGNED) ? !SIGNED : SIGNED>;
-	using Data = Array<Types::uichar_t, COUNT_BYTES>;
+	using Data = StaticArray<Types::uichar_t, COUNT_BYTES>;
 
 	WideInt() = default;
 	WideInt(const Me &integer) = default;
@@ -44,7 +44,7 @@ public:
 	WideInt(PrimitiveType value);
 
 	// TODO: check this
-	template<Types::ullong_t BITS1, bool SIGNED1>
+	template<Types::ulong_t BITS1, bool SIGNED1>
 	WideInt(const WideInt<BITS1, SIGNED1> &value);
 
 	template<typename PrimitiveType>
@@ -150,32 +150,31 @@ using UnsignedInt = WideInt<COUNT_BITS, false>;
 
 // traits
 
-template<Types::ullong_t BITS>
+template<Types::ulong_t BITS>
 struct MakeSigned<WideInt<BITS, true>>
 {
 	using Type = WideInt<BITS, true>;
 };
 
-template<Types::ullong_t BITS>
+template<Types::ulong_t BITS>
 struct MakeSigned<WideInt<BITS, false>>
 {
 	using Type = WideInt<BITS, true>;
 };
 
-template<Types::ullong_t BITS>
+template<Types::ulong_t BITS>
 struct MakeUnsigned<WideInt<BITS, true>>
 {
 	using Type = WideInt<BITS, false>;
 };
 
-template<Types::ullong_t BITS>
+template<Types::ulong_t BITS>
 struct MakeUnsigned<WideInt<BITS, false>>
 {
 	using Type = WideInt<BITS, false>;
 };
 
 // external operators
-
 // TODO: add external operators
 
 // typedefs
@@ -206,26 +205,32 @@ namespace wideint_utils
 template<Types::size_t COUNT_BYTES, bool IS_INTEGRAL>
 struct PrimitiveTypeOperationsImpl: public NonCreational
 {
-	using Array = flame_ide::templates::Array<Types::uichar_t, COUNT_BYTES>;
+	using Array = flame_ide::templates::StaticArray<Types::uichar_t, COUNT_BYTES>;
 
 	template<typename PrimitiveType>
 	static void operatorInit(Array &array, PrimitiveType value) // ctor()
 	{
 		static_assert(IsIntegralType<PrimitiveType>::VALUE, "It is not a integral type");
+
+		constexpr Types::size_t SPECIALIZED_VALUE_INIT_SIZE =
+				(COUNT_BYTES >= sizeof(PrimitiveType))
+						? sizeof(PrimitiveType)
+						: COUNT_BYTES;
+
+		constexpr Types::size_t SPECIALIZED_VALUE_OFFSET = (COUNT_BYTES >= sizeof(PrimitiveType))
+				? 0
+				: sizeof(PrimitiveType) - COUNT_BYTES;
+
+		constexpr Types::size_t SERIALIZER_OFFSET = (SPECIALIZED_VALUE_OFFSET == 0)
+				? COUNT_BYTES - sizeof(PrimitiveType)
+				: 0;
+
 		SpecializedValue<ByteOrder::HOST_ORDER, PrimitiveType> specValue(
 				value
-				, (
-						COUNT_BYTES >= sizeof(PrimitiveType)
-								? sizeof(PrimitiveType)
-								: COUNT_BYTES
-				)
-				, (
-						COUNT_BYTES >= sizeof(PrimitiveType)
-								? COUNT_BYTES -  sizeof(PrimitiveType)
-								: sizeof(PrimitiveType) - COUNT_BYTES
-				)
+				, SPECIALIZED_VALUE_INIT_SIZE
+				, SPECIALIZED_VALUE_OFFSET
 		);
-		SerializerBe(array.data())(specValue);
+		SerializerBe(array.data(), SERIALIZER_OFFSET)(specValue);
 	}
 
 	template<typename PrimitiveType>
@@ -253,6 +258,15 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 	template<typename PrimitiveType>
 	static void operatorBinAnd(PrimitiveType &value, Array &array); // operator&
 
+	static void operatorBitwiseNegation(Array &array) // operator~
+	{
+		using Type = typename RemoveAll<decltype(*(array.begin()))>::Type;
+		for (auto &i : array)
+		{
+			i = Type(~i);
+		}
+	}
+
 	// convert operator
 
 	template<typename PrimitiveType>
@@ -260,20 +274,26 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 	{
 		static_assert (!isConst<decltype(value)>(), "Value cannot be contant");
 		static_assert(IsIntegralType<PrimitiveType>::VALUE, "It is not a integral type");
+
+		constexpr Types::size_t SPECIALIZED_VALUE_INIT_SIZE =
+				(COUNT_BYTES >= sizeof(PrimitiveType))
+						? sizeof(PrimitiveType)
+						: COUNT_BYTES;
+
+		constexpr Types::size_t SPECIALIZED_VALUE_OFFSET = (COUNT_BYTES >= sizeof(PrimitiveType))
+				? 0
+				: sizeof(PrimitiveType) - COUNT_BYTES;
+
+		constexpr Types::size_t SERIALIZER_OFFSET = (SPECIALIZED_VALUE_OFFSET == 0)
+				? COUNT_BYTES - sizeof(PrimitiveType)
+				: 0;
+
 		SpecializedValue<ByteOrder::HOST_ORDER, PrimitiveType> specValue(
 				PrimitiveType()
-				, (
-						COUNT_BYTES >= sizeof(PrimitiveType)
-								? sizeof(PrimitiveType)
-								: COUNT_BYTES
-				)
-				, (
-						COUNT_BYTES >= sizeof(PrimitiveType)
-								? COUNT_BYTES -  sizeof(PrimitiveType)
-								: sizeof(PrimitiveType) - COUNT_BYTES
-				)
+				, SPECIALIZED_VALUE_INIT_SIZE
+				, SPECIALIZED_VALUE_OFFSET
 		);
-		DeserializerBe(array.data())(specValue);
+		DeserializerBe(array.data(), SERIALIZER_OFFSET)(specValue);
 		value = specValue.getValue();
 	}
 };
@@ -287,7 +307,7 @@ struct PrimitiveTypeOperationsImpl<COUNT_BYTES, false>: public NonCreational
 	static void opeatorInit(Array &array, PrimitiveType value) // ctor()
 	{
 		using PrimitiveTypeOperationsImpl = PrimitiveTypeOperationsImpl<COUNT_BYTES, true>;
-		PrimitiveTypeOperationsImpl::operatorInit(array, static_cast<Types::llong_t>(value));
+		PrimitiveTypeOperationsImpl::operatorInit(array, static_cast<Types::long_t>(value));
 	}
 
 	template<typename PrimitiveType>
@@ -321,7 +341,7 @@ inline PrimitiveType operatorConvert(const Array &array)
 {
 	PrimitiveType value;
 	using Operations = wideint_utils::PrimitiveTypeOperationsImpl<
-		Array::SIZE, isIntegralType<typename RemoveAll<decltype(value)>::Type>()
+		Array::CAPACITY, isIntegralType<typename RemoveAll<decltype(value)>::Type>()
 	>;
 	Operations::operatorConvert(array, value);
 	return value;
@@ -711,6 +731,10 @@ WIDE_INT WIDE_INT::operator--(int) const
 TEMPLATE_WIDE_INT
 WIDE_INT &WIDE_INT::operator~()
 {
+	using Operations = wideint_utils::PrimitiveTypeOperationsImpl<
+		COUNT_BYTES, true
+	>;
+	Operations::operatorBitwiseNegation(byteArray);
 	return *this;
 }
 
