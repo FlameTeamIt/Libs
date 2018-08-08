@@ -33,6 +33,7 @@ HEADERS += \
 	./src/Filesystem/Session.hpp \
 	./src/Templates/Serialization/SpecializedValue.hpp \
 	./src/Templates/Serialization/Serializer.hpp \
+	./src/Templates/Serialization/ValueInfo.hpp \
 	./src/Templates/Serialization/Deserializer.hpp \
 	./src/Templates/CircularVector.hpp \
 	./src/Templates/AlignObject.hpp \
