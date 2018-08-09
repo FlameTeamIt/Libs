@@ -1,4 +1,4 @@
-#ifndef TEMPLATES_ALLOCATOR_OBJECT_ALLOCATOR_HPP
+﻿#ifndef TEMPLATES_ALLOCATOR_OBJECT_ALLOCATOR_HPP
 #define TEMPLATES_ALLOCATOR_OBJECT_ALLOCATOR_HPP
 
 #include <Templates/Allocator/MallocAllocator.hpp>
@@ -16,11 +16,15 @@ namespace flame_ide
 /// @tparam Traits
 /// View flame_ide::templates::ContainerTraits
 ///
-template<typename T, typename Traits = flame_ide::templates::ContainerTraits<T>>
-class ObjectAllocator: protected MallocAllocator<Traits>
+template<
+	typename T
+	, typename Traits = flame_ide::templates::ContainerTraits<T>
+	, typename BaseAllocatorImpl = MallocAllocator<Traits>
+>
+class ObjectAllocator: protected BaseAllocatorImpl
 {
 public:
-	using Parent = MallocAllocator<Traits>;
+	using Parent = BaseAllocatorImpl;
 	using typename Parent::VoidPointer;
 	using typename Parent::SizeType;
 	using typename Parent::SsizeType;
@@ -28,13 +32,14 @@ public:
 	using typename Traits::Pointer;
 	using typename Traits::MoveReference;
 	using typename Traits::ConstReference;
+	using Me = ObjectAllocator<T, Traits, BaseAllocatorImpl>;
 
 	ObjectAllocator() = default;
-	ObjectAllocator(const ObjectAllocator<T, Traits> &) = default;
-	ObjectAllocator(ObjectAllocator<T, Traits> &&) = default;
+	ObjectAllocator(const Me &) = default;
+	ObjectAllocator(Me &&) = default;
 	~ObjectAllocator() = default;
-	ObjectAllocator<T, Traits> &operator=(const ObjectAllocator<T, Traits> &) = default;
-	ObjectAllocator<T, Traits> &operator=(ObjectAllocator<T, Traits> &&) = default;
+	Me &operator=(const Me &) = default;
+	Me &operator=(Me &&) = default;
 
 	///
 	/// @brief Function for create object, using custom constructor
@@ -68,10 +73,10 @@ namespace flame_ide
 {namespace allocator
 {
 
-template<typename T, typename Traits>
+template<typename T, typename Traits, typename BaseAllocatorImpl>
 template<typename ...Args>
-typename ObjectAllocator<T, Traits>::Pointer
-ObjectAllocator<T, Traits>::construct(Args &&...args) noexcept
+typename ObjectAllocator<T, Traits, BaseAllocatorImpl>::Pointer
+ObjectAllocator<T, Traits, BaseAllocatorImpl>::construct(Args &&...args) noexcept
 {
 	Pointer pointer = reinterpret_cast<Pointer>(
 			this->allocate(SizeType(sizeof(Type)))
@@ -81,10 +86,10 @@ ObjectAllocator<T, Traits>::construct(Args &&...args) noexcept
 	return pointer;
 }
 
-template<typename T, typename Traits>
-typename ObjectAllocator<T, Traits>::Pointer
-ObjectAllocator<T, Traits>::construct(
-		typename ObjectAllocator<T, Traits>::MoveReference obj) noexcept
+template<typename T, typename Traits, typename BaseAllocatorImpl>
+typename ObjectAllocator<T, Traits, BaseAllocatorImpl>::Pointer
+ObjectAllocator<T, Traits, BaseAllocatorImpl>::construct(
+		typename ObjectAllocator<T, Traits, BaseAllocatorImpl>::MoveReference obj) noexcept
 {
 	Pointer pointer = reinterpret_cast<Pointer>(
 			this->allocate(SizeType(sizeof(Type)))
@@ -94,9 +99,10 @@ ObjectAllocator<T, Traits>::construct(
 	return pointer;
 }
 
-template<typename T, typename Traits>
-typename ObjectAllocator<T, Traits>::Pointer
-ObjectAllocator<T, Traits>::construct(typename ObjectAllocator<T, Traits>::ConstReference obj) noexcept
+template<typename T, typename Traits, typename BaseAllocatorImpl>
+typename ObjectAllocator<T, Traits, BaseAllocatorImpl>::Pointer
+ObjectAllocator<T, Traits, BaseAllocatorImpl>::construct(
+		typename ObjectAllocator<T, Traits, BaseAllocatorImpl>::ConstReference obj) noexcept
 {
 	Pointer pointer = reinterpret_cast<Pointer>(
 			this->allocate(SizeType(sizeof(Type)))
@@ -106,9 +112,9 @@ ObjectAllocator<T, Traits>::construct(typename ObjectAllocator<T, Traits>::Const
 	return pointer;
 }
 
-template<typename T, typename Traits>
-void ObjectAllocator<T, Traits>::destroy(
-		typename ObjectAllocator<T, Traits>::Pointer &pointer) noexcept
+template<typename T, typename Traits, typename BaseAllocatorImpl>
+void ObjectAllocator<T, Traits, BaseAllocatorImpl>::destroy(
+		typename ObjectAllocator<T, Traits, BaseAllocatorImpl>::Pointer &pointer) noexcept
 {
 	(*pointer).~T();
 	this->deallocate(pointer);

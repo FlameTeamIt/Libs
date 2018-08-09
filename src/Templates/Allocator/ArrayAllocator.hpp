@@ -1,4 +1,4 @@
-#ifndef TEMPLATES_ALLOCATOR_ARRAY_ALLOCATOR_HPP
+﻿#ifndef TEMPLATES_ALLOCATOR_ARRAY_ALLOCATOR_HPP
 #define TEMPLATES_ALLOCATOR_ARRAY_ALLOCATOR_HPP
 
 #include <Templates/Allocator/MallocAllocator.hpp>
@@ -16,23 +16,24 @@ namespace flame_ide
 /// @tparam Traits
 /// View flame_ide::templates::ContainerTraits
 ///
-template<typename T, typename Traits = flame_ide::templates::ContainerTraits<T>>
-class ArrayAllocator: protected MallocAllocator<Traits>
+template<typename T, typename Traits = flame_ide::templates::ContainerTraits<T>, typename BaseAllocatorImpl = MallocAllocator<Traits>>
+class ArrayAllocator: protected BaseAllocatorImpl
 {
 public:
-	using ParentType = MallocAllocator<Traits>;
-	using VoidPointer = typename MallocAllocator<Traits>::VoidPointer;
-	using SizeType = typename MallocAllocator<Traits>::SizeType;
-	using SsizeType = typename MallocAllocator<Traits>::SsizeType;
-	using Type = typename Traits::Type;
-	using Pointer = typename Traits::Pointer;
+	using Parent = BaseAllocatorImpl;
+	using typename Parent::VoidPointer;
+	using typename Parent::SizeType;
+	using typename Parent::SsizeType;
+	using typename Parent::Type;
+	using typename Parent::Pointer;
+	using Me = ArrayAllocator<T, Traits, BaseAllocatorImpl>;
 
 	ArrayAllocator() = default;
-	ArrayAllocator(const ArrayAllocator<T, Traits> &) = default;
-	ArrayAllocator(ArrayAllocator<T, Traits> &&) = default;
+	ArrayAllocator(const Me &) = default;
+	ArrayAllocator(Me &&) = default;
 	~ArrayAllocator() = default;
-	ArrayAllocator<T, Traits> &operator=(const ArrayAllocator<T, Traits> &) = default;
-	ArrayAllocator<T, Traits> &operator=(ArrayAllocator<T, Traits> &&) = default;
+	Me &operator=(const Me &) = default;
+	Me &operator=(Me &&) = default;
 
 	///
 	/// @brief Allocate array and initialize cells by need constructor
@@ -81,8 +82,8 @@ public:
 	void freeArray(Pointer pointer);
 
 private:
-	using ParentType::allocate;
-	using ParentType::deallocate;
+	using Parent::allocate;
+	using Parent::deallocate;
 };
 
 }}}
@@ -92,11 +93,11 @@ namespace flame_ide
 {namespace allocator
 {
 
-template<typename T, typename Traits>
+template<typename T, typename Traits, typename BaseAllocatorImpl>
 template<typename ...Args>
-typename ArrayAllocator<T, Traits>::Pointer
-ArrayAllocator<T, Traits>::construct(
-		typename ArrayAllocator<T, Traits>::SizeType count
+typename ArrayAllocator<T, Traits, BaseAllocatorImpl>::Pointer
+ArrayAllocator<T, Traits, BaseAllocatorImpl>::construct(
+		typename ArrayAllocator<T, Traits, BaseAllocatorImpl>::SizeType count
 		, Args &&...args) noexcept
 {
 	Pointer pointer = reinterpret_cast<Pointer>(
@@ -111,17 +112,18 @@ ArrayAllocator<T, Traits>::construct(
 	return pointer;
 }
 
-template<typename T, typename Traits>
-typename ArrayAllocator<T, Traits>::Pointer
-ArrayAllocator<T, Traits>::createArray(SizeType count)
+template<typename T, typename Traits, typename BaseAllocatorImpl>
+typename ArrayAllocator<T, Traits, BaseAllocatorImpl>::Pointer
+ArrayAllocator<T, Traits, BaseAllocatorImpl>::createArray(SizeType count)
 {
 	return reinterpret_cast<Pointer>(this->allocate(SizeType(sizeof(Type) * count)));
 }
 
-template<typename T, typename Traits>
-typename ArrayAllocator<T, Traits>::Pointer
-ArrayAllocator<T, Traits>::reallocateArray(typename ArrayAllocator<T, Traits>::Pointer pointer,
-		SizeType count)
+template<typename T, typename Traits, typename BaseAllocatorImpl>
+typename ArrayAllocator<T, Traits, BaseAllocatorImpl>::Pointer
+ArrayAllocator<T, Traits, BaseAllocatorImpl>::reallocateArray(
+		typename ArrayAllocator<T, Traits, BaseAllocatorImpl>::Pointer pointer
+		, SizeType count)
 {
 	return reinterpret_cast<Pointer>(
 			this->reallocate(
@@ -130,10 +132,10 @@ ArrayAllocator<T, Traits>::reallocateArray(typename ArrayAllocator<T, Traits>::P
 	);
 }
 
-template<typename T, typename Traits>
-void ArrayAllocator<T, Traits>::destroy(
-		typename ArrayAllocator<T, Traits>::Pointer &pointer
-		, typename ArrayAllocator<T, Traits>::SizeType count) noexcept
+template<typename T, typename Traits, typename BaseAllocatorImpl>
+void ArrayAllocator<T, Traits, BaseAllocatorImpl>::destroy(
+		typename ArrayAllocator<T, Traits, BaseAllocatorImpl>::Pointer &pointer
+		, typename ArrayAllocator<T, Traits, BaseAllocatorImpl>::SizeType count) noexcept
 {
 	for (Pointer iterator = pointer; SizeType(iterator - pointer) < count; ++iterator)
 		(*iterator).~T();
@@ -141,9 +143,9 @@ void ArrayAllocator<T, Traits>::destroy(
 	pointer = nullptr;
 }
 
-template<typename T, typename Traits>
-void ArrayAllocator<T, Traits>::freeArray(
-		typename ArrayAllocator<T, Traits>::Pointer pointer)
+template<typename T, typename Traits, typename BaseAllocatorImpl>
+void ArrayAllocator<T, Traits, BaseAllocatorImpl>::freeArray(
+		typename ArrayAllocator<T, Traits, BaseAllocatorImpl>::Pointer pointer)
 {
 	this->deallocate(pointer);
 }
