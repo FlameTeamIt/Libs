@@ -505,36 +505,13 @@ ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE_1 &array)
 TEMPLATE_DEFINE
 ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE &array)
 {
-	clean();
-	for (auto const &i : array)
-		pushBack(i);
+	if (&array != this)
+	{
+		clean();
+		for (auto const &i : array)
+			pushBack(i);
+	}
 	return *this;
-}
-
-TEMPLATE_DEFINE
-bool ARRAY_TYPE::operator==(const ARRAY_TYPE &array) const
-{
-	if (this->size() != array.size())
-	{
-		return false;
-	}
-
-	auto it = array.begin();
-	for (auto i : *this)
-	{
-		if (i != *it)
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
-TEMPLATE_DEFINE
-bool ARRAY_TYPE::operator!=(const ARRAY_TYPE &array) const
-{
-	return !(*this == array);
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
@@ -552,10 +529,41 @@ ARRAY_TYPE &ARRAY_TYPE::operator=(ARRAY_TYPE_1 &&array)
 TEMPLATE_DEFINE
 ARRAY_TYPE &ARRAY_TYPE::operator=(ARRAY_TYPE &&array)
 {
-	clean();
-	for (auto &&i : array)
-		pushBack(move(i));
+	if (&array != this)
+	{
+		clean();
+		for (auto &&i : array)
+			pushBack(move(i));
+	}
 	return *this;
+}
+
+TEMPLATE_DEFINE
+bool ARRAY_TYPE::operator==(const ARRAY_TYPE &array) const
+{
+	if (&array != this)
+	{
+		if (this->size() != array.size())
+		{
+			return false;
+		}
+
+		auto it = array.begin();
+		for (auto i : *this)
+		{
+			if (i != *it)
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+TEMPLATE_DEFINE
+bool ARRAY_TYPE::operator!=(const ARRAY_TYPE &array) const
+{
+	return !(*this == array);
 }
 
 TEMPLATE_DEFINE
@@ -1341,10 +1349,13 @@ ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE_1 &array)
 TEMPLATE_DEFINE
 ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE &array)
 {
-	auto it = this->begin();
-	for (auto const &i : array)
+	if (&array != this)
 	{
-		*it = i;
+		auto it = this->begin();
+		for (auto const &i : array)
+		{
+			*it = i;
+		}
 	}
 	return *this;
 }
