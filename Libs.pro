@@ -31,6 +31,10 @@ HEADERS += \
 	./src/Filesystem/Project.hpp \
 	./src/Filesystem/BasicFile.hpp \
 	./src/Filesystem/Session.hpp \
+	./src/Templates/Allocator/ObjectAllocator.hpp \
+	./src/Templates/Allocator/ArrayAllocator.hpp \
+	./src/Templates/Allocator/MallocAllocator.hpp \
+	./src/Templates/Allocator/Interface.hpp \
 	./src/Templates/Serialization/SpecializedValue.hpp \
 	./src/Templates/Serialization/Serializer.hpp \
 	./src/Templates/Serialization/ValueInfo.hpp \
