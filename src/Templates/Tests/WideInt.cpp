@@ -6,13 +6,14 @@ namespace flame_ide
 {namespace test
 {
 
+using flame_ide::templates::uint40_t;
+using flame_ide::templates::Types;
+
 WideInt::WideInt() : AbstractTest("WideInt")
 {}
 
 int WideInt::vStart()
 {
-	using flame_ide::templates::uint40_t;
-	using flame_ide::templates::Types;
 
 	// initialization
 	{
@@ -182,6 +183,56 @@ int WideInt::vStart()
 
 	// binary operations
 	{
+		// bitwize negation
+		{
+			uint40_t int40(Types::long_t(0x0000000102030405));
+			int40 = ~int40;
+			uint40_t::Data data = int40.getData();
+			uint40_t::Data dataValid {{
+					Types::uichar_t(~0x01)
+					, Types::uichar_t(~0x02)
+					, Types::uichar_t(~0x03)
+					, Types::uichar_t(~0x04)
+					, Types::uichar_t(~0x05)
+			}};
+			if (data != dataValid)
+			{
+				Types::size_t index = 0;
+				log << "data != dataValid" << std::endl;
+				std::cout << "data { " << std::hex;
+				for (auto i : data)
+				{
+					++index;
+					if (index != data.size())
+					{
+						std::cout << int(i) << ", ";
+					}
+					else
+					{
+						std::cout << int(i);
+					}
+				}
+				index = 0;
+
+				std::cout << " };" << std::endl;
+				std::cout << "dataValid { ";
+				for (auto i : dataValid)
+				{
+					++index;
+					if (index != dataValid.size())
+					{
+						std::cout << int(i) << ", ";
+					}
+					else
+					{
+						std::cout << int(i);
+					}
+				}
+				std::cout << " };" << std::endl;
+				return -1;
+			}
+		}
+
 		// shift left
 
 		// shift right
