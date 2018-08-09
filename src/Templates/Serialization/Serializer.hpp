@@ -10,6 +10,8 @@ namespace flame_ide
 
 ///
 /// @brief The Serializer class
+/// @tparam ORDER
+/// @tparam IS_VOLATILE
 ///
 template<ByteOrder ORDER, bool IS_VOLATILE>
 class Serializer
