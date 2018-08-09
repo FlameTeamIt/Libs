@@ -35,6 +35,8 @@ template <typename T
 class Array: public Traits
 {
 public:
+	static_assert (ARRAY_CAPACITY != 0, "Zero-sized array is impossible");
+
 	using Me = ARRAY_TYPE;
 
 	using typename Traits::Type;
@@ -992,8 +994,6 @@ namespace flame_ide
 {namespace templates
 {
 
-// TODO: нужно написать тесты и ещё раз проверить реализацию.
-
 /**
  * @brief Array
  */
@@ -1004,6 +1004,8 @@ template <typename T
 class Array<T, ARRAY_CAPACITY, Traits, true>: public Traits
 {
 public:
+	static_assert (ARRAY_CAPACITY != 0, "Zero-sized array is impossible");
+
 	using Me = ARRAY_TYPE;
 
 	using typename Traits::Type;
@@ -1072,7 +1074,7 @@ public:
 	 */
 	Array(InitializerList<T, ARRAY_CAPACITY> list);
 
-	~Array();
+	~Array() = default;
 
 	/**
 	 * @brief operator =
@@ -1319,15 +1321,6 @@ ARRAY_TYPE::Array(InitializerList<T, ARRAY_CAPACITY> list)
 	{
 		*arrIt = move(it);
 		++arrIt;
-	}
-}
-
-TEMPLATE_DEFINE
-ARRAY_TYPE::~Array()
-{
-	for (Type &i : *this)
-	{
-		i.~T();
 	}
 }
 
