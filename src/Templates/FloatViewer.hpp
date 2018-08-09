@@ -39,7 +39,7 @@ struct FloatTraits<Types::double_t>: public NonCreational
 }
 
 template<typename FloatType>
-class FloatViewer : public float_utils::FloatTraits<FloatType>
+class FloatViewer: public float_utils::FloatTraits<FloatType>
 {
 public:
 	FloatViewer(FloatType valueInit);

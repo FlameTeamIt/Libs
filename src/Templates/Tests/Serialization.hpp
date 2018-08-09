@@ -10,7 +10,7 @@ namespace flame_ide
 {namespace test
 {
 
-class Serialization : public AbstractTest
+class Serialization: public AbstractTest
 {
 public:
 	Serialization() : AbstractTest("Serialization")

@@ -9,7 +9,7 @@ namespace flame_ide
 {namespace test
 {
 
-class ByteOrderTest : public AbstractTest
+class ByteOrderTest: public AbstractTest
 {
 public:
 	ByteOrderTest() : AbstractTest("ByteOrder")

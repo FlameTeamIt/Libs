@@ -71,7 +71,7 @@ public:
 /// @tparam T
 ///
 template<typename T>
-struct SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T> : public ValueInfo<T>
+struct SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>: public ValueInfo<T>
 {
 	using Me = SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>;
 	using Parent = ValueInfo<T>;
@@ -152,7 +152,7 @@ struct SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T> : public ValueInfo<T>
 /// @tparam T
 ///
 template<typename T>
-struct SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T> : public ValueInfo<T>
+struct SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>: public ValueInfo<T>
 {
 	using Me = SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>;
 	using Parent = ValueInfo<T>;
