@@ -5,7 +5,7 @@ namespace flame_ide
 {
 
 using flame_ide::templates::ToNeedOrder;
-using flame_ide::templates::Types;
+using flame_ide::Types;
 using flame_ide::templates::ByteOrder;
 
 int ByteOrderTest::vStart()

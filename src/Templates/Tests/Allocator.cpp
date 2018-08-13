@@ -37,7 +37,7 @@ ArrayAllocator::~ArrayAllocator()
 
 int ArrayAllocator::vStart()
 {
-	using SsizeType = flame_ide::templates::SizeTraits::SsizeType;
+	using SsizeType = flame_ide::SizeTraits::SsizeType;
 	constexpr SsizeType SIZE = 6;
 	TestClass *array = allocator.construct(SIZE);
 

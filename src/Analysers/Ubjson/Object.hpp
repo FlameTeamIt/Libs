@@ -19,7 +19,7 @@ struct ValueTraits<EnumeratedType::OBJECT>
 {
 	static constexpr Type VALUE_TYPE = Type::OBJECT_OPEN;
 	static constexpr Type VALUE_TYPE_CLOSE = Type::OBJECT_CLOSE;
-	static constexpr bool DATA_PAYLOAD = templates::TrueType::VALUE;
+	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = Object;
 };
 

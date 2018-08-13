@@ -20,7 +20,7 @@ Types::size_t copy(const ContainerInput &input, IteratorOutput out);
 /**
  * @brief Getting size of range.
  */
-template<typename Iterator, typename SizeTraits = flame_ide::templates::SizeTraits>
+template<typename Iterator, typename SizeTraits = flame_ide::SizeTraits>
 typename SizeTraits::SizeType countIterations(Iterator start, Iterator end);
 
 

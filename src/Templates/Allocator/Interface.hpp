@@ -15,7 +15,7 @@ namespace flame_ide
 /// @tparam Traits
 /// View flame_ide::templates::ContainerTraits
 ///
-template<typename Traits = flame_ide::templates::SizeTraits>
+template<typename Traits = flame_ide::SizeTraits>
 class BaseAllocator: public Traits
 {
 public:

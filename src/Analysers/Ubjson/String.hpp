@@ -32,7 +32,7 @@ template<>
 struct ValueTraits<EnumeratedType::STRING>
 {
 	static constexpr Type VALUE_TYPE = Type::STRING;
-	static constexpr bool DATA_PAYLOAD = templates::TrueType::VALUE;
+	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = long_t;
 };
 

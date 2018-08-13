@@ -78,7 +78,7 @@ int List::vStart()
 
 	std::cout << "Test reverse:" << std::endl;
 	{
-		templates::ContainerTraits<decltype(list)>::ConstReference crlist = list;
+		flame_ide::ContainerTraits<decltype(list)>::ConstReference crlist = list;
 		templates::Range<
 			decltype(crlist.crbegin())
 		> range(crlist.crbegin(), crlist.crend());

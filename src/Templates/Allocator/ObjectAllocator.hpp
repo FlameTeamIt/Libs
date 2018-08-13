@@ -14,11 +14,11 @@ namespace flame_ide
 /// @tparam T
 /// Concrete type of objects
 /// @tparam Traits
-/// View flame_ide::templates::ContainerTraits
+/// View flame_ide::ContainerTraits
 ///
 template<
 	typename T
-	, typename Traits = flame_ide::templates::ContainerTraits<T>
+	, typename Traits = flame_ide::ContainerTraits<T>
 	, typename BaseAllocatorImpl = MallocAllocator<Traits>
 >
 class ObjectAllocator: protected BaseAllocatorImpl

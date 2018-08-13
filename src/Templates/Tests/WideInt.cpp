@@ -7,7 +7,7 @@ namespace flame_ide
 {
 
 using flame_ide::templates::uint40_t;
-using flame_ide::templates::Types;
+using flame_ide::Types;
 
 WideInt::WideInt() : AbstractTest("WideInt")
 {}

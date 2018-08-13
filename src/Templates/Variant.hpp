@@ -153,7 +153,7 @@ public:
 	using VariantStruct = variant_utils::VariantStruct<Arg, Args...>;
 
 	template<Types::size_t INDEX>
-	using GetTypeByIndex = flame_ide::templates::GetTypeByIndex<INDEX, Arg, Args...>;
+	using GetTypeByIndex = flame_ide::GetTypeByIndex<INDEX, Arg, Args...>;
 
 	Variant() noexcept;
 	Variant(const Me &me) noexcept;

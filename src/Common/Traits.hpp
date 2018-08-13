@@ -5,7 +5,6 @@
 #include <Common/PrimitiveTypes.hpp>
 
 namespace flame_ide
-{namespace templates
 {
 
 /**
@@ -754,6 +753,6 @@ struct GetIndexOfType<T>
 	static constexpr Types::ssize_t INDEX = -1;
 };
 
-}}
+}
 
 #endif // COMMON_TRAITS_HPP

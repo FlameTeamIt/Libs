@@ -18,7 +18,7 @@ public:
 	virtual ~Serialization() = default;
 
 private:
-	using Types = templates::Types;
+	using Types = flame_ide::Types;
 	using SerializerLe = templates::SerializerLe;
 	using SerializerBe = templates::SerializerBe;
 	using DeserializerLe = templates::DeserializerLe;

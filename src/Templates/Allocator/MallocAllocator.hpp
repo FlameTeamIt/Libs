@@ -14,9 +14,9 @@ namespace flame_ide
 /// @brief Allocator, using malloc() as base function
 ///
 /// @tparam Traits
-/// View flame_ide::templates::ContainerTraits
+/// View flame_ide::ContainerTraits
 ///
-template<typename Traits = flame_ide::templates::SizeTraits>
+template<typename Traits = flame_ide::SizeTraits>
 class MallocAllocator: public BaseAllocator<Traits>
 {
 public:

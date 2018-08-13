@@ -99,14 +99,14 @@ typename Container::ConstReverseIterator crend(const Container &container);
 }}
 
 template<typename T>
-inline void *operator new(flame_ide::templates::SizeTraits::SizeType
+inline void *operator new(flame_ide::SizeTraits::SizeType
 		, T *pointer) noexcept
 {
 	return pointer;
 }
 
 template<typename T>
-inline void *operator new[](flame_ide::templates::SizeTraits::SizeType
+inline void *operator new[](flame_ide::SizeTraits::SizeType
 		, T * pointer) noexcept
 {
 	return pointer;

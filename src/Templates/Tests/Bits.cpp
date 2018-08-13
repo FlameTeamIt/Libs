@@ -32,7 +32,7 @@ bool Bits::minimalType()
 	using Type33 = templates::bits::MinimalType<33>;
 	using Type65 = templates::bits::MinimalType<65>;
 
-	using Types = templates::Types;
+	using Types = flame_ide::Types;
 
 	std::cout << "---> Bits::minimalType()" << std::endl;
 
@@ -86,7 +86,7 @@ bool Bits::minimalType()
 
 bool Bits::arrayBits()
 {
-	constexpr templates::Types::short_t int16 = 32144;
+	constexpr flame_ide::Types::short_t int16 = 32144;
 	constexpr std::bitset<16> bitsInt16(int16);
 
 	templates::bits::ArrayBits<16> bits16(int16);
@@ -96,7 +96,7 @@ bool Bits::arrayBits()
 	std::cout << "Bitset: " << bitsInt16 << std::endl;
 
 	std::cout << "ArrayBits: ";
-	for (templates::Types::size_t i = 0; i < sizeof(templates::Types::short_t) * 8; ++i)
+	for (flame_ide::Types::size_t i = 0; i < sizeof(flame_ide::Types::short_t) * 8; ++i)
 	{
 		std::cout << !!bits16[i];
 	}
@@ -104,8 +104,8 @@ bool Bits::arrayBits()
 
 	std::cout << "Set bit:" << std::endl;
 	{
-		constexpr flame_ide::templates::Types::size_t INDEX_1 = 4;
-		constexpr flame_ide::templates::Types::size_t INDEX_0 = 5;
+		constexpr flame_ide::Types::size_t INDEX_1 = 4;
+		constexpr flame_ide::Types::size_t INDEX_0 = 5;
 
 		std::cout << "Current value[5]: " << !!bits16[INDEX_0] << std::endl;
 //		bits16[INDEX_0] = !bits16[INDEX_0];

@@ -148,31 +148,36 @@ using SignedInt = WideInt<COUNT_BITS, true>;
 template<Types::size_t COUNT_BITS>
 using UnsignedInt = WideInt<COUNT_BITS, false>;
 
+} // templates
+
 // traits
 
 template<Types::ulong_t BITS>
-struct MakeSigned<WideInt<BITS, true>>
+struct MakeSigned<templates::WideInt<BITS, true>>
 {
-	using Type = WideInt<BITS, true>;
+	using Type = templates::WideInt<BITS, true>;
 };
 
 template<Types::ulong_t BITS>
-struct MakeSigned<WideInt<BITS, false>>
+struct MakeSigned<templates::WideInt<BITS, false>>
 {
-	using Type = WideInt<BITS, true>;
+	using Type = templates::WideInt<BITS, true>;
 };
 
 template<Types::ulong_t BITS>
-struct MakeUnsigned<WideInt<BITS, true>>
+struct MakeUnsigned<templates::WideInt<BITS, true>>
 {
-	using Type = WideInt<BITS, false>;
+	using Type = templates::WideInt<BITS, false>;
 };
 
 template<Types::ulong_t BITS>
-struct MakeUnsigned<WideInt<BITS, false>>
+struct MakeUnsigned<templates::WideInt<BITS, false>>
 {
-	using Type = WideInt<BITS, false>;
+	using Type = templates::WideInt<BITS, false>;
 };
+
+namespace templates
+{
 
 // external operators
 // TODO: add external operators
