@@ -16,7 +16,7 @@ echo
 
 echo "#" headers
 echo -n "HEADERS +="
-HEADERS=`find . -type f -name '*.hpp'`
+HEADERS=`find . -type f -name '*.hpp' | sort`
 STRINGS=0
 for header in $HEADERS
 do
@@ -30,7 +30,7 @@ echo
 
 echo "#" sources
 echo -n "SOURCES +="
-SOURCES=`find . -type f -name '*.cpp'`
+SOURCES=`find . -type f -name '*.cpp' | sort`
 for source in $SOURCES
 do
   echo " \\"
