@@ -34,10 +34,10 @@ int SharedPointer::vStart()
 
 	std::cout << "Test moving:" << std::endl;
 	{
-		decltype(pointer) movePointer = templates::move(pointer);
+		decltype(pointer) movePointer = flame_ide::move(pointer);
 		lambdaPrint(*movePointer);
 
-		pointer = templates::move(movePointer);
+		pointer = flame_ide::move(movePointer);
 	}
 
 	return 0;

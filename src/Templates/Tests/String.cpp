@@ -123,9 +123,9 @@ int String::vStart()
 		std::cout << "---> operator=(MoveReference)" << std::endl;
 		{
 			templates::String movedString = templates::String();
-			movedString = templates::move(string);
+			movedString = flame_ide::move(string);
 			std::cout << "Moved: " << movedString.data() << std::endl;
-			string = templates::move(movedString);
+			string = flame_ide::move(movedString);
 			std::cout << "Original: " << string.data() << std::endl;
 		}
 		std::cout << "---> operator=(PointerToConst)" << std::endl;

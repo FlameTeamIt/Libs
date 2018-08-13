@@ -36,7 +36,7 @@ bool Bits::minimalType()
 
 	std::cout << "---> Bits::minimalType()" << std::endl;
 
-	if (!templates::isSameTypes<Type3::Type, Types::uichar_t>())
+	if (!flame_ide::isSameTypes<Type3::Type, Types::uichar_t>())
 	{
 		return false;
 	}
@@ -45,7 +45,7 @@ bool Bits::minimalType()
 		std::cout << Type3::COUNT_BITS << " bits -> Types::uchar_t" << std::endl;
 	}
 
-	if (!templates::isSameTypes<Type9::Type, Types::ushort_t>())
+	if (!flame_ide::isSameTypes<Type9::Type, Types::ushort_t>())
 	{
 		return false;
 	}
@@ -54,7 +54,7 @@ bool Bits::minimalType()
 		std::cout << Type9::COUNT_BITS << " bits -> Types::ushort_t" << std::endl;
 	}
 
-	if (!templates::isSameTypes<Type18::Type, Types::uint_t>())
+	if (!flame_ide::isSameTypes<Type18::Type, Types::uint_t>())
 	{
 		return false;
 	}
@@ -63,7 +63,7 @@ bool Bits::minimalType()
 		std::cout << Type18::COUNT_BITS << " bits -> Types::uint_t" << std::endl;
 	}
 
-	if (!templates::isSameTypes<Type33::Type, Types::ulong_t>())
+	if (!flame_ide::isSameTypes<Type33::Type, Types::ulong_t>())
 	{
 		return false;
 	}
@@ -72,7 +72,7 @@ bool Bits::minimalType()
 		std::cout << Type33::COUNT_BITS << " bits -> Types::ulong_t" << std::endl;
 	}
 
-	if (!templates::isSameTypes<Type65::Type, void>())
+	if (!flame_ide::isSameTypes<Type65::Type, void>())
 	{
 		return false;
 	}

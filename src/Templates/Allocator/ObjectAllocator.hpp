@@ -82,7 +82,7 @@ ObjectAllocator<T, Traits, BaseAllocatorImpl>::construct(Args &&...args) noexcep
 			this->allocate(SizeType(sizeof(Type)))
 	);
 	if (pointer)
-		emplaceNew<Type>(pointer, forward<decltype(args)>(args)...);
+		flame_ide::emplaceNew<Type>(pointer, forward<decltype(args)>(args)...);
 	return pointer;
 }
 

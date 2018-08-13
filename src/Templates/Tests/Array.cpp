@@ -74,11 +74,11 @@ int Array::vStart()
 
 	std::cout << "Test moving:" << std::endl;
 	{
-		templates::Array<TestClass, 10> arrayMove = templates::move(array);
+		templates::Array<TestClass, 10> arrayMove = flame_ide::move(array);
 		std::cout << "--> Moved: " << std::endl;
 		printArray(arrayMove, false);
 
-		array = templates::move(arrayMove);
+		array = flame_ide::move(arrayMove);
 		std::cout << "--> Original: " << std::endl;
 		printArray(array);
 	}
@@ -181,7 +181,7 @@ int Array::vStart()
 	std::cout << "Test operator+=() move" << std::endl;
 	{
 		TestClass testObject {-7000, -700, -70, '7'};
-		array += flame_ide::templates::move(testObject);
+		array += flame_ide::move(testObject);
 
 		printArray(array);
 	}

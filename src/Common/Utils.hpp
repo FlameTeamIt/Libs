@@ -4,7 +4,6 @@
 #include <Common/Traits.hpp>
 
 namespace flame_ide
-{namespace templates
 {
 
 /**
@@ -96,7 +95,7 @@ typename Container::ReverseIterator rend(Container &container);
 template<typename Container> inline
 typename Container::ConstReverseIterator crend(const Container &container);
 
-}}
+}
 
 template<typename T>
 inline void *operator new(flame_ide::SizeTraits::SizeType
@@ -121,7 +120,6 @@ inline void operator delete[](void *, T *) noexcept
 {}
 
 namespace flame_ide
-{namespace templates
 {
 
 template<typename T> inline constexpr
@@ -297,6 +295,6 @@ typename Container::SizeType size(const Container &container)
 	return container.size();
 }
 
-}}
+}
 
 #endif // TEMPLATES_UTILS_HPP

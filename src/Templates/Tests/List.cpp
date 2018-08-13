@@ -67,11 +67,11 @@ int List::vStart()
 
 	std::cout << "Test moving:" << std::endl;
 	{
-		templates::List<TestClass> listMove = templates::move(list);
+		templates::List<TestClass> listMove = flame_ide::move(list);
 		std::cout << "--> Moved: " << std::endl;
 		printList(listMove, false);
 
-		list = templates::move(listMove);
+		list = flame_ide::move(listMove);
 		std::cout << "--> Original: " << std::endl;
 		printList(list);
 	}
