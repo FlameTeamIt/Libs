@@ -2,7 +2,6 @@
 #define TEMPLATES_POINTERS_HPP
 
 #include <Templates/Allocator.hpp>
-#include <Templates/Utils.hpp>
 
 #define SHARED_TEMPLATE_DEFINE \
 	template< \

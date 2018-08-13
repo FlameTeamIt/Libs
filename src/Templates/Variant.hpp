@@ -1,8 +1,8 @@
 #ifndef TEMPLATES_VARIANT_HPP
 #define TEMPLATES_VARIANT_HPP
 
-#include <Templates/Traits.hpp>
-#include <Templates/Utils.hpp>
+#include <Common/Traits.hpp>
+#include <Common/Utils.hpp>
 
 namespace flame_ide
 {namespace templates

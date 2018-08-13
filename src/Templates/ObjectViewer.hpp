@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_OBJECTVIEWER_HPP
 #define TEMPLATES_OBJECTVIEWER_HPP
 
-#include <Templates/Utils.hpp>
+#include <Common/Utils.hpp>
 
 namespace flame_ide
 {namespace templates

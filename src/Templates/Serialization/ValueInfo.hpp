@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_SERIALIZATION_VALUE_INFO_HPP
 #define TEMPLATES_SERIALIZATION_VALUE_INFO_HPP
 
-#include <Templates/Traits.hpp>
+#include <Common/Traits.hpp>
 #include <Templates/Iterator.hpp>
 
 namespace flame_ide

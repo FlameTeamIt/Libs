@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_WIDEINT_HPP
 #define TEMPLATES_WIDEINT_HPP
 
-#include <Templates/Utils.hpp>
+#include <Common/Utils.hpp>
 #include <Templates/Array.hpp>
 #include <Templates/Serialization.hpp>
 

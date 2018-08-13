@@ -1,10 +1,10 @@
 #ifndef TEMPLATES_TREES_HPP
 #define TEMPLATES_TREES_HPP
 
+#include <Common/Traits.hpp>
+#include <Common/Utils.hpp>
 #include <Templates/Allocator.hpp>
 #include <Templates/Iterator.hpp>
-#include <Templates/Traits.hpp>
-#include <Templates/Utils.hpp>
 
 namespace flame_ide
 {namespace templates

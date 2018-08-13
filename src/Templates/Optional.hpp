@@ -1,8 +1,6 @@
 #ifndef TEMPLATES_OPTIONAL_HPP
 #define TEMPLATES_OPTIONAL_HPP
 
-#include <Templates/Traits.hpp>
-#include <Templates/Utils.hpp>
 #include <Templates/AlignObject.hpp>
 
 namespace flame_ide

@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_ITERATOR_HPP
 #define TEMPLATES_ITERATOR_HPP
 
-#include <Templates/Traits.hpp>
+#include <Common/Traits.hpp>
 
 // defined classes and types
 

@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_UTILS_HPP
 #define TEMPLATES_UTILS_HPP
 
-#include <Templates/Traits.hpp>
+#include <Common/Traits.hpp>
 
 namespace flame_ide
 {namespace templates

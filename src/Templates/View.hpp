@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_VIEW_HPP
 #define TEMPLATES_VIEW_HPP
 
-#include <Templates/Utils.hpp>
+#include <Common/Utils.hpp>
 #include <Templates/Iterator.hpp>
 
 namespace flame_ide

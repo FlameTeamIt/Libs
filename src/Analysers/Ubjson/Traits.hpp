@@ -1,7 +1,7 @@
 #ifndef ANALYSERS_UBJSON_TRAITS_HPP
 #define ANALYSERS_UBJSON_TRAITS_HPP
 
-#include <Templates/Traits.hpp>
+#include <Common/Traits.hpp>
 #include <Templates/Variant.hpp>
 
 #include <Analysers/Ubjson/Types.hpp>

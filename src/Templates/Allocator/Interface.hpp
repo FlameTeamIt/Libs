@@ -1,8 +1,8 @@
 #ifndef TEMPLATES_ALLOCATOR_INTERFACE_HPP
 #define TEMPLATES_ALLOCATOR_INTERFACE_HPP
 
-#include <Templates/Traits.hpp>
-#include <Templates/Utils.hpp>
+#include <Common/Traits.hpp>
+#include <Common/Utils.hpp>
 
 namespace flame_ide
 {namespace templates

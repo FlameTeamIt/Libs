@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_WIDEFLOAT_HPP
 #define TEMPLATES_WIDEFLOAT_HPP
 
-#include <Templates/Utils.hpp>
+#include <Common/Utils.hpp>
 #include <Templates/Array.hpp>
 
 namespace flame_ide

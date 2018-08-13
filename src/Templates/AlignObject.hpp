@@ -1,7 +1,7 @@
 #ifndef TEMPLATES_ALIGNOBJECT_HPP
 #define TEMPLATES_ALIGNOBJECT_HPP
 
-#include <Templates/Traits.hpp>
+#include <Common/Traits.hpp>
 
 namespace flame_ide
 {namespace templates

@@ -1,8 +1,6 @@
 #ifndef TEMPLATES_STRING_HPP
 #define TEMPLATES_STRING_HPP
 
-#include <Templates/Traits.hpp>
-#include <Templates/Utils.hpp>
 #include <Templates/Allocator.hpp>
 #include <Templates/Iterator.hpp>
 #include <Templates/View.hpp>

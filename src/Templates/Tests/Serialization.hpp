@@ -3,7 +3,7 @@
 
 #include <tests/Test.hpp>
 
-#include <Templates/Traits.hpp>
+#include <Common/Traits.hpp>
 #include <Templates/Serialization.hpp>
 
 namespace flame_ide

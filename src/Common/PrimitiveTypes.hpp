@@ -1,5 +1,5 @@
-#ifndef BASETYPES_H
-#define BASETYPES_H
+#ifndef COMMON_PRIMITIVE_TYPES_HPP
+#define COMMON_PRIMITIVE_TYPES_HPP
 
 #include <stddef.h>
 #include <stdint.h>
@@ -32,4 +32,4 @@ typedef long double ldouble_t;
 
 }
 
-#endif // BASETYPES_H
+#endif // COMMON_PRIMITIVE_TYPES_HPP

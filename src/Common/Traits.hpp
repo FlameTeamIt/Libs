@@ -1,5 +1,5 @@
-﻿#ifndef TEMPLATES_TRAITS_HPP
-#define TEMPLATES_TRAITS_HPP
+﻿#ifndef COMMON_TRAITS_HPP
+#define COMMON_TRAITS_HPP
 
 #include <Common/Macroses.hpp>
 #include <Common/PrimitiveTypes.hpp>
@@ -277,9 +277,9 @@ template<>
 struct IsPrimitiveType<Types::ldouble_t>: public TrueType
 {};
 
-/**
- * @brief The IsFloatType struct
- */
+///
+/// @brief The IsFloatType struct
+///
 template<typename T>
 struct IsFloatType: public FalseType
 {};
@@ -297,9 +297,9 @@ struct IsFloatType<Types::ldouble_t>: public TrueType
 {};
 
 
-/**
- * @brief The IsSigned struct
- */
+///
+/// @brief The IsSigned struct
+///
 template<typename T>
 struct IsSigned: public FalseType
 {
@@ -342,9 +342,9 @@ struct IsSigned<Types::long_t>: public TrueType
 {};
 
 
-/**
- * @brief The IsUnsigned struct
- */
+///
+/// @brief The IsUnsigned struct
+///
 template<typename T>
 struct IsUnsigned: public FalseType
 {
@@ -393,10 +393,10 @@ struct IsIntegralType: public IntegralConstant<
 		>
 {};
 
-/**
- * @brief Default type traits
- * @tparam Raw type.
- */
+///
+/// @brief Default type traits
+/// @tparam Raw type.
+///
 template<typename T>
 struct DefaultTraits
 {
@@ -415,9 +415,9 @@ struct DefaultTraits
 };
 
 
-/**
- * @brief Default size, diff and traits.
- */
+///
+/// @brief Default size, diff and traits.
+///
 struct SizeTraits
 {
 	using SizeType = Types::size_t;
@@ -426,21 +426,21 @@ struct SizeTraits
 };
 
 
-/**
- * @brief Default traits for containers such as Array, Vector, etc.
- * @tparam Raw type.
- */
+///
+/// @brief Default traits for containers such as Array, Vector, etc.
+/// @tparam Raw type.
+///
 template<typename T>
 struct ContainerTraits: public DefaultTraits<T>, public SizeTraits
 {};
 
 
-/**
- * @brief Default traits for containers such as Array, Vector, etc.
- * @tparam Is volatile type.
- */
+///
+/// @brief Default traits for containers such as Array, Vector, etc.
+/// @tparam Is volatile type.
+///
 template<bool IS_VOLATILE>
-struct SerializationTraits: public NonCreational
+struct SerializationTraits
 {
 	using InputDataBlock = void *;
 	using ConstInputDataBlock =  const void *;
@@ -450,7 +450,7 @@ struct SerializationTraits: public NonCreational
 };
 
 template<>
-struct SerializationTraits<true>: public NonCreational
+struct SerializationTraits<true>
 {
 	using InputDataBlock = volatile void *;
 	using ConstInputDataBlock =  const volatile void *;
@@ -460,12 +460,12 @@ struct SerializationTraits<true>: public NonCreational
 };
 
 
-/**
- * @brief
- * @tparam INDEX.
- * @tparam Arg.
- * @tparam Args.
- */
+///
+/// @brief
+/// @tparam INDEX.
+/// @tparam Arg.
+/// @tparam Args.
+///
 template<Types::size_t INDEX, typename ...Args>
 struct GetTypeByIndex: public NonCreational
 {};
@@ -495,30 +495,30 @@ struct GetTypeByIndex<0>: public NonCreational
 };
 
 
-/**
- * @brief Comparing different types.
- * @tparam First type.
- * @tparam Second type.
- */
+///
+/// @brief Comparing different types.
+/// @tparam First type.
+/// @tparam Second type.
+///
 template<typename T, typename U>
 struct ComparingTypes: public FalseType
 {};
 
 
-/**
- * @brief Comparing equal types.
- * @tparam Type.
- */
+///
+/// @brief Comparing equal types.
+/// @tparam Type.
+///
 template<typename T>
 struct ComparingTypes<T, T>: public TrueType
 {};
 
 
-/**
- * @brief Comparing different types.
- * @tparam First type.
- * @tparam Second type.
- */
+///
+/// @brief Comparing different types.
+/// @tparam First type.
+/// @tparam Second type.
+///
 template<typename T, typename Arg, typename ...Args>
 struct ComparingTypeWithPack: public NonCreational
 {
@@ -533,10 +533,10 @@ struct ComparingTypeWithPack<T, Arg>: public NonCreational
 };
 
 
-/**
- * @brief Get info is type pointer.
- * @tparam Type.
- */
+///
+/// @brief Get info is type pointer.
+/// @tparam Type.
+///
 template<typename T>
 struct IsPointer: public FalseType
 {};
@@ -546,10 +546,10 @@ struct IsPointer<T *>: public TrueType
 {};
 
 
-/**
- * @brief Get info is type reference.
- * @tparam Type.
- */
+///
+/// @brief Get info is type reference.
+/// @tparam Type.
+///
 template<typename T>
 struct IsReference: public FalseType
 {};
@@ -575,10 +575,10 @@ template<typename T>
 struct IsConst<const T>: public TrueType
 {};
 
-/**
- * @brief Get info is volatile type.
- * @tparam Type.
- */
+///
+/// @brief Get info is volatile type.
+/// @tparam Type.
+///
 template<typename T>
 struct IsVolatile: public FalseType
 {};
@@ -587,10 +587,10 @@ template<typename T>
 struct IsVolatile<volatile T>: public TrueType
 {};
 
-/**
- * @brief Get info about lvalue/rvalue.
- * @tparam Type.
- */
+///
+/// @brief Get info about lvalue/rvalue.
+/// @tparam Type.
+///
 template<typename T>
 struct IsLvalue: public FalseType
 {};
@@ -599,10 +599,10 @@ template<typename T>
 struct IsLvalue<T &>: public TrueType
 {};
 
-/**
- * @brief Get info about lvalue/rvalue.
- * @tparam Type.
- */
+///
+/// @brief Get info about lvalue/rvalue.
+/// @tparam Type.
+///
 template<typename T>
 struct IsRvalue: public FalseType
 {};
@@ -612,6 +612,9 @@ struct IsRvalue<T &&>: public TrueType
 {};
 
 
+///
+/// @brief The MakeSigned struct
+///
 template<typename IntType>
 struct MakeSigned
 {
@@ -684,41 +687,38 @@ struct MakeUnsigned<Types::long_t>
 	using Type = Types::ulong_t;
 };
 
-/**
- * @brief The ChooseType struct
- */
+///
+/// @brief The ChooseType struct
+///
 template<bool CONDITION_RESULT, typename T1, typename T2>
 struct ChooseType: public NonCreational
 {};
 
-/**
- * @brief The ChooseType<_Tp1, T1, T2> struct
- */
+///
+/// @brief The ChooseType<_Tp1, T1, T2> struct
+///
 template<typename T1, typename T2>
 struct ChooseType<true, T1, T2>: public NonCreational
 {
 	using Type = T1;
 };
 
-/**
- * @brief The ChooseType<_Tp1, T1, T2> struct
- */
+///
+/// @brief The ChooseType<_Tp1, T1, T2> struct
+///
 template<typename T1, typename T2>
 struct ChooseType<false, T1, T2>: public NonCreational
 {
 	using Type = T2;
 };
 
-/**
- * @brief The IsUniqueParameterPack struct
- */
+///
+/// @brief The IsUniqueParameterPack struct
+///
 template<typename ...Args>
 struct IsUniqueParameterPack: public TrueType
 {};
 
-/**
- * @brief The IsUniqueParameterPack<Arg, Args> struct
- */
 template<typename Arg, typename ...Args>
 struct IsUniqueParameterPack<Arg, Args...>
 {
@@ -726,9 +726,6 @@ struct IsUniqueParameterPack<Arg, Args...>
 		|| IsUniqueParameterPack<Args...>::VALUE;
 };
 
-/**
- * @brief The IsUniqueParameterPack<Arg, Args> struct
- */
 template<typename Arg, typename Arg1>
 struct IsUniqueParameterPack<Arg, Arg1>
 {
@@ -759,4 +756,4 @@ struct GetIndexOfType<T>
 
 }}
 
-#endif // TEMPLATES_TRAITS_HPP
+#endif // COMMON_TRAITS_HPP

@@ -10,8 +10,6 @@
 #include <Templates/ObjectViewer.hpp>
 #include <Templates/Pointers.hpp>
 #include <Templates/String.hpp>
-#include <Templates/Traits.hpp>
-#include <Templates/Utils.hpp>
 #include <Templates/Vector.hpp>
 #include <Templates/View.hpp>
 
