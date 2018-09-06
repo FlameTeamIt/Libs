@@ -50,6 +50,7 @@ HEADERS += \
 	./src/Templates/Byte.hpp \
 	./src/Templates/ByteOrder.hpp \
 	./src/Templates/CircularVector.hpp \
+	./src/Templates/HybridVector.hpp \
 	./src/Templates/InitializerList.hpp \
 	./src/Templates/Iterator.hpp \
 	./src/Templates/List.hpp \
