@@ -207,6 +207,8 @@ namespace flame_ide
 namespace wideint_utils
 {
 
+// TODO: разделить реадизацию и объявление
+
 template<Types::size_t COUNT_BYTES, bool IS_INTEGRAL>
 struct PrimitiveTypeOperationsImpl: public NonCreational
 {
@@ -243,27 +245,77 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 
 	// binary operations
 
-	template<typename PrimitiveType>
-	static void operatorShiftLeft(Array &array, PrimitiveType value); // operator<<
-	template<typename PrimitiveType>
-	static void operatorShiftLeft(PrimitiveType value, Array &array); // operator<<
+	// operator<< - shift left
 
 	template<typename PrimitiveType>
-	static void operatorShiftRight(Array &array, PrimitiveType value); // operator>>
-	template<typename PrimitiveType>
-	static void operatorShiftRight(PrimitiveType &value, Array &array); // operator>>
+	static void operatorShiftLeft(Array &array, PrimitiveType value)
+	{
+		auto range = makeRange(array.rbegin(), array.rend());
+	}
 
 	template<typename PrimitiveType>
-	static void operatorBinOr(Array &array, PrimitiveType value); // operator|
-	template<typename PrimitiveType>
-	static void operatorBinOr(PrimitiveType &value, Array &array); // operator|
+	static void operatorShiftLeft(PrimitiveType value, Array &array)
+	{
+		auto range = makeRange(array.rbegin(), array.rend());
+	}
+
+	// operator>> - shift right
 
 	template<typename PrimitiveType>
-	static void operatorBinAnd(Array &array, PrimitiveType value); // operator&
-	template<typename PrimitiveType>
-	static void operatorBinAnd(PrimitiveType &value, Array &array); // operator&
+	static void operatorShiftRight(Array &array, PrimitiveType value)
+	{
+		auto range = makeRange(array.rbegin(), array.rend());
+	}
 
-	static void operatorBitwiseNegation(Array &array) // operator~
+	template<typename PrimitiveType>
+	static void operatorShiftRight(PrimitiveType &value, Array &array)
+	{
+		auto range = makeRange(array.rbegin(), array.rend());
+	}
+
+	// operator| - or
+
+	template<typename PrimitiveType>
+	static void operatorBinOr(Array &array, PrimitiveType value)
+	{
+		// тут нужно в зависимости от размеров делать:
+		// 1. array.size() > sizeof(value) -- дополнение value до битности array.
+		// 2. array.size() <= sizeof(value) -- срезание value.
+		// Всё делать в BigEndian.
+	}
+
+	template<typename PrimitiveType>
+	static void operatorBinOr(PrimitiveType &value, Array &array)
+	{
+		// тут нужно в зависимости от размеров делать:
+		// 1. sizeof(value) > array.size() -- дополнение array до битности value.
+		// 2. sizeof(value) <= array.size() -- срезание array.
+		// Всё делать в BigEndian.
+	}
+
+	// operator& - and
+
+	template<typename PrimitiveType>
+	static void operatorBinAnd(Array &array, PrimitiveType value)
+	{
+		// тут нужно в зависимости от размеров делать:
+		// 1. array.size() > sizeof(value) -- дополнение value до битности array.
+		// 2. array.size() <= sizeof(value) -- срезание value.
+		// Всё делать в BigEndian.
+	}
+
+	template<typename PrimitiveType>
+	static void operatorBinAnd(PrimitiveType &value, Array &array)
+	{
+		// тут нужно в зависимости от размеров делать:
+		// 1. sizeof(value) > array.size() -- дополнение array до битности value.
+		// 2. sizeof(value) <= array.size() -- срезание array.
+		// Всё делать в BigEndian.
+	}
+
+	// operator~
+
+	static void operatorBitwiseNegation(Array &array)
 	{
 		using Type = typename RemoveAll<decltype(*(array.begin()))>::Type;
 		for (auto &i : array)
