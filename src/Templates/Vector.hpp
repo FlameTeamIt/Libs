@@ -67,10 +67,10 @@ public:
 	using typename Traits::SsizeType;
 
 	using Iterator = flame_ide::templates::Iterator<
-		Pointer, IteratorCategory::RANDOM_ACCESS, Traits
+		Pointer, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	>;
 	using ConstIterator = flame_ide::templates:: ConstIterator<
-		PointerToConst, IteratorCategory::RANDOM_ACCESS, Traits
+		PointerToConst, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	>;
 	using ReverseIterator = flame_ide::templates::ReverseIterator<
 		Iterator
@@ -586,7 +586,6 @@ void VECTOR_TYPE::reserve(typename VECTOR_TYPE::SizeType newCapacity)
 {
 	if (capacity() < newCapacity)
 	{
-//		Pointer tempHead = allocator.createArray(newCapacity);
 		Pointer tempHead = allocator.reallocateArray(head, newCapacity);
 		if (!tempHead)
 		{

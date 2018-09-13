@@ -56,10 +56,10 @@ public:
 	static constexpr SizeType CAPACITY = ARRAY_CAPACITY;
 
 	using Iterator = flame_ide::templates::Iterator<
-		Pointer, IteratorCategory::RANDOM_ACCESS, Traits
+		Pointer, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	>;
 	using ConstIterator = flame_ide::templates::ConstIterator<
-		PointerToConst, IteratorCategory::RANDOM_ACCESS, Traits
+		PointerToConst, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	>;
 	using ReverseIterator = flame_ide::templates::ReverseIterator<
 		Iterator

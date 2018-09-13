@@ -282,25 +282,29 @@ struct GetType<IteratorType *>
 };
 
 template<typename IteratorType>
-struct IteratorTraits: public ContainerTraits<typename GetType<IteratorType>::Type>
-{};
-
-template<typename IteratorType>
 struct GetIteratorCategory
 {
 	static constexpr IteratorCategory CATEGORY = IteratorType::CATEGORY;
+	static constexpr IteratorAccess ACCESS = IteratorType::ACCESS;
 };
 
 template<typename IteratorType>
 struct GetIteratorCategory<IteratorType *>
 {
 	static constexpr IteratorCategory CATEGORY = IteratorCategory::RANDOM_ACCESS;
+	static constexpr IteratorAccess ACCESS = flame_ide::IsConst<IteratorType>::VALUE
+			? IteratorAccess::CONSTANT : IteratorAccess::NON_CONSTANT;
 };
+
+template<typename IteratorType>
+struct IteratorTraits: public ContainerTraits<typename GetType<IteratorType>::Type>
+{};
 
 template<typename IteratorType
 	, IteratorCategory ITERATOR_CATEGORY
 	, IteratorAccess ITERATOR_ACCESS
-	, typename Traits>
+	, typename Traits
+	, typename MetaType>
 class BaseIterator;
 
 }
@@ -308,25 +312,29 @@ class BaseIterator;
 template<typename IteratorType
 	, IteratorCategory ITERATOR_CATEGORY =
 			iterator_utils::GetIteratorCategory<IteratorType>::CATEGORY
-	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>>
+	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>
+	, typename MetaType = void>
 class Iterator;
 
 template<typename IteratorType
 	, IteratorCategory ITERATOR_CATEGORY =
 			iterator_utils::GetIteratorCategory<IteratorType>::CATEGORY
-	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>>
+	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>
+	, typename MetaType = void>
 class ReverseIterator;
 
 template<typename IteratorType
 	, IteratorCategory ITERATOR_CATEGORY =
 			iterator_utils::GetIteratorCategory<IteratorType>::CATEGORY
-	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>>
+	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>
+	, typename MetaType = void>
 class ConstIterator;
 
 template<typename IteratorType
 	, IteratorCategory ITERATOR_CATEGORY =
 			iterator_utils::GetIteratorCategory<IteratorType>::CATEGORY
-	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>>
+	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>
+	, typename MetaType = void>
 class ConstReverseIterator;
 
 }}
@@ -347,12 +355,14 @@ template<
 	, IteratorCategory ITERATOR_CATEGORY
 	, IteratorAccess ITERATOR_ACCESS
 	, typename Traits
+	, typename MetaType = void
 >
 class BaseIterator: public Traits
 {
 public:
-	using Me = BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits>;
+	using Me = BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits, MetaType>;
 
+	BaseIterator() = default;
 	BaseIterator(const Me &) = default;
 	Me &operator=(const Me &) = default;
 	~BaseIterator() = default;
@@ -381,7 +391,10 @@ public:
 	static constexpr IteratorAccess ACCESS = ITERATOR_ACCESS;
 
 protected:
-	BaseIterator(IteratorType iterator) : wrappedIterator(iterator)
+	BaseIterator(const IteratorType &iteratorInit) : wrappedIterator(iteratorInit)
+	{}
+
+	BaseIterator(IteratorType &&iteratorInit) : wrappedIterator(move(iteratorInit))
 	{}
 
 	mutable IteratorType wrappedIterator;
@@ -391,16 +404,16 @@ protected:
 
 // Iterator
 
-template<typename IteratorType, typename Traits>
-class Iterator<IteratorType, IteratorCategory::OUTPUT, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class Iterator<IteratorType, IteratorCategory::OUTPUT, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::OUTPUT, IteratorAccess::NON_CONSTANT, Traits>
+			, IteratorCategory::OUTPUT, IteratorAccess::NON_CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
-		IteratorType, IteratorCategory::OUTPUT, IteratorAccess::NON_CONSTANT, Traits
+		IteratorType, IteratorCategory::OUTPUT, IteratorAccess::NON_CONSTANT, Traits, MetaType
 	>;
-	using Me = Iterator<IteratorType, IteratorCategory::OUTPUT, Traits>;
+	using Me = Iterator<IteratorType, IteratorCategory::OUTPUT, Traits, MetaType>;
 
 	Iterator(const Me &) = default;
 	Iterator(IteratorType iterator) : Parent(iterator)
@@ -415,19 +428,20 @@ public:
 	OPERATOR_ARROW
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
-template<typename IteratorType, typename Traits>
-class Iterator<IteratorType, IteratorCategory::INPUT, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class Iterator<IteratorType, IteratorCategory::INPUT, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::INPUT, IteratorAccess::NON_CONSTANT, Traits>
+			, IteratorCategory::INPUT, IteratorAccess::NON_CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
-		IteratorType, IteratorCategory::INPUT, IteratorAccess::NON_CONSTANT, Traits
+		IteratorType, IteratorCategory::INPUT, IteratorAccess::NON_CONSTANT, Traits, MetaType
 	>;
-	using Me = Iterator<IteratorType, IteratorCategory::INPUT, Traits>;
+	using Me = Iterator<IteratorType, IteratorCategory::INPUT, Traits, MetaType>;
 
 	Iterator(const Me &) = default;
 	Iterator(IteratorType iterator) : Parent(iterator)
@@ -442,19 +456,20 @@ public:
 	OPERATOR_ARROW_CONST
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
-template<typename IteratorType, typename Traits>
-class Iterator<IteratorType, IteratorCategory::FORWARD, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class Iterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::FORWARD, IteratorAccess::NON_CONSTANT, Traits>
+			, IteratorCategory::FORWARD, IteratorAccess::NON_CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
-		IteratorType, IteratorCategory::FORWARD, IteratorAccess::NON_CONSTANT, Traits
+		IteratorType, IteratorCategory::FORWARD, IteratorAccess::NON_CONSTANT, Traits, MetaType
 	>;
-	using Me = Iterator<IteratorType, IteratorCategory::FORWARD, Traits>;
+	using Me = Iterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>;
 
 	Iterator() = default;
 	Iterator(const Me &) = default;
@@ -473,20 +488,21 @@ public:
 	OPERATOR_ARROW_CONST
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
-template<typename IteratorType, typename Traits>
-class Iterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class Iterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT, Traits>
+			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
 		IteratorType, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT
-		, Traits
+		, Traits, MetaType
 	>;
-	using Me = Iterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
+	using Me = Iterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>;
 
 	Iterator() = default;
 	Iterator(const Me &) = default;
@@ -508,20 +524,21 @@ public:
 	OPERATOR_ARROW_CONST
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
-template<typename IteratorType, typename Traits>
-class Iterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class Iterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT, Traits>
+			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
 		IteratorType, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT
-		, Traits
+		, Traits, MetaType
 	>;
-	using Me = Iterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using Me = Iterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>;
 
 	Iterator() = default;
 	Iterator(const Me &) = default;
@@ -563,17 +580,17 @@ private:
 
 // ReverseIterator
 
-template<typename IteratorType, typename Traits>
-class ReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class ReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT, Traits>
+			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
 		IteratorType, IteratorCategory::BIDIRECTIONAL, IteratorAccess::NON_CONSTANT
-		, Traits
+		, Traits, MetaType
 	>;
-	using Me = ReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
+	using Me = ReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>;
 
 	ReverseIterator(const Me &) = default;
 	ReverseIterator(IteratorType iterator) : Parent(iterator)
@@ -594,20 +611,21 @@ public:
 	OPERATOR_ARROW_CONST
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
-template<typename IteratorType, typename Traits>
-class ReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class ReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT, Traits>
+			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
 		IteratorType, IteratorCategory::RANDOM_ACCESS, IteratorAccess::NON_CONSTANT
-		, Traits
+		, Traits, MetaType
 	>;
-	using Me = ReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using Me = ReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>;
 
 	ReverseIterator(const Me &) = default;
 	ReverseIterator(IteratorType iterator) : Parent(iterator)
@@ -648,16 +666,16 @@ private:
 
 // ConstIterator
 
-template<typename IteratorType, typename Traits>
-class ConstIterator<IteratorType, IteratorCategory::OUTPUT, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class ConstIterator<IteratorType, IteratorCategory::OUTPUT, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::OUTPUT, IteratorAccess::CONSTANT, Traits>
+			, IteratorCategory::OUTPUT, IteratorAccess::CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
-		IteratorType, IteratorCategory::OUTPUT, IteratorAccess::CONSTANT, Traits
+		IteratorType, IteratorCategory::OUTPUT, IteratorAccess::CONSTANT, Traits, MetaType
 	>;
-	using Me = ConstIterator<IteratorType, IteratorCategory::OUTPUT, Traits>;
+	using Me = ConstIterator<IteratorType, IteratorCategory::OUTPUT, Traits, MetaType>;
 
 	ConstIterator(const Me &) = default;
 	ConstIterator(IteratorType iterator) : Parent(iterator)
@@ -672,19 +690,20 @@ public:
 	OPERATOR_ARROW_CONST
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
-template<typename IteratorType, typename Traits>
-class ConstIterator<IteratorType, IteratorCategory::INPUT, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class ConstIterator<IteratorType, IteratorCategory::INPUT, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::INPUT, IteratorAccess::CONSTANT, Traits>
+			, IteratorCategory::INPUT, IteratorAccess::CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
-		IteratorType, IteratorCategory::INPUT, IteratorAccess::CONSTANT, Traits
+		IteratorType, IteratorCategory::INPUT, IteratorAccess::CONSTANT, Traits, MetaType
 	>;
-	using Me = ConstIterator<IteratorType, IteratorCategory::INPUT, Traits>;
+	using Me = ConstIterator<IteratorType, IteratorCategory::INPUT, Traits, MetaType>;
 
 	ConstIterator(const Me &) = default;
 	ConstIterator(IteratorType iterator) : Parent(iterator)
@@ -699,19 +718,20 @@ public:
 	OPERATOR_ARROW_CONST
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
-template<typename IteratorType, typename Traits>
-class ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::FORWARD, IteratorAccess::CONSTANT, Traits>
+			, IteratorCategory::FORWARD, IteratorAccess::CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
-		IteratorType, IteratorCategory::FORWARD, IteratorAccess::CONSTANT, Traits
+		IteratorType, IteratorCategory::FORWARD, IteratorAccess::CONSTANT, Traits, MetaType
 	>;
-	using Me = ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits>;
+	using Me = ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>;
 
 	ConstIterator(const Me &) = default;
 	ConstIterator(IteratorType iterator) : Parent(iterator)
@@ -726,20 +746,21 @@ public:
 	OPERATOR_ARROW_CONST
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
-template<typename IteratorType, typename Traits>
-class ConstIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class ConstIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits>
+			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
 		IteratorType, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT
-		, Traits
+		, Traits, MetaType
 	>;
-	using Me = ConstIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>;
+	using Me = ConstIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>;
 
 	ConstIterator(const Me &) = default;
 	ConstIterator(IteratorType iterator) : Parent(iterator)
@@ -757,20 +778,21 @@ public:
 	OPERATOR_ARROW_CONST
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
-template<typename IteratorType, typename Traits>
-class ConstIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class ConstIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits>
+			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
 		IteratorType, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT
-		, Traits
+		, Traits, MetaType
 	>;
-	using Me = ConstIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>;
+	using Me = ConstIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>;
 
 	ConstIterator(const Me &) = default;
 	ConstIterator(IteratorType iterator) : Parent(iterator)
@@ -802,23 +824,24 @@ public:
 	OPERATOR_OFFSET_DEREF_CONST
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
 // ConstReverseIterator
 
-template<typename IteratorType, typename Traits>
-class ConstReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class ConstReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits>
+			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
 		IteratorType, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT
-		, Traits
+		, Traits, MetaType
 	>;
 	using Me = ConstReverseIterator<
-		IteratorType, IteratorCategory::BIDIRECTIONAL, Traits
+		IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType
 	>;
 
 	ConstReverseIterator(const Me &) = default;
@@ -837,21 +860,22 @@ public:
 	OPERATOR_ARROW_CONST
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
-template<typename IteratorType, typename Traits>
-class ConstReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits>:
+template<typename IteratorType, typename Traits, typename MetaType>
+class ConstReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>:
 		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits>
+			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits, MetaType>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
 		IteratorType, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT
-		, Traits
+		, Traits, MetaType
 	>;
 	using Me = ConstReverseIterator<
-		IteratorType, IteratorCategory::RANDOM_ACCESS, Traits
+		IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType
 	>;
 
 	ConstReverseIterator(const Me &) = default;
@@ -885,6 +909,7 @@ public:
 	OPERATOR_OFFSET_DEREF_CONST_REVERSED
 
 private:
+	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
 
