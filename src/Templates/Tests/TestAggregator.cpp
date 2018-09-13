@@ -12,6 +12,7 @@
 #include <Templates/Tests/Variant.hpp>
 #include <Templates/Tests/Vector.hpp>
 #include <Templates/Tests/WideInt.hpp>
+#include <Templates/Tests/HybridVector.hpp>
 
 #include <tests/Test.hpp>
 #include <Templates/Tests/TestAggregator.hpp>
@@ -37,6 +38,7 @@ TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 	pushBackTest(new test::Vector());
 	pushBackTest(new test::Variant());
 	pushBackTest(new test::WideInt());
+	pushBackTest(new test::HybridVector());
 }
 
 }}
