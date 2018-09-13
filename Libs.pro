@@ -70,6 +70,7 @@ HEADERS += \
 	./src/Templates/Tests/Bits.hpp \
 	./src/Templates/Tests/ByteOrder.hpp \
 	./src/Templates/Tests/CircularVector.hpp \
+	./src/Templates/Tests/HybridVector.hpp \
 	./src/Templates/Tests/List.hpp \
 	./src/Templates/Tests/Serialization.hpp \
 	./src/Templates/Tests/SharedPointer.hpp \
@@ -107,6 +108,7 @@ SOURCES += \
 	./src/Templates/Tests/Bits.cpp \
 	./src/Templates/Tests/ByteOrder.cpp \
 	./src/Templates/Tests/CircularVector.cpp \
+	./src/Templates/Tests/HybridVector.cpp \
 	./src/Templates/Tests/List.cpp \
 	./src/Templates/Tests/Serialization.cpp \
 	./src/Templates/Tests/SharedPointer.cpp \
