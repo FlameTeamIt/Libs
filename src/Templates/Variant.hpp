@@ -156,14 +156,12 @@ public:
 	using GetTypeByIndex = flame_ide::GetTypeByIndex<INDEX, Arg, Args...>;
 
 	Variant() noexcept;
-	Variant(const Me &me) noexcept;
-	Variant(Me &&me) noexcept;
 
 	template<typename T>
-	explicit Variant(const T &initObject) noexcept;
+	Variant(const T &initObject) noexcept;
 
 	template<typename T>
-	explicit Variant(T &&initObject) noexcept;
+	Variant(T &&initObject) noexcept;
 
 	~Variant() noexcept;
 
@@ -200,6 +198,44 @@ public:
 	bool get(T &object) const;
 
 private:
+	template<typename TT, bool IS_SAME>
+	struct InitStruct: public flame_ide::NonCreational
+	{};
+
+	template<typename TT>
+	struct InitStruct<TT, false>: public flame_ide::NonCreational
+	{
+		static void exec(Me *me, const TT &initObject)
+		{
+			me->currentIndex = me->value.set(initObject);
+		}
+		static void execMove(Me *me, TT &&initObject)
+		{
+			me->currentIndex = me->value.set(move(initObject));
+		}
+	};
+
+	template<typename TT>
+	struct InitStruct<TT, true>: public flame_ide::NonCreational
+	{
+		static void exec(Me *itsMe, const Me &me)
+		{
+			if (me.getCurrentIndex() >= 0)
+			{
+				itsMe->value.assign(me.getCurrentIndex(), me.value);
+				itsMe->currentIndex = me.getCurrentIndex();
+			}
+		}
+		static void execMove(Me *itsMe, Me &&me)
+		{
+			if (me.getCurrentIndex() >= 0)
+			{
+				itsMe->value.assign(me.getCurrentIndex(), move(me.value));
+				itsMe->currentIndex = me.getCurrentIndex();
+			}
+		}
+	};
+
 	static constexpr bool VALUE = IsUniqueParameterPack<Arg, Args...>::VALUE;
 	static_assert(VALUE, "Paramter pack is not unique.");
 
@@ -381,36 +417,22 @@ template<typename Arg, typename ...Args>
 Variant<Arg, Args...>::Variant() noexcept : currentIndex(-1)
 {}
 
-template<typename Arg, typename ...Args>
-Variant<Arg, Args...>::Variant(const Me &me) noexcept
-{
-	if (me.getCurrentIndex() >= 0)
-	{
-		value.assign(me.getCurrentIndex(), me.value);
-		currentIndex = me.getCurrentIndex();
-	}
-}
-
-template<typename Arg, typename ...Args>
-Variant<Arg, Args...>::Variant(Me &&me) noexcept
-{
-	if (me.getCurrentIndex() >= 0)
-	{
-		value.assign(me.getCurrentIndex(), move(me.value));
-		currentIndex = me.getCurrentIndex();
-	}
-}
-
 template<typename Arg, typename ...Args> template<typename T>
 Variant<Arg, Args...>::Variant(const T &initObject) noexcept
 {
-	currentIndex = value.set(initObject);
+	InitStruct<
+		typename RemoveAll<T>::Type
+		, ComparingTypes<Me, typename RemoveAll<T>::Type>::VALUE
+	>::exec(this, initObject);
 }
 
 template<typename Arg, typename ...Args> template<typename T>
 Variant<Arg, Args...>::Variant(T &&initObject) noexcept
 {
-	currentIndex = value.set(move(initObject));
+	InitStruct<
+		typename RemoveAll<T>::Type
+		, ComparingTypes<Me, typename RemoveAll<T>::Type>::VALUE
+	>::execMove(this, move(initObject));
 }
 
 template<typename Arg, typename ...Args>
