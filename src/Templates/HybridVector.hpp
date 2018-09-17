@@ -59,6 +59,8 @@ public:
 		T, ARRAY_CAPACITY, ArrayTraits, VectorTraits, VectorAllocator, Traits
 	>;
 
+	using typename Parent::Type;
+
 	using typename Parent::Reference;
 	using typename Parent::ConstReference;
 
@@ -67,7 +69,7 @@ public:
 
 	Iterator() = default;
 	Iterator(const Me &) = default;
-	Iterator(Me &&) = default;
+	Iterator(Me &&) noexcept = default;
 
 	Iterator(ArrayIterator iterator) : Parent(WrappedIterator(iterator))
 	{}
@@ -76,7 +78,7 @@ public:
 	{}
 
 	Me &operator=(const Me &) = default;
-	Me &operator=(Me &&) = default;
+	Me &operator=(Me &&) noexcept = default;
 
 	Me &operator++()
 	{
@@ -122,33 +124,6 @@ public:
 		return myCopy;
 	}
 
-	bool operator==(const Me &iterator)
-	{
-		auto index = wrappedIterator.template getCurrentIndex();
-		auto itIndex = iterator.wrappedIterator.template getCurrentIndex();
-		if (index == itIndex)
-		{
-			if (index == ARRAY_INDEX)
-			{
-				ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
-				ArrayIterator &itIt = *(iterator.wrappedIterator.template get<ArrayIterator>());
-				return it == itIt;
-			}
-			else
-			{
-				VectorIterator &it = *(wrappedIterator.template get<VectorIterator>());
-				VectorIterator &itIt = *(iterator.wrappedIterator.template get<VectorIterator>());
-				return it == itIt;
-			}
-		}
-		return false;
-	}
-
-	bool operator!=(const Me &iterator)
-	{
-		return !operator==(iterator);
-	}
-
 	Reference operator*()
 	{
 		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
@@ -161,6 +136,11 @@ public:
 			VectorIterator &it = *(wrappedIterator.template get<VectorIterator>());
 			return *it;
 		}
+	}
+
+	Pointer operator->()
+	{
+		return &(operator*());
 	}
 
 	ConstReference operator*() const
@@ -177,14 +157,163 @@ public:
 		}
 	}
 
-	Pointer operator->()
+	PointerToConst operator->() const
 	{
 		return &(operator*());
 	}
 
-	PointerToConst operator->() const
+	template<typename IntType>
+	Me operator+(IntType value)
 	{
-		return &(operator*());
+		Me me = *this;
+		me += value;
+		return me;
+	}
+
+	template<typename IntType>
+	Me operator-(IntType value)
+	{
+		Me me = *this;
+		me -= value;
+		return me;
+	}
+
+	template<typename IntType>
+	Me &operator+=(IntType value)
+	{
+		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		{
+			ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
+			it += value;
+		}
+		else
+		{
+			VectorIterator &it = *(wrappedIterator.template get<VectorIterator>());
+			it += value;
+		}
+		return *this;
+	}
+
+	template<typename IntType>
+	Me &operator-=(IntType value)
+	{
+		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		{
+			ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
+			it -= value;
+		}
+		else
+		{
+			VectorIterator &it = *(wrappedIterator.template get<VectorIterator>());
+			it -= value;
+		}
+		return *this;
+	}
+
+	bool operator==(const Me &iterator)
+	{
+		return wrappedIterator == iterator.wrappedIterator;
+	}
+
+	bool operator!=(const Me &iterator)
+	{
+		return !operator==(iterator);
+	}
+
+	bool operator<(const Me &iterator)
+	{
+		if (wrappedIterator.template getCurrentIndex() ==
+				iterator.wrappedIterator.template getCurrentIndex())
+		{
+			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			{
+				ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
+				ArrayIterator &itIt = *(iterator.wrappedIterator.template get<ArrayIterator>());
+				return it < itIt;
+			}
+			else
+			{
+				VectorIterator &it = *(wrappedIterator.template get<VectorIterator>());
+				VectorIterator &itIt = *(iterator.wrappedIterator.template get<VectorIterator>());
+				return it < itIt;
+			}
+		}
+		return false;
+	}
+
+	bool operator>(const Me &iterator)
+	{
+		if (wrappedIterator.template getCurrentIndex() ==
+				iterator.wrappedIterator.template getCurrentIndex())
+		{
+			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			{
+				ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
+				ArrayIterator &itIt = *(iterator.wrappedIterator.template get<ArrayIterator>());
+				return it > itIt;
+			}
+			else
+			{
+				VectorIterator &it = *(wrappedIterator.template get<VectorIterator>());
+				VectorIterator &itIt = *(iterator.wrappedIterator.template get<VectorIterator>());
+				return it > itIt;
+			}
+		}
+		return false;
+	}
+
+	bool operator<=(const Me &iterator)
+	{
+		if (wrappedIterator.template getCurrentIndex() ==
+				iterator.wrappedIterator.template getCurrentIndex())
+		{
+			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			{
+				ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
+				ArrayIterator &itIt = *(iterator.wrappedIterator.template get<ArrayIterator>());
+				return it <= itIt;
+			}
+			else
+			{
+				VectorIterator &it = *(wrappedIterator.template get<VectorIterator>());
+				VectorIterator &itIt = *(iterator.wrappedIterator.template get<VectorIterator>());
+				return it <= itIt;
+			}
+		}
+		return false;
+	}
+
+	bool operator>=(const Me &iterator)
+	{
+		if (wrappedIterator.template getCurrentIndex() ==
+				iterator.wrappedIterator.template getCurrentIndex())
+		{
+			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			{
+				ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
+				ArrayIterator &itIt = *(iterator.wrappedIterator.template get<ArrayIterator>());
+				return it >= itIt;
+			}
+			else
+			{
+				VectorIterator &it = *(wrappedIterator.template get<VectorIterator>());
+				VectorIterator &itIt = *(iterator.wrappedIterator.template get<VectorIterator>());
+				return it >= itIt;
+			}
+		}
+		return false;
+	}
+
+	template<typename IntType>
+	Reference operator[](IntType index)
+	{
+		return operator->()[index];
+	}
+
+	template<typename IntType>
+	ConstReference operator[](IntType index)
+	{
+		return operator->()[index];
 	}
 
 private:
@@ -204,10 +333,10 @@ class ConstIterator:
 			Variant<
 				typename flame_ide::templates::Array<
 					T, ARRAY_CAPACITY, ArrayTraits, FalseType::VALUE
-				>::Iterator
+				>::ConstIterator
 				, typename flame_ide::templates::Vector<
 					T, VectorTraits, VectorAllocator
-				>::Iterator
+				>::ConstIterator
 			>
 			, IteratorCategory::RANDOM_ACCESS
 			, IteratorAccess::CONSTANT
@@ -215,32 +344,29 @@ class ConstIterator:
 		>
 {
 public:
-	using Parent = iterator_utils::BaseIterator<
-		Variant<
-			typename flame_ide::templates::Array<
-				T, ARRAY_CAPACITY, ArrayTraits, FalseType::VALUE
-			>::ConstIterator
-			, typename flame_ide::templates::Vector<
-				T, VectorTraits, VectorAllocator
-			>::ConstIterator
-		>
-		, IteratorCategory::RANDOM_ACCESS
-		, IteratorAccess::CONSTANT
-		, Traits
-	>;
-
 	using Me = ConstIterator<
 		T, ARRAY_CAPACITY, ArrayTraits, VectorTraits, VectorAllocator, Traits
 	>;
 
 	using ConstArrayIterator = typename flame_ide::templates::Array<
 		T, ARRAY_CAPACITY, ArrayTraits, FalseType::VALUE
-	>::Iterator;
+	>::ConstIterator;
 
 	using ConstVectorIterator = typename flame_ide::templates::Vector<
 		T, VectorTraits, VectorAllocator
 	>::ConstIterator;
 
+	using WrappedIterator = flame_ide::templates::Variant<ConstArrayIterator, ConstVectorIterator>;
+
+	using Parent = iterator_utils::BaseIterator<
+		Variant<
+			ConstArrayIterator
+			, ConstVectorIterator
+		>
+		, IteratorCategory::RANDOM_ACCESS
+		, IteratorAccess::CONSTANT
+		, Traits
+	>;
 
 	using typename Parent::Reference;
 	using typename Parent::ConstReference;
@@ -250,21 +376,225 @@ public:
 	ConstIterator() = default;
 	ConstIterator(const Me &) = default;
 	ConstIterator(Me &&) = default;
+
+	ConstIterator(ConstArrayIterator iterator) : Parent(WrappedIterator(iterator))
+	{}
+
+	ConstIterator(ConstVectorIterator iterator) : Parent(WrappedIterator(iterator))
+	{}
+
 	Me &operator=(const Me &) = default;
 	Me &operator=(Me &&) = default;
 
-	Me &operator++();
-	Me operator++(int);
+	Me &operator++()
+	{
+		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		{
+			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+			++it;
+		}
+		else
+		{
+			ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+			++it;
+		}
+		return *this;
+	}
 
-	Me &operator--();
-	Me operator--(int);
+	Me operator++(int)
+	{
+		Me myCopy = *this;
+		operator++();
+		return myCopy;
+	}
+
+	Me &operator--()
+	{
+		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		{
+			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+			--it;
+		}
+		else
+		{
+			ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+			--it;
+		}
+		return *this;
+	}
+
+	Me operator--(int)
+	{
+		Me myCopy = *this;
+		operator--();
+		return myCopy;
+	}
 
 	ConstReference operator*() const
 	{
+		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		{
+			const ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+			return *it;
+		}
+		else
+		{
+			const ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+			return *it;
+		}
 	}
 
 	PointerToConst operator->() const
 	{
+		return &(operator*());
+	}
+
+	template<typename IntType>
+	Me operator+(IntType value)
+	{
+		Me me = *this;
+		me += value;
+		return me;
+	}
+
+	template<typename IntType>
+	Me operator-(IntType value)
+	{
+		Me me = *this;
+		me -= value;
+		return me;
+	}
+
+	template<typename IntType>
+	Me &operator+=(IntType value)
+	{
+		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		{
+			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+			it += value;
+		}
+		else
+		{
+			ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+			it += value;
+		}
+		return *this;
+	}
+
+	template<typename IntType>
+	Me &operator-=(IntType value)
+	{
+		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		{
+			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+			it -= value;
+		}
+		else
+		{
+			ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+			it -= value;
+		}
+		return *this;
+	}
+
+	bool operator==(const Me &iterator)
+	{
+		return wrappedIterator == iterator.wrappedIterator;
+	}
+
+	bool operator!=(const Me &iterator)
+	{
+		return !operator==(iterator);
+	}
+
+	bool operator<(const Me &iterator)
+	{
+		if (wrappedIterator.template getCurrentIndex() ==
+				iterator.wrappedIterator.template getCurrentIndex())
+		{
+			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			{
+				ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+				ConstArrayIterator &itIt = *(iterator.wrappedIterator.template get<ConstArrayIterator>());
+				return it < itIt;
+			}
+			else
+			{
+				ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+				ConstVectorIterator &itIt = *(iterator.wrappedIterator.template get<ConstVectorIterator>());
+				return it < itIt;
+			}
+		}
+		return false;
+	}
+
+	bool operator>(const Me &iterator)
+	{
+		if (wrappedIterator.template getCurrentIndex() ==
+				iterator.wrappedIterator.template getCurrentIndex())
+		{
+			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			{
+				ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+				ConstArrayIterator &itIt = *(iterator.wrappedIterator.template get<ConstArrayIterator>());
+				return it > itIt;
+			}
+			else
+			{
+				ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+				ConstVectorIterator &itIt = *(iterator.wrappedIterator.template get<ConstVectorIterator>());
+				return it > itIt;
+			}
+		}
+		return false;
+	}
+
+	bool operator<=(const Me &iterator)
+	{
+		if (wrappedIterator.template getCurrentIndex() ==
+				iterator.wrappedIterator.template getCurrentIndex())
+		{
+			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			{
+				ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+				ConstArrayIterator &itIt = *(iterator.wrappedIterator.template get<ConstArrayIterator>());
+				return it <= itIt;
+			}
+			else
+			{
+				ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+				ConstVectorIterator &itIt = *(iterator.wrappedIterator.template get<ConstVectorIterator>());
+				return it <= itIt;
+			}
+		}
+		return false;
+	}
+
+	bool operator>=(const Me &iterator)
+	{
+		if (wrappedIterator.template getCurrentIndex() ==
+				iterator.wrappedIterator.template getCurrentIndex())
+		{
+			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			{
+				ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+				ConstArrayIterator &itIt = *(iterator.wrappedIterator.template get<ConstArrayIterator>());
+				return it >= itIt;
+			}
+			else
+			{
+				ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+				ConstVectorIterator &itIt = *(iterator.wrappedIterator.template get<ConstVectorIterator>());
+				return it >= itIt;
+			}
+		}
+		return false;
+	}
+
+	template<typename IntType>
+	ConstReference operator[](IntType index)
+	{
+		return operator->()[index];
 	}
 
 private:
@@ -298,6 +628,13 @@ public:
 
 	using ConstIterator = hybrid_vector_utils::ConstIterator<
 		T, ARRAY_CAPACITY, ArrayTraits, VectorTraits, VectorAllocator
+	>;
+
+	using ReverseIterator = flame_ide::templates::ReverseIterator<
+		Iterator
+	>;
+	using ConstReverseIterator = flame_ide::templates::ConstReverseIterator<
+		ConstIterator
 	>;
 
 	HybridVector();

@@ -33,18 +33,36 @@ bool HybridVector::iterators()
 	}
 	static_assert(!isSameTypes<Array::Iterator, Vector::Iterator>(), "");
 
-	HybVectorIterator itBeign = vector.begin();
-	HybVectorIterator itEnd = vector.end();
-	for (auto it = vector.begin(); it != vector.end(); ++it)
 	{
-		std::cout << *it << ' ';
+		HybVectorIterator itBeign = vector.begin();
+		HybVectorIterator itEnd = vector.end();
+		for (auto it = vector.begin(); it != vector.end(); ++it)
+		{
+			std::cout << *it << ' ';
+		}
+		std::cout << std::endl;
+		for (auto it = itBeign; it != itEnd; ++it)
+		{
+			std::cout << *it << ' ';
+		}
+		std::cout << std::endl;
 	}
-	std::cout << std::endl;
-	for (auto it = itBeign; it != itEnd; ++it)
+
+	ContainerTraits<Vector>::ConstReference cvector = vector;
 	{
-		std::cout << *it << ' ';
+		HybConstVectorIterator itBeign = cvector.begin();
+		HybConstVectorIterator itEnd = cvector.end();
+		for (auto it = vector.begin(); it != vector.end(); ++it)
+		{
+			std::cout << *it << ' ';
+		}
+		std::cout << std::endl;
+		for (auto it = itBeign; it != itEnd; ++it)
+		{
+			std::cout << *it << ' ';
+		}
+		std::cout << std::endl;
 	}
-	std::cout << std::endl;
 
 	return true;
 }

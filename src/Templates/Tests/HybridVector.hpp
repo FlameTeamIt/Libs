@@ -26,6 +26,7 @@ private:
 	using Vector = flame_ide::templates::Vector<Types::int_t>;
 	using HybVector = flame_ide::templates::HybridVector<Types::int_t, 4>;
 	using HybVectorIterator = HybVector::Iterator;
+	using HybConstVectorIterator = HybVector::ConstIterator;
 };
 
 }}
