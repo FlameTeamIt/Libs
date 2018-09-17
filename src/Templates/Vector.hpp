@@ -69,7 +69,7 @@ public:
 	using Iterator = flame_ide::templates::Iterator<
 		Pointer, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	>;
-	using ConstIterator = flame_ide::templates:: ConstIterator<
+	using ConstIterator = flame_ide::templates::ConstIterator<
 		PointerToConst, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	>;
 	using ReverseIterator = flame_ide::templates::ReverseIterator<
