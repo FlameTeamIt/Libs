@@ -355,7 +355,7 @@ Node<T, Traits>::Node(typename Node<T, Traits>::ConstReference object)
 
 template<typename T, typename Traits>
 Node<T, Traits>::Node(typename Node<T, Traits>::MoveReference object)
-	: previous(nullptr), next(nullptr), object(object)
+		: previous(nullptr), next(nullptr), object(object)
 {}
 
 
