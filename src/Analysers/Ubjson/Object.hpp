@@ -14,15 +14,6 @@ class Object
 {
 };
 
-template<>
-struct ValueTraits<EnumeratedType::OBJECT>
-{
-	static constexpr Type VALUE_TYPE = Type::OBJECT_OPEN;
-	static constexpr Type VALUE_TYPE_CLOSE = Type::OBJECT_CLOSE;
-	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
-	using ValueType = Object;
-};
-
 }}
 
 #endif // ANALYSERS_UBJSON_OBJECT_HPP

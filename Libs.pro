@@ -13,15 +13,18 @@ INCLUDEPATH += .
 HEADERS += \
 	./src/About/About.hpp \
 	./src/Analysers/Ubjson/Array.hpp \
-	./src/Analysers/Ubjson/HugeNumeric.hpp \
+	./src/Analysers/Ubjson/BaseValue.hpp \
+	./src/Analysers/Ubjson/HugeNumber.hpp \
 	./src/Analysers/Ubjson/Object.hpp \
 	./src/Analysers/Ubjson/Pair.hpp \
 	./src/Analysers/Ubjson/Settings.hpp \
+	./src/Analysers/Ubjson/SimpleTypeValues.hpp \
 	./src/Analysers/Ubjson/Stream.hpp \
 	./src/Analysers/Ubjson/String.hpp \
 	./src/Analysers/Ubjson/Traits.hpp \
 	./src/Analysers/Ubjson/Types.hpp \
 	./src/Analysers/Ubjson/Value.hpp \
+	./src/Analysers/Ubjson/ValueSpecializations.hpp \
 	./src/Bus/MsgInterface.hpp \
 	./src/Common/Byte.hpp \
 	./src/Common/Macroses.hpp \

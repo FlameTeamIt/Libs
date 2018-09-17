@@ -5,6 +5,9 @@
 
 #include <Analysers/Ubjson/Traits.hpp>
 
+#include <Analysers/Ubjson/BaseValue.hpp>
+#include <Analysers/Ubjson/ValueSpecializations.hpp>
+
 #include <Analysers/Ubjson/Array.hpp>
 #include <Analysers/Ubjson/Object.hpp>
 #include <Analysers/Ubjson/String.hpp>
@@ -13,23 +16,24 @@ namespace flame_ide
 {namespace ubjson
 {
 
+template<bool IS_ALLOCATED>
 using ValueVariant = templates::Variant<
-	ValueTraits<EnumeratedType::NULLVAL>
-	, ValueTraits<EnumeratedType::NOOP>
-	, ValueTraits<EnumeratedType::TRUE>
-	, ValueTraits<EnumeratedType::FALSE>
-	, ValueTraits<EnumeratedType::INT8>
-	, ValueTraits<EnumeratedType::UINT8>
-	, ValueTraits<EnumeratedType::INT16>
-	, ValueTraits<EnumeratedType::INT32>
-	, ValueTraits<EnumeratedType::INT64>
-	, ValueTraits<EnumeratedType::FLOAT32>
-	, ValueTraits<EnumeratedType::FLOAT64>
-	, ValueTraits<EnumeratedType::HUGE_NUM>
-	, ValueTraits<EnumeratedType::CHAR>
-	, ValueTraits<EnumeratedType::STRING>
-	, ValueTraits<EnumeratedType::ARRAY>
-	, ValueTraits<EnumeratedType::OBJECT>
+	BaseValue<EnumeratedType::NULLVAL, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::NOOP, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::TRUE, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::FALSE, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::INT8, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::UINT8, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::INT16, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::INT32, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::INT64, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::FLOAT32, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::FLOAT64, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::HUGE_NUM, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::CHAR, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::STRING, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::ARRAY, IS_ALLOCATED>
+	, BaseValue<EnumeratedType::OBJECT, IS_ALLOCATED>
 >;
 
 class Value
@@ -61,10 +65,8 @@ public:
 		}
 	}
 
-
-
 private:
-	ValueVariant valueVariant;
+	ValueVariant<TrueType::VALUE> valueVariant;
 };
 
 }}

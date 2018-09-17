@@ -19,7 +19,7 @@ namespace flame_ide
 class String
 {
 public:
-	static constexpr size_t STATIC_STRING_SIZE = MAX_STATIC_SIZE;
+	static constexpr size_t STATIC_STRING_SIZE = Settings::MAX_STATIC_SIZE;
 	using StringVariant = templates::Variant<
 		templates::String, templates::Array<char_t, STATIC_STRING_SIZE>
 	>;
@@ -27,15 +27,6 @@ public:
 	String(const char_t *cstring);
 private:
 };
-
-template<>
-struct ValueTraits<EnumeratedType::STRING>
-{
-	static constexpr Type VALUE_TYPE = Type::STRING;
-	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
-	using ValueType = long_t;
-};
-
 
 }}
 
