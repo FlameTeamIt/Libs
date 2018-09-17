@@ -637,8 +637,51 @@ public:
 		ConstIterator
 	>;
 
-	HybridVector();
-	~HybridVector();
+	HybridVector() = default;
+	HybridVector(const Me &) = default;
+	HybridVector(Me &&) noexcept = default;
+
+	HybridVector(const Array &array) : container(array)
+	{}
+
+	HybridVector(Array &&array) noexcept : container(move(array))
+	{}
+
+	HybridVector(const Vector &vector) : container(vector)
+	{}
+
+	HybridVector(Vector &&vector) noexcept : container(move(vector))
+	{}
+
+	~HybridVector() = default;
+
+	Me &operator=(const Me &) = default;
+	Me &operator=(Me &&) = default;
+
+	Me &operator=(const Array &array)
+	{
+		container = array;
+	}
+
+	Me &operator=(Array &&array) noexcept
+	{
+		container = move(array);
+	}
+
+	Me &operator=(const Vector &vector)
+	{
+		container = vector;
+	}
+
+	Me &operator=(Vector &&vector) noexcept
+	{
+		container = move(vector);
+	}
+
+	inline void clean() noexcept
+	{
+		container.template reset();
+	}
 
 private:
 	ContainerVariant container;
