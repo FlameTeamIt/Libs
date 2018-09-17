@@ -83,6 +83,7 @@ bool Variant::testVariant()
 	if (variant.getCurrentIndex() >= 0)
 	{
 		log << "variant.getCurrentIndex() >= 0" << std::endl;
+		return false;
 	}
 
 	variant = decltype(variant)(int(10));
@@ -92,6 +93,41 @@ bool Variant::testVariant()
 		log << "variant.get<TestClass>() != nullptr" << std::endl;
 		log << "variant.getCurrentIndex() = " << variant.getCurrentIndex() << std::endl;
 		return false;
+	}
+
+	Variant<int, long> variantArray[6] = {
+		Variant<Types::int_t, Types::long_t>(Types::int_t(10))
+		, Variant<Types::int_t, Types::long_t>(Types::int_t(10))
+		, Variant<Types::int_t, Types::long_t>(Types::int_t(25))
+		, Variant<Types::int_t, Types::long_t>(Types::long_t(100))
+		, Variant<Types::int_t, Types::long_t>(Types::long_t(100))
+		, Variant<Types::int_t, Types::long_t>(Types::long_t(125))
+	};
+	{
+		size_t offset = 0;
+		if (variantArray[offset + 0] != variantArray[offset + 1])
+		{
+			return false;
+		}
+		if (variantArray[offset + 0] == variantArray[offset + 2])
+		{
+			return false;
+		}
+
+		if (variantArray[offset + 0] == variantArray[offset + 3])
+		{
+			return false;
+		}
+
+		offset = 3;
+		if (variantArray[offset + 0] != variantArray[offset + 1])
+		{
+			return false;
+		}
+		if (variantArray[offset + 0] == variantArray[offset + 2])
+		{
+			return false;
+		}
 	}
 
 	return true;

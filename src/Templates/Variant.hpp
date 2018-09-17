@@ -33,6 +33,8 @@ struct VariantStruct
 	bool assign(Types::ssize_t index, Me &&me);
 
 	bool reset(Types::ssize_t index);
+
+	bool equal(const Me &varianStruct, Types::ssize_t index);
 };
 
 template<typename Arg, typename ...Args>
@@ -57,6 +59,8 @@ struct VariantStruct<Arg, Args...>
 	bool assign(Types::ssize_t index, Me &&me);
 
 	bool reset(Types::ssize_t index);
+
+	bool equal(const Me &varianStruct, Types::ssize_t index);
 
 	union VariantUnion
 	{
@@ -98,6 +102,11 @@ struct VariantStruct<>
 	}
 
 	inline bool reset(Types::ssize_t)
+	{
+		return false;
+	}
+
+	bool equal(const Me &, Types::ssize_t)
 	{
 		return false;
 	}
@@ -167,6 +176,9 @@ public:
 
 	Me &operator=(const Me &me) noexcept;
 	Me &operator=(Me &&me) noexcept;
+
+	bool operator==(const Me &) noexcept;
+	bool operator!=(const Me &) noexcept;
 
 	operator bool() const noexcept;
 
@@ -324,6 +336,19 @@ bool VariantStruct<Arg, Args...>::reset(Types::ssize_t index)
 	return result;
 }
 
+template<typename Arg, typename ...Args>
+bool VariantStruct<Arg, Args...>::equal(const Me &variantStruct, Types::ssize_t index)
+{
+	if (index == 0)
+	{
+		return data.arg == variantStruct.data.arg;
+	}
+	else
+	{
+		return data.pack.equal(variantStruct.data.pack, --index);
+	}
+}
+
 template<typename T>
 typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer
 VariantStruct<>::get()
@@ -463,6 +488,22 @@ Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(Me &&me) noexcept
 		currentIndex = me.getCurrentIndex();
 	}
 	return *this;
+}
+
+template<typename Arg, typename ...Args>
+bool Variant<Arg, Args...>::operator==(const Me &variant) noexcept
+{
+	if (isSet() && variant.isSet() && getCurrentIndex() == variant.getCurrentIndex())
+	{
+		return value.equal(variant.value, getCurrentIndex());
+	}
+	return false;
+}
+
+template<typename Arg, typename ...Args>
+bool Variant<Arg, Args...>::operator!=(const Me &variant) noexcept
+{
+	return !this->operator==(variant);
 }
 
 template<typename Arg, typename ...Args>
