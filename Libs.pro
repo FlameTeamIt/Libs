@@ -46,11 +46,9 @@ HEADERS += \
 	./src/Templates/Allocator/MallocAllocator.hpp \
 	./src/Templates/Allocator/ObjectAllocator.hpp \
 	./src/Templates/Array.hpp \
-	./src/Templates/ArrayBits.hpp \
 	./src/Templates/ArrayBlocks.hpp \
 	./src/Templates/BitSet.hpp \
 	./src/Templates/Bits.hpp \
-	./src/Templates/Byte.hpp \
 	./src/Templates/ByteOrder.hpp \
 	./src/Templates/CircularVector.hpp \
 	./src/Templates/HybridVector.hpp \

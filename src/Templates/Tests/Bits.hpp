@@ -19,7 +19,6 @@ private:
 	virtual int vStart();
 
 	bool minimalType();
-	bool arrayBits();
 };
 
 }}
