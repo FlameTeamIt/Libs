@@ -19,11 +19,18 @@ int HybridVector::vStart()
 		return -1;
 	}
 
+	if (!container())
+	{
+		return -1;
+	}
+
 	return 0;
 }
 
 bool HybridVector::iterators()
 {
+	log << std::endl;
+
 	constexpr Types::size_t SIZE = 4;
 	Vector vector;
 	vector.reserve(SIZE);
@@ -63,6 +70,36 @@ bool HybridVector::iterators()
 		}
 		std::cout << std::endl;
 	}
+
+	return true;
+}
+
+bool HybridVector::container()
+{
+	log << std::endl;
+
+	Array array{{0, 1, 2, 3}};
+
+	HybVector hybVector{array};
+	{
+		for (auto it = hybVector.begin(); it != hybVector.end(); ++it)
+		{
+			std::cout << *it << ' ';
+		}
+		std::cout << std::endl;
+	}
+
+
+	Vector vector{{0, 1, 2, 3}};
+	HybVector hybVector1{vector};
+	{
+		for (auto i : hybVector1)
+		{
+			std::cout << i << ' ';
+		}
+		std::cout << std::endl;
+	}
+//	HybVector hybVector2;
 
 	return true;
 }

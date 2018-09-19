@@ -625,7 +625,6 @@ public:
 	using Iterator = hybrid_vector_utils::Iterator<
 		T, ARRAY_CAPACITY, ArrayTraits, VectorTraits, VectorAllocator
 	>;
-
 	using ConstIterator = hybrid_vector_utils::ConstIterator<
 		T, ARRAY_CAPACITY, ArrayTraits, VectorTraits, VectorAllocator
 	>;
@@ -636,6 +635,18 @@ public:
 	using ConstReverseIterator = flame_ide::templates::ConstReverseIterator<
 		ConstIterator
 	>;
+
+	using typename Traits::Type;
+
+	using typename Traits::Reference;
+	using typename Traits::ConstReference;
+	using typename Traits::MoveReference;
+
+	using typename Traits::Pointer;
+	using typename Traits::PointerToConst;
+
+	using typename Traits::SizeType;
+	using typename Traits::SsizeType;
 
 	HybridVector() = default;
 	HybridVector(const Me &) = default;
@@ -676,6 +687,176 @@ public:
 	Me &operator=(Vector &&vector) noexcept
 	{
 		container = move(vector);
+	}
+
+	template<typename IntType>
+	Reference operator[](IntType index)
+	{
+		return begin()[index];
+	}
+
+	Iterator begin()
+	{
+		if (container)
+		{
+			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			{
+				Array &realContainer = *(container.template get<Array>());
+				return realContainer.begin();
+			}
+			else
+			{
+				Vector &realContainer = *(container.template get<Vector>());
+				return realContainer.begin();
+			}
+		}
+		return Iterator();
+	}
+
+	ConstIterator begin() const
+	{
+		if (container)
+		{
+			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			{
+				const Array &realContainer = *(container.template get<Array>());
+				return realContainer.begin();
+			}
+			else
+			{
+				const Vector &realContainer = *(container.template get<Vector>());
+				return realContainer.begin();
+			}
+		}
+		return ConstIterator();
+	}
+
+	ConstIterator cbegin() const
+	{
+		return this->begin();
+	}
+
+	ReverseIterator rbegin()
+	{
+		if (container)
+		{
+			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			{
+				Array &realContainer = *(container.template get<Array>());
+				return --(realContainer.end());
+			}
+			else
+			{
+				Vector &realContainer = *(container.template get<Vector>());
+				return --(realContainer.end());
+			}
+		}
+		return ReverseIterator();
+	}
+
+	ConstReverseIterator rbegin() const
+	{
+		if (container)
+		{
+			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			{
+				const Array &realContainer = *(container.template get<Array>());
+				return --(realContainer.end());
+			}
+			else
+			{
+				const Vector &realContainer = *(container.template get<Vector>());
+				return --(realContainer.end());
+			}
+		}
+		return ConstReverseIterator();
+	}
+
+	ConstReverseIterator crbegin() const
+	{
+		return this->rbegin();
+	}
+
+	Iterator end()
+	{
+		if (container)
+		{
+			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			{
+				Array &realContainer = *(container.template get<Array>());
+				return realContainer.end();
+			}
+			else
+			{
+				Vector &realContainer = *(container.template get<Vector>());
+				return realContainer.end();
+			}
+		}
+		return Iterator();
+	}
+
+	ConstIterator end() const
+	{
+		if (container)
+		{
+			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			{
+				const Array &realContainer = *(container.template get<Array>());
+				return realContainer.end();
+			}
+			else
+			{
+				const Vector &realContainer = *(container.template get<Vector>());
+				return realContainer.end();
+			}
+		}
+		return ConstIterator();
+	}
+
+	ConstIterator cend() const
+	{
+		return this->end();
+	}
+
+	ReverseIterator rend()
+	{
+		if (container)
+		{
+			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			{
+				Array &realContainer = *(container.template get<Array>());
+				return --(realContainer.begin());
+			}
+			else
+			{
+				Vector &realContainer = *(container.template get<Vector>());
+				return --(realContainer.begin());
+			}
+		}
+		return ReverseIterator();
+	}
+
+	ConstReverseIterator rend() const
+	{
+		if (container)
+		{
+			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			{
+				const Array &realContainer = *(container.template get<Array>());
+				return --(realContainer.begin());
+			}
+			else
+			{
+				const Vector &realContainer = *(container.template get<Vector>());
+				return --(realContainer.begin());
+			}
+		}
+		return ConstReverseIterator();
+	}
+
+	ConstReverseIterator crend() const
+	{
+		return this->rend();
 	}
 
 	inline void clean() noexcept

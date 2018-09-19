@@ -22,6 +22,8 @@ private:
 
 	bool iterators();
 
+	bool container();
+
 	using Array = flame_ide::templates::Array<Types::int_t, 4>;
 	using Vector = flame_ide::templates::Vector<Types::int_t>;
 	using HybVector = flame_ide::templates::HybridVector<Types::int_t, 4>;
