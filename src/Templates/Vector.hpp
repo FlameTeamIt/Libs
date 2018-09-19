@@ -414,32 +414,33 @@ TEMPLATE_DEFINE TEMPLATE_DEFINE_1
 VECTOR_TYPE::Vector(const VECTOR_TYPE_1 &vector)
 		: allocator()
 		, vectorCapacity(vector.size())
-		, head(vector.allocator.createArray(vector.size())), tail(head + vector.size())
+		, head(allocator.createArray(vector.size())), tail(head + vector.size())
 {
-	Iterator it = head;
+	Pointer it = head;
 	for (const Type &i : vector)
-		placementNew<Type>(it, i);
+		placementNew<Type>(it++, i);
 }
 
 TEMPLATE_DEFINE
 VECTOR_TYPE::Vector(const VECTOR_TYPE &vector)
 		: allocator(vector.allocator)
 		, vectorCapacity(vector.size())
-		, head(vector.allocator.createArray(vector.size())), tail(head + vector.size())
+		, head(allocator.createArray(vector.size())), tail(head + vector.size())
 {
-	Iterator it = head;
+	Pointer it = head;
 	for (const Type &i : vector)
-		placementNew<Type>(it, i);
+		placementNew<Type>(it++, i);
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
 VECTOR_TYPE::Vector(VECTOR_TYPE_1 &&vector) noexcept
-		: allocator(move(vector.allocator))
+		: allocator()
 		, vectorCapacity(vector.vectorCapacity)
-		, head(vector.head), tail(vector.tail)
+		, head(allocator.createArray(vector.size())), tail(head + vector.size())
 {
-	vector.head = nullptr;
-	vector.tail = nullptr;
+	Pointer it = head;
+	for (Type &&i : vector)
+		placementNew<Type>(it++, move(i));
 }
 
 TEMPLATE_DEFINE
