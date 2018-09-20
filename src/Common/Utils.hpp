@@ -95,6 +95,23 @@ typename Container::ReverseIterator rend(Container &container);
 template<typename Container> inline
 typename Container::ConstReverseIterator crend(const Container &container);
 
+template<typename T, typename Tt = T&&>
+Tt __implementation_decval__(int) noexcept;
+
+template<typename T>
+T __implementation_decval__(long) noexcept;
+
+template<typename Type>
+decltype(__implementation_decval__<Type>) declareValue() noexcept;
+
+template <class F, class T, class = T>
+struct IsStaticCastable: public FalseType
+{};
+
+template <class F, class T>
+struct IsStaticCastable<F, T, decltype(static_cast<T>(declareValue<F>()))>: public TrueType
+{};
+
 }
 
 template<typename T>
