@@ -242,30 +242,6 @@ public:
 	inline constexpr SizeType capacity() const noexcept;
 
 	/**
-	 * @brief first
-	 * @return
-	 */
-	inline Reference first();
-
-	/**
-	 * @brief first
-	 * @return
-	 */
-	inline ConstReference first() const;
-
-	/**
-	 * @brief first
-	 * @return
-	 */
-	inline Reference last();
-
-	/**
-	 * @brief first
-	 * @return
-	 */
-	inline ConstReference last() const;
-
-	/**
 	 * @brief clean
 	 */
 	inline void clean();
@@ -656,30 +632,6 @@ TEMPLATE_DEFINE constexpr inline
 typename ARRAY_TYPE::SizeType ARRAY_TYPE::capacity() const noexcept
 {
 	return ARRAY_CAPACITY;
-}
-
-TEMPLATE_DEFINE inline
-typename ARRAY_TYPE::Reference ARRAY_TYPE::first()
-{
-	return *begin();
-}
-
-TEMPLATE_DEFINE inline
-typename ARRAY_TYPE::ConstReference ARRAY_TYPE::first() const
-{
-	return *begin();
-}
-
-TEMPLATE_DEFINE inline
-typename ARRAY_TYPE::Reference ARRAY_TYPE::last()
-{
-	return *rbegin();
-}
-
-TEMPLATE_DEFINE inline
-typename ARRAY_TYPE::ConstReference ARRAY_TYPE::last() const
-{
-	return *rbegin();
 }
 
 TEMPLATE_DEFINE inline

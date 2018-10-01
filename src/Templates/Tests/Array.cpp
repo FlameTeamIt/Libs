@@ -93,28 +93,13 @@ int Array::vStart()
 	}
 	std::cout << std::endl;
 
-	TestClass testLastObject;
-	std::cout << "Test last():" << std::endl;
-	{
-		testLastObject = array.last();
-		lambdaPrint(testLastObject);
-	}
-	std::cout << std::endl;
-
-	TestClass testFirstObject;
-	std::cout << "Test first():" << std::endl;
-	{
-		testFirstObject = array.first();
-		lambdaPrint(testFirstObject);
-	}
-	std::cout << std::endl;
-
 	std::cout << "Test popBack():" << std::endl;
 	{
 		array.popBack();
 		printArray(array);
 	}
 
+	TestClass testLastObject = *array.rbegin();
 	std::cout << "Test pushBack():" << std::endl;
 	{
 		array.pushBack(testLastObject);
@@ -129,7 +114,7 @@ int Array::vStart()
 	}
 
 	TestClass testMiddleObject = {-2500, -250, -25, 'M'};
-	testFirstObject = {-1000, -100, -10, 'F'};
+	TestClass testFirstObject = {-1000, -100, -10, 'F'};
 	testLastObject = {-5000, -500, -50, 'L'};
 
 	std::cout << "Test insert()" << std::endl;
