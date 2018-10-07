@@ -78,28 +78,29 @@ bool HybridVector::container()
 {
 	log << std::endl;
 
-	Array array{{0, 1, 2, 3}};
-
-	HybVector hybVector{array};
 	{
-		for (auto it = hybVector.begin(); it != hybVector.end(); ++it)
+		// Creating by array
 		{
-			std::cout << *it << ' ';
+			Array array{{0, 1, 2, 3}};
+			HybVector hybVector{array};
+			for (auto it = hybVector.begin(); it != hybVector.end(); ++it)
+			{
+				std::cout << *it << ' ';
+			}
+			std::cout << std::endl;
 		}
-		std::cout << std::endl;
-	}
 
-
-	Vector vector{{0, 1, 2, 3}};
-	HybVector hybVector1{vector};
-	{
-		for (auto i : hybVector1)
+		// Creating by vector
 		{
-			std::cout << i << ' ';
+			Vector vector{{0, 1, 2, 3}};
+			HybVector hybVector{vector};
+			for (auto i : hybVector)
+			{
+				std::cout << i << ' ';
+			}
+			std::cout << std::endl;
 		}
-		std::cout << std::endl;
 	}
-//	HybVector hybVector2;
 
 	return true;
 }

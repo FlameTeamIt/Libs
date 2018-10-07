@@ -6,6 +6,8 @@
 #include <Templates/Variant.hpp>
 #include <Templates/Iterator.hpp>
 
+// TODO: провести аудит кода и написать тесты.
+
 namespace flame_ide
 {namespace templates
 {
@@ -82,7 +84,7 @@ public:
 
 	Me &operator++()
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
 			++it;
@@ -104,7 +106,7 @@ public:
 
 	Me &operator--()
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
 			--it;
@@ -126,7 +128,7 @@ public:
 
 	Reference operator*()
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
 			return *it;
@@ -145,7 +147,7 @@ public:
 
 	ConstReference operator*() const
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			const ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
 			return *it;
@@ -181,7 +183,7 @@ public:
 	template<typename IntType>
 	Me &operator+=(IntType value)
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
 			it += value;
@@ -197,7 +199,7 @@ public:
 	template<typename IntType>
 	Me &operator-=(IntType value)
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
 			it -= value;
@@ -225,7 +227,7 @@ public:
 		if (wrappedIterator.template getCurrentIndex() ==
 				iterator.wrappedIterator.template getCurrentIndex())
 		{
-			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			if (isArrayIterator())
 			{
 				ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
 				ArrayIterator &itIt = *(iterator.wrappedIterator.template get<ArrayIterator>());
@@ -246,7 +248,7 @@ public:
 		if (wrappedIterator.template getCurrentIndex() ==
 				iterator.wrappedIterator.template getCurrentIndex())
 		{
-			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			if (isArrayIterator())
 			{
 				ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
 				ArrayIterator &itIt = *(iterator.wrappedIterator.template get<ArrayIterator>());
@@ -267,7 +269,7 @@ public:
 		if (wrappedIterator.template getCurrentIndex() ==
 				iterator.wrappedIterator.template getCurrentIndex())
 		{
-			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			if (isArrayIterator())
 			{
 				ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
 				ArrayIterator &itIt = *(iterator.wrappedIterator.template get<ArrayIterator>());
@@ -288,7 +290,7 @@ public:
 		if (wrappedIterator.template getCurrentIndex() ==
 				iterator.wrappedIterator.template getCurrentIndex())
 		{
-			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			if (isArrayIterator())
 			{
 				ArrayIterator &it = *(wrappedIterator.template get<ArrayIterator>());
 				ArrayIterator &itIt = *(iterator.wrappedIterator.template get<ArrayIterator>());
@@ -316,7 +318,37 @@ public:
 		return operator->()[index];
 	}
 
+	operator ArrayIterator()
+	{
+		ArrayIterator it;
+		if (isArrayIterator())
+		{
+			it = *(wrappedIterator.template get<ArrayIterator>());
+		}
+		return it;
+	}
+
+	operator VectorIterator()
+	{
+		VectorIterator it;
+		if (isVectorIterator())
+		{
+			it = *(wrappedIterator.template get<VectorIterator>());
+		}
+		return it;
+	}
+
 private:
+	inline bool isArrayIterator() const noexcept
+	{
+		return wrappedIterator && wrappedIterator.template getCurrentIndex() == ARRAY_INDEX;
+	}
+
+	inline bool isVectorIterator() const noexcept
+	{
+		return wrappedIterator && wrappedIterator.template getCurrentIndex() == VECTOR_INDEX;
+	}
+
 	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
@@ -375,7 +407,7 @@ public:
 
 	ConstIterator() = default;
 	ConstIterator(const Me &) = default;
-	ConstIterator(Me &&) = default;
+	ConstIterator(Me &&) noexcept = default;
 
 	ConstIterator(ConstArrayIterator iterator) : Parent(WrappedIterator(iterator))
 	{}
@@ -384,11 +416,11 @@ public:
 	{}
 
 	Me &operator=(const Me &) = default;
-	Me &operator=(Me &&) = default;
+	Me &operator=(Me &&) noexcept = default;
 
 	Me &operator++()
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
 			++it;
@@ -410,7 +442,7 @@ public:
 
 	Me &operator--()
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
 			--it;
@@ -432,7 +464,7 @@ public:
 
 	ConstReference operator*() const
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			const ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
 			return *it;
@@ -468,7 +500,7 @@ public:
 	template<typename IntType>
 	Me &operator+=(IntType value)
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
 			it += value;
@@ -484,7 +516,7 @@ public:
 	template<typename IntType>
 	Me &operator-=(IntType value)
 	{
-		if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+		if (isArrayIterator())
 		{
 			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
 			it -= value;
@@ -512,7 +544,7 @@ public:
 		if (wrappedIterator.template getCurrentIndex() ==
 				iterator.wrappedIterator.template getCurrentIndex())
 		{
-			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			if (isArrayIterator())
 			{
 				ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
 				ConstArrayIterator &itIt = *(iterator.wrappedIterator.template get<ConstArrayIterator>());
@@ -533,7 +565,7 @@ public:
 		if (wrappedIterator.template getCurrentIndex() ==
 				iterator.wrappedIterator.template getCurrentIndex())
 		{
-			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			if (isArrayIterator())
 			{
 				ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
 				ConstArrayIterator &itIt = *(iterator.wrappedIterator.template get<ConstArrayIterator>());
@@ -554,7 +586,7 @@ public:
 		if (wrappedIterator.template getCurrentIndex() ==
 				iterator.wrappedIterator.template getCurrentIndex())
 		{
-			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			if (isArrayIterator())
 			{
 				ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
 				ConstArrayIterator &itIt = *(iterator.wrappedIterator.template get<ConstArrayIterator>());
@@ -575,7 +607,7 @@ public:
 		if (wrappedIterator.template getCurrentIndex() ==
 				iterator.wrappedIterator.template getCurrentIndex())
 		{
-			if (wrappedIterator.template getCurrentIndex() == ARRAY_INDEX)
+			if (isArrayIterator())
 			{
 				ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
 				ConstArrayIterator &itIt = *(iterator.wrappedIterator.template get<ConstArrayIterator>());
@@ -598,6 +630,16 @@ public:
 	}
 
 private:
+	inline bool isArrayIterator() const noexcept
+	{
+		return wrappedIterator && wrappedIterator.template getCurrentIndex() == ARRAY_INDEX;
+	}
+
+	inline bool isVectorIterator() const noexcept
+	{
+		return wrappedIterator && wrappedIterator.template getCurrentIndex() == VECTOR_INDEX;
+	}
+
 	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
@@ -667,7 +709,7 @@ public:
 	~HybridVector() = default;
 
 	Me &operator=(const Me &) = default;
-	Me &operator=(Me &&) = default;
+	Me &operator=(Me &&) noexcept = default;
 
 	Me &operator=(const Array &array)
 	{
@@ -692,14 +734,111 @@ public:
 	template<typename IntType>
 	Reference operator[](IntType index)
 	{
-		return begin()[index];
+		return this->begin()[index];
+	}
+
+	Pointer data()
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array &realContainer = *(container.template get<Array>());
+				return realContainer.data();
+			}
+			else
+			{
+				Vector &realContainer = *(container.template get<Vector>());
+				return realContainer.data();
+			}
+		}
+		return Pointer();
+	}
+
+	PointerToConst data() const
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				const Array &realContainer = *(container.template get<Array>());
+				return realContainer.data();
+			}
+			else
+			{
+				const Vector &realContainer = *(container.template get<Vector>());
+				return realContainer.data();
+			}
+		}
+		return Pointer();
+	}
+
+	SizeType size() const
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				const Array &realContainer = *(container.template get<Array>());
+				return realContainer.size();
+			}
+			else
+			{
+				const Vector &realContainer = *(container.template get<Vector>());
+				return realContainer.size();
+			}
+		}
+		return SizeType();
+	}
+
+	SizeType capacity() const
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				const Array &realContainer = *(container.template get<Array>());
+				return realContainer.capacity();
+			}
+			else
+			{
+				const Vector &realContainer = *(container.template get<Vector>());
+				return realContainer.capacity();
+			}
+		}
+		return SizeType();
+	}
+
+	inline void clean() noexcept
+	{
+		this->reset();
+		container = Array{};
+	}
+
+	Me clone() const
+	{
+		Me copy;
+		if (container)
+		{
+			if (this->isArray())
+			{
+				const Array &realContainer = *(container.template get<Array>());
+				copy = Me(realContainer);
+			}
+			else
+			{
+				const Vector &realContainer = *(container.template get<Vector>());
+				copy = Me(realContainer);
+			}
+		}
+		return copy;
 	}
 
 	Iterator begin()
 	{
 		if (container)
 		{
-			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			if (this->isArray())
 			{
 				Array &realContainer = *(container.template get<Array>());
 				return realContainer.begin();
@@ -717,7 +856,7 @@ public:
 	{
 		if (container)
 		{
-			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			if (this->isArray())
 			{
 				const Array &realContainer = *(container.template get<Array>());
 				return realContainer.begin();
@@ -740,7 +879,7 @@ public:
 	{
 		if (container)
 		{
-			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			if (this->isArray())
 			{
 				Array &realContainer = *(container.template get<Array>());
 				return --(realContainer.end());
@@ -758,7 +897,7 @@ public:
 	{
 		if (container)
 		{
-			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			if (this->isArray())
 			{
 				const Array &realContainer = *(container.template get<Array>());
 				return --(realContainer.end());
@@ -781,7 +920,7 @@ public:
 	{
 		if (container)
 		{
-			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			if (this->isArray())
 			{
 				Array &realContainer = *(container.template get<Array>());
 				return realContainer.end();
@@ -799,7 +938,7 @@ public:
 	{
 		if (container)
 		{
-			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			if (this->isArray())
 			{
 				const Array &realContainer = *(container.template get<Array>());
 				return realContainer.end();
@@ -822,7 +961,7 @@ public:
 	{
 		if (container)
 		{
-			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			if (this->isArray())
 			{
 				Array &realContainer = *(container.template get<Array>());
 				return --(realContainer.begin());
@@ -840,7 +979,7 @@ public:
 	{
 		if (container)
 		{
-			if (container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX)
+			if (this->isArray())
 			{
 				const Array &realContainer = *(container.template get<Array>());
 				return --(realContainer.begin());
@@ -859,12 +998,387 @@ public:
 		return this->rend();
 	}
 
-	inline void clean() noexcept
+	void pushBack(ConstReference object)
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array *realContainer = container.template get<Array>();
+				if (realContainer->capacity() > realContainer->size())
+				{
+					realContainer->pushBack(object);
+				}
+				else
+				{
+					this->useVector();
+					this->pushBack(object);
+				}
+			}
+			else
+			{
+				container.template get<Vector>()->pushBack(object);
+			}
+		}
+		else
+		{
+			this->useArray();
+			this->pushBack(object);
+		}
+	}
+
+	void pushBack(MoveReference object)
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array *realContainer = container.template get<Array>();
+				if (realContainer->capacity() > realContainer->size())
+				{
+					realContainer->pushBack(move(object));
+				}
+				else
+				{
+					this->useVector();
+					this->pushBack(move(object));
+				}
+			}
+			else
+			{
+				container.template get<Vector>()->pushBack(move(object));
+			}
+		}
+		else
+		{
+			this->useArray();
+			this->pushBack(move(object));
+		}
+	}
+
+	template<typename ...Args>
+	void emplaceBack(Args &&...args)
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array *realContainer = container.template get<Array>();
+				if (realContainer->capacity() > realContainer->size())
+				{
+					realContainer->emplaceBack(forward(args)...);
+				}
+				else
+				{
+					this->useVector();
+					this->emplaceBack(forward(args)...);
+				}
+			}
+			else
+			{
+				container.template get<Vector>()->emplaceBack(forward(args)...);
+			}
+		}
+		else
+		{
+			this->useArray();
+			this->emplaceBack(forward(args)...);
+		}
+	}
+
+	void popBack()
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				container.template get<Array>()->popBack();
+			}
+			else
+			{
+				container.template get<Vector>()->popBack();
+			}
+		}
+	}
+
+	void insert(Iterator it, ConstReference object)
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array *realContainer = container.template get<Array>();
+				if (realContainer->capacity() > realContainer->size())
+				{
+					realContainer->insert(it.operator typename Array::Iterator(), object);
+				}
+				else
+				{
+					auto diff = this->begin() - it;
+
+					this->useVector();
+
+					it = this->begin() + diff;
+					this->insert(it, object);
+				}
+			}
+			else
+			{
+				container.template get<Vector>()->insert(it, object);
+			}
+		}
+		else
+		{
+			this->useArray();
+			this->insert(it, move(object));
+		}
+	}
+
+	void insert(Iterator it, MoveReference object)
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array *realContainer = container.template get<Array>();
+				if (realContainer->capacity() > realContainer->size())
+				{
+					realContainer->insert(it.operator typename Array::Iterator(), move(object));
+				}
+				else
+				{
+					auto diff = this->begin() - it;
+
+					this->useVector();
+
+					it = this->begin() + diff;
+					this->insert(it, move(object));
+				}
+			}
+			else
+			{
+				container.template get<Vector>()->insert(it, move(object));
+			}
+		}
+		else
+		{
+			this->useArray();
+			this->insert(it, move(object));
+		}
+	}
+
+	template<typename InputIterator>
+	void insert(Iterator it, InputIterator itBegin, InputIterator itEnd)
+	{
+		auto countElements = countIterations(itBegin, itEnd);
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array *realContainer = container.template get<Array>();
+				if (countElements < realContainer->capacity() - realContainer->size())
+				{
+					realContainer->insert(it.operator typename Array::Iterator(), itBegin, itEnd);
+				}
+				else
+				{
+					auto diff = this->begin() - it;
+
+					this->useVector();
+
+					it = this->begin() + diff;
+					this->insert(it, itBegin, itEnd);
+				}
+			}
+			else
+			{
+				container.template get<Vector>()->insert(
+						it.operator typename Vector::Iterator()
+						, itBegin, itEnd
+				);
+			}
+		}
+		else if (it == Iterator())
+		{
+			if (countElements > ARRAY_CAPACITY)
+			{
+				this->useVector();
+				this->insert(this->end(), itBegin, itEnd);
+			}
+			else
+			{
+				this->useArray();
+				this->insert(this->end(), itBegin, itEnd);
+			}
+		}
+	}
+
+	template<typename ...Args>
+	void emplace(Iterator it, Args &&...args) const
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array *realContainer = container.template get<Array>();
+				if (realContainer->capacity() == realContainer->size())
+				{
+					auto diff = it - begin();
+
+					this->useVector();
+
+					it = begin() + diff;
+					this->emplace(it, forward(args)...);
+				}
+				else
+				{
+					realContainer->emplace(it, forward(args)...);
+				}
+			}
+			else
+			{
+				container.template get<Vector>()->emplace(it, forward(args)...);
+			}
+		}
+		else
+		{
+			this->useArray();
+			this->emplace(it, args...);
+		}
+	}
+
+	void erase(Iterator it)
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array *realContainer = container.template get<Array>();
+				realContainer->erase(it);
+				if (!realContainer->size())
+				{
+					this->reset();
+				}
+			}
+			else
+			{
+				Vector *realContainer = container.template get<Vector>();
+				realContainer->erase(it);
+				if (realContainer->size() < ARRAY_CAPACITY)
+				{
+					this->useArray();
+				}
+			}
+		}
+	}
+
+	void erase(Iterator itBegin, Iterator itEnd)
+	{
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array *realContainer = container.template get<Array>();
+				realContainer->erase(itBegin, itEnd);
+				if (!realContainer->size())
+				{
+					this->reset();
+				}
+			}
+			else
+			{
+				Vector *realContainer = container.template get<Vector>();
+				realContainer->erase(itBegin, itEnd);
+				if (realContainer->size() < ARRAY_CAPACITY)
+				{
+					this->useArray();
+				}
+			}
+		}
+	}
+
+	void reset()
 	{
 		container.template reset();
 	}
 
 private:
+	void useArray()
+	{
+		if (container)
+		{
+			if (this->isVector())
+			{
+				Vector *realContainer = container.template get<Array>();
+				auto range = makeRange(
+						realContainer->begin(),
+						realContainer->begin()
+						+ (
+								realContainer->size() > ARRAY_CAPACITY
+										? ARRAY_CAPACITY
+										: realContainer->size()
+						)
+				);
+
+				Array array;
+				for (MoveReference i : range)
+				{
+					array.pushBack(move(i));
+				}
+
+				this->reset();
+				container = move(array);
+			}
+		}
+		else
+		{
+			container = Array{};
+		}
+	}
+
+	void useVector()
+	{
+		auto lambdaMakeVector = [](SizeType reserveSize) -> Vector
+		{
+			Vector vector;
+			vector.reserve(reserveSize * SizeType(2));
+			return vector;
+		};
+
+		if (container)
+		{
+			if (this->isArray())
+			{
+				Array *realContainer = container.template get<Array>();
+
+				Vector vector = lambdaMakeVector(realContainer->size());
+				for (MoveReference i : *realContainer)
+				{
+					vector.pushBack(move(i));
+				}
+
+				this->reset();
+				container = move(vector);
+			}
+		}
+		else
+		{
+			container = move(lambdaMakeVector(ARRAY_CAPACITY));
+		}
+	}
+
+	inline bool isArray() const noexcept
+	{
+		return container
+				&& container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX;
+	}
+
+	inline bool isVector() const noexcept
+	{
+		return container
+				&& container.template getCurrentIndex() == hybrid_vector_utils::VECTOR_INDEX;
+	}
+
 	ContainerVariant container;
 };
 
