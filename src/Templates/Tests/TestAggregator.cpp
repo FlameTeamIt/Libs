@@ -39,6 +39,7 @@ TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 	pushBackTest(new test::Variant());
 	pushBackTest(new test::WideInt());
 	pushBackTest(new test::HybridVector());
+	pushBackTest(new test::IntegerIterator());
 }
 
 }}

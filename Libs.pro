@@ -53,6 +53,7 @@ HEADERS += \
 	./src/Templates/CircularVector.hpp \
 	./src/Templates/HybridVector.hpp \
 	./src/Templates/InitializerList.hpp \
+	./src/Templates/IntegerIterator.hpp \
 	./src/Templates/Iterator.hpp \
 	./src/Templates/List.hpp \
 	./src/Templates/ObjectViewer.hpp \
@@ -72,6 +73,7 @@ HEADERS += \
 	./src/Templates/Tests/ByteOrder.hpp \
 	./src/Templates/Tests/CircularVector.hpp \
 	./src/Templates/Tests/HybridVector.hpp \
+	./src/Templates/Tests/IntegerIterator.hpp \
 	./src/Templates/Tests/List.hpp \
 	./src/Templates/Tests/Serialization.hpp \
 	./src/Templates/Tests/SharedPointer.hpp \
@@ -110,6 +112,7 @@ SOURCES += \
 	./src/Templates/Tests/ByteOrder.cpp \
 	./src/Templates/Tests/CircularVector.cpp \
 	./src/Templates/Tests/HybridVector.cpp \
+	./src/Templates/Tests/IntegerIterator.cpp \
 	./src/Templates/Tests/List.cpp \
 	./src/Templates/Tests/Serialization.cpp \
 	./src/Templates/Tests/SharedPointer.cpp \

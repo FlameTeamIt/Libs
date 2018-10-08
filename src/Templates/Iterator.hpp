@@ -3,8 +3,6 @@
 
 #include <Common/Traits.hpp>
 
-// defined classes and types
-
 #define OPERATOR_INC_PREFIX \
 Me &operator++() \
 { \
@@ -246,6 +244,8 @@ typename Traits::ConstReference operator[](IntType value) const \
 { \
 	return *(this->wrappedIterator - value); \
 }
+
+// define classes and types
 
 namespace flame_ide
 {namespace templates
