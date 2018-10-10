@@ -31,19 +31,19 @@ public:
 
 	int start()
 	{
-		int return_code;
+		int returnCode;
 
 		printStart();
 
-		return_code = vStart();
-		if (return_code)
+		returnCode = vStart();
+		if (returnCode)
 			printMessageFalse();
 		else
 			printMessageTrue();
 
 		printEnd();
 
-		return return_code;
+		return returnCode;
 	}
 
 protected:
@@ -117,7 +117,7 @@ public:
 		printEnd();
 	}
 
-	void pushBackTest(AbstractTest *test, int is_enable=1)
+	void pushBackTest(AbstractTest *test, int is_enable = 1)
 	{
 		vectorTests.push_back(test);
 		vectorEnableTests.push_back(is_enable);
