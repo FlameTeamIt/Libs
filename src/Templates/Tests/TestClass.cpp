@@ -24,7 +24,7 @@ TestClass::TestClass(const TestClass &object) :
 		, c(ObjectAllocator<char>().construct(object.getChar()))
 {}
 
-TestClass::TestClass(TestClass &&object) :
+TestClass::TestClass(TestClass &&object) noexcept :
 		l(object.l)
 		, i(object.i)
 		, s(object.s)
@@ -76,7 +76,7 @@ TestClass &TestClass::operator=(const TestClass &object)
 	return *this;
 }
 
-TestClass &TestClass::operator=(TestClass &&object)
+TestClass &TestClass::operator=(TestClass &&object) noexcept
 {
 	if (this != &object)
 	{
