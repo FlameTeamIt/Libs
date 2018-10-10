@@ -3,6 +3,7 @@
 
 #include <tests/Test.hpp>
 #include <Templates/Vector.hpp>
+#include <vector>
 
 #include "TestClass.hpp"
 
@@ -16,10 +17,13 @@ public:
 	Vector();
 	virtual ~Vector();
 
+	using TestVector = flame_ide::templates::Vector<TestClass>;
+
 private:
 	virtual int vStart();
 
-	flame_ide::templates::Vector<TestClass> vector;
+	TestVector vector;
+	std::vector<TestClass> stdvector;
 };
 
 }}

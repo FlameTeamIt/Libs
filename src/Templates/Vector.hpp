@@ -214,30 +214,6 @@ public:
 	void reserve(SizeType vectorCapacity);
 
 	/**
-	 * @brief first
-	 * @return
-	 */
-	Reference first();
-
-	/**
-	 * @brief first
-	 * @return
-	 */
-	ConstReference first() const;
-
-	/**
-	 * @brief last
-	 * @return
-	 */
-	Reference last();
-
-	/**
-	 * @brief last
-	 * @return
-	 */
-	ConstReference last() const;
-
-	/**
 	 * @brief clean
 	 */
 	void clean();
@@ -618,30 +594,6 @@ void VECTOR_TYPE::reserve(typename VECTOR_TYPE::SizeType newCapacity)
 			vectorCapacity = newCapacity;
 		}
 	}
-}
-
-TEMPLATE_DEFINE
-typename VECTOR_TYPE::Reference VECTOR_TYPE::first()
-{
-	return *head;
-}
-
-TEMPLATE_DEFINE
-typename VECTOR_TYPE::ConstReference VECTOR_TYPE::first() const
-{
-	return *head;
-}
-
-TEMPLATE_DEFINE
-typename VECTOR_TYPE::Reference VECTOR_TYPE::last()
-{
-	return *(tail - 1);
-}
-
-TEMPLATE_DEFINE
-typename VECTOR_TYPE::ConstReference VECTOR_TYPE::last() const
-{
-	return *(tail - 1);
 }
 
 TEMPLATE_DEFINE
