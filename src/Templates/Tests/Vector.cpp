@@ -81,7 +81,7 @@ int Vector::vStart()
 	{
 		if (vector.size() != stdvector.size())
 		{
-			log << vector.size() << " != " << SIZE << std::endl;
+			log << "Failed" << std::endl;
 			return -1;
 		}
 		else
