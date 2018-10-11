@@ -13,6 +13,7 @@
 #include <Templates/Tests/Vector.hpp>
 #include <Templates/Tests/WideInt.hpp>
 #include <Templates/Tests/HybridVector.hpp>
+#include <Templates/Tests/IntegerIterator.hpp>
 
 #include <tests/Test.hpp>
 #include <Templates/Tests/TestAggregator.hpp>
