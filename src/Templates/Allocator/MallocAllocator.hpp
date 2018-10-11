@@ -27,10 +27,10 @@ public:
 
 	MallocAllocator() = default;
 	MallocAllocator(const MallocAllocator<Traits> &) = default;
-	MallocAllocator(MallocAllocator<Traits> &&) = default;
+	MallocAllocator(MallocAllocator<Traits> &&) noexcept = default;
 	~MallocAllocator() = default;
 	MallocAllocator &operator=(const MallocAllocator<Traits> &) = default;
-	MallocAllocator &operator=(MallocAllocator<Traits> &&) = default;
+	MallocAllocator &operator=(MallocAllocator<Traits> &&) noexcept = default;
 
 protected:
 	///

@@ -36,10 +36,10 @@ public:
 
 	ObjectAllocator() = default;
 	ObjectAllocator(const Me &) = default;
-	ObjectAllocator(Me &&) = default;
+	ObjectAllocator(Me &&) noexcept = default;
 	~ObjectAllocator() = default;
 	Me &operator=(const Me &) = default;
-	Me &operator=(Me &&) = default;
+	Me &operator=(Me &&) noexcept = default;
 
 	///
 	/// @brief Function for create object, using custom constructor
