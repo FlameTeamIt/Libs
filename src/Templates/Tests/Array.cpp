@@ -18,6 +18,13 @@ Array::Array() : AbstractTest("Array")
 				, TestClass{4000, 400, 40, '4'}
 				, TestClass{5000, 500, 50, '5'}
 		}}
+		, stdVector{{
+				TestClass{1000, 100, 10, '1'}
+				, TestClass{2000, 200, 20, '2'}
+				, TestClass{3000, 300, 30, '3'}
+				, TestClass{4000, 400, 40, '4'}
+				, TestClass{5000, 500, 50, '5'}
+		}}
 {}
 
 Array::~Array()
@@ -25,249 +32,323 @@ Array::~Array()
 
 int Array::vStart()
 {
-	constexpr size_t SIZE = 5;
-	auto lambdaPrint = [] (const TestClass &testObject) {
-		std::cout << testObject.getLong()
-				<< ' ' << testObject.getInt()
-				<< ' ' << testObject.getShort()
-				<< ' ' << testObject.getChar() << std::endl;
+	TestClass testArray[] = {
+			TestClass{-1000, -100, -10, 'F'}
+			, TestClass{-2500, -250, -25, 'M'}
+			, TestClass{-5000, -500, -50, 'L'}
 	};
-	auto printArray = [&lambdaPrint] (auto &array, bool endl = true) {
-		auto itEnd = array.end();
-		auto it = array.begin();
-		while (it != itEnd)
-		{
-			lambdaPrint(*it);
-			++it;
-		}
-		if (endl)
-			std::cout << std::endl;
-	};
+	constexpr size_t countObjects = sizeof(testArray) / sizeof(testArray[0]);
+	constexpr size_t insertIndex = 3;
 
-	std::cout << "Test initializing size:" << std::endl;
-	{
-		if (array.size() == SIZE)
-			std::cout << array.size() << " == " << SIZE << std::endl;
-		else
-		{
-			std::cout << array.size() << " != " << SIZE << std::endl;
-			return 1;
-		}
-	}
+	CHECK_RESULT(doTestCase(
+			"initializing size"
+			, [&]()
+			{
+				return (array.size() == stdVector.size())
+						? ResultType::SUCCESS
+						: ResultType::FAILED;
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"initializing"
+			, [&]()
+			{
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"cloning"
+			, [&]()
+			{
+				templates::Array<TestClass, 10> arrayClone = array.clone();
+				return compareContainers(arrayClone, array);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"copying"
+			, [&]()
+			{
+				templates::Array<TestClass, 10> arrayCopy = array;
+				return compareContainers(arrayCopy, array);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"moving"
+			, [&]()
+			{
+				templates::Array<TestClass, 10> arrayMove = flame_ide::move(array);
+				CHECK_RESULT(compareContainers(arrayMove, stdVector));
 
-	std::cout << "Test initializing:" << std::endl;
-	{
-		printArray(array);
-	}
+				array = flame_ide::move(arrayMove);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"reverse"
+			, [&]()
+			{
+				return compareContainers(
+					templates::makeRange(array.rbegin(), array.rend())
+					, templates::makeRange(stdVector.rbegin(), stdVector.rend())
+				);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"popBack()"
+			, [&]()
+			{
+				array.popBack();
+				stdVector.pop_back();
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"pushBack()"
+			, [&]()
+			{
+				TestClass testLastObject = *array.rbegin();
+				array.pushBack(testLastObject);
+				stdVector.push_back(testLastObject);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"emplaceBack()"
+			, [&]()
+			{
+				array.emplaceBack(-6000, -600, -60, '6');
+				stdVector.emplace_back(-6000, -600, -60, '6');
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"insert()"
+			, [&]()
+			{
+				TestClass testFirstObject = {-1000, -100, -10, 'F'};
+				TestClass testMiddleObject = {-2500, -250, -25, 'M'};
+				TestClass testLastObject = {-5000, -500, -50, 'L'};
 
-	std::cout << "Test cloning:" << std::endl;
-	{
-		templates::Array<TestClass, 10> arrayClone = array.clone();
-		printArray(arrayClone);
-	}
+				array.insert(array.begin(), testFirstObject);
+				array.insert(array.begin() + 3, testMiddleObject);
+				array.insert(array.end(), testLastObject);
+				stdVector.insert(stdVector.begin(), testFirstObject);
+				stdVector.insert(stdVector.begin() + 3, testMiddleObject);
+				stdVector.insert(stdVector.end(), testLastObject);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"erase()"
+			, [&]()
+			{
+				TestClass testFirstObject = {-1000, -100, -10, 'F'};
+				TestClass testMiddleObject = {-2500, -250, -25, 'M'};
+				TestClass testLastObject = {-5000, -500, -50, 'L'};
 
-	std::cout << "Test copying:" << std::endl;
-	{
-		templates::Array<TestClass, 10> arrayCopy = array;
-		printArray(arrayCopy);
-	}
+				array.erase(array.begin() + 3);
+				array.erase(array.begin());
+				array.erase(array.end() - 1);
+				stdVector.erase(stdVector.begin() + 3);
+				stdVector.erase(stdVector.begin());
+				stdVector.erase(stdVector.end() - 1);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"emplace()"
+			, [&]()
+			{
+				TestClass testFirstObject = {-1000, -100, -10, 'F'};
+				TestClass testMiddleObject = {-2500, -250, -25, 'M'};
+				TestClass testLastObject = {-5000, -500, -50, 'L'};
 
-	std::cout << "Test moving:" << std::endl;
-	{
-		templates::Array<TestClass, 10> arrayMove = flame_ide::move(array);
-		std::cout << "--> Moved: " << std::endl;
-		printArray(arrayMove, false);
+				array.emplace(array.begin(), testFirstObject);
+				array.emplace(array.begin() + 3, testMiddleObject);
+				array.emplace(array.end(), testLastObject);
+				stdVector.emplace(stdVector.begin(), testFirstObject);
+				stdVector.emplace(stdVector.begin() + 3, testMiddleObject);
+				stdVector.emplace(stdVector.end(), testLastObject);
+				CHECK_RESULT(compareContainers(array, stdVector));
 
-		array = flame_ide::move(arrayMove);
-		std::cout << "--> Original: " << std::endl;
-		printArray(array);
-	}
-	std::cout << std::endl;
+				array.erase(array.begin() + 3);
+				array.erase(array.begin());
+				array.erase(array.end() - 1);
+				stdVector.erase(stdVector.begin() + 3);
+				stdVector.erase(stdVector.begin());
+				stdVector.erase(stdVector.end() - 1);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"operator+=() copy"
+			, [&]()
+			{
+				TestClass testObject {-6000, -600, -60, '6'};
+				array += testObject;
+				stdVector.push_back(testObject);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"operator-=(Iterator)"
+			, [&]()
+			{
+				array -= --(array.end());
+				stdVector.erase(--stdVector.end());
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"operator+=() move"
+			, [&]()
+			{
+				TestClass testObject {-7000, -700, -70, '7'};
+				array += flame_ide::move(testObject);
+				stdVector.emplace_back(-7000, -700, -70, '7');
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"operator-=(ReverseIterator)"
+			, [&]()
+			{
+				array -= array.rbegin();
+				stdVector.erase(--stdVector.end());
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"operator+=(Range)"
+			, [&]()
+			{
+				TestClass testObjects[] = {
+						{6000, 600, 60, '6'}
+						, {-7000, -700, -70, '7'}
+						, {-8000, -800, -80, '8'}
+						, {-8000, -800, -80, '8'}
+				};
+				constexpr size_t countObjects = sizeof(testObjects) / sizeof(testObjects[0]);
 
-	std::cout << "Test reverse:" << std::endl;
-	{
-		templates::Range<
-			decltype(array.crbegin())
-		> range(array.crbegin(), array.crend());
-		printArray(range);
-	}
-	std::cout << std::endl;
+				array += templates::Range<TestClass *>{
+						testObjects, testObjects + countObjects
+				};
+				stdVector.insert(stdVector.end(), testObjects, testObjects + countObjects);
 
-	std::cout << "Test popBack():" << std::endl;
-	{
-		array.popBack();
-		printArray(array);
-	}
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"operator-=(Range)"
+			, [&]()
+			{
+				constexpr size_t countObjects = 4;
+				array -= templates::makeRange(array.end() - countObjects, array.end());
+				stdVector.erase(stdVector.end() - countObjects, stdVector.end());
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"operator+=(Range)"
+			, [&]()
+			{
+				TestClass testObjects[] = {
+						{6000, 600, 60, '6'}
+						, {-7000, -700, -70, '7'}
+						, {-8000, -800, -80, '8'}
+						, {-8000, -800, -80, '8'}
+				};
+				constexpr size_t countObjects = sizeof(testObjects) / sizeof(testObjects[0]);
+				auto range = templates::Range<TestClass *>{
+						 testObjects, testObjects + countObjects
+				};
 
-	TestClass testLastObject = *array.rbegin();
-	std::cout << "Test pushBack():" << std::endl;
-	{
-		array.pushBack(testLastObject);
-		printArray(array);
-	}
+				array += range;
+				stdVector.insert(stdVector.end(), range.begin(), range.end());
 
-	std::cout << "Test emplaceBack():" << std::endl;
-	{
-		array.emplaceBack(-6000, -600, -60, '6');
-		printArray(array);
-		array.popBack();
-	}
-
-	TestClass testMiddleObject = {-2500, -250, -25, 'M'};
-	TestClass testFirstObject = {-1000, -100, -10, 'F'};
-	testLastObject = {-5000, -500, -50, 'L'};
-
-	std::cout << "Test insert()" << std::endl;
-	{
-		array.insert(array.begin(), testFirstObject);
-		array.insert(array.begin() + 3, testMiddleObject);
-		array.insert(array.end(), testLastObject);
-
-		printArray(array);
-	}
-
-	std::cout << "Test erase()" << std::endl;
-	{
-		array.erase(array.begin() + 3);
-		array.erase(array.begin());
-		array.erase(array.end() - 1);
-
-		printArray(array);
-	}
-
-	std::cout << "Test emplace:" << std::endl;
-	{
-		array.emplace(array.begin(), testFirstObject);
-		array.emplace(array.begin() + 3, testMiddleObject);
-		array.emplace(array.end(), testLastObject);
-
-		printArray(array);
-
-		array.erase(array.begin() + 3);
-		array.erase(array.begin());
-		array.erase(array.end() - 1);
-	}
-
-	std::cout << "Test operator+=() copy" << std::endl;
-	{
-		TestClass testObject {-6000, -600, -60, '6'};
-		array += testObject;
-
-		printArray(array);
-	}
-
-	std::cout << "Test operator-=(Iterator)" << std::endl;
-	{
-		array -= --(array.end());
-
-		printArray(array);
-	}
-
-	std::cout << "Test operator+=() move" << std::endl;
-	{
-		TestClass testObject {-7000, -700, -70, '7'};
-		array += flame_ide::move(testObject);
-
-		printArray(array);
-	}
-
-	std::cout << "Test operator-=(ReverseIterator)" << std::endl;
-	{
-		array -= array.rbegin();
-
-		printArray(array);
-	}
-
-	std::cout << "Test operator+=(Range)" << std::endl;
-	{
-		TestClass testObjects[] = {{6000, 600, 60, '6'}
-				, {-7000, -700, -70, '7'}
-				, {-8000, -800, -80, '8'}
-				, {-8000, -800, -80, '8'}};
-
-		array += flame_ide::templates::Range<TestClass *>{
-				testObjects, testObjects + 4
-		};
-
-		printArray(array);
-	}
-
-	std::cout << "Test operator-=(ForwardRange)" << std::endl;
-	{
-		array -= flame_ide::templates::Range<decltype(array)::Iterator> {
-				array.end() - 4, array.end()
-		};
-
-		printArray(array);
-	}
-
-	std::cout << "Test operator+=(Range)" << std::endl;
-	{
-		TestClass testObjects[] = {{6000, 600, 60, '6'}
-				, {-7000, -700, -70, '7'}
-				, {-8000, -800, -80, '8'}
-				, {-8000, -800, -80, '8'}};
-
-		array += flame_ide::templates::Range<TestClass *>{
-				testObjects, testObjects + 4
-		};
-
-		printArray(array);
-	}
-
-	std::cout << "Test operator-=(ReverseRange)" << std::endl;
-	{
-		array -= flame_ide::templates::Range<decltype(array)::ReverseIterator> {
-				array.rbegin(), array.rbegin() + 4
-		};
-
-		printArray(array);
-	}
-
-	std::cout << ">--- Test insert(range)/erase(range) ---<" << std::endl << std::endl;
-	{
-		TestClass testArray[] = {
-			testFirstObject, testMiddleObject, testLastObject
-		};
-
-		std::cout << "Insert to begin()" << std::endl;
-		{
-			array.insert(array.begin(), testArray, testArray + 3);
-			printArray(array);
-		}
-
-		std::cout << "Erase from begin()" << std::endl;
-		{
-			array.erase(array.begin(), array.begin() + 3);
-			printArray(array);
-		}
-
-		std::cout << "Insert to begin() + 3" << std::endl;
-		{
-			array.insert(array.begin() + 3, testArray, testArray + 3);
-			printArray(array);
-		}
-
-		std::cout << "Erase from begin() + 3" << std::endl;
-		{
-			array.erase(array.begin() + 3, array.begin() + 3 + 3);
-			printArray(array);
-		}
-
-		std::cout << "Insert to end()" << std::endl;
-		{
-			array.insert(array.end(), testArray, testArray + 3);
-			printArray(array);
-		}
-
-		std::cout << "Erase from end()" << std::endl;
-		{
-			array.erase(array.end() - 3, array.end());
-			printArray(array);
-		}
-	}
-	std::cout << ">--- End test insert(range)/erase(range) ---<" << std::endl << std::endl;
-	/**/
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"operator-=(ReverseRange)"
+			, [&]()
+			{
+				constexpr size_t countObjects = 4;
+				array -= flame_ide::templates::Range<decltype(array)::ReverseIterator> {
+						array.rbegin(), array.rbegin() + countObjects
+				};
+				stdVector.erase(stdVector.end() - countObjects, stdVector.end());
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"insert to begin(range)"
+			, [&]()
+			{
+				array.insert(array.begin(), testArray, testArray + countObjects);
+				stdVector.insert(stdVector.begin(), testArray, testArray + countObjects);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"erase from begin(range)"
+			, [&]()
+			{
+				array.erase(array.begin(), array.begin() + countObjects);
+				stdVector.erase(stdVector.begin(), stdVector.begin() + countObjects);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			std::string("insert to begin(range) + ") + std::to_string(insertIndex)
+			, [&]()
+			{
+				array.insert(
+						array.begin() + insertIndex
+						, testArray
+						, testArray + countObjects
+				);
+				stdVector.insert(
+						stdVector.begin() + insertIndex
+						, testArray
+						, testArray + countObjects
+				);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			std::string("erase from begin(range) + ") + std::to_string(insertIndex)
+			, [&]()
+			{
+				array.erase(
+						array.begin() + insertIndex
+						, array.begin() + insertIndex + countObjects
+				);
+				stdVector.erase(
+						stdVector.begin() + insertIndex
+						, stdVector.begin() + insertIndex + countObjects
+				);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"insert to end(range)"
+			, [&]()
+			{
+				array.insert(array.end(), testArray, testArray + countObjects);
+				stdVector.insert(stdVector.end(), testArray, testArray + countObjects);
+				return compareContainers(array, stdVector);
+			}
+	));
+	CHECK_RESULT(doTestCase(
+			"erase from end(range)"
+			, [&]()
+			{
+				array.erase(array.end() - countObjects, array.end());
+				stdVector.erase(stdVector.end() - countObjects, stdVector.end());
+				return compareContainers(array, stdVector);
+			}
+	));
 
 	return 0;
 }

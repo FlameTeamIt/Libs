@@ -6,6 +6,8 @@
 
 #include "TestClass.hpp"
 
+#include <vector>
+
 namespace flame_ide
 {namespace test
 {
@@ -20,6 +22,7 @@ private:
 	virtual int vStart();
 
 	flame_ide::templates::Array<TestClass, 10> array;
+	std::vector<TestClass> stdVector;
 };
 
 }}
