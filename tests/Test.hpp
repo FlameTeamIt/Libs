@@ -12,9 +12,18 @@
 #define log \
 	std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": "
 
+#define CHECK_RESULT(result) \
+	if (ResultType::FAILED == result) return true
+
 class AbstractTest
 {
 public:
+	enum ResultType
+	{
+		SUCCESS
+		, FAILED
+	};
+
 	AbstractTest() : testName("NONAME") {}
 	AbstractTest(const AbstractTest &) = delete;
 	AbstractTest(AbstractTest &&) = delete;
@@ -31,29 +40,142 @@ public:
 
 	int start()
 	{
-		int returnCode;
+		int resultCode = 0;
 
 		printStart();
-
-		returnCode = vStart();
-		if (returnCode)
-			printMessageFalse();
-		else
-			printMessageTrue();
-
+		printFinishMessage((resultCode = vStart()));
 		printEnd();
 
-		return returnCode;
+		return resultCode;
 	}
 
 protected:
 	virtual int vStart() = 0;
 
+	enum MessageType
+	{
+		EMPTY
+		, INFO
+		, WARNING
+		, ERROR
+	};
+
+	static void printMessage(MessageType messageType, const std::string &message)
+	{
+		printMessage(messageType, message.c_str());
+	}
+
+	static void printMessage(MessageType messageType, const char *message)
+	{
+		struct
+		{
+			const char *EMPTY = "";
+			const char *INFO =
+					"INFO"
+					;
+
+			const char *WARINIG =
+					"WARINIG"
+					;
+
+			const char *ERROR =
+					"ERROR"
+					;
+		} messageTypeTexts;
+
+		const char *messageTypeText = [&messageTypeTexts](MessageType messageType) -> const char *
+		{
+			switch (messageType)
+			{
+				case MessageType::EMPTY:
+				{
+					return messageTypeTexts.EMPTY;
+				}
+				case MessageType::INFO:
+				{
+					return messageTypeTexts.INFO;
+				}
+				case MessageType::WARNING:
+				{
+					return messageTypeTexts.WARINIG;
+				}
+				case MessageType::ERROR:
+				{
+					return messageTypeTexts.ERROR;
+				}
+			}
+		} (messageType);
+
+		std::cout << messageTypeText << ": " << message << std::endl;
+	}
+
+	template<typename Function>
+	ResultType doTestCase(const char *name, Function &&function)
+	{
+		ResultType status = ResultType::SUCCESS;
+		std::cout << "--------> Case \"" << name << "\": " << std::endl;
+		if (function() == ResultType::SUCCESS)
+		{
+			std::cout << "--------> "
+			#if defined (__linux)
+					TEXT_STYLE_BOLD TEXT_STYLE_GREEN
+			#endif
+					"Success"
+			#if defined (__linux)
+					TEXT_STYLE_NULL
+			#endif
+					<< std::endl << std::endl;
+		}
+		else
+		{
+			std::cout << "--------> "
+			#if defined (__linux)
+					TEXT_STYLE_BOLD TEXT_STYLE_RED
+			#endif
+					"Failed"
+			#if defined (__linux)
+					TEXT_STYLE_NULL
+			#endif
+					<< std::endl << std::endl;
+			status = ResultType::FAILED;
+		}
+		return status;
+	}
+
+	template<typename Function>
+	ResultType doTestCase(const std::string &name, Function &&function)
+	{
+		return doTestCase(name.c_str(), std::move(function));
+	}
+
+	template<typename Container1, typename Container2>
+	bool compareContainers(Container1 &&container1, Container2 &&container2)
+	{
+		auto it1Begin = container1.begin();
+		auto it1End = container1.end();
+		auto it2Begin = container2.begin();
+		auto it2End = container2.end();
+
+		auto it1 = it1Begin;
+		auto it2 = it2Begin;
+
+		for (; it1 != it1End || it2 != it2End; ++it1, ++it2)
+		{
+			auto &v1 = *it1;
+			auto &v2 = *it2;
+			if (v1 != v2)
+			{
+				return ResultType::FAILED;
+			}
+		}
+		return ResultType::SUCCESS;
+	}
+
 private:
 	void printStart()
 	{
 #if defined(__linux)
-		std::cout << "> " TEXT_STYLE_BOLD TEXT_STYLE_CYAN "Start" TEXT_STYLE_NULL " " << testName << '\n';
+		std::cout << "> " TEXT_STYLE_BOLD TEXT_STYLE_CYAN "Start" TEXT_STYLE_NULL " " << testName << std::endl << std::endl;
 #else
 		std::cout << "> Start " << testName << '\n';
 #endif
@@ -62,13 +184,13 @@ private:
 	void printEnd()
 	{
 #if defined(__linux)
-		std::cout << "> " TEXT_STYLE_BOLD TEXT_STYLE_CYAN "End" TEXT_STYLE_NULL " " << testName << "\n\n";
+		std::cout << "> " TEXT_STYLE_BOLD TEXT_STYLE_CYAN "End" TEXT_STYLE_NULL " " << testName << std::endl << std::endl;
 #else
 		std::cout << "> End " << testName << "\n\n";
 #endif
 	}
 
-	void printMessageTrue()
+	void printTestSuccess()
 	{
 #if defined(__linux)
 		std::cout << "----> " TEXT_STYLE_BOLD TEXT_STYLE_GREEN "SUCCESS TEST\n" TEXT_STYLE_NULL;
@@ -77,13 +199,25 @@ private:
 #endif
 	}
 
-	void printMessageFalse()
+	void printTestFailed()
 	{
 #if defined(__linux)
 		std::cout << "----> " TEXT_STYLE_BOLD TEXT_STYLE_RED "FAILED TEST\n" TEXT_STYLE_NULL;
 #else
 		std::cout << "----> FAILED TEST\n";
 #endif
+	}
+
+	void printFinishMessage(int resultCode)
+	{
+		if (resultCode)
+		{
+			printTestFailed();
+		}
+		else
+		{
+			printTestSuccess();
+		}
 	}
 
 	std::string testName;
