@@ -51,26 +51,25 @@ class Range
 public:
 	using Me = Range<InputIterator>;
 	using Iterator = InputIterator;
-	using ConstIterator = templates::ConstIterator<Iterator>;
 
 	Range() = delete;
 	Range(const Me &) = default;
-	Range(Me &&) = default;
+	Range(Me &&) noexcept = default;
 	Range(Iterator itBegin, Iterator itEnd);
 	~Range() = default;
 
 	Me &operator=(const Me &) = default;
-	Me &operator=(Me &&) = default;
+	Me &operator=(Me &&) noexcept = default;
 
 	Iterator begin();
 	Iterator end();
 
-	ConstIterator begin() const;
-	ConstIterator end() const;
+	Iterator begin() const;
+	Iterator end() const;
 
 private:
-	Iterator first;
-	Iterator last;
+	mutable Iterator first;
+	mutable Iterator last;
 };
 
 // Range getters
@@ -169,19 +168,18 @@ Range<InputIterator>::end()
 }
 
 template<typename InputIterator>
-typename Range<InputIterator>::ConstIterator
+typename Range<InputIterator>::Iterator
 Range<InputIterator>::begin() const
 {
 	return first;
 }
 
 template<typename InputIterator>
-typename Range<InputIterator>::ConstIterator
+typename Range<InputIterator>::Iterator
 Range<InputIterator>::end() const
 {
 	return last;
 }
-
 
 // Range makers
 
