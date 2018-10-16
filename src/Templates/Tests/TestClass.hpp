@@ -5,25 +5,24 @@ class TestClass
 {
 public:
 	TestClass();
-	TestClass(const TestClass &object);
-	TestClass(TestClass &&object) noexcept;
+	TestClass(const TestClass &testClass);
+	TestClass(TestClass &&testClass) noexcept;
 	TestClass(long initL, int initI
 			, short initS, char initC);
 	~TestClass();
-	TestClass &operator=(const TestClass &object);
-	TestClass &operator=(TestClass &&object) noexcept;
+	TestClass &operator=(const TestClass &testClass);
+	TestClass &operator=(TestClass &&testClass) noexcept;
 
-	bool operator==(const TestClass &testClass) const
-	{
-		return this->getChar() == testClass.getChar()
-				&& this->getShort() == testClass.getShort()
-				&& this->getInt() == testClass.getInt()
-				&& this->getLong() == testClass.getLong();
-	}
+	bool operator==(const TestClass &testClass) const;
 
-	bool operator!=(const TestClass &testClass)
+	bool operator!=(const TestClass &testClass) const
 	{
 		return !operator==(testClass);
+	}
+
+	operator bool() const
+	{
+		return l && i && s && c;
 	}
 
 	long &getLong();

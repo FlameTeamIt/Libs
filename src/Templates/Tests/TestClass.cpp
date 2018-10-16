@@ -96,6 +96,16 @@ TestClass &TestClass::operator=(TestClass &&object) noexcept
 	return *this;
 }
 
+bool TestClass::operator==(const TestClass &testClass) const
+{
+	return ((*this && testClass)
+			? (this->getChar() == testClass.getChar()
+					&& this->getShort() == testClass.getShort()
+					&& this->getInt() == testClass.getInt()
+					&& this->getLong() == testClass.getLong())
+			: false);
+}
+
 long &TestClass::getLong()
 {
 	return *l;
