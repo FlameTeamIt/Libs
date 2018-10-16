@@ -30,54 +30,50 @@ bool Bits::minimalType()
 
 	using Types = flame_ide::Types;
 
-	std::cout << "---> Bits::minimalType()" << std::endl;
+	CHECK_RESULT(doTestCase(
+		std::string("Bits::minimalType(") + std::to_string(Type3::COUNT_BITS) + " bits)"
+		, [&]()
+		{
+			bool result = flame_ide::isSameTypes<Type3::Type, Types::uichar_t>();
+			IN_CASE_CHECK_END(result)
+		}
+	));
 
-	if (!flame_ide::isSameTypes<Type3::Type, Types::uichar_t>())
-	{
-		return false;
-	}
-	else
-	{
-		std::cout << Type3::COUNT_BITS << " bits -> Types::uchar_t" << std::endl;
-	}
+	CHECK_RESULT(doTestCase(
+		std::string("Bits::minimalType(") + std::to_string(Type9::COUNT_BITS) + " bits)"
+		, [&]()
+		{
+			bool result = flame_ide::isSameTypes<Type9::Type, Types::ushort_t>();
+			IN_CASE_CHECK_END(result)
+		}
+	));
 
-	if (!flame_ide::isSameTypes<Type9::Type, Types::ushort_t>())
-	{
-		return false;
-	}
-	else
-	{
-		std::cout << Type9::COUNT_BITS << " bits -> Types::ushort_t" << std::endl;
-	}
+	CHECK_RESULT(doTestCase(
+		std::string("Bits::minimalType(") + std::to_string(Type18::COUNT_BITS) + " bits)"
+		, [&]()
+		{
+			bool result = flame_ide::isSameTypes<Type18::Type, Types::uint_t>();
+			IN_CASE_CHECK_END(result)
+		}
+	));
 
-	if (!flame_ide::isSameTypes<Type18::Type, Types::uint_t>())
-	{
-		return false;
-	}
-	else
-	{
-		std::cout << Type18::COUNT_BITS << " bits -> Types::uint_t" << std::endl;
-	}
+	CHECK_RESULT(doTestCase(
+		std::string("Bits::minimalType(") + std::to_string(Type33::COUNT_BITS) + " bits)"
+		, [&]()
+		{
+			bool result = flame_ide::isSameTypes<Type33::Type, Types::ulong_t>();
+			IN_CASE_CHECK_END(result)
+		}
+	));
 
-	if (!flame_ide::isSameTypes<Type33::Type, Types::ulong_t>())
-	{
-		return false;
-	}
-	else
-	{
-		std::cout << Type33::COUNT_BITS << " bits -> Types::ulong_t" << std::endl;
-	}
-
-	if (!flame_ide::isSameTypes<Type65::Type, void>())
-	{
-		return false;
-	}
-	else
-	{
-		std::cout << Type65::COUNT_BITS << " bits -> is too more." << std::endl;
-	}
-
-	return true;
+	CHECK_RESULT_END(doTestCase(
+		std::string("Bits::minimalType(") + std::to_string(Type65::COUNT_BITS) + " bits)"
+		, [&]()
+		{
+			bool result = flame_ide::isSameTypes<Type65::Type, void>();
+			IN_CASE_CHECK_END(result)
+		}
+	));
 }
 
 }}
