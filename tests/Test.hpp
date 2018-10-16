@@ -13,7 +13,18 @@
 	std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": "
 
 #define CHECK_RESULT(result) \
-	if (ResultType::FAILED == result) return true
+	if (ResultType::FAILED == result) return false
+
+#define CHECK_RESULT_END(result) \
+	if (ResultType::FAILED == result) return false; \
+	else return true
+
+#define IN_CASE_CHECK(condition) \
+	if (!(result)) return ResultType::FAILED;
+
+#define IN_CASE_CHECK_END(condition) \
+	if (result) return ResultType::SUCCESS; \
+	else return ResultType::FAILED;
 
 class AbstractTest
 {
