@@ -12,19 +12,26 @@
 #define log \
 	std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": "
 
-#define CHECK_RESULT(result) \
-	if (ResultType::FAILED == result) return false
+#define CHECK_RESULT_SUCCESS(result) \
+	if (ResultType::FAILED == result) return true
 
-#define CHECK_RESULT_END(result) \
-	if (ResultType::FAILED == result) return false; \
-	else return true
+#define CHECK_RESULT_SUCCESS_END(result) \
+	if (ResultType::FAILED == result) return true; \
+	else return false
 
 #define IN_CASE_CHECK(condition) \
-	if (!(result)) return ResultType::FAILED;
+	if (!(condition)) return ResultType::FAILED
 
 #define IN_CASE_CHECK_END(condition) \
-	if (result) return ResultType::SUCCESS; \
-	else return ResultType::FAILED;
+	if (condition) return ResultType::SUCCESS; \
+	else return ResultType::FAILED
+
+#define IN_TEST_CHECK(condition) \
+	if (!(condition)) return 1
+
+#define IN_TEST_CHECK_END(condition) \
+	if (condition) return 1; \
+	else return 0
 
 class AbstractTest
 {
@@ -124,10 +131,20 @@ protected:
 	ResultType doTestCase(const char *name, Function &&function)
 	{
 		ResultType status = ResultType::SUCCESS;
-		std::cout << "--------> Case \"" << name << "\": " << std::endl;
+		std::cout << "----> "
+		#if defined (__linux)
+				TEXT_STYLE_BOLD TEXT_STYLE_CYAN
+		#endif
+				"Case"
+		#if defined (__linux)
+				TEXT_STYLE_NULL
+		#endif
+				" \""
+				<< name
+				<< "\": " << std::endl;
 		if (function() == ResultType::SUCCESS)
 		{
-			std::cout << "--------> "
+			std::cout << "----> "
 			#if defined (__linux)
 					TEXT_STYLE_BOLD TEXT_STYLE_GREEN
 			#endif
@@ -139,7 +156,7 @@ protected:
 		}
 		else
 		{
-			std::cout << "--------> "
+			std::cout << "----> "
 			#if defined (__linux)
 					TEXT_STYLE_BOLD TEXT_STYLE_RED
 			#endif

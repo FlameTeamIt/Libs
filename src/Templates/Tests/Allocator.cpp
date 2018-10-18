@@ -18,7 +18,7 @@ int ObjectAllocator::vStart()
 	TestClass mainObject{ 1000, 10, 1, '1' };
 	TestClass *object;
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 			"Constructing object"
 			, [&]()
 			{
@@ -39,7 +39,7 @@ int ObjectAllocator::vStart()
 			}
 	));
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 			"Destructing object"
 			, [&]()
 			{
@@ -114,7 +114,7 @@ int ArrayAllocator::vStart()
 	};
 	TestClass *testArray;
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 			"Check array pointer"
 			, [&]()
 			{
@@ -130,7 +130,7 @@ int ArrayAllocator::vStart()
 			}
 	));
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 			"Check intializing"
 			, [&]()
 			{
@@ -154,7 +154,7 @@ int ArrayAllocator::vStart()
 			}
 	));
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 			"Destroying array"
 			, [&]()
 			{

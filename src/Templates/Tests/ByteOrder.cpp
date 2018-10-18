@@ -22,41 +22,73 @@ int ByteOrderTest::vStart()
 			ToNeedOrder<
 				ByteOrder::LITTLE_ENDIAN_ORDER, ByteOrder::BIG_ENDIAN_ORDER
 			>::convert(VALUE16);
-	if (VALUE_OTHER16 != valueResult16)
-	{
-		log << std::hex << VALUE_OTHER16 << ' ' << valueResult16 << std::endl;
-		return -1;
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"convert from LE to BE byte ordering 16bit"
+		, [&]()
+		{
+			IN_CASE_CHECK_END(VALUE_OTHER16 == valueResult16);
+		}
+	));
 
 	valueResult16 =
 			ToNeedOrder<
 				ByteOrder::BIG_ENDIAN_ORDER, ByteOrder::LITTLE_ENDIAN_ORDER
 			>::convert(VALUE16);
-	if (VALUE_OTHER16 != valueResult16)
-	{
-		log << std::hex << VALUE_OTHER16 << ' ' << valueResult16 << std::endl;
-		return -1;
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"convert from BE to LE byte ordering 16bit"
+		, [&]()
+		{
+			IN_CASE_CHECK_END(VALUE_OTHER16 == valueResult16);
+		}
+	));
 
 	Types::uint_t valueResult32 =
 			ToNeedOrder<
 				ByteOrder::LITTLE_ENDIAN_ORDER, ByteOrder::BIG_ENDIAN_ORDER
 			>::convert(VALUE32);
-	if (VALUE_OTHER32 != valueResult32)
-	{
-		log << std::hex << VALUE_OTHER32 << ' ' << valueResult32 << std::endl;
-		return -1;
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"convert from LE to BE byte ordering 32bit"
+		, [&]()
+		{
+			IN_CASE_CHECK_END(VALUE_OTHER32 == valueResult32);
+		}
+	));
+
+	valueResult32 =
+				ToNeedOrder<
+					ByteOrder::BIG_ENDIAN_ORDER, ByteOrder::LITTLE_ENDIAN_ORDER
+				>::convert(VALUE32);
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"convert from BE to LE byte ordering 32bit"
+		, [&]()
+		{
+			IN_CASE_CHECK_END(VALUE_OTHER32 == valueResult32);
+		}
+	));
 
 	Types::ulong_t valueResult64 =
 			ToNeedOrder<
 				ByteOrder::LITTLE_ENDIAN_ORDER, ByteOrder::BIG_ENDIAN_ORDER
 			>::convert(VALUE64);
-	if (VALUE_OTHER64 != valueResult64)
-	{
-		log << std::hex << VALUE_OTHER64 << ' ' << valueResult64 << std::endl;
-		return -1;
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"convert from LE to BE byte ordering 64bit"
+		, [&]()
+		{
+			IN_CASE_CHECK_END(VALUE_OTHER64 == valueResult64);
+		}
+	));
+
+	valueResult64 =
+			ToNeedOrder<
+				ByteOrder::BIG_ENDIAN_ORDER, ByteOrder::LITTLE_ENDIAN_ORDER
+			>::convert(VALUE64);
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"convert from BE to LE byte ordering 64bit"
+		, [&]()
+		{
+			IN_CASE_CHECK_END(VALUE_OTHER64 == valueResult64);
+		}
+	));
 
 	return 0;
 }

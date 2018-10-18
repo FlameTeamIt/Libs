@@ -22,7 +22,7 @@ private:
 	virtual int vStart();
 
 	flame_ide::templates::Array<TestClass, 10> array;
-	std::vector<TestClass> stdVector;
+	std::vector<TestClass> stdvector;
 };
 
 }}

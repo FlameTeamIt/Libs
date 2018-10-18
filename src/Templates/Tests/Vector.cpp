@@ -34,7 +34,7 @@ int Vector::vStart()
 	TestClass testMiddleObject{ -2000, -200, -20, 'M' };
 	TestClass testLastObject{ -3000, -300, -30, 'L' };
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 			"initializing size"
 			, [&]()
 			{
@@ -49,7 +49,7 @@ int Vector::vStart()
 			}
 	));
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 		"initializing"
 		, [&]()
 		{
@@ -57,7 +57,7 @@ int Vector::vStart()
 		}
 	));
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 		"reverse"
 		, [&]()
 		{
@@ -75,7 +75,7 @@ int Vector::vStart()
 	{
 		TestClass tmp = *vector.rbegin();
 
-		CHECK_RESULT(doTestCase(
+		CHECK_RESULT_SUCCESS(doTestCase(
 			"popBack()"
 			, [&]()
 			{
@@ -85,7 +85,7 @@ int Vector::vStart()
 			}
 		));
 
-		CHECK_RESULT(doTestCase(
+		CHECK_RESULT_SUCCESS(doTestCase(
 			"pushBack()"
 			, [&]()
 			{
@@ -96,14 +96,14 @@ int Vector::vStart()
 		));
 	}
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 		"emplaceBack()"
 		, [&]()
 		{
 			vector.emplaceBack(6000, 600, 60, '6');
 			stdvector.emplace_back(6000, 600, 60, '6');
 
-			CHECK_RESULT(compareContainers(vector, stdvector));
+			CHECK_RESULT_SUCCESS(compareContainers(vector, stdvector));
 
 			vector.popBack();
 			stdvector.pop_back();
@@ -112,7 +112,7 @@ int Vector::vStart()
 		}
 	));
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 		"insert()"
 		, [&]()
 		{
@@ -128,7 +128,7 @@ int Vector::vStart()
 		}
 	));
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 		"erase()"
 		, [&]()
 		{
@@ -144,7 +144,7 @@ int Vector::vStart()
 		}
 	));
 
-	CHECK_RESULT(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 		"emplace"
 		, [&]()
 		{
@@ -160,7 +160,7 @@ int Vector::vStart()
 			stdvector.emplace(stdvector.begin() + 3, tempMiddleObject);
 			stdvector.emplace(stdvector.end(), tempLastObject);
 
-			CHECK_RESULT(compareContainers(vector, stdvector));
+			CHECK_RESULT_SUCCESS(compareContainers(vector, stdvector));
 
 			vector.erase(vector.begin() + 3);
 			vector.erase(vector.begin());
@@ -182,7 +182,7 @@ int Vector::vStart()
 		constexpr size_t countObjects = sizeof(testArray) / sizeof(testArray[0]);
 		constexpr size_t offset = countObjects;
 
-		CHECK_RESULT(doTestCase(
+		CHECK_RESULT_SUCCESS(doTestCase(
 			"insert range to begin()"
 			, [&]()
 			{
@@ -193,7 +193,7 @@ int Vector::vStart()
 			}
 		));
 
-		CHECK_RESULT(doTestCase(
+		CHECK_RESULT_SUCCESS(doTestCase(
 			"erase range from begin()"
 			, [&]()
 			{
@@ -204,7 +204,7 @@ int Vector::vStart()
 			}
 		));
 
-		CHECK_RESULT(doTestCase(
+		CHECK_RESULT_SUCCESS(doTestCase(
 			std::string("insert range to begin() + offset(") + std::to_string(countObjects) + ")"
 			, [&]()
 			{
@@ -217,7 +217,7 @@ int Vector::vStart()
 			}
 		));
 
-		CHECK_RESULT(doTestCase(
+		CHECK_RESULT_SUCCESS(doTestCase(
 			std::string("erase range from begin() + offset(") + std::to_string(countObjects) + ")"
 			, [&]()
 			{
@@ -234,7 +234,7 @@ int Vector::vStart()
 			}
 		));
 
-		CHECK_RESULT(doTestCase(
+		CHECK_RESULT_SUCCESS(doTestCase(
 			"insert range to end()"
 			, [&]()
 			{
@@ -245,7 +245,7 @@ int Vector::vStart()
 			}
 		));
 
-		CHECK_RESULT(doTestCase(
+		CHECK_RESULT_SUCCESS(doTestCase(
 			"erase from end()"
 			, [&]()
 			{
