@@ -279,12 +279,6 @@ public:
 
 	SizeType size() const;
 
-	Reference first();
-	ConstReference first() const;
-
-	Reference last();
-	ConstReference last() const;
-
 	void clean();
 
 	Me clone() const;
@@ -522,30 +516,6 @@ typename LIST_TYPE::SizeType LIST_TYPE::size() const
 	for (Node *pointer = head; pointer != &postLast; pointer = pointer->next)
 		++resultSize;
 	return resultSize;
-}
-
-TEMPLATE_DEFINE
-typename LIST_TYPE::Reference LIST_TYPE::first()
-{
-	return head->object;
-}
-
-TEMPLATE_DEFINE
-typename LIST_TYPE::ConstReference LIST_TYPE::first() const
-{
-	return head->object;
-}
-
-TEMPLATE_DEFINE
-typename LIST_TYPE::Reference LIST_TYPE::last()
-{
-	return tail->object;
-}
-
-TEMPLATE_DEFINE
-typename LIST_TYPE::ConstReference LIST_TYPE::last() const
-{
-	return tail->object;
 }
 
 TEMPLATE_DEFINE

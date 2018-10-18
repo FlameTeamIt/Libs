@@ -6,6 +6,8 @@
 
 #include "TestClass.hpp"
 
+#include <list>
+
 namespace flame_ide
 {namespace test
 {
@@ -20,6 +22,7 @@ private:
 	virtual int vStart();
 
 	templates::List<TestClass> list;
+	std::list<TestClass> stdlist;
 };
 
 }}

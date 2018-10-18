@@ -11,6 +11,13 @@ List::List() : AbstractTest("List")
 				, TestClass{4000, 400, 40, '4'}
 				, TestClass{5000, 500, 50, '5'}
 		}}
+		, stdlist {{
+				TestClass{1000, 100, 10, '1'}
+				, TestClass{2000, 200, 20, '2'}
+				, TestClass{3000, 300, 30, '3'}
+				, TestClass{4000, 400, 40, '4'}
+				, TestClass{5000, 500, 50, '5'}
+  }}
 {}
 
 List::~List()
@@ -18,207 +25,261 @@ List::~List()
 
 int List::vStart()
 {
-	constexpr size_t SIZE = 5;
-	auto lambdaPrint = [] (const TestClass &testObject) {
-		std::cout << testObject.getLong()
-				<< ' ' << testObject.getInt()
-				<< ' ' << testObject.getShort()
-				<< ' ' << testObject.getChar() << std::endl;
-	};
-	auto printList = [&lambdaPrint] (auto &list, bool endl = true) {
-		auto itEnd = list.end();
-		auto it = list.begin();
-		while (it != itEnd)
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"initializing size"
+		, [&]()
 		{
-			lambdaPrint(*it);
-			++it;
+			IN_CASE_CHECK_END(list.size() == stdlist.size());
 		}
-		if (endl)
-			std::cout << std::endl;
-	};
+	));
 
-	std::cout << "Test initializing size:" << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"initializing"
+		, [&]()
 	{
-		if (list.size() == SIZE)
-			std::cout << list.size() << " == " << SIZE << std::endl;
-		else
+		return compareContainers(list, stdlist);
+	}
+	));
+
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"cloning"
+		, [&]()
 		{
-			std::cout << list.size() << " != " << SIZE << std::endl;
-			return 1;
+			templates::List<TestClass> listClone = list.clone();
+			CHECK_RESULT_SUCCESS(compareContainers(listClone, list));
+			CHECK_RESULT_SUCCESS(compareContainers(listClone, stdlist));
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
 		}
-	}
+	));
 
-	std::cout << "Test initializing:" << std::endl;
-	{
-		printList(list);
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"copying"
+		, [&]()
+		{
+			templates::List<TestClass> listCopy = list;
+			CHECK_RESULT_SUCCESS(compareContainers(listCopy, list));
+			CHECK_RESULT_SUCCESS(compareContainers(listCopy, stdlist));
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
-	std::cout << "Test cloning:" << std::endl;
-	{
-		templates::List<TestClass> listClone = list.clone();
-		printList(listClone);
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"moving"
+		, [&]()
+		{
+			templates::List<TestClass> listMove = flame_ide::move(list);
+			CHECK_RESULT_SUCCESS(compareContainers(listMove, stdlist));
 
-	std::cout << "Test copying:" << std::endl;
-	{
-		templates::List<TestClass> listCopy = list;
-		printList(listCopy);
-	}
+			list = flame_ide::move(listMove);
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
-	std::cout << "Test moving:" << std::endl;
-	{
-		templates::List<TestClass> listMove = flame_ide::move(list);
-		std::cout << "--> Moved: " << std::endl;
-		printList(listMove, false);
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"reverse iterating", [&]()
+		{
+			auto range = templates::makeRange(list.rbegin(), list.rend());
+			auto stdrange = templates::makeRange(stdlist.rbegin(), stdlist.rend());
+			CHECK_RESULT_SUCCESS_END(compareContainers(range, stdrange));
+		}
+	));
 
-		list = flame_ide::move(listMove);
-		std::cout << "--> Original: " << std::endl;
-		printList(list);
-	}
+	TestClass testLastObject = *list.rbegin();
+	TestClass testFirstObject = *list.begin();
 
-	std::cout << "Test reverse:" << std::endl;
-	{
-		flame_ide::ContainerTraits<decltype(list)>::ConstReference crlist = list;
-		templates::Range<
-			decltype(crlist.crbegin())
-		> range(crlist.crbegin(), crlist.crend());
-		printList(range);
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"popBack()"
+		, [&]()
+		{
+			list.popBack();
+			stdlist.pop_back();
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
-	TestClass testLastObject;
-	std::cout << "Test last():" << std::endl;
-	{
-		testLastObject = list.last();
-		lambdaPrint(testLastObject);
-	}
-	std::cout << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"pushBack()"
+		, [&]()
+		{
+			list.pushBack(testLastObject);
+			stdlist.push_back(testLastObject);
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
-	TestClass testFirstObject;
-	std::cout << "Test first():" << std::endl;
-	{
-		testFirstObject = list.first();
-		lambdaPrint(testFirstObject);
-	}
-	std::cout << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"emplaceBack()"
+		, [&]()
+		{
+			list.emplaceBack(-6000, -600, -60, '6');
+			stdlist.emplace_back(-6000, -600, -60, '6');
+			CHECK_RESULT_SUCCESS(compareContainers(list, stdlist));
 
-	std::cout << "Test popBack():" << std::endl;
-	{
-		list.popBack();
-		printList(list);
-	}
+			list.popBack();
+			stdlist.pop_back();
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
-	std::cout << "Test pushBack():" << std::endl;
-	{
-		list.pushBack(testLastObject);
-		printList(list);
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"popFront()"
+		, [&]()
+		{
+			list.popFront();
+			stdlist.pop_front();
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
-	std::cout << "Test emplaceBack():" << std::endl;
-	{
-		list.emplaceBack(-6000, -600, -60, '6');
-		printList(list);
-		list.popBack();
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"pushFront()"
+		, [&]()
+		{
+			list.pushFront(testFirstObject);
+			stdlist.push_front(testFirstObject);
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
-	std::cout << "Test popFront():" << std::endl;
-	{
-		list.popFront();
-		printList(list);
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"emplaceFront()"
+		, [&]()
+		{
+			list.emplaceFront(-6000, -600, -60, '6');
+			stdlist.emplace_front(-6000, -600, -60, '6');
+			CHECK_RESULT_SUCCESS(compareContainers(list, stdlist));
 
-	std::cout << "Test pushFront():" << std::endl;
-	{
-		list.pushFront(testFirstObject);
-		printList(list);
-	}
-
-	std::cout << "Test emplaceFront():" << std::endl;
-	{
-		list.emplaceFront(-6000, -600, -60, '6');
-		printList(list);
-		list.popFront();
-	}
+			list.popFront();
+			stdlist.pop_front();
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
 	TestClass testMiddleObject = {-2500, -250, -25, 'M'};
 	testFirstObject = {-1000, -100, -10, 'F'};
 	testLastObject = {-5000, -500, -50, 'L'};
 
-	std::cout << "Test insert()" << std::endl;
-	{
-		list.insert(list.begin(), testFirstObject);
-		list.insert(++(++(++list.begin())), testMiddleObject);
-		list.insert(list.end(), testLastObject);
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"insert()"
+		, [&]()
+		{
+			list.insert(list.begin(), testFirstObject);
+			list.insert(++(++(++list.begin())), testMiddleObject);
+			list.insert(list.end(), testLastObject);
 
-		printList(list);
-	}
+			stdlist.insert(stdlist.begin(), testFirstObject);
+			stdlist.insert(++(++(++stdlist.begin())), testMiddleObject);
+			stdlist.insert(stdlist.end(), testLastObject);
 
-	std::cout << "Test erase()" << std::endl;
-	{
-		list.erase(list.begin());
-		list.erase(++(++list.begin()));
-		list.erase(list.end());
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
-		printList(list);
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"erase()"
+		, [&]()
+		{
+			list.erase(list.begin());
+			list.erase(++(++list.begin()));
+			list.erase(list.end());
 
-	std::cout << "Test emplace:" << std::endl;
-	{
-		list.emplace(list.begin(), testFirstObject);
-		list.emplace(++(++(++list.begin())), testMiddleObject);
-		list.emplace(list.end(), testLastObject);
+			stdlist.erase(stdlist.begin());
+			stdlist.erase(++(++stdlist.begin()));
+			stdlist.erase(--stdlist.end());
 
-		printList(list, false);
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
-		list.erase(list.begin());
-		list.erase(++(++list.begin()));
-		list.erase(list.end());
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"emplace()"
+		, [&]()
+		{
+			list.emplace(list.begin(), testFirstObject);
+			list.emplace(++(++(++list.begin())), testMiddleObject);
+			list.emplace(list.end(), testLastObject);
+			stdlist.emplace(stdlist.begin(), testFirstObject);
+			stdlist.emplace(++(++(++stdlist.begin())), testMiddleObject);
+			stdlist.emplace(stdlist.end(), testLastObject);
+			CHECK_RESULT_SUCCESS(compareContainers(list, stdlist));
 
-		std::cout << "--> revert" << std::endl;
-		printList(list);
-	}
+			list.erase(list.begin());
+			list.erase(++(++list.begin()));
+			list.erase(list.end());
+			stdlist.erase(stdlist.begin());
+			stdlist.erase(++(++stdlist.begin()));
+			stdlist.erase(--stdlist.end());
+			CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+		}
+	));
 
-	std::cout << ">--- Test insert(range)/erase(range) ---<" << std::endl << std::endl;
 	{
 		TestClass testlist[] = {
 			testFirstObject, testMiddleObject, testLastObject
 		};
+		constexpr size_t countObjects = sizeof(testlist) / sizeof(testlist[0]);
 
-		std::cout << "Insert to begin()" << std::endl;
-		{
-			list.insert(list.begin(), testlist, testlist + 3);
-			printList(list);
-		}
+		CHECK_RESULT_SUCCESS(doTestCase(
+			"insert range to begin()"
+			, [&]()
+			{
+				list.insert(list.begin(), testlist, testlist + countObjects);
+				stdlist.insert(stdlist.begin(), testlist, testlist + countObjects);
+				CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+			}
+		));
 
-		std::cout << "Erase from begin()" << std::endl;
-		{
-			list.erase(list.begin(), ++(++(++list.begin())));
-			printList(list);
-		}
+		CHECK_RESULT_SUCCESS(doTestCase(
+			"erase range from begin()"
+			, [&]()
+			{
+				list.erase(list.begin(), ++(++(++list.begin())));
+				stdlist.erase(stdlist.begin(), ++(++(++stdlist.begin())));
+				CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+			}
+		));
 
-		std::cout << "Insert to begin() + 3" << std::endl;
-		{
-			list.insert(++(++(++list.begin())), testlist, testlist + 3);
-			printList(list);
-		}
+		CHECK_RESULT_SUCCESS(doTestCase(
+			std::string("insert range to begin() + offset(") + std::to_string(countObjects) + ")"
+			, [&]()
+			{
+				list.insert(++(++(++list.begin())), testlist, testlist + countObjects);
+				stdlist.insert(++(++(++stdlist.begin())), testlist, testlist + countObjects);
+				CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+			}
+		));
 
-		std::cout << "Erase from begin() + 3" << std::endl;
-		{
-			list.erase(++(++(++list.begin()))
-					, ++(++(++(++(++(++list.begin()))))) );
-			printList(list);
-		}
+		CHECK_RESULT_SUCCESS(doTestCase(
+			std::string("erase range from begin() + offset(") + std::to_string(countObjects) + ")"
+			, [&]()
+			{
+				list.erase(++(++(++list.begin()))
+						, ++(++(++(++(++(++list.begin()))))) );
+				stdlist.erase( ++(++(++stdlist.begin()))
+						, ++(++(++(++(++(++stdlist.begin()))))) );
+				CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+			}
+		));
 
-		std::cout << "Insert to end()" << std::endl;
-		{
-			list.insert(list.end(), testlist, testlist + 3);
-			printList(list);
-		}
+		CHECK_RESULT_SUCCESS(doTestCase(
+			"insert range to end()"
+			, [&]()
+			{
+				list.insert(list.end(), testlist, testlist + countObjects);
+				stdlist.insert(stdlist.end(), testlist, testlist + countObjects);
+				CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+			}
+		));
 
-		std::cout << "Erase from end()" << std::endl;
-		{
-			list.erase(--(--(--list.end())), list.end());
-			printList(list);
-		}
+		CHECK_RESULT_SUCCESS(doTestCase(
+			"erase range from end()"
+			, [&]()
+			{
+				list.erase(--(--(--list.end())), list.end());
+				stdlist.erase(--(--(--stdlist.end())), stdlist.end());
+				CHECK_RESULT_SUCCESS_END(compareContainers(list, stdlist));
+			}
+		));
 	}
 
 	return 0;
