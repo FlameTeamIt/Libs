@@ -1,10 +1,12 @@
 #include "SharedPointer.hpp"
 
-using namespace flame_ide;
-using namespace flame_ide::test;
+namespace flame_ide
+{namespace test
+{
 
 SharedPointer::SharedPointer() : AbstractTest("SharedPointer")
 		, pointer {{1000, 100, 10, 1}}
+		, stdpointer {std::make_shared<TestClass>(1000, 100, 10, 1)}
 {}
 
 SharedPointer::~SharedPointer()
@@ -12,33 +14,38 @@ SharedPointer::~SharedPointer()
 
 int SharedPointer::vStart()
 {
-	auto lambdaPrint = [] (const TestClass &testObject, bool endl = true) {
-		std::cout << testObject.getLong()
-				<< ' ' << testObject.getInt()
-				<< ' ' << testObject.getShort()
-				<< ' ' << testObject.getChar() << std::endl;
-		if (endl)
-			std::cout << std::endl;
-	};
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"initializing"
+		, [&]()
+		{
+			IN_CASE_CHECK_END(*pointer == *stdpointer);
+		}
 
-	std::cout << "Test initializing:" << std::endl;
-	{
-		lambdaPrint(*pointer);
-	}
+	));
 
-	std::cout << "Test copying:" << std::endl;
-	{
-		auto copyPointer = pointer;
-		lambdaPrint(*copyPointer);
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"copying"
+		, [&]()
+		{
+			auto copyPointer = pointer;
+			auto stdcopyPointer = stdpointer;
+			IN_CASE_CHECK_END(*copyPointer == *stdcopyPointer);
+		}
 
-	std::cout << "Test moving:" << std::endl;
-	{
-		decltype(pointer) movePointer = flame_ide::move(pointer);
-		lambdaPrint(*movePointer);
+	));
 
-		pointer = flame_ide::move(movePointer);
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"moving"
+		, [&]()
+		{
+			decltype(pointer) movePointer = flame_ide::move(pointer);
+			decltype(stdpointer) stdmovePointer = std::move(stdpointer);
+			IN_CASE_CHECK_END(*movePointer == *stdmovePointer);
+		}
+
+	));
 
 	return 0;
 }
+
+}}

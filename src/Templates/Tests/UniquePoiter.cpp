@@ -5,6 +5,7 @@ using namespace flame_ide::test;
 
 UniquePointer::UniquePointer() : AbstractTest("UniquePointer")
 		, pointer {{1000, 100, 10, '1'}}
+		, stdpointer {std::make_unique<TestClass>(1000, 100, 10, '1')}
 {}
 
 UniquePointer::~UniquePointer()
@@ -12,27 +13,25 @@ UniquePointer::~UniquePointer()
 
 int UniquePointer::vStart()
 {
-	auto lambdaPrint = [] (const TestClass &testObject, bool endl = true) {
-		std::cout << testObject.getLong()
-				<< ' ' << testObject.getInt()
-				<< ' ' << testObject.getShort()
-				<< ' ' << testObject.getChar() << std::endl;
-		if (endl)
-			std::cout << std::endl;
-	};
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"initializing"
+		, [&]()
+		{
+			IN_CASE_CHECK_END(*pointer == *stdpointer);
+		}
+	));
 
-	std::cout << "Test initializing:" << std::endl;
-	{
-		lambdaPrint(*pointer);
-	}
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"moving"
+		, [&]()
+		{
+			decltype(pointer) movePointer = flame_ide::move(pointer);
+			IN_CASE_CHECK_END(*movePointer == *stdpointer);
 
-	std::cout << "Test moving:" << std::endl;
-	{
-		decltype(pointer) movePointer = flame_ide::move(pointer);
-		lambdaPrint(*movePointer);
-
-		pointer = flame_ide::move(movePointer);
-	}
+			pointer = flame_ide::move(movePointer);
+			IN_CASE_CHECK_END(*pointer == *stdpointer);
+		}
+	));
 
 	return 0;
 }

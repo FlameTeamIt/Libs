@@ -6,6 +6,8 @@
 
 #include "TestClass.hpp"
 
+#include <memory>
+
 namespace flame_ide
 {namespace test
 {
@@ -20,6 +22,7 @@ private:
 	virtual int vStart();
 
 	templates::UniquePointer<TestClass> pointer;
+	std::unique_ptr<TestClass> stdpointer;
 };
 
 }}
