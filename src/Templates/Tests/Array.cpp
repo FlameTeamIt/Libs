@@ -75,7 +75,7 @@ int Array::vStart()
 			, [&]()
 			{
 				templates::Array<TestClass, 10> arrayMove = flame_ide::move(array);
-				CHECK_RESULT_SUCCESS(compareContainers(arrayMove, stdvector));
+				IN_CASE_CHECK(ResultType::SUCCESS == compareContainers(arrayMove, stdvector));
 
 				array = flame_ide::move(arrayMove);
 				return compareContainers(array, stdvector);
@@ -167,7 +167,7 @@ int Array::vStart()
 				stdvector.emplace(stdvector.begin(), testFirstObject);
 				stdvector.emplace(stdvector.begin() + 3, testMiddleObject);
 				stdvector.emplace(stdvector.end(), testLastObject);
-				CHECK_RESULT_SUCCESS(compareContainers(array, stdvector));
+				IN_CASE_CHECK(ResultType::SUCCESS == compareContainers(array, stdvector));
 
 				array.erase(array.begin() + 3);
 				array.erase(array.begin());

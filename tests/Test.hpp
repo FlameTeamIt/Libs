@@ -138,7 +138,7 @@ protected:
 				" \""
 				<< name
 				<< "\": " << std::endl;
-		if ((status = function()) == ResultType::SUCCESS)
+		if ((status = static_cast<ResultType>(function())) == ResultType::SUCCESS)
 		{
 			std::cout << "----> "
 					TEXT_STYLE_BOLD TEXT_STYLE_GREEN
@@ -164,7 +164,7 @@ protected:
 	}
 
 	template<typename Container1, typename Container2>
-	bool compareContainers(Container1 &&container1, Container2 &&container2)
+	ResultType compareContainers(Container1 &&container1, Container2 &&container2)
 	{
 		auto it1Begin = container1.begin();
 		auto it1End = container1.end();

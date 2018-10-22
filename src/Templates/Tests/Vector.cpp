@@ -38,14 +38,7 @@ int Vector::vStart()
 			"initializing size"
 			, [&]()
 			{
-				if (vector.size() != stdvector.size())
-				{
-					return ResultType::FAILED;
-				}
-				else
-				{
-					return ResultType::SUCCESS;
-				}
+				IN_CASE_CHECK_END(vector.size() != stdvector.size());
 			}
 	));
 
@@ -68,7 +61,7 @@ int Vector::vStart()
 					stdvector.rbegin(), stdvector.rend()
 			);
 
-			return compareContainers(vectorRange, stdVectorRange);
+			CHECK_RESULT_SUCCESS_END(compareContainers(vectorRange, stdVectorRange));
 		}
 	));
 
@@ -108,7 +101,7 @@ int Vector::vStart()
 			vector.popBack();
 			stdvector.pop_back();
 
-			return compareContainers(vector, stdvector);
+			CHECK_RESULT_SUCCESS_END(compareContainers(vector, stdvector));
 		}
 	));
 
@@ -170,7 +163,7 @@ int Vector::vStart()
 			stdvector.erase(stdvector.begin());
 			stdvector.erase(stdvector.end() - 1);
 
-			return compareContainers(vector, stdvector);
+			CHECK_RESULT_SUCCESS_END(compareContainers(vector, stdvector));
 		}
 	));
 
