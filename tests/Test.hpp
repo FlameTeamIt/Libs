@@ -132,40 +132,27 @@ protected:
 	{
 		ResultType status = ResultType::SUCCESS;
 		std::cout << "----> "
-		#if defined (__linux)
-				TEXT_STYLE_BOLD TEXT_STYLE_CYAN
-		#endif
+				TEXT_STYLE_BOLD TEXT_STYLE_VIOLET
 				"Case"
-		#if defined (__linux)
 				TEXT_STYLE_NULL
-		#endif
 				" \""
 				<< name
 				<< "\": " << std::endl;
-		if (function() == ResultType::SUCCESS)
+		if ((status = function()) == ResultType::SUCCESS)
 		{
 			std::cout << "----> "
-			#if defined (__linux)
 					TEXT_STYLE_BOLD TEXT_STYLE_GREEN
-			#endif
 					"Success"
-			#if defined (__linux)
 					TEXT_STYLE_NULL
-			#endif
 					<< std::endl << std::endl;
 		}
 		else
 		{
 			std::cout << "----> "
-			#if defined (__linux)
 					TEXT_STYLE_BOLD TEXT_STYLE_RED
-			#endif
 					"Failed"
-			#if defined (__linux)
 					TEXT_STYLE_NULL
-			#endif
 					<< std::endl << std::endl;
-			status = ResultType::FAILED;
 		}
 		return status;
 	}
@@ -202,38 +189,32 @@ protected:
 private:
 	void printStart()
 	{
-#if defined(__linux)
-		std::cout << "> " TEXT_STYLE_BOLD TEXT_STYLE_CYAN "Start" TEXT_STYLE_NULL " " << testName << std::endl << std::endl;
-#else
-		std::cout << "> Start " << testName << '\n';
-#endif
+		std::cout << "> "
+				TEXT_STYLE_BOLD TEXT_STYLE_CYAN
+				"Start"
+				TEXT_STYLE_NULL
+				" "
+				<< testName << std::endl << std::endl;
 	}
 
 	void printEnd()
 	{
-#if defined(__linux)
-		std::cout << "> " TEXT_STYLE_BOLD TEXT_STYLE_CYAN "End" TEXT_STYLE_NULL " " << testName << std::endl << std::endl;
-#else
-		std::cout << "> End " << testName << "\n\n";
-#endif
+		std::cout << "> "
+				TEXT_STYLE_BOLD TEXT_STYLE_CYAN
+				"End"
+				TEXT_STYLE_NULL
+				" "
+				<< testName << std::endl << std::endl;
 	}
 
 	void printTestSuccess()
 	{
-#if defined(__linux)
 		std::cout << "----> " TEXT_STYLE_BOLD TEXT_STYLE_GREEN "SUCCESS TEST\n" TEXT_STYLE_NULL;
-#else
-		std::cout << "----> SUCCESS TEST\n";
-#endif
 	}
 
 	void printTestFailed()
 	{
-#if defined(__linux)
 		std::cout << "----> " TEXT_STYLE_BOLD TEXT_STYLE_RED "FAILED TEST\n" TEXT_STYLE_NULL;
-#else
-		std::cout << "----> FAILED TEST\n";
-#endif
 	}
 
 	void printFinishMessage(int resultCode)
@@ -299,7 +280,6 @@ protected:
 
 	void printStart()
 	{
-#if defined(__linux)
 		std::cout << TEXT_STYLE_BOLD TEXT_STYLE_YELLOW
 				"-------------------- "
 				TEXT_STYLE_NULL
@@ -308,14 +288,10 @@ protected:
 				" --------------------"
 				TEXT_STYLE_NULL
 				"\n";
-#else
-		std::cout << "-------------------- " << aggregatorName << " --------------------" "\n";
-#endif
 	}
 
 	void printEnd()
 	{
-#if defined(__linux)
 		std::cout << TEXT_STYLE_BOLD TEXT_STYLE_YELLOW
 				"-------------------- "
 				TEXT_STYLE_NULL
@@ -323,12 +299,6 @@ protected:
 				TEXT_STYLE_BOLD TEXT_STYLE_YELLOW
 				" --------------------"
 				TEXT_STYLE_NULL "\n\n";
-#else
-		std::cout << "-------------------- "
-				"END"
-				" --------------------"
-				"\n\n";
-#endif
 	}
 
 	virtual void vPrintStatistic() const
