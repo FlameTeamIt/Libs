@@ -159,11 +159,11 @@ public:
 
 	using Me = SHARED_TYPE;
 
-	SharedPointer() = default;
-	SharedPointer(const Me &);
-	SharedPointer(Me &&);
-	SharedPointer(ConstReference obj);
-	SharedPointer(MoveReference obj);
+	SharedPointer() noexcept = default;
+	SharedPointer(const Me &) noexcept;
+	SharedPointer(Me &&) noexcept;
+	SharedPointer(ConstReference obj) noexcept;
+	SharedPointer(MoveReference obj) noexcept;
 	~SharedPointer();
 	Me &operator=(const Me &) noexcept;
 	Me &operator=(Me &&) noexcept;
@@ -200,12 +200,12 @@ public:
 
 	UniquePointer() = default;
 	UniquePointer(const Me &) = delete;
-	UniquePointer(Me &&);
-	UniquePointer(ConstReference object);
-	UniquePointer(MoveReference object);
+	UniquePointer(Me &&) noexcept;
+	UniquePointer(ConstReference object) noexcept;
+	UniquePointer(MoveReference object) noexcept;
 	~UniquePointer();
 	Me &operator=(const Me &) = delete;
-	Me &operator=(Me &&);
+	Me &operator=(Me &&) noexcept;
 
 	Reference operator*() noexcept;
 	ConstReference operator*() const noexcept;
@@ -240,7 +240,7 @@ Counter<CounterType>::Counter() : counter(Counter<CounterType>::NULL_VALUE)
 // SharedPointer
 
 SHARED_TEMPLATE_DEFINE
-SHARED_TYPE::SharedPointer(const SHARED_TYPE &pointer)
+SHARED_TYPE::SharedPointer(const SHARED_TYPE &pointer) noexcept
 		: allocator(pointer.allocator)
 		, counterAllocator(pointer.counterAllocator)
 		, object(pointer.object)
@@ -250,7 +250,7 @@ SHARED_TYPE::SharedPointer(const SHARED_TYPE &pointer)
 }
 
 SHARED_TEMPLATE_DEFINE
-SHARED_TYPE::SharedPointer(SHARED_TYPE &&pointer)
+SHARED_TYPE::SharedPointer(SHARED_TYPE &&pointer) noexcept
 		: allocator(pointer.allocator)
 		, counterAllocator(pointer.counterAllocator)
 		, object(pointer.object)
@@ -261,7 +261,7 @@ SHARED_TYPE::SharedPointer(SHARED_TYPE &&pointer)
 }
 
 SHARED_TEMPLATE_DEFINE
-SHARED_TYPE::SharedPointer(typename SHARED_TYPE::ConstReference obj)
+SHARED_TYPE::SharedPointer(typename SHARED_TYPE::ConstReference obj) noexcept
 		: allocator()
 		, counterAllocator()
 		, object(allocator.construct(obj))
@@ -271,7 +271,7 @@ SHARED_TYPE::SharedPointer(typename SHARED_TYPE::ConstReference obj)
 }
 
 SHARED_TEMPLATE_DEFINE
-SHARED_TYPE::SharedPointer(typename SHARED_TYPE::MoveReference obj)
+SHARED_TYPE::SharedPointer(typename SHARED_TYPE::MoveReference obj) noexcept
 		: allocator()
 		, counterAllocator()
 		, object(allocator.construct(obj))
@@ -357,7 +357,7 @@ void SHARED_TYPE::clean()
 // UniquePointer
 
 UNIQUE_TEMPLATE_DEFINE
-UNIQUE_TYPE::UniquePointer(UNIQUE_TYPE &&pointer)
+UNIQUE_TYPE::UniquePointer(UNIQUE_TYPE &&pointer) noexcept
 		: allocator(pointer.allocator)
 		, object(pointer.object)
 {
@@ -365,19 +365,19 @@ UNIQUE_TYPE::UniquePointer(UNIQUE_TYPE &&pointer)
 }
 
 UNIQUE_TEMPLATE_DEFINE
-UNIQUE_TYPE::UniquePointer(typename UNIQUE_TYPE::ConstReference obj)
+UNIQUE_TYPE::UniquePointer(typename UNIQUE_TYPE::ConstReference obj) noexcept
 		: allocator()
 		, object(allocator.construct(obj))
 {}
 
 UNIQUE_TEMPLATE_DEFINE
-UNIQUE_TYPE::UniquePointer(typename UNIQUE_TYPE::MoveReference obj)
+UNIQUE_TYPE::UniquePointer(typename UNIQUE_TYPE::MoveReference obj) noexcept
 		: allocator()
 		, object(allocator.construct(obj))
 {}
 
 UNIQUE_TEMPLATE_DEFINE
-UNIQUE_TYPE &UNIQUE_TYPE::operator=(UNIQUE_TYPE &&pointer)
+UNIQUE_TYPE &UNIQUE_TYPE::operator=(UNIQUE_TYPE &&pointer) noexcept
 {
 	clean();
 
