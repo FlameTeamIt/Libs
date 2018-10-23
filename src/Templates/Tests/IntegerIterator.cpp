@@ -14,14 +14,24 @@ IntegerIterator::~IntegerIterator()
 
 int IntegerIterator::vStart()
 {
+	size_t begin = 0;
+	size_t end = 10;
+
 	using namespace flame_ide::templates;
-	auto range = makeRange<templates::SizeTypeIterator>(0, 10);
-	for (auto i : range)
-	{
-		std::cout << i << ' ';
-	}
-	std::cout << std::endl;
-	return 0;
+	CHECK_RESULT_SUCCESS_END(doTestCase(
+		std::string("check (") + std::to_string(begin) + ":" + std::to_string(end) + ")"
+		, [&]()
+		{
+			size_t value = 0;
+			auto range = makeRange<SizeTypeIterator>(begin, end);
+
+			for (auto i : range)
+			{
+				IN_CASE_CHECK(i == value++);
+			}
+			return ResultType::SUCCESS;
+		}
+	));
 }
 
 }}
