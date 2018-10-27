@@ -18,6 +18,7 @@ public:
 
 private:
 	templates::String string;
+	std::string stdstring;
 };
 
 }}

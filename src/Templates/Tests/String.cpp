@@ -2,6 +2,8 @@
 
 #define TEST_STRING "Hello, world!"
 
+#define TO_TEXT(some) #some
+
 using namespace flame_ide::test;
 
 String::String() : AbstractTest("String")
@@ -13,129 +15,133 @@ String::~String()
 
 int String::vStart()
 {
-	auto printString = [] (auto &string, bool endl = false)
-	{
-		std::cout << '"';
-		for (auto i : string)
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"bufferSize from string_utils"
+		, [&]()
 		{
-			std::cout << i;
+			int i = 100500;
+			Types::size_t size_100500 = sizeof( TO_TEXT(100500) ) - 1;
+			Types::size_t size_minus100500 = sizeof( TO_TEXT(-100500) ) - 1;
+			Types::size_t size_uint64MAX = sizeof( TO_TEXT(18446744073709551615ul) ) - 1;
+
+			IN_TEST_CHECK(templates::string_utils::bufferSize(i) == size_100500);
+			IN_TEST_CHECK(templates::string_utils::bufferSize(-i) == size_minus100500);
+			IN_TEST_CHECK_END(templates::string_utils::bufferSize(UINT64_MAX) == size_uint64MAX);
 		}
-		std::cout << '"' << std::endl;
+	));
 
-		if (endl)
-			std::cout << std::endl;
-	};
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"toString()"
+		, [&]()
+		{
+			int i = 100500;
+			auto string = templates::toString(i);
+			std::string stdstring("100500");
+			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(string, stdstring));
+		}
+	));
 
-	std::cout << "Testing bufferSize from string_utils:" << std::endl;
-	{
-		int i = 100500;
-		std::cout << '\'' << i << "' -> "
-				<< templates::string_utils::bufferSize(i)
-				<< std::endl;
-		std::cout << '\'' << i * (-1) << "' -> "
-				<< templates::string_utils::bufferSize(i * (-1))
-				<< std::endl;
-		std::cout << '\'' << unsigned(i) << "' -> "
-				<< templates::string_utils::bufferSize(unsigned(i))
-				<< std::endl;
-		std::cout << '\'' << UINT64_MAX << "' -> "
-				<< templates::string_utils::bufferSize(UINT64_MAX)
-				<< std::endl;
-	}
-	std::cout << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"output (reverse)"
+		, [&]()
+		{
+			string = templates::String(TEST_STRING); // FIXME: нужно присвоение const char *!
+			stdstring = TEST_STRING;
+			auto range = templates::makeRange(string.rbegin(), string.rend());
+			auto stdrange = templates::makeRange(stdstring.rbegin(), stdstring.rend());
+			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(range, stdrange));
+		}
+	));
 
-	std::cout << "Testing toString()" << std::endl;
-	{
-		int i = 100500;
-		std::cout << i << " -> "
-				<< templates::toString(i).data()
-				<< std::endl;
-	}
-	std::cout << std::endl;
-
-	std::cout << "Testing output:" << std::endl;
-	{
-		printString(string);
-	}
-	std::cout << std::endl;
-
-	std::cout << "Testing output (reverse):" << std::endl;
-	{
-		auto range = templates::makeRange(string.rbegin(), string.rend());
-		printString(range);
-	}
-	std::cout << std::endl;
-
-	std::cout << "Testing pushBack()/popBack():" << std::endl;
-	{
-		std::cout << "---> pushBack(object):" << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"pushBack(object)"
+		, [&]()
 		{
 			string.pushBack('_');
-			printString(string);
+			stdstring.push_back('_');
+			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(string, stdstring));
 		}
+	));
 
-		std::cout << "---> popBack():" << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"popBack()"
+		, [&]()
 		{
 			string.popBack();
-			printString(string);
+			stdstring.pop_back();
+			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(string, stdstring));
 		}
+	));
 
-		std::cout << "---> pushBack(array):" << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"pushBack(array)"
+		, [&]()
 		{
 			string.pushBack(" My name is John.");
-			printString(string);
+			stdstring += " My name is John.";
+			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(string, stdstring));
 		}
-	}
-	std::cout << std::endl;
+	));
 
-	std::cout << "Testing insert()/erase():" << std::endl;
-	{
-		std::cout << "---> erase(range)" << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"erase(range)"
+		, [&]()
 		{
-			auto size = sizeof(TEST_STRING) - 1;
-			string.erase(string.begin() + size, string.end());
-			printString(string);
+			log << "Add" << std::endl;
+			return ResultType::SUCCESS;
 		}
+	));
 
-		std::cout << "---> erase(iterator)" << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"erase(iterator)"
+		, [&]()
 		{
-			auto size = sizeof("Hello") - 1;
-			string.erase(string.begin() + size);
-			printString(string);
+			log << "Add" << std::endl;
+			return ResultType::SUCCESS;
 		}
+	));
 
-		std::cout << "---> insert(iterator)" << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"insert(iterator)"
+		, [&]()
 		{
-			auto size = sizeof("Hello") - 1;
-			string.insert(string.begin() + size, ',');
-			printString(string);
+			log << "Add" << std::endl;
+			return ResultType::SUCCESS;
 		}
-	}
-	std::cout << std::endl;
+	));
 
-	std::cout << "Testing operator=()" << std::endl;
-	{
-		std::cout << "---> operator=(ConstReference)" << std::endl;
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"operator=(ConstReference)"
+		, [&]()
 		{
 			templates::String copiedString = string;
-			std::cout << copiedString.data() << std::endl;
+			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(copiedString, string));
 		}
-		std::cout << "---> operator=(MoveReference)" << std::endl;
+	));
+
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"operator=(MoveReference)"
+		, [&]()
 		{
+			templates::String copiedString = string;
 			templates::String movedString = templates::String();
 			movedString = flame_ide::move(string);
-			std::cout << "Moved: " << movedString.data() << std::endl;
+			IN_CASE_CHECK(ResultType::SUCCESS == compareContainers(copiedString, movedString));
 			string = flame_ide::move(movedString);
-			std::cout << "Original: " << string.data() << std::endl;
+			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(copiedString, string));
 		}
-		std::cout << "---> operator=(PointerToConst)" << std::endl;
+	));
+
+	CHECK_RESULT_SUCCESS(doTestCase(
+		"operator=(PointerToConst)"
+		, [&]()
 		{
 			templates::String stringFromArray = templates::String();
 			stringFromArray = string.data();
-			std::cout << stringFromArray.data() << std::endl;
+			IN_CASE_CHECK(string.length() == stringFromArray.length());
+			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(stringFromArray, string));
 		}
-	}
-	std::cout << std::endl;
+	));
 
 	return 0;
 }

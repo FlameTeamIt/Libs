@@ -155,11 +155,11 @@ public:
 
 	BasicString();
 	BasicString(const Me &string);
-	BasicString(Me &&string);
+	BasicString(Me &&string) noexcept;
 	BasicString(PointerToConst rawString);
 	~BasicString();
 	Me &operator=(const Me &string);
-	Me &operator=(Me &&string);
+	Me &operator=(Me &&string) noexcept;
 	Me &operator=(PointerToConst array);
 
 	template<typename IntType>
@@ -341,7 +341,7 @@ STRING_TYPE::BasicString(const STRING_TYPE &string)
 }
 
 TEMPLATE_TYPE
-STRING_TYPE::BasicString(STRING_TYPE &&string)
+STRING_TYPE::BasicString(STRING_TYPE &&string) noexcept
 		: allocator(string.allocator)
 		, stringCapacity(string.stringCapacity)
 		, head(string.head)
@@ -398,7 +398,7 @@ STRING_TYPE &STRING_TYPE::operator=(const STRING_TYPE &string)
 }
 
 TEMPLATE_TYPE
-STRING_TYPE &STRING_TYPE::operator=(STRING_TYPE &&string)
+STRING_TYPE &STRING_TYPE::operator=(STRING_TYPE &&string) noexcept
 {
 	clean();
 	if (head)
@@ -432,7 +432,8 @@ STRING_TYPE &STRING_TYPE::operator=(typename STRING_TYPE::PointerToConst array)
 			*it = i;
 			++it;
 		}
-		*it = NULL_SYMBOL;
+		tail = (--it).operator->();
+		*tail = NULL_SYMBOL;
 	}
 	else
 	{
