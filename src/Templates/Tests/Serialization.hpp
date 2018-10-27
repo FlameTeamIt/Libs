@@ -26,21 +26,21 @@ private:
 
 	virtual int vStart();
 
-	bool le();
+	ResultType le();
 	bool le16();
 	bool le32();
 	bool le64();
 
-	bool be();
+	ResultType be();
 	bool be16();
 	bool be32();
 	bool be64();
 
-	bool leSpec();
+	ResultType leSpec();
 	bool leSpec32();
 	bool leSpec64();
 
-	bool beSpec();
+	ResultType beSpec();
 	bool beSpec32();
 	bool beSpec64();
 

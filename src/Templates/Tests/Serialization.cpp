@@ -10,19 +10,19 @@ using templates::CompileTimeReverseBytes;
 
 int Serialization::vStart()
 {
-	if(!le() || !be() || !leSpec() || !beSpec())
-	{
-		return -1;
-	}
-
-	return 0;
+	CHECK_RESULT_SUCCESS(le());
+	CHECK_RESULT_SUCCESS(be());
+	CHECK_RESULT_SUCCESS(leSpec());
+	CHECK_RESULT_SUCCESS_END(beSpec());
 }
 
 // LITTLE_ENDIAN
 
-bool Serialization::le()
+Serialization::ResultType Serialization::le()
 {
-	return le16() && le32() && le64();
+	IN_CASE_CHECK(le16());
+	IN_CASE_CHECK(le32());
+	IN_CASE_CHECK_END(le64());
 }
 
 bool Serialization::le16()
@@ -149,9 +149,11 @@ bool Serialization::le64()
 
 // BIG_ENDIAN
 
-bool Serialization::be()
+Serialization::ResultType Serialization::be()
 {
-	return be16() && be32() && be64();
+	IN_CASE_CHECK(be16());
+	IN_CASE_CHECK(be32());
+	IN_CASE_CHECK_END(be64());
 }
 
 bool Serialization::be16()
@@ -273,12 +275,12 @@ bool Serialization::be64()
 	return true;
 }
 
-
 // LITTLE_ENDIAN spetialized
 
-bool Serialization::leSpec()
+Serialization::ResultType Serialization::leSpec()
 {
-	return leSpec32() && leSpec64();
+	IN_CASE_CHECK(leSpec32());
+	IN_CASE_CHECK_END(leSpec64());
 }
 
 bool Serialization::leSpec32()
@@ -399,9 +401,10 @@ bool Serialization::leSpec64()
 
 // BIG_ENDIAN spetialized
 
-bool Serialization::beSpec()
+Serialization::ResultType Serialization::beSpec()
 {
-	return beSpec32() && beSpec64();
+	IN_CASE_CHECK(beSpec32());
+	IN_CASE_CHECK_END(beSpec64());
 }
 
 bool Serialization::beSpec32()
