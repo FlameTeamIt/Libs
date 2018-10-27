@@ -38,7 +38,7 @@ int Vector::vStart()
 			"initializing size"
 			, [&]()
 			{
-				IN_CASE_CHECK_END(vector.size() != stdvector.size());
+				IN_CASE_CHECK_END(vector.size() == stdvector.size());
 			}
 	));
 
