@@ -13,25 +13,55 @@
 	std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": "
 
 #define CHECK_RESULT_SUCCESS(result) \
-	if (ResultType::FAILED == result) return true
+	if (ResultType::FAILED == result) \
+	{ \
+		return true; \
+	}
 
 #define CHECK_RESULT_SUCCESS_END(result) \
-	if (ResultType::FAILED == result) return true; \
-	else return false
+	if (ResultType::FAILED == result) \
+	{ \
+		return true; \
+	} \
+	else \
+	{ \
+		return false; \
+	}
 
 #define IN_CASE_CHECK(condition) \
-	if (!(condition)) return ResultType::FAILED
+	if (!(condition)) \
+	{ \
+		log << #condition << std::endl; \
+		return ResultType::FAILED; \
+	}
 
 #define IN_CASE_CHECK_END(condition) \
-	if (condition) return ResultType::SUCCESS; \
-	else return ResultType::FAILED
+	if (condition) \
+	{ \
+		return ResultType::SUCCESS; \
+	} \
+	else \
+	{ \
+		log << #condition << std::endl; \
+		return ResultType::FAILED; \
+	}
 
 #define IN_TEST_CHECK(condition) \
-	if (!(condition)) return 1
+	if (!(condition)) \
+	{\
+		log << #condition << std::endl; \
+		return 1; \
+	}
 
 #define IN_TEST_CHECK_END(condition) \
-	if (condition) return 1; \
-	else return 0
+	if (condition) \
+	{ \
+		return 1; \
+	} \
+	else \
+	{ \
+		return 0; \
+	}
 
 class AbstractTest
 {
