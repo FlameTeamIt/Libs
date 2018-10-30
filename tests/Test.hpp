@@ -97,6 +97,11 @@ public:
 		return resultCode;
 	}
 
+	const std::string &getName() const
+	{
+		return testName;
+	}
+
 protected:
 	virtual int vStart() = 0;
 
@@ -158,22 +163,23 @@ protected:
 	}
 
 	template<typename Function>
-	ResultType doTestCase(const char *name, Function &&function)
+	static ResultType doTestCase(const char *name, Function &&function)
 	{
 		ResultType status = ResultType::SUCCESS;
 		std::cout << "----> "
-				TEXT_STYLE_BOLD TEXT_STYLE_VIOLET
-				"Case"
-				TEXT_STYLE_NULL
-				" \""
+				<< TEXT_STYLE_BOLD TEXT_STYLE_VIOLET
+				<< "Case"
+				<< TEXT_STYLE_NULL
+				<< " \""
 				<< name
-				<< "\": " << std::endl;
+				<< "\": "
+				<< std::endl;
 		if ((status = static_cast<ResultType>(function())) == ResultType::SUCCESS)
 		{
 			std::cout << "----> "
-					TEXT_STYLE_BOLD TEXT_STYLE_GREEN
-					"Success"
-					TEXT_STYLE_NULL
+					<< TEXT_STYLE_BOLD TEXT_STYLE_GREEN
+					<< "Success"
+					<< TEXT_STYLE_NULL
 					<< std::endl << std::endl;
 		}
 		else
@@ -188,13 +194,13 @@ protected:
 	}
 
 	template<typename Function>
-	ResultType doTestCase(const std::string &name, Function &&function)
+	static ResultType doTestCase(const std::string &name, Function &&function)
 	{
 		return doTestCase(name.c_str(), std::move(function));
 	}
 
 	template<typename Container1, typename Container2>
-	ResultType compareContainers(Container1 &&container1, Container2 &&container2)
+	static ResultType compareContainers(Container1 &&container1, Container2 &&container2)
 	{
 		auto it1Begin = container1.begin();
 		auto it1End = container1.end();
@@ -216,15 +222,46 @@ protected:
 		return ResultType::SUCCESS;
 	}
 
+	static void printTestSuccess()
+	{
+		std::cout << TEXT_STYLE_BOLD
+				<< TEXT_STYLE_GREEN
+				<< "SUCCESS TEST"
+				<< TEXT_STYLE_NULL
+				<< std::endl;
+	}
+
+	static void printTestFailed()
+	{
+		std::cout << TEXT_STYLE_BOLD
+				<< TEXT_STYLE_RED
+				<< "FAILED TEST"
+				<< TEXT_STYLE_NULL
+				<< std::endl;
+	}
+
+	static void printFinishMessage(int resultCode)
+	{
+		std::cout << "----> ";
+		if (resultCode)
+		{
+			printTestFailed();
+		}
+		else
+		{
+			printTestSuccess();
+		}
+	}
+
 private:
 	void printStart()
 	{
 		std::cout << "> "
-				TEXT_STYLE_BOLD TEXT_STYLE_CYAN
-				"Start"
-				TEXT_STYLE_NULL
-				" "
-				<< testName << std::endl << std::endl;
+				<< TEXT_STYLE_BOLD TEXT_STYLE_CYAN
+				<< "Start"
+				<< TEXT_STYLE_NULL
+				<< " "
+				<< testName << std::endl;
 	}
 
 	void printEnd()
@@ -234,29 +271,7 @@ private:
 				"End"
 				TEXT_STYLE_NULL
 				" "
-				<< testName << std::endl << std::endl;
-	}
-
-	void printTestSuccess()
-	{
-		std::cout << "----> " TEXT_STYLE_BOLD TEXT_STYLE_GREEN "SUCCESS TEST\n" TEXT_STYLE_NULL;
-	}
-
-	void printTestFailed()
-	{
-		std::cout << "----> " TEXT_STYLE_BOLD TEXT_STYLE_RED "FAILED TEST\n" TEXT_STYLE_NULL;
-	}
-
-	void printFinishMessage(int resultCode)
-	{
-		if (resultCode)
-		{
-			printTestFailed();
-		}
-		else
-		{
-			printTestSuccess();
-		}
+				<< testName << std::endl;
 	}
 
 	std::string testName;
@@ -287,52 +302,122 @@ public:
 	{
 		printStart();
 		vStart();
+		printStatistic();
 		printEnd();
 	}
 
-	void pushBackTest(AbstractTest *test, int is_enable = 1)
+	void pushBackTest(AbstractTest *test)
 	{
 		vectorTests.push_back(test);
-		vectorEnableTests.push_back(is_enable);
 	}
 
 	void printStatistic()
 	{
+		printGlobalMessage(aggregatorName + " STATISTIC");
 		vPrintStatistic();
 	}
 
 protected:
 	virtual void vStart()
 	{
-		for (auto it : vectorTests)
-			vectorReturnCodes.push_back(it->start());
+		auto it = vectorTests.begin();
+		for (; it != vectorTests.end(); ++it)
+		{
+			vectorReturnCodes.push_back((*it)->start());
+			if (it != --vectorTests.end())
+				std::cout << std::endl;
+		}
+	}
+
+	void printGlobalMessage(const std::string &message)
+	{
+		printGlobalMessage(message.c_str());
+	}
+
+	void printGlobalMessage(const char *message)
+	{
+		std::cout << TEXT_STYLE_BOLD
+				<< TEXT_STYLE_YELLOW
+				<< "-------------------- "
+				<< TEXT_STYLE_NULL
+				<< message
+				<< TEXT_STYLE_BOLD
+				<< TEXT_STYLE_YELLOW
+				<< " --------------------"
+				<< TEXT_STYLE_NULL
+				<< std::endl;
+
 	}
 
 	void printStart()
 	{
-		std::cout << TEXT_STYLE_BOLD TEXT_STYLE_YELLOW
-				"-------------------- "
-				TEXT_STYLE_NULL
-				<< aggregatorName
-				<< TEXT_STYLE_BOLD TEXT_STYLE_YELLOW
-				" --------------------"
-				TEXT_STYLE_NULL
-				"\n";
+		printGlobalMessage(aggregatorName + " START");
 	}
 
 	void printEnd()
 	{
-		std::cout << TEXT_STYLE_BOLD TEXT_STYLE_YELLOW
-				"-------------------- "
-				TEXT_STYLE_NULL
-				"END"
-				TEXT_STYLE_BOLD TEXT_STYLE_YELLOW
-				" --------------------"
-				TEXT_STYLE_NULL "\n\n";
+		printGlobalMessage(aggregatorName + " END");
 	}
 
 	virtual void vPrintStatistic() const
-	{}
+	{
+		auto test = vectorTests.begin();
+		auto code = vectorReturnCodes.begin();
+		size_t countFailed = 0;
+		size_t countSuccess = 0;
+
+		for (; test != vectorTests.end() && code != vectorReturnCodes.end(); ++test, ++code)
+		{
+			std::cout << "Test \"" << (*test)->getName() << "\" : ";
+			printStatus(*code);
+			if (*code)
+			{
+				++countFailed;
+			}
+			else
+			{
+				++countSuccess;
+			}
+			std::cout << std::endl;
+		}
+		std::cout << TEXT_STYLE_BOLD
+				<< TEXT_STYLE_VIOLET
+				<< "Count tests"
+				<< TEXT_STYLE_NULL
+				<< ": "
+				<< vectorTests.size() << std::endl;
+		if (countSuccess)
+		{
+			std::cout << TEXT_STYLE_BOLD
+					<< TEXT_STYLE_VIOLET
+					<< "Count "
+					<< TEXT_STYLE_NULL;
+			printTestSuccess();
+			std::cout << TEXT_STYLE_BOLD
+					<< TEXT_STYLE_VIOLET
+					<< " tests"
+					<< TEXT_STYLE_NULL
+					<< ": "
+					<< countSuccess
+					<< std::endl;
+		}
+		if (countFailed)
+		{
+			std::cout << TEXT_STYLE_BOLD
+					<< TEXT_STYLE_VIOLET
+					<< "Count "
+					<< TEXT_STYLE_NULL;
+			printTestFailed();
+			std::cout << " tests: " << countFailed;
+			std::cout << TEXT_STYLE_BOLD
+					<< TEXT_STYLE_VIOLET
+					<< " tests"
+					<< TEXT_STYLE_NULL
+					<< ": "
+					<< countSuccess
+					<< std::endl;
+		}
+	}
 
 	std::string getName() const
 	{
@@ -352,11 +437,36 @@ protected:
 		aggregatorName = new_name;
 	}
 
-	std::vector<int> vectorReturnCodes;
-	std::vector<int> vectorEnableTests;
+	static void printStatus(int resultCode)
+	{
+		if (resultCode)
+		{
+			printTestFailed();
+		}
+		else
+		{
+			printTestSuccess();
+		}
+	}
 
-private:
+	static void printTestSuccess()
+	{
+		std::cout << TEXT_STYLE_BOLD
+				<< TEXT_STYLE_GREEN
+				<< "SUCCESS"
+				<< TEXT_STYLE_NULL;
+	}
+
+	static void printTestFailed()
+	{
+		std::cout << TEXT_STYLE_BOLD
+				<< TEXT_STYLE_RED
+				<< "FAILED"
+				<< TEXT_STYLE_NULL;
+	}
+
 	std::string aggregatorName;
+	std::vector<int> vectorReturnCodes;
 	std::vector<AbstractTest *> vectorTests;
 };
 
