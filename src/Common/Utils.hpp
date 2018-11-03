@@ -231,24 +231,24 @@ template<typename Iterator1, typename Iterator2>
 bool isEqual(Iterator1 start1, Iterator1 end1
 		, Iterator2 start2, Iterator2 end2)
 {
-	static_assert(!isSameTypes<decltype(*start1), decltype(*start2)>(), "Types is not equal.");
+	static_assert(
+			!isSameTypes<
+				typename RemoveAll<decltype(*start1)>::Type
+				, typename RemoveAll<decltype(*start2)>::Type
+			>()
+			, "Types is not equal."
+	);
 
-	bool equal = true;
-	auto iterator1 = start1;
-	auto iterator2 = start2;
-
-	for(; iterator1 != end1 && iterator2 != end2 && equal; ++iterator1, ++iterator2)
-		equal = (equal && *iterator1 == *iterator2);
-
-	if(iterator1 == end1)
-		if(iterator2 == end2)
-			return equal;
-		else
+	typename RemoveAll<Iterator1>::Type it1 = start1;
+	typename RemoveAll<Iterator2>::Type it2 = start2;
+	for (; (it1 != end1) && (it2 != end2); ++it1, ++it2)
+	{
+		if ((it1 == end1) || (it2 == end2) || (*it1 != *it2))
+		{
 			return false;
-	else
-		return false;
-
-	return equal;
+		}
+	}
+	return true;
 }
 
 template<typename Container> inline
@@ -274,7 +274,6 @@ typename Container::ConstReverseIterator crbegin(const Container &container)
 {
 	return container.crbegin();
 }
-
 
 template<typename Container> inline
 typename Container::Iterator end(Container &container)

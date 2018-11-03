@@ -29,6 +29,8 @@ HEADERS += \
 	./src/Common/Byte.hpp \
 	./src/Common/Macroses.hpp \
 	./src/Common/PrimitiveTypes.hpp \
+	./src/Common/Tests/TestAggregator.hpp \
+	./src/Common/Tests/Utils.hpp \
 	./src/Common/Traits.hpp \
 	./src/Common/Utils.hpp \
 	./src/Constants/C.hpp \
@@ -101,6 +103,8 @@ SOURCES += \
 	./src/Analysers/Ubjson/Pair.cpp \
 	./src/Analysers/Ubjson/String.cpp \
 	./src/Bus/MsgInterface.cpp \
+	./src/Common/Tests/TestAggregator.cpp \
+	./src/Common/Tests/Utils.cpp \
 	./src/Filesystem/BasicFile.cpp \
 	./src/Filesystem/Project.cpp \
 	./src/Filesystem/Session.cpp \
