@@ -15,12 +15,14 @@
 #define CHECK_RESULT_SUCCESS(result) \
 	if (ResultType::FAILED == result) \
 	{ \
+		log << #result << std::endl; \
 		return true; \
 	}
 
 #define CHECK_RESULT_SUCCESS_END(result) \
 	if (ResultType::FAILED == result) \
 	{ \
+		log << #result << std::endl; \
 		return true; \
 	} \
 	else \
@@ -54,8 +56,9 @@
 	}
 
 #define IN_TEST_CHECK_END(condition) \
-	if (condition) \
+	if (!(condition)) \
 	{ \
+		log << #condition << std::endl; \
 		return 1; \
 	} \
 	else \

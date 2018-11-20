@@ -26,7 +26,7 @@ int String::vStart()
 
 			IN_TEST_CHECK(templates::string_utils::bufferSize(i) == size_100500);
 			IN_TEST_CHECK(templates::string_utils::bufferSize(-i) == size_minus100500);
-			IN_TEST_CHECK_END(templates::string_utils::bufferSize(UINT64_MAX) == size_uint64MAX);
+			IN_TEST_CHECK_END(templates::string_utils::bufferSize(UINT64_MAX) != size_uint64MAX);
 		}
 	));
 
@@ -92,12 +92,14 @@ int String::vStart()
 		}
 	));
 
+	auto temp = *(string.begin() + 4);
 	CHECK_RESULT_SUCCESS(doTestCase(
 		"erase(iterator)"
 		, [&]()
 		{
-			log << "Add" << std::endl;
-			return ResultType::SUCCESS;
+			string.erase(string.begin() + 4);
+			stdstring.erase(stdstring.begin() + 4);
+			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(string, stdstring));
 		}
 	));
 
@@ -105,8 +107,9 @@ int String::vStart()
 		"insert(iterator)"
 		, [&]()
 		{
-			log << "Add" << std::endl;
-			return ResultType::SUCCESS;
+			string.insert(string.begin() + 4, temp);
+			stdstring.insert(stdstring.begin() + 4, temp);
+			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(string, stdstring));
 		}
 	));
 

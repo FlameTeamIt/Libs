@@ -1,9 +1,3 @@
-/*
- * file:       Vector.cpp
- *
- * created:    16.08.2017
- * author:     kachsheev
- */
 #include "Vector.hpp"
 
 using namespace flame_ide::test;

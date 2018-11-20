@@ -68,7 +68,7 @@ bool Bits::minimalType()
 		, [&]()
 		{
 			bool result = flame_ide::isSameTypes<Type65::Type, void>();
-			IN_CASE_CHECK_END(result);
+			IN_CASE_CHECK_END(!result);
 		}
 	));
 }
