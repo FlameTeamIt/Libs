@@ -69,6 +69,8 @@ public:
 	using typename Parent::Pointer;
 	using typename Parent::PointerToConst;
 
+	using typename Parent::SsizeType;
+
 	Iterator() = default;
 	Iterator(const Me &) = default;
 	Iterator(Me &&) noexcept = default;
@@ -178,6 +180,23 @@ public:
 		Me me = *this;
 		me -= value;
 		return me;
+	}
+
+	SsizeType operator-(const Me &iterator)
+	{
+		if (isArrayIterator() && iterator.isArrayIterator())
+		{
+			const ArrayIterator &meIt = *(wrappedIterator.template get<ArrayIterator>());
+			const ArrayIterator &itIt = *(iterator.wrappedIterator.template get<ArrayIterator>());
+			return meIt - itIt;
+		}
+		else if (isVectorIterator() && iterator.isVectorIterator())
+		{
+			const VectorIterator &meIt = *(wrappedIterator.template get<VectorIterator>());
+			const VectorIterator &itIt = *(iterator.wrappedIterator.template get<VectorIterator>());
+			return meIt - itIt;
+		}
+		return SsizeType(0);
 	}
 
 	template<typename IntType>
@@ -882,15 +901,15 @@ public:
 			if (this->isArray())
 			{
 				Array &realContainer = *(container.template get<Array>());
-				return --(realContainer.end());
+				return Iterator(--(realContainer.end()));
 			}
 			else
 			{
 				Vector &realContainer = *(container.template get<Vector>());
-				return --(realContainer.end());
+				return Iterator(--(realContainer.end()));
 			}
 		}
-		return ReverseIterator();
+		return ReverseIterator{ Iterator{} };
 	}
 
 	ConstReverseIterator rbegin() const
@@ -964,15 +983,15 @@ public:
 			if (this->isArray())
 			{
 				Array &realContainer = *(container.template get<Array>());
-				return --(realContainer.begin());
+				return Iterator(--(realContainer.begin()));
 			}
 			else
 			{
 				Vector &realContainer = *(container.template get<Vector>());
-				return --(realContainer.begin());
+				return Iterator(--(realContainer.begin()));
 			}
 		}
-		return ReverseIterator();
+		return ReverseIterator{ Iterator{} };
 	}
 
 	ConstReverseIterator rend() const
@@ -1214,7 +1233,7 @@ public:
 	}
 
 	template<typename ...Args>
-	void emplace(Iterator it, Args &&...args) const
+	void emplace(Iterator it, Args &&...args)
 	{
 		if (container)
 		{
@@ -1309,7 +1328,7 @@ private:
 		{
 			if (this->isVector())
 			{
-				Vector *realContainer = container.template get<Array>();
+				Vector *realContainer = container.template get<Vector>();
 				auto range = makeRange(
 						realContainer->begin(),
 						realContainer->begin()
@@ -1321,7 +1340,7 @@ private:
 				);
 
 				Array array;
-				for (MoveReference i : range)
+				for (Reference i : range)
 				{
 					array.pushBack(move(i));
 				}
@@ -1352,7 +1371,7 @@ private:
 				Array *realContainer = container.template get<Array>();
 
 				Vector vector = lambdaMakeVector(realContainer->size());
-				for (MoveReference i : *realContainer)
+				for (Reference i : *realContainer)
 				{
 					vector.pushBack(move(i));
 				}
