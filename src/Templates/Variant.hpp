@@ -275,7 +275,8 @@ template<typename Arg, typename ...Args> template<typename T>
 typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst
 VariantStruct<Arg, Args...>::get() const
 {
-	return VariantStructGetterSetter<isSameTypes<T, Arg>()>::template getConst(*this);
+	return VariantStructGetterSetter<isSameTypes<T, Arg>()>
+			::template getConst<T>(*this);
 }
 
 template<typename Arg, typename ...Args> template<typename T>
