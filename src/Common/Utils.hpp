@@ -37,13 +37,13 @@ typename RemoveReference<T>::Type&& move(T &&reference) noexcept;
  * @brief std::forward alternative.
  */
 template<class T> constexpr inline
-T&& forward(typename RemoveReference<T>::Type &&reference) noexcept;
+T&& forward(T &&reference) noexcept;
 
 /**
  * @brief std::forward alternative.
  */
 template<class T> constexpr inline
-T&& forward(typename RemoveReference<T>::Type &reference) noexcept;
+T&& forward(T &reference) noexcept;
 
 /**
  * @brief Adapter for palcement new operator.
@@ -193,14 +193,14 @@ typename RemoveReference<T>::Type &&move(T &&reference) noexcept
 }
 
 template<class T> constexpr inline
-T &&forward(typename RemoveReference<T>::Type &&reference) noexcept
+T &&forward(T &&reference) noexcept
 {
 	static_assert(IsLvalue<T>::VALUE, "Cannot forward rvalue as lvalue.");
 	return static_cast<T &&>(reference);
 }
 
 template<class T> constexpr inline
-T &&forward(typename RemoveReference<T>::Type &reference) noexcept
+T &&forward(T &reference) noexcept
 {
 	return static_cast<T &&>(reference);
 }
