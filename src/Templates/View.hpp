@@ -18,12 +18,12 @@ public:
 
 	View() = delete;
 	View(const Me &) = default;
-	View(Me &&) = default;
+	View(Me &&) noexcept = default;
 	View(Iterator itBegin, Iterator itEnd);
 	~View() = default;
 
 	Me &operator=(const Me &) = default;
-	Me &operator=(Me &&) = default;
+	Me &operator=(Me &&) noexcept = default;
 
 	Iterator begin() const;
 	Iterator end() const;

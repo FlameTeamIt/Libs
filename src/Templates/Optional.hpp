@@ -13,19 +13,19 @@ class Optional: public DefaultTraits<T>
 public:
 	using Me = Optional<T>;
 
-	Optional();
+	Optional() noexcept;
 	Optional(const Me &optional);
-	Optional(Me &&optional);
+	Optional(Me &&optional) noexcept;
 	Optional(typename Me::ConstReference value);
-	Optional(typename Me::MoveReference value);
+	Optional(typename Me::MoveReference value) noexcept;
 	~Optional();
 
 	Me &operator=(const Me &optional);
-	Me &operator=(Me &&optional);
+	Me &operator=(Me &&optional) noexcept;
 	Me &operator=(typename Me::ConstReference value);
-	Me &operator=(typename Me::MoveReference value);
+	Me &operator=(typename Me::MoveReference value) noexcept;
 
-	operator bool() const;
+	operator bool() const noexcept;
 
 	typename Me::Pointer operator->();
 	typename Me::PointerToConst operator->() const;
@@ -34,7 +34,7 @@ public:
 
 	void init();
 	void set(typename Me::ConstReference value);
-	void set(typename Me::MoveReference value);
+	void set(typename Me::MoveReference value) noexcept;
 
 	typename Me::Reference get();
 	typename Me::ConstReference get() const;
@@ -59,7 +59,7 @@ namespace flame_ide
 {
 
 template<typename T>
-Optional<T>::Optional() : value(), isFill(false)
+Optional<T>::Optional() noexcept : value(), isFill(false)
 {}
 
 template<typename T>
@@ -73,7 +73,7 @@ Optional<T>::Optional(const Optional<T> &optional) : Optional<T>()
 }
 
 template<typename T>
-Optional<T>::Optional(Optional<T> &&optional) : Optional<T>()
+Optional<T>::Optional(Optional<T> &&optional) noexcept : Optional<T>()
 {
 	if (optional)
 	{
@@ -83,14 +83,16 @@ Optional<T>::Optional(Optional<T> &&optional) : Optional<T>()
 }
 
 template<typename T>
-Optional<T>::Optional(typename Optional<T>::ConstReference value) : Optional<T>()
+Optional<T>::Optional(typename Optional<T>::ConstReference value)
+		: Optional<T>()
 {
 	placementNew(toValue(), value);
 	isFill = true;
 }
 
 template<typename T>
-Optional<T>::Optional(typename Optional<T>::MoveReference value) : Optional<T>()
+Optional<T>::Optional(typename Optional<T>::MoveReference value) noexcept
+		: Optional<T>()
 {
 	placementNew(toValue(), move(value));
 	isFill = true;
@@ -124,7 +126,7 @@ Optional<T> &Optional<T>::operator=(const Optional &optional)
 }
 
 template<typename T>
-Optional<T> &Optional<T>::operator=(Optional &&optional)
+Optional<T> &Optional<T>::operator=(Optional &&optional) noexcept
 {
 	if (*this)
 	{
@@ -160,7 +162,7 @@ Optional<T> &Optional<T>::operator=(typename Me::ConstReference value)
 }
 
 template<typename T>
-Optional<T> &Optional<T>::operator=(typename Me::MoveReference value)
+Optional<T> &Optional<T>::operator=(typename Me::MoveReference value) noexcept
 {
 	if (*this)
 	{
@@ -175,7 +177,7 @@ Optional<T> &Optional<T>::operator=(typename Me::MoveReference value)
 }
 
 template<typename T>
-Optional<T>::operator bool() const
+Optional<T>::operator bool() const noexcept
 {
 	return isFill;
 }
@@ -217,7 +219,7 @@ void Optional<T>::set(typename Optional<T>::ConstReference value)
 }
 
 template<typename T>
-void Optional<T>::set(typename Optional<T>::MoveReference value)
+void Optional<T>::set(typename Optional<T>::MoveReference value) noexcept
 {
 	operator=(move(value));
 }
@@ -271,7 +273,6 @@ typename Optional<T>::PointerToConst Optional<T>::toValue() const
 			static_cast<const void *>(value.array)
 	);
 }
-
 
 }}
 
