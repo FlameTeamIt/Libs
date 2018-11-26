@@ -1,11 +1,19 @@
-#ifndef TESTAGGREGATOR_HPP
-#define TESTAGGREGATOR_HPP
+#ifndef COMMON_TESTAGGREGATOR_HPP
+#define COMMON_TESTAGGREGATOR_HPP
 
+#include <tests/Test.hpp>
 
-class TestAggregator
+namespace flame_ide
+{namespace tests
+{
+
+class TestAggregator: public ::TestAggregator
 {
 public:
 	TestAggregator();
+	~TestAggregator() = default;
 };
 
-#endif // TESTAGGREGATOR_HPP
+}}
+
+#endif // COMMON_TESTAGGREGATOR_HPP

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include <iostream>
 
 #ifdef __linux
@@ -295,11 +296,7 @@ public:
 	TestAggregator(std::string &&name) : aggregatorName(name)
 	{}
 
-	virtual ~TestAggregator()
-	{
-		for (auto it : vectorTests)
-			delete it;
-	}
+	virtual ~TestAggregator() = default;
 
 	void start()
 	{
@@ -309,9 +306,14 @@ public:
 		printEnd();
 	}
 
-	void pushBackTest(AbstractTest *test)
+	void pushBackTest(const std::shared_ptr<AbstractTest> &test)
 	{
 		vectorTests.push_back(test);
+	}
+
+	void pushBackTest(std::shared_ptr<AbstractTest> &&test)
+	{
+		vectorTests.push_back(std::move(test));
 	}
 
 	void printStatistic()
@@ -470,7 +472,7 @@ protected:
 
 	std::string aggregatorName;
 	std::vector<int> vectorReturnCodes;
-	std::vector<AbstractTest *> vectorTests;
+	std::vector<std::shared_ptr<AbstractTest>> vectorTests;
 };
 
 #endif // TEST_BASETEST_H

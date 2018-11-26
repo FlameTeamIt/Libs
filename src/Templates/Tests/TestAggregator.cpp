@@ -20,27 +20,28 @@
 
 namespace flame_ide
 {namespace templates
+{namespace tests
 {
 
 TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 {
-	pushBackTest(new test::ObjectAllocator);
-	pushBackTest(new test::ArrayAllocator);
-	pushBackTest(new test::Array());
-	pushBackTest(new test::Bits());
-	pushBackTest(new test::ByteOrderTest());
-	pushBackTest(new test::CircularVector());
-	pushBackTest(new test::List());
-	pushBackTest(new test::SharedPointer());
-	pushBackTest(new test::Serialization());
-	pushBackTest(new test::String());
-	pushBackTest(new test::Tuple());
-	pushBackTest(new test::UniquePointer());
-	pushBackTest(new test::Vector());
-	pushBackTest(new test::Variant());
-	pushBackTest(new test::WideInt());
-	pushBackTest(new test::HybridVector());
-	pushBackTest(new test::IntegerIterator());
+	pushBackTest(std::make_shared<test::ObjectAllocator>());
+	pushBackTest(std::make_shared<test::ArrayAllocator>());
+	pushBackTest(std::make_shared<test::Array>());
+	pushBackTest(std::make_shared<test::Bits>());
+	pushBackTest(std::make_shared<test::ByteOrderTest>());
+	pushBackTest(std::make_shared<test::CircularVector>());
+	pushBackTest(std::make_shared<test::List>());
+	pushBackTest(std::make_shared<test::SharedPointer>());
+	pushBackTest(std::make_shared<test::Serialization>());
+	pushBackTest(std::make_shared<test::String>());
+	pushBackTest(std::make_shared<test::Tuple>());
+	pushBackTest(std::make_shared<test::UniquePointer>());
+	pushBackTest(std::make_shared<test::Vector>());
+	pushBackTest(std::make_shared<test::Variant>());
+	pushBackTest(std::make_shared<test::WideInt>());
+	pushBackTest(std::make_shared<test::HybridVector>());
+	pushBackTest(std::make_shared<test::IntegerIterator>());
 }
 
-}}
+}}}

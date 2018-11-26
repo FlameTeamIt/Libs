@@ -5,6 +5,7 @@
 
 namespace flame_ide
 {namespace templates
+{namespace tests
 {
 
 class TestAggregator: public ::TestAggregator
@@ -14,6 +15,6 @@ public:
 	~TestAggregator() = default;
 };
 
-}}
+}}}
 
 #endif // TEMPLATES_TESTAGGREGATOR_HPP
