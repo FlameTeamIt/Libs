@@ -1,10 +1,4 @@
-/*
- * file:       TestClass.cpp
- *
- * created:    17.07.2017
- * author:     kachsheev
- */
-#include <Templates/Allocator.hpp>
+#include <FlameIDE/Templates/Allocator.hpp>
 
 #include "TestClass.hpp"
 

@@ -3,7 +3,7 @@
 
 #include <tests/Test.hpp>
 
-#include <Templates/Bits.hpp>
+#include <FlameIDE/Templates/Bits.hpp>
 
 namespace flame_ide
 {namespace test

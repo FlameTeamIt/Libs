@@ -1,4 +1,4 @@
-#include <Templates/View.hpp>
+#include <FlameIDE/Templates/View.hpp>
 
 #include "HybridVector.hpp"
 

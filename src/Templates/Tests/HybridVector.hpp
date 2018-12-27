@@ -2,7 +2,7 @@
 #define TEST_HYBRIDVECTOR_HPP
 
 #include <tests/Test.hpp>
-#include <Templates/HybridVector.hpp>
+#include <FlameIDE/Templates/HybridVector.hpp>
 #include "TestClass.hpp"
 
 #include <array>

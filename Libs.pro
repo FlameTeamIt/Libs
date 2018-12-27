@@ -6,74 +6,81 @@ CONFIG -= qt
 
 QMAKE_CXXFLAGS = -std=c++14 -pedantic -fno-rtti -fno-exceptions
 QMAKE_CXXFLAGS_DEBUG += -gdwarf-3
-INCLUDEPATH += src/
+INCLUDEPATH += include/
 INCLUDEPATH += .
 
 # headers
 HEADERS += \
-	./src/About/About.hpp \
-	./src/Analysers/Ubjson/Array.hpp \
-	./src/Analysers/Ubjson/BaseValue.hpp \
-	./src/Analysers/Ubjson/HugeNumber.hpp \
-	./src/Analysers/Ubjson/Object.hpp \
-	./src/Analysers/Ubjson/Pair.hpp \
-	./src/Analysers/Ubjson/Settings.hpp \
-	./src/Analysers/Ubjson/SimpleTypeValues.hpp \
-	./src/Analysers/Ubjson/Stream.hpp \
-	./src/Analysers/Ubjson/String.hpp \
-	./src/Analysers/Ubjson/Traits.hpp \
-	./src/Analysers/Ubjson/Types.hpp \
-	./src/Analysers/Ubjson/Value.hpp \
-	./src/Analysers/Ubjson/ValueSpecializations.hpp \
-	./src/Bus/MsgInterface.hpp \
-	./src/Common/Byte.hpp \
-	./src/Common/Macroses.hpp \
-	./src/Common/PrimitiveTypes.hpp \
+	./include/FlameIDE/About/About.hpp \
+	./include/FlameIDE/Analysers/Ubjson/Array.hpp \
+	./include/FlameIDE/Analysers/Ubjson/BaseValue.hpp \
+	./include/FlameIDE/Analysers/Ubjson/HugeNumber.hpp \
+	./include/FlameIDE/Analysers/Ubjson/Object.hpp \
+	./include/FlameIDE/Analysers/Ubjson/Pair.hpp \
+	./include/FlameIDE/Analysers/Ubjson/Settings.hpp \
+	./include/FlameIDE/Analysers/Ubjson/SimpleTypeValues.hpp \
+	./include/FlameIDE/Analysers/Ubjson/Stream.hpp \
+	./include/FlameIDE/Analysers/Ubjson/String.hpp \
+	./include/FlameIDE/Analysers/Ubjson/Traits.hpp \
+	./include/FlameIDE/Analysers/Ubjson/Types.hpp \
+	./include/FlameIDE/Analysers/Ubjson/Value.hpp \
+	./include/FlameIDE/Analysers/Ubjson/ValueSpecializations.hpp \
+	./include/FlameIDE/Bus/MsgInterface.hpp \
+	./include/FlameIDE/Common/Byte.hpp \
+	./include/FlameIDE/Common/Macroses.hpp \
+	./include/FlameIDE/Common/PrimitiveTypes.hpp \
+	./include/FlameIDE/Common/Traits.hpp \
+	./include/FlameIDE/Common/Traits/CreationProhibitions.hpp \
+	./include/FlameIDE/Common/Traits/CustomTraits.hpp \
+	./include/FlameIDE/Common/Traits/Defaults.hpp \
+	./include/FlameIDE/Common/Traits/Fuctional.hpp \
+	./include/FlameIDE/Common/Traits/Numbers.hpp \
+	./include/FlameIDE/Common/Utils.hpp \
+	./include/FlameIDE/Constants/C.hpp \
+	./include/FlameIDE/Constants/CPP.hpp \
+	./include/FlameIDE/Filesystem/BasicFile.hpp \
+	./include/FlameIDE/Filesystem/Project.hpp \
+	./include/FlameIDE/Filesystem/Session.hpp \
+	./include/FlameIDE/Others/TextStyle.hpp \
+	./include/FlameIDE/Process/CommandLine.hpp \
+	./include/FlameIDE/Streams/StreamBase.hpp \
+	./include/FlameIDE/Templates/AlignObject.hpp \
+	./include/FlameIDE/Templates/Allocator.hpp \
+	./include/FlameIDE/Templates/Allocator/ArrayAllocator.hpp \
+	./include/FlameIDE/Templates/Allocator/Interface.hpp \
+	./include/FlameIDE/Templates/Allocator/MallocAllocator.hpp \
+	./include/FlameIDE/Templates/Allocator/ObjectAllocator.hpp \
+	./include/FlameIDE/Templates/Array.hpp \
+	./include/FlameIDE/Templates/ArrayBlocks.hpp \
+	./include/FlameIDE/Templates/BitSet.hpp \
+	./include/FlameIDE/Templates/Bits.hpp \
+	./include/FlameIDE/Templates/ByteOrder.hpp \
+	./include/FlameIDE/Templates/CircularVector.hpp \
+	./include/FlameIDE/Templates/HybridVector.hpp \
+	./include/FlameIDE/Templates/InitializerList.hpp \
+	./include/FlameIDE/Templates/IntegerIterator.hpp \
+	./include/FlameIDE/Templates/Iterator.hpp \
+	./include/FlameIDE/Templates/List.hpp \
+	./include/FlameIDE/Templates/ObjectViewer.hpp \
+	./include/FlameIDE/Templates/Optional.hpp \
+	./include/FlameIDE/Templates/Pointers.hpp \
+	./include/FlameIDE/Templates/Serialization.hpp \
+	./include/FlameIDE/Templates/Serialization/Deserializer.hpp \
+	./include/FlameIDE/Templates/Serialization/Serializer.hpp \
+	./include/FlameIDE/Templates/Serialization/SpecializedValue.hpp \
+	./include/FlameIDE/Templates/Serialization/ValueInfo.hpp \
+	./include/FlameIDE/Templates/SimpleAlgorithms.hpp \
+	./include/FlameIDE/Templates/String.hpp \
+	./include/FlameIDE/Templates/Templates.hpp \
+	./include/FlameIDE/Templates/Trees.hpp \
+	./include/FlameIDE/Templates/Tuple.hpp \
+	./include/FlameIDE/Templates/Variant.hpp \
+	./include/FlameIDE/Templates/Vector.hpp \
+	./include/FlameIDE/Templates/View.hpp \
+	./include/FlameIDE/Templates/WideFloat.hpp \
+	./include/FlameIDE/Templates/WideInt.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
-	./src/Common/Traits.hpp \
-	./src/Common/Traits/CreationProhibitions.hpp \
-	./src/Common/Traits/CustomTraits.hpp \
-	./src/Common/Traits/Defaults.hpp \
-	./src/Common/Traits/Fuctional.hpp \
-	./src/Common/Traits/Numbers.hpp \
-	./src/Common/Utils.hpp \
-	./src/Constants/C.hpp \
-	./src/Constants/CPP.hpp \
-	./src/Filesystem/BasicFile.hpp \
-	./src/Filesystem/Project.hpp \
-	./src/Filesystem/Session.hpp \
-	./src/Others/TextStyle.hpp \
-	./src/Process/CommandLine.hpp \
-	./src/Streams/StreamBase.hpp \
-	./src/Templates/AlignObject.hpp \
-	./src/Templates/Allocator.hpp \
-	./src/Templates/Allocator/ArrayAllocator.hpp \
-	./src/Templates/Allocator/Interface.hpp \
-	./src/Templates/Allocator/MallocAllocator.hpp \
-	./src/Templates/Allocator/ObjectAllocator.hpp \
-	./src/Templates/Array.hpp \
-	./src/Templates/ArrayBlocks.hpp \
-	./src/Templates/BitSet.hpp \
-	./src/Templates/Bits.hpp \
-	./src/Templates/ByteOrder.hpp \
-	./src/Templates/CircularVector.hpp \
-	./src/Templates/HybridVector.hpp \
-	./src/Templates/InitializerList.hpp \
-	./src/Templates/IntegerIterator.hpp \
-	./src/Templates/Iterator.hpp \
-	./src/Templates/List.hpp \
-	./src/Templates/ObjectViewer.hpp \
-	./src/Templates/Optional.hpp \
-	./src/Templates/Pointers.hpp \
-	./src/Templates/Serialization.hpp \
-	./src/Templates/Serialization/Deserializer.hpp \
-	./src/Templates/Serialization/Serializer.hpp \
-	./src/Templates/Serialization/SpecializedValue.hpp \
-	./src/Templates/Serialization/ValueInfo.hpp \
-	./src/Templates/SimpleAlgorithms.hpp \
-	./src/Templates/String.hpp \
-	./src/Templates/Templates.hpp \
 	./src/Templates/Tests/Allocator.hpp \
 	./src/Templates/Tests/Array.hpp \
 	./src/Templates/Tests/Bits.hpp \
@@ -92,13 +99,6 @@ HEADERS += \
 	./src/Templates/Tests/Variant.hpp \
 	./src/Templates/Tests/Vector.hpp \
 	./src/Templates/Tests/WideInt.hpp \
-	./src/Templates/Trees.hpp \
-	./src/Templates/Tuple.hpp \
-	./src/Templates/Variant.hpp \
-	./src/Templates/Vector.hpp \
-	./src/Templates/View.hpp \
-	./src/Templates/WideFloat.hpp \
-	./src/Templates/WideInt.hpp \
 	./tests/Test.hpp
 
 # sources

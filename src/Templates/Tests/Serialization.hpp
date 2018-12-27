@@ -3,8 +3,8 @@
 
 #include <tests/Test.hpp>
 
-#include <Common/Traits.hpp>
-#include <Templates/Serialization.hpp>
+#include <FlameIDE/Common/Traits.hpp>
+#include <FlameIDE/Templates/Serialization.hpp>
 
 namespace flame_ide
 {namespace test

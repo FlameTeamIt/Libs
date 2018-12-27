@@ -1,5 +1,5 @@
-#include <Templates/Tests/TestAggregator.hpp>
-#include <Common/Tests/TestAggregator.hpp>
+#include <FlameIDE/../../src/Templates/Tests/TestAggregator.hpp>
+#include <FlameIDE/../../src/Common/Tests/TestAggregator.hpp>
 
 int main()
 {

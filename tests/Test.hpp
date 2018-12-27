@@ -7,7 +7,7 @@
 #include <iostream>
 
 #ifdef __linux
-#include <Others/TextStyle.hpp>
+#include <FlameIDE/Others/TextStyle.hpp>
 #endif
 
 #define log \

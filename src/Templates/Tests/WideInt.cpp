@@ -1,6 +1,6 @@
 #include "WideInt.hpp"
 
-#include <Templates/AlignObject.hpp>
+#include <FlameIDE/Templates/AlignObject.hpp>
 
 namespace flame_ide
 {namespace test

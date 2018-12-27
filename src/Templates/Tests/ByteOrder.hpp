@@ -3,7 +3,7 @@
 
 #include <tests/Test.hpp>
 
-#include <Templates/ByteOrder.hpp>
+#include <FlameIDE/Templates/ByteOrder.hpp>
 
 namespace flame_ide
 {namespace test

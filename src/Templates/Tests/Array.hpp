@@ -2,7 +2,7 @@
 #define TEST_ARRAY_HPP
 
 #include <tests/Test.hpp>
-#include <Templates/Array.hpp>
+#include <FlameIDE/Templates/Array.hpp>
 
 #include "TestClass.hpp"
 

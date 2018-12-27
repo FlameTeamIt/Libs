@@ -2,7 +2,7 @@
 #define TEST_INTEGERITERATOR_HPP
 
 #include <tests/Test.hpp>
-#include <Templates/IntegerIterator.hpp>
+#include <FlameIDE/Templates/IntegerIterator.hpp>
 
 namespace flame_ide
 {namespace test

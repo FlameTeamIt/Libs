@@ -3,7 +3,7 @@
 
 #include <tests/Test.hpp>
 
-#include <Templates/Tuple.hpp>
+#include <FlameIDE/Templates/Tuple.hpp>
 
 namespace flame_ide
 {namespace test

@@ -2,7 +2,7 @@
 #define TEST_SHAREDPOINTER_HPP
 
 #include <tests/Test.hpp>
-#include <Templates/Pointers.hpp>
+#include <FlameIDE/Templates/Pointers.hpp>
 
 #include "TestClass.hpp"
 

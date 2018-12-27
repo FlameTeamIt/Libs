@@ -10,7 +10,7 @@ echo
 echo "QMAKE_CXXFLAGS = -std=c++14 -pedantic -fno-rtti -fno-exceptions"
 echo "QMAKE_CXXFLAGS_DEBUG += -gdwarf-3"
 #echo "QMAKE_CXXFLAGS_RELEASE = -O3 -Wall -W"
-echo "INCLUDEPATH += src/"
+echo "INCLUDEPATH += include/"
 echo "INCLUDEPATH += ."
 echo
 

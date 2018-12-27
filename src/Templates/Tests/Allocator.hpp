@@ -3,7 +3,7 @@
 
 #include <tests/Test.hpp>
 
-#include <Templates/Allocator.hpp>
+#include <FlameIDE/Templates/Allocator.hpp>
 
 #include "TestClass.hpp"
 

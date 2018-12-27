@@ -2,7 +2,7 @@
 #define TEST_LIST_HPP
 
 #include <tests/Test.hpp>
-#include <Templates/List.hpp>
+#include <FlameIDE/Templates/List.hpp>
 
 #include "TestClass.hpp"
 

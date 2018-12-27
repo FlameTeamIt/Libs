@@ -2,7 +2,7 @@
 #define TEST_VECTOR_HPP
 
 #include <tests/Test.hpp>
-#include <Templates/Vector.hpp>
+#include <FlameIDE/Templates/Vector.hpp>
 #include <vector>
 
 #include "TestClass.hpp"

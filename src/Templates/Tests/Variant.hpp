@@ -3,7 +3,7 @@
 
 #include <tests/Test.hpp>
 
-#include <Templates/Variant.hpp>
+#include <FlameIDE/Templates/Variant.hpp>
 
 #include "TestClass.hpp"
 

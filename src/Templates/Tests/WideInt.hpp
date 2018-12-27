@@ -3,7 +3,7 @@
 
 #include <tests/Test.hpp>
 
-#include <Templates/WideInt.hpp>
+#include <FlameIDE/Templates/WideInt.hpp>
 
 namespace flame_ide
 {namespace test

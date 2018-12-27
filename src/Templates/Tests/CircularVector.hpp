@@ -2,7 +2,7 @@
 #define TEST_CIRCULARVECTOR_HPP
 
 #include <tests/Test.hpp>
-#include <Templates/CircularVector.hpp>
+#include <FlameIDE/Templates/CircularVector.hpp>
 #include "TestClass.hpp"
 
 namespace flame_ide

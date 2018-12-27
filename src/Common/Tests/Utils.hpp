@@ -1,7 +1,7 @@
-#ifndef COMMON_TESTS_UTILS_HPP
-#define COMMON_TESTS_UTILS_HPP
+#ifndef FLAMEIDE_COMMON_TESTS_UTILS_HPP
+#define FLAMEIDE_COMMON_TESTS_UTILS_HPP
 
-#include <Common/Utils.hpp>
+#include <FlameIDE/Common/Utils.hpp>
 
 #include <tests/Test.hpp>
 
@@ -21,4 +21,4 @@ private:
 
 }}
 
-#endif // COMMON_TESTS_UTILS_HPP
+#endif // FLAMEIDE_COMMON_TESTS_UTILS_HPP

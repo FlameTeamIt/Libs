@@ -1,6 +1,6 @@
 #include "IntegerIterator.hpp"
 
-#include <Templates/View.hpp>
+#include <FlameIDE/Templates/View.hpp>
 
 namespace flame_ide
 {namespace test
