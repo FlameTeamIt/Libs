@@ -32,6 +32,11 @@ HEADERS += \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
 	./src/Common/Traits.hpp \
+	./src/Common/Traits/CreationProhibitions.hpp \
+	./src/Common/Traits/CustomTraits.hpp \
+	./src/Common/Traits/Defaults.hpp \
+	./src/Common/Traits/Fuctional.hpp \
+	./src/Common/Traits/Numbers.hpp \
 	./src/Common/Utils.hpp \
 	./src/Constants/C.hpp \
 	./src/Constants/CPP.hpp \

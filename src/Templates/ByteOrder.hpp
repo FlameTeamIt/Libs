@@ -1,6 +1,7 @@
 #ifndef TEMPLATES_BYTEORDER_HPP
 #define TEMPLATES_BYTEORDER_HPP
 
+#include <Common/Macroses.hpp>
 #include <Templates/Bits.hpp>
 
 namespace flame_ide
