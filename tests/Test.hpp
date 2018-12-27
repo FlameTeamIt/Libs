@@ -127,20 +127,12 @@ protected:
 		struct
 		{
 			const char *EMPTY = "";
-			const char *INFO =
-					"INFO"
-					;
-
-			const char *WARINIG =
-					"WARINIG"
-					;
-
-			const char *ERROR =
-					"ERROR"
-					;
+			const char *INFO = "INFO";
+			const char *WARINIG = "WARINIG";
+			const char *ERROR = "ERROR";
 		} messageTypeTexts;
 
-		const char *messageTypeText = [&messageTypeTexts](MessageType messageType) -> const char *
+		const char *messageTypeText = [&messageTypeTexts](MessageType messageType)
 		{
 			switch (messageType)
 			{
@@ -214,7 +206,7 @@ protected:
 		auto it1 = it1Begin;
 		auto it2 = it2Begin;
 
-		for (; it1 != it1End || it2 != it2End; ++it1, ++it2)
+		for (; it1 != it1End && it2 != it2End; ++it1, ++it2)
 		{
 			auto &v1 = *it1;
 			auto &v2 = *it2;
@@ -222,6 +214,11 @@ protected:
 			{
 				return ResultType::FAILED;
 			}
+		}
+		if ((it1 != it1End && it2 == it2End)
+				|| (it1 == it1End && it2 != it2End))
+		{
+			return ResultType::FAILED;
 		}
 		return ResultType::SUCCESS;
 	}
