@@ -125,7 +125,7 @@ template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
 T Serializer<ORDER, IS_VOLATILE>::toOrder(T value)
 {
-	return ToNeedOrder<ByteOrder::HOST_ORDER, ORDER>()(value);
+	return ToNeedOrder<ByteOrder::HOST, ORDER>()(value);
 }
 
 template<ByteOrder ORDER, bool IS_VOLATILE>

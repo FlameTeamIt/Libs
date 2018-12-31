@@ -232,7 +232,7 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 				? COUNT_BYTES - sizeof(PrimitiveType)
 				: 0;
 
-		SpecializedValue<ByteOrder::HOST_ORDER, PrimitiveType> specValue(
+		SpecializedValue<ByteOrder::HOST, PrimitiveType> specValue(
 				value
 				, SPECIALIZED_VALUE_INIT_SIZE
 				, SPECIALIZED_VALUE_OFFSET
@@ -345,7 +345,7 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 				? COUNT_BYTES - sizeof(PrimitiveType)
 				: 0;
 
-		SpecializedValue<ByteOrder::HOST_ORDER, PrimitiveType> specValue(
+		SpecializedValue<ByteOrder::HOST, PrimitiveType> specValue(
 				PrimitiveType()
 				, SPECIALIZED_VALUE_INIT_SIZE
 				, SPECIALIZED_VALUE_OFFSET

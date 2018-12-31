@@ -8,12 +8,12 @@ namespace flame_ide
 {namespace templates
 {
 
-enum class ByteOrder
+enum class ByteOrder: Types::int_t
 {
-	LITTLE_ENDIAN_ORDER = ORDER_LITTLE_ENDIAN
-	, BIG_ENDIAN_ORDER = ORDER_BIG_ENDIAN
-	, PDP_ENDIAN_ORDER = ORDER_PDP_ENDIAN
-	, HOST_ORDER = CURRENT_BYTE_ORDER
+	LITTLE_ENDIAN_ORDER = FLAMEIDE_ORDER_LITTLE_ENDIAN
+	, BIG_ENDIAN_ORDER = FLAMEIDE_ORDER_BIG_ENDIAN
+	, PDP_ENDIAN_ORDER = FLAMEIDE_ORDER_PDP_ENDIAN
+	, HOST = FLAMEIDE_ORDER_CURRENT
 };
 
 template<typename T>
@@ -161,11 +161,8 @@ private:
 	static Types::ushort_t reverseBytes(Types::ushort_t value)
 	{
 		constexpr Types::ushort_t BYTE = bits::Constants::BYTE_FF;
-
-		Types::ushort_t RESULT = (value & BYTE) << 8;
-		RESULT |= (value & (BYTE << 8)) >> 8;
-
-		return RESULT;
+		return static_cast<Types::ushort_t>((value & BYTE) << 8)
+				| (value & (BYTE << 8)) >> 8;;
 	}
 	static Types::uint_t reverseBytes(Types::uint_t value)
 	{
@@ -281,11 +278,11 @@ namespace flame_ide
 {namespace templates
 {
 
-using ToBigEndian = ToNeedOrder<ByteOrder::HOST_ORDER, ByteOrder::BIG_ENDIAN_ORDER>;
-using ToLittleEndian = ToNeedOrder<ByteOrder::HOST_ORDER, ByteOrder::LITTLE_ENDIAN_ORDER>;
+using ToBigEndian = ToNeedOrder<ByteOrder::HOST, ByteOrder::BIG_ENDIAN_ORDER>;
+using ToLittleEndian = ToNeedOrder<ByteOrder::HOST, ByteOrder::LITTLE_ENDIAN_ORDER>;
 
-using FromBigEndian = ToNeedOrder<ByteOrder::BIG_ENDIAN_ORDER, ByteOrder::HOST_ORDER>;
-using FromLittleEndian = ToNeedOrder<ByteOrder::LITTLE_ENDIAN_ORDER, ByteOrder::HOST_ORDER>;
+using FromBigEndian = ToNeedOrder<ByteOrder::BIG_ENDIAN_ORDER, ByteOrder::HOST>;
+using FromLittleEndian = ToNeedOrder<ByteOrder::LITTLE_ENDIAN_ORDER, ByteOrder::HOST>;
 
 }}
 

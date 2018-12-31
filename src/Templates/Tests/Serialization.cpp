@@ -16,7 +16,7 @@ int Serialization::vStart()
 	CHECK_RESULT_SUCCESS_END(beSpec());
 }
 
-// LITTLE_ENDIAN
+// LITTLE_ENDIAN_ORDER
 
 Serialization::ResultType Serialization::le()
 {
@@ -147,7 +147,7 @@ bool Serialization::le64()
 	return true;
 }
 
-// BIG_ENDIAN
+// BIG_ENDIAN_ORDER
 
 Serialization::ResultType Serialization::be()
 {
@@ -275,7 +275,7 @@ bool Serialization::be64()
 	return true;
 }
 
-// LITTLE_ENDIAN spetialized
+// LITTLE_ENDIAN_ORDER spetialized
 
 Serialization::ResultType Serialization::leSpec()
 {
@@ -399,7 +399,7 @@ bool Serialization::leSpec64()
 	return true;
 }
 
-// BIG_ENDIAN spetialized
+// BIG_ENDIAN_ORDER spetialized
 
 Serialization::ResultType Serialization::beSpec()
 {

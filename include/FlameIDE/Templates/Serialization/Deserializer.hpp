@@ -139,7 +139,7 @@ template<ByteOrder ORDER, bool IS_VOLATILE>
 template<typename T>
 T Deserializer<ORDER, IS_VOLATILE>::toOrder(T value)
 {
-	return ToNeedOrder<ORDER, ByteOrder::HOST_ORDER>()(value);
+	return ToNeedOrder<ORDER, ByteOrder::HOST>()(value);
 }
 
 template<ByteOrder ORDER, bool IS_VOLATILE>

@@ -90,7 +90,7 @@ struct SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>: public ValueInfo<T>
 	Me &operator=(Me &&) = default;
 
 	///
-	/// @brief operator SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>
+	/// @brief operator SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER_ORDER, T>
 	///
 	operator SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>() const;
 
@@ -145,7 +145,7 @@ struct SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>: public ValueInfo<T>
 	using ValueInfo<T>::getSize;
 	using ValueInfo<T>::getOffset;
 	using ValueInfo<T>::getValue;
-}; // struct SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>
+}; // struct SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER_ORDER, T>
 
 ///
 /// @brief The SpecializedValue class
@@ -171,7 +171,7 @@ struct SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>: public ValueInfo<T>
 	Me &operator=(Me &&) = default;
 
 	///
-	/// @brief operator SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>
+	/// @brief operator SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER_ORDER, T>
 	///
 	operator SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>() const;
 
@@ -226,7 +226,7 @@ struct SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>: public ValueInfo<T>
 	using ValueInfo<T>::getValue;
 	using ValueInfo<T>::getSize;
 	using ValueInfo<T>::getOffset;
-}; // struct SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>
+}; // struct SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER_ORDER, T>
 
 ///
 /// @brief makeSpecializedValue
@@ -308,7 +308,7 @@ SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T> makeSpecializedValueEmptyBe(
 /// @return
 ///
 template<typename T>
-SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueHost(
+SpecializedValue<ByteOrder::HOST, T> makeSpecifiedValueHost(
 		T value
 		, Types::size_t size = sizeof(T)
 		, Types::size_t offset = 0);
@@ -320,7 +320,7 @@ SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueHost(
 /// @return
 ///
 template<typename T>
-SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueEmptyHost(
+SpecializedValue<ByteOrder::HOST, T> makeSpecifiedValueEmptyHost(
 		Types::size_t size = sizeof(T)
 		, Types::size_t offset = 0);
 
@@ -337,7 +337,7 @@ using SpecializedValueLe = SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>;
 template<typename T>
 using SpecializedValueBe = SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>;
 
-// ByteOrder::BIG_ENDIAN_ORDER
+// ByteOrder::BIG_ENDIAN_ORDER_ORDER
 
 template<typename T>
 SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>::SpecializedValue(
@@ -414,7 +414,7 @@ SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>::rend() const
 	return begin() - 1;
 }
 
-// ByteOrder::LITTLE_ENDIAN_ORDER
+// ByteOrder::LITTLE_ENDIAN_ORDER_ORDER
 
 template<typename T>
 SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>::SpecializedValue(
@@ -503,7 +503,7 @@ SpecializedValue<ORDER, T> makeSpecializedValue(
 		, Types::size_t offset)
 {
 	return SpecializedValue<ORDER, T>{
-		ToNeedOrder<ByteOrder::HOST_ORDER, ORDER>()(value)
+		ToNeedOrder<ByteOrder::HOST, ORDER>()(value)
 		, size, offset
 	};
 }
@@ -552,10 +552,10 @@ SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T> makeSpecializedValueEmptyBe(
 }
 
 template<typename T>
-SpecializedValue<ByteOrder::HOST_ORDER, T> makeSpecifiedValueEmptyHost(
+SpecializedValue<ByteOrder::HOST, T> makeSpecifiedValueEmptyHost(
 		Types::size_t size, Types::size_t offset)
 {
-	return SpecializedValue<ByteOrder::HOST_ORDER, T>{ T{}, size, offset };
+	return SpecializedValue<ByteOrder::HOST, T>{ T{}, size, offset };
 }
 
 }}
