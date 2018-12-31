@@ -26,42 +26,13 @@ int WideInt::vStart()
 				, uichar_t(0x07)
 				, uichar_t(0x08)
 		} };
-		if (data != dataValid)
-		{
-			Types::size_t index = 0;
-			log << "data != dataValid" << std::endl;
-			std::cout << "data { " << std::hex;
-			for (auto i : data)
-			{
-				++index;
-				if (index != data.size())
+		CHECK_RESULT_SUCCESS(doTestCase(
+				"initialization"
+				, [&]()
 				{
-					std::cout << int(i) << ", ";
+					IN_CASE_CHECK_END(data == dataValid);
 				}
-				else
-				{
-					std::cout << int(i);
-				}
-			}
-			index = 0;
-
-			std::cout << " };" << std::endl;
-			std::cout << "dataValid { ";
-			for (auto i : dataValid)
-			{
-				++index;
-				if (index != dataValid.size())
-				{
-					std::cout << int(i) << ", ";
-				}
-				else
-				{
-					std::cout << int(i);
-				}
-			}
-			std::cout << " };" << std::endl;
-			return -1;
-		}
+		));
 	}
 
 	// assign
@@ -76,59 +47,36 @@ int WideInt::vStart()
 				, Types::uichar_t(0x02)
 				, Types::uichar_t(0x01)
 		} };
-		if (data != dataValid)
-		{
-			Types::size_t index = 0;
-			log << "data != dataValid" << std::endl;
-			std::cout << "data { " << std::hex;
-			for (auto i : data)
-			{
-				++index;
-				if (index != data.size())
+		CHECK_RESULT_SUCCESS(doTestCase(
+				"assign"
+				, [&]()
 				{
-					std::cout << int(i) << ", ";
+					IN_CASE_CHECK_END(data == dataValid);
 				}
-				else
-				{
-					std::cout << int(i);
-				}
-			}
-			index = 0;
-
-			std::cout << " };" << std::endl;
-			std::cout << "dataValid { ";
-			for (auto i : dataValid)
-			{
-				++index;
-				if (index != dataValid.size())
-				{
-					std::cout << int(i) << ", ";
-				}
-				else
-				{
-					std::cout << int(i);
-				}
-			}
-			std::cout << " };" << std::endl;
-			return -1;
-		}
+		));
 	}
 
 	// convertion
 	{
 		uint40_t int40 = Types::long_t(0x0807060504030201);
 		long_t longValue = int40;
-		if (longValue != Types::long_t(0x0000000504030201))
-		{
-			return -1;
-		}
+		CHECK_RESULT_SUCCESS(doTestCase(
+				"convertion to long_t"
+				, [&]()
+				{
+					IN_CASE_CHECK_END(longValue == Types::long_t(0x0000000504030201));
+				}
+		));
 
 		int40 = Types::short_t(0x1020);
 		Types::short_t shortValue = int40;
-		if (shortValue != 0x1020)
-		{
-			return -1;
-		}
+		CHECK_RESULT_SUCCESS(doTestCase(
+				"convertion to short_t"
+				, [&]()
+				{
+					IN_CASE_CHECK_END(shortValue == 0x1020);
+				}
+		));
 	}
 
 	// reset
@@ -143,42 +91,13 @@ int WideInt::vStart()
 				, Types::uichar_t(0x00)
 				, Types::uichar_t(0x00)
 		} };
-		if (data != dataValid)
-		{
-			Types::size_t index = 0;
-			log << "data != dataValid" << std::endl;
-			std::cout << "data { " << std::hex;
-			for (auto i : data)
-			{
-				++index;
-				if (index != data.size())
+		CHECK_RESULT_SUCCESS(doTestCase(
+				"reset"
+				, [&]()
 				{
-					std::cout << int(i) << ", ";
+					IN_CASE_CHECK_END(data == dataValid);
 				}
-				else
-				{
-					std::cout << int(i);
-				}
-			}
-			index = 0;
-
-			std::cout << " };" << std::endl;
-			std::cout << "dataValid { ";
-			for (auto i : dataValid)
-			{
-				++index;
-				if (index != dataValid.size())
-				{
-					std::cout << int(i) << ", ";
-				}
-				else
-				{
-					std::cout << int(i);
-				}
-			}
-			std::cout << " };" << std::endl;
-			return -1;
-		}
+		));
 	}
 
 	// binary operations
@@ -195,42 +114,13 @@ int WideInt::vStart()
 					, Types::uichar_t(~0x04)
 					, Types::uichar_t(~0x05)
 			}};
-			if (data != dataValid)
-			{
-				Types::size_t index = 0;
-				log << "data != dataValid" << std::endl;
-				std::cout << "data { " << std::hex;
-				for (auto i : data)
-				{
-					++index;
-					if (index != data.size())
+			CHECK_RESULT_SUCCESS(doTestCase(
+					"bitwize negation"
+					, [&]()
 					{
-						std::cout << int(i) << ", ";
+						IN_CASE_CHECK_END(data == dataValid);
 					}
-					else
-					{
-						std::cout << int(i);
-					}
-				}
-				index = 0;
-
-				std::cout << " };" << std::endl;
-				std::cout << "dataValid { ";
-				for (auto i : dataValid)
-				{
-					++index;
-					if (index != dataValid.size())
-					{
-						std::cout << int(i) << ", ";
-					}
-					else
-					{
-						std::cout << int(i);
-					}
-				}
-				std::cout << " };" << std::endl;
-				return -1;
-			}
+			));
 		}
 
 		// shift left

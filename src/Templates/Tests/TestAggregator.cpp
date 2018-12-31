@@ -15,8 +15,9 @@
 #include <FlameIDE/../../src/Templates/Tests/HybridVector.hpp>
 #include <FlameIDE/../../src/Templates/Tests/IntegerIterator.hpp>
 
-#include <tests/Test.hpp>
 #include <FlameIDE/../../src/Templates/Tests/TestAggregator.hpp>
+
+#include <tests/Test.hpp>
 
 namespace flame_ide
 {namespace templates
