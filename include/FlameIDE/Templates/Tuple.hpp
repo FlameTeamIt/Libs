@@ -71,7 +71,7 @@ struct Getter<SizeTraits::SizeType(0), Arg, Args...>
 template<SizeTraits::SizeType INDEX>
 struct Getter<INDEX>
 {
-	void get()
+	static void get()
 	{
 		static_assert(INDEX, "Invalid INDEX argument.");
 	}
@@ -84,7 +84,7 @@ class ConstGetter
 	using TupleConstReference = typename DefaultTraits<Tuple>::ConstReference;
 	using Type = typename GetTypeByIndex<INDEX, Args...>::Type;
 
-	const Type &get(TupleConstReference tuple) const
+	static const Type &get(TupleConstReference tuple)
 	{
 		return Getter<INDEX - 1, Args...>::get(tuple);
 	}
@@ -96,7 +96,7 @@ struct ConstGetter<SizeTraits::SizeType(0), Arg, Args...>
 	using Tuple = flame_ide::templates::Tuple<Arg, Args...>;
 	using TupleConstReference = typename DefaultTraits<Tuple>::ConstReference;
 
-	static Arg &get(TupleConstReference tuple) noexcept
+	static const Arg &get(TupleConstReference tuple) noexcept
 	{
 		return tuple.get();
 	}

@@ -217,39 +217,39 @@ private:
 	template<typename TT>
 	struct InitStruct<TT, false>: public flame_ide::NonCreational
 	{
-		static void exec(Me *me, const TT &initObject)
+		static void exec(Me &me, const TT &initObject)
 		{
-			me->currentIndex = me->value.set(initObject);
+			me.currentIndex = me.value.set(initObject);
 		}
-		static void execMove(Me *me, TT &&initObject)
+		static void execMove(Me &me, TT &&initObject)
 		{
-			me->currentIndex = me->value.set(move(initObject));
+			me.currentIndex = me.value.set(move(initObject));
 		}
 	};
 
 	template<typename TT>
 	struct InitStruct<TT, true>: public flame_ide::NonCreational
 	{
-		static void exec(Me *itsMe, const Me &me)
+		static void exec(Me &itsMe, const Me &me)
 		{
 			if (me.getCurrentIndex() >= 0)
 			{
-				itsMe->value.assign(me.getCurrentIndex(), me.value);
-				itsMe->currentIndex = me.getCurrentIndex();
+				itsMe.value.assign(me.getCurrentIndex(), me.value);
+				itsMe.currentIndex = me.getCurrentIndex();
 			}
 		}
-		static void execMove(Me *itsMe, Me &&me)
+		static void execMove(Me &itsMe, Me &&me)
 		{
 			if (me.getCurrentIndex() >= 0)
 			{
-				itsMe->value.assign(me.getCurrentIndex(), move(me.value));
-				itsMe->currentIndex = me.getCurrentIndex();
+				itsMe.value.assign(me.getCurrentIndex(), move(me.value));
+				itsMe.currentIndex = me.getCurrentIndex();
 			}
 		}
 	};
 
-	static constexpr bool VALUE = IsUniqueParameterPack<Arg, Args...>::VALUE;
-	static_assert(VALUE, "Paramter pack is not unique.");
+	static_assert(IsUniqueParameterPack<Arg, Args...>::VALUE
+			, "Paramter pack is not unique.");
 
 	VariantStruct value;
 	Types::ssize_t currentIndex;
@@ -449,7 +449,7 @@ Variant<Arg, Args...>::Variant(const T &initObject) noexcept
 	InitStruct<
 		typename RemoveAll<T>::Type
 		, ComparingTypes<Me, typename RemoveAll<T>::Type>::VALUE
-	>::exec(this, initObject);
+	>::exec(*this, initObject);
 }
 
 template<typename Arg, typename ...Args> template<typename T>
@@ -458,7 +458,7 @@ Variant<Arg, Args...>::Variant(T &&initObject) noexcept
 	InitStruct<
 		typename RemoveAll<T>::Type
 		, ComparingTypes<Me, typename RemoveAll<T>::Type>::VALUE
-	>::execMove(this, move(initObject));
+	>::execMove(*this, move(initObject));
 }
 
 template<typename Arg, typename ...Args>

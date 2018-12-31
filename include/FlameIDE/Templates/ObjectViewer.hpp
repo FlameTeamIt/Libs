@@ -2,6 +2,7 @@
 #define FLAMEIDE_TEMPLATES_OBJECTVIEWER_HPP
 
 #include <FlameIDE/Common/Utils.hpp>
+#include <FlameIDE/Common/Traits/CustomTraits.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -10,7 +11,7 @@ namespace flame_ide
 /**
  * @brief View object as byte array.
  */
-template<typename T, typename ContainerTraits = flame_ide::templates::ContainerTraits<T>>
+template<typename T, typename ContainerTraits = flame_ide::ContainerTraits<T>>
 struct ObjectViewer: public NonCopy, public NonMove
 {
 	ObjectViewer();
@@ -33,7 +34,7 @@ struct ObjectViewer: public NonCopy, public NonMove
 		Bytes(typename ContainerTraits::Pointer obj);
 
 		typename ContainerTraits::Pointer object;
-		flame_ide::templates::ContainerTraits<Types::byte_t>::Pointer array;
+		flame_ide::ContainerTraits<Types::byte_t>::Pointer array;
 	} bytes;
 	constexpr static SizeTraits::SizeType SIZE = sizeof(ContainerTraits::Type);
 };

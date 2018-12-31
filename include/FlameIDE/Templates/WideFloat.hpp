@@ -25,7 +25,7 @@ public:
 	Me &operator=(const Me &value);
 
 	template<typename IntegerType>
-	WideFloat<BITS, SIGNED> &operator=(const IntegerType &value);
+	WideFloat<BITS> &operator=(const IntegerType &value);
 
 	template<typename IntegerType>
 	Me &operator+(IntegerType value);
