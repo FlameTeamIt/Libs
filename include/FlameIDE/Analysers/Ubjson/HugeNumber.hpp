@@ -1,8 +1,8 @@
 #ifndef ANALYSERS_UBJSON_HUGENUMBER_HPP
 #define ANALYSERS_UBJSON_HUGENUMBER_HPP
 
-#include <Analysers/Ubjson/Types.hpp>
-#include <Analysers/Ubjson/Traits.hpp>
+#include <FlameIDE/Analysers/Ubjson/Types.hpp>
+#include <FlameIDE/Analysers/Ubjson/Traits.hpp>
 
 namespace flame_ide
 {namespace ubjson

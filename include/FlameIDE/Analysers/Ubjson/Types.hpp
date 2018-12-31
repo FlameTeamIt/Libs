@@ -1,7 +1,7 @@
 #ifndef ANALYSERS_UBJSON_TYPES_HPP
 #define ANALYSERS_UBJSON_TYPES_HPP
 
-#include <Common/PrimitiveTypes.hpp>
+#include <FlameIDE/Common/PrimitiveTypes.hpp>
 
 namespace flame_ide
 {namespace ubjson

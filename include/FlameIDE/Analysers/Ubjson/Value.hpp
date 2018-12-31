@@ -1,16 +1,13 @@
 #ifndef ANALYSERS_UBJSON_VALUE_HPP
 #define ANALYSERS_UBJSON_VALUE_HPP
 
-#include <Analysers/Ubjson/Types.hpp>
-
-#include <Analysers/Ubjson/Traits.hpp>
-
-#include <Analysers/Ubjson/BaseValue.hpp>
-#include <Analysers/Ubjson/ValueSpecializations.hpp>
-
-#include <Analysers/Ubjson/Array.hpp>
-#include <Analysers/Ubjson/Object.hpp>
-#include <Analysers/Ubjson/String.hpp>
+#include <FlameIDE/Analysers/Ubjson/Types.hpp>
+#include <FlameIDE/Analysers/Ubjson/Traits.hpp>
+#include <FlameIDE/Analysers/Ubjson/BaseValue.hpp>
+#include <FlameIDE/Analysers/Ubjson/ValueSpecializations.hpp>
+#include <FlameIDE/Analysers/Ubjson/Array.hpp>
+#include <FlameIDE/Analysers/Ubjson/Object.hpp>
+#include <FlameIDE/Analysers/Ubjson/String.hpp>
 
 namespace flame_ide
 {namespace ubjson

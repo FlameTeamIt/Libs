@@ -1,9 +1,9 @@
 #ifndef ANALYSERS_UBJSON_VALUESPECIALIZATIONS_HPP
 #define ANALYSERS_UBJSON_VALUESPECIALIZATIONS_HPP
 
-#include <Analysers/Ubjson/Traits.hpp>
-#include <Analysers/Ubjson/BaseValue.hpp>
-#include <Analysers/Ubjson/SimpleTypeValues.hpp>
+#include <FlameIDE/Analysers/Ubjson/Traits.hpp>
+#include <FlameIDE/Analysers/Ubjson/BaseValue.hpp>
+#include <FlameIDE/Analysers/Ubjson/SimpleTypeValues.hpp>
 
 namespace flame_ide
 {namespace ubjson

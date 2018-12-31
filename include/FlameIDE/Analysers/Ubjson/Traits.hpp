@@ -1,10 +1,10 @@
 #ifndef ANALYSERS_UBJSON_TRAITS_HPP
 #define ANALYSERS_UBJSON_TRAITS_HPP
 
-#include <Common/Traits.hpp>
-#include <Templates/Variant.hpp>
+#include <FlameIDE/Common/Traits.hpp>
+#include <FlameIDE/Templates/Variant.hpp>
 
-#include <Analysers/Ubjson/Types.hpp>
+#include <FlameIDE/Analysers/Ubjson/Types.hpp>
 
 namespace flame_ide
 {namespace ubjson

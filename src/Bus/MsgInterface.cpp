@@ -1,4 +1,4 @@
-#include <Bus/MsgInterface.hpp>
+#include <FlameIDE/Bus/MsgInterface.hpp>
 
 using namespace flame_ide;
 

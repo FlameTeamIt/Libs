@@ -1,15 +1,15 @@
 #ifndef ANALYSERS_UBJSON_STRING_HPP
 #define ANALYSERS_UBJSON_STRING_HPP
 
-#include <Common/PrimitiveTypes.hpp>
+#include <FlameIDE/Common/PrimitiveTypes.hpp>
 
-#include <Templates/String.hpp>
-#include <Templates/Variant.hpp>
-#include <Templates/Array.hpp>
+#include <FlameIDE/Templates/String.hpp>
+#include <FlameIDE/Templates/Variant.hpp>
+#include <FlameIDE/Templates/Array.hpp>
 
-#include <Analysers/Ubjson/Settings.hpp>
-#include <Analysers/Ubjson/Types.hpp>
-#include <Analysers/Ubjson/Traits.hpp>
+#include <FlameIDE/Analysers/Ubjson/Settings.hpp>
+#include <FlameIDE/Analysers/Ubjson/Types.hpp>
+#include <FlameIDE/Analysers/Ubjson/Traits.hpp>
 
 
 namespace flame_ide

@@ -1,8 +1,8 @@
 #ifndef ANALYSERS_UBJSON_SETTINGS_HPP
 #define ANALYSERS_UBJSON_SETTINGS_HPP
 
-#include <Common/PrimitiveTypes.hpp>
-#include <Common/Traits.hpp>
+#include <FlameIDE/Common/PrimitiveTypes.hpp>
+#include <FlameIDE/Common/Traits.hpp>
 
 namespace flame_ide
 {namespace ubjson
