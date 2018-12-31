@@ -235,21 +235,20 @@ private:
 template<typename T, typename Traits = ContainerTraits<T>
 	, typename Allocator = allocator::ObjectAllocator<list_utils::Node<T, Traits> >
 >
-class List: public Traits
+class List
 {
 public:
 	using Me = List<T, Traits, Allocator>;
 	using Node = list_utils::Node<T, Traits>;
 
-	using typename Traits::Type;
-	using typename Traits::SizeType;
-
-	using typename Traits::Reference;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
-
-	using typename Traits::Pointer;
-	using typename Traits::PointerToConst;
+	using Type = typename Traits::Type;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 
 	using Iterator = list_utils::ListIterator<T, Traits>;
 	using ConstIterator = list_utils::ListConstIterator<T, Traits>;

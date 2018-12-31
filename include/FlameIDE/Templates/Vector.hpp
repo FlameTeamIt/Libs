@@ -46,7 +46,7 @@ template <typename T
 	, typename Traits = ContainerTraits<T>
 	, typename Allocator = allocator::ArrayAllocator<T, Traits>
 >
-class Vector: public Traits
+class Vector: protected Allocator
 {
 public:
 	static_assert(VECTOR_RESIZE_FACTOR_MULT > VECTOR_RESIZE_FACTOR_DIV,
@@ -54,17 +54,14 @@ public:
 
 	using Me = VECTOR_TYPE;
 
-	using typename Traits::Type;
-
-	using typename Traits::Reference;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
-
-	using typename Traits::Pointer;
-	using typename Traits::PointerToConst;
-
-	using typename Traits::SizeType;
-	using typename Traits::SsizeType;
+	using Type = typename Traits::Type;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 
 	using Iterator = flame_ide::templates::Iterator<
 		Pointer, IteratorCategory::RANDOM_ACCESS, Traits, Me
@@ -364,10 +361,16 @@ public:
 	 */
 	void erase(Iterator itBegin, Iterator itEnd);
 
+protected:
+//	using Allocator::construct;
+//	using Allocator::createArray;
+//	using Allocator::reallocateArray;
+//	using Allocator::destroy;
+//	using Allocator::freeArray;
+
 private:
 	inline SizeType nextCapacity() const;
 
-	Allocator allocator;
 	SizeType vectorCapacity;
 	Pointer head;
 	Pointer tail;
@@ -381,16 +384,16 @@ namespace flame_ide
 
 TEMPLATE_DEFINE
 VECTOR_TYPE::Vector() noexcept
-		: allocator()
+		: Allocator()
 		, vectorCapacity()
 		, head(nullptr), tail(nullptr)
 {}
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
 VECTOR_TYPE::Vector(const VECTOR_TYPE_1 &vector)
-		: allocator()
+		: Allocator()
 		, vectorCapacity(vector.size())
-		, head(allocator.createArray(vector.size())), tail(head + vector.size())
+		, head(createArray(vector.size())), tail(head + vector.size())
 {
 	Pointer it = head;
 	for (const Type &i : vector)
@@ -399,9 +402,9 @@ VECTOR_TYPE::Vector(const VECTOR_TYPE_1 &vector)
 
 TEMPLATE_DEFINE
 VECTOR_TYPE::Vector(const VECTOR_TYPE &vector)
-		: allocator(vector.allocator)
+		: Allocator(vector)
 		, vectorCapacity(vector.size())
-		, head(allocator.createArray(vector.size())), tail(head + vector.size())
+		, head(this->createArray(vector.size())), tail(head + vector.size())
 {
 	Pointer it = head;
 	for (const Type &i : vector)
@@ -410,9 +413,9 @@ VECTOR_TYPE::Vector(const VECTOR_TYPE &vector)
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
 VECTOR_TYPE::Vector(VECTOR_TYPE_1 &&vector) noexcept
-		: allocator()
+		: Allocator()
 		, vectorCapacity(vector.vectorCapacity)
-		, head(allocator.createArray(vector.size())), tail(head + vector.size())
+		, head(createArray(vector.size())), tail(head + vector.size())
 {
 	Pointer it = head;
 	for (Type &&i : vector)
@@ -421,7 +424,7 @@ VECTOR_TYPE::Vector(VECTOR_TYPE_1 &&vector) noexcept
 
 TEMPLATE_DEFINE
 VECTOR_TYPE::Vector(VECTOR_TYPE &&vector) noexcept
-		: allocator(move(vector.allocator))
+		: Allocator(vector)
 		, vectorCapacity(vector.vectorCapacity)
 		, head(vector.head), tail(vector.tail)
 {
@@ -431,17 +434,17 @@ VECTOR_TYPE::Vector(VECTOR_TYPE &&vector) noexcept
 
 TEMPLATE_DEFINE
 VECTOR_TYPE::Vector(typename VECTOR_TYPE::SizeType size)
-		: allocator()
+		: Allocator()
 		, vectorCapacity((size * VECTOR_RESIZE_FACTOR_MULT) / VECTOR_RESIZE_FACTOR_DIV)
-		, head(allocator.construct(vectorCapacity)), tail(head + vectorCapacity)
+		, head(this->construct(vectorCapacity)), tail(head + vectorCapacity)
 {}
 
 TEMPLATE_DEFINE
 template<SizeTraits::SizeType INIT_LIST_SIZE>
 VECTOR_TYPE::Vector(InitializerList<T, INIT_LIST_SIZE> list)
-		: allocator()
+		: Allocator()
 		, vectorCapacity(list.size())
-		, head(allocator.createArray(vectorCapacity)), tail(head + vectorCapacity)
+		, head(this->createArray(vectorCapacity)), tail(head + vectorCapacity)
 {
 	auto itList = list.begin();
 	for (auto &i : *this)
@@ -455,7 +458,7 @@ TEMPLATE_DEFINE
 VECTOR_TYPE::~Vector()
 {
 	clean();
-	allocator.freeArray(head);
+	this->freeArray(head);
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
@@ -563,10 +566,10 @@ void VECTOR_TYPE::reserve(typename VECTOR_TYPE::SizeType newCapacity)
 {
 	if (capacity() < newCapacity)
 	{
-		Pointer tempHead = allocator.reallocateArray(head, newCapacity);
+		Pointer tempHead = this->reallocateArray(head, newCapacity);
 		if (!tempHead)
 		{
-			tempHead = allocator.createArray(newCapacity);
+			tempHead = this->createArray(newCapacity);
 			if (tempHead)
 			{
 				Range<Pointer> rangeNew(tempHead, tempHead + newCapacity);
@@ -580,7 +583,7 @@ void VECTOR_TYPE::reserve(typename VECTOR_TYPE::SizeType newCapacity)
 					placementNew<Type>(itNew, move(*itOld));
 					itOld->~T();
 				}
-				allocator.freeArray(head);
+				this->freeArray(head);
 				tail = tempHead + size();
 				head = tempHead;
 				vectorCapacity = newCapacity;

@@ -16,7 +16,10 @@ namespace flame_ide
 /// @tparam Traits
 /// View flame_ide::ContainerTraits
 ///
-template<typename T, typename Traits = flame_ide::ContainerTraits<T>, typename BaseAllocatorImpl = MallocAllocator<Traits>>
+template<typename T
+	, typename Traits = flame_ide::ContainerTraits<T>
+	, typename BaseAllocatorImpl = MallocAllocator<Traits>
+>
 class ArrayAllocator: protected BaseAllocatorImpl
 {
 public:
@@ -24,8 +27,8 @@ public:
 	using typename Parent::VoidPointer;
 	using typename Parent::SizeType;
 	using typename Parent::SsizeType;
-	using typename Parent::Type;
-	using typename Parent::Pointer;
+	using Type = typename Traits::Type;
+	using Pointer = typename Traits::Pointer;
 	using Me = ArrayAllocator<T, Traits, BaseAllocatorImpl>;
 
 	ArrayAllocator() = default;

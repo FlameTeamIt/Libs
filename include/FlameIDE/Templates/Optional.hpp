@@ -7,11 +7,20 @@ namespace flame_ide
 {namespace templates
 {
 
-template<typename T>
-class Optional: public DefaultTraits<T>
+template<typename T, typename Traits = DefaultTraits<T>>
+class Optional
 {
 public:
-	using Me = Optional<T>;
+	using Me = Optional<T, Traits>;
+
+	using Type = typename Traits::Type;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 
 	Optional() noexcept;
 	Optional(const Me &optional);
@@ -58,12 +67,12 @@ namespace flame_ide
 {namespace templates
 {
 
-template<typename T>
-Optional<T>::Optional() noexcept : value(), isFill(false)
+template<typename T, typename Traits>
+Optional<T, Traits>::Optional() noexcept : value(), isFill(false)
 {}
 
-template<typename T>
-Optional<T>::Optional(const Optional<T> &optional) : Optional<T>()
+template<typename T, typename Traits>
+Optional<T, Traits>::Optional(const Me &optional) : Optional()
 {
 	if (optional)
 	{
@@ -72,8 +81,8 @@ Optional<T>::Optional(const Optional<T> &optional) : Optional<T>()
 	}
 }
 
-template<typename T>
-Optional<T>::Optional(Optional<T> &&optional) noexcept : Optional<T>()
+template<typename T, typename Traits>
+Optional<T, Traits>::Optional(Me &&optional) noexcept : Optional()
 {
 	if (optional)
 	{
@@ -82,30 +91,30 @@ Optional<T>::Optional(Optional<T> &&optional) noexcept : Optional<T>()
 	}
 }
 
-template<typename T>
-Optional<T>::Optional(typename Optional<T>::ConstReference value)
+template<typename T, typename Traits>
+Optional<T, Traits>::Optional(ConstReference value)
 		: Optional<T>()
 {
 	placementNew(toValue(), value);
 	isFill = true;
 }
 
-template<typename T>
-Optional<T>::Optional(typename Optional<T>::MoveReference value) noexcept
-		: Optional<T>()
+template<typename T, typename Traits>
+Optional<T, Traits>::Optional(MoveReference value) noexcept
+		: Optional()
 {
 	placementNew(toValue(), move(value));
 	isFill = true;
 }
 
-template<typename T>
-Optional<T>::~Optional()
+template<typename T, typename Traits>
+Optional<T, Traits>::~Optional()
 {
 	unset();
 }
 
-template<typename T>
-Optional<T> &Optional<T>::operator=(const Optional &optional)
+template<typename T, typename Traits>
+Optional<T, Traits> &Optional<T, Traits>::operator=(const Me &optional)
 {
 	if (*this)
 	{
@@ -125,8 +134,8 @@ Optional<T> &Optional<T>::operator=(const Optional &optional)
 	return *this;
 }
 
-template<typename T>
-Optional<T> &Optional<T>::operator=(Optional &&optional) noexcept
+template<typename T, typename Traits>
+Optional<T, Traits> &Optional<T, Traits>::operator=(Me &&optional) noexcept
 {
 	if (*this)
 	{
@@ -146,8 +155,8 @@ Optional<T> &Optional<T>::operator=(Optional &&optional) noexcept
 	return *this;
 }
 
-template<typename T>
-Optional<T> &Optional<T>::operator=(typename Me::ConstReference value)
+template<typename T, typename Traits>
+Optional<T, Traits> &Optional<T, Traits>::operator=(ConstReference value)
 {
 	if (*this)
 	{
@@ -161,8 +170,8 @@ Optional<T> &Optional<T>::operator=(typename Me::ConstReference value)
 	return *this;
 }
 
-template<typename T>
-Optional<T> &Optional<T>::operator=(typename Me::MoveReference value) noexcept
+template<typename T, typename Traits>
+Optional<T, Traits> &Optional<T, Traits>::operator=(MoveReference value) noexcept
 {
 	if (*this)
 	{
@@ -176,80 +185,80 @@ Optional<T> &Optional<T>::operator=(typename Me::MoveReference value) noexcept
 	return *this;
 }
 
-template<typename T>
-Optional<T>::operator bool() const noexcept
+template<typename T, typename Traits>
+Optional<T, Traits>::operator bool() const noexcept
 {
 	return isFill;
 }
 
-template<typename T>
-typename Optional<T>::Pointer Optional<T>::operator->()
+template<typename T, typename Traits>
+typename Optional<T, Traits>::Pointer Optional<T, Traits>::operator->()
 {
 	return toValue();
 }
 
-template<typename T>
-typename Optional<T>::PointerToConst Optional<T>::operator->() const
+template<typename T, typename Traits>
+typename Optional<T, Traits>::PointerToConst Optional<T, Traits>::operator->() const
 {
 	return toValue();
 }
 
-template<typename T>
-typename Optional<T>::Reference Optional<T>::operator*()
+template<typename T, typename Traits>
+typename Optional<T, Traits>::Reference Optional<T, Traits>::operator*()
 {
 	return *toValue();
 }
 
-template<typename T>
-typename Optional<T>::ConstReference Optional<T>::operator*() const
+template<typename T, typename Traits>
+typename Optional<T, Traits>::ConstReference Optional<T, Traits>::operator*() const
 {
 	return *toValue();
 }
 
-template<typename T>
-void Optional<T>::init()
+template<typename T, typename Traits>
+void Optional<T, Traits>::init()
 {
 	emplaceNew(toValue());
 }
 
-template<typename T>
-void Optional<T>::set(typename Optional<T>::ConstReference value)
+template<typename T, typename Traits>
+void Optional<T, Traits>::set(typename Optional<T, Traits>::ConstReference value)
 {
 	operator=(value);
 }
 
-template<typename T>
-void Optional<T>::set(typename Optional<T>::MoveReference value) noexcept
+template<typename T, typename Traits>
+void Optional<T, Traits>::set(typename Optional<T, Traits>::MoveReference value) noexcept
 {
 	operator=(move(value));
 }
 
-template<typename T>
-typename Optional<T>::Reference Optional<T>::get()
+template<typename T, typename Traits>
+typename Optional<T, Traits>::Reference Optional<T, Traits>::get()
 {
 	return *toValue();
 }
 
-template<typename T>
-typename Optional<T>::ConstReference Optional<T>::get() const
+template<typename T, typename Traits>
+typename Optional<T, Traits>::ConstReference Optional<T, Traits>::get() const
 {
 	return *toValue();
 }
 
-template<typename T>
-typename Optional<T>::Pointer Optional<T>::getPointer()
+template<typename T, typename Traits>
+typename Optional<T, Traits>::Pointer Optional<T, Traits>::getPointer()
 {
 	return toValue();
 }
 
-template<typename T>
-typename Optional<T>::PointerToConst Optional<T>::getPointer() const
+template<typename T, typename Traits>
+typename Optional<T, Traits>::PointerToConst Optional<T, Traits>::getPointer() const
 {
 	return toValue();
 }
 
-template<typename T>
-void Optional<T>::unset()
+template<typename T, typename Traits>
+void Optional<T, Traits>::unset()
 {
 	if (*this)
 	{
@@ -258,16 +267,16 @@ void Optional<T>::unset()
 	}
 }
 
-template<typename T>
-typename Optional<T>::Pointer Optional<T>::toValue()
+template<typename T, typename Traits>
+typename Optional<T, Traits>::Pointer Optional<T, Traits>::toValue()
 {
 	return static_cast<typename Me::Pointer>(
 			static_cast<void *>(value.array)
 	);
 }
 
-template<typename T>
-typename Optional<T>::PointerToConst Optional<T>::toValue() const
+template<typename T, typename Traits>
+typename Optional<T, Traits>::PointerToConst Optional<T, Traits>::toValue() const
 {
 	return static_cast<typename Me::PointerToConst>(
 			static_cast<const void *>(value.array)

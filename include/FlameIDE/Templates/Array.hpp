@@ -9,16 +9,24 @@
 #include <FlameIDE/Templates/SimpleAlgorithms.hpp>
 
 #define TEMPLATE_DEFINE \
-	template <typename T, SizeTraits::SizeType ARRAY_CAPACITY, typename Traits, bool AS_C_ARRAY>
+	template < \
+		typename T \
+		, SizeTraits::SizeType ARRAY_CAPACITY \
+		, typename Traits \
+		, bool AS_PURE_C_ARRAY \
+	>
 
 #define TEMPLATE_DEFINE_1 \
-	template <SizeTraits::SizeType ARRAY_CAPACITY1, typename Traits1, bool AS_C_ARRAY1>
+	template < \
+		SizeTraits::SizeType ARRAY_CAPACITY1\
+		, typename Traits1\
+		, bool AS_PURE_C_ARRAY1>
 
 #define ARRAY_TYPE \
-	Array<T, ARRAY_CAPACITY, Traits, AS_C_ARRAY>
+	Array<T, ARRAY_CAPACITY, Traits, AS_PURE_C_ARRAY>
 
 #define ARRAY_TYPE_1 \
-	Array<T, ARRAY_CAPACITY1, Traits1, AS_C_ARRAY1>
+	Array<T, ARRAY_CAPACITY1, Traits1, AS_PURE_C_ARRAY1>
 
 namespace flame_ide
 {namespace templates
@@ -30,28 +38,25 @@ namespace flame_ide
 template <typename T
 	, SizeTraits::SizeType ARRAY_CAPACITY
 	, typename Traits = ContainerTraits<T>
-	, bool AS_C_ARRAY = false
+	, bool AS_PURE_C_ARRAY = false
 >
-class Array: public Traits
+class Array
 {
 public:
 	static_assert (ARRAY_CAPACITY != 0, "Zero-sized array is impossible");
 
 	using Me = ARRAY_TYPE;
 
-	using typename Traits::Type;
+	using Type = typename Traits::Type;
 
-	using typename Traits::Reference;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
-
-	using typename Traits::Pointer;
-	using typename Traits::PointerToConst;
-
-	using typename Traits::SizeType;
-	using typename Traits::SsizeType;
-
-	using typename Traits::VoidPointer;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
+	using VoidPointer = typename Traits::VoidPointer;
 
 	static constexpr SizeType CAPACITY = ARRAY_CAPACITY;
 

@@ -35,11 +35,11 @@ public:
 		, Traits
 	>;
 
-	using typename Parent::Type;
-	using typename Parent::Reference;
-	using typename Parent::Pointer;
-	using typename Parent::SizeType;
-	using typename Parent::SsizeType;
+	using Type = typename Traits::Type;
+	using Reference = typename Traits::Reference;
+	using Pointer = typename Traits::Pointer;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 	using IteratorType = Pointer;
 
 	Iterator() = default;
@@ -97,11 +97,11 @@ public:
 		, Traits
 	>;
 
-	using typename Parent::Type;
-	using typename Parent::ConstReference;
-	using typename Parent::PointerToConst;
-	using typename Parent::SizeType;
-	using typename Parent::SsizeType;
+	using Type = typename Traits::Type;
+	using ConstReference = typename Traits::ConstReference;
+	using PointerToConst = typename Traits::PointerToConst;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 	using IteratorType = PointerToConst;
 
 	ConstIterator() = default;
@@ -146,38 +146,38 @@ private:
 
 // TODO: маловато параметров
 template<typename T, typename Traits, typename Allocator>
-class CircularVector: public Traits
+class CircularVector
 {
 public:
 	using Me = CircularVector<T, Traits, Allocator>;
-	using Parent = Traits;
 
-	using Iterator = circularvector_utils::Iterator<T, Parent>;
-	using ConstIterator = circularvector_utils::ConstIterator<T, Parent>;
-	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator>;
-	using ConstReverseIterator = flame_ide::templates::ConstReverseIterator<ConstIterator>;
+	using Iterator =
+		circularvector_utils::Iterator<T, Traits>;
+	using ConstIterator =
+		circularvector_utils::ConstIterator<T, Traits>;
+	using ReverseIterator =
+		flame_ide::templates::ReverseIterator<Iterator>;
+	using ConstReverseIterator =
+		flame_ide::templates::ConstReverseIterator<ConstIterator>;
 
-	using typename Parent::Type;
-
-	using typename Parent::Reference;
-	using typename Parent::ConstReference;
-	using typename Parent::MoveReference;
-
-	using typename Parent::Pointer;
-	using typename Parent::PointerToConst;
-
-	using typename Parent::SizeType;
-	using typename Parent::SsizeType;
+	using Type = typename Traits::Type;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 
 	CircularVector() noexcept;
 	CircularVector(const Me &);
 	CircularVector(Me &&) noexcept;
 
-	/**
-	 * @brief CircularVector
-	 * @param beginIt
-	 * @param endIt
-	 */
+	///
+	/// @brief CircularVector
+	/// @param beginIt
+	/// @param endIt
+	///
 	template<typename InputIterator>
 	CircularVector(InputIterator beginIt, InputIterator endIt);
 
@@ -186,174 +186,175 @@ public:
 	Me &operator=(const Me &);
 	Me &operator=(Me &&) noexcept;
 
-	/**
-	 * @brief operator []
-	 * @param index
-	 * @return
-	 */
+	///
+	/// @brief operator []
+	/// @param index
+	/// @return
+	///
 	Reference operator[](SsizeType index);
 
-	/**
-	 * @brief operator []
-	 * @param index
-	 * @return
-	 */
+	///
+	/// @brief operator []
+	/// @param index
+	/// @return
+	///
 	ConstReference operator[](SsizeType index) const;
 
-	/**
-	 * @brief size
-	 * @return
-	 */
+	///
+	/// @brief size
+	/// @return
+	///
 	SizeType size() const;
 
-	/**
-	 * @brief capacity
-	 * @return
-	 */
+	///
+	/// @brief capacity
+	/// @return
+	///
 	SizeType capacity() const;
 
-	/**
-	 * @brief pushBack
-	 * @param object
-	 */
+	///
+	/// @brief pushBack
+	/// @param object
+	///
 	void pushBack(ConstReference object);
 
-	/**
-	 * @brief pushBack
-	 * @param object
-	 */
+	///
+	/// @brief pushBack
+	/// @param object
+	///
 	void pushBack(MoveReference object);
 
-	/**
-	 * @brief pushBack
-	 * @param itBegin
-	 * @param itEnd
-	 */
+	///
+	/// @brief pushBack
+	/// @param itBegin
+	/// @param itEnd
+	///
 	template<typename InputIterator>
 	void pushBack(InputIterator itBegin, InputIterator itEnd);
 
-	/**
-	 * @brief pushFront
-	 * @param object
-	 */
+	///
+	/// @brief pushFront
+	/// @param object
+	///
 	void pushFront(ConstReference object);
 
-	/**
-	 * @brief pushFront
-	 * @param object
-	 */
+	///
+	/// @brief pushFront
+	/// @param object
+	///
 	void pushFront(MoveReference object);
 
-	/**
-	 * @brief pushFront
-	 * @param itBegin
-	 * @param itEnd
-	 */
+	///
+	/// @brief pushFront
+	/// @param itBegin
+	/// @param itEnd
+	///
 	template<typename InputIterator>
 	void pushFront(InputIterator itBegin, InputIterator itEnd);
-	/**
-	 * @brief emplaceBack
-	 * @param args
-	 */
+
+	///
+	/// @brief emplaceBack
+	/// @param args
+	///
 	template<typename ...Args>
 	void emplaceBack(Args &&...args);
 
-	/**
-	 * @brief emplaceFront
-	 * @param args
-	 */
+	///
+	/// @brief emplaceFront
+	/// @param args
+	///
 	template<typename ...Args>
 	void emplaceFront(Args &&...args);
 
-	/**
-	 * @brief popBack
-	 */
+	///
+	/// @brief popBack
+	///
 	void popBack();
 
-	/**
-	 * @brief popFront
-	 */
+	///
+	/// @brief popFront
+	///
 	void popFront();
 
-	/**
-	 * @brief begin
-	 * @return
-	 */
+	///
+	/// @brief begin
+	/// @return
+	///
 	Iterator begin();
 
-	/**
-	 * @brief begin
-	 * @return
-	 */
+	///
+	/// @brief begin
+	/// @return
+	///
 	ConstIterator begin() const;
 
-	/**
-	 * @brief cbegin
-	 * @return
-	 */
+	///
+	/// @brief cbegin
+	/// @return
+	///
 	ConstIterator cbegin() const;
 
-	/**
-	 * @brief rbegin
-	 * @return
-	 */
+	///
+	/// @brief rbegin
+	/// @return
+	///
 	ReverseIterator rbegin();
 
-	/**
-	 * @brief rbegin
-	 * @return
-	 */
+	///
+	/// @brief rbegin
+	/// @return
+	///
 	ConstReverseIterator rbegin() const;
 
-	/**
-	 * @brief crbegin
-	 * @return
-	 */
+	///
+	/// @brief crbegin
+	/// @return
+	///
 	ConstReverseIterator crbegin() const;
 
-	/**
-	 * @brief end
-	 * @return
-	 */
+	///
+	/// @brief end
+	/// @return
+	///
 	Iterator end();
 
-	/**
-	 * @brief end
-	 * @return
-	 */
+	///
+	/// @brief end
+	/// @return
+	///
 	ConstIterator end() const;
 
-	/**
-	 * @brief cend
-	 * @return
-	 */
+	///
+	/// @brief cend
+	/// @return
+	///
 	ConstIterator cend() const;
 
-	/**
-	 * @brief rend
-	 * @return
-	 */
+	///
+	/// @brief rend
+	/// @return
+	///
 	ReverseIterator rend();
 
-	/**
-	 * @brief rend
-	 * @return
-	 */
+	///
+	/// @brief rend
+	/// @return
+	///
 	ConstReverseIterator rend() const;
 
-	/**
-	 * @brief crend
-	 * @return
-	 */
+	///
+	/// @brief crend
+	/// @return
+	///
 	ConstReverseIterator crend() const;
 
 private:
 	SizeType realCapacity() const noexcept;
 
-	Pointer array; /**< */
-	Pointer head; /**< */
-	Pointer tail; /**< */
-	SizeType vectorCapacity; /**< */
+	Pointer array; ///<
+	Pointer head; ///<
+	Pointer tail; ///<
+	SizeType vectorCapacity; ///<
 	Allocator allocator;
 
 }; // class CircularVector
@@ -371,7 +372,7 @@ namespace circularvector_utils
 template<typename T, typename Traits>
 Iterator<T, Traits>::Iterator(Pointer initWappedIterator, Pointer initActualBegin
 		, Pointer initActualEnd)
-		: Parent(initWappedIterator)
+		: Traits(initWappedIterator)
 		, actualArrayBegin(initActualBegin)
 		, actualArrayEnd(initActualEnd)
 {}

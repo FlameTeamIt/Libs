@@ -16,14 +16,14 @@ namespace tree_utils
 // Nodes
 
 template<typename T, typename Traits = ContainerTraits<T>>
-struct Node: public Traits
+struct Node
 {
 	using Me = Node<T, Traits>;
 
-	using typename Traits::Type;
-	using typename Traits::Reference;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
+	using Type = typename Traits::Type;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
 
 	Node() = default;
 	Node(Me &&node);
@@ -115,6 +115,15 @@ template<
 >
 class Tree
 {
+public:
+	using Type = typename Traits::Type;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 
 };
 

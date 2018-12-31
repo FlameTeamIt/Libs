@@ -369,10 +369,24 @@ template<
 	, typename Traits
 	, typename MetaType = void
 >
-class BaseIterator: public Traits
+class BaseIterator
 {
 public:
-	using Me = BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits, MetaType>;
+	using Me = BaseIterator<
+		IteratorType
+		, ITERATOR_CATEGORY
+		, ITERATOR_ACCESS
+		, Traits
+		, MetaType
+	>;
+
+	using Type = typename Traits::Type;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using SsizeType = typename Traits::SsizeType;
 
 	BaseIterator() = default;
 	BaseIterator(const Me &) = default;

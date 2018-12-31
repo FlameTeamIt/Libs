@@ -146,16 +146,16 @@ template<
 	, typename Traits, typename Allocator
 	, typename Counter, typename CounterAllocator
 >
-class SharedPointer: public Traits
+class SharedPointer
 {
 public:
-	using typename Traits::Type;
-	using typename Traits::Pointer;
-	using typename Traits::PointerToConst;
-	using typename Traits::Reference;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
-	using typename Traits::SizeType;
+	using Type = typename Traits::Type;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using SizeType = typename Traits::SizeType;
 
 	using Me = SHARED_TYPE;
 
@@ -186,15 +186,15 @@ private:
 };
 
 template<typename T, typename Traits, typename Allocator>
-class UniquePointer: public Traits
+class UniquePointer
 {
 public:
-	using typename Traits::Type;
-	using typename Traits::Pointer;
-	using typename Traits::PointerToConst;
-	using typename Traits::Reference;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
+	using Type = typename Traits::Type;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
 
 	using Me = UNIQUE_TYPE;
 

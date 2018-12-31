@@ -16,11 +16,11 @@ namespace flame_ide
 /// View flame_ide::templates::ContainerTraits
 ///
 template<typename Traits = flame_ide::SizeTraits>
-class BaseAllocator: public Traits
+class BaseAllocator
 {
 public:
-	using typename Traits::SizeType;
-	using typename Traits::SsizeType;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 	using VoidPointer = void *;
 
 	BaseAllocator() = default;

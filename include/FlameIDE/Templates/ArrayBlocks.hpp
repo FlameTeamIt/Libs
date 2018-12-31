@@ -11,34 +11,31 @@ namespace flame_ide
 {namespace templates
 {
 
-typedef enum
+namespace arrayblocks_utils
+{
+
+enum class FromBlock
 {
 	FROM_NULL  = char(0),
 	FROM_FRONT = char(1),
 	FROM_BACK  = char(2)
-} FromBlock;
-
-namespace arrayblocks_utils
-{
+};
 
 template<typename T
 	, SizeTraits::SizeType SIZE
 	, typename Traits = ContainerTraits<T>
 >
-struct Node: public Traits
+struct Node
 {
 	using Me = Node<T, SIZE, Traits>;
 
-	using typename Traits::Type;
-
-	using typename Traits::Reference;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
-
-	using typename Traits::Pointer;
-
-	using typename Traits::SizeType;
-	using typename Traits::SsizeType;
+	using Type = typename Traits::Type;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using Pointer = typename Traits::Pointer;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 
 	using Block = Array<T, SIZE, Traits>;
 
@@ -58,10 +55,17 @@ struct Node: public Traits
 
 template<typename T
 	, typename Traits = ContainerTraits<T>
-	, typename Allocator = allocator::ObjectAllocator
+	, typename Allocator = allocator::ObjectAllocator<T, Traits>
 >
-class ArrayBlocks
+class ArrayBlocks: protected Allocator
 {
+	using Type = typename Traits::Type;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using Pointer = typename Traits::Pointer;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 };
 
 }}

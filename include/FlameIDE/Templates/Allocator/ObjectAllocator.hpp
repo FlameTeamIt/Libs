@@ -28,10 +28,12 @@ public:
 	using typename Parent::VoidPointer;
 	using typename Parent::SizeType;
 	using typename Parent::SsizeType;
-	using typename Traits::Type;
-	using typename Traits::Pointer;
-	using typename Traits::MoveReference;
-	using typename Traits::ConstReference;
+
+	using Type = typename Traits::Type;
+	using Pointer = typename Traits::Pointer;
+	using MoveReference = typename Traits::MoveReference;
+	using ConstReference = typename Traits::ConstReference;
+
 	using Me = ObjectAllocator<T, Traits, BaseAllocatorImpl>;
 
 	ObjectAllocator() = default;

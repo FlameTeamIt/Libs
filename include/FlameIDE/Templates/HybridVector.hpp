@@ -672,7 +672,7 @@ template<typename T
 	, typename VectorAllocator = allocator::ArrayAllocator<T, VectorTraits>
 	, typename Traits = ContainerTraits<T>
 >
-class HybridVector: public Traits
+class HybridVector
 {
 public:
 	using Array = flame_ide::templates::Array<T, ARRAY_CAPACITY, ArrayTraits, FalseType::VALUE>;
@@ -697,17 +697,14 @@ public:
 		ConstIterator
 	>;
 
-	using typename Traits::Type;
-
-	using typename Traits::Reference;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
-
-	using typename Traits::Pointer;
-	using typename Traits::PointerToConst;
-
-	using typename Traits::SizeType;
-	using typename Traits::SsizeType;
+	using Type = typename Traits::Type;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 
 	HybridVector() = default;
 	HybridVector(const Me &) = default;

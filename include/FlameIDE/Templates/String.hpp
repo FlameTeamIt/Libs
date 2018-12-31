@@ -127,22 +127,19 @@ private:
 
 
 TEMPLATE_TYPE
-class BasicString: public Traits
+class BasicString
 {
 public:
 	using Me = STRING_TYPE;
 
-	using typename Traits::Type;
-
-	using typename Traits::Reference;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
-
-	using typename Traits::Pointer;
-	using typename Traits::PointerToConst;
-
-	using typename Traits::SizeType;
-	using typename Traits::SsizeType;
+	using Type = typename Traits::Type;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 
 	using Iterator = flame_ide::templates::Iterator<
 			Pointer, IteratorCategory::RANDOM_ACCESS, Traits
