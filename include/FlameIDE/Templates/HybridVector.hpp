@@ -31,7 +31,7 @@ template<typename T
 class Iterator: public
 		iterator_utils::BaseIterator<
 			Variant<
-				typename Array<T, ARRAY_CAPACITY, ArrayTraits, FalseType::VALUE>::Iterator
+				typename Array<T, ARRAY_CAPACITY, FalseType::VALUE, ArrayTraits>::Iterator
 				, typename Vector<T, VectorTraits, VectorAllocator>::Iterator
 			>
 			, IteratorCategory::RANDOM_ACCESS
@@ -41,7 +41,7 @@ class Iterator: public
 {
 public:
 	using ArrayIterator = typename flame_ide::templates::Array<
-		T, ARRAY_CAPACITY, ArrayTraits, FalseType::VALUE
+		T, ARRAY_CAPACITY, FalseType::VALUE, ArrayTraits
 	>::Iterator;
 
 	using VectorIterator = typename flame_ide::templates::Vector<
@@ -51,7 +51,10 @@ public:
 	using WrappedIterator = flame_ide::templates::Variant<ArrayIterator, VectorIterator>;
 
 	using Parent = iterator_utils::BaseIterator<
-		WrappedIterator
+		Variant<
+			typename Array<T, ARRAY_CAPACITY, FalseType::VALUE, ArrayTraits>::Iterator
+			, typename Vector<T, VectorTraits, VectorAllocator>::Iterator
+		>
 		, IteratorCategory::RANDOM_ACCESS
 		, IteratorAccess::NON_CONSTANT
 		, Traits
@@ -383,7 +386,7 @@ class ConstIterator:
 		public iterator_utils::BaseIterator<
 			Variant<
 				typename flame_ide::templates::Array<
-					T, ARRAY_CAPACITY, ArrayTraits, FalseType::VALUE
+					T, ARRAY_CAPACITY, FalseType::VALUE, ArrayTraits
 				>::ConstIterator
 				, typename flame_ide::templates::Vector<
 					T, VectorTraits, VectorAllocator
@@ -400,7 +403,7 @@ public:
 	>;
 
 	using ConstArrayIterator = typename flame_ide::templates::Array<
-		T, ARRAY_CAPACITY, ArrayTraits, FalseType::VALUE
+		T, ARRAY_CAPACITY, FalseType::VALUE, ArrayTraits
 	>::ConstIterator;
 
 	using ConstVectorIterator = typename flame_ide::templates::Vector<
@@ -675,7 +678,9 @@ template<typename T
 class HybridVector
 {
 public:
-	using Array = flame_ide::templates::Array<T, ARRAY_CAPACITY, ArrayTraits, FalseType::VALUE>;
+	using Array = flame_ide::templates::Array<
+		T, ARRAY_CAPACITY, FalseType::VALUE, ArrayTraits
+	>;
 	using Vector = flame_ide::templates::Vector<T, VectorTraits, VectorAllocator>;
 	using ContainerVariant = flame_ide::templates::Variant<Array, Vector>;
 

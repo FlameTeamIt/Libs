@@ -12,21 +12,22 @@
 	template < \
 		typename T \
 		, SizeTraits::SizeType ARRAY_CAPACITY \
-		, typename Traits \
 		, bool AS_PURE_C_ARRAY \
+		, typename Traits \
 	>
 
 #define TEMPLATE_DEFINE_1 \
 	template < \
-		SizeTraits::SizeType ARRAY_CAPACITY1\
-		, typename Traits1\
-		, bool AS_PURE_C_ARRAY1>
+		SizeTraits::SizeType ARRAY_CAPACITY1 \
+		, typename Traits1 \
+		, bool AS_PURE_C_ARRAY1 \
+	>
 
 #define ARRAY_TYPE \
-	Array<T, ARRAY_CAPACITY, Traits, AS_PURE_C_ARRAY>
+	Array<T, ARRAY_CAPACITY, AS_PURE_C_ARRAY, Traits>
 
 #define ARRAY_TYPE_1 \
-	Array<T, ARRAY_CAPACITY1, Traits1, AS_PURE_C_ARRAY1>
+	Array<T, ARRAY_CAPACITY1, AS_PURE_C_ARRAY1, Traits1>
 
 namespace flame_ide
 {namespace templates
@@ -37,8 +38,8 @@ namespace flame_ide
  */
 template <typename T
 	, SizeTraits::SizeType ARRAY_CAPACITY
-	, typename Traits = ContainerTraits<T>
 	, bool AS_PURE_C_ARRAY = false
+	, typename Traits = ContainerTraits<T>
 >
 class Array
 {
@@ -48,7 +49,6 @@ public:
 	using Me = ARRAY_TYPE;
 
 	using Type = typename Traits::Type;
-
 	using Reference = typename Traits::Reference;
 	using ConstReference = typename Traits::ConstReference;
 	using MoveReference = typename Traits::MoveReference;
@@ -953,7 +953,7 @@ typename ARRAY_TYPE::PointerToConst ARRAY_TYPE::head() const
 	template <typename T, SizeTraits::SizeType ARRAY_CAPACITY, typename Traits>
 
 #define ARRAY_TYPE \
-	Array<T, ARRAY_CAPACITY, Traits, true>
+	Array<T, ARRAY_CAPACITY, true, Traits>
 
 namespace flame_ide
 {namespace templates
@@ -966,7 +966,7 @@ template <typename T
 	, SizeTraits::SizeType ARRAY_CAPACITY
 	, typename Traits
 >
-class Array<T, ARRAY_CAPACITY, Traits, true>: public Traits
+class Array<T, ARRAY_CAPACITY, true, Traits>: public Traits
 {
 public:
 	static_assert (ARRAY_CAPACITY != 0, "Zero-sized array is impossible");
