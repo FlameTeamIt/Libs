@@ -1,16 +1,46 @@
-#ifndef STREAMS_STREAMBASE_HPP
-#define STREAMS_STREAMBASE_HPP
+#ifndef FLAMEIDE_STREAMS_STREAMBASE_HPP
+#define FLAMEIDE_STREAMS_STREAMBASE_HPP
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
+#include <FlameIDE/Common/Traits.hpp>
+#include <FlameIDE/Common/Byte.hpp>
+#include <FlameIDE/Templates/View.hpp>
+#include <FlameIDE/Templates/Iterator.hpp>
 
 namespace flame_ide
 {namespace streams
 {
 
-template<typename Accumulator>
+namespace stream_utils
+{
+
+template<typename IteratorType>
+constexpr void checkIterator(IteratorType)
+{
+	using namespace templates::iterator_utils;
+	using templates::IteratorAccess;
+	using templates::IteratorCategory;
+	static_assert (
+		GetIteratorInfo<IteratorType>::CATEGORY >= IteratorCategory::FORWARD
+		, "Invalid iterator type"
+	);
+}
+
+
+}
+
+template<typename Accumulator, typename Traits = SizeTraits>
 class StreamOutputBase
 {
 public:
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
+	using Byte = typename Traits::ByteType;
+	using DataIterator = templates::ConstIterator<
+		const Byte*, templates::IteratorCategory::FORWARD
+	>;
+	using WritebleData = templates::Range<DataIterator>;
+
 	StreamOutputBase() = default;
 	StreamOutputBase(const StreamOutputBase &stream) = default;
 	StreamOutputBase(StreamOutputBase &&stream) = default;
@@ -20,38 +50,26 @@ public:
 	StreamOutputBase &operator=(const StreamOutputBase &stream) = default;
 	StreamOutputBase &operator=(StreamOutputBase &&stream) = default;
 
-	StreamOutputBase &operator<<(ichar_t value);
-	StreamOutputBase &operator<<(uichar_t value);
+	SsizeType write(const WritebleData &data) noexcept;
 
-	StreamOutputBase &operator<<(short_t value);
-	StreamOutputBase &operator<<(ushort_t value);
-
-	StreamOutputBase &operator<<(int_t value);
-	StreamOutputBase &operator<<(uint_t value);
-
-	StreamOutputBase &operator<<(long_t value);
-	StreamOutputBase &operator<<(ulong_t value);
-
-	StreamOutputBase &operator<<(float_t value);
-	StreamOutputBase &operator<<(double_t value);
-
-	StreamOutputBase &operator<<(char *value);
-
-	ssize_t write(const char_t *buffer, ssize_t size);
+protected:
+	Accumulator &getOutputDataAccumulator();
 
 private:
 	Accumulator accum;
 };
 
-template<typename Accumulator>
+template<typename Accumulator, typename Traits = SizeTraits>
 class StreamInputBase
 {
 public:
-	struct ReadStringSetting
-	{
-		char_t delimer;
-		char *value;
-	};
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
+	using Byte = typename Traits::ByteType;
+	using DataIterator = templates::ConstIterator<
+		const Byte*, templates::IteratorCategory::FORWARD
+	>;
+	using RidableData = templates::Range<DataIterator>;
 
 	StreamInputBase() = default;
 	StreamInputBase(const StreamInputBase &stream) = default;
@@ -62,24 +80,10 @@ public:
 	StreamInputBase &operator=(const StreamInputBase &stream) = default;
 	StreamInputBase &operator=(StreamInputBase &&stream) = default;
 
-	StreamInputBase &operator>>(ichar_t value);
-	StreamInputBase &operator>>(uichar_t value);
+	SsizeType read(RidableData &data) noexcept;
 
-	StreamInputBase &operator>>(short_t value);
-	StreamInputBase &operator>>(ushort_t value);
-
-	StreamInputBase &operator>>(int_t value);
-	StreamInputBase &operator>>(uint_t value);
-
-	StreamInputBase &operator>>(long_t value);
-	StreamInputBase &operator>>(ulong_t value);
-
-	StreamInputBase &operator>>(float_t value);
-	StreamInputBase &operator>>(double_t value);
-
-	StreamInputBase &operator>>(ReadStringSetting &value);
-
-	ssize_t read(char_t *buffer, ssize_t size);
+protected:
+	Accumulator &getInputDataAccumulator();
 
 private:
 	Accumulator accum;
@@ -87,4 +91,4 @@ private:
 
 }}
 
-#endif // STREAMS_STREAMBASE_HPP
+#endif // FLAMEIDE_STREAMS_STREAMBASE_HPP
