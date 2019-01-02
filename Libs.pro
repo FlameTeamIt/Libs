@@ -43,6 +43,7 @@ HEADERS += \
 	./include/FlameIDE/Filesystem/Session.hpp \
 	./include/FlameIDE/Others/TextStyle.hpp \
 	./include/FlameIDE/Process/CommandLine.hpp \
+	./include/FlameIDE/Streams/DefaultAccumulator.hpp \
 	./include/FlameIDE/Streams/StreamBase.hpp \
 	./include/FlameIDE/Templates/AlignObject.hpp \
 	./include/FlameIDE/Templates/Allocator.hpp \
@@ -114,6 +115,7 @@ SOURCES += \
 	./src/Filesystem/Project.cpp \
 	./src/Filesystem/Session.cpp \
 	./src/Process/CommandLine.cpp \
+	./src/Streams/DefaultAccumulator.cpp \
 	./src/Streams/StreamBase.cpp \
 	./src/Templates/Tests/Allocator.cpp \
 	./src/Templates/Tests/Array.cpp \
