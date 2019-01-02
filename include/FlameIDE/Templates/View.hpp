@@ -148,8 +148,7 @@ makeReverseView(const Container &container)
 // Range
 
 template<typename InputIterator>
-Range<InputIterator>::Range(Range<InputIterator>::Iterator itBegin
-		, Range<InputIterator>::Iterator itEnd)
+Range<InputIterator>::Range(InputIterator itBegin, InputIterator itEnd)
 		: first(itBegin), last(itEnd)
 {}
 
