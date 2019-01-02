@@ -294,14 +294,14 @@ struct GetType<IteratorType *>
 };
 
 template<typename IteratorType>
-struct GetIteratorCategory
+struct GetIteratorInfo
 {
 	static constexpr IteratorCategory CATEGORY = IteratorType::CATEGORY;
 	static constexpr IteratorAccess ACCESS = IteratorType::ACCESS;
 };
 
 template<typename IteratorType>
-struct GetIteratorCategory<IteratorType *>
+struct GetIteratorInfo<IteratorType *>
 {
 	static constexpr IteratorCategory CATEGORY = IteratorCategory::RANDOM_ACCESS;
 	static constexpr IteratorAccess ACCESS = flame_ide::IsConst<IteratorType>::VALUE
@@ -323,28 +323,28 @@ class BaseIterator;
 
 template<typename IteratorType
 	, IteratorCategory ITERATOR_CATEGORY =
-			iterator_utils::GetIteratorCategory<IteratorType>::CATEGORY
+			iterator_utils::GetIteratorInfo<IteratorType>::CATEGORY
 	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>
 	, typename MetaType = void>
 class Iterator;
 
 template<typename IteratorType
 	, IteratorCategory ITERATOR_CATEGORY =
-			iterator_utils::GetIteratorCategory<IteratorType>::CATEGORY
+			iterator_utils::GetIteratorInfo<IteratorType>::CATEGORY
 	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>
 	, typename MetaType = void>
 class ReverseIterator;
 
 template<typename IteratorType
 	, IteratorCategory ITERATOR_CATEGORY =
-			iterator_utils::GetIteratorCategory<IteratorType>::CATEGORY
+			iterator_utils::GetIteratorInfo<IteratorType>::CATEGORY
 	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>
 	, typename MetaType = void>
 class ConstIterator;
 
 template<typename IteratorType
 	, IteratorCategory ITERATOR_CATEGORY =
-			iterator_utils::GetIteratorCategory<IteratorType>::CATEGORY
+			iterator_utils::GetIteratorInfo<IteratorType>::CATEGORY
 	, typename Traits = typename iterator_utils::IteratorTraits<IteratorType>
 	, typename MetaType = void>
 class ConstReverseIterator;
