@@ -2,7 +2,7 @@
 #define FLAMEIDE_COMMON_BYTE_HPP
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
-#include <FlameIDE/Common/Traits.hpp>
+#include <FlameIDE/Common/Traits/Numbers.hpp>
 
 namespace flame_ide
 {
