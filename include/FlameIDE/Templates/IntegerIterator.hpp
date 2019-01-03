@@ -2,221 +2,9 @@
 #define FLAMEIDE_TEMPLATES_INTEGERITERATOR_HPP
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
-#include <FlameIDE/Templates/Iterator.hpp>
+#include <FlameIDE/Templates/Iterator/Iterator.hpp>
 
-// macroses
-
-#define OPERATOR_INC_PREFIX \
-Me &operator++() \
-{ \
-	++this->wrappedIterator; \
-	return *this; \
-}
-
-#define OPERATOR_INC_POSTFIX \
-Me operator++(int) \
-{ \
-	auto copy = *this;\
-	++this->wrappedIterator; \
-	return copy; \
-}
-
-#define OPERATOR_DEC_PREFIX \
-Me &operator--() \
-{ \
-	--this->wrappedIterator; \
-	return *this; \
-}
-
-#define OPERATOR_DEC_POSTFIX \
-Me operator--(int) \
-{ \
-	auto copy = *this; \
-	--this->wrappedIterator; \
-	return copy; \
-}
-
-#define OPERATOR_DEREF \
-typename Traits::Reference operator*() \
-{ \
-	return (this->wrappedIterator); \
-}
-
-#define OPERATOR_ARROW \
-typename Traits::Pointer operator->() \
-{ \
-	return &(this->wrappedIterator); \
-}
-
-#define OPERATOR_DEREF_CONST \
-typename Traits::ConstReference operator*() const \
-{ \
-	return (this->wrappedIterator); \
-}
-
-#define OPERATOR_ARROW_CONST \
-typename Traits::PointerToConst operator->() const \
-{ \
-	return &(this->wrappedIterator); \
-}
-
-#define OPERATOR_PLUS \
-template<typename IntType> Me operator+(IntType value) \
-{ \
-	Me copy = *this; \
-	copy += value; \
-	return copy; \
-} \
-\
-template<typename IntType> \
-friend Me operator+(IntType value, const Me &iterator) \
-{ \
-	return iterator + value; \
-}
-
-#define OPERATOR_MINUS \
-template<typename IntType> Me operator-(IntType value) \
-{ \
-	Me copy = *this; \
-	copy -= value; \
-	return copy; \
-} \
-\
-typename Traits::SsizeType operator-(const Me &iterator) \
-{ \
-	return static_cast<Traits::SsizeType>(this->wrappedIterator - iterator.wrappedIterator); \
-}
-
-#define OPERATOR_PLUS_ASSIGN \
-template<typename IntType> Me &operator+=(IntType value) \
-{ \
-	this->wrappedIterator += value; \
-	return *this; \
-}
-
-#define OPERATOR_MINUS_ASSIGN \
-template<typename IntType> Me &operator-=(IntType value) \
-{ \
-	this->wrappedIterator -= value; \
-	return *this; \
-}
-
-#define OPERATOR_PLUS_REVERSED \
-template<typename IntType> Me operator+(IntType value) \
-{ \
-	Me copy = *this; \
-	copy += value; \
-	return copy; \
-} \
-\
-template<typename IntType> \
-friend Me operator+(IntType value, const Me &iterator) \
-{ \
-	return iterator + value; \
-}
-
-#define OPERATOR_MINUS_REVERSED \
-template<typename IntType> Me operator-(IntType value) \
-{ \
-	Me copy = *this; \
-	copy -= value; \
-	return copy; \
-} \
-\
-typename Traits::SsizeType operator-(const Me &iterator) \
-{ \
-	return this->wrappedIterator - iterator.wrappedIterator; \
-}
-
-#define OPERATOR_PLUS_ASSIGN_REVERSED \
-template<typename IntType> Me &operator+=(IntType value) \
-{ \
-	this->wrappedIterator -= value; \
-	return *this; \
-}
-
-#define OPERATOR_MINUS_ASSIGN_REVERSED \
-template<typename IntType> Me &operator-=(IntType value) \
-{ \
-	this->wrappedIterator += value; \
-	return *this; \
-}
-
-#define OPERATOR_MORE \
-bool operator>(const Me &iterator) \
-{ \
-	return this->wrappedIterator > iterator.wrappedIterator; \
-}
-
-#define OPERATOR_LESS \
-bool operator<(const Me &iterator) \
-{ \
-	return this->wrappedIterator < iterator.wrappedIterator; \
-}
-
-#define OPERATOR_MORE_EQUAL \
-bool operator>=(const Me &iterator) \
-{ \
-	return this->wrappedIterator >= iterator.wrappedIterator; \
-}
-
-#define OPERATOR_LESS_EQUAL \
-bool operator<=(const Me &iterator) \
-{ \
-	return this->wrappedIterator <= iterator.wrappedIterator; \
-}
-
-#define OPERATOR_OFFSET_DEREF \
-template<typename IntType> \
-typename Traits::Reference operator[](IntType value) \
-{ \
-	return this->wrappedIterator + value; \
-}
-
-#define OPERATOR_OFFSET_DEREF_CONST \
-template<typename IntType> \
-typename Traits::ConstReference operator[](IntType value) \
-{ \
-	return this->wrappedIterator + value; \
-}
-
-#define OPERATOR_MORE_REVERSED \
-bool operator>(const Me &iterator) \
-{ \
-	return this->wrappedIterator <= iterator.wrappedIterator; \
-}
-
-#define OPERATOR_LESS_REVERSED \
-bool operator<(const Me &iterator) \
-{ \
-	return this->wrappedIterator >= iterator; \
-}
-
-#define OPERATOR_MORE_EQUAL_REVERSED \
-bool operator>=(const Me &iterator) \
-{ \
-	return this->wrappedIterator < iterator.wrappedIterator; \
-}
-
-#define OPERATOR_LESS_EQUAL_REVERSED \
-bool operator<=(const Me &iterator) \
-{ \
-	return this->wrappedIterator > iterator.wrappedIterator; \
-}
-
-#define OPERATOR_OFFSET_DEREF_REVERSED \
-template<typename IntType> \
-typename Traits::Reference operator[](IntType value) \
-{ \
-	return *(this->wrappedIterator - value); \
-}
-
-#define OPERATOR_OFFSET_DEREF_CONST_REVERSED \
-template<typename IntType> \
-typename Traits::ConstReference operator[](IntType value) const \
-{ \
-	return *(this->wrappedIterator - value); \
-}
+#include <FlameIDE/Templates/Iterator/Operators.hpp>
 
 // define
 
@@ -309,29 +97,29 @@ public: \
 	~Iterator() = default; \
 	Me& operator=(const Me &) = default; \
 \
-	OPERATOR_INC_PREFIX \
-	OPERATOR_INC_POSTFIX \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_INC_PREFIX \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_INC_POSTFIX \
 \
-	OPERATOR_DEREF \
-	OPERATOR_ARROW \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_DEREF \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_ARROW \
 \
-	OPERATOR_DEREF_CONST \
-	OPERATOR_ARROW_CONST \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_DEREF_CONST \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_ARROW_CONST \
 \
-	OPERATOR_PLUS \
-	OPERATOR_MINUS \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_PLUS \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_MINUS \
 \
-	OPERATOR_PLUS_ASSIGN \
-	OPERATOR_MINUS_ASSIGN \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_PLUS_ASSIGN \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_MINUS_ASSIGN \
 \
-	OPERATOR_MORE \
-	OPERATOR_LESS \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_MORE \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_LESS \
 \
-	OPERATOR_MORE_EQUAL \
-	OPERATOR_LESS_EQUAL \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_MORE_EQUAL \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_LESS_EQUAL \
 \
-	OPERATOR_OFFSET_DEREF \
-	OPERATOR_OFFSET_DEREF_CONST \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_OFFSET_DEREF \
+	FLAMEIDE_INTEGERITERATOR_OPERATOR_OFFSET_DEREF_CONST \
 \
 private: \
 	using BaseIterator::wrappedIterator; \
@@ -348,5 +136,7 @@ GENERATE_ITERATOR_IMPL(Types::uint_t)
 GENERATE_ITERATOR_IMPL(Types::ulong_t)
 
 }}
+
+#include <FlameIDE/Templates/Iterator/UndefOperators.hpp>
 
 #endif // FLAMEIDE_TEMPLATES_INTEGERITERATOR_HPP
