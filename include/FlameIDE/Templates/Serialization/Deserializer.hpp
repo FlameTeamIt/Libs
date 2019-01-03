@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_TEMPLATES_SERIALIZATION_DESERIALIZER_HPP
 #define FLAMEIDE_TEMPLATES_SERIALIZATION_DESERIALIZER_HPP
 
-#include <FlameIDE/Templates/View.hpp>
+#include <FlameIDE/Templates/Range.hpp>
 #include <FlameIDE/Templates/Serialization/SpecializedValue.hpp>
 
 namespace flame_ide

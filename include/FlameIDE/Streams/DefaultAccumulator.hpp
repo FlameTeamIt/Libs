@@ -3,7 +3,7 @@
 
 #include <FlameIDE/Common/Traits/Defaults.hpp>
 #include <FlameIDE/Templates/Array.hpp>
-#include <FlameIDE/Templates/View.hpp>
+#include <FlameIDE/Templates/Range.hpp>
 
 namespace flame_ide
 {namespace streams

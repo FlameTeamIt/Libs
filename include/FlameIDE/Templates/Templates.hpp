@@ -11,6 +11,6 @@
 #include <FlameIDE/Templates/Pointers.hpp>
 #include <FlameIDE/Templates/String.hpp>
 #include <FlameIDE/Templates/Vector.hpp>
-#include <FlameIDE/Templates/View.hpp>
+#include <FlameIDE/Templates/Range.hpp>
 
 #endif // FLAMEIDE_TEMPLATES_HPP

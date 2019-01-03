@@ -76,6 +76,7 @@ HEADERS += \
 	./include/FlameIDE/Templates/ObjectViewer.hpp \
 	./include/FlameIDE/Templates/Optional.hpp \
 	./include/FlameIDE/Templates/Pointers.hpp \
+	./include/FlameIDE/Templates/Range.hpp \
 	./include/FlameIDE/Templates/Serialization.hpp \
 	./include/FlameIDE/Templates/Serialization/Deserializer.hpp \
 	./include/FlameIDE/Templates/Serialization/Serializer.hpp \
@@ -88,7 +89,6 @@ HEADERS += \
 	./include/FlameIDE/Templates/Tuple.hpp \
 	./include/FlameIDE/Templates/Variant.hpp \
 	./include/FlameIDE/Templates/Vector.hpp \
-	./include/FlameIDE/Templates/View.hpp \
 	./include/FlameIDE/Templates/WideFloat.hpp \
 	./include/FlameIDE/Templates/WideInt.hpp \
 	./src/Common/Tests/TestAggregator.hpp \

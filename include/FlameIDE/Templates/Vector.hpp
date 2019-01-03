@@ -5,7 +5,7 @@
 #include <FlameIDE/Templates/Iterator.hpp>
 #include <FlameIDE/Templates/Allocator.hpp>
 #include <FlameIDE/Templates/InitializerList.hpp>
-#include <FlameIDE/Templates/View.hpp>
+#include <FlameIDE/Templates/Range.hpp>
 
 #ifndef VECTOR_RESIZE_FACTOR_MULT
 #define VECTOR_RESIZE_FACTOR_MULT 3

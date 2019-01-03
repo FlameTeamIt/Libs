@@ -14,16 +14,19 @@ echo "INCLUDEPATH += include/"
 echo "INCLUDEPATH += ."
 echo
 
+STRINGS=0
+COUNT_FILES=0
+
 echo "#" headers
 echo -n "HEADERS +="
 HEADERS=`find . -type f -name '*.hpp' | sort`
-STRINGS=0
 for header in $HEADERS
 do
   echo " \\"
   echo -n "	$header"
   count_strings=$(cat $header | wc -l)
   STRINGS=$(( STRINGS+count_strings ))
+  COUNT_FILES=$(( COUNT_FILES+1 ))
 done
 echo
 echo
@@ -37,9 +40,11 @@ do
   echo -n "	$source"
   count_strings=$(cat $source | wc -l)
   STRINGS=$(( STRINGS+count_strings ))
+  COUNT_FILES=$(( COUNT_FILES+1 ))
 done
 echo
 echo
 
->&2 echo $STRINGS
+>&2 echo count files is $COUNT_FILES
+>&2 echo count strings is $STRINGS
 

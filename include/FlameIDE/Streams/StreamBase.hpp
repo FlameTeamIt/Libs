@@ -4,7 +4,7 @@
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
 #include <FlameIDE/Common/Traits.hpp>
 #include <FlameIDE/Common/Byte.hpp>
-#include <FlameIDE/Templates/View.hpp>
+#include <FlameIDE/Templates/Range.hpp>
 #include <FlameIDE/Templates/Iterator.hpp>
 
 namespace flame_ide

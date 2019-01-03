@@ -3,7 +3,7 @@
 
 #include <FlameIDE/Templates/Allocator.hpp>
 #include <FlameIDE/Templates/Iterator.hpp>
-#include <FlameIDE/Templates/View.hpp>
+#include <FlameIDE/Templates/Range.hpp>
 
 #ifndef STRING_RESIZE_FACTOR_MULT
 #define STRING_RESIZE_FACTOR_MULT 3

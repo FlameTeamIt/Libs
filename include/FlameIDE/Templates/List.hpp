@@ -3,7 +3,7 @@
 
 #include <FlameIDE/Templates/Allocator.hpp>
 #include <FlameIDE/Templates/Iterator.hpp>
-#include <FlameIDE/Templates/View.hpp>
+#include <FlameIDE/Templates/Range.hpp>
 #include <FlameIDE/Templates/SimpleAlgorithms.hpp>
 #include <FlameIDE/Templates/InitializerList.hpp>
 
