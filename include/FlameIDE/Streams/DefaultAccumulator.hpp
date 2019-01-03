@@ -13,16 +13,29 @@ class DefaultAccumulator
 {
 public:
 	using Traits = SizeTraits;
+	using SsizeType = typename Traits::SsizeType;
 	using Byte = typename Traits::ByteType;
 	using DataIterator = templates::ConstIterator<
+		Byte*, templates::IteratorCategory::FORWARD
+	>;
+	using ConstDataIterator = templates::ConstIterator<
 		const Byte*, templates::IteratorCategory::FORWARD
 	>;
-	using WritebleData = templates::Range<DataIterator>;
+	using WritebleData = templates::Range<ConstDataIterator>;
+	using ReadableData = templates::Range<DataIterator>;
 
 	static constexpr SizeTraits::SizeType BUFFER_SIZE = 1024;
 
 	DefaultAccumulator();
 	~DefaultAccumulator();
+
+	SsizeType push(const WritebleData &data);
+	void flush()
+	{
+	}
+
+	SsizeType pull(ReadableData &data);
+	SsizeType peek(ReadableData &data);
 
 private:
 	templates::Array<Byte, BUFFER_SIZE, false, ContainerTraits<Byte>> buffer;
