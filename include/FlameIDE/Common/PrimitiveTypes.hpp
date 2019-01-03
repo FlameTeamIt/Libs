@@ -7,28 +7,21 @@
 namespace flame_ide
 {
 
-typedef ::ptrdiff_t diff_t;
-typedef diff_t ssize_t;
-
-typedef ::size_t size_t;
-
-typedef char char_t;
-
-typedef ::uint8_t uichar_t;
-typedef ::int8_t ichar_t;
-
-typedef ::uint16_t ushort_t;
-typedef ::int16_t short_t;
-
-typedef ::uint32_t uint_t;
-typedef ::int32_t int_t;
-
-typedef ::uint64_t ulong_t;
-typedef ::int64_t long_t;
-
-typedef float float_t;
-typedef double double_t;
-typedef long double ldouble_t;
+using diff_t     = ::ptrdiff_t ;
+using ssize_t    = diff_t;
+using size_t     = ::size_t;
+using char_t     =  char;
+using uichar_t   = ::uint8_t;
+using ichar_t    = ::int8_t;
+using ushort_t   = ::uint16_t;
+using short_t    = ::int16_t;
+using uint_t     = ::uint32_t;
+using int_t      = ::int32_t;
+using ulong_t    = ::uint64_t;
+using long_t     = ::int64_t;
+using float_t    = float;
+using double_t   = double;
+using ldouble_t  = long double;
 
 }
 
