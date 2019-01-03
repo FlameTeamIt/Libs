@@ -63,6 +63,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/IntegerIterator.hpp \
 	./include/FlameIDE/Templates/Iterator.hpp \
 	./include/FlameIDE/Templates/Iterator/BaseIterator.hpp \
+	./include/FlameIDE/Templates/Iterator/CircularIterator.hpp \
+	./include/FlameIDE/Templates/Iterator/ConstCircularIterator.hpp \
 	./include/FlameIDE/Templates/Iterator/ConstIterator.hpp \
 	./include/FlameIDE/Templates/Iterator/ConstReverseIterator.hpp \
 	./include/FlameIDE/Templates/Iterator/Iterator.hpp \
