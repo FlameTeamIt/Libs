@@ -56,6 +56,7 @@ HEADERS += \
 	./include/FlameIDE/Templates/BitSet.hpp \
 	./include/FlameIDE/Templates/Bits.hpp \
 	./include/FlameIDE/Templates/ByteOrder.hpp \
+	./include/FlameIDE/Templates/CircularArray.hpp \
 	./include/FlameIDE/Templates/CircularVector.hpp \
 	./include/FlameIDE/Templates/HybridVector.hpp \
 	./include/FlameIDE/Templates/InitializerList.hpp \
