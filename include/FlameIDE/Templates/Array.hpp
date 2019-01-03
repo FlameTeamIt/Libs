@@ -33,9 +33,9 @@ namespace flame_ide
 {namespace templates
 {
 
-/**
- * @brief Array
- */
+///
+/// @brief Array
+///
 template <typename T
 	, SizeTraits::SizeType ARRAY_CAPACITY
 	, bool AS_PURE_C_ARRAY = false

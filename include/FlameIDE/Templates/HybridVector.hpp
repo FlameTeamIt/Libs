@@ -21,7 +21,8 @@ enum
 	, VECTOR_INDEX
 };
 
-template<typename T
+template<
+	typename T
 	, SizeTraits::SizeType ARRAY_CAPACITY
 	, typename ArrayTraits = ContainerTraits<T>
 	, typename VectorTraits = ContainerTraits<T>
