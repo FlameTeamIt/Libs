@@ -14,6 +14,7 @@
 #include <FlameIDE/../../src/Templates/Tests/WideInt.hpp>
 #include <FlameIDE/../../src/Templates/Tests/HybridVector.hpp>
 #include <FlameIDE/../../src/Templates/Tests/IntegerIterator.hpp>
+#include <FlameIDE/../../src/Templates/Tests/CircularIterator.hpp>
 
 #include <FlameIDE/../../src/Templates/Tests/TestAggregator.hpp>
 
@@ -43,6 +44,7 @@ TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 	pushBackTest(std::make_shared<test::WideInt>());
 	pushBackTest(std::make_shared<test::HybridVector>());
 	pushBackTest(std::make_shared<test::IntegerIterator>());
+	pushBackTest(std::make_shared<test::CircularIteratorTest>());
 }
 
 }}}

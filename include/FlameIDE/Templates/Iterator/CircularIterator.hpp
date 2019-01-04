@@ -1,10 +1,10 @@
 #ifndef FLAMEIDE_TEMPLATES_ITERATOR_CIRCULARITERATOR_HPP
 #define FLAMEIDE_TEMPLATES_ITERATOR_CIRCULARITERATOR_HPP
 
+#include <FlameIDE/Templates/Range.hpp>
+
 #include <FlameIDE/Templates/Iterator/IteratorTraits.hpp>
 #include <FlameIDE/Templates/Iterator/Iterator.hpp>
-
-#include <FlameIDE/Templates/Range.hpp>
 
 #include <FlameIDE/Templates/Iterator/Operators.hpp>
 
@@ -57,9 +57,10 @@ public:
 
 	FLAMEIDE_ITERATOR_OPERATOR_INC_POSTFIX
 
-	Me &operator++()
-	{}
+	FLAMEIDE_CIRCULARITERATOR_OPERATOR_INC_PREFIX
 
+protected:
+	using Parent::internalData;
 private:
 	mutable Range range;
 };
@@ -69,11 +70,13 @@ template<
 	, typename Traits
 	, typename MetaType
 >
-class CircularIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>:
+class CircularIterator<IteratorType, IteratorCategory::BIDIRECTIONAL
+	, Traits, MetaType>:
 		public Iterator<
 			IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType
 		>
 {
+public:
 	using Parent = Iterator<
 		IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType
 	>;
@@ -94,12 +97,11 @@ class CircularIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, Me
 	FLAMEIDE_ITERATOR_OPERATOR_INC_POSTFIX
 	FLAMEIDE_ITERATOR_OPERATOR_DEC_POSTFIX
 
-	Me &operator++()
-	{}
+	FLAMEIDE_CIRCULARITERATOR_OPERATOR_INC_PREFIX
+	FLAMEIDE_CIRCULARITERATOR_OPERATOR_DEC_PREFIX
 
-	Me &operator--()
-	{}
-
+protected:
+	using Parent::internalData;
 private:
 	mutable Range range;
 };
@@ -109,11 +111,13 @@ template<
 	, typename Traits
 	, typename MetaType
 >
-class CircularIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>:
+class CircularIterator<IteratorType, IteratorCategory::RANDOM_ACCESS
+	, Traits, MetaType>:
 		public Iterator<
 			IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType
 		>
 {
+public:
 	using Parent = Iterator<
 		IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType
 	>;
@@ -131,26 +135,19 @@ class CircularIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	~CircularIterator() = default;
 	Me& operator=(const Me &) = default;
 
+	FLAMEIDE_CIRCULARITERATOR_OPERATOR_INC_PREFIX
 	FLAMEIDE_ITERATOR_OPERATOR_INC_POSTFIX
+	FLAMEIDE_CIRCULARITERATOR_OPERATOR_DEC_PREFIX
 	FLAMEIDE_ITERATOR_OPERATOR_DEC_POSTFIX
-
 	FLAMEIDE_ITERATOR_OPERATOR_PLUS
 	FLAMEIDE_ITERATOR_OPERATOR_MINUS
+	FLAMEIDE_CIRCULARITERATOR_OPERATOR_PLUS_ASSIGN
+	FLAMEIDE_CIRCULARITERATOR_OPERATOR_MINUS_ASSIGN
+	FLAMEIDE_CIRCULARITERATOR_OPERATOR_OFFSET_DEREF
+	FLAMEIDE_CIRCULARITERATOR_OPERATOR_OFFSET_DEREF_CONST
 
-	Me &operator++()
-	{}
-
-	Me &operator--()
-	{}
-
-	template<typename IntType>
-	Me &operator+=(IntType value)
-	{}
-
-	template<typename IntType>
-	Me &operator-=(IntType value)
-	{}
-
+protected:
+	using Parent::internalData;
 private:
 	mutable Range range;
 };

@@ -97,6 +97,7 @@ HEADERS += \
 	./src/Templates/Tests/Array.hpp \
 	./src/Templates/Tests/Bits.hpp \
 	./src/Templates/Tests/ByteOrder.hpp \
+	./src/Templates/Tests/CircularIterator.hpp \
 	./src/Templates/Tests/CircularVector.hpp \
 	./src/Templates/Tests/HybridVector.hpp \
 	./src/Templates/Tests/IntegerIterator.hpp \
@@ -132,6 +133,7 @@ SOURCES += \
 	./src/Templates/Tests/Array.cpp \
 	./src/Templates/Tests/Bits.cpp \
 	./src/Templates/Tests/ByteOrder.cpp \
+	./src/Templates/Tests/CircularIterator.cpp \
 	./src/Templates/Tests/CircularVector.cpp \
 	./src/Templates/Tests/HybridVector.cpp \
 	./src/Templates/Tests/IntegerIterator.cpp \

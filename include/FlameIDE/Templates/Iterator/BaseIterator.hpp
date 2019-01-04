@@ -34,6 +34,9 @@ public:
 	using PointerToConst = typename Traits::PointerToConst;
 	using SsizeType = typename Traits::SsizeType;
 
+	static constexpr IteratorCategory CATEGORY = ITERATOR_CATEGORY;
+	static constexpr IteratorAccess ACCESS = ITERATOR_ACCESS;
+
 	BaseIterator() = default;
 	BaseIterator(const Me &) = default;
 	~BaseIterator() = default;
@@ -58,9 +61,6 @@ public:
 	{
 		return wrappedIterator;
 	}
-
-	static constexpr IteratorCategory CATEGORY = ITERATOR_CATEGORY;
-	static constexpr IteratorAccess ACCESS = ITERATOR_ACCESS;
 
 protected:
 	using WrappedIterator = IteratorType;
