@@ -67,10 +67,10 @@ public:
 		PointerToConst, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	>;
 	using ReverseIterator = flame_ide::templates::ReverseIterator<
-		Iterator
+		Iterator, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	>;
 	using ConstReverseIterator = flame_ide::templates::ConstReverseIterator<
-		ConstIterator
+		ConstIterator, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	>;
 
 	/**
@@ -83,32 +83,32 @@ public:
 	 * @param array
 	 */
 	TEMPLATE_DEFINE_1
-	Array(const ARRAY_TYPE_1 &objects);
+	Array(const ARRAY_TYPE_1 &objects) noexcept;
 
 	/**
 	 * @brief Array
 	 * @param objects
 	 */
-	Array(const Me &objects);
+	Array(const Me &objects) noexcept;
 
 	/**
 	 * @brief Array
 	 * @param array
 	 */
 	TEMPLATE_DEFINE_1
-	Array(ARRAY_TYPE_1 &&objects);
+	Array(ARRAY_TYPE_1 &&objects) noexcept;
 
 	/**
 	 * @brief Array
 	 * @param objects
 	 */
-	Array(Me &&objects);
+	Array(Me &&objects) noexcept;
 
 	/**
 	 * @brief Array
 	 * @param args
 	 */
-	Array(InitializerList<T, ARRAY_CAPACITY> list);
+	Array(InitializerList<T, ARRAY_CAPACITY> list) noexcept;
 
 	~Array();
 
@@ -118,14 +118,14 @@ public:
 	 * @return
 	 */
 	TEMPLATE_DEFINE_1
-	Me &operator=(const ARRAY_TYPE_1 &objects);
+	Me &operator=(const ARRAY_TYPE_1 &objects) noexcept;
 
 	/**
 	 * @brief operator =
 	 * @param objects
 	 * @return
 	 */
-	Me &operator=(const Me &objects);
+	Me &operator=(const Me &objects) noexcept;
 
 	/**
 	 * @brief operator =
@@ -133,21 +133,21 @@ public:
 	 * @return
 	 */
 	TEMPLATE_DEFINE_1
-	Me &operator=(ARRAY_TYPE_1 &&objects);
+	Me &operator=(ARRAY_TYPE_1 &&objects) noexcept;
 
 	/**
 	 * @brief operator =
 	 * @param objects
 	 * @return
 	 */
-	Me &operator=(Me &&objects);
+	Me &operator=(Me &&objects) noexcept;
 
 	/**
 	 * @brief operator ==
 	 * @param array
 	 * @return
 	 */
-	bool operator==(const Me &array) const;
+	bool operator==(const Me &array) const noexcept;
 
 	/**
 	 * @brief operator !=
@@ -410,6 +410,13 @@ private:
 	Pointer tail;
 };
 
+template <
+	typename T
+	, SizeTraits::SizeType ARRAY_CAPACITY
+	, typename Traits = ContainerTraits<T>
+>
+using StaticVector = Array<T, ARRAY_CAPACITY, true, Traits>;
+
 }}
 
 namespace flame_ide
@@ -423,7 +430,7 @@ ARRAY_TYPE::Array()
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
-ARRAY_TYPE::Array(const ARRAY_TYPE_1 &array)
+ARRAY_TYPE::Array(const ARRAY_TYPE_1 &array) noexcept
 {
 	tail = head();
 	if (array.size() <= capacity())
@@ -432,7 +439,7 @@ ARRAY_TYPE::Array(const ARRAY_TYPE_1 &array)
 }
 
 TEMPLATE_DEFINE
-ARRAY_TYPE::Array(const ARRAY_TYPE &array)
+ARRAY_TYPE::Array(const ARRAY_TYPE &array) noexcept
 {
 	tail = head();
 	for (ConstReference &i : array)
@@ -440,7 +447,7 @@ ARRAY_TYPE::Array(const ARRAY_TYPE &array)
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
-ARRAY_TYPE::Array(ARRAY_TYPE_1 &&array)
+ARRAY_TYPE::Array(ARRAY_TYPE_1 &&array) noexcept
 {
 	tail = head();
 	if (array.size() <= capacity())
@@ -449,7 +456,7 @@ ARRAY_TYPE::Array(ARRAY_TYPE_1 &&array)
 }
 
 TEMPLATE_DEFINE
-ARRAY_TYPE::Array(ARRAY_TYPE &&array)
+ARRAY_TYPE::Array(ARRAY_TYPE &&array) noexcept
 {
 	tail = head();
 	for (auto &&i : array)
@@ -457,7 +464,7 @@ ARRAY_TYPE::Array(ARRAY_TYPE &&array)
 }
 
 TEMPLATE_DEFINE
-ARRAY_TYPE::Array(InitializerList<T, ARRAY_CAPACITY> list)
+ARRAY_TYPE::Array(InitializerList<T, ARRAY_CAPACITY> list) noexcept
 {
 	tail = head();
 	for (auto it : list)
@@ -472,7 +479,7 @@ ARRAY_TYPE::~Array()
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
-ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE_1 &array)
+ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE_1 &array) noexcept
 {
 	if (array.size() > capacity())
 		return *this;
@@ -484,7 +491,7 @@ ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE_1 &array)
 }
 
 TEMPLATE_DEFINE
-ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE &array)
+ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE &array) noexcept
 {
 	if (&array != this)
 	{
@@ -496,7 +503,7 @@ ARRAY_TYPE &ARRAY_TYPE::operator=(const ARRAY_TYPE &array)
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
-ARRAY_TYPE &ARRAY_TYPE::operator=(ARRAY_TYPE_1 &&array)
+ARRAY_TYPE &ARRAY_TYPE::operator=(ARRAY_TYPE_1 &&array) noexcept
 {
 	if (array.size() > capacity())
 		return *this;
@@ -508,7 +515,7 @@ ARRAY_TYPE &ARRAY_TYPE::operator=(ARRAY_TYPE_1 &&array)
 }
 
 TEMPLATE_DEFINE
-ARRAY_TYPE &ARRAY_TYPE::operator=(ARRAY_TYPE &&array)
+ARRAY_TYPE &ARRAY_TYPE::operator=(ARRAY_TYPE &&array) noexcept
 {
 	if (&array != this)
 	{
@@ -520,7 +527,7 @@ ARRAY_TYPE &ARRAY_TYPE::operator=(ARRAY_TYPE &&array)
 }
 
 TEMPLATE_DEFINE
-bool ARRAY_TYPE::operator==(const ARRAY_TYPE &array) const
+bool ARRAY_TYPE::operator==(const ARRAY_TYPE &array) const noexcept
 {
 	if (&array != this)
 	{
@@ -802,7 +809,9 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 	if (size() < capacity())
 	{
 		if (it == end())
+		{
 			pushBack(move(object));
+		}
 		else
 		{
 			placementNew<Type>(tail);
@@ -826,13 +835,19 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 {
 	auto rangeSize = countIterations(itBegin, itEnd);
 	if (!rangeSize)
+	{
 		return;
+	}
 	else if (rangeSize + size() <= capacity())
 	{
 		Range<InputIterator> range(itBegin, itEnd);
 		if (it == end())
+		{
 			for (Reference itInsert : range)
+			{
 				pushBack(itInsert);
+			}
+		}
 		else
 		{
 			Range<Iterator> initRange(end(), end() + rangeSize);
@@ -840,10 +855,15 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 				emplaceNew<Type>(&it);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
-					, rangeNew(rangeOld.begin() - rangeSize, rangeOld.end() - rangeSize);
+					, rangeNew(
+							rangeOld.begin() - rangeSize
+							, rangeOld.end() - rangeSize
+					);
 			for (ReverseIterator itOld = rangeOld.begin(), itNew = rangeNew.begin();
 					itOld != rangeOld.end(); ++itOld, ++itNew)
+			{
 				*itNew = move(*itOld);
+			}
 
 			for (auto &itInsert : range)
 			{
@@ -1215,7 +1235,11 @@ private:
 	Type objects[CAPACITY];
 };
 
-template <typename T, SizeTraits::SizeType ARRAY_CAPACITY, typename Traits = ContainerTraits<T>>
+template <
+	typename T
+	, SizeTraits::SizeType ARRAY_CAPACITY
+	, typename Traits = ContainerTraits<T>
+>
 using StaticArray = ARRAY_TYPE;
 
 }}
