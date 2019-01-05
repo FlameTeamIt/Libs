@@ -27,11 +27,7 @@ namespace flame_ide
 {namespace templates
 {
 
-template<
-	typename IteratorType
-	, typename Traits
-	, typename MetaType
->
+template<typename IteratorType, typename Traits, typename MetaType>
 class CircularIterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>:
 		public Iterator<
 			IteratorType, IteratorCategory::FORWARD, Traits, MetaType
@@ -65,11 +61,7 @@ private:
 	mutable Range range;
 };
 
-template<
-	typename IteratorType
-	, typename Traits
-	, typename MetaType
->
+template<typename IteratorType, typename Traits, typename MetaType>
 class CircularIterator<IteratorType, IteratorCategory::BIDIRECTIONAL
 	, Traits, MetaType>:
 		public Iterator<
@@ -106,11 +98,7 @@ private:
 	mutable Range range;
 };
 
-template<
-	typename IteratorType
-	, typename Traits
-	, typename MetaType
->
+template<typename IteratorType, typename Traits, typename MetaType>
 class CircularIterator<IteratorType, IteratorCategory::RANDOM_ACCESS
 	, Traits, MetaType>:
 		public Iterator<
