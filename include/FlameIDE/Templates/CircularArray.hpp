@@ -102,43 +102,126 @@ public:
 	///
 	void clean() noexcept;
 
+	///
+	/// @brief pushBack
+	/// @param obj
+	///
 	void pushBack(ConstReference obj) noexcept;
 
+	///
+	/// @brief pushBack
+	/// @param obj
+	///
 	void pushBack(MoveReference obj) noexcept;
 
+	///
+	/// @brief pushBack
+	/// @param range
+	///
 	template<typename InputIterator>
 	void pushBack(const Range<InputIterator> &range) noexcept;
 
 	template<typename InputIterator>
+	///
+	/// @brief pushBack
+	/// @param range
+	///
 	void pushBack(Range<InputIterator> &&range) noexcept;
 
+	///
+	/// @brief emplaceBack
+	/// @param args
+	///
 	template<typename ...Args>
 	void emplaceBack(Args &&...args) noexcept;
 
+	///
+	/// @brief popFront
+	///
 	void popFront() noexcept;
 
+	///
+	/// @brief begin
+	/// @return
+	///
 	Iterator begin() noexcept;
+
+	///
+	/// @brief begin
+	/// @return
+	///
 	ConstIterator begin() const noexcept;
+
+	///
+	/// @brief cbegin
+	/// @return
+	///
 	ConstIterator cbegin() const noexcept;
 
+	///
+	/// @brief rbegin
+	/// @return
+	///
 	ReverseIterator rbegin() noexcept;
+
+	///
+	/// @brief rbegin
+	/// @return
+	///
 	ConstReverseIterator rbegin() const noexcept;
+
+	///
+	/// @brief crbegin
+	/// @return
+	///
 	ConstReverseIterator crbegin() const noexcept;
 
+	///
+	/// @brief end
+	/// @return
+	///
 	Iterator end() noexcept;
+
+	///
+	/// @brief end
+	/// @return
+	///
 	ConstIterator end() const noexcept;
+
+	///
+	/// @brief cend
+	/// @return
+	///
 	ConstIterator cend() const noexcept;
 
+	///
+	/// @brief rend
+	/// @return
+	///
 	ReverseIterator rend() noexcept;
+
+	///
+	/// @brief rend
+	/// @return
+	///
 	ConstReverseIterator rend() const noexcept;
+
+	///
+	/// @brief crend
+	/// @return
+	///
 	ConstReverseIterator crend() const noexcept;
 
 private:
+	///
+	/// @brief updateTerminal
+	/// @param terminal
+	///
 	void updateTerminal(typename BufferType::Iterator &terminal) noexcept;
 
-	BufferType buffer;
-	typename BufferType::Iterator head;
-	typename BufferType::Iterator tail;
+	BufferType buffer; ///<
+	typename BufferType::Iterator head; ///<
+	typename BufferType::Iterator tail; ///<
 };
 
 }}
