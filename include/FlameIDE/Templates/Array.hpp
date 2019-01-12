@@ -603,7 +603,7 @@ ARRAY_TYPE &ARRAY_TYPE::operator-=(ARRAY_TYPE::Iterator it)
 TEMPLATE_DEFINE
 ARRAY_TYPE &ARRAY_TYPE::operator-=(ARRAY_TYPE::ReverseIterator it)
 {
-	return operator-=(Iterator(&(*it)));
+	return operator-=(Iterator(getPointer(it)));
 }
 
 TEMPLATE_DEFINE
@@ -617,7 +617,7 @@ TEMPLATE_DEFINE
 ARRAY_TYPE &ARRAY_TYPE::operator-=(Range<ARRAY_TYPE::ReverseIterator> range)
 {
 	Range<ARRAY_TYPE::Iterator> forwardRange = {
-			&(*(--range.end())), &(*(--range.begin()))
+			getPointer(--range.end()), getPointer(--range.begin())
 	};
 	return operator-=(forwardRange);
 }
@@ -894,7 +894,7 @@ void ARRAY_TYPE::emplace(typename ARRAY_TYPE::Iterator it, Args &&...args)
 				*itNew = move(*itOld);
 
 			it->~T();
-			emplaceNew<Type>(&(*it), forward<decltype(args)>(args)...);
+			emplaceNew<Type>(getPointer(it), forward<decltype(args)>(args)...);
 			++tail;
 		}
 	}

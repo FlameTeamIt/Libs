@@ -858,7 +858,7 @@ void VECTOR_TYPE::emplace(typename VECTOR_TYPE::Iterator it, Args &&...args)
 					++itOld, ++itNew)
 				*itNew = move(*itOld);
 
-			placementNew<Type>(&(*it), forward<decltype(args)>(args)...);
+			placementNew<Type>(getPointer(it), forward<decltype(args)>(args)...);
 			++tail;
 		}
 	}

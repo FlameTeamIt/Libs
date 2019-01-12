@@ -69,7 +69,7 @@ typename Parent::Reference operator*() noexcept                               \
 #define FLAMEIDE_ITERATOR_OPERATOR_ARROW                                      \
 typename Parent::Pointer operator->() noexcept                                \
 {                                                                             \
-   return &(*(this->wrappedIterator));                                        \
+   return getPointer(this->wrappedIterator);                                  \
 }
 
 #define FLAMEIDE_ITERATOR_OPERATOR_DEREF_CONST                                \
@@ -81,7 +81,7 @@ typename Parent::ConstReference operator*() const noexcept                    \
 #define FLAMEIDE_ITERATOR_OPERATOR_ARROW_CONST                                \
 typename Parent::PointerToConst operator->() const noexcept                   \
 {                                                                             \
-   return &(*(this->wrappedIterator));                                        \
+   return getPointer(this->wrappedIterator);                                  \
 }
 
 #define FLAMEIDE_ITERATOR_OPERATOR_PLUS                                       \
