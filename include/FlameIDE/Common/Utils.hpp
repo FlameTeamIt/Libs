@@ -181,6 +181,12 @@ template <class F, class T>
 struct IsStaticCastable<F, T, decltype(static_cast<T>(declareValue<F>()))>: public TrueType
 {};
 
+template<typename Iterator> inline
+auto getPointer(Iterator iterator) noexcept
+{
+	return &(*iterator);
+}
+
 }
 
 template<typename T>
