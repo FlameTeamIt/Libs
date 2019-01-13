@@ -30,8 +30,8 @@ HEADERS += \
 	./include/FlameIDE/Common/Macroses.hpp \
 	./include/FlameIDE/Common/PrimitiveTypes.hpp \
 	./include/FlameIDE/Common/Traits.hpp \
+	./include/FlameIDE/Common/Traits/ContainerTraits.hpp \
 	./include/FlameIDE/Common/Traits/CreationProhibitions.hpp \
-	./include/FlameIDE/Common/Traits/CustomTraits.hpp \
 	./include/FlameIDE/Common/Traits/Defaults.hpp \
 	./include/FlameIDE/Common/Traits/Fuctional.hpp \
 	./include/FlameIDE/Common/Traits/Numbers.hpp \

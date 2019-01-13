@@ -2,7 +2,7 @@
 #define FLAMEIDE_TEMPLATES_OBJECTVIEWER_HPP
 
 #include <FlameIDE/Common/Utils.hpp>
-#include <FlameIDE/Common/Traits/CustomTraits.hpp>
+#include <FlameIDE/Common/Traits/ContainerTraits.hpp>
 
 namespace flame_ide
 {namespace templates
