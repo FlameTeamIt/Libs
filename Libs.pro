@@ -93,26 +93,26 @@ HEADERS += \
 	./include/FlameIDE/Templates/WideInt.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
-	./src/Templates/Tests/Allocator.hpp \
-	./src/Templates/Tests/Array.hpp \
-	./src/Templates/Tests/Bits.hpp \
-	./src/Templates/Tests/ByteOrder.hpp \
+	./src/Templates/Tests/AllocatorTest.hpp \
+	./src/Templates/Tests/ArrayTest.hpp \
+	./src/Templates/Tests/BitsTest.hpp \
+	./src/Templates/Tests/ByteOrderTest.hpp \
 	./src/Templates/Tests/CircularArrayTest.hpp \
-	./src/Templates/Tests/CircularIterator.hpp \
-	./src/Templates/Tests/CircularVector.hpp \
-	./src/Templates/Tests/HybridVector.hpp \
-	./src/Templates/Tests/IntegerIterator.hpp \
-	./src/Templates/Tests/List.hpp \
-	./src/Templates/Tests/Serialization.hpp \
-	./src/Templates/Tests/SharedPointer.hpp \
-	./src/Templates/Tests/String.hpp \
+	./src/Templates/Tests/CircularIteratorTest.hpp \
+	./src/Templates/Tests/CircularVectorTest.hpp \
+	./src/Templates/Tests/HybridVectorTest.hpp \
+	./src/Templates/Tests/IntegerIteratorTest.hpp \
+	./src/Templates/Tests/ListTest.hpp \
+	./src/Templates/Tests/SerializationTest.hpp \
+	./src/Templates/Tests/SharedPointerTest.hpp \
+	./src/Templates/Tests/StringTest.hpp \
 	./src/Templates/Tests/TestAggregator.hpp \
 	./src/Templates/Tests/TestClass.hpp \
-	./src/Templates/Tests/Tuple.hpp \
-	./src/Templates/Tests/UniquePoiter.hpp \
-	./src/Templates/Tests/Variant.hpp \
-	./src/Templates/Tests/Vector.hpp \
-	./src/Templates/Tests/WideInt.hpp \
+	./src/Templates/Tests/TupleTest.hpp \
+	./src/Templates/Tests/UniquePoiterTest.hpp \
+	./src/Templates/Tests/VariantTest.hpp \
+	./src/Templates/Tests/VectorTest.hpp \
+	./src/Templates/Tests/WideIntTest.hpp \
 	./tests/Test.hpp
 
 # sources
@@ -130,25 +130,25 @@ SOURCES += \
 	./src/Process/CommandLine.cpp \
 	./src/Streams/DefaultAccumulator.cpp \
 	./src/Streams/StreamBase.cpp \
-	./src/Templates/Tests/Allocator.cpp \
-	./src/Templates/Tests/Array.cpp \
-	./src/Templates/Tests/Bits.cpp \
-	./src/Templates/Tests/ByteOrder.cpp \
+	./src/Templates/Tests/AllocatorTest.cpp \
+	./src/Templates/Tests/ArrayTest.cpp \
+	./src/Templates/Tests/BitsTest.cpp \
+	./src/Templates/Tests/ByteOrderTest.cpp \
 	./src/Templates/Tests/CircularArrayTest.cpp \
-	./src/Templates/Tests/CircularIterator.cpp \
-	./src/Templates/Tests/CircularVector.cpp \
-	./src/Templates/Tests/HybridVector.cpp \
-	./src/Templates/Tests/IntegerIterator.cpp \
-	./src/Templates/Tests/List.cpp \
-	./src/Templates/Tests/Serialization.cpp \
-	./src/Templates/Tests/SharedPointer.cpp \
-	./src/Templates/Tests/String.cpp \
+	./src/Templates/Tests/CircularIteratorTest.cpp \
+	./src/Templates/Tests/CircularVectorTest.cpp \
+	./src/Templates/Tests/HybridVectorTest.cpp \
+	./src/Templates/Tests/IntegerIteratorTest.cpp \
+	./src/Templates/Tests/ListTest.cpp \
+	./src/Templates/Tests/SerializationTest.cpp \
+	./src/Templates/Tests/SharedPointerTest.cpp \
+	./src/Templates/Tests/StringTest.cpp \
 	./src/Templates/Tests/TestAggregator.cpp \
 	./src/Templates/Tests/TestClass.cpp \
-	./src/Templates/Tests/Tuple.cpp \
-	./src/Templates/Tests/UniquePoiter.cpp \
-	./src/Templates/Tests/Variant.cpp \
-	./src/Templates/Tests/Vector.cpp \
-	./src/Templates/Tests/WideInt.cpp \
+	./src/Templates/Tests/TupleTest.cpp \
+	./src/Templates/Tests/UniquePoiterTest.cpp \
+	./src/Templates/Tests/VariantTest.cpp \
+	./src/Templates/Tests/VectorTest.cpp \
+	./src/Templates/Tests/WideIntTest.cpp \
 	./tests/main.cpp
 
