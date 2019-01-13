@@ -1,5 +1,5 @@
-#ifndef FLAMEIDE_COMMON_TRAITS_CUSTOMTRAITS_HPP
-#define FLAMEIDE_COMMON_TRAITS_CUSTOMTRAITS_HPP
+#ifndef FLAMEIDE_COMMON_TRAITS_CONTAINERTRAITS_HPP
+#define FLAMEIDE_COMMON_TRAITS_CONTAINERTRAITS_HPP
 
 #include <FlameIDE/Common/Traits/Numbers.hpp>
 #include <FlameIDE/Common/Byte.hpp>
@@ -53,4 +53,4 @@ struct SerializationTraits<true>
 
 }
 
-#endif // CUSTOMTRAITS_HPP
+#endif // CONTAINERTRAITS_HPP
