@@ -77,6 +77,26 @@ int CircularIteratorTest::vStart()
 	std::cout << it[1] << std::endl;
 	std::cout << it[9] << std::endl;
 
+	using ReverseCircularIterator = templates::ReverseIterator<CircularIterator>;
+	auto reverseRange = templates::makeRange(
+		ReverseCircularIterator(
+				CircularIterator(
+					--array.end(), templates::makeRange(--array.begin(), array.end())
+				)
+		)
+		, ReverseCircularIterator(
+				CircularIterator(
+					--array.begin(), templates::makeRange(--array.begin(), array.end())
+				)
+		)
+	);
+
+	std::cout << std::endl;
+	for (auto i : reverseRange)
+	{
+		std::cout << i << std::endl;
+	}
+
 	return 0;
 }
 

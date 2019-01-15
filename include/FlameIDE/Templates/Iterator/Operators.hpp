@@ -489,7 +489,7 @@ Me &operator--() noexcept                                                     \
 {                                                                             \
 	auto &wrappedIt = internalData();                                         \
 	--wrappedIt;                                                              \
-	if (wrappedIt == range.begin())                                           \
+	if (wrappedIt == --range.begin())                                         \
 	{                                                                         \
 		wrappedIt = --range.end();                                            \
 	}                                                                         \
