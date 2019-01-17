@@ -5,7 +5,7 @@
 #include <FlameIDE/Common/Traits.hpp>
 #include <FlameIDE/Common/Byte.hpp>
 #include <FlameIDE/Templates/Range.hpp>
-#include <FlameIDE/Templates/Iterator.hpp>
+#include <FlameIDE/Templates/CircularArray.hpp>
 
 namespace flame_ide
 {namespace streams
@@ -14,79 +14,81 @@ namespace flame_ide
 namespace stream_utils
 {
 
-template<typename IteratorType>
-constexpr void checkIterator(IteratorType)
-{
-	using namespace templates::iterator_utils;
-	using templates::IteratorAccess;
-	using templates::IteratorCategory;
-	static_assert (
-		GetIteratorInfo<IteratorType>::CATEGORY >= IteratorCategory::FORWARD
-		, "Invalid iterator type"
-	);
-}
+constexpr SizeTraits::SizeType DEFAULT_CIRCULAR_BUFFER_SIZE = 1023;
 
-
-}
-
-template<typename Accumulator, typename Traits = SizeTraits>
-class StreamOutputBase
+class AbstractByteStream
 {
 public:
-	using SizeType = typename Traits::SizeType;
-	using SsizeType = typename Traits::SsizeType;
-	using Byte = typename Traits::ByteType;
-	using DataIterator = templates::ConstIterator<
-		const Byte*, templates::IteratorCategory::FORWARD
-	>;
-	using WritebleData = templates::Range<DataIterator>;
+	using Byte = byte_t;
+	using InputByteRange = templates::Range<const Byte *>;
+	using OutputByteRange = templates::Range<Byte *>;
+	using SsizeType = SizeTraits::SsizeType;
 
-	StreamOutputBase() = default;
-	StreamOutputBase(const StreamOutputBase &stream) = default;
-	StreamOutputBase(StreamOutputBase &&stream) = default;
-	StreamOutputBase(const Accumulator &accum);
-	StreamOutputBase(Accumulator &&accum);
-	~StreamOutputBase() = default;
-	StreamOutputBase &operator=(const StreamOutputBase &stream) = default;
-	StreamOutputBase &operator=(StreamOutputBase &&stream) = default;
+	virtual ~AbstractByteStream() = default;
 
-	SsizeType write(const WritebleData &data) noexcept;
-
-protected:
-	Accumulator &getOutputDataAccumulator();
-
-private:
-	Accumulator accum;
+	virtual SizeTraits::SsizeType write(InputByteRange range) = 0;
+	virtual SizeTraits::SsizeType read(OutputByteRange range) = 0;
 };
 
-template<typename Accumulator, typename Traits = SizeTraits>
-class StreamInputBase
+using DefaultCircularByteBuffer = templates::CircularArray<
+	byte_t, DEFAULT_CIRCULAR_BUFFER_SIZE
+>;
+
+}
+
+template<typename CircularByteBuffer, typename RealByteStream>
+class Reader
 {
 public:
-	using SizeType = typename Traits::SizeType;
-	using SsizeType = typename Traits::SsizeType;
-	using Byte = typename Traits::ByteType;
-	using DataIterator = templates::ConstIterator<
-		const Byte*, templates::IteratorCategory::FORWARD
-	>;
-	using RidableData = templates::Range<DataIterator>;
+	using OutputByteRange = stream_utils::AbstractByteStream::OutputByteRange;
+	using SsizeType = stream_utils::AbstractByteStream::SsizeType;
 
-	StreamInputBase() = default;
-	StreamInputBase(const StreamInputBase &stream) = default;
-	StreamInputBase(StreamInputBase &&stream) = default;
-	StreamInputBase(const Accumulator &initAccum);
-	StreamInputBase(Accumulator &&initAccum);
-	~StreamInputBase() = default;
-	StreamInputBase &operator=(const StreamInputBase &stream) = default;
-	StreamInputBase &operator=(StreamInputBase &&stream) = default;
+	///
+	/// @brief Getting data without popping.
+	/// @param range
+	/// @return
+	///
+	SsizeType seeData(OutputByteRange &range) noexcept;
 
-	SsizeType read(RidableData &data) noexcept;
+	///
+	/// @brief Getting data with popping.
+	/// @param range
+	/// @return
+	///
+	SsizeType readData(OutputByteRange &range) noexcept;
+
+	///
+	/// @brief empty
+	/// @return
+	///
+	bool empty() const noexcept;
 
 protected:
-	Accumulator &getInputDataAccumulator();
+	CircularByteBuffer buffer;
+};
 
-private:
-	Accumulator accum;
+template<typename CircularByteBuffer, typename RealByteStream>
+class Writer
+{
+public:
+	using InputByteRange = stream_utils::AbstractByteStream::InputByteRange;
+	using SsizeType = stream_utils::AbstractByteStream::SsizeType;
+
+	///
+	/// @brief putData
+	/// @param range
+	/// @return
+	///
+	SsizeType putData(const InputByteRange &range) noexcept;
+
+	///
+	/// @brief flush
+	/// @return
+	///
+	bool flush() noexcept;
+
+protected:
+	CircularByteBuffer buffer;
 };
 
 }}

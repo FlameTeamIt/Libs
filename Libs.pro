@@ -43,7 +43,6 @@ HEADERS += \
 	./include/FlameIDE/Filesystem/Session.hpp \
 	./include/FlameIDE/Others/TextStyle.hpp \
 	./include/FlameIDE/Process/CommandLine.hpp \
-	./include/FlameIDE/Streams/DefaultAccumulator.hpp \
 	./include/FlameIDE/Streams/StreamBase.hpp \
 	./include/FlameIDE/Templates/AlignObject.hpp \
 	./include/FlameIDE/Templates/Allocator.hpp \
