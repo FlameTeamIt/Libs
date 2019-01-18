@@ -162,5 +162,13 @@ void TestClass::clean()
 		ObjectAllocator<char>().destroy(c);
 		c = nullptr;
 	}
+}
 
+std::iostream &operator<<(std::iostream &cout, const TestClass &obj)
+{
+	cout << "{ long(" << obj.getLong() << "),"
+			" int(" << obj.getInt() << "),"
+			" short(" << obj.getShort() << ")"
+			" char('" << obj.getChar() << ") }";
+	return cout;
 }
