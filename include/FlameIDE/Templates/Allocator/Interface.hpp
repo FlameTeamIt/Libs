@@ -15,20 +15,20 @@ namespace flame_ide
 /// @tparam Traits
 /// View flame_ide::templates::ContainerTraits
 ///
-template<typename Traits = flame_ide::SizeTraits>
+template<typename SizeTraits = flame_ide::SizeTraits>
 class BaseAllocator
 {
 public:
-	using SizeType = typename Traits::SizeType;
-	using SsizeType = typename Traits::SsizeType;
+	using SizeType = typename SizeTraits::SizeType;
+	using SsizeType = typename SizeTraits::SsizeType;
 	using VoidPointer = void *;
 
-	BaseAllocator() = default;
-	BaseAllocator(const BaseAllocator &) = default;
-	BaseAllocator(BaseAllocator &&) = default;
-	~BaseAllocator() = default;
-	BaseAllocator &operator=(const BaseAllocator &) = default;
-	BaseAllocator &operator=(BaseAllocator &&) = default;
+	BaseAllocator() noexcept = default;
+	BaseAllocator(const BaseAllocator &) noexcept = default;
+	BaseAllocator(BaseAllocator &&) noexcept = default;
+	~BaseAllocator() noexcept = default;
+	BaseAllocator &operator=(const BaseAllocator &) noexcept = default;
+	BaseAllocator &operator=(BaseAllocator &&) noexcept = default;
 
 	///
 	/// @brief Non-virtual interface for allocation
