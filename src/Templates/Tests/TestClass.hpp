@@ -1,6 +1,8 @@
 #ifndef FLAMEIDE_TEMPLATES_TESTS_TESTCLASS_HPP
 #define FLAMEIDE_TEMPLATES_TESTS_TESTCLASS_HPP
 
+#include <iostream>
+
 class TestClass
 {
 public:
@@ -37,6 +39,8 @@ public:
 	char &getChar();
 	const char &getChar() const;
 
+	friend std::iostream &operator<<(std::iostream &cout, const TestClass &obj);
+
 private:
 	void clean();
 
@@ -45,5 +49,6 @@ private:
 	short *s;
 	char *c;
 };
+std::iostream &operator<<(std::iostream &cout, const TestClass &obj);
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_TESTCLASS_HPP
