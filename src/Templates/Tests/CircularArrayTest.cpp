@@ -29,25 +29,23 @@ int CircularArrayTest::vStart()
 			, templates::SizeTypeIterator(10));
 	for (auto i : range)
 	{
-		std::cout << i << std::endl;
+		(void)i;
 		TestClass tmp = testObject;
 		auto itBegin = circularArray.begin();
 		auto itEnd = circularArray.end();
-
-		auto pointerBegin = flame_ide::getPointer(itBegin);
-		auto pointerEnd = flame_ide::getPointer(itEnd);
 
 		if (itBegin != itEnd)
 		{
 			return -1;
 		}
 		circularArray.pushBack(move(tmp));
-		log << "circularArray.size() = " << circularArray.size() << std::endl;
+		if (circularArray.size() != 1)
+		{
+			return -1;
+		}
+
 		itBegin = circularArray.begin();
 		itEnd = circularArray.end();
-
-		pointerBegin = flame_ide::getPointer(itBegin);
-		pointerEnd = flame_ide::getPointer(itEnd);
 
 		if (itBegin == itEnd)
 		{
@@ -56,22 +54,24 @@ int CircularArrayTest::vStart()
 		for (auto it = circularArray.begin(); it != circularArray.end(); ++it)
 		{
 			TestClass &obj = *it;
-			log << "{ long(" << obj.getLong() << "),"
-					" int(" << obj.getInt() << "),"
-					" short(" << obj.getShort() << ")"
-					" char('" << obj.getChar() << ") }"
-					<< std::endl;
+			if (obj != testObject)
+			{
+				return -1;
+			}
 		}
 
 		circularArray.popFront();
-		log << "circularArray.size() = " << circularArray.size() << '\n' << std::endl;
+		if (circularArray.size() != 0)
+		{
+			return -1;
+		}
 	}
 
 	circularArray.clean();
 
 	for (auto i : range)
 	{
-		std::cout << i << std::endl;
+		(void)i;
 		TestClass tmp = testObject;
 		auto itBegin = circularArray.begin();
 		auto itEnd = circularArray.end();
@@ -80,7 +80,10 @@ int CircularArrayTest::vStart()
 			return -1;
 		}
 		circularArray.pushBack(move(tmp));
-		log << "circularArray.size() = " << circularArray.size() << std::endl;
+		if (circularArray.size() != 1)
+		{
+			return -1;
+		}
 		itBegin = circularArray.begin();
 		itEnd = circularArray.end();
 		if (itBegin == itEnd)
@@ -90,24 +93,29 @@ int CircularArrayTest::vStart()
 		for (auto it = circularArray.begin(); it != circularArray.end(); ++it)
 		{
 			TestClass &obj = *it;
-			log << "{ long(" << obj.getLong() << "),"
-					" int(" << obj.getInt() << "),"
-					" short(" << obj.getShort() << ")"
-					" char('" << obj.getChar() << ") }"
-					<< std::endl;
+			if (obj != testObject)
+			{
+				return -1;
+			}
 		}
 
 		circularArray.popFront();
-		log << "circularArray.size() = " << circularArray.size() << '\n' << std::endl;
+		if (circularArray.size() != 0)
+		{
+			return -1;
+		}
 	}
 
 	circularArray.clean();
 
 	for (auto i : range)
 	{
-		std::cout << i << std::endl;
+		(void)i;
 		circularArray.pushBack(testObject);
-		log << "circularArray.size() = " << circularArray.size() << std::endl;
+		if (circularArray.size() != 1)
+		{
+			return -1;
+		}
 		auto itBegin = circularArray.rbegin();
 		auto itEnd = circularArray.rend();
 		if (itBegin == itEnd)
@@ -117,15 +125,17 @@ int CircularArrayTest::vStart()
 		for (auto it = circularArray.rbegin(); it != circularArray.rend(); ++it)
 		{
 			TestClass &obj = *it;
-			log << "{ long(" << obj.getLong() << "),"
-					" int(" << obj.getInt() << "),"
-					" short(" << obj.getShort() << ")"
-					" char('" << obj.getChar() << ") }"
-					<< std::endl;
+			if (obj != testObject)
+			{
+				return -1;
+			}
 		}
 
 		circularArray.popFront();
-		log << "circularArray.size() = " << circularArray.size() << '\n' << std::endl;
+		if (circularArray.size() != 0)
+		{
+			return -1;
+		}
 	}
 
 	return 0;
