@@ -302,7 +302,7 @@ bool VariantStruct<Arg, Args...>::assign(Types::ssize_t index, const Me &me)
 	}
 	else
 	{
-		result = data.template pack.assign(index - 1, me.data.pack);
+		result = data.pack.assign(index - 1, me.data.pack);
 	}
 	return result;
 }
@@ -317,7 +317,7 @@ bool VariantStruct<Arg, Args...>::assign(Types::ssize_t index, Me &&me)
 	}
 	else
 	{
-		result = data.template pack.assign(index - 1, move(me.data.pack));
+		result = data.pack.assign(index - 1, move(me.data.pack));
 	}
 	return result;
 }
@@ -332,7 +332,7 @@ bool VariantStruct<Arg, Args...>::reset(Types::ssize_t index)
 	}
 	else
 	{
-		result = data.template pack.reset(index - 1);
+		result = data.pack.reset(index - 1);
 	}
 	return result;
 }
