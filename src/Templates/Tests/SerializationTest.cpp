@@ -6,6 +6,15 @@ namespace flame_ide
 {namespace test
 {
 
+namespace
+{
+
+constexpr Types::uichar_t BYTES[] = {
+	0xA0, 0xB1, 0xC2, 0xD3, 0xE4, 0xF5, 0x6A, 0x7B
+};
+
+}
+
 using templates::CompileTimeReverseBytes;
 
 int SerializationTest::vStart()
