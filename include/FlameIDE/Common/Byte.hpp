@@ -41,6 +41,9 @@ constexpr byte_t operator^(byte_t byteValue, IntegerType shiftValue);
 template<typename IntegerType>
 constexpr byte_t &operator^=(byte_t &byteValue, IntegerType shiftValue);
 
+template<typename IntegerType>
+constexpr IntegerType toInteger(byte_t byteValue);
+
 }
 
 namespace flame_ide

@@ -50,7 +50,7 @@ public:
 	FLAMEIDE_ITERATOR_OPERATOR_DEREF_CONST
 	FLAMEIDE_ITERATOR_OPERATOR_ARROW_CONST
 
-private:
+protected:
 	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
@@ -82,7 +82,7 @@ public:
 	FLAMEIDE_ITERATOR_OPERATOR_DEREF_CONST
 	FLAMEIDE_ITERATOR_OPERATOR_ARROW_CONST
 
-private:
+protected:
 	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
@@ -114,7 +114,7 @@ public:
 	FLAMEIDE_ITERATOR_OPERATOR_DEREF_CONST
 	FLAMEIDE_ITERATOR_OPERATOR_ARROW_CONST
 
-private:
+protected:
 	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
@@ -149,7 +149,7 @@ public:
 	FLAMEIDE_ITERATOR_OPERATOR_DEREF_CONST
 	FLAMEIDE_ITERATOR_OPERATOR_ARROW_CONST
 
-private:
+protected:
 	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
@@ -200,7 +200,7 @@ public:
 
 	FLAMEIDE_ITERATOR_OPERATOR_OFFSET_DEREF_CONST
 
-private:
+protected:
 	using Parent::internalData;
 	using Parent::wrappedIterator;
 };
