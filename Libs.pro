@@ -43,8 +43,10 @@ HEADERS += \
 	./include/FlameIDE/Filesystem/Session.hpp \
 	./include/FlameIDE/Others/TextStyle.hpp \
 	./include/FlameIDE/Process/CommandLine.hpp \
-	./include/FlameIDE/Streams/DefaultAccumulator.hpp \
-	./include/FlameIDE/Streams/StreamBase.hpp \
+	./include/FlameIDE/Streams/RamStream.hpp \
+	./include/FlameIDE/Streams/Reader.hpp \
+	./include/FlameIDE/Streams/StreamUtils.hpp \
+	./include/FlameIDE/Streams/Writer.hpp \
 	./include/FlameIDE/Templates/AlignObject.hpp \
 	./include/FlameIDE/Templates/Allocator.hpp \
 	./include/FlameIDE/Templates/Allocator/ArrayAllocator.hpp \
@@ -53,8 +55,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/Allocator/ObjectAllocator.hpp \
 	./include/FlameIDE/Templates/Array.hpp \
 	./include/FlameIDE/Templates/ArrayBlocks.hpp \
-	./include/FlameIDE/Templates/BitSet.hpp \
 	./include/FlameIDE/Templates/Bits.hpp \
+	./include/FlameIDE/Templates/BitSet.hpp \
 	./include/FlameIDE/Templates/ByteOrder.hpp \
 	./include/FlameIDE/Templates/CircularArray.hpp \
 	./include/FlameIDE/Templates/CircularVector.hpp \
@@ -93,6 +95,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/WideInt.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
+	./src/Streams/Tests/RamStreamTest.hpp \
+	./src/Streams/Tests/TestAggregator.hpp \
 	./src/Templates/Tests/AllocatorTest.hpp \
 	./src/Templates/Tests/ArrayTest.hpp \
 	./src/Templates/Tests/BitsTest.hpp \
@@ -128,8 +132,9 @@ SOURCES += \
 	./src/Filesystem/Project.cpp \
 	./src/Filesystem/Session.cpp \
 	./src/Process/CommandLine.cpp \
-	./src/Streams/DefaultAccumulator.cpp \
-	./src/Streams/StreamBase.cpp \
+	./src/Streams/RamStream.cpp \
+	./src/Streams/Tests/RamStreamTest.cpp \
+	./src/Streams/Tests/TestAggregator.cpp \
 	./src/Templates/Tests/AllocatorTest.cpp \
 	./src/Templates/Tests/ArrayTest.cpp \
 	./src/Templates/Tests/BitsTest.cpp \

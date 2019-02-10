@@ -15,6 +15,10 @@
 #define VECTOR_RESIZE_FACTOR_DIV 2
 #endif // VECTOR_RESIZE_FACTOR_DIV
 
+#ifndef VECTOR_DEFAULT_SIZE
+#define VECTOR_DEFAULT_SIZE 8
+#endif // VECTOR_DEFAULT_SIZE
+
 #define TEMPLATE_DEFINE \
 	template < \
 		typename T \
@@ -914,7 +918,14 @@ void VECTOR_TYPE::erase(typename VECTOR_TYPE::Iterator itBegin
 TEMPLATE_DEFINE
 typename VECTOR_TYPE::SizeType VECTOR_TYPE::nextCapacity() const
 {
-	return ((capacity() * VECTOR_RESIZE_FACTOR_MULT) / VECTOR_RESIZE_FACTOR_DIV);
+	if (capacity())
+	{
+		return ((capacity() * VECTOR_RESIZE_FACTOR_MULT) / VECTOR_RESIZE_FACTOR_DIV);
+	}
+	else
+	{
+		return VECTOR_DEFAULT_SIZE;
+	}
 }
 
 }}

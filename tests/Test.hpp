@@ -1,4 +1,4 @@
-#ifndef TEST_BASETEST_H
+﻿#ifndef TEST_BASETEST_H
 #define TEST_BASETEST_H
 
 #include <string>
@@ -6,9 +6,7 @@
 #include <memory>
 #include <iostream>
 
-#ifdef __linux
 #include <FlameIDE/Others/TextStyle.hpp>
-#endif
 
 #define log \
 	std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": "
