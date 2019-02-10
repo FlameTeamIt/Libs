@@ -14,22 +14,33 @@ namespace flame_ide
 {namespace stream_utils
 {
 
-class AbstractByteStream
-{
-public:
-	using Byte = byte_t;
+using Byte = byte_t;
 
+struct AbstractByteStreamReader
+{
 	using ByteIterator = templates::Iterator<
 		Byte *, templates::IteratorCategory::RANDOM_ACCESS
-		, ContainerTraits<Byte>, void
-	>;
-	using ConstByteIterator = templates::ConstIterator<
-		const Byte *, templates::IteratorCategory::RANDOM_ACCESS
 		, ContainerTraits<Byte>, void
 	>;
 
 	using CircularByteIterator = templates::CircularIterator<
 		ByteIterator, templates::IteratorCategory::RANDOM_ACCESS
+		, ContainerTraits<Byte>, void
+	>;
+
+	using OutputByteRange = templates::Range<ByteIterator>;
+	using OutputCircularByteRange = templates::Range<CircularByteIterator>;
+
+	virtual ~AbstractByteStreamReader() = default;
+
+	virtual SizeTraits::SsizeType read(OutputByteRange range) = 0;
+	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) = 0;
+};
+
+struct AbstractByteStreamWriter
+{
+	using ConstByteIterator = templates::ConstIterator<
+		const Byte *, templates::IteratorCategory::RANDOM_ACCESS
 		, ContainerTraits<Byte>, void
 	>;
 
@@ -41,19 +52,17 @@ public:
 	using InputByteRange = templates::Range<ConstByteIterator>;
 	using InputCircularByteRange = templates::Range<ConstCircularByteIterator>;
 
-	using OutputByteRange = templates::Range<ByteIterator>;
-	using OutputCircularByteRange = templates::Range<CircularByteIterator>;
-
 	using SsizeType = SizeTraits::SsizeType;
 
-	virtual ~AbstractByteStream() = default;
+	virtual ~AbstractByteStreamWriter() = default;
 
 	virtual SizeTraits::SsizeType write(InputByteRange range) = 0;
 	virtual SizeTraits::SsizeType write(InputCircularByteRange range) = 0;
 
-	virtual SizeTraits::SsizeType read(OutputByteRange range) = 0;
-	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) = 0;
 };
+
+class AbstractByteStream : public AbstractByteStreamReader, public AbstractByteStreamWriter
+{};
 
 }}}
 

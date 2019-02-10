@@ -23,7 +23,7 @@ public:
 	virtual SizeTraits::SsizeType read(Parent::OutputCircularByteRange range);
 
 private:
-	templates::Vector<Parent::Byte> buffer;
+	templates::Vector<stream_utils::Byte> buffer;
 };
 
 }}
