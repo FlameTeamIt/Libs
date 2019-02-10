@@ -33,10 +33,10 @@ public:
 
 	ArrayAllocator() = default;
 	ArrayAllocator(const Me &) = default;
-	ArrayAllocator(Me &&) = default;
+	ArrayAllocator(Me &&) noexcept = default;
 	~ArrayAllocator() = default;
 	Me &operator=(const Me &) = default;
-	Me &operator=(Me &&) = default;
+	Me &operator=(Me &&) noexcept = default;
 
 	///
 	/// @brief Allocate array and initialize cells by need constructor
