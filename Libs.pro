@@ -4,7 +4,7 @@ CONFIG += object_parallel_to_source
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CXXFLAGS = -std=c++14 -pedantic -fno-rtti -fno-exceptions
+QMAKE_CXXFLAGS = -std=c++14 -Wpedantic -Wextra -fno-rtti -fno-exceptions
 QMAKE_CXXFLAGS_DEBUG += -gdwarf-3
 INCLUDEPATH += include/
 INCLUDEPATH += .
