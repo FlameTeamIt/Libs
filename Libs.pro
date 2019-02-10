@@ -115,7 +115,9 @@ HEADERS += \
 	./src/Templates/Tests/Variant.hpp \
 	./src/Templates/Tests/Vector.hpp \
 	./src/Templates/Tests/WideInt.hpp \
-	./tests/Test.hpp
+	./tests/Test.hpp \
+    src/Streams/Tests/RamStreamTest.hpp \
+    src/Streams/Tests/TestAggregator.hpp
 
 # sources
 SOURCES += \
@@ -151,5 +153,7 @@ SOURCES += \
 	./src/Templates/Tests/Variant.cpp \
 	./src/Templates/Tests/Vector.cpp \
 	./src/Templates/Tests/WideInt.cpp \
-	./tests/main.cpp
+	./tests/main.cpp \
+    src/Streams/Tests/RamStreamTest.cpp \
+    src/Streams/Tests/TestAggregator.cpp
 

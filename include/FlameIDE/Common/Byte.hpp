@@ -44,6 +44,9 @@ constexpr byte_t &operator^=(byte_t &byteValue, IntegerType shiftValue);
 template<typename IntegerType>
 constexpr IntegerType toInteger(byte_t byteValue);
 
+template<typename IntegerType>
+constexpr byte_t toByte(IntegerType value);
+
 }
 
 namespace flame_ide
@@ -140,6 +143,13 @@ constexpr IntegerType toInteger(byte_t byteValue)
 {
 	static_assert(IsIntegralType<IntegerType>::VALUE, "Type is not integral.");
 	return static_cast<IntegerType>(byteValue);
+}
+
+template<typename IntegerType>
+constexpr byte_t toByte(IntegerType value)
+{
+	static_assert(IsIntegralType<IntegerType>::VALUE, "Type is not integral.");
+	return static_cast<byte_t>(value);
 }
 
 }
