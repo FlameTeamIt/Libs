@@ -43,10 +43,6 @@ private:
 	ResultType beSpec();
 	bool beSpec32();
 	bool beSpec64();
-
-	static constexpr Types::uichar_t BYTES[] = {
-		0xA0, 0xB1, 0xC2, 0xD3, 0xE4, 0xF5, 0x6A, 0x7B
-	};
 };
 
 }}
