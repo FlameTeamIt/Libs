@@ -10,7 +10,11 @@ namespace flame_ide
 {namespace posix
 {
 
+using OsFileDescriptor = int;
+
 }}}
+
+#define FLAMEIDE_OS_NAMESPACE flame_ide::os::posix
 
 #endif // FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 

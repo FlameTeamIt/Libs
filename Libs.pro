@@ -140,6 +140,7 @@ SOURCES += \
 	./src/Process/CommandLine.cpp \
 	./src/Streams/Posix/PipeStream.cpp \
 	./src/Streams/RamStream.cpp \
+	./src/Streams/StreamUtils.cpp \
 	./src/Streams/Tests/RamStreamTest.cpp \
 	./src/Streams/Tests/TestAggregator.cpp \
 	./src/Streams/Windows/PipeStream.cpp \

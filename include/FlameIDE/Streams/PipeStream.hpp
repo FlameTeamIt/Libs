@@ -3,6 +3,8 @@
 
 #include <FlameIDE/Streams/StreamUtils.hpp>
 
+#include <FlameIDE/Common/OsTypes.hpp>
+
 namespace flame_ide
 {namespace streams
 {
@@ -15,13 +17,16 @@ class PipeStreamReader: public stream_utils::AbstractByteStreamReader
 public:
 	using Parent = stream_utils::AbstractByteStreamReader;
 
-	PipeStreamReader();
 	virtual ~PipeStreamReader();
 
-	virtual SizeTraits::SsizeType read(OutputByteRange range) = 0;
-	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) = 0;
+	virtual SizeTraits::SsizeType read(OutputByteRange range);
+	virtual SizeTraits::SsizeType read(OutputCircularByteRange range);
 
-private:
+protected:
+	PipeStreamReader(os::FileDescriptor fd) : fileDescriptor(fd)
+	{}
+
+	os::FileDescriptor fileDescriptor;
 };
 
 ///
@@ -32,13 +37,18 @@ class PipeStreamWriter: public stream_utils::AbstractByteStreamWriter
 public:
 	using Parent = stream_utils::AbstractByteStreamWriter;
 
-	PipeStreamWriter();
+	friend class PipeStream;
+
 	virtual ~PipeStreamWriter();
 
 	virtual SizeTraits::SsizeType write(InputByteRange range);
 	virtual SizeTraits::SsizeType write(InputCircularByteRange range);
 
 private:
+	PipeStreamWriter(os::FileDescriptor fd) : fileDescriptor(fd)
+	{}
+
+	os::FileDescriptor fileDescriptor;
 };
 
 ///
@@ -50,18 +60,32 @@ public:
 	using Parent = stream_utils::AbstractByteStream;
 
 	PipeStream();
+	PipeStream(os::FileDescriptor fdReader, os::FileDescriptor fdWriter);
+
+	PipeStream(const PipeStream &) = delete;
+	PipeStream(PipeStream &&);
+
 	virtual ~PipeStream();
 
+	PipeStream &operator=(const PipeStream &) = delete;
+	PipeStream &operator=(PipeStream &&);
+
+	PipeStreamReader getReader();
+	PipeStreamWriter getWriter();
+
+	os::FileDescriptor &getFdRead();
+	os::FileDescriptor &getFdWrite();
+
+protected:
 	virtual SizeTraits::SsizeType read(OutputByteRange range);
 	virtual SizeTraits::SsizeType read(OutputCircularByteRange range);
 
 	virtual SizeTraits::SsizeType write(InputByteRange range);
 	virtual SizeTraits::SsizeType write(InputCircularByteRange range);
 
-	PipeStreamReader getReader();
-	PipeStreamWriter getWriter();
+private:
+	os::FileDescriptor fileDescriptors[2];
 };
-
 
 }}
 
