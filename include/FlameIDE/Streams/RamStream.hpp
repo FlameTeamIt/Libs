@@ -8,7 +8,7 @@ namespace flame_ide
 {namespace streams
 {
 
-class RamStream : public stream_utils::AbstractByteStream
+class RamStream: public stream_utils::AbstractByteStream
 {
 public:
 	using Parent = stream_utils::AbstractByteStream;

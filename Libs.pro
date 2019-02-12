@@ -28,6 +28,10 @@ HEADERS += \
 	./include/FlameIDE/Bus/MsgInterface.hpp \
 	./include/FlameIDE/Common/Byte.hpp \
 	./include/FlameIDE/Common/Macroses.hpp \
+	./include/FlameIDE/Common/Macroses/ByteOrder.hpp \
+	./include/FlameIDE/Common/Macroses/DetectOs.hpp \
+	./include/FlameIDE/Common/OsTypes.hpp \
+	./include/FlameIDE/Common/OsTypes/Posix.hpp \
 	./include/FlameIDE/Common/PrimitiveTypes.hpp \
 	./include/FlameIDE/Common/Traits.hpp \
 	./include/FlameIDE/Common/Traits/CreationProhibitions.hpp \
@@ -43,6 +47,8 @@ HEADERS += \
 	./include/FlameIDE/Filesystem/Session.hpp \
 	./include/FlameIDE/Others/TextStyle.hpp \
 	./include/FlameIDE/Process/CommandLine.hpp \
+	./include/FlameIDE/Streams/NamedPipeStream.hpp \
+	./include/FlameIDE/Streams/PipeStream.hpp \
 	./include/FlameIDE/Streams/RamStream.hpp \
 	./include/FlameIDE/Streams/Reader.hpp \
 	./include/FlameIDE/Streams/StreamUtils.hpp \
@@ -95,6 +101,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/WideInt.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
+	./src/Streams/Tests/RamStreamTest.hpp \
+	./src/Streams/Tests/TestAggregator.hpp \
 	./src/Templates/Tests/Allocator.hpp \
 	./src/Templates/Tests/Array.hpp \
 	./src/Templates/Tests/Bits.hpp \
@@ -115,9 +123,7 @@ HEADERS += \
 	./src/Templates/Tests/Variant.hpp \
 	./src/Templates/Tests/Vector.hpp \
 	./src/Templates/Tests/WideInt.hpp \
-	./tests/Test.hpp \
-    src/Streams/Tests/RamStreamTest.hpp \
-    src/Streams/Tests/TestAggregator.hpp
+	./tests/Test.hpp
 
 # sources
 SOURCES += \
@@ -132,7 +138,11 @@ SOURCES += \
 	./src/Filesystem/Project.cpp \
 	./src/Filesystem/Session.cpp \
 	./src/Process/CommandLine.cpp \
+	./src/Streams/Posix/PipeStream.cpp \
 	./src/Streams/RamStream.cpp \
+	./src/Streams/Tests/RamStreamTest.cpp \
+	./src/Streams/Tests/TestAggregator.cpp \
+	./src/Streams/Windows/PipeStream.cpp \
 	./src/Templates/Tests/Allocator.cpp \
 	./src/Templates/Tests/Array.cpp \
 	./src/Templates/Tests/Bits.cpp \
@@ -153,7 +163,5 @@ SOURCES += \
 	./src/Templates/Tests/Variant.cpp \
 	./src/Templates/Tests/Vector.cpp \
 	./src/Templates/Tests/WideInt.cpp \
-	./tests/main.cpp \
-    src/Streams/Tests/RamStreamTest.cpp \
-    src/Streams/Tests/TestAggregator.cpp
+	./tests/main.cpp
 

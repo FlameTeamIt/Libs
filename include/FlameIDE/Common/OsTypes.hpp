@@ -1,0 +1,6 @@
+#ifndef FLAMEIDE_COMMON_OSTYPES_HPP
+#define FLAMEIDE_COMMON_OSTYPES_HPP
+
+#include <FlameIDE/Common/OsTypes/Posix.hpp>
+
+#endif // FLAMEIDE_COMMON_OSTYPES_HPP
