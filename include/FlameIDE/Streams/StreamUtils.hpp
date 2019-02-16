@@ -8,6 +8,7 @@
 #include <FlameIDE/Templates/Iterator/CircularIterator.hpp>
 #include <FlameIDE/Templates/Iterator/ConstIterator.hpp>
 #include <FlameIDE/Templates/Iterator/ConstCircularIterator.hpp>
+#include <FlameIDE/Templates/Array.hpp>
 
 namespace flame_ide
 {namespace streams
@@ -15,6 +16,9 @@ namespace flame_ide
 {
 
 using Byte = byte_t;
+
+constexpr flame_ide::Types::size_t COUNT_CONTINUOUS_RANGES = 2;
+constexpr flame_ide::SizeTraits::SsizeType INVALID_COUNT_BYTES = -1;
 
 struct AbstractByteStreamReader
 {
@@ -31,10 +35,18 @@ struct AbstractByteStreamReader
 	using OutputByteRange = templates::Range<ByteIterator>;
 	using OutputCircularByteRange = templates::Range<CircularByteIterator>;
 
+	using ContiniousOutputRanges = templates::Array<
+		OutputByteRange, COUNT_CONTINUOUS_RANGES
+	>;
+
 	virtual ~AbstractByteStreamReader() = default;
 
 	virtual SizeTraits::SsizeType read(OutputByteRange range) = 0;
 	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) = 0;
+
+	 // TODO: тестирование
+	static ContiniousOutputRanges
+	getContiniousOutputRanges(OutputCircularByteRange range) noexcept;
 };
 
 struct AbstractByteStreamWriter
@@ -52,17 +64,34 @@ struct AbstractByteStreamWriter
 	using InputByteRange = templates::Range<ConstByteIterator>;
 	using InputCircularByteRange = templates::Range<ConstCircularByteIterator>;
 
-	using SsizeType = SizeTraits::SsizeType;
+	using ContiniousInputRanges = templates::Array<
+		InputByteRange, COUNT_CONTINUOUS_RANGES
+	>;
 
 	virtual ~AbstractByteStreamWriter() = default;
 
 	virtual SizeTraits::SsizeType write(InputByteRange range) = 0;
 	virtual SizeTraits::SsizeType write(InputCircularByteRange range) = 0;
 
+	 // TODO: тестирование
+	static ContiniousInputRanges
+	getContiniousInputRanges(InputCircularByteRange range) noexcept;
 };
 
-class AbstractByteStream : public AbstractByteStreamReader, public AbstractByteStreamWriter
-{};
+class AbstractByteStream : public AbstractByteStreamReader
+		, public AbstractByteStreamWriter
+{
+public:
+	AbstractByteStreamReader &getReader()
+	{
+		return *this;
+	}
+
+	AbstractByteStreamWriter &getWriter()
+	{
+		return *this;
+	}
+};
 
 }}}
 

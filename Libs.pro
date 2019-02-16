@@ -28,6 +28,10 @@ HEADERS += \
 	./include/FlameIDE/Bus/MsgInterface.hpp \
 	./include/FlameIDE/Common/Byte.hpp \
 	./include/FlameIDE/Common/Macroses.hpp \
+	./include/FlameIDE/Common/Macroses/ByteOrder.hpp \
+	./include/FlameIDE/Common/Macroses/DetectOs.hpp \
+	./include/FlameIDE/Common/OsTypes.hpp \
+	./include/FlameIDE/Common/OsTypes/Posix.hpp \
 	./include/FlameIDE/Common/PrimitiveTypes.hpp \
 	./include/FlameIDE/Common/Traits.hpp \
 	./include/FlameIDE/Common/Traits/ContainerTraits.hpp \
@@ -43,6 +47,11 @@ HEADERS += \
 	./include/FlameIDE/Filesystem/Session.hpp \
 	./include/FlameIDE/Others/TextStyle.hpp \
 	./include/FlameIDE/Process/CommandLine.hpp \
+	./include/FlameIDE/Streams/NamedPipeStream.hpp \
+	./include/FlameIDE/Streams/PipeStream.hpp \
+	./include/FlameIDE/Streams/PipeStream/PipeStream.hpp \
+	./include/FlameIDE/Streams/PipeStream/PipeStreamReader.hpp \
+	./include/FlameIDE/Streams/PipeStream/PipeStreamWriter.hpp \
 	./include/FlameIDE/Streams/RamStream.hpp \
 	./include/FlameIDE/Streams/Reader.hpp \
 	./include/FlameIDE/Streams/StreamUtils.hpp \
@@ -55,8 +64,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/Allocator/ObjectAllocator.hpp \
 	./include/FlameIDE/Templates/Array.hpp \
 	./include/FlameIDE/Templates/ArrayBlocks.hpp \
-	./include/FlameIDE/Templates/Bits.hpp \
 	./include/FlameIDE/Templates/BitSet.hpp \
+	./include/FlameIDE/Templates/Bits.hpp \
 	./include/FlameIDE/Templates/ByteOrder.hpp \
 	./include/FlameIDE/Templates/CircularArray.hpp \
 	./include/FlameIDE/Templates/CircularVector.hpp \
@@ -95,6 +104,7 @@ HEADERS += \
 	./include/FlameIDE/Templates/WideInt.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
+	./src/Streams/Tests/PipeStreamTest.hpp \
 	./src/Streams/Tests/RamStreamTest.hpp \
 	./src/Streams/Tests/TestAggregator.hpp \
 	./src/Templates/Tests/AllocatorTest.hpp \
@@ -132,9 +142,15 @@ SOURCES += \
 	./src/Filesystem/Project.cpp \
 	./src/Filesystem/Session.cpp \
 	./src/Process/CommandLine.cpp \
+	./src/Streams/Posix/PipeStream/PipeStream.cpp \
+	./src/Streams/Posix/PipeStream/PipeStreamReader.cpp \
+	./src/Streams/Posix/PipeStream/PipeStreamWriter.cpp \
 	./src/Streams/RamStream.cpp \
+	./src/Streams/StreamUtils.cpp \
+	./src/Streams/Tests/PipeStreamTest.cpp \
 	./src/Streams/Tests/RamStreamTest.cpp \
 	./src/Streams/Tests/TestAggregator.cpp \
+	./src/Streams/Windows/PipeStream.cpp \
 	./src/Templates/Tests/AllocatorTest.cpp \
 	./src/Templates/Tests/ArrayTest.cpp \
 	./src/Templates/Tests/BitsTest.cpp \
