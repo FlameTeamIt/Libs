@@ -8,6 +8,12 @@ namespace flame_ide
 {
 
 using FileDescriptor = FLAMEIDE_OS_NAMESPACE::OsFileDescriptor;
+constexpr FileDescriptor INVALID_DESCRIPTOR =
+		FLAMEIDE_OS_NAMESPACE::OS_INVALID_DESCRIPTOR;
+
+using Status = FLAMEIDE_OS_NAMESPACE::OsStatus;
+constexpr Status SUCCESS_STATUS =
+		FLAMEIDE_OS_NAMESPACE::OS_SUCCESS_STATUS;
 
 }}
 

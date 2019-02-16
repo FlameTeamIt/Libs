@@ -12,7 +12,7 @@ namespace // anonymous
 template<typename Range, typename CircularRange> inline
 auto getContiniousRanges(CircularRange range) noexcept
 {
-	using Ranges = templates::Array<Range, CountContiniousRanges>;
+	using Ranges = templates::Array<Range, COUNT_CONTINUOUS_RANGES>;
 
 	auto iteratorPrev = range.begin();
 	auto iteratorNext = iteratorPrev + 1;

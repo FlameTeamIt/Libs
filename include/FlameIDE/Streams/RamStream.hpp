@@ -16,11 +16,11 @@ public:
 	RamStream();
 	virtual ~RamStream();
 
-	virtual SizeTraits::SsizeType write(Parent::InputByteRange range);
-	virtual SizeTraits::SsizeType write(Parent::InputCircularByteRange range);
-
 	virtual SizeTraits::SsizeType read(Parent::OutputByteRange range);
 	virtual SizeTraits::SsizeType read(Parent::OutputCircularByteRange range);
+
+	virtual SizeTraits::SsizeType write(Parent::InputByteRange range);
+	virtual SizeTraits::SsizeType write(Parent::InputCircularByteRange range);
 
 private:
 	templates::Vector<stream_utils::Byte> buffer;

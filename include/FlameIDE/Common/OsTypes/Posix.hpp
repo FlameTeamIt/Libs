@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_COMMON_OSTYPES_POSIX_HPP
 #define FLAMEIDE_COMMON_OSTYPES_POSIX_HPP
 
-#include <FlameIDE/Common/Macroses.hpp>
+#include <FlameIDE/Common/Macroses/DetectOs.hpp>
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
@@ -11,6 +11,10 @@ namespace flame_ide
 {
 
 using OsFileDescriptor = int;
+constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = -1;
+
+using OsStatus = int;
+constexpr OsStatus OS_SUCCESS_STATUS = 0;
 
 }}}
 

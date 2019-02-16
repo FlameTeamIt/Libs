@@ -27,7 +27,9 @@ int RamStreamTest::vStart()
 	RamStream stream;
 	auto writtableRange = templates::makeRange(
 			RamStream::ConstByteIterator(&writtableArray.front())
-			, RamStream::ConstByteIterator(&writtableArray.front() + writtableArray.size())
+			, RamStream::ConstByteIterator(
+					&writtableArray.front() + writtableArray.size()
+			)
 	);
 	auto result = stream.write(writtableRange);
 	IN_CASE_CHECK(result == writtableArray.size());
@@ -40,7 +42,9 @@ int RamStreamTest::vStart()
 	result = stream.read(readableRange);
 	IN_CASE_CHECK(result == writtableArray.size() && result == readableArray.size());
 
-	IN_CASE_CHECK(std::equal(readableArray.begin(), readableArray.end(), writtableArray.begin()));
+	IN_CASE_CHECK(std::equal(
+			readableArray.begin(), readableArray.end(), writtableArray.begin()
+	));
 
 	return 0;
 }

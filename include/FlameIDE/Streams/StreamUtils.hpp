@@ -17,7 +17,8 @@ namespace flame_ide
 
 using Byte = byte_t;
 
-constexpr flame_ide::Types::size_t CountContiniousRanges = 2;
+constexpr flame_ide::Types::size_t COUNT_CONTINUOUS_RANGES = 2;
+constexpr flame_ide::SizeTraits::SsizeType INVALID_COUNT_BYTES = -1;
 
 struct AbstractByteStreamReader
 {
@@ -35,7 +36,7 @@ struct AbstractByteStreamReader
 	using OutputCircularByteRange = templates::Range<CircularByteIterator>;
 
 	using ContiniousOutputRanges = templates::Array<
-		OutputByteRange, CountContiniousRanges
+		OutputByteRange, COUNT_CONTINUOUS_RANGES
 	>;
 
 	virtual ~AbstractByteStreamReader() = default;
@@ -64,7 +65,7 @@ struct AbstractByteStreamWriter
 	using InputCircularByteRange = templates::Range<ConstCircularByteIterator>;
 
 	using ContiniousInputRanges = templates::Array<
-		InputByteRange, CountContiniousRanges
+		InputByteRange, COUNT_CONTINUOUS_RANGES
 	>;
 
 	virtual ~AbstractByteStreamWriter() = default;
@@ -79,7 +80,18 @@ struct AbstractByteStreamWriter
 
 class AbstractByteStream : public AbstractByteStreamReader
 		, public AbstractByteStreamWriter
-{};
+{
+public:
+	AbstractByteStreamReader &getReader()
+	{
+		return *this;
+	}
+
+	AbstractByteStreamWriter &getWriter()
+	{
+		return *this;
+	}
+};
 
 }}}
 
