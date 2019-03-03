@@ -46,7 +46,6 @@ HEADERS += \
 	./include/FlameIDE/Filesystem/Project.hpp \
 	./include/FlameIDE/Filesystem/Session.hpp \
 	./include/FlameIDE/Others/TextStyle.hpp \
-	./include/FlameIDE/Process/CommandLine.hpp \
 	./include/FlameIDE/Streams/NamedPipeStream.hpp \
 	./include/FlameIDE/Streams/PipeStream.hpp \
 	./include/FlameIDE/Streams/PipeStream/PipeStream.hpp \
@@ -141,7 +140,6 @@ SOURCES += \
 	./src/Filesystem/BasicFile.cpp \
 	./src/Filesystem/Project.cpp \
 	./src/Filesystem/Session.cpp \
-	./src/Process/CommandLine.cpp \
 	./src/Streams/Posix/PipeStream/PipeStream.cpp \
 	./src/Streams/Posix/PipeStream/PipeStreamReader.cpp \
 	./src/Streams/Posix/PipeStream/PipeStreamWriter.cpp \
