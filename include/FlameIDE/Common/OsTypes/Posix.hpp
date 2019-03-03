@@ -5,6 +5,9 @@
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
+#include <sys/socket.h>
+#include <sys/un.h>
+
 namespace flame_ide
 {namespace os
 {namespace posix
@@ -15,6 +18,15 @@ constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = -1;
 
 using OsStatus = int;
 constexpr OsStatus OS_SUCCESS_STATUS = 0;
+
+struct OsSocket
+{
+	::sockaddr_un sockaddr;
+	OsFileDescriptor fd;
+};
+constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
+		{}, OS_INVALID_DESCRIPTOR
+};
 
 }}}
 

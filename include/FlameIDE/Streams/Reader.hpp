@@ -7,26 +7,56 @@ namespace flame_ide
 {namespace streams
 {
 
-template<typename CircularByteBuffer, typename RealByteStream>
+template<typename CircularByteBuffer>
 class Reader
 {
 public:
-	using OutputByteRange = stream_utils::AbstractByteStream::OutputByteRange;
-	using SsizeType = stream_utils::AbstractByteStream::SsizeType;
+	using OutputByteRange = stream_utils::AbstractByteStreamReader::OutputByteRange;
+	using OutputCiruclarByteRange =
+			stream_utils::AbstractByteStreamReader::OutputCircularByteRange;
+
+	Reader() noexcept = default;
+	Reader(const Reader &reader) noexcept = delete;
+	Reader(Reader &&reader) noexcept = default;
+
+	///
+	/// @brief Reader
+	/// @param baseReaderImpl
+	///
+	Reader(stream_utils::AbstractByteStreamReader &baseReaderImpl) noexcept;
+
+	~Reader() = default;
+
+	Reader &operator=(const Reader &reader) noexcept = delete;
+	Reader &operator=(Reader &&reader) noexcept = default;
 
 	///
 	/// @brief Getting data without popping.
-	/// @param range
+	/// @param[in,out] range
 	/// @return
 	///
-	SsizeType seeData(OutputByteRange &range) noexcept;
+	SizeTraits::SsizeType seeData(OutputByteRange &range) noexcept;
+	SizeTraits::SsizeType seeData(OutputCiruclarByteRange &range) noexcept;
 
 	///
 	/// @brief Getting data with popping.
-	/// @param range
+	/// @param[in,out] range
 	/// @return
 	///
-	SsizeType readData(OutputByteRange &range) noexcept;
+	SizeTraits::SsizeType readData(OutputByteRange &range) noexcept;
+	SizeTraits::SsizeType readData(OutputCiruclarByteRange &range) noexcept;
+
+	///
+	/// @brief setReaderImpl
+	/// @param[in] baseReaderImpl
+	///
+	void setReaderImpl(stream_utils::AbstractByteStreamReader &baseReaderImpl) noexcept;
+
+	///
+	/// @brief getReaderImpl
+	/// @return
+	///
+	stream_utils::AbstractByteStreamReader *getReaderImpl();
 
 	///
 	/// @brief empty
@@ -36,7 +66,14 @@ public:
 
 protected:
 	CircularByteBuffer buffer;
+	stream_utils::AbstractByteStreamReader *readerImpl;
 };
+
+}}
+
+namespace flame_ide
+{namespace streams
+{
 
 }}
 

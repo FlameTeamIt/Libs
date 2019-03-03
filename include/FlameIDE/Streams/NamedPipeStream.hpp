@@ -1,7 +1,9 @@
-#ifndef FLAMEIDE_STREAMS_NAMEDNamedPipeStream_HPP
-#define FLAMEIDE_STREAMS_NAMEDNamedPipeStream_HPP
+#ifndef FLAMEIDE_STREAMS_NAMEDPIPESTREAM_HPP
+#define FLAMEIDE_STREAMS_NAMEDPIPESTREAM_HPP
 
 #include <FlameIDE/Streams/StreamUtils.hpp>
+
+#include <FlameIDE/Common/OsTypes.hpp>
 
 namespace flame_ide
 {namespace streams
@@ -15,13 +17,19 @@ class NamedPipeStreamReader: public stream_utils::AbstractByteStreamReader
 public:
 	using Parent = stream_utils::AbstractByteStreamReader;
 
-	NamedPipeStreamReader();
-	virtual ~NamedPipeStreamReader();
+	NamedPipeStreamReader() noexcept;
+	NamedPipeStreamReader(const char *name) noexcept;
+	NamedPipeStreamReader(os::FileDescriptor fileDescriptor) noexcept;
+	virtual ~NamedPipeStreamReader() noexcept;
 
-	virtual SizeTraits::SsizeType read(OutputByteRange range) = 0;
-	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) = 0;
+	os::Status open(const char *name) noexcept;
+
+	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept;
+	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept;
 
 private:
+	os::Status status;
+	os::FileDescriptor fd;
 };
 
 ///
@@ -33,12 +41,18 @@ public:
 	using Parent = stream_utils::AbstractByteStreamWriter;
 
 	NamedPipeStreamWriter();
-	virtual ~NamedPipeStreamWriter();
+	NamedPipeStreamWriter(const char *name) noexcept;
+	NamedPipeStreamWriter(os::FileDescriptor fileDescriptor) noexcept;
+	~NamedPipeStreamWriter() noexcept;
 
-	virtual SizeTraits::SsizeType write(InputByteRange range);
-	virtual SizeTraits::SsizeType write(InputCircularByteRange range);
+	os::Status open(const char *name) noexcept;
+
+	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
+	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept;
 
 private:
+	os::Status status;
+	os::FileDescriptor fd;
 };
 
 ///
@@ -52,17 +66,19 @@ public:
 	NamedPipeStream();
 	virtual ~NamedPipeStream();
 
-	virtual SizeTraits::SsizeType read(OutputByteRange range);
-	virtual SizeTraits::SsizeType read(OutputCircularByteRange range);
+	os::Status open(const char *name) noexcept;
 
-	virtual SizeTraits::SsizeType write(InputByteRange range);
-	virtual SizeTraits::SsizeType write(InputCircularByteRange range);
+	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept;
+	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept;
 
-	NamedPipeStreamReader getReader();
-	NamedPipeStreamWriter getWriter();
+	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
+	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept;
+
+private:
+	NamedPipeStreamReader writer;
+	NamedPipeStreamReader reader;
 };
-
 
 }}
 
-#endif // FLAMEIDE_STREAMS_NAMEDNamedPipeStream_HPP
+#endif // FLAMEIDE_STREAMS_NAMEDPIPESTREAM_HPP

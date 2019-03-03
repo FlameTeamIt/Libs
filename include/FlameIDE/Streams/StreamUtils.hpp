@@ -1,5 +1,5 @@
-#ifndef FLAMEIDE_STREAMS_STREAMBASE_HPP
-#define FLAMEIDE_STREAMS_STREAMBASE_HPP
+#ifndef FLAMEIDE_STREAMS_STREAMUTILS_HPP
+#define FLAMEIDE_STREAMS_STREAMUTILS_HPP
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
 #include <FlameIDE/Common/Byte.hpp>
@@ -39,14 +39,14 @@ struct AbstractByteStreamReader
 		OutputByteRange, COUNT_CONTINUOUS_RANGES
 	>;
 
-	virtual ~AbstractByteStreamReader() = default;
+	virtual ~AbstractByteStreamReader() noexcept = default;
 
-	virtual SizeTraits::SsizeType read(OutputByteRange range) = 0;
-	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) = 0;
+	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept = 0;
+	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept = 0;
 
 	 // TODO: тестирование
 	static ContiniousOutputRanges
-	getContiniousOutputRanges(OutputCircularByteRange range) noexcept;
+	getContinuousOutputRanges(OutputCircularByteRange range) noexcept;
 };
 
 struct AbstractByteStreamWriter
@@ -70,24 +70,26 @@ struct AbstractByteStreamWriter
 
 	virtual ~AbstractByteStreamWriter() = default;
 
-	virtual SizeTraits::SsizeType write(InputByteRange range) = 0;
-	virtual SizeTraits::SsizeType write(InputCircularByteRange range) = 0;
+	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept = 0;
+	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept = 0;
+
+	virtual void flush() noexcept = 0;
 
 	 // TODO: тестирование
 	static ContiniousInputRanges
-	getContiniousInputRanges(InputCircularByteRange range) noexcept;
+	getContinuousInputRanges(InputCircularByteRange range) noexcept;
 };
 
-class AbstractByteStream : public AbstractByteStreamReader
+class AbstractByteStream: public AbstractByteStreamReader
 		, public AbstractByteStreamWriter
 {
 public:
-	AbstractByteStreamReader &getReader()
+	AbstractByteStreamReader &getReader() noexcept
 	{
 		return *this;
 	}
 
-	AbstractByteStreamWriter &getWriter()
+	AbstractByteStreamWriter &getWriter() noexcept
 	{
 		return *this;
 	}
@@ -95,4 +97,4 @@ public:
 
 }}}
 
-#endif // FLAMEIDE_STREAMS_STREAMBASE_HPP
+#endif // FLAMEIDE_STREAMS_STREAMUTILS_HPP

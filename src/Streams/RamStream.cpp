@@ -7,7 +7,7 @@ namespace flame_ide
 RamStream::RamStream() = default;
 RamStream::~RamStream() = default;
 
-SizeTraits::SsizeType RamStream::read(Parent::OutputByteRange range)
+SizeTraits::SsizeType RamStream::read(Parent::OutputByteRange range) noexcept
 {
 	auto currentSize = buffer.size();
 	for (auto &i : range)
@@ -26,7 +26,7 @@ SizeTraits::SsizeType RamStream::read(Parent::OutputByteRange range)
 	return static_cast<SizeTraits::SsizeType>(currentSize - newSize);
 }
 
-SizeTraits::SsizeType RamStream::read(Parent::OutputCircularByteRange range)
+SizeTraits::SsizeType RamStream::read(Parent::OutputCircularByteRange range) noexcept
 {
 	auto currentSize = buffer.size();
 	for (auto &i : range)
@@ -45,7 +45,7 @@ SizeTraits::SsizeType RamStream::read(Parent::OutputCircularByteRange range)
 	return static_cast<SizeTraits::SsizeType>(currentSize - newSize);
 }
 
-SizeTraits::SsizeType RamStream::write(Parent::InputByteRange range)
+SizeTraits::SsizeType RamStream::write(Parent::InputByteRange range) noexcept
 {
 	auto currentSize = buffer.size();
 	for (auto i : range)
@@ -56,7 +56,7 @@ SizeTraits::SsizeType RamStream::write(Parent::InputByteRange range)
 	return static_cast<SizeTraits::SsizeType>(newSize - currentSize);
 }
 
-SizeTraits::SsizeType RamStream::write(Parent::InputCircularByteRange range)
+SizeTraits::SsizeType RamStream::write(Parent::InputCircularByteRange range) noexcept
 {
 	auto currentSize = buffer.size();
 	for (auto i : range)
@@ -66,5 +66,8 @@ SizeTraits::SsizeType RamStream::write(Parent::InputCircularByteRange range)
 	auto newSize = buffer.size();
 	return static_cast<SizeTraits::SsizeType>(newSize - currentSize);
 }
+
+void RamStream::flush() noexcept
+{}
 
 }}

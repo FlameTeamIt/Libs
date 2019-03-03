@@ -42,16 +42,16 @@ auto getContiniousRanges(CircularRange range) noexcept
 } // anonymous
 
 AbstractByteStreamReader::ContiniousOutputRanges
-AbstractByteStreamReader::getContiniousOutputRanges(
-	AbstractByteStreamReader::OutputCircularByteRange range
+AbstractByteStreamReader::getContinuousOutputRanges(
+		AbstractByteStreamReader::OutputCircularByteRange range
 ) noexcept
 {
 	return getContiniousRanges<OutputByteRange>(range);
 }
 
 AbstractByteStreamWriter::ContiniousInputRanges
-AbstractByteStreamWriter::getContiniousInputRanges(
-	AbstractByteStreamWriter::InputCircularByteRange range
+AbstractByteStreamWriter::getContinuousInputRanges(
+		AbstractByteStreamWriter::InputCircularByteRange range
 ) noexcept
 {
 	return getContiniousRanges<InputByteRange>(range);

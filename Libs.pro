@@ -47,13 +47,15 @@ HEADERS += \
 	./include/FlameIDE/Filesystem/Session.hpp \
 	./include/FlameIDE/Others/TextStyle.hpp \
 	./include/FlameIDE/Process/CommandLine.hpp \
+	./include/FlameIDE/Streams/FileStreamReader.hpp \
+	./include/FlameIDE/Streams/FileStreamWriter.hpp \
 	./include/FlameIDE/Streams/NamedPipeStream.hpp \
 	./include/FlameIDE/Streams/PipeStream.hpp \
-	./include/FlameIDE/Streams/PipeStream/PipeStream.hpp \
-	./include/FlameIDE/Streams/PipeStream/PipeStreamReader.hpp \
-	./include/FlameIDE/Streams/PipeStream/PipeStreamWriter.hpp \
 	./include/FlameIDE/Streams/RamStream.hpp \
 	./include/FlameIDE/Streams/Reader.hpp \
+	./include/FlameIDE/Streams/Socket.hpp \
+	./include/FlameIDE/Streams/SocketClient.hpp \
+	./include/FlameIDE/Streams/SocketServer.hpp \
 	./include/FlameIDE/Streams/StreamUtils.hpp \
 	./include/FlameIDE/Streams/Writer.hpp \
 	./include/FlameIDE/Templates/AlignObject.hpp \
@@ -142,9 +144,12 @@ SOURCES += \
 	./src/Filesystem/Project.cpp \
 	./src/Filesystem/Session.cpp \
 	./src/Process/CommandLine.cpp \
-	./src/Streams/Posix/PipeStream/PipeStream.cpp \
-	./src/Streams/Posix/PipeStream/PipeStreamReader.cpp \
-	./src/Streams/Posix/PipeStream/PipeStreamWriter.cpp \
+	./src/Streams/Posix/FileStreamReader.cpp \
+	./src/Streams/Posix/FileStreamWriter.cpp \
+	./src/Streams/Posix/PipeStream.cpp \
+	./src/Streams/Posix/Socket.cpp \
+	./src/Streams/Posix/SocketClient.cpp \
+	./src/Streams/Posix/SocketServer.cpp \
 	./src/Streams/RamStream.cpp \
 	./src/Streams/StreamUtils.cpp \
 	./src/Streams/Tests/PipeStreamTest.cpp \
