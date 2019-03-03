@@ -32,6 +32,7 @@ HEADERS += \
 	./include/FlameIDE/Common/Macroses/DetectOs.hpp \
 	./include/FlameIDE/Common/OsTypes.hpp \
 	./include/FlameIDE/Common/OsTypes/Posix.hpp \
+	./include/FlameIDE/Common/OsTypes/Windows.hpp \
 	./include/FlameIDE/Common/PrimitiveTypes.hpp \
 	./include/FlameIDE/Common/Traits.hpp \
 	./include/FlameIDE/Common/Traits/CreationProhibitions.hpp \
@@ -66,8 +67,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/Allocator/ObjectAllocator.hpp \
 	./include/FlameIDE/Templates/Array.hpp \
 	./include/FlameIDE/Templates/ArrayBlocks.hpp \
-	./include/FlameIDE/Templates/BitSet.hpp \
 	./include/FlameIDE/Templates/Bits.hpp \
+	./include/FlameIDE/Templates/BitSet.hpp \
 	./include/FlameIDE/Templates/ByteOrder.hpp \
 	./include/FlameIDE/Templates/CircularArray.hpp \
 	./include/FlameIDE/Templates/CircularVector.hpp \
@@ -155,7 +156,12 @@ SOURCES += \
 	./src/Streams/Tests/PipeStreamTest.cpp \
 	./src/Streams/Tests/RamStreamTest.cpp \
 	./src/Streams/Tests/TestAggregator.cpp \
+	./src/Streams/Windows/FileStreamReader.cpp \
+	./src/Streams/Windows/FileStreamWriter.cpp \
 	./src/Streams/Windows/PipeStream.cpp \
+	./src/Streams/Windows/Socket.cpp \
+	./src/Streams/Windows/SocketClient.cpp \
+	./src/Streams/Windows/SocketServer.cpp \
 	./src/Templates/Tests/Allocator.cpp \
 	./src/Templates/Tests/Array.cpp \
 	./src/Templates/Tests/Bits.cpp \

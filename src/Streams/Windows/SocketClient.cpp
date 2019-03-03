@@ -1,8 +1,8 @@
-﻿#include <FlameIDE/Common/Macroses.hpp>
+#include <FlameIDE/Common/Macroses.hpp>
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
-#include <FlameIDE/Streams/SocketServer.hpp>
+#include <FlameIDE/Streams/SocketClient.hpp>
 
 namespace flame_ide
 {namespace streams
