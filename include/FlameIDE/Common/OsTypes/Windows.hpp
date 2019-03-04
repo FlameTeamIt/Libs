@@ -16,7 +16,7 @@ namespace flame_ide
 using OsFileDescriptor = HANDLE;
 constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = HANDLE{};
 
-using OsStatus = int;
+using OsStatus = int; // WINBOOL + GetLastError()?
 constexpr OsStatus OS_SUCCESS_STATUS = 0;
 
 struct OsSocket
