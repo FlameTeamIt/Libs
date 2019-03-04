@@ -4,8 +4,6 @@ CONFIG += object_parallel_to_source
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CXXFLAGS = -std=c++14 -pedantic -fno-rtti -fno-exceptions
-QMAKE_CXXFLAGS_DEBUG += -gdwarf-3
 INCLUDEPATH += include/
 INCLUDEPATH += .
 
@@ -67,8 +65,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/Allocator/ObjectAllocator.hpp \
 	./include/FlameIDE/Templates/Array.hpp \
 	./include/FlameIDE/Templates/ArrayBlocks.hpp \
-	./include/FlameIDE/Templates/Bits.hpp \
 	./include/FlameIDE/Templates/BitSet.hpp \
+	./include/FlameIDE/Templates/Bits.hpp \
 	./include/FlameIDE/Templates/ByteOrder.hpp \
 	./include/FlameIDE/Templates/CircularArray.hpp \
 	./include/FlameIDE/Templates/CircularVector.hpp \
@@ -145,23 +143,11 @@ SOURCES += \
 	./src/Filesystem/Project.cpp \
 	./src/Filesystem/Session.cpp \
 	./src/Process/CommandLine.cpp \
-	./src/Streams/Posix/FileStreamReader.cpp \
-	./src/Streams/Posix/FileStreamWriter.cpp \
-	./src/Streams/Posix/PipeStream.cpp \
-	./src/Streams/Posix/Socket.cpp \
-	./src/Streams/Posix/SocketClient.cpp \
-	./src/Streams/Posix/SocketServer.cpp \
 	./src/Streams/RamStream.cpp \
 	./src/Streams/StreamUtils.cpp \
 	./src/Streams/Tests/PipeStreamTest.cpp \
 	./src/Streams/Tests/RamStreamTest.cpp \
 	./src/Streams/Tests/TestAggregator.cpp \
-	./src/Streams/Windows/FileStreamReader.cpp \
-	./src/Streams/Windows/FileStreamWriter.cpp \
-	./src/Streams/Windows/PipeStream.cpp \
-	./src/Streams/Windows/Socket.cpp \
-	./src/Streams/Windows/SocketClient.cpp \
-	./src/Streams/Windows/SocketServer.cpp \
 	./src/Templates/Tests/Allocator.cpp \
 	./src/Templates/Tests/Array.cpp \
 	./src/Templates/Tests/Bits.cpp \
@@ -183,4 +169,26 @@ SOURCES += \
 	./src/Templates/Tests/Vector.cpp \
 	./src/Templates/Tests/WideInt.cpp \
 	./tests/main.cpp
+
+# Windows sources
+win32 {
+SOURCES += \
+	./src/Streams/Windows/FileStreamReader.cpp \
+	./src/Streams/Windows/FileStreamWriter.cpp \
+	./src/Streams/Windows/PipeStream.cpp \
+	./src/Streams/Windows/Socket.cpp \
+	./src/Streams/Windows/SocketClient.cpp \
+	./src/Streams/Windows/SocketServer.cpp
+}
+
+# Posix sources
+!win32 {
+SOURCES += \
+	./src/Streams/Posix/FileStreamReader.cpp \
+	./src/Streams/Posix/FileStreamWriter.cpp \
+	./src/Streams/Posix/PipeStream.cpp \
+	./src/Streams/Posix/Socket.cpp \
+	./src/Streams/Posix/SocketClient.cpp \
+	./src/Streams/Posix/SocketServer.cpp
+}
 
