@@ -8,6 +8,10 @@
 
 #include <FlameIDE/Others/TextStyle.hpp>
 
+#ifndef __PRETTY_FUNCTION__
+#define __PRETTY_FUNCTION__ __FUNCTION__
+#endif // __PRETTY_FUNCTION__
+
 #define log \
 	std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": "
 

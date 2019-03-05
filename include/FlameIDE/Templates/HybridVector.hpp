@@ -76,7 +76,9 @@ public:
 	using typename Parent::SsizeType;
 
 	Iterator() = default;
-	Iterator(const Me &) = default;
+	Iterator(const Me &it) noexcept : Parent(it)
+	{}
+
 	Iterator(Me &&) noexcept = default;
 
 	Iterator(ArrayIterator iterator) : Parent(WrappedIterator(iterator))
@@ -364,12 +366,12 @@ public:
 private:
 	inline bool isArrayIterator() const noexcept
 	{
-		return wrappedIterator && wrappedIterator.template getCurrentIndex() == ARRAY_INDEX;
+		return wrappedIterator && wrappedIterator.getCurrentIndex() == ARRAY_INDEX;
 	}
 
 	inline bool isVectorIterator() const noexcept
 	{
-		return wrappedIterator && wrappedIterator.template getCurrentIndex() == VECTOR_INDEX;
+		return wrappedIterator && wrappedIterator.getCurrentIndex() == VECTOR_INDEX;
 	}
 
 	using Parent::internalData;
@@ -429,7 +431,8 @@ public:
 	using typename Parent::PointerToConst;
 
 	ConstIterator() = default;
-	ConstIterator(const Me &) = default;
+	ConstIterator(const Me &it) noexcept : Parent(it)
+	{}
 	ConstIterator(Me &&) noexcept = default;
 
 	ConstIterator(ConstArrayIterator iterator) : Parent(WrappedIterator(iterator))
@@ -445,12 +448,12 @@ public:
 	{
 		if (isArrayIterator())
 		{
-			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+			ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
 			++it;
 		}
 		else
 		{
-			ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+			ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
 			++it;
 		}
 		return *this;
@@ -467,12 +470,12 @@ public:
 	{
 		if (isArrayIterator())
 		{
-			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+			ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
 			--it;
 		}
 		else
 		{
-			ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+			ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
 			--it;
 		}
 		return *this;
@@ -489,12 +492,12 @@ public:
 	{
 		if (isArrayIterator())
 		{
-			const ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+			const ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
 			return *it;
 		}
 		else
 		{
-			const ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+			const ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
 			return *it;
 		}
 	}
@@ -525,12 +528,12 @@ public:
 	{
 		if (isArrayIterator())
 		{
-			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+			ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
 			it += value;
 		}
 		else
 		{
-			ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+			ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
 			it += value;
 		}
 		return *this;
@@ -541,12 +544,12 @@ public:
 	{
 		if (isArrayIterator())
 		{
-			ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
+			ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
 			it -= value;
 		}
 		else
 		{
-			ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
+			ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
 			it -= value;
 		}
 		return *this;
@@ -564,19 +567,19 @@ public:
 
 	bool operator<(const Me &iterator)
 	{
-		if (wrappedIterator.template getCurrentIndex() ==
-				iterator.wrappedIterator.template getCurrentIndex())
+		if (wrappedIterator.getCurrentIndex() ==
+				iterator.wrappedIterator.getCurrentIndex())
 		{
 			if (isArrayIterator())
 			{
-				ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
-				ConstArrayIterator &itIt = *(iterator.wrappedIterator.template get<ConstArrayIterator>());
+				ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
+				ConstArrayIterator &itIt = *(iterator.wrappedIterator.get<ConstArrayIterator>());
 				return it < itIt;
 			}
 			else
 			{
-				ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
-				ConstVectorIterator &itIt = *(iterator.wrappedIterator.template get<ConstVectorIterator>());
+				ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
+				ConstVectorIterator &itIt = *(iterator.wrappedIterator.get<ConstVectorIterator>());
 				return it < itIt;
 			}
 		}
@@ -585,19 +588,19 @@ public:
 
 	bool operator>(const Me &iterator)
 	{
-		if (wrappedIterator.template getCurrentIndex() ==
-				iterator.wrappedIterator.template getCurrentIndex())
+		if (wrappedIterator.getCurrentIndex() ==
+				iterator.wrappedIterator.getCurrentIndex())
 		{
 			if (isArrayIterator())
 			{
-				ConstArrayIterator &it = *(wrappedIterator.template get<ConstArrayIterator>());
-				ConstArrayIterator &itIt = *(iterator.wrappedIterator.template get<ConstArrayIterator>());
+				ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
+				ConstArrayIterator &itIt = *(iterator.wrappedIterator.get<ConstArrayIterator>());
 				return it > itIt;
 			}
 			else
 			{
-				ConstVectorIterator &it = *(wrappedIterator.template get<ConstVectorIterator>());
-				ConstVectorIterator &itIt = *(iterator.wrappedIterator.template get<ConstVectorIterator>());
+				ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
+				ConstVectorIterator &itIt = *(iterator.wrappedIterator.get<ConstVectorIterator>());
 				return it > itIt;
 			}
 		}
@@ -655,12 +658,12 @@ public:
 private:
 	inline bool isArrayIterator() const noexcept
 	{
-		return wrappedIterator && wrappedIterator.template getCurrentIndex() == ARRAY_INDEX;
+		return wrappedIterator && wrappedIterator.getCurrentIndex() == ARRAY_INDEX;
 	}
 
 	inline bool isVectorIterator() const noexcept
 	{
-		return wrappedIterator && wrappedIterator.template getCurrentIndex() == VECTOR_INDEX;
+		return wrappedIterator && wrappedIterator.getCurrentIndex() == VECTOR_INDEX;
 	}
 
 	using Parent::internalData;
@@ -1321,7 +1324,7 @@ public:
 
 	void reset()
 	{
-		container.template reset();
+		container.reset();
 	}
 
 private:
@@ -1392,13 +1395,13 @@ private:
 	inline bool isArray() const noexcept
 	{
 		return container
-				&& container.template getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX;
+				&& container.getCurrentIndex() == hybrid_vector_utils::ARRAY_INDEX;
 	}
 
 	inline bool isVector() const noexcept
 	{
 		return container
-				&& container.template getCurrentIndex() == hybrid_vector_utils::VECTOR_INDEX;
+				&& container.getCurrentIndex() == hybrid_vector_utils::VECTOR_INDEX;
 	}
 
 	ContainerVariant container;

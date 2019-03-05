@@ -168,17 +168,17 @@ public:
 	// TODO: Not implement
 	Me &operator+=(const T &object);
 	Me &operator+=(T &&object);
-	template<typename IntType>
-	Me &operator+=(IntType integer);
-	Me &operator+=(const Me &string);
-	template<typename InputIterator>
-	Me &operator+=(Range<InputIterator> range);
+//	template<typename IntType>
+//	Me &operator+=(IntType integer);
+//	Me &operator+=(const Me &string);
+//	template<typename InputIterator>
+//	Me &operator+=(Range<InputIterator> range);
 
 	// TODO: Not implement
-	Me &operator-=(Iterator it);
-	Me &operator-=(ReverseIterator it);
-	Me &operator-=(Range<Iterator> range);
-	Me &operator-=(Range<ReverseIterator> range);
+//	Me &operator-=(Iterator it);
+//	Me &operator-=(ReverseIterator it);
+//	Me &operator-=(Range<Iterator> range);
+//	Me &operator-=(Range<ReverseIterator> range);
 
 	SizeType length() const noexcept;
 	SizeType capacity() const noexcept;
@@ -272,19 +272,23 @@ NumberChecker<MIN, MAX, BUFFER_SIZE>::get(IntType value)
 		>::get(value);
 }
 
-template<SizeTraits::SizeType BUFFER_SIZE>
-template<typename IntType>
+template<SizeTraits::SizeType BUFFER_SIZE> template<typename IntType>
 inline SizeTraits::SizeType NumberChecker<
 	Types::ulong_t(999999999999999999ULL), Types::ulong_t(9999999999999999999ULL)
-	, BUFFER_SIZE>::get(IntType value)
+	, BUFFER_SIZE
+>::get(IntType value)
 {
 	constexpr Types::ulong_t MIN = Types::ulong_t(999999999999999999ULL);
 	constexpr Types::ulong_t MAX = Types::ulong_t(9999999999999999999ULL);
 
 	if (MIN <= value && value <= MAX)
+	{
 		return BUFFER_SIZE;
+	}
 	else
+	{
 		return BUFFER_SIZE + 1;
+	}
 }
 
 template<typename IntType, bool SIGNED>
@@ -316,7 +320,8 @@ SizeTraits::SizeType bufferSize(IntType integer)
 }
 
 TEMPLATE_TYPE
-STRING_TYPE::BasicString() : allocator()
+STRING_TYPE::BasicString()
+		: allocator()
 		, stringCapacity()
 		, head(nullptr), tail(nullptr)
 {}
@@ -476,46 +481,46 @@ STRING_TYPE &STRING_TYPE::operator+=(T &&object)
 }
 
 // TODO: implement
-TEMPLATE_TYPE
-template<typename IntType>
-STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
-{
+//TEMPLATE_TYPE
+//template<typename IntType>
+//STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
+//{
 
-	return *this;
-}
-
-// TODO: implement
-TEMPLATE_TYPE
-STRING_TYPE &STRING_TYPE::operator+=(const Me &string)
-{
-	return *this;
-}
+//	return *this;
+//}
 
 // TODO: implement
-TEMPLATE_TYPE
-template<typename InputIterator>
-STRING_TYPE &STRING_TYPE::operator+=(Range<InputIterator> range)
-{}
+//TEMPLATE_TYPE
+//STRING_TYPE &STRING_TYPE::operator+=(const Me &string)
+//{
+//	return *this;
+//}
 
 // TODO: implement
-TEMPLATE_TYPE
-STRING_TYPE &STRING_TYPE::operator-=(Iterator it)
-{}
+//TEMPLATE_TYPE
+//template<typename InputIterator>
+//STRING_TYPE &STRING_TYPE::operator+=(Range<InputIterator> range)
+//{}
 
 // TODO: implement
-TEMPLATE_TYPE
-STRING_TYPE &STRING_TYPE::operator-=(ReverseIterator it)
-{}
+//TEMPLATE_TYPE
+//STRING_TYPE &STRING_TYPE::operator-=(Iterator it)
+//{}
 
 // TODO: implement
-TEMPLATE_TYPE
-STRING_TYPE &STRING_TYPE::operator-=(Range<Iterator> range)
-{}
+//TEMPLATE_TYPE
+//STRING_TYPE &STRING_TYPE::operator-=(ReverseIterator it)
+//{}
 
 // TODO: implement
-TEMPLATE_TYPE
-STRING_TYPE &STRING_TYPE::operator-=(Range<ReverseIterator> range)
-{}
+//TEMPLATE_TYPE
+//STRING_TYPE &STRING_TYPE::operator-=(Range<Iterator> range)
+//{}
+
+// TODO: implement
+//TEMPLATE_TYPE
+//STRING_TYPE &STRING_TYPE::operator-=(Range<ReverseIterator> range)
+//{}
 
 TEMPLATE_TYPE
 typename STRING_TYPE::SizeType STRING_TYPE::length() const noexcept

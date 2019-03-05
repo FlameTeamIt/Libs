@@ -144,7 +144,7 @@ public:
 	 * @param vector
 	 * @return
 	 */
-	Me &operator=(Me &&vector);
+	Me &operator=(Me &&vector) noexcept;
 
 	/**
 	 * @brief operator []
@@ -366,11 +366,11 @@ public:
 	void erase(Iterator itBegin, Iterator itEnd);
 
 protected:
-//	using Allocator::construct;
-//	using Allocator::createArray;
-//	using Allocator::reallocateArray;
-//	using Allocator::destroy;
-//	using Allocator::freeArray;
+	using Allocator::construct;
+	using Allocator::createArray;
+	using Allocator::reallocateArray;
+	using Allocator::destroy;
+	using Allocator::freeArray;
 
 private:
 	inline SizeType nextCapacity() const;
@@ -440,7 +440,7 @@ TEMPLATE_DEFINE
 VECTOR_TYPE::Vector(typename VECTOR_TYPE::SizeType size)
 		: Allocator()
 		, vectorCapacity((size * VECTOR_RESIZE_FACTOR_MULT) / VECTOR_RESIZE_FACTOR_DIV)
-		, head(this->construct(vectorCapacity)), tail(head + vectorCapacity)
+		, head(construct(vectorCapacity)), tail(head + vectorCapacity)
 {}
 
 TEMPLATE_DEFINE
@@ -462,7 +462,7 @@ TEMPLATE_DEFINE
 VECTOR_TYPE::~Vector()
 {
 	clean();
-	this->freeArray(head);
+	freeArray(head);
 }
 
 TEMPLATE_DEFINE TEMPLATE_DEFINE_1
@@ -471,7 +471,7 @@ VECTOR_TYPE &VECTOR_TYPE::operator=(const VECTOR_TYPE_1 &vector)
 	if (capacity() < vector.size())
 	{
 		reserve(vector.size() - capacity());
-		operator=(vector);
+		*this = vector;
 	}
 	else
 	{
@@ -585,7 +585,7 @@ void VECTOR_TYPE::reserve(typename VECTOR_TYPE::SizeType newCapacity)
 						++itNew, ++itOld)
 				{
 					placementNew<Type>(itNew, move(*itOld));
-					itOld->~T();
+					(*itOld).~T();
 				}
 				this->freeArray(head);
 				tail = tempHead + size();
@@ -606,8 +606,11 @@ void VECTOR_TYPE::reserve(typename VECTOR_TYPE::SizeType newCapacity)
 TEMPLATE_DEFINE
 void VECTOR_TYPE::clean()
 {
-	for (auto &i : *this)
+	auto range = makeRange(head, tail);
+	for (auto &i : range)
+	{
 		i.~T();
+	}
 	tail = head;
 }
 

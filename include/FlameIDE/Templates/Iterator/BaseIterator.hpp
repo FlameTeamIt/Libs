@@ -38,7 +38,8 @@ public:
 	static constexpr IteratorAccess ACCESS = ITERATOR_ACCESS;
 
 	BaseIterator() = default;
-	BaseIterator(const Me &) = default;
+	BaseIterator(const Me &it) noexcept : wrappedIterator(it.wrappedIterator)
+	{}
 	~BaseIterator() = default;
 	Me &operator=(const Me &) = default;
 

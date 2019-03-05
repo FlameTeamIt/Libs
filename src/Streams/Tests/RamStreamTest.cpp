@@ -3,6 +3,8 @@
 #include <FlameIDE/Streams/RamStream.hpp>
 #include <FlameIDE/Common/Utils.hpp>
 
+#include <array>
+
 namespace flame_ide
 {namespace streams
 {namespace tests

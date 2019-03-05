@@ -7,9 +7,8 @@
 namespace flame_ide
 {
 
-enum class byte_t : uichar_t
-{
-};
+enum class byte_t: uichar_t
+{};
 
 template<typename IntegerType>
 constexpr byte_t operator<<(byte_t byteValue, IntegerType shiftValue);

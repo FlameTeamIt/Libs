@@ -66,6 +66,18 @@ public:
 	CircularArray() noexcept;
 	CircularArray(const Me &array) noexcept;
 	CircularArray(Me &&array) noexcept;
+
+	// TODO
+	template<typename InputIterator>
+	CircularArray(const Range<InputIterator> &range);
+
+	// TODO
+	template<typename InputIterator>
+	CircularArray(Range<InputIterator> &&range);
+
+	// TODO
+	CircularArray(InitializerList<T, ARRAY_CAPACITY> list);
+
 	~CircularArray();
 	Me &operator=(const Me &) noexcept;
 	Me &operator=(Me &&) noexcept;
@@ -92,7 +104,7 @@ public:
 	/// @brief capacity
 	/// @return
 	///
-	constexpr SizeType capacity() noexcept
+	constexpr SizeType capacity() const noexcept
 	{
 		return CAPACITY;
 	}
@@ -219,6 +231,16 @@ private:
 	///
 	void updateTerminal(typename BufferType::Iterator &terminal) noexcept;
 
+	Range<typename BufferType::Iterator> getBufferRange()
+	{
+		return makeRange(buffer.begin(), buffer.begin() + buffer.CAPACITY);
+	}
+
+	Range<typename BufferType::ConstIterator> getBufferRange() const
+	{
+		return makeRange(buffer.cbegin(), buffer.cbegin() + buffer.CAPACITY);
+	}
+
 	BufferType buffer; ///<
 	typename BufferType::Iterator head; ///<
 	typename BufferType::Iterator tail; ///<
@@ -278,8 +300,7 @@ CIRCULAR_ARRAY_TYPE &CIRCULAR_ARRAY_TYPE::operator=(const Me &array) noexcept
 	clean();
 	for (auto &i : array)
 	{
-		placementNew(getPointer(tail), i);
-		++tail;
+		placementNew(getPointer(tail++), i);
 	}
 }
 
@@ -289,8 +310,7 @@ CIRCULAR_ARRAY_TYPE &CIRCULAR_ARRAY_TYPE::operator=(Me &&array) noexcept
 	clean();
 	for (auto &&i : array)
 	{
-		emplaceNew(getPointer(tail), move(i));
-		++tail;
+		emplaceNew(getPointer(tail++), move(i));
 	}
 }
 
@@ -314,7 +334,7 @@ CIRCULAR_ARRAY_TYPE::size() const noexcept
 {
 	if (head > tail)
 	{
-		return capacity() - (head - tail);
+		return this->capacity() - (head - tail - 1);
 	}
 	else
 	{
@@ -337,7 +357,8 @@ void CIRCULAR_ARRAY_TYPE::pushBack(ConstReference obj) noexcept
 {
 	if (size() != capacity())
 	{
-		placementNew(getPointer(++tail), obj);
+		placementNew(getPointer(tail), obj);
+		tail++;
 		updateTerminal(tail);
 	}
 }
@@ -347,7 +368,9 @@ void CIRCULAR_ARRAY_TYPE::pushBack(MoveReference obj) noexcept
 {
 	if (size() != capacity())
 	{
-		placementNew(getPointer(++tail), move(obj));
+
+		placementNew(getPointer(tail), move(obj));
+		++tail;
 		updateTerminal(tail);
 	}
 }
@@ -397,15 +420,10 @@ void CIRCULAR_ARRAY_TYPE::emplaceBack(Args &&...args) noexcept
 TEMPLATE_DEFINE
 void CIRCULAR_ARRAY_TYPE::popFront() noexcept
 {
-	if (size())
+	if (head != tail)
 	{
 		head->~T();
-		++head;
-		updateTerminal(head);
-	}
-	else
-	{
-		tail = head = buffer.begin();
+		updateTerminal(++head);
 	}
 }
 
@@ -413,7 +431,7 @@ TEMPLATE_DEFINE
 typename CIRCULAR_ARRAY_TYPE::Iterator
 CIRCULAR_ARRAY_TYPE::begin() noexcept
 {
-	return Iterator(head);
+	return Iterator(head, getBufferRange());
 }
 
 TEMPLATE_DEFINE
@@ -427,7 +445,7 @@ TEMPLATE_DEFINE
 typename CIRCULAR_ARRAY_TYPE::ConstIterator
 CIRCULAR_ARRAY_TYPE::cbegin() const noexcept
 {
-	return ConstIterator(buffer.cbegin());
+	return ConstIterator(buffer.cbegin(), getBufferRange());
 }
 
 TEMPLATE_DEFINE
@@ -499,7 +517,7 @@ TEMPLATE_DEFINE
 void CIRCULAR_ARRAY_TYPE::updateTerminal(
 		typename BufferType::Iterator &terminal) noexcept
 {
-	if (terminal == buffer.begin() + BufferType::CAPACITY)
+	if (terminal == (buffer.begin() + BufferType::CAPACITY))
 	{
 		terminal = buffer.begin();
 	}
