@@ -986,26 +986,26 @@ template <typename T
 	, SizeTraits::SizeType ARRAY_CAPACITY
 	, typename Traits
 >
-class Array<T, ARRAY_CAPACITY, true, Traits>: public Traits
+class Array<T, ARRAY_CAPACITY, true, Traits>
 {
 public:
 	static_assert (ARRAY_CAPACITY != 0, "Zero-sized array is impossible");
 
 	using Me = ARRAY_TYPE;
 
-	using typename Traits::Type;
+	using Type = typename Traits::Type;
 
-	using typename Traits::Reference;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
+	using Reference = typename Traits::Reference;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
 
-	using typename Traits::Pointer;
-	using typename Traits::PointerToConst;
+	using Pointer = typename Traits::Pointer;
+	using PointerToConst = typename Traits::PointerToConst;
 
-	using typename Traits::SizeType;
-	using typename Traits::SsizeType;
+	using SizeType = typename Traits::SizeType;
+	using SsizeType = typename Traits::SsizeType;
 
-	using typename Traits::VoidPointer;
+	using VoidPointer = typename Traits::VoidPointer;
 
 	static constexpr SizeType CAPACITY = ARRAY_CAPACITY;
 
