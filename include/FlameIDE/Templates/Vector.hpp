@@ -585,7 +585,7 @@ void VECTOR_TYPE::reserve(typename VECTOR_TYPE::SizeType newCapacity)
 						++itNew, ++itOld)
 				{
 					placementNew<Type>(itNew, move(*itOld));
-					itOld->~T();
+					(*itOld).~T();
 				}
 				this->freeArray(head);
 				tail = tempHead + size();

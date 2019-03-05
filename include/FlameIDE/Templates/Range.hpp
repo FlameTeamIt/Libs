@@ -15,7 +15,7 @@ public:
 	using Iterator = InputIterator;
 
 	Range() = delete;
-	Range(const Me &) = default;
+	Range(const Me &) noexcept;
 	Range(Me &&) noexcept = default;
 	Range(Iterator itBegin, Iterator itEnd) noexcept;
 	~Range() = default;
@@ -63,8 +63,13 @@ namespace flame_ide
 // Range
 
 template<typename InputIterator>
-Range<InputIterator>::Range(InputIterator itBegin, InputIterator itEnd) noexcept
-		: first(itBegin), last(itEnd)
+Range<InputIterator>::Range(const Me &range) noexcept :
+		first(range.first), last(range.last)
+{}
+
+template<typename InputIterator>
+Range<InputIterator>::Range(InputIterator itBegin, InputIterator itEnd) noexcept :
+		first(itBegin), last(itEnd)
 {}
 
 template<typename InputIterator>

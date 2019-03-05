@@ -411,7 +411,7 @@ template<typename T, typename Arg, typename ...Args> inline
 Types::ssize_t VariantStructGetterSetter<false>::set(
 		VariantStruct<Arg, Args...> &me, const T &object)
 {
-	Types::ssize_t result = me.data.pack.template set(object);
+	Types::ssize_t result = me.data.pack.set(object);
 	return (result < 0) ? result : ++result;
 }
 
@@ -419,7 +419,7 @@ template<typename T, typename Arg, typename ...Args> inline
 Types::ssize_t VariantStructGetterSetter<false>::set(
 		VariantStruct<Arg, Args...> &me, T &&object)
 {
-	Types::ssize_t result = me.data.pack.template set(move(object));
+	Types::ssize_t result = me.data.pack.set(move(object));
 	return (result < 0) ? result : ++result;
 }
 
@@ -554,7 +554,7 @@ template<typename Arg, typename ...Args> template<typename T>
 Types::ssize_t Variant<Arg, Args...>::set(T &&object)
 {
 	reset();
-	currentIndex = value.template set(move(object));
+	currentIndex = value.set(move(object));
 	return getCurrentIndex();
 }
 
@@ -562,7 +562,7 @@ template<typename Arg, typename ...Args> template<typename T>
 Types::ssize_t Variant<Arg, Args...>::set(const T &object)
 {
 	reset();
-	currentIndex = value.template set(object);
+	currentIndex = value.set(object);
 	return getCurrentIndex();
 }
 

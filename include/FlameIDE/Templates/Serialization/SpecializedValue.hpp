@@ -92,7 +92,17 @@ struct SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>: public ValueInfo<T>
 	///
 	/// @brief operator SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER_ORDER, T>
 	///
-	operator SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>() const;
+	operator SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>() const
+	{
+		return SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>{
+				ToNeedOrder<
+					ByteOrder::LITTLE_ENDIAN_ORDER
+					, ByteOrder::BIG_ENDIAN_ORDER
+				>::convert(getValue)
+				, getSize()
+				, getOffset()
+		};
+	}
 
 	///
 	/// @brief begin
@@ -344,20 +354,6 @@ SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>::SpecializedValue(
 		T initValue, Types::size_t initSize, Types::size_t initOffset)
 	: Parent(initValue, initSize, initOffset)
 {}
-
-template<typename T>
-SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>::
-operator SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>() const
-{
-	return SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>{
-			ToNeedOrder<
-				ByteOrder::LITTLE_ENDIAN_ORDER
-				, ByteOrder::BIG_ENDIAN_ORDER
-			>::convert(getValue)
-			, getSize()
-			, getOffset()
-	};
-}
 
 template<typename T>
 typename ValueInfo<T>::Iterator
