@@ -42,9 +42,6 @@ HEADERS += \
 	./include/FlameIDE/Common/Utils.hpp \
 	./include/FlameIDE/Constants/C.hpp \
 	./include/FlameIDE/Constants/CPP.hpp \
-	./include/FlameIDE/Filesystem/BasicFile.hpp \
-	./include/FlameIDE/Filesystem/Project.hpp \
-	./include/FlameIDE/Filesystem/Session.hpp \
 	./include/FlameIDE/Others/TextStyle.hpp \
 	./include/FlameIDE/Streams/FileStreamReader.hpp \
 	./include/FlameIDE/Streams/FileStreamWriter.hpp \
@@ -139,9 +136,6 @@ SOURCES += \
 	./src/Bus/MsgInterface.cpp \
 	./src/Common/Tests/TestAggregator.cpp \
 	./src/Common/Tests/Utils.cpp \
-	./src/Filesystem/BasicFile.cpp \
-	./src/Filesystem/Project.cpp \
-	./src/Filesystem/Session.cpp \
 	./src/Streams/RamStream.cpp \
 	./src/Streams/StreamUtils.cpp \
 	./src/Streams/Tests/PipeStreamTest.cpp \
