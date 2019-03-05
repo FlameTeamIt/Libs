@@ -1,4 +1,4 @@
-#ifndef FLAMEIDE_COMMON_TRAITS_CREATIONPROHIBITIONS_HPP
+﻿#ifndef FLAMEIDE_COMMON_TRAITS_CREATIONPROHIBITIONS_HPP
 #define FLAMEIDE_COMMON_TRAITS_CREATIONPROHIBITIONS_HPP
 
 namespace flame_ide
@@ -32,9 +32,7 @@ struct NonCopy
 /// @brief A variable of this struct cannot be define.
 ///
 struct NonCreational: public NonDefault, public NonMove, public NonCopy
-{
-	~NonCreational() = delete;
-};
+{};
 
 }
 
