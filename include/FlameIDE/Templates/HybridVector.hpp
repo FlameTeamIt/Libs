@@ -1,4 +1,4 @@
-#ifndef FLAMEIDE_TEMPLATES_HYBRIDVECTOR_HPP
+﻿#ifndef FLAMEIDE_TEMPLATES_HYBRIDVECTOR_HPP
 #define FLAMEIDE_TEMPLATES_HYBRIDVECTOR_HPP
 
 #include <FlameIDE/Templates/Array.hpp>
@@ -448,12 +448,16 @@ public:
 	{
 		if (isArrayIterator())
 		{
-			ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
+			ConstArrayIterator &it = *(
+					wrappedIterator.template get<ConstArrayIterator>()
+			);
 			++it;
 		}
 		else
 		{
-			ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
+			ConstVectorIterator &it = *(
+					wrappedIterator.template get<ConstVectorIterator>()
+			);
 			++it;
 		}
 		return *this;
@@ -470,12 +474,16 @@ public:
 	{
 		if (isArrayIterator())
 		{
-			ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
+			ConstArrayIterator &it = *(
+					wrappedIterator.template get<ConstArrayIterator>()
+			);
 			--it;
 		}
 		else
 		{
-			ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
+			ConstVectorIterator &it = *(
+					wrappedIterator.template get<ConstVectorIterator>()
+			);
 			--it;
 		}
 		return *this;
@@ -492,12 +500,16 @@ public:
 	{
 		if (isArrayIterator())
 		{
-			const ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
+			const ConstArrayIterator &it = *(
+					wrappedIterator.template get<ConstArrayIterator>()
+			);
 			return *it;
 		}
 		else
 		{
-			const ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
+			const ConstVectorIterator &it = *(
+					wrappedIterator.template get<ConstVectorIterator>()
+			);
 			return *it;
 		}
 	}
@@ -528,12 +540,16 @@ public:
 	{
 		if (isArrayIterator())
 		{
-			ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
+			ConstArrayIterator &it = *(
+					wrappedIterator.template get<ConstArrayIterator>()
+			);
 			it += value;
 		}
 		else
 		{
-			ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
+			ConstVectorIterator &it = *(
+					wrappedIterator.template get<ConstVectorIterator>()
+			);
 			it += value;
 		}
 		return *this;
@@ -544,12 +560,16 @@ public:
 	{
 		if (isArrayIterator())
 		{
-			ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
+			ConstArrayIterator &it = *(
+					wrappedIterator.template get<ConstArrayIterator>()
+			);
 			it -= value;
 		}
 		else
 		{
-			ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
+			ConstVectorIterator &it = *(
+					wrappedIterator.template get<ConstVectorIterator>()
+			);
 			it -= value;
 		}
 		return *this;
@@ -572,14 +592,22 @@ public:
 		{
 			if (isArrayIterator())
 			{
-				ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
-				ConstArrayIterator &itIt = *(iterator.wrappedIterator.get<ConstArrayIterator>());
+				ConstArrayIterator &it = *(
+						wrappedIterator.template get<ConstArrayIterator>()
+				);
+				ConstArrayIterator &itIt = *(
+						iterator.wrappedIterator.template get<ConstArrayIterator>()
+				);
 				return it < itIt;
 			}
 			else
 			{
-				ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
-				ConstVectorIterator &itIt = *(iterator.wrappedIterator.get<ConstVectorIterator>());
+				ConstVectorIterator &it = *(
+						wrappedIterator.template get<ConstVectorIterator>()
+				);
+				ConstVectorIterator &itIt = *(
+						iterator.wrappedIterator.template get<ConstVectorIterator>()
+				);
 				return it < itIt;
 			}
 		}
@@ -593,14 +621,22 @@ public:
 		{
 			if (isArrayIterator())
 			{
-				ConstArrayIterator &it = *(wrappedIterator.get<ConstArrayIterator>());
-				ConstArrayIterator &itIt = *(iterator.wrappedIterator.get<ConstArrayIterator>());
+				ConstArrayIterator &it = *(
+						wrappedIterator.template get<ConstArrayIterator>()
+				);
+				ConstArrayIterator &itIt = *(
+						iterator.wrappedIterator.template get<ConstArrayIterator>()
+				);
 				return it > itIt;
 			}
 			else
 			{
-				ConstVectorIterator &it = *(wrappedIterator.get<ConstVectorIterator>());
-				ConstVectorIterator &itIt = *(iterator.wrappedIterator.get<ConstVectorIterator>());
+				ConstVectorIterator &it = *(
+						wrappedIterator.template get<ConstVectorIterator>()
+				);
+				ConstVectorIterator &itIt = *(
+						iterator.wrappedIterator.template get<ConstVectorIterator>()
+				);
 				return it > itIt;
 			}
 		}

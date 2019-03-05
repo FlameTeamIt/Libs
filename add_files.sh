@@ -3,6 +3,7 @@
 echo "TEMPLATE = app"
 echo "CONFIG += console"
 echo "CONFIG += object_parallel_to_source"
+echo "CONFIG += c++14"
 echo "CONFIG -= app_bundle"
 echo "CONFIG -= qt"
 echo

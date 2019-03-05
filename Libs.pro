@@ -1,6 +1,7 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG += object_parallel_to_source
+CONFIG += c++14
 CONFIG -= app_bundle
 CONFIG -= qt
 
@@ -45,6 +46,8 @@ HEADERS += \
 	./include/FlameIDE/Filesystem/Project.hpp \
 	./include/FlameIDE/Filesystem/Session.hpp \
 	./include/FlameIDE/Others/TextStyle.hpp \
+	./include/FlameIDE/Streams/FileStreamReader.hpp \
+	./include/FlameIDE/Streams/FileStreamWriter.hpp \
 	./include/FlameIDE/Streams/NamedPipeStream.hpp \
 	./include/FlameIDE/Streams/PipeStream.hpp \
 	./include/FlameIDE/Streams/RamStream.hpp \
@@ -62,8 +65,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/Allocator/ObjectAllocator.hpp \
 	./include/FlameIDE/Templates/Array.hpp \
 	./include/FlameIDE/Templates/ArrayBlocks.hpp \
-	./include/FlameIDE/Templates/BitSet.hpp \
 	./include/FlameIDE/Templates/Bits.hpp \
+	./include/FlameIDE/Templates/BitSet.hpp \
 	./include/FlameIDE/Templates/ByteOrder.hpp \
 	./include/FlameIDE/Templates/CircularArray.hpp \
 	./include/FlameIDE/Templates/CircularVector.hpp \
@@ -139,15 +142,11 @@ SOURCES += \
 	./src/Filesystem/BasicFile.cpp \
 	./src/Filesystem/Project.cpp \
 	./src/Filesystem/Session.cpp \
-	./src/Streams/Posix/PipeStream/PipeStream.cpp \
-	./src/Streams/Posix/PipeStream/PipeStreamReader.cpp \
-	./src/Streams/Posix/PipeStream/PipeStreamWriter.cpp \
 	./src/Streams/RamStream.cpp \
 	./src/Streams/StreamUtils.cpp \
 	./src/Streams/Tests/PipeStreamTest.cpp \
 	./src/Streams/Tests/RamStreamTest.cpp \
 	./src/Streams/Tests/TestAggregator.cpp \
-	./src/Streams/Windows/PipeStream.cpp \
 	./src/Templates/Tests/AllocatorTest.cpp \
 	./src/Templates/Tests/ArrayTest.cpp \
 	./src/Templates/Tests/BitsTest.cpp \
