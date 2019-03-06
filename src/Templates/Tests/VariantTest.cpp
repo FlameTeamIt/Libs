@@ -90,12 +90,15 @@ bool VariantTest::testVariant()
 
 	if (variant.get<TestClass>())
 	{
-		log << "variant.get<TestClass>() != nullptr" << std::endl;
-		log << "variant.getCurrentIndex() = " << variant.getCurrentIndex() << std::endl;
+		log << "variant.get<TestClass>() != nullptr"
+				<< std::endl;
+		log << "variant.getCurrentIndex() = "
+				<< variant.getCurrentIndex()
+				<< std::endl;
 		return false;
 	}
 
-	Variant<int, long> variantArray[6] = {
+	Variant<Types::int_t, Types::long_t> variantArray[6] = {
 		Variant<Types::int_t, Types::long_t>(Types::int_t(10))
 		, Variant<Types::int_t, Types::long_t>(Types::int_t(10))
 		, Variant<Types::int_t, Types::long_t>(Types::int_t(25))
@@ -107,25 +110,40 @@ bool VariantTest::testVariant()
 		size_t offset = 0;
 		if (variantArray[offset + 0] != variantArray[offset + 1])
 		{
+			log << "Variant<Types::int_t, Types::long_t>(Types::int_t(10))"
+					" != Variant<Types::int_t, Types::long_t>(Types::int_t(10))"
+					<< std::endl;
 			return false;
 		}
 		if (variantArray[offset + 0] == variantArray[offset + 2])
 		{
+			log << "Variant<Types::int_t, Types::long_t>(Types::int_t(10))"
+					" == Variant<Types::int_t, Types::long_t>(Types::int_t(25))"
+					<< std::endl;
 			return false;
 		}
 
 		if (variantArray[offset + 0] == variantArray[offset + 3])
 		{
+			log << "Variant<Types::int_t, Types::long_t>(Types::int_t(10))"
+					" == Variant<Types::int_t, Types::long_t>(Types::long_t(100))"
+					<< std::endl;
 			return false;
 		}
 
 		offset = 3;
 		if (variantArray[offset + 0] != variantArray[offset + 1])
 		{
+			log << "Variant<Types::int_t, Types::long_t>(Types::long_t(100))"
+					" != Variant<Types::int_t, Types::long_t>(Types::long_t(100))"
+					<< std::endl;
 			return false;
 		}
 		if (variantArray[offset + 0] == variantArray[offset + 2])
 		{
+			log << "Variant<Types::int_t, Types::long_t>(Types::long_t(100))"
+					" != Variant<Types::int_t, Types::long_t>(Types::long_t(125))"
+					<< std::endl;
 			return false;
 		}
 	}
