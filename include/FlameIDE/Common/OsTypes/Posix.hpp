@@ -29,7 +29,16 @@ constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
 		{}, OS_INVALID_DESCRIPTOR
 };
 
-using OsAsyncIoContext = ::aiocb;
+struct OsAsyncIoContext : public ::aiocb
+{
+	constexpr OsAsyncIoContext() : ::aiocb{}
+	{
+		aio_nbytes = 0;
+		aio_fildes = OS_INVALID_DESCRIPTOR;
+		aio_offset = 0;
+		aio_buf = nullptr;
+	}
+};
 constexpr OsAsyncIoContext OS_ASYNC_CONTEXT_INITIALIZER = OsAsyncIoContext{};
 
 }}}

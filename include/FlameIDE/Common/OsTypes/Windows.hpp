@@ -25,7 +25,7 @@ struct OsSocket
 	SOCKET sock;
 };
 constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
-	::SOCKADDR_IN{}, SOCKET{}
+		::SOCKADDR_IN{}, SOCKET{}
 };
 
 }}}
