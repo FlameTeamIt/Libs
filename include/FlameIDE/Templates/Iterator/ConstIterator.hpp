@@ -70,6 +70,7 @@ public:
 	>;
 	using Me = ConstIterator<IteratorType, IteratorCategory::INPUT, Traits, MetaType>;
 
+	ConstIterator() noexcept = default;
 	ConstIterator(const Me &) = default;
 	ConstIterator(IteratorType iterator) : Parent(iterator)
 	{}
@@ -102,6 +103,7 @@ public:
 	>;
 	using Me = ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>;
 
+	ConstIterator() noexcept = default;
 	ConstIterator(const Me &) = default;
 	ConstIterator(IteratorType iterator) : Parent(iterator)
 	{}
@@ -134,6 +136,7 @@ public:
 		IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType
 	>;
 
+	ConstIterator() noexcept = default;
 	ConstIterator(const Me &) = default;
 	ConstIterator(IteratorType iterator) : Parent(iterator)
 	{}
@@ -171,6 +174,7 @@ public:
 		IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType
 	>;
 
+	ConstIterator() noexcept = default;
 	ConstIterator(const Me &) = default;
 	ConstIterator(IteratorType iterator) : Parent(iterator)
 	{}
