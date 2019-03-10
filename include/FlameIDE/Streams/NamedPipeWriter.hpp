@@ -16,18 +16,43 @@ class NamedPipeWriter: public stream_utils::AbstractByteStreamWriter
 public:
 	using Parent = stream_utils::AbstractByteStreamWriter;
 
-	NamedPipeWriter();
-	NamedPipeWriter(const char *name) noexcept;
-	NamedPipeWriter(os::FileDescriptor fileDescriptor) noexcept;
+	NamedPipeWriter() noexcept;
+	NamedPipeWriter(const NamedPipeWriter &) = delete;
+	NamedPipeWriter(NamedPipeWriter &&writer) noexcept;
+
+	///
+	/// @brief NamedPipeWriter
+	/// @param name
+	/// @param deletePipe
+	///
+	NamedPipeWriter(const char *name, bool deletePipe = true) noexcept;
+
 	~NamedPipeWriter() noexcept;
 
-	os::Status open(const char *name) noexcept;
+	NamedPipeWriter &operator=(const NamedPipeWriter &) = delete;
+	NamedPipeWriter &operator=(NamedPipeWriter &&reader) noexcept;
 
 	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
 	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept;
 
+	///
+	/// @brief getFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
+	os::FileDescriptor getFileDescriptor(bool continueOwning = false) noexcept;
+
+	///
+	/// @brief open
+	/// @param name
+	/// @param deletePipe
+	/// @return
+	///
+	os::Status open(const char *name, bool deletePipe = true) noexcept;
+
 private:
-	FileStreamWriter writer;
+	FileStreamWriter writer; ///<
+	bool delPipe; ///<
 };
 
 }}

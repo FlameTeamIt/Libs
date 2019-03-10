@@ -18,17 +18,42 @@ public:
 	using Parent = stream_utils::AbstractByteStreamReader;
 
 	NamedPipeReader() noexcept;
-	NamedPipeReader(const char *name) noexcept;
-	NamedPipeReader(os::FileDescriptor fileDescriptor) noexcept;
+	NamedPipeReader(const NamedPipeReader &) = delete;
+	NamedPipeReader(NamedPipeReader &&reader) noexcept;
+
+	///
+	/// @brief NamedPipeReader
+	/// @param name
+	/// @param deletePipe
+	///
+	NamedPipeReader(const char *name, bool deletePipe = true) noexcept;
+
 	virtual ~NamedPipeReader() noexcept;
 
-	os::Status open(const char *name) noexcept;
+	NamedPipeReader &operator=(const NamedPipeReader &) = delete;
+	NamedPipeReader &operator=(NamedPipeReader &&reader) noexcept;
 
 	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept;
 	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept;
 
+	///
+	/// @brief getFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
+	os::FileDescriptor getFileDescriptor(bool continueOwning = false) noexcept;
+
+	///
+	/// @brief open
+	/// @param name
+	/// @param deletePipe
+	/// @return
+	///
+	os::Status open(const char *name, bool deletePipe = true) noexcept;
+
 private:
-	FileStreamReader reader;
+	FileStreamReader reader; ///<
+	bool delPipe; ///<
 };
 
 }}
