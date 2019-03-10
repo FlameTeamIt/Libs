@@ -9,16 +9,12 @@ namespace flame_ide
 {namespace streams
 {
 
-class PipeStream;
-
 ///
 /// @brief The FileStreamReader class
 ///
 class FileStreamReader: public stream_utils::AbstractByteStreamReader
 {
 public:
-	friend class PipeStream;
-
 	using Parent = stream_utils::AbstractByteStreamReader;
 
 	FileStreamReader();
