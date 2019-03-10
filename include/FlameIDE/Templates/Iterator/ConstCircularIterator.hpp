@@ -43,7 +43,7 @@ public:
 	>;
 	using Range = templates::Range<IteratorType>;
 
-	ConstCircularIterator() = default;
+	ConstCircularIterator() noexcept = default;
 	ConstCircularIterator(const Me &) = default;
 	ConstCircularIterator(IteratorType iterator, Range containerActualRange)
 			: Parent(iterator)
@@ -78,7 +78,7 @@ public:
 	>;
 	using Range = templates::Range<IteratorType>;
 
-	ConstCircularIterator() = default;
+	ConstCircularIterator() noexcept = default;
 	ConstCircularIterator(const Me &) = default;
 	ConstCircularIterator(IteratorType iterator, Range containerActualRange)
 			: Parent(iterator)
@@ -114,11 +114,10 @@ public:
 	>;
 	using Range = templates::Range<IteratorType>;
 
-	ConstCircularIterator() = default;
+	ConstCircularIterator() noexcept = default;
 	ConstCircularIterator(const Me &) = default;
-	ConstCircularIterator(IteratorType iterator, Range containerActualRange)
-			: Parent(iterator)
-			, range(containerActualRange)
+	ConstCircularIterator(IteratorType iterator, Range containerActualRange) :
+			Parent(iterator), range(containerActualRange)
 	{}
 	~ConstCircularIterator() = default;
 	Me &operator=(const Me &) = default;
