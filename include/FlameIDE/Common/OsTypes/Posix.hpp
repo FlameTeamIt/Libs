@@ -7,6 +7,7 @@
 
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <aio.h>
 
 namespace flame_ide
 {namespace os
@@ -27,6 +28,9 @@ struct OsSocket
 constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
 		{}, OS_INVALID_DESCRIPTOR
 };
+
+using OsAsyncIoContext = ::aiocb;
+constexpr OsAsyncIoContext OS_ASYNC_CONTEXT_INITIALIZER = OsAsyncIoContext{};
 
 }}}
 
