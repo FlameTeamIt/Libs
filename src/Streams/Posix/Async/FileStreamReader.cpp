@@ -9,11 +9,11 @@ namespace flame_ide
 {namespace async
 {
 
-FileStreamReader::FileStreamReader() noexcept :
-		context(os::ASYNC_CONTEXT_INITIALIZER), own(false), outputRange()
-{}
+//FileStreamReader::FileStreamReader() noexcept :
+//		context(os::ASYNC_CONTEXT_INITIALIZER), own(false), outputRange()
+//{}
 
-FileStreamReader::~FileStreamReader() = default;
+//FileStreamReader::~FileStreamReader() = default;
 
 }}}
 

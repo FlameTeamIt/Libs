@@ -47,7 +47,9 @@ HEADERS += \
 	./include/FlameIDE/Streams/Async/FileStreamWriter.hpp \
 	./include/FlameIDE/Streams/FileStreamReader.hpp \
 	./include/FlameIDE/Streams/FileStreamWriter.hpp \
+	./include/FlameIDE/Streams/NamedPipeReader.hpp \
 	./include/FlameIDE/Streams/NamedPipeStream.hpp \
+	./include/FlameIDE/Streams/NamedPipeWriter.hpp \
 	./include/FlameIDE/Streams/PipeStream.hpp \
 	./include/FlameIDE/Streams/RamStream.hpp \
 	./include/FlameIDE/Streams/Reader.hpp \
