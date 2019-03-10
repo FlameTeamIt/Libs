@@ -43,6 +43,8 @@ HEADERS += \
 	./include/FlameIDE/Constants/C.hpp \
 	./include/FlameIDE/Constants/CPP.hpp \
 	./include/FlameIDE/Others/TextStyle.hpp \
+	./include/FlameIDE/Streams/Async/FileStreamReader.hpp \
+	./include/FlameIDE/Streams/Async/FileStreamWriter.hpp \
 	./include/FlameIDE/Streams/FileStreamReader.hpp \
 	./include/FlameIDE/Streams/FileStreamWriter.hpp \
 	./include/FlameIDE/Streams/NamedPipeStream.hpp \
@@ -62,8 +64,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/Allocator/ObjectAllocator.hpp \
 	./include/FlameIDE/Templates/Array.hpp \
 	./include/FlameIDE/Templates/ArrayBlocks.hpp \
-	./include/FlameIDE/Templates/Bits.hpp \
 	./include/FlameIDE/Templates/BitSet.hpp \
+	./include/FlameIDE/Templates/Bits.hpp \
 	./include/FlameIDE/Templates/ByteOrder.hpp \
 	./include/FlameIDE/Templates/CircularArray.hpp \
 	./include/FlameIDE/Templates/CircularVector.hpp \
@@ -177,6 +179,8 @@ SOURCES += \
 # Posix sources
 !win32 {
 SOURCES += \
+	./src/Streams/Posix/Async/FileStreamReader.cpp \
+	./src/Streams/Posix/Async/FileStreamWriter.cpp \
 	./src/Streams/Posix/FileStreamReader.cpp \
 	./src/Streams/Posix/FileStreamWriter.cpp \
 	./src/Streams/Posix/PipeStream.cpp \
