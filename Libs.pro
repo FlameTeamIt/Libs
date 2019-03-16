@@ -1,10 +1,17 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG += object_parallel_to_source
+win32 {
 CONFIG += c++14
+}
 CONFIG -= app_bundle
 CONFIG -= qt
 
+!win32 {
+QMAKE_CXXFLAGS = -std=c++14 -pedantic -fno-rtti -fno-exceptions
+QMAKE_CXXFLAGS_DEBUG += -gdwarf-3
+QMAKE_CXXFLAGS_RELEASE = -O3 -Wall -W
+}
 INCLUDEPATH += include/
 INCLUDEPATH += .
 
@@ -62,8 +69,9 @@ HEADERS += \
 	./include/FlameIDE/Templates/Allocator/ObjectAllocator.hpp \
 	./include/FlameIDE/Templates/Array.hpp \
 	./include/FlameIDE/Templates/ArrayBlocks.hpp \
-	./include/FlameIDE/Templates/Bits.hpp \
+	./include/FlameIDE/Templates/AsIntegralType.hpp \
 	./include/FlameIDE/Templates/BitSet.hpp \
+	./include/FlameIDE/Templates/Bits.hpp \
 	./include/FlameIDE/Templates/ByteOrder.hpp \
 	./include/FlameIDE/Templates/CircularArray.hpp \
 	./include/FlameIDE/Templates/CircularVector.hpp \
@@ -107,6 +115,7 @@ HEADERS += \
 	./src/Streams/Tests/TestAggregator.hpp \
 	./src/Templates/Tests/AllocatorTest.hpp \
 	./src/Templates/Tests/ArrayTest.hpp \
+	./src/Templates/Tests/AsIntegralTypeTest.hpp \
 	./src/Templates/Tests/BitsTest.hpp \
 	./src/Templates/Tests/ByteOrderTest.hpp \
 	./src/Templates/Tests/CircularArrayTest.hpp \
@@ -143,6 +152,7 @@ SOURCES += \
 	./src/Streams/Tests/TestAggregator.cpp \
 	./src/Templates/Tests/AllocatorTest.cpp \
 	./src/Templates/Tests/ArrayTest.cpp \
+	./src/Templates/Tests/AsIntegralTypeTest.cpp \
 	./src/Templates/Tests/BitsTest.cpp \
 	./src/Templates/Tests/ByteOrderTest.cpp \
 	./src/Templates/Tests/CircularArrayTest.cpp \
