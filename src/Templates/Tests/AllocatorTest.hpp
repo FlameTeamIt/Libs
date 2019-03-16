@@ -8,6 +8,7 @@
 #include "TestClass.hpp"
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -35,6 +36,6 @@ private:
 	flame_ide::templates::allocator::ArrayAllocator<TestClass> allocator;
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_ALLOCATORTEST_HPP

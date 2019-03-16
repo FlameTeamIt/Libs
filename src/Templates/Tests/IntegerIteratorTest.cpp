@@ -3,6 +3,7 @@
 #include <FlameIDE/Templates/Range.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -34,4 +35,4 @@ int IntegerIteratorTest::vStart()
 	));
 }
 
-}}
+}}}

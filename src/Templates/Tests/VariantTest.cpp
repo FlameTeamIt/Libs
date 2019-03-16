@@ -2,6 +2,7 @@
 #include "TestClass.hpp"
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -151,4 +152,4 @@ bool VariantTest::testVariant()
 	return true;
 }
 
-}}
+}}}

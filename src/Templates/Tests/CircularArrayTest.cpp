@@ -4,6 +4,7 @@
 #include <FlameIDE/Templates/IntegerIterator.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -619,4 +620,4 @@ int CircularArrayTest::vStart()
 
 }
 
-}}
+}}}

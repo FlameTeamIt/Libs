@@ -1,6 +1,7 @@
 #include "ByteOrderTest.hpp"
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -93,4 +94,4 @@ int ByteOrderTest::vStart()
 	return 0;
 }
 
-}}
+}}}

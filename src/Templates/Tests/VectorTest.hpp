@@ -8,6 +8,7 @@
 #include "TestClass.hpp"
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -26,6 +27,6 @@ private:
 	std::vector<TestClass> stdvector;
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_VECTORTEST_HPP

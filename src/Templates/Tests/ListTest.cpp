@@ -1,7 +1,7 @@
 #include "ListTest.hpp"
 
 using namespace flame_ide;
-using namespace flame_ide::test;
+using namespace flame_ide::templates::test;
 
 ListTest::ListTest() : AbstractTest("List")
 		, list {{

@@ -9,6 +9,7 @@
 #include <vector>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -25,6 +26,6 @@ private:
 	std::vector<TestClass> stdvector;
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_ARRAYTEST_HPP

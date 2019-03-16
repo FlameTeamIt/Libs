@@ -3,6 +3,7 @@
 #include <FlameIDE/Templates/AlignObject.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -131,4 +132,4 @@ int WideIntTest::vStart()
 	return 0;
 }
 
-}}
+}}}

@@ -8,6 +8,7 @@
 #include "TestClass.hpp"
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -21,6 +22,6 @@ private:
 	virtual int vStart();
 };
 
-}}
+}}}
 
 #endif // CIRCULARARRAYTEST_HPP

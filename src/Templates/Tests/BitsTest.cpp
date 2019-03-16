@@ -3,6 +3,7 @@
 #include <bitset>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -73,4 +74,4 @@ bool BitsTest::minimalType()
 	));
 }
 
-}}
+}}}

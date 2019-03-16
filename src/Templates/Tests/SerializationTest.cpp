@@ -3,6 +3,7 @@
 #include <FlameIDE/Templates/Vector.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -534,4 +535,4 @@ bool SerializationTest::beSpec64()
 	return true;
 }
 
-}}
+}}}
