@@ -3,6 +3,7 @@
 #include "HybridVectorTest.hpp"
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -368,4 +369,4 @@ bool HybridVectorTest::hybridTest()
 	return false;
 }
 
-}}
+}}}

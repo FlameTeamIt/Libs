@@ -3,14 +3,19 @@
 echo "TEMPLATE = app"
 echo "CONFIG += console"
 echo "CONFIG += object_parallel_to_source"
+
+echo "win32 {"
 echo "CONFIG += c++14"
+echo "}"
 echo "CONFIG -= app_bundle"
 echo "CONFIG -= qt"
 echo
 
-#echo "QMAKE_CXXFLAGS = -std=c++14 -pedantic -fno-rtti -fno-exceptions"
-#echo "QMAKE_CXXFLAGS_DEBUG += -gdwarf-3"
-#echo "QMAKE_CXXFLAGS_RELEASE = -O3 -Wall -W"
+echo "!win32 {"
+echo "QMAKE_CXXFLAGS = -std=c++14 -pedantic -fno-rtti -fno-exceptions"
+echo "QMAKE_CXXFLAGS_DEBUG += -gdwarf-3"
+echo "QMAKE_CXXFLAGS_RELEASE = -O3 -Wall -W"
+echo "}"
 echo "INCLUDEPATH += include/"
 echo "INCLUDEPATH += ."
 echo

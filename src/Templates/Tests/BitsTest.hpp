@@ -6,6 +6,7 @@
 #include <FlameIDE/Templates/Bits.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -21,6 +22,6 @@ private:
 	bool minimalType();
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_BITSTEST_HPP

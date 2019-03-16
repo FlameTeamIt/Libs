@@ -1,6 +1,6 @@
 #include "VectorTest.hpp"
 
-using namespace flame_ide::test;
+using namespace flame_ide::templates::test;
 
 VectorTest::VectorTest() : AbstractTest("Vector")
 		, vector{{

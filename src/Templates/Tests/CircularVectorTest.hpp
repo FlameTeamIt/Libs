@@ -6,6 +6,7 @@
 #include "TestClass.hpp"
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -21,6 +22,6 @@ private:
 	templates::CircularVector<TestClass> circVector;
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_CIRCULARVECTORTEST_HPP
