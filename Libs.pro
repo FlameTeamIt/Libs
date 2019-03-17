@@ -114,6 +114,10 @@ HEADERS += \
 	./include/FlameIDE/Templates/WideInt.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
+	./src/Streams/Posix/InternalPosixFunctions.hpp \
+	./src/Streams/Tests/NamedPipeReaderTest.hpp \
+	./src/Streams/Tests/NamedPipeStreamTest.hpp \
+	./src/Streams/Tests/NamedPipeWriterTest.hpp \
 	./src/Streams/Tests/PipeStreamTest.hpp \
 	./src/Streams/Tests/RamStreamTest.hpp \
 	./src/Streams/Tests/TestAggregator.hpp \
@@ -151,6 +155,9 @@ SOURCES += \
 	./src/Common/Tests/Utils.cpp \
 	./src/Streams/RamStream.cpp \
 	./src/Streams/StreamUtils.cpp \
+	./src/Streams/Tests/NamedPipeReaderTest.cpp \
+	./src/Streams/Tests/NamedPipeStreamTest.cpp \
+	./src/Streams/Tests/NamedPipeWriterTest.cpp \
 	./src/Streams/Tests/PipeStreamTest.cpp \
 	./src/Streams/Tests/RamStreamTest.cpp \
 	./src/Streams/Tests/TestAggregator.cpp \
@@ -195,6 +202,10 @@ SOURCES += \
 	./src/Streams/Posix/Async/FileStreamWriter.cpp \
 	./src/Streams/Posix/FileStreamReader.cpp \
 	./src/Streams/Posix/FileStreamWriter.cpp \
+	./src/Streams/Posix/InternalPosixFunctions.cpp \
+	./src/Streams/Posix/NamedPipeReader.cpp \
+	./src/Streams/Posix/NamedPipeStream.cpp \
+	./src/Streams/Posix/NamedPipeWriter.cpp \
 	./src/Streams/Posix/PipeStream.cpp \
 	./src/Streams/Posix/Socket.cpp \
 	./src/Streams/Posix/SocketClient.cpp \

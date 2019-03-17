@@ -8,6 +8,13 @@ namespace flame_ide
 {namespace os
 {
 
+enum class ActionType
+{
+	READER
+	, WRITER
+	, BIDIRECTIONAL
+};
+
 using FileDescriptor = FLAMEIDE_OS_NAMESPACE::OsFileDescriptor;
 constexpr FileDescriptor INVALID_DESCRIPTOR =
 		FLAMEIDE_OS_NAMESPACE::OS_INVALID_DESCRIPTOR;

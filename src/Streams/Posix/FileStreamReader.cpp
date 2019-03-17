@@ -9,7 +9,7 @@ namespace flame_ide
 {namespace streams
 {
 
-FileStreamReader::FileStreamReader() : fd(os::INVALID_DESCRIPTOR)
+FileStreamReader::FileStreamReader() : fd(os::INVALID_DESCRIPTOR), own(false)
 {}
 
 FileStreamReader::FileStreamReader(FileStreamReader &&reader) noexcept :
@@ -24,7 +24,7 @@ FileStreamReader::FileStreamReader(os::FileDescriptor fileDescriptor
 		fd(fileDescriptor), own(owner)
 {}
 
-FileStreamReader::~FileStreamReader()
+FileStreamReader::~FileStreamReader() noexcept
 {
 	if (own && fd != os::INVALID_DESCRIPTOR)
 	{

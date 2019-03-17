@@ -4,6 +4,7 @@
 #include <FlameIDE/Streams/StreamUtils.hpp>
 #include <FlameIDE/Streams/FileStreamReader.hpp>
 #include <FlameIDE/Common/OsTypes.hpp>
+#include <FlameIDE/Templates/String.hpp>
 
 namespace flame_ide
 {namespace streams
@@ -12,10 +13,10 @@ namespace flame_ide
 ///
 /// @brief The NamedPipeReader class
 ///
-class NamedPipeReader: public stream_utils::AbstractByteStreamReader
+class NamedPipeReader: public FileStreamReader
 {
 public:
-	using Parent = stream_utils::AbstractByteStreamReader;
+	using Parent = FileStreamReader;
 
 	NamedPipeReader() noexcept;
 	NamedPipeReader(const NamedPipeReader &) = delete;
@@ -33,16 +34,6 @@ public:
 	NamedPipeReader &operator=(const NamedPipeReader &) = delete;
 	NamedPipeReader &operator=(NamedPipeReader &&reader) noexcept;
 
-	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept;
-	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept;
-
-	///
-	/// @brief getFileDescriptor
-	/// @param continueOwning
-	/// @return
-	///
-	os::FileDescriptor getFileDescriptor(bool continueOwning = false) noexcept;
-
 	///
 	/// @brief open
 	/// @param name
@@ -52,7 +43,7 @@ public:
 	os::Status open(const char *name, bool deletePipe = true) noexcept;
 
 private:
-	FileStreamReader reader; ///<
+	templates::String string;
 	bool delPipe; ///<
 };
 

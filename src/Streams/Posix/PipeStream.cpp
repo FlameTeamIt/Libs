@@ -7,16 +7,17 @@
 #include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Streams/PipeStream.hpp>
 
-enum
-{
-	PIPE_READER
-	, PIPE_WRITER
-	, PIPE_COUNT
-};
-
 namespace flame_ide
 {namespace streams
 {
+
+enum
+{
+	PIPE_READER = static_cast<int>(os::ActionType::READER)
+	, PIPE_WRITER  = static_cast<int>(os::ActionType::WRITER)
+	, PIPE_COUNT
+};
+
 
 PipeStream::PipeStream() noexcept : status(os::SUCCESS_STATUS), reader(), writer()
 {
