@@ -3,6 +3,7 @@
 
 #include <FlameIDE/Streams/StreamUtils.hpp>
 #include <FlameIDE/Streams/FileStreamWriter.hpp>
+#include <FlameIDE/Templates/String.hpp>
 
 namespace flame_ide
 {namespace streams
@@ -11,10 +12,10 @@ namespace flame_ide
 ///
 /// @brief The NamedPipeWriter class
 ///
-class NamedPipeWriter: public stream_utils::AbstractByteStreamWriter
+class NamedPipeWriter: public FileStreamWriter
 {
 public:
-	using Parent = stream_utils::AbstractByteStreamWriter;
+	using Parent = FileStreamWriter;
 
 	NamedPipeWriter() noexcept;
 	NamedPipeWriter(const NamedPipeWriter &) = delete;
@@ -32,16 +33,6 @@ public:
 	NamedPipeWriter &operator=(const NamedPipeWriter &) = delete;
 	NamedPipeWriter &operator=(NamedPipeWriter &&reader) noexcept;
 
-	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
-	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept;
-
-	///
-	/// @brief getFileDescriptor
-	/// @param continueOwning
-	/// @return
-	///
-	os::FileDescriptor getFileDescriptor(bool continueOwning = false) noexcept;
-
 	///
 	/// @brief open
 	/// @param name
@@ -50,8 +41,14 @@ public:
 	///
 	os::Status open(const char *name, bool deletePipe = true) noexcept;
 
+	///
+	/// @brief getName
+	/// @return
+	///
+	const templates::String &getName() const noexcept;
+
 private:
-	FileStreamWriter writer; ///<
+	templates::String fname; ///<
 	bool delPipe; ///<
 };
 

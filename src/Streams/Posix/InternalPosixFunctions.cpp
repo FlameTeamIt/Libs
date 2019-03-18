@@ -2,6 +2,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
 
@@ -13,6 +14,7 @@ namespace flame_ide
 
 os::FileDescriptor makeFifo(const char *fifoName, os::ActionType action) noexcept
 {
+	os::Status status1 = unlink(fifoName);
 	os::Status status = mknod(fifoName, S_IFIFO | 0666, 0);
 	if (status < 0)
 	{
@@ -22,22 +24,22 @@ os::FileDescriptor makeFifo(const char *fifoName, os::ActionType action) noexcep
 		}
 	}
 
-	flame_ide::int_t flag = 0;
+	flame_ide::int_t flag = O_CREAT;
 	switch(action)
 	{
 		case os::ActionType::READER:
 		{
-			flag = O_RDONLY;
+			flag |= O_RDONLY | O_NONBLOCK;
 			break;
 		}
 		case os::ActionType::WRITER:
 		{
-			flag = O_WRONLY;
+			flag |= O_WRONLY;
 			break;
 		}
 		case os::ActionType::BIDIRECTIONAL:
 		{
-			flag = O_RDWR;
+			flag |= O_RDWR;
 			break;
 		}
 	}
@@ -45,13 +47,11 @@ os::FileDescriptor makeFifo(const char *fifoName, os::ActionType action) noexcep
 	status = ::open(fifoName, flag);
 	if (status < 0)
 	{
-		return static_cast<os::FileDescriptor>(status);
+		status = -errno;
+		auto *data = strerror(-status);
+		return status;
 	}
-	else
-	{
-		return -errno;
-	}
+	return static_cast<os::FileDescriptor>(status);
 }
-
 
 }}

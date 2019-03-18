@@ -42,8 +42,14 @@ public:
 	///
 	os::Status open(const char *name, bool deletePipe = true) noexcept;
 
+	///
+	/// @brief getName
+	/// @return
+	///
+	const templates::String &getName() const noexcept;
+
 private:
-	templates::String string;
+	templates::String fname;
 	bool delPipe; ///<
 };
 

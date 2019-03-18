@@ -37,6 +37,7 @@ protected:
 
 	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
 	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept;
+
 	virtual void flush() noexcept;
 
 private:

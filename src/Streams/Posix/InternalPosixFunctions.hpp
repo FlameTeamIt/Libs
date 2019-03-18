@@ -8,7 +8,6 @@ namespace flame_ide
 {
 
 os::FileDescriptor makeFifo(const char *fifoName, os::ActionType action) noexcept;
-os::FileDescriptor removeFile(os::FileDescriptor fd) noexcept;
 
 }}
 

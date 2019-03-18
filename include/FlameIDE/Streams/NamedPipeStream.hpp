@@ -17,10 +17,8 @@ public:
 	using Parent = stream_utils::AbstractByteStream;
 
 	NamedPipeStream();
-	NamedPipeStream(const char *name) noexcept;
+	NamedPipeStream(const char *name, bool deletePipe = true) noexcept;
 	virtual ~NamedPipeStream();
-
-	os::Status open(const char *name) noexcept;
 
 	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept;
 	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept;
@@ -28,8 +26,27 @@ public:
 	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
 	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept;
 
+	virtual void flush() noexcept;
+
+	///
+	/// @brief setFileDescriptor
+	/// @param fileDescriptor
+	/// @param owner
+	///
+	void setFileDescriptor(os::FileDescriptor fileDescriptor
+			, bool owner = true) noexcept;
+
+	///
+	/// @brief getFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
+	os::FileDescriptor getFileDescriptor(bool continueOwning = false) noexcept;
+
+	os::Status open(const char *name, bool deletePipe = true) noexcept;
+
 private:
-	NamedPipeReader writer;
+	NamedPipeWriter writer;
 	NamedPipeReader reader;
 };
 

@@ -23,7 +23,7 @@ NamedPipeReader::NamedPipeReader(NamedPipeReader &&reader) noexcept :
 
 NamedPipeReader::NamedPipeReader(const char *name, bool deletePipe) noexcept :
 		Parent(makeFifo(name, os::ActionType::READER), true)
-		, string(name)
+		, fname(name)
 		, delPipe(deletePipe)
 {}
 
@@ -32,7 +32,7 @@ NamedPipeReader::~NamedPipeReader() noexcept
 	this->setFileDescriptor(os::INVALID_DESCRIPTOR, false);
 	if (delPipe)
 	{
-		unlink(string.data());
+		remove(fname.data());
 	}
 }
 
@@ -59,6 +59,11 @@ os::Status NamedPipeReader::open(const char *name, bool deletePipe) noexcept
 	delPipe = deletePipe;
 
 	return os::SUCCESS_STATUS;
+}
+
+const templates::String &NamedPipeReader::getName() const noexcept
+{
+	return fname;
 }
 
 
