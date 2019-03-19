@@ -17,8 +17,8 @@ class FileStreamReader: public stream_utils::AbstractByteStreamReader
 public:
 	using Parent = stream_utils::AbstractByteStreamReader;
 
-	FileStreamReader();
-	FileStreamReader(const FileStreamReader &) = delete;
+	FileStreamReader() noexcept;
+	FileStreamReader(const FileStreamReader &) noexcept = delete;
 	FileStreamReader(FileStreamReader &&reader) noexcept;
 
 	///

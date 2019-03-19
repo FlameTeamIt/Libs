@@ -20,6 +20,9 @@ using Byte = byte_t;
 constexpr flame_ide::Types::size_t COUNT_CONTINUOUS_RANGES = 2;
 constexpr flame_ide::SizeTraits::SsizeType INVALID_COUNT_BYTES = -1;
 
+///
+/// @brief The AbstractByteStreamReader struct
+///
 struct AbstractByteStreamReader
 {
 	using ByteIterator = templates::Iterator<
@@ -41,10 +44,26 @@ struct AbstractByteStreamReader
 
 	virtual ~AbstractByteStreamReader() noexcept = default;
 
+	///
+	/// @brief read
+	/// @param range
+	/// @return
+	///
 	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept = 0;
+
+	///
+	/// @brief read
+	/// @param range
+	/// @return
+	///
 	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept = 0;
 
-	 // TODO: тестирование
+	///
+	/// @brief getContinuousOutputRanges
+	/// @param range
+	/// @return
+	///
+	// TODO: тестирование
 	static ContiniousOutputRanges
 	getContinuousOutputRanges(OutputCircularByteRange range) noexcept;
 };
@@ -68,14 +87,30 @@ struct AbstractByteStreamWriter
 		InputByteRange, COUNT_CONTINUOUS_RANGES
 	>;
 
-	virtual ~AbstractByteStreamWriter() = default;
+	virtual ~AbstractByteStreamWriter() noexcept = default;
 
+	///
+	/// @brief write
+	/// @param range
+	/// @return
+	///
 	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept = 0;
+
+	///
+	/// @brief write
+	/// @param range
+	/// @return
+	///
 	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept = 0;
 
 	virtual void flush() noexcept = 0;
 
-	 // TODO: тестирование
+	///
+	/// @brief getContinuousInputRanges
+	/// @param range
+	/// @return
+	///
+	// TODO: тестирование
 	static ContiniousInputRanges
 	getContinuousInputRanges(InputCircularByteRange range) noexcept;
 };
@@ -84,11 +119,19 @@ class AbstractByteStream: public AbstractByteStreamReader
 		, public AbstractByteStreamWriter
 {
 public:
+	///
+	/// @brief getReader
+	/// @return
+	///
 	AbstractByteStreamReader &getReader() noexcept
 	{
 		return *this;
 	}
 
+	///
+	/// @brief getWriter
+	/// @return
+	///
 	AbstractByteStreamWriter &getWriter() noexcept
 	{
 		return *this;

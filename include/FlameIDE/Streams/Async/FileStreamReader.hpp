@@ -29,7 +29,7 @@ public:
 	FileStreamReader(os::FileDescriptor fileDescriptor
 			, bool owner = true) noexcept;
 
-	virtual ~FileStreamReader();
+	virtual ~FileStreamReader() noexcept;
 
 	FileStreamReader &operator=(const FileStreamReader &) = delete;
 	FileStreamReader &operator=(FileStreamReader &&reader) noexcept;

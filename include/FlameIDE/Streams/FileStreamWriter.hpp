@@ -17,8 +17,8 @@ class FileStreamWriter: public stream_utils::AbstractByteStreamWriter
 public:
 	using Parent = stream_utils::AbstractByteStreamWriter;
 
-	FileStreamWriter();
-	FileStreamWriter(const FileStreamWriter &) = delete;
+	FileStreamWriter() noexcept;
+	FileStreamWriter(const FileStreamWriter &) noexcept = delete;
 	FileStreamWriter(FileStreamWriter &&writer) noexcept;
 
 	///
@@ -31,7 +31,7 @@ public:
 
 	virtual ~FileStreamWriter() noexcept;
 
-	FileStreamWriter &operator=(const FileStreamWriter &) = delete;
+	FileStreamWriter &operator=(const FileStreamWriter &) noexcept = delete;
 	FileStreamWriter &operator=(FileStreamWriter &&writer) noexcept;
 
 	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;

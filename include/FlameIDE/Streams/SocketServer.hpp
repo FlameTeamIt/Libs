@@ -18,11 +18,14 @@ namespace flame_ide
 {namespace streams
 {
 
+///
+/// @brief The SocketServer class
+///
 class SocketServer: public stream_utils::AbstractByteStream
 {
 public:
-	SocketServer();
-	~SocketServer();
+	SocketServer() noexcept;
+	~SocketServer() noexcept;
 
 	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept = 0;
 	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept = 0;
@@ -33,8 +36,8 @@ public:
 	virtual void flush() noexcept = 0;
 
 private:
-	os::Socket sockServer;
-	Socket socketClient;
+	os::Socket sockServer; ///<
+	Socket socketClient; ///<
 };
 
 }}

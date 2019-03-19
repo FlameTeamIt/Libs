@@ -1,8 +1,6 @@
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <errno.h>
-#include <unistd.h>
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
 
@@ -14,7 +12,6 @@ namespace flame_ide
 
 os::FileDescriptor makeFifo(const char *fifoName, os::ActionType action) noexcept
 {
-	os::Status status1 = unlink(fifoName);
 	os::Status status = mknod(fifoName, S_IFIFO | 0666, 0);
 	if (status < 0)
 	{
@@ -48,7 +45,6 @@ os::FileDescriptor makeFifo(const char *fifoName, os::ActionType action) noexcep
 	if (status < 0)
 	{
 		status = -errno;
-		auto *data = strerror(-status);
 		return status;
 	}
 	return static_cast<os::FileDescriptor>(status);

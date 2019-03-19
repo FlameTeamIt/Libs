@@ -1,5 +1,5 @@
-#ifndef FLAMEIDE_STREAMS_NAMEDPIPEREADER
-#define FLAMEIDE_STREAMS_NAMEDPIPEREADER
+#ifndef FLAMEIDE_STREAMS_NAMEDPIPEREADER_HPP
+#define FLAMEIDE_STREAMS_NAMEDPIPEREADER_HPP
 
 #include <FlameIDE/Streams/StreamUtils.hpp>
 #include <FlameIDE/Streams/FileStreamReader.hpp>
@@ -19,7 +19,7 @@ public:
 	using Parent = FileStreamReader;
 
 	NamedPipeReader() noexcept;
-	NamedPipeReader(const NamedPipeReader &) = delete;
+	NamedPipeReader(const NamedPipeReader &) noexcept = delete;
 	NamedPipeReader(NamedPipeReader &&reader) noexcept;
 
 	///
@@ -31,7 +31,7 @@ public:
 
 	virtual ~NamedPipeReader() noexcept;
 
-	NamedPipeReader &operator=(const NamedPipeReader &) = delete;
+	NamedPipeReader &operator=(const NamedPipeReader &) noexcept = delete;
 	NamedPipeReader &operator=(NamedPipeReader &&reader) noexcept;
 
 	///
@@ -49,10 +49,10 @@ public:
 	const templates::String &getName() const noexcept;
 
 private:
-	templates::String fname;
+	templates::String fname; ///<
 	bool delPipe; ///<
 };
 
 }}
 
-#endif // FLAMEIDE_STREAMS_NAMEDPIPEREADER
+#endif // FLAMEIDE_STREAMS_NAMEDPIPEREADER_HPP

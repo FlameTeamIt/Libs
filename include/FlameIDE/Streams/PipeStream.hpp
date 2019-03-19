@@ -18,17 +18,28 @@ public:
 	using Parent = stream_utils::AbstractByteStream;
 
 	PipeStream() noexcept;
-	PipeStream(const PipeStream &) = delete;
+	PipeStream(const PipeStream &) noexcept = delete;
 	PipeStream(PipeStream &&pipes) noexcept;
 
+	///
+	/// @brief PipeStream
+	/// @param fileDescriptorReader
+	/// @param readerOwn
+	/// @param fileDescriptorWriter
+	/// @param writerOwn
+	///
 	PipeStream(os::FileDescriptor fileDescriptorReader, bool readerOwn
 			, os::FileDescriptor fileDescriptorWriter, bool writerOwn) noexcept;
 
 	virtual ~PipeStream() noexcept = default;
 
-	PipeStream &operator=(const PipeStream &) = delete;
+	PipeStream &operator=(const PipeStream &) noexcept = delete;
 	PipeStream &operator=(PipeStream &&) noexcept;
 
+	///
+	/// @brief getStatus
+	/// @return
+	///
 	os::Status getStatus() const;
 
 protected:
@@ -41,9 +52,9 @@ protected:
 	virtual void flush() noexcept;
 
 private:
-	os::Status status;
-	FileStreamReader reader;
-	FileStreamWriter writer;
+	os::Status status; ///<
+	FileStreamReader reader; ///<
+	FileStreamWriter writer; ///<
 };
 
 }}

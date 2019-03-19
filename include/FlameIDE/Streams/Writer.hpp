@@ -9,6 +9,10 @@ namespace flame_ide
 {namespace streams
 {
 
+///
+/// @brief The Writer class
+/// @tparam CircularByteBuffer
+///
 template<typename CircularByteBuffer>
 class Writer
 {
@@ -58,8 +62,8 @@ public:
 	bool flush() noexcept;
 
 protected:
-	CircularByteBuffer buffer;
-	stream_utils::AbstractByteStreamWriter *writerImpl;
+	CircularByteBuffer buffer; ///<
+	stream_utils::AbstractByteStreamWriter *writerImpl; ///<
 
 };
 

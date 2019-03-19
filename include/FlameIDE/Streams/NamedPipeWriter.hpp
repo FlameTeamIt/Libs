@@ -1,5 +1,5 @@
 #ifndef FLAMEIDE_STREAMS_NAMEDPIPEWRITER_HPP
-#define FLAMEIDE_STREAMS_NAMEDPIPEWRITER
+#define FLAMEIDE_STREAMS_NAMEDPIPEWRITER_HPP
 
 #include <FlameIDE/Streams/StreamUtils.hpp>
 #include <FlameIDE/Streams/FileStreamWriter.hpp>
@@ -18,7 +18,7 @@ public:
 	using Parent = FileStreamWriter;
 
 	NamedPipeWriter() noexcept;
-	NamedPipeWriter(const NamedPipeWriter &) = delete;
+	NamedPipeWriter(const NamedPipeWriter &) noexcept = delete;
 	NamedPipeWriter(NamedPipeWriter &&writer) noexcept;
 
 	///
@@ -30,7 +30,7 @@ public:
 
 	~NamedPipeWriter() noexcept;
 
-	NamedPipeWriter &operator=(const NamedPipeWriter &) = delete;
+	NamedPipeWriter &operator=(const NamedPipeWriter &) noexcept = delete;
 	NamedPipeWriter &operator=(NamedPipeWriter &&reader) noexcept;
 
 	///
@@ -54,4 +54,4 @@ private:
 
 }}
 
-#endif // FLAMEIDE_STREAMS_NAMEDPIPEWRITER
+#endif // FLAMEIDE_STREAMS_NAMEDPIPEWRITER_HPP

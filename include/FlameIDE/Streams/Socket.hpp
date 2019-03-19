@@ -17,7 +17,7 @@ public:
 	using Parent = stream_utils::AbstractByteStream;
 
 	Socket() noexcept;
-	Socket(const Socket &) = delete;
+	Socket(const Socket &) noexcept = delete;
 	Socket(Socket &&socket) noexcept;
 
 	///
@@ -27,7 +27,7 @@ public:
 	///
 	Socket(os::Socket socket, bool owner = true) noexcept;
 
-	Socket &operator=(const Socket &) = delete;
+	Socket &operator=(const Socket &) noexcept = delete;
 	Socket &operator=(Socket &&socket) noexcept;
 
 	virtual ~Socket() noexcept;
