@@ -150,14 +150,14 @@ public:
 	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator>;
 	using ConstReverseIterator = flame_ide::templates::ConstIterator<ReverseIterator>;
 
-	BasicString();
-	BasicString(const Me &string);
+	BasicString() noexcept;
+	BasicString(const Me &string) noexcept;
 	BasicString(Me &&string) noexcept;
-	BasicString(PointerToConst rawString);
-	~BasicString();
-	Me &operator=(const Me &string);
+	BasicString(PointerToConst rawString) noexcept;
+	~BasicString() noexcept;
+	Me &operator=(const Me &string) noexcept;
 	Me &operator=(Me &&string) noexcept;
-	Me &operator=(PointerToConst array);
+	Me &operator=(PointerToConst array) noexcept;
 
 	template<typename IntType>
 	Reference operator[](IntType integer) noexcept;
@@ -320,14 +320,14 @@ SizeTraits::SizeType bufferSize(IntType integer)
 }
 
 TEMPLATE_TYPE
-STRING_TYPE::BasicString()
+STRING_TYPE::BasicString() noexcept
 		: allocator()
 		, stringCapacity()
 		, head(nullptr), tail(nullptr)
 {}
 
 TEMPLATE_TYPE
-STRING_TYPE::BasicString(const STRING_TYPE &string)
+STRING_TYPE::BasicString(const STRING_TYPE &string) noexcept
 		: allocator(string.allocator)
 		, stringCapacity(string.length() + SizeType(1))
 		, head(allocator.createArray(stringCapacity))
@@ -355,7 +355,7 @@ STRING_TYPE::BasicString(STRING_TYPE &&string) noexcept
 }
 
 TEMPLATE_TYPE
-STRING_TYPE::BasicString(typename STRING_TYPE::PointerToConst rawString)
+STRING_TYPE::BasicString(typename STRING_TYPE::PointerToConst rawString) noexcept
 		: allocator()
 		, stringCapacity(rawStringLength(rawString) + SizeType(1))
 		, head(allocator.createArray(stringCapacity))
@@ -371,14 +371,14 @@ STRING_TYPE::BasicString(typename STRING_TYPE::PointerToConst rawString)
 }
 
 TEMPLATE_TYPE
-STRING_TYPE::~BasicString()
+STRING_TYPE::~BasicString() noexcept
 {
 	clean();
 	allocator.freeArray(head);
 }
 
 TEMPLATE_TYPE
-STRING_TYPE &STRING_TYPE::operator=(const STRING_TYPE &string)
+STRING_TYPE &STRING_TYPE::operator=(const STRING_TYPE &string) noexcept
 {
 	if (capacity() >= string.length())
 	{
@@ -420,7 +420,7 @@ STRING_TYPE &STRING_TYPE::operator=(STRING_TYPE &&string) noexcept
 }
 
 TEMPLATE_TYPE
-STRING_TYPE &STRING_TYPE::operator=(typename STRING_TYPE::PointerToConst array)
+STRING_TYPE &STRING_TYPE::operator=(typename STRING_TYPE::PointerToConst array) noexcept
 {
 	clean();
 	const auto arraySize = rawStringLength(array) + SizeType(1);
