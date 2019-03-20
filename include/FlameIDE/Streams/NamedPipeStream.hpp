@@ -71,9 +71,12 @@ public:
 	const templates::String &getName() const noexcept;
 
 private:
+	void deinit();
+
 	templates::String fname; ///<
 	FileStreamWriter writer; ///<
 	FileStreamReader reader; ///<
+	bool delPipe; ///<
 };
 
 }}
