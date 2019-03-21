@@ -65,7 +65,7 @@ public:
 	bool error() const noexcept;
 
 protected:
-	os::AsyncIo context; ///<
+	os::AsyncIoContext context; ///<
 	bool own; ///<
 	OutputCircularByteRange outputRange; ///<
 };

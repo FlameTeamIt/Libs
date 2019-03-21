@@ -67,7 +67,7 @@ public:
 	bool error() const noexcept;
 
 private:
-	os::AsyncIo context; ///<
+	os::AsyncIoContext context; ///<
 	bool own; ///<
 	InputCircularByteRange inputRange; ///<
 };
