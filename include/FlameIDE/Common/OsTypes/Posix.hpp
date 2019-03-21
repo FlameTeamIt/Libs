@@ -8,6 +8,8 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <aio.h>
+#include <pthread.h>
+#include <semaphore.h>
 
 namespace flame_ide
 {namespace os
@@ -40,6 +42,18 @@ struct OsAsyncIoContext : public ::aiocb
 	}
 };
 constexpr OsAsyncIoContext OS_ASYNC_CONTEXT_INITIALIZER = OsAsyncIoContext{};
+
+struct OsMutexContext
+{
+	pthread_mutex_t pthrMutex;
+	pthread_mutexattr_t pthrMutexAttributes;
+};
+constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = {
+	PTHREAD_MUTEX_INITIALIZER, {}
+};
+
+using OsSemaphoreContext = ::sem_t;
+constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreContext{};
 
 }}}
 

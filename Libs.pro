@@ -112,6 +112,11 @@ HEADERS += \
 	./include/FlameIDE/Templates/Vector.hpp \
 	./include/FlameIDE/Templates/WideFloat.hpp \
 	./include/FlameIDE/Templates/WideInt.hpp \
+	./include/FlameIDE/Threads/Mutex.hpp \
+	./include/FlameIDE/Threads/Semaphore.hpp \
+	./include/FlameIDE/Threads/Task.hpp \
+	./include/FlameIDE/Threads/Thread.hpp \
+	./include/FlameIDE/Threads/ThreadPool.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
 	./src/Streams/Posix/InternalPosixFunctions.hpp \
@@ -209,6 +214,11 @@ SOURCES += \
 	./src/Streams/Posix/PipeStream.cpp \
 	./src/Streams/Posix/Socket.cpp \
 	./src/Streams/Posix/SocketClient.cpp \
-	./src/Streams/Posix/SocketServer.cpp
+	./src/Streams/Posix/SocketServer.cpp \
+	./src/Threads/Posix/Mutex.cpp \
+	./src/Threads/Posix/Semaphore.cpp \
+	./src/Threads/Posix/Task.cpp \
+	./src/Threads/Posix/Thread.cpp \
+	./src/Threads/Posix/ThreadPool.cpp
 }
 
