@@ -52,6 +52,14 @@ struct DefaultTraits
 	using VoidPointer = void *;
 };
 
+template<>
+struct DefaultTraits<void>
+{
+	using Pointer = void *;
+	using VoidToConst = void const *;
+	using ConstPointer = void *const;
+	using ConstPointerToConst = void const *const;
+};
 
 ///
 /// @brief Removing pointer from type.
