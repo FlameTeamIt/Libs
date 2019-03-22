@@ -20,8 +20,8 @@ PipeStream::PipeStream() noexcept : status(os::SUCCESS_STATUS), reader(), writer
 {
 	os::FileDescriptor fds[PIPE_COUNT];
 	status = ::CreatePipe(
-			&fds[PIPE_READER]
-			, &fds[PIPE_WRITER]
+			&fds[PIPE_READER].handle
+			, &fds[PIPE_WRITER].handle
 			, nullptr
 			, 0);
 	if (status)
