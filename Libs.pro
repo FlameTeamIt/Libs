@@ -121,6 +121,7 @@ HEADERS += \
 	./src/Streams/Tests/PipeStreamTest.hpp \
 	./src/Streams/Tests/RamStreamTest.hpp \
 	./src/Streams/Tests/TestAggregator.hpp \
+	./src/Streams/Windows/InternalWinApiFunctions.hpp \
 	./src/Templates/Tests/AllocatorTest.hpp \
 	./src/Templates/Tests/ArrayTest.hpp \
 	./src/Templates/Tests/AsIntegralTypeTest.hpp \
@@ -187,8 +188,13 @@ SOURCES += \
 # Windows sources
 win32 {
 SOURCES += \
+	./src/Streams/Windows/Async/FileStreamReader.cpp \
+	./src/Streams/Windows/Async/FileStreamWriter.cpp \
 	./src/Streams/Windows/FileStreamReader.cpp \
 	./src/Streams/Windows/FileStreamWriter.cpp \
+	./src/Streams/Windows/NamedPipeReader.cpp \
+	./src/Streams/Windows/NamedPipeStream.cpp \
+	./src/Streams/Windows/NamedPipeWriter.cpp \
 	./src/Streams/Windows/PipeStream.cpp \
 	./src/Streams/Windows/Socket.cpp \
 	./src/Streams/Windows/SocketClient.cpp \
