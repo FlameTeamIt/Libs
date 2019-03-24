@@ -1,34 +1,40 @@
-#ifndef FLAMEIDE_THREADS_MUTEX_HPP
-#define FLAMEIDE_THREADS_MUTEX_HPP
+#ifndef MUTEX_HPP
+#define MUTEX_HPP
 
-#include <FlameIDE/Common/OsTypes.hpp>
+#include <pthread.h>
+#include "Templates/PthreadObject.hpp"
+#include "Templates/Locker.hpp"
 
-namespace flame_ide
-{namespace threads
-{
-
-class Mutex
+class Mutex: public PthreadObject<pthread_mutex_t, pthread_mutexattr_t>
 {
 public:
-	Mutex() noexcept;
-	~Mutex() noexcept;
-
-	void lock() noexcept;
-	void unlock() noexcept;
-
-	struct Guard
+	class Locker: public ::Locker<Mutex>
 	{
-		Guard(Mutex &) noexcept;
+	public:
+		Locker(Mutex &mutex) : ::Locker<Mutex>(mutex)
+		{
+			get().lock();
+		}
 
-		~Guard() noexcept;
-
-		Mutex &mutex;
+		~Locker()
+		{
+			get().unlock();
+		}
 	};
 
-private:
+	Mutex();
+	Mutex(bool locked);
+	virtual ~Mutex();
 
+	void lock();
+	bool tryLock();
+
+	void unlock();
+
+private:
+	typedef PthreadObject<pthread_mutex_t, pthread_mutexattr_t> Parent;
+	virtual void init();
+	virtual void clear();
 };
 
-}}
-
-#endif // FLAMEIDE_THREADS_MUTEX_HPP
+#endif // MUTEX_HPP
