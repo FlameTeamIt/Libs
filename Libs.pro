@@ -16,6 +16,7 @@ INCLUDEPATH += include/
 INCLUDEPATH += .
 
 # headers
+## common headers
 HEADERS += \
 	./include/FlameIDE/About/About.hpp \
 	./include/FlameIDE/Analysers/Ubjson/Array.hpp \
@@ -37,8 +38,6 @@ HEADERS += \
 	./include/FlameIDE/Common/Macroses/ByteOrder.hpp \
 	./include/FlameIDE/Common/Macroses/DetectOs.hpp \
 	./include/FlameIDE/Common/OsTypes.hpp \
-	./include/FlameIDE/Common/OsTypes/Posix.hpp \
-	./include/FlameIDE/Common/OsTypes/Windows.hpp \
 	./include/FlameIDE/Common/PrimitiveTypes.hpp \
 	./include/FlameIDE/Common/Traits.hpp \
 	./include/FlameIDE/Common/Traits/ContainerTraits.hpp \
@@ -74,8 +73,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/Array.hpp \
 	./include/FlameIDE/Templates/ArrayBlocks.hpp \
 	./include/FlameIDE/Templates/AsIntegralType.hpp \
-	./include/FlameIDE/Templates/BitSet.hpp \
 	./include/FlameIDE/Templates/Bits.hpp \
+	./include/FlameIDE/Templates/BitSet.hpp \
 	./include/FlameIDE/Templates/ByteOrder.hpp \
 	./include/FlameIDE/Templates/CircularArray.hpp \
 	./include/FlameIDE/Templates/CircularVector.hpp \
@@ -104,6 +103,7 @@ HEADERS += \
 	./include/FlameIDE/Templates/Serialization/SpecializedValue.hpp \
 	./include/FlameIDE/Templates/Serialization/ValueInfo.hpp \
 	./include/FlameIDE/Templates/SimpleAlgorithms.hpp \
+	./include/FlameIDE/Templates/StaticAllocator.hpp \
 	./include/FlameIDE/Templates/String.hpp \
 	./include/FlameIDE/Templates/Templates.hpp \
 	./include/FlameIDE/Templates/Trees.hpp \
@@ -114,14 +114,12 @@ HEADERS += \
 	./include/FlameIDE/Templates/WideInt.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
-	./src/Streams/Posix/InternalPosixFunctions.hpp \
 	./src/Streams/Tests/NamedPipeReaderTest.hpp \
 	./src/Streams/Tests/NamedPipeStreamTest.hpp \
 	./src/Streams/Tests/NamedPipeWriterTest.hpp \
 	./src/Streams/Tests/PipeStreamTest.hpp \
 	./src/Streams/Tests/RamStreamTest.hpp \
 	./src/Streams/Tests/TestAggregator.hpp \
-	./src/Streams/Windows/InternalWinApiFunctions.hpp \
 	./src/Templates/Tests/AllocatorTest.hpp \
 	./src/Templates/Tests/ArrayTest.hpp \
 	./src/Templates/Tests/AsIntegralTypeTest.hpp \
@@ -144,6 +142,20 @@ HEADERS += \
 	./src/Templates/Tests/VectorTest.hpp \
 	./src/Templates/Tests/WideIntTest.hpp \
 	./tests/Test.hpp
+
+## Windows headers
+win32 {
+HEADERS += \
+	./include/FlameIDE/Common/OsTypes/Windows.hpp \
+	./src/Streams/Windows/InternalWinApiFunctions.hpp
+}
+
+## Posix headers
+!win32 {
+HEADERS += \
+	./include/FlameIDE/Common/OsTypes/Posix.hpp \
+	./src/Streams/Posix/InternalPosixFunctions.hpp
+}
 
 # sources
 SOURCES += \
@@ -185,13 +197,14 @@ SOURCES += \
 	./src/Templates/Tests/WideIntTest.cpp \
 	./tests/main.cpp
 
-# Windows sources
+## Windows sources
 win32 {
 SOURCES += \
 	./src/Streams/Windows/Async/FileStreamReader.cpp \
 	./src/Streams/Windows/Async/FileStreamWriter.cpp \
 	./src/Streams/Windows/FileStreamReader.cpp \
 	./src/Streams/Windows/FileStreamWriter.cpp \
+	./src/Streams/Windows/InternalWinApiFunctions.cpp \
 	./src/Streams/Windows/NamedPipeReader.cpp \
 	./src/Streams/Windows/NamedPipeStream.cpp \
 	./src/Streams/Windows/NamedPipeWriter.cpp \
@@ -201,7 +214,7 @@ SOURCES += \
 	./src/Streams/Windows/SocketServer.cpp
 }
 
-# Posix sources
+## Posix sources
 !win32 {
 SOURCES += \
 	./src/Streams/Posix/Async/FileStreamReader.cpp \

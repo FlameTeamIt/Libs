@@ -5,16 +5,16 @@
 #include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Streams/PipeStream.hpp>
 
-enum
-{
-	PIPE_READER
-	, PIPE_WRITER
-	, PIPE_COUNT
-};
-
 namespace flame_ide
 {namespace streams
 {
+
+enum
+{
+	PIPE_READER = static_cast<int32_t>(os::ActionType::READER)
+	, PIPE_WRITER = static_cast<int32_t>(os::ActionType::WRITER)
+	, PIPE_COUNT
+};
 
 PipeStream::PipeStream() noexcept : status(os::SUCCESS_STATUS), reader(), writer()
 {
@@ -49,6 +49,26 @@ PipeStream &PipeStream::operator=(PipeStream &&pipes) noexcept
 	reader = flame_ide::move(pipes.reader);
 	writer = flame_ide::move(pipes.writer);
 	return *this;
+}
+
+void PipeStream::setReaderFileDescriptor(os::FileDescriptor fileDescriptor, bool owner) noexcept
+{
+	reader.setFileDescriptor(fileDescriptor, owner);
+}
+
+void PipeStream::setWriterFileDescriptor(os::FileDescriptor fileDescriptor, bool owner) noexcept
+{
+	writer.setFileDescriptor(fileDescriptor, owner);
+}
+
+os::FileDescriptor PipeStream::getReaderFileDescriptor(bool continueOwning) noexcept
+{
+	return reader.getFileDescriptor(continueOwning);
+}
+
+os::FileDescriptor PipeStream::getWriterFileDescriptor(bool continueOwning) noexcept
+{
+	return writer.getFileDescriptor(continueOwning);
 }
 
 os::Status PipeStream::getStatus() const
@@ -100,8 +120,6 @@ void PipeStream::flush() noexcept
 {
 	writer.flush();
 }
-
-
 
 }}
 

@@ -2,6 +2,8 @@
 
 #include <FlameIDE/Streams/NamedPipeStream.hpp>
 
+#include <array>
+
 namespace flame_ide
 {namespace streams
 {namespace tests

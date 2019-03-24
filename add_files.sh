@@ -23,9 +23,13 @@ echo
 STRINGS=0
 COUNT_FILES=0
 
+# headers ---------------
+
 echo "#" headers
+
+echo "##" common headers
 echo -n "HEADERS +="
-HEADERS=`find . -type f -name '*.hpp' | sort`
+HEADERS=`find . -type f -name '*.hpp' | grep -v Posix | grep -v Windows | sort`
 for header in $HEADERS
 do
   echo " \\"
@@ -37,7 +41,43 @@ done
 echo
 echo
 
+echo "##" Windows headers
+echo "win32 {"
+echo -n "HEADERS +="
+HEADERS=`find . -type f -name '*.hpp' | grep Windows | sort`
+for header in $HEADERS
+do
+  echo " \\"
+  echo -n "	$header"
+  count_strings=$(cat $header | wc -l)
+  STRINGS=$(( STRINGS+count_strings ))
+  COUNT_FILES=$(( COUNT_FILES+1 ))
+done
+echo
+echo "}"
+echo
+
+echo "##" Posix headers
+echo "!win32 {"
+echo -n "HEADERS +="
+HEADERS=`find . -type f -name '*.hpp' | grep Posix | sort`
+for header in $HEADERS
+do
+  echo " \\"
+  echo -n "	$header"
+  count_strings=$(cat $header | wc -l)
+  STRINGS=$(( STRINGS+count_strings ))
+  COUNT_FILES=$(( COUNT_FILES+1 ))
+done
+echo
+echo "}"
+echo
+
+
+# sources ---------------
+
 echo "#" sources
+
 echo -n "SOURCES +="
 SOURCES=`find . -type f -name '*.cpp' | grep -v Posix | grep -v Windows | sort`
 for source in $SOURCES
@@ -51,7 +91,7 @@ done
 echo
 echo
 
-echo "#" Windows sources
+echo "##" Windows sources
 echo "win32 {"
 echo -n "SOURCES +="
 SOURCES=`find . -type f -name '*.cpp' | grep Windows | sort`
@@ -68,7 +108,7 @@ echo "}"
 echo
 
 
-echo "#" Posix sources
+echo "##" Posix sources
 echo "!win32 {"
 echo -n "SOURCES +="
 SOURCES=`find . -type f -name '*.cpp' | grep Posix | sort`

@@ -5,26 +5,32 @@
 #include <FlameIDE/../../src/Streams/Windows/InternalWinApiFunctions.hpp>
 #include <FlameIDE/Streams/NamedPipeStream.hpp>
 
+#include <FlameIDE/Templates/RaiiCaller.hpp>
+
 namespace flame_ide
 {namespace streams
 {
 
+auto LambdaConnect = [](os::FileDescriptor fd)
+{
+	return ConnectNamedPipe(fd, nullptr);
+};
+
+auto LambdaDisconnect = [](os::FileDescriptor fd)
+{
+	return DisconnectNamedPipe(fd);
+};
+
 NamedPipeStream::NamedPipeStream() noexcept = default;
 
 NamedPipeStream::NamedPipeStream(NamedPipeStream &&stream) noexcept :
-		fname(move(stream.fname))
-		, writer(move(stream.writer))
+		writer(move(stream.writer))
 		, reader(move(stream.reader))
-		, delPipe(stream.delPipe)
 {
-	stream.delPipe = false;
 }
 
 NamedPipeStream::NamedPipeStream(const char *name, bool deletePipe) noexcept :
-		fname(name)
-		, writer(makeNamedPipe(name, os::ActionType::BIDIRECTIONAL))
-		, reader(writer.getFileDescriptor(true), false)
-		, delPipe(deletePipe)
+		writer(name, deletePipe), reader(name)
 {}
 
 NamedPipeStream::~NamedPipeStream() noexcept
@@ -36,12 +42,8 @@ NamedPipeStream &NamedPipeStream::operator=(NamedPipeStream &&stream) noexcept
 {
 	deinit();
 
-	fname = move(stream.fname);
 	writer = move(stream.writer);
 	reader = move(stream.reader);
-	delPipe = stream.delPipe;
-
-	stream.delPipe = false;
 
 	return *this;
 }
@@ -78,7 +80,12 @@ void NamedPipeStream::setFileDescriptor(os::FileDescriptor fileDescriptor
 	reader.setFileDescriptor(fileDescriptor, false);
 }
 
-os::FileDescriptor NamedPipeStream::getFileDescriptor(bool continueOwning) noexcept
+os::FileDescriptor NamedPipeStream::getReaderFileDescriptor(bool continueOwning) noexcept
+{
+	return reader.getFileDescriptor(continueOwning);
+}
+
+os::FileDescriptor NamedPipeStream::getWriterFileDescriptor(bool continueOwning) noexcept
 {
 	return writer.getFileDescriptor(continueOwning);
 }
@@ -87,28 +94,30 @@ os::Status NamedPipeStream::open(const char *name, bool deletePipe) noexcept
 {
 	deinit();
 
-	fname = name;
-	delPipe = deletePipe;
-
-	os::FileDescriptor fd = makeNamedPipe(name, os::ActionType::BIDIRECTIONAL);
-	if (fd == os::INVALID_DESCRIPTOR)
+	Descriptors fd = makeNamedPipe(name, os::ActionType::BIDIRECTIONAL);
+	if (fd.reader == os::INVALID_DESCRIPTOR || fd.writer == os::INVALID_DESCRIPTOR)
 	{
 		return GetLastError();
 	}
-	writer.setFileDescriptor(fd);
-	reader.setFileDescriptor(writer.getFileDescriptor(true), false);
+	writer.setFileDescriptor(fd.writer);
+	reader.setFileDescriptor(fd.reader);
 
 	return os::SUCCESS_STATUS;
 }
 
 const templates::String &NamedPipeStream::getName() const noexcept
 {
-	return fname;
+	return writer.getName();
 }
 
 void NamedPipeStream::deinit()
 {
-	os::FileDescriptor fd = writer.getFileDescriptor();
+	os::FileDescriptor fd = reader.getFileDescriptor();
+	if (fd != INVALID_HANDLE_VALUE || fd != os::INVALID_DESCRIPTOR)
+	{
+		CloseHandle(fd);
+	}
+	fd = writer.getFileDescriptor();
 	if (fd != INVALID_HANDLE_VALUE || fd != os::INVALID_DESCRIPTOR)
 	{
 		CloseHandle(fd);
