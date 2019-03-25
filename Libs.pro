@@ -146,6 +146,10 @@ HEADERS += \
 	./src/Templates/Tests/VariantTest.hpp \
 	./src/Templates/Tests/VectorTest.hpp \
 	./src/Templates/Tests/WideIntTest.hpp \
+	./src/Threads/Tests/MutexTest.hpp \
+	./src/Threads/Tests/SemaphoreTest.hpp \
+	./src/Threads/Tests/TestAggregator.hpp \
+	./src/Threads/Tests/ThreadTest.hpp \
 	./tests/Test.hpp
 
 # sources
@@ -186,6 +190,13 @@ SOURCES += \
 	./src/Templates/Tests/VariantTest.cpp \
 	./src/Templates/Tests/VectorTest.cpp \
 	./src/Templates/Tests/WideIntTest.cpp \
+	./src/Threads/MutexLocker.cpp \
+	./src/Threads/SemaphorePoster.cpp \
+	./src/Threads/SemaphoreWaiter.cpp \
+	./src/Threads/Tests/MutexTest.cpp \
+	./src/Threads/Tests/SemaphoreTest.cpp \
+	./src/Threads/Tests/TestAggregator.cpp \
+	./src/Threads/Tests/ThreadTest.cpp \
 	./tests/main.cpp
 
 # Windows sources
@@ -216,7 +227,6 @@ SOURCES += \
 	./src/Streams/Posix/SocketServer.cpp \
 	./src/Threads/Posix/Mutex.cpp \
 	./src/Threads/Posix/Semaphore.cpp \
-	./src/Threads/Posix/Task.cpp \
 	./src/Threads/Posix/Thread.cpp
 }
 
