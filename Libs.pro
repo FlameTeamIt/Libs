@@ -11,6 +11,7 @@ CONFIG -= qt
 QMAKE_CXXFLAGS = -std=c++14 -pedantic -fno-rtti -fno-exceptions
 QMAKE_CXXFLAGS_DEBUG += -gdwarf-3
 QMAKE_CXXFLAGS_RELEASE = -O3 -Wall -W
+QMAKE_LFLAGS = -pthread
 }
 INCLUDEPATH += include/
 INCLUDEPATH += .
@@ -114,9 +115,7 @@ HEADERS += \
 	./include/FlameIDE/Templates/WideInt.hpp \
 	./include/FlameIDE/Threads/Mutex.hpp \
 	./include/FlameIDE/Threads/Semaphore.hpp \
-	./include/FlameIDE/Threads/Task.hpp \
 	./include/FlameIDE/Threads/Thread.hpp \
-	./include/FlameIDE/Threads/ThreadPool.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
 	./src/Streams/Posix/InternalPosixFunctions.hpp \
@@ -218,7 +217,6 @@ SOURCES += \
 	./src/Threads/Posix/Mutex.cpp \
 	./src/Threads/Posix/Semaphore.cpp \
 	./src/Threads/Posix/Task.cpp \
-	./src/Threads/Posix/Thread.cpp \
-	./src/Threads/Posix/ThreadPool.cpp
+	./src/Threads/Posix/Thread.cpp
 }
 

@@ -43,10 +43,17 @@ struct OsAsyncIoContext : public ::aiocb
 };
 constexpr OsAsyncIoContext OS_ASYNC_CONTEXT_INITIALIZER = OsAsyncIoContext{};
 
+struct OsThreadContext
+{
+	pthread_t object;
+	pthread_attr_t attributes;
+};
+constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OsThreadContext{};
+
 struct OsMutexContext
 {
-	pthread_mutex_t pthrMutex;
-	pthread_mutexattr_t pthrMutexAttributes;
+	pthread_mutex_t object;
+	pthread_mutexattr_t attributes;
 };
 constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = {
 	PTHREAD_MUTEX_INITIALIZER, {}
@@ -54,6 +61,8 @@ constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = {
 
 using OsSemaphoreContext = ::sem_t;
 constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreContext{};
+using OsSemaphoreValue = unsigned int;
+constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1u;
 
 }}}
 

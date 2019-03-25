@@ -28,6 +28,20 @@ constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
 		::SOCKADDR_IN{}, SOCKET{}
 };
 
+struct OsAsyncIoContext{};
+constexpr OsAsyncIoContext OS_ASYNC_CONTEXT_INITIALIZER = OsAsyncIoContext{};
+
+struct OsThreadContext{};
+constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OsThreadContext{};
+
+struct OsMutexContext{};
+constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = {};
+
+struct OsSemaphoreContext{};
+constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreContext{};
+using OsSemaphoreValue = LONG;
+constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1;
+
 }}}
 
 #define FLAMEIDE_OS_NAMESPACE flame_ide::os::windows
