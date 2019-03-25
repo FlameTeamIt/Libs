@@ -1,41 +1,91 @@
-#ifndef SEMAPHORE_HPP
-#define SEMAPHORE_HPP
+#ifndef FLAMEIDE_THREADS_SEMAPHORE_HPP
+#define FLAMEIDE_THREADS_SEMAPHORE_HPP
 
-#include <pthread.h>
-#include <semaphore.h>
-#include "Templates/PthreadObject.hpp"
-#include "Templates/Locker.hpp"
+#include <FlameIDE/Common/OsTypes.hpp>
 
-class Semaphore: PthreadObject<sem_t, int>
+namespace flame_ide
+{namespace threads
+{
+
+///
+/// @brief The Semaphore class
+///
+class Semaphore
 {
 public:
-	class Locker: public ::Locker<Semaphore>
+	///
+	/// @brief The Poster class
+	///
+	class Poster
 	{
 	public:
-		Locker(Semaphore &semaphore): ::Locker<Semaphore>(semaphore)
-		{
-			get().wait();
-		}
-
-		~Locker()
-		{
-			get().post();
-		}
+		///
+		/// @brief Poster
+		/// @param semaphore
+		///
+		Poster(Semaphore &semaphore) noexcept;
+		~Poster() noexcept;
+	private:
+		Semaphore &sem; ///<
 	};
 
-	Semaphore();
-	Semaphore(unsigned int startValue);
-	~Semaphore();
+	///
+	/// @brief The Waiter class
+	///
+	class Waiter
+	{
+	public:
+		///
+		/// @brief Waiter
+		/// @param semaphore
+		///
+		Waiter(Semaphore &semaphore) noexcept;
+		~Waiter() noexcept;
+	private:
+		Semaphore &sem; ///<
+	};
 
-	int value();
-	void post();
-	void wait();
-	bool tryWait();
+	Semaphore() noexcept;
+	Semaphore(const Semaphore &) = delete;
+	Semaphore(Semaphore &&semaphore) noexcept;
+
+	///
+	/// @brief Semaphore
+	/// @param initValue
+	///
+	Semaphore(os::SemaphoreValue initValue) noexcept;
+
+	~Semaphore() noexcept;
+	Semaphore &operator=(const Semaphore &) = delete;
+	Semaphore &operator=(Semaphore &&semaphore) noexcept;
+
+	///
+	/// @brief post
+	///
+	void post() noexcept;
+
+	///
+	/// @brief wait
+	///
+	void wait() noexcept;
+
+	///
+	/// @brief getValue
+	/// @return
+	///
+	os::SemaphoreValue getValue() const noexcept;
+
+	///
+	/// @brief getStatus
+	/// @return
+	///
+	os::Status getStatus() const noexcept;
 
 private:
-	virtual void init();
-	void init(unsigned int startValue);
-	virtual void clear();
+	mutable os::SemaphoreContext context; ///<
+	mutable os::Status status; ///<
 };
 
-#endif // SEMAPHORE_HPP
+}}
+
+#endif // FLAMEIDE_THREADS_SEMAPHORE_HPP
