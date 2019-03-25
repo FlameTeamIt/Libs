@@ -7,7 +7,7 @@
 namespace flame_ide
 {
 
-using diff_t     = ::ptrdiff_t ;
+using diff_t     = ::ptrdiff_t;
 using ssize_t    = diff_t;
 using size_t     = ::size_t;
 using char_t     =  char;

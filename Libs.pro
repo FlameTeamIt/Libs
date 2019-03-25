@@ -11,6 +11,7 @@ CONFIG -= qt
 QMAKE_CXXFLAGS = -std=c++14 -pedantic -fno-rtti -fno-exceptions
 QMAKE_CXXFLAGS_DEBUG += -gdwarf-3
 QMAKE_CXXFLAGS_RELEASE = -O3 -Wall -W
+QMAKE_LFLAGS = -pthread
 }
 INCLUDEPATH += include/
 INCLUDEPATH += .
@@ -112,6 +113,9 @@ HEADERS += \
 	./include/FlameIDE/Templates/Vector.hpp \
 	./include/FlameIDE/Templates/WideFloat.hpp \
 	./include/FlameIDE/Templates/WideInt.hpp \
+	./include/FlameIDE/Threads/Mutex.hpp \
+	./include/FlameIDE/Threads/Semaphore.hpp \
+	./include/FlameIDE/Threads/Thread.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
 	./src/Streams/Posix/InternalPosixFunctions.hpp \
@@ -143,6 +147,10 @@ HEADERS += \
 	./src/Templates/Tests/VariantTest.hpp \
 	./src/Templates/Tests/VectorTest.hpp \
 	./src/Templates/Tests/WideIntTest.hpp \
+	./src/Threads/Tests/MutexTest.hpp \
+	./src/Threads/Tests/SemaphoreTest.hpp \
+	./src/Threads/Tests/TestAggregator.hpp \
+	./src/Threads/Tests/ThreadTest.hpp \
 	./tests/Test.hpp
 
 # sources
@@ -183,6 +191,13 @@ SOURCES += \
 	./src/Templates/Tests/VariantTest.cpp \
 	./src/Templates/Tests/VectorTest.cpp \
 	./src/Templates/Tests/WideIntTest.cpp \
+	./src/Threads/MutexLocker.cpp \
+	./src/Threads/SemaphorePoster.cpp \
+	./src/Threads/SemaphoreWaiter.cpp \
+	./src/Threads/Tests/MutexTest.cpp \
+	./src/Threads/Tests/SemaphoreTest.cpp \
+	./src/Threads/Tests/TestAggregator.cpp \
+	./src/Threads/Tests/ThreadTest.cpp \
 	./tests/main.cpp
 
 # Windows sources
@@ -215,6 +230,9 @@ SOURCES += \
 	./src/Streams/Posix/PipeStream.cpp \
 	./src/Streams/Posix/Socket.cpp \
 	./src/Streams/Posix/SocketClient.cpp \
-	./src/Streams/Posix/SocketServer.cpp
+	./src/Streams/Posix/SocketServer.cpp \
+	./src/Threads/Posix/Mutex.cpp \
+	./src/Threads/Posix/Semaphore.cpp \
+	./src/Threads/Posix/Thread.cpp
 }
 

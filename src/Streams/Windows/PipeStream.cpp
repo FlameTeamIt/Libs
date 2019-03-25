@@ -16,7 +16,7 @@ namespace flame_ide
 {namespace streams
 {
 
-PipeStream::PipeStream() noexcept : status(os::SUCCESS_STATUS), reader(), writer()
+PipeStream::PipeStream() noexcept : status(os::STATUS_SUCCESS), reader(), writer()
 {
 	os::FileDescriptor fds[PIPE_COUNT];
 	status = ::CreatePipe(
@@ -38,14 +38,14 @@ PipeStream::PipeStream(PipeStream &&pipes) noexcept :
 
 PipeStream::PipeStream(os::FileDescriptor fileDescriptorReader, bool readerOwn
 		, os::FileDescriptor fileDescriptorWriter, bool writerOwn) noexcept :
-		status(os::SUCCESS_STATUS)
+		status(os::STATUS_SUCCESS)
 		, reader(fileDescriptorReader, readerOwn)
 		, writer(fileDescriptorWriter, writerOwn)
 {}
 
 PipeStream &PipeStream::operator=(PipeStream &&pipes) noexcept
 {
-	status = os::SUCCESS_STATUS;
+	status = os::STATUS_SUCCESS;
 	reader = flame_ide::move(pipes.reader);
 	writer = flame_ide::move(pipes.writer);
 	return *this;
