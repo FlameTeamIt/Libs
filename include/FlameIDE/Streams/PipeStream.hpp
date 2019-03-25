@@ -37,6 +37,36 @@ public:
 	PipeStream &operator=(PipeStream &&) noexcept;
 
 	///
+	/// @brief setReaderFileDescriptor
+	/// @param fileDescriptor
+	/// @param owner
+	///
+	void setReaderFileDescriptor(os::FileDescriptor fileDescriptor
+			, bool owner = true) noexcept;
+
+	///
+	/// @brief setFileDescriptor
+	/// @param fileDescriptor
+	/// @param owner
+	///
+	void setWriterFileDescriptor(os::FileDescriptor fileDescriptor
+			, bool owner = true) noexcept;
+
+	///
+	/// @brief getReaderFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
+	os::FileDescriptor getReaderFileDescriptor(bool continueOwning = false) noexcept;
+
+	///
+	/// @brief getWriterFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
+	os::FileDescriptor getWriterFileDescriptor(bool continueOwning = false) noexcept;
+
+	///
 	/// @brief getStatus
 	/// @return
 	///

@@ -34,6 +34,9 @@ public:
 	NamedPipeReader &operator=(const NamedPipeReader &) noexcept = delete;
 	NamedPipeReader &operator=(NamedPipeReader &&reader) noexcept;
 
+	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept;
+	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept;
+
 	///
 	/// @brief open
 	/// @param name
@@ -48,7 +51,7 @@ public:
 	///
 	const templates::String &getName() const noexcept;
 
-private:
+protected:
 	templates::String fname; ///<
 	bool delPipe; ///<
 };

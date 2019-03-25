@@ -23,7 +23,7 @@ FileStreamReader::FileStreamReader(os::FileDescriptor fileDescriptor
 		fd(fileDescriptor), own(owner)
 {}
 
-FileStreamReader::~FileStreamReader()
+FileStreamReader::~FileStreamReader() noexcept
 {
 	if (own && fd != os::INVALID_DESCRIPTOR)
 	{

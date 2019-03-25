@@ -7,7 +7,13 @@ namespace flame_ide
 {namespace streams
 {
 
-os::FileDescriptor makeNamedPipe(const char *pipeName, os::ActionType action) noexcept;
+struct Descriptors
+{
+	os::FileDescriptor reader;
+	os::FileDescriptor writer;
+};
+
+Descriptors makeNamedPipe(const char *pipeName, os::ActionType action) noexcept;
 
 }}
 

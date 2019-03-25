@@ -14,7 +14,6 @@ NamedPipeWriterTest::~NamedPipeWriterTest() = default;
 
 int NamedPipeWriterTest::vStart()
 {
-	NamedPipeWriter writer("namedTest.bin", false); // need reader -> threading or other process
 	return 0;
 }
 

@@ -33,6 +33,9 @@ public:
 	NamedPipeWriter &operator=(const NamedPipeWriter &) noexcept = delete;
 	NamedPipeWriter &operator=(NamedPipeWriter &&reader) noexcept;
 
+	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
+	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept;
+
 	///
 	/// @brief open
 	/// @param name
@@ -47,7 +50,7 @@ public:
 	///
 	const templates::String &getName() const noexcept;
 
-private:
+protected:
 	templates::String fname; ///<
 	bool delPipe; ///<
 };

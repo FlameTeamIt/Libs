@@ -1,8 +1,8 @@
 #ifndef FLAMEIDE_STREAMS_NAMEDPIPESTREAM_HPP
 #define FLAMEIDE_STREAMS_NAMEDPIPESTREAM_HPP
 
-#include <FlameIDE/Streams/FileStreamReader.hpp>
-#include <FlameIDE/Streams/FileStreamWriter.hpp>
+#include <FlameIDE/Streams/NamedPipeReader.hpp>
+#include <FlameIDE/Streams/NamedPipeWriter.hpp>
 #include <FlameIDE/Templates/String.hpp>
 
 namespace flame_ide
@@ -50,11 +50,18 @@ public:
 			, bool owner = true) noexcept;
 
 	///
-	/// @brief getFileDescriptor
+	/// @brief getReaderFileDescriptor
 	/// @param continueOwning
 	/// @return
 	///
-	os::FileDescriptor getFileDescriptor(bool continueOwning = false) noexcept;
+	os::FileDescriptor getReaderFileDescriptor(bool continueOwning = false) noexcept;
+
+	///
+	/// @brief getWriterFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
+	os::FileDescriptor getWriterFileDescriptor(bool continueOwning = false) noexcept;
 
 	///
 	/// @brief open
@@ -73,10 +80,8 @@ public:
 private:
 	void deinit();
 
-	templates::String fname; ///<
-	FileStreamWriter writer; ///<
-	FileStreamReader reader; ///<
-	bool delPipe; ///<
+	NamedPipeWriter writer; ///<
+	NamedPipeReader reader; ///<
 };
 
 }}
