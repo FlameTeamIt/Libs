@@ -11,6 +11,8 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+#include <FlameIDE/Common/Traits/Numbers.hpp>
+
 namespace flame_ide
 {namespace os
 {namespace posix
@@ -63,6 +65,8 @@ using OsSemaphoreContext = ::sem_t;
 constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreContext{};
 using OsSemaphoreValue = unsigned int;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1u;
+constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
+		NumerLimit<OsSemaphoreValue>::MAX_VALUE;
 
 }}}
 

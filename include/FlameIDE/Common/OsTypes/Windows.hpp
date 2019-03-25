@@ -8,6 +8,8 @@
 #include <winsock2.h>
 #include <windows.h>
 
+#include <FlameIDE/Common/Traits/Numbers.hpp>
+
 namespace flame_ide
 {namespace os
 {namespace windows
@@ -41,6 +43,8 @@ struct OsSemaphoreContext{};
 constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreContext{};
 using OsSemaphoreValue = LONG;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1;
+constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
+		NumerLimit<OsSemaphoreValue>::MAX_VALUE;
 
 }}}
 
