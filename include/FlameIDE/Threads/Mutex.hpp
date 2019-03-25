@@ -1,40 +1,79 @@
-#ifndef MUTEX_HPP
-#define MUTEX_HPP
+#ifndef FLAMEIDE_THREADS_MUTEX_HPP
+#define FLAMEIDE_THREADS_MUTEX_HPP
 
-#include <pthread.h>
-#include "Templates/PthreadObject.hpp"
-#include "Templates/Locker.hpp"
+#include <FlameIDE/Common/OsTypes.hpp>
 
-class Mutex: public PthreadObject<pthread_mutex_t, pthread_mutexattr_t>
+namespace flame_ide
+{namespace threads
+{
+
+///
+/// @brief The Mutex class
+///
+class Mutex
 {
 public:
-	class Locker: public ::Locker<Mutex>
+	///
+	/// @brief The State enum
+	///
+	enum class State
 	{
-	public:
-		Locker(Mutex &mutex) : ::Locker<Mutex>(mutex)
-		{
-			get().lock();
-		}
-
-		~Locker()
-		{
-			get().unlock();
-		}
+		INVALID ///<
+		, UNLOCKED ///<
+		, LOCKED ///<
 	};
 
-	Mutex();
-	Mutex(bool locked);
-	virtual ~Mutex();
+	///
+	/// @brief The Locker class
+	///
+	class Locker
+	{
+	public:
+		///
+		/// @brief Locker
+		/// @param initMutex
+		///
+		Locker(Mutex &initMutex) noexcept;
+		~Locker() noexcept;
 
-	void lock();
-	bool tryLock();
+	private:
+		Mutex &mtx; ///<
+	};
 
-	void unlock();
+	Mutex() noexcept;
+	Mutex(const Mutex &) = delete;
+	Mutex(Mutex &&mutex) noexcept;
+	~Mutex() noexcept;
+	Mutex &operator=(const Mutex &) = delete;
+	Mutex &operator=(Mutex &&mutex) noexcept;
+
+	///
+	/// @brief lock
+	///
+	void lock() noexcept;
+
+	///
+	/// @brief unlock
+	///
+	void unlock() noexcept;
+
+	///
+	/// @brief getState
+	/// @return
+	///
+	Mutex::State getState() const noexcept;
+
+	///
+	/// @brief getStatus
+	/// @return
+	///
+	os::Status getStatus() const noexcept;
 
 private:
-	typedef PthreadObject<pthread_mutex_t, pthread_mutexattr_t> Parent;
-	virtual void init();
-	virtual void clear();
+	mutable os::MutexContext context; ///<
+	mutable os::Status status; ///<
 };
+
+}}
 
 #endif // MUTEX_HPP
