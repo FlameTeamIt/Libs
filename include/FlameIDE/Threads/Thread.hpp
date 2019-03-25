@@ -1,51 +1,63 @@
-#ifndef THREAD_HPP
-#define THREAD_HPP
+#ifndef FLAMEIDE_THREADS_THREAD_HPP
+#define FLAMEIDE_THREADS_THREAD_HPP
 
-#include "Types.hpp"
-#include "Semaphore.hpp"
-#include "Descriptor.hpp"
+#include <FlameIDE/Common/OsTypes.hpp>
+
+namespace flame_ide
+{namespace threads
+{
 
 class Thread
 {
 public:
-	enum class Status
-	{
-		NOT_RUN,
-		STARTING,
-		READY,
-		PERFOMING,
-		SLEEP,
-		FINISHED
-	};
+	Thread() noexcept;
+	Thread(const Thread &) = delete;
+	Thread(Thread &&thread) noexcept;
+	virtual ~Thread() noexcept;
 
+	Thread &operator=(const Thread &) = delete;
+	Thread &operator=(Thread &&)noexcept;
 
-	Thread();
-	virtual ~Thread();
+	///
+	/// @brief run
+	///
+	void run() noexcept;
 
-	void start();
-	void join();
-	void cancel();
+	///
+	/// @brief join
+	///
+	void join() noexcept;
 
-	Status getStatus() const;
+	///
+	/// @brief detach
+	///
+	void detach() noexcept;
+
+	///
+	/// @brief getStatus
+	/// @return
+	///
+	os::Status getStatus() const noexcept;
 
 protected:
-	virtual void run() = 0;
-	void setStatus(Status newStatus);
+	///
+	/// @brief vRun
+	///
+	virtual void vRun() = 0;
 
-	void enableCancel();
-	void disableCancel();
+	os::ThreadContext context; ///<
 
 private:
-	Thread(const Thread &) = delete;
-	Thread(Thread &&) = delete;
-	Thread &operator=(const Thread &) = delete;
-	Thread &operator=(Thread &&) = delete;
+	///
+	/// @brief task
+	/// @param data
+	/// @return
+	///
+	static void *task(void *data) noexcept;
 
-	Descriptor descriptor;
-	Status status;
-	Semaphore semaphore;
-
-	static void *threadTask(void *data);
+	os::Status status; ///<
 };
 
-#endif // THREAD_HPP
+}}
+
+#endif // FLAMEIDE_THREADS_THREAD_HPP
