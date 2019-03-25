@@ -46,6 +46,16 @@ NamedPipeWriter &NamedPipeWriter::operator=(NamedPipeWriter &&writer) noexcept
 	return *this;
 }
 
+SizeTraits::SsizeType NamedPipeWriter::write(InputByteRange range) noexcept
+{
+	return this->FileStreamWriter::write(range);
+}
+
+SizeTraits::SsizeType NamedPipeWriter::write(InputCircularByteRange range) noexcept
+{
+	return this->FileStreamWriter::write(range);
+}
+
 os::Status NamedPipeWriter::open(const char *name, bool deletePipe) noexcept
 {
 	this->setFileDescriptor(os::INVALID_DESCRIPTOR, false);

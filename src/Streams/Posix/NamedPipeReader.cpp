@@ -36,6 +36,16 @@ NamedPipeReader::~NamedPipeReader() noexcept
 	}
 }
 
+SizeTraits::SsizeType NamedPipeReader::read(OutputByteRange range) noexcept
+{
+	return this->FileStreamReader::read(range);
+}
+
+SizeTraits::SsizeType NamedPipeReader::read(OutputCircularByteRange range) noexcept
+{
+	return this->FileStreamReader::read(range);
+}
+
 NamedPipeReader &NamedPipeReader::operator=(NamedPipeReader &&reader) noexcept
 {
 	this->Parent::operator=(move(reader));
