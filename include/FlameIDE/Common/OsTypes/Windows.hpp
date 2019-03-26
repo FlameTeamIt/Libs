@@ -113,9 +113,6 @@ struct OsAsyncIoContext: public ::OVERLAPPED
 };
 constexpr OsAsyncIoContext OS_ASYNC_CONTEXT_INITIALIZER = OsAsyncIoContext{};
 
-struct OsAsyncIoContext{};
-constexpr OsAsyncIoContext OS_ASYNC_CONTEXT_INITIALIZER = OsAsyncIoContext{};
-
 struct OsThreadContext{};
 constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OsThreadContext{};
 
@@ -124,7 +121,7 @@ constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = {};
 
 struct OsSemaphoreContext{};
 constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreContext{};
-using OsSemaphoreValue = LONG;
+using OsSemaphoreValue = Types::int_t;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
 		NumerLimit<OsSemaphoreValue>::MAX_VALUE;
