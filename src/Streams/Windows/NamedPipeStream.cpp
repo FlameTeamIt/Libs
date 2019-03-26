@@ -102,7 +102,7 @@ os::Status NamedPipeStream::open(const char *name, bool deletePipe) noexcept
 	writer.setFileDescriptor(fd.writer);
 	reader.setFileDescriptor(fd.reader);
 
-	return os::SUCCESS_STATUS;
+	return os::STATUS_SUCCESS;
 }
 
 const templates::String &NamedPipeStream::getName() const noexcept

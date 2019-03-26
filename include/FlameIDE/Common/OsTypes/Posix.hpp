@@ -1,4 +1,4 @@
-#ifndef FLAMEIDE_COMMON_OSTYPES_POSIX_HPP
+﻿#ifndef FLAMEIDE_COMMON_OSTYPES_POSIX_HPP
 #define FLAMEIDE_COMMON_OSTYPES_POSIX_HPP
 
 #include <FlameIDE/Common/Macroses/DetectOs.hpp>
@@ -22,7 +22,7 @@ using OsFileDescriptor = int;
 constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = -1;
 
 using OsStatus = int;
-constexpr OsStatus OS_SUCCESS_STATUS = 0;
+constexpr OsStatus OS_STATUS_SUCCESS = 0;
 
 struct OsSocket
 {
@@ -51,6 +51,11 @@ struct OsThreadContext
 	pthread_attr_t attributes;
 };
 constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OsThreadContext{};
+struct OsThreadTaskTrait : NonCreational
+{
+	using ReturnType = void *;
+	using ArgumentType = void *;
+};
 
 struct OsMutexContext
 {

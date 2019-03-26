@@ -102,10 +102,11 @@ os::Status Thread::getStatus() const noexcept
 
 // private
 
-void *Thread::task(void *data) noexcept
+os::ThreadTaskTrait::ReturnType
+Thread::task(os::ThreadTaskTrait::ArgumentType data) noexcept
 {
 	reinterpret_cast<Thread *>(data)->vRun();
-	return nullptr;
+	return os::ThreadTaskTrait::ReturnType{};
 }
 
 }}

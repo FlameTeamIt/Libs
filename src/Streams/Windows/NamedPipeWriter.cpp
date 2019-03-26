@@ -64,7 +64,7 @@ os::Status NamedPipeWriter::open(const char *name, bool deletePipe) noexcept
 	this->setFileDescriptor(fd, true);
 	delPipe = deletePipe;
 
-	return os::SUCCESS_STATUS;
+	return os::STATUS_SUCCESS;
 }
 
 const templates::String &NamedPipeWriter::getName() const noexcept

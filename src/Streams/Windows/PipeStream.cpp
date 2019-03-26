@@ -16,7 +16,7 @@ enum
 	, PIPE_COUNT
 };
 
-PipeStream::PipeStream() noexcept : status(os::SUCCESS_STATUS), reader(), writer()
+PipeStream::PipeStream() noexcept : status(os::STATUS_SUCCESS), reader(), writer()
 {
 	os::FileDescriptor fds[PIPE_COUNT];
 	status = ::CreatePipe(

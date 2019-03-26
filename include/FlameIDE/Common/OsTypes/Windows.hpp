@@ -13,6 +13,18 @@
 #include <FlameIDE/Common/Traits/Numbers.hpp>
 
 namespace flame_ide
+{
+
+template<>
+struct NumerLimit<LONG>
+{
+	static constexpr LONG MIN_VALUE = INT32_MIN;
+	static constexpr LONG MAX_VALUE = INT32_MAX;
+};
+
+}
+
+namespace flame_ide
 {namespace os
 {namespace windows
 {
@@ -93,9 +105,10 @@ union OsFileDescriptor
 	flame_ide::ssize_t value;
 };
 constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = OsFileDescriptor(flame_ide::ssize_t(-1));
+constexpr OsFileDescriptor OS_DESCRIPTOR_INITIALIZER = OsFileDescriptor(flame_ide::ssize_t{});
 
 using OsStatus = DWORD;
-constexpr OsStatus OS_SUCCESS_STATUS = 0;
+constexpr OsStatus OS_STATUS_SUCCESS = 0;
 
 struct OsSocket
 {
@@ -113,18 +126,30 @@ struct OsAsyncIoContext: public ::OVERLAPPED
 };
 constexpr OsAsyncIoContext OS_ASYNC_CONTEXT_INITIALIZER = OsAsyncIoContext{};
 
-struct OsThreadContext{};
-constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OsThreadContext{};
+using OsThreadContext = OsFileDescriptor;
+constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OS_DESCRIPTOR_INITIALIZER;
 
-struct OsMutexContext{};
-constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = {};
+struct OsThreadTaskTrait : NonCreational
+{
+	using ReturnType = DWORD;
+	using ArgumentType = LPVOID;
+};
 
-struct OsSemaphoreContext{};
-constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreContext{};
-using OsSemaphoreValue = Types::int_t;
+using OsMutexContext = OsFileDescriptor;
+constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = OS_DESCRIPTOR_INITIALIZER;
+
+using OsSemaphoreValue = LONG;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1;
-constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
-		NumerLimit<OsSemaphoreValue>::MAX_VALUE;
+constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID = NumerLimit<OsSemaphoreValue>::MIN_VALUE;
+
+struct OsSemaphoreContext
+{
+	OsFileDescriptor object;
+	OsSemaphoreValue value;
+};
+constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = {
+	OS_DESCRIPTOR_INITIALIZER, OS_SEMAPHORE_VALUE_INVALID
+};
 
 }}}
 

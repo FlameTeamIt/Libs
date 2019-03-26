@@ -53,7 +53,8 @@ private:
 	/// @param data
 	/// @return
 	///
-	static void *task(void *data) noexcept;
+	static os::ThreadTaskTrait::ReturnType
+	task(os::ThreadTaskTrait::ArgumentType data) noexcept;
 
 	os::Status status; ///<
 };
