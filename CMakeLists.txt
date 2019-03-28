@@ -8,13 +8,17 @@ set(DIR_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(DIR_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/tests)
 
 set(FLAMEIDE_LIB_SOURCE_LIST)
+set(FLAMEIDE_LIB_HEADER_LIST)
 set(FLAMEIDE_LIB_TESTS_SOURCE_LIST)
 
 add_subdirectory(${DIR_SOURCE})
 add_subdirectory(${DIR_INCLUDE})
 
 include_directories(${DIR_INCLUDE})
-add_library(Flame ${FLAMEIDE_LIB_SOURCE_LIST})
+add_library(Flame
+	${FLAMEIDE_LIB_SOURCE_LIST}
+	${FLAMEIDE_LIB_HEADER_LIST}
+)
 
 # tests
 
