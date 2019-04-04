@@ -1,9 +1,3 @@
-set(TESTS_SOURCE_LIST)
-
-add_cpp_sources(${CMAKE_CURRENT_SOURCE_DIR} TESTS_SOURCE_LIST)
-
-set(FLAMEIDE_LIB_TESTS_SOURCE_LIST
-	${FLAMEIDE_LIB_TESTS_SOURCE_LIST}
-	${TESTS_SOURCE_LIST}
-	PARENT_SCOPE
-)
+include(Files.cmake)
+add_executable(FlameRunnableTests ${FILE_LIST} ${FLAME_TEST_MODULES})
+target_link_libraries(FlameRunnableTests ${FLAME_LIBRARIES})

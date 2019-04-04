@@ -1,24 +1,15 @@
-set(NAME Common)
+set(NAME Ubjson)
 
-set(MODULE_WITH_FILES FALSE)
+set(MODULE_WITH_FILES TRUE)
 set(LIST_OF_SUBMODULES FALSE)
-
 set_object_module(
     ${NAME}
     ${MODULE_WITH_FILES}
     ${LIST_OF_SUBMODULES}
     LIST_OF_MODULES
 )
+
 set(${NAME}_LIST_OF_SUBMODULES
     ${LIST_OF_MODULES}
-    PARENT_SCOPE
-)
-
-# Tests
-set(ENABLE_TESTS ${CMAKE_ENABLE_TESTS})
-add_tests(${ENABLE_TESTS})
-
-set(${NAME}_TEST_MODULE
-    ${${NAME}Tests_TEST_MODULE}
     PARENT_SCOPE
 )

@@ -1,40 +1,38 @@
-set(ANALYSERS_SOURCE_LIST)
-set(      BUS_SOURCE_LIST)
-set(   COMMON_SOURCE_LIST)
-set(  STREAMS_SOURCE_LIST)
-set(TEMPLATES_SOURCE_LIST)
-set(  THREADS_SOURCE_LIST)
-
-set(ANALYSERS_TESTS_SOURCE_LIST)
-set(      BUS_TESTS_SOURCE_LIST)
-set(   COMMON_TESTS_SOURCE_LIST)
-set(  STREAMS_TESTS_SOURCE_LIST)
-set(TEMPLATES_TESTS_SOURCE_LIST)
-set(  THREADS_TESTS_SOURCE_LIST)
-
-add_subdirectory(Analysers)
-add_subdirectory(Bus)
-add_subdirectory(Common)
-add_subdirectory(Streams)
-add_subdirectory(Templates)
-add_subdirectory(Threads)
-
-set(FLAMEIDE_LIB_SOURCE_LIST
-	${ANALYSERS_SOURCE_LIST}
-	${BUS_SOURCE_LIST}
-	${COMMON_SOURCE_LIST}
-	${STREAMS_SOURCE_LIST}
-	${TEMPLATES_SOURCE_LIST}
-	${THREADS_SOURCE_LIST}
-	PARENT_SCOPE
+set(FLAME_MODULES
+    Analysers
+    Bus
+    Common
+    Streams
+    Templates
+    Threads
 )
 
-set(FLAMEIDE_LIB_TESTS_SOURCE_LIST
-	${ANALYSERS_TESTS_SOURCE_LIST}
-	${BUS_TESTS_SOURCE_LIST}
-	${COMMON_TESTS_SOURCE_LIST}
-	${STREAMS_TESTS_SOURCE_LIST}
-	${TEMPLATES_TESTS_SOURCE_LIST}
-	${THREADS_TESTS_SOURCE_LIST}
-	PARENT_SCOPE
+foreach(module ${FLAME_MODULES})
+    add_subdirectory(${module})
+
+    message(${module})
+    if (${module}_LIST_OF_SUBMODULES)
+        set(FLAME_LIST_OF_SUBMODULES ${FLAME_LIST_OF_SUBMODULES}
+            ${${module}_LIST_OF_SUBMODULES}
+        )
+        message("\t"
+            "Add ${module}_LIST_OF_SUBMODULES"
+        )
+    endif()
+    if (${module}_TEST_MODULE)
+        message("\t"
+            "Add ${module}_TEST_MODULE"
+        )
+        set(FLAME_TEST_MODULES ${FLAME_TEST_MODULES}
+            ${${module}_TEST_MODULE}
+        )
+    endif()
+
+endforeach()
+add_library(${CMAKE_PROJECT_NAME} ${FLAME_LIST_OF_SUBMODULES})
+
+set(FLAME_TEST_MODULES
+    ${FLAME_TEST_MODULES}
+    ${FLAME_LIST_OF_SUBMODULES}
+    PARENT_SCOPE
 )

@@ -1,0 +1,9 @@
+set(NAME ${NAME}Tests)
+
+set(MODULE_WITH_FILES TRUE)
+set_test_module(
+    ${NAME}
+    ${MODULE_WITH_FILES}
+    TEST_MODULE
+)
+set(${NAME}_TEST_MODULE ${TEST_MODULE} PARENT_SCOPE)

@@ -1,3 +1,6 @@
+set(FLAME_PLATFORM Posix)
+set(FLAME_LIBRARIES pthread)
+
 function(add_cpp_sources DIR_NAME SOURCE_LIST_VAR)
 	execute_process(
 		COMMAND find ${DIR_NAME}/ -maxdepth 1 -type f -name "*.cpp"
