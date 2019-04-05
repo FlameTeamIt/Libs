@@ -1,15 +1,15 @@
 set(NAME Analysers)
 
 set(MODULE_WITH_FILES FALSE)
-set(LIST_OF_SUBMODULES Ubjson)
+set(MODULES Ubjson)
 set_object_module(
     ${NAME}
     ${MODULE_WITH_FILES}
-    ${LIST_OF_SUBMODULES}
+    ${MODULES}
     LIST_OF_MODULES
 )
 
-set(${NAME}_LIST_OF_SUBMODULES
+set(${NAME}_MODULES
     ${LIST_OF_MODULES}
     PARENT_SCOPE
 )

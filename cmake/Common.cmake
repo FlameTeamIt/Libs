@@ -9,29 +9,29 @@ endif (WIN32)
 macro(set_object_module
 		CURRENT_MODULE_NAME
 		MODULE_WITH_FILES
-		LIST_OF_SUBMODULES
-		VARNAME_LIST_OF_SUBMODULES)
+		MODULES
+		VARNAME_MODULES)
 
-	set(${VARNAME_LIST_OF_SUBMODULES})
+	set(${VARNAME_MODULES})
 	if (${MODULE_WITH_FILES})
 		include(Files.cmake)
 
 		set(OBJECT_LIST ${FILE_LIST})
 		add_library(${CURRENT_MODULE_NAME} OBJECT ${OBJECT_LIST})
 
-		set(${VARNAME_LIST_OF_SUBMODULES}
-			${${VARNAME_LIST_OF_SUBMODULES}}
+		set(${VARNAME_MODULES}
+			${${VARNAME_MODULES}}
 			$<TARGET_OBJECTS:${CURRENT_MODULE_NAME}>
 		)
 	endif()
 
-	if (LIST_OF_SUBMODULES)
-		foreach(module ${LIST_OF_SUBMODULES})
+	if (MODULES)
+		foreach(module ${MODULES})
 			add_subdirectory(${module})
-			if (${module}_LIST_OF_SUBMODULES)
-				set(${VARNAME_LIST_OF_SUBMODULES}
-					${${VARNAME_LIST_OF_SUBMODULES}}
-					${${module}_LIST_OF_SUBMODULES}
+			if (${module}_MODULES)
+				set(${VARNAME_MODULES}
+					${${VARNAME_MODULES}}
+					${${module}_MODULES}
 				)
 			endif()
 		endforeach()

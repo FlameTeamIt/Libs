@@ -11,28 +11,24 @@ foreach(module ${FLAME_MODULES})
     add_subdirectory(${module})
 
     message(${module})
-    if (${module}_LIST_OF_SUBMODULES)
-        set(FLAME_LIST_OF_SUBMODULES ${FLAME_LIST_OF_SUBMODULES}
-            ${${module}_LIST_OF_SUBMODULES}
-        )
-        message("\t"
-            "Add ${module}_LIST_OF_SUBMODULES"
+    if (${module}_MODULES)
+        message("\t" "Add ${module}_MODULES")
+        set(FLAME_SUBMODULES ${FLAME_SUBMODULES}
+            ${${module}_MODULES}
         )
     endif()
     if (${module}_TEST_MODULE)
-        message("\t"
-            "Add ${module}_TEST_MODULE"
-        )
-        set(FLAME_TEST_MODULES ${FLAME_TEST_MODULES}
+        message("\t" "Add ${module}_TEST_MODULE")
+        set(FLAME_TEST_SUBMODULES ${FLAME_TEST_SUBMODULES}
             ${${module}_TEST_MODULE}
         )
     endif()
 
 endforeach()
-add_library(${CMAKE_PROJECT_NAME} ${FLAME_LIST_OF_SUBMODULES})
+add_library(${CMAKE_PROJECT_NAME} ${FLAME_SUBMODULES})
 
-set(FLAME_TEST_MODULES
-    ${FLAME_TEST_MODULES}
-    ${FLAME_LIST_OF_SUBMODULES}
+set(FLAME_TEST_SUBMODULES
+    ${FLAME_TEST_SUBMODULES}
+    ${FLAME_SUBMODULES}
     PARENT_SCOPE
 )
