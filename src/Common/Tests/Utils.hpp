@@ -6,6 +6,7 @@
 #include <tests/Test.hpp>
 
 namespace flame_ide
+{namespace common
 {namespace tests
 {
 
@@ -19,6 +20,6 @@ private:
 	virtual int vStart();
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_COMMON_TESTS_UTILS_HPP

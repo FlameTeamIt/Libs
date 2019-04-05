@@ -6,7 +6,7 @@
 int main()
 {
 	flame_ide::templates::tests::TestAggregator().start();
-	flame_ide::tests::TestAggregator().start();
+	flame_ide::common::tests::TestAggregator().start();
 	flame_ide::streams::tests::TestAggregator().start();
 	flame_ide::threads::tests::TestAggregator().start();
 	return 0;

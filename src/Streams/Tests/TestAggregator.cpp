@@ -1,10 +1,10 @@
-﻿#include "TestAggregator.hpp"
+﻿#include <FlameIDE/../../src/Streams/Tests/RamStreamTest.hpp>
+#include <FlameIDE/../../src/Streams/Tests/PipeStreamTest.hpp>
+#include <FlameIDE/../../src/Streams/Tests/NamedPipeStreamTest.hpp>
+#include <FlameIDE/../../src/Streams/Tests/NamedPipeReaderTest.hpp>
+#include <FlameIDE/../../src/Streams/Tests/NamedPipeWriterTest.hpp>
 
-#include "RamStreamTest.hpp"
-#include "PipeStreamTest.hpp"
-#include "NamedPipeStreamTest.hpp"
-#include "NamedPipeReaderTest.hpp"
-#include "NamedPipeWriterTest.hpp"
+#include <FlameIDE/../../src/Streams/Tests/TestAggregator.hpp>
 
 namespace flame_ide
 {namespace streams

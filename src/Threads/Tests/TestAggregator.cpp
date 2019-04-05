@@ -1,6 +1,6 @@
-#include "TestAggregator.hpp"
+#include <FlameIDE/../../src/Threads/Tests/ThreadTest.hpp>
 
-#include "ThreadTest.hpp"
+#include <FlameIDE/../../src/Threads/Tests/TestAggregator.hpp>
 
 namespace flame_ide
 {namespace threads

@@ -1,6 +1,7 @@
 #include "Utils.hpp"
 
 namespace flame_ide
+{namespace common
 {namespace tests
 {
 
@@ -14,4 +15,4 @@ int Utils::vStart()
 	return 0;
 }
 
-}}
+}}}
