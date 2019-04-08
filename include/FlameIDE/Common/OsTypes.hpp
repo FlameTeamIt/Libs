@@ -21,7 +21,7 @@ constexpr FileDescriptor INVALID_DESCRIPTOR =
 
 using Status = FLAMEIDE_OS_NAMESPACE::OsStatus;
 constexpr Status STATUS_SUCCESS =
-		FLAMEIDE_OS_NAMESPACE::OS_SUCCESS_STATUS;
+		FLAMEIDE_OS_NAMESPACE::OS_STATUS_SUCCESS;
 
 using Socket = FLAMEIDE_OS_NAMESPACE::OsSocket;
 constexpr Socket SOCKET_INITIALIZER =
@@ -34,6 +34,7 @@ constexpr AsyncIoContext ASYNC_CONTEXT_INITIALIZER =
 using ThreadContext = FLAMEIDE_OS_NAMESPACE::OsThreadContext;
 constexpr ThreadContext THREAD_CONTEXT_INITIALIZER =
 		FLAMEIDE_OS_NAMESPACE::OS_THREAD_CONTEXT_INITIALIZER;
+using ThreadTaskTrait = FLAMEIDE_OS_NAMESPACE::OsThreadTaskTrait;
 
 using MutexContext = FLAMEIDE_OS_NAMESPACE::OsMutexContext;
 constexpr MutexContext MUTEX_CONTEXT_INITIALIZER =
