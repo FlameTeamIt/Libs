@@ -1,4 +1,4 @@
-#include "ThreadTest.hpp"
+#include <FlameIDE/../../src/Threads/Tests/ThreadTest.hpp>
 
 namespace flame_ide
 {namespace threads
