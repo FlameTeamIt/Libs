@@ -1,5 +1,7 @@
 set(FLAME_PLATFORM Posix)
-set(FLAME_LIBRARIES pthread)
+
+find_library(PTHREAD_LIBRARY pthread)
+set(FLAME_LIBRARIES ${PTHREAD_LIBRARY})
 
 function(add_cpp_sources DIR_NAME SOURCE_LIST_VAR)
 	execute_process(
