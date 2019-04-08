@@ -58,10 +58,10 @@ static inline os::Status mutexContextDestroy(os::MutexContext &ctx) noexcept
 
 static inline Mutex::State mutexGetState(os::MutexContext &ctx) noexcept
 {
-	if (pthread_mutex_trylock(&ctx.object))
+	auto tryLockStatus = -pthread_mutex_trylock(&ctx.object);
+	if (tryLockStatus)
 	{
-		os::Status status = -errno;
-		switch (status)
+		switch (tryLockStatus)
 		{
 			case -EBUSY:
 				return Mutex::State::LOCKED;

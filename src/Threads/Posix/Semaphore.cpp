@@ -59,7 +59,7 @@ Semaphore::Semaphore(Semaphore &&sem) noexcept : context(sem.context)
 }
 
 Semaphore::Semaphore(os::SemaphoreValue value) noexcept :
-		context(semaphoreContexInit(value))
+		context(semaphoreContexInit(value)), status(os::STATUS_SUCCESS)
 {
 	if (context == os::SEMAPHORE_CONTEXT_INITIALIZER)
 	{
@@ -110,10 +110,11 @@ void Semaphore::wait() noexcept
 os::SemaphoreValue Semaphore::getValue() const noexcept
 {
 	int value = 0;
-	if (!status && ::sem_getvalue(&context, &value))
+	if (!status && !::sem_getvalue(&context, &value))
 	{
 		return static_cast<os::SemaphoreValue>(value);
 	}
+	status = -errno;
 	return os::SEMAPHORE_VALUE_INVALID;
 }
 
