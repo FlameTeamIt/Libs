@@ -1,4 +1,4 @@
-set (FILE_LIST
+set (SOURCE_LIST
 	./TestAggregator.cpp
 	./Utils.cpp
 )

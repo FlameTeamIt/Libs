@@ -1,4 +1,4 @@
-set (FILE_LIST
+set (SOURCE_LIST
 	./NamedPipeReaderTest.cpp
 	./NamedPipeStreamTest.cpp
 	./NamedPipeWriterTest.cpp

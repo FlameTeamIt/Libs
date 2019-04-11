@@ -10,6 +10,7 @@ set(FLAME_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(FLAME_INCLUDE_SUBMODLUES_PATH ${FLAME_INCLUDE_PATH}/FlameIDE)
 
 include(cmake/Common.cmake)
+include(cmake/Headers.cmake)
 
 include_directories(${FLAME_INCLUDE_PATH} ${FLAME_TEST_PATH})
 add_subdirectory(src)

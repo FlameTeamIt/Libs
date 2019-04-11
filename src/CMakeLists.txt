@@ -7,6 +7,11 @@ set(FLAME_MODULES
     Threads
 )
 
+set(LOCAL_HEADER_LIST)
+actualize_header_list(HEADER_LIST LOCAL_HEADER_LIST)
+set(HEADER_LIST ${LOCAL_HEADER_LIST})
+unset(LOCAL_HEADER_LIST)
+
 foreach(module ${FLAME_MODULES})
     add_subdirectory(${module})
 

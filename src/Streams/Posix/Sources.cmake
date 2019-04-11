@@ -1,7 +1,7 @@
-set (FILE_LIST
+set (SOURCE_LIST
 	./FileStreamReader.cpp
 	./FileStreamWriter.cpp
-	./InternalWinApiFunctions.cpp
+	./InternalPosixFunctions.cpp
 	./NamedPipeReader.cpp
 	./NamedPipeStream.cpp
 	./NamedPipeWriter.cpp

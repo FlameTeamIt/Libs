@@ -1,3 +1,3 @@
-set (FILE_LIST
+set (SOURCE_LIST
 	./MsgInterface.cpp
 )
