@@ -13,7 +13,8 @@ macro(set_object_module
 	if (${MODULE_WITH_FILES})
 		include(Sources.cmake)
 
-		add_library(${CURRENT_MODULE_NAME} OBJECT ${SOURCE_LIST})
+		add_library(${CURRENT_MODULE_NAME}
+			OBJECT ${SOURCE_LIST} ${HEADER_LIST})
 
 		set(${VARNAME_MODULES}
 			${${VARNAME_MODULES}}
