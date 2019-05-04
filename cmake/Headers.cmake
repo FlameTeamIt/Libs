@@ -1,18 +1,5 @@
 set(HEADER_LIST
 	include/FlameIDE/About/About.hpp
-	include/FlameIDE/Analysers/Ubjson/Array.hpp
-	include/FlameIDE/Analysers/Ubjson/BaseValue.hpp
-	include/FlameIDE/Analysers/Ubjson/HugeNumber.hpp
-	include/FlameIDE/Analysers/Ubjson/Object.hpp
-	include/FlameIDE/Analysers/Ubjson/Pair.hpp
-	include/FlameIDE/Analysers/Ubjson/Settings.hpp
-	include/FlameIDE/Analysers/Ubjson/SimpleTypeValues.hpp
-	include/FlameIDE/Analysers/Ubjson/Stream.hpp
-	include/FlameIDE/Analysers/Ubjson/String.hpp
-	include/FlameIDE/Analysers/Ubjson/Traits.hpp
-	include/FlameIDE/Analysers/Ubjson/Types.hpp
-	include/FlameIDE/Analysers/Ubjson/Value.hpp
-	include/FlameIDE/Analysers/Ubjson/ValueSpecializations.hpp
 	include/FlameIDE/Bus/MsgInterface.hpp
 	include/FlameIDE/Common/Byte.hpp
 	include/FlameIDE/Common/Constants.hpp
@@ -100,4 +87,17 @@ set(HEADER_LIST
 	include/FlameIDE/Threads/Mutex.hpp
 	include/FlameIDE/Threads/Semaphore.hpp
 	include/FlameIDE/Threads/Thread.hpp
+	include/FlameIDE/Ubjson/Array.hpp
+	include/FlameIDE/Ubjson/BaseValue.hpp
+	include/FlameIDE/Ubjson/HugeNumber.hpp
+	include/FlameIDE/Ubjson/Object.hpp
+	include/FlameIDE/Ubjson/Pair.hpp
+	include/FlameIDE/Ubjson/Settings.hpp
+	include/FlameIDE/Ubjson/SimpleTypeValues.hpp
+	include/FlameIDE/Ubjson/Stream.hpp
+	include/FlameIDE/Ubjson/String.hpp
+	include/FlameIDE/Ubjson/Traits.hpp
+	include/FlameIDE/Ubjson/Types.hpp
+	include/FlameIDE/Ubjson/Value.hpp
+	include/FlameIDE/Ubjson/ValueSpecializations.hpp
 )

@@ -1,25 +1,19 @@
-#ifndef MSGINTERFACE_H
-#define MSGINTERFACE_H
+#ifndef FLAMEIDE_MESSAGEINTERFACE_MESSAGEINTERFACE_HPP
+#define FLAMEIDE_MESSAGEINTERFACE_MESSAGEINTERFACE_HPP
 
-// класс для работы с библиотекой
-
-#include <list>
+#include <FlameIDE/Templates/List.hpp>
 
 namespace flame_ide
 {
 
-class MsgInterface
+class MessageInterface
 {
-protected:
 public:
-	MsgInterface();
-	~MsgInterface();
-	
-	static bool isFurst();
-	static std::list<int> getSessionList();
+	MessageInterface();
+	~MessageInterface();
 };
 
 }
 
 
-#endif // MSGINTERFACE_H
+#endif // FLAMEIDE_MESSAGEINTERFACE_MESSAGEINTERFACE_HPP
