@@ -1,10 +1,10 @@
-#ifndef ANALYSERS_UBJSON_TRAITS_HPP
-#define ANALYSERS_UBJSON_TRAITS_HPP
+#ifndef FLAMEIDE_UBJSON_TRAITS_HPP
+#define FLAMEIDE_UBJSON_TRAITS_HPP
 
 #include <FlameIDE/Common/Traits.hpp>
 #include <FlameIDE/Templates/Variant.hpp>
 
-#include <FlameIDE/Analysers/Ubjson/Types.hpp>
+#include <FlameIDE/Ubjson/Types.hpp>
 
 namespace flame_ide
 {namespace ubjson
@@ -178,4 +178,4 @@ struct ValueTraits<EnumeratedType::OBJECT>
 
 }}
 
-#endif // ANALYSERS_UBJSON_TRAITS_HPP
+#endif // FLAMEIDE_UBJSON_TRAITS_HPP

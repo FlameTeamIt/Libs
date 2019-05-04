@@ -1,5 +1,5 @@
-#ifndef ANALYSERS_UBJSON_STRING_HPP
-#define ANALYSERS_UBJSON_STRING_HPP
+#ifndef FLAMEIDE_UBJSON_STRING_HPP
+#define FLAMEIDE_UBJSON_STRING_HPP
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
 
@@ -7,9 +7,9 @@
 #include <FlameIDE/Templates/Variant.hpp>
 #include <FlameIDE/Templates/Array.hpp>
 
-#include <FlameIDE/Analysers/Ubjson/Settings.hpp>
-#include <FlameIDE/Analysers/Ubjson/Types.hpp>
-#include <FlameIDE/Analysers/Ubjson/Traits.hpp>
+#include <FlameIDE/Ubjson/Settings.hpp>
+#include <FlameIDE/Ubjson/Types.hpp>
+#include <FlameIDE/Ubjson/Traits.hpp>
 
 
 namespace flame_ide
@@ -30,4 +30,4 @@ private:
 
 }}
 
-#endif // ANALYSERS_UBJSON_STRING_HPP
+#endif // FLAMEIDE_UBJSON_STRING_HPP

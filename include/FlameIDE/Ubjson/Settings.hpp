@@ -1,5 +1,5 @@
-#ifndef ANALYSERS_UBJSON_SETTINGS_HPP
-#define ANALYSERS_UBJSON_SETTINGS_HPP
+#ifndef FLAMEIDE_UBJSON_SETTINGS_HPP
+#define FLAMEIDE_UBJSON_SETTINGS_HPP
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
 #include <FlameIDE/Common/Traits.hpp>
@@ -15,4 +15,4 @@ struct Settings : public NonCreational
 
 }}
 
-#endif // ANALYSERS_UBJSON_SETTINGS_HPP
+#endif // FLAMEIDE_UBJSON_SETTINGS_HPP

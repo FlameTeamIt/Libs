@@ -1,9 +1,8 @@
-#ifndef ANALYSERS_UBJSON_BASEVALUE_HPP
-#define ANALYSERS_UBJSON_BASEVALUE_HPP
+#ifndef FLAMEIDE_UBJSON_BASEVALUE_HPP
+#define FLAMEIDE_UBJSON_BASEVALUE_HPP
 
 #include <FlameIDE/Templates/Pointers.hpp>
-
-#include <FlameIDE/Analysers/Ubjson/Traits.hpp>
+#include <FlameIDE/Ubjson/Traits.hpp>
 
 namespace flame_ide
 {namespace ubjson
@@ -162,4 +161,4 @@ private:
 
 }}
 
-#endif // ANALYSERS_UBJSON_BASEVALUE_HPP
+#endif // FLAMEIDE_UBJSON_BASEVALUE_HPP
