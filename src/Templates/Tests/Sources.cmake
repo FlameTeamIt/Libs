@@ -1,0 +1,23 @@
+set (SOURCE_LIST
+	./AllocatorTest.cpp
+	./ArrayTest.cpp
+	./AsIntegralTypeTest.cpp
+	./BitsTest.cpp
+	./ByteOrderTest.cpp
+	./CircularArrayTest.cpp
+	./CircularIteratorTest.cpp
+	./CircularVectorTest.cpp
+	./HybridVectorTest.cpp
+	./IntegerIteratorTest.cpp
+	./ListTest.cpp
+	./SerializationTest.cpp
+	./SharedPointerTest.cpp
+	./StringTest.cpp
+	./TestAggregator.cpp
+	./TestClass.cpp
+	./TupleTest.cpp
+	./UniquePoiterTest.cpp
+	./VariantTest.cpp
+	./VectorTest.cpp
+	./WideIntTest.cpp
+)

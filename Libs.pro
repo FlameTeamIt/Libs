@@ -20,19 +20,6 @@ INCLUDEPATH += .
 ## common headers
 HEADERS += \
 	./include/FlameIDE/About/About.hpp \
-	./include/FlameIDE/Analysers/Ubjson/Array.hpp \
-	./include/FlameIDE/Analysers/Ubjson/BaseValue.hpp \
-	./include/FlameIDE/Analysers/Ubjson/HugeNumber.hpp \
-	./include/FlameIDE/Analysers/Ubjson/Object.hpp \
-	./include/FlameIDE/Analysers/Ubjson/Pair.hpp \
-	./include/FlameIDE/Analysers/Ubjson/Settings.hpp \
-	./include/FlameIDE/Analysers/Ubjson/SimpleTypeValues.hpp \
-	./include/FlameIDE/Analysers/Ubjson/Stream.hpp \
-	./include/FlameIDE/Analysers/Ubjson/String.hpp \
-	./include/FlameIDE/Analysers/Ubjson/Traits.hpp \
-	./include/FlameIDE/Analysers/Ubjson/Types.hpp \
-	./include/FlameIDE/Analysers/Ubjson/Value.hpp \
-	./include/FlameIDE/Analysers/Ubjson/ValueSpecializations.hpp \
 	./include/FlameIDE/Bus/MsgInterface.hpp \
 	./include/FlameIDE/Common/Byte.hpp \
 	./include/FlameIDE/Common/Constants.hpp \
@@ -75,8 +62,8 @@ HEADERS += \
 	./include/FlameIDE/Templates/Array.hpp \
 	./include/FlameIDE/Templates/ArrayBlocks.hpp \
 	./include/FlameIDE/Templates/AsIntegralType.hpp \
-	./include/FlameIDE/Templates/Bits.hpp \
 	./include/FlameIDE/Templates/BitSet.hpp \
+	./include/FlameIDE/Templates/Bits.hpp \
 	./include/FlameIDE/Templates/ByteOrder.hpp \
 	./include/FlameIDE/Templates/CircularArray.hpp \
 	./include/FlameIDE/Templates/CircularVector.hpp \
@@ -118,6 +105,19 @@ HEADERS += \
 	./include/FlameIDE/Threads/Mutex.hpp \
 	./include/FlameIDE/Threads/Semaphore.hpp \
 	./include/FlameIDE/Threads/Thread.hpp \
+	./include/FlameIDE/Ubjson/Array.hpp \
+	./include/FlameIDE/Ubjson/BaseValue.hpp \
+	./include/FlameIDE/Ubjson/HugeNumber.hpp \
+	./include/FlameIDE/Ubjson/Object.hpp \
+	./include/FlameIDE/Ubjson/Pair.hpp \
+	./include/FlameIDE/Ubjson/Settings.hpp \
+	./include/FlameIDE/Ubjson/SimpleTypeValues.hpp \
+	./include/FlameIDE/Ubjson/Stream.hpp \
+	./include/FlameIDE/Ubjson/String.hpp \
+	./include/FlameIDE/Ubjson/Traits.hpp \
+	./include/FlameIDE/Ubjson/Types.hpp \
+	./include/FlameIDE/Ubjson/Value.hpp \
+	./include/FlameIDE/Ubjson/ValueSpecializations.hpp \
 	./src/Common/Tests/TestAggregator.hpp \
 	./src/Common/Tests/Utils.hpp \
 	./src/Streams/Tests/NamedPipeReaderTest.hpp \
@@ -169,10 +169,6 @@ HEADERS += \
 
 # sources
 SOURCES += \
-	./src/Analysers/Ubjson/Array.cpp \
-	./src/Analysers/Ubjson/Object.cpp \
-	./src/Analysers/Ubjson/Pair.cpp \
-	./src/Analysers/Ubjson/String.cpp \
 	./src/Bus/MsgInterface.cpp \
 	./src/Common/Tests/TestAggregator.cpp \
 	./src/Common/Tests/Utils.cpp \
@@ -212,6 +208,10 @@ SOURCES += \
 	./src/Threads/Tests/SemaphoreTest.cpp \
 	./src/Threads/Tests/TestAggregator.cpp \
 	./src/Threads/Tests/ThreadTest.cpp \
+	./src/Ubjson/Array.cpp \
+	./src/Ubjson/Object.cpp \
+	./src/Ubjson/Pair.cpp \
+	./src/Ubjson/String.cpp \
 	./tests/main.cpp
 
 ## Windows sources

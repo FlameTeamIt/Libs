@@ -2,12 +2,12 @@
 
 using namespace flame_ide;
 
-MsgInterface::MsgInterface()
+MessageInterface::MessageInterface()
 {
 	//ctor
 }
 
-MsgInterface::~MsgInterface()
+MessageInterface::~MessageInterface()
 {
 	//dtor
 }
