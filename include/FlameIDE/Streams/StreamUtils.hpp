@@ -17,8 +17,8 @@ namespace flame_ide
 
 using Byte = byte_t;
 
-constexpr flame_ide::Types::size_t COUNT_CONTINUOUS_RANGES = 2;
-constexpr flame_ide::SizeTraits::SsizeType INVALID_COUNT_BYTES = -1;
+constexpr flame_ide::Types::size_t COUNT_CONTINUOUS_RANGES = 2; ///<
+constexpr flame_ide::SizeTraits::SsizeType INVALID_COUNT_BYTES = -1; ///<
 
 ///
 /// @brief The AbstractByteStreamReader struct
