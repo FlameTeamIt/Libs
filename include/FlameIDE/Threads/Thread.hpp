@@ -16,7 +16,7 @@ public:
 	virtual ~Thread() noexcept;
 
 	Thread &operator=(const Thread &) = delete;
-	Thread &operator=(Thread &&)noexcept;
+	Thread &operator=(Thread &&) noexcept;
 
 	///
 	/// @brief run
