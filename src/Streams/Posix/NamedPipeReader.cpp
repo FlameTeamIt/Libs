@@ -2,7 +2,7 @@
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
-#include "InternalPosixFunctions.hpp"
+#include "../CommonFuncitons.hpp"
 
 #include <FlameIDE/Streams/NamedPipeReader.hpp>
 
@@ -16,24 +16,17 @@ NamedPipeReader::NamedPipeReader() noexcept : Parent()
 {}
 
 NamedPipeReader::NamedPipeReader(NamedPipeReader &&reader) noexcept :
-		Parent(move(reader)), delPipe(reader.delPipe)
-{
-	reader.delPipe = false;
-}
-
-NamedPipeReader::NamedPipeReader(const char *name, bool deletePipe) noexcept :
-		Parent(makeFifo(name, os::ActionType::READER), true)
-		, fname(name)
-		, delPipe(deletePipe)
+		Parent(move(reader))
 {}
+
+NamedPipeReader::NamedPipeReader(const char *name) noexcept :
+		Parent(makeNamedReader(name).fd), fname(name)
+{
+}
 
 NamedPipeReader::~NamedPipeReader() noexcept
 {
 	this->setFileDescriptor(os::INVALID_DESCRIPTOR, false);
-	if (delPipe)
-	{
-		remove(fname.data());
-	}
 }
 
 SizeTraits::SsizeType NamedPipeReader::read(OutputByteRange range) noexcept
@@ -49,24 +42,19 @@ SizeTraits::SsizeType NamedPipeReader::read(OutputCircularByteRange range) noexc
 NamedPipeReader &NamedPipeReader::operator=(NamedPipeReader &&reader) noexcept
 {
 	this->Parent::operator=(move(reader));
-
-	delPipe = reader.delPipe;
-	reader.delPipe = false;
-
 	return *this;
 }
 
-os::Status NamedPipeReader::open(const char *name, bool deletePipe) noexcept
+os::Status NamedPipeReader::open(const char *name) noexcept
 {
 	this->setFileDescriptor(os::INVALID_DESCRIPTOR, false);
 
-	os::FileDescriptor fd = makeFifo(name, os::ActionType::READER);
+	os::FileDescriptor fd = makeNamedReader(name).fd;
 	if (fd < 0)
 	{
 		return os::INVALID_DESCRIPTOR;
 	}
 	this->setFileDescriptor(fd, true);
-	delPipe = deletePipe;
 
 	return os::STATUS_SUCCESS;
 }

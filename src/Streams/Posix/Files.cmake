@@ -1,7 +1,7 @@
 set (FILE_LIST
+	./CommonFunctionsImpl.cpp
 	./FileStreamReader.cpp
 	./FileStreamWriter.cpp
-	./InternalPosixFunctions.cpp
 	./NamedPipeReader.cpp
 	./NamedPipeStream.cpp
 	./NamedPipeWriter.cpp

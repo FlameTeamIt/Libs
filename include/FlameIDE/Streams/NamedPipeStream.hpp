@@ -78,6 +78,7 @@ public:
 	const templates::String &getName() const noexcept;
 
 private:
+	void init();
 	void deinit();
 
 	NamedPipeWriter writer; ///<

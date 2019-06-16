@@ -50,6 +50,12 @@ public:
 	///
 	const templates::String &getName() const noexcept;
 
+	///
+	/// @brief setName
+	/// @param name
+	///
+	void setName(const templates::String &name, bool deletePipe = true);
+
 protected:
 	templates::String fname; ///<
 	bool delPipe; ///<
