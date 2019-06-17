@@ -291,60 +291,60 @@ struct MakeUnsigned<Types::long_t>
 /// @brief The NumerLimit struct
 ///
 template<typename IntType>
-struct NumerLimit
+struct NumberLimit
 {};
 
 template<>
-struct NumerLimit<Types::ichar_t>
+struct NumberLimit<Types::ichar_t>
 {
 	static constexpr Types::ichar_t MIN_VALUE = INT8_MIN;
 	static constexpr Types::ichar_t MAX_VALUE = INT8_MAX;
 };
 
 template<>
-struct NumerLimit<Types::short_t>
+struct NumberLimit<Types::short_t>
 {
 	static constexpr Types::short_t MIN_VALUE = INT16_MIN;
 	static constexpr Types::short_t MAX_VALUE = INT16_MAX;
 };
 
 template<>
-struct NumerLimit<Types::int_t>
+struct NumberLimit<Types::int_t>
 {
 	static constexpr Types::int_t MIN_VALUE = INT32_MIN;
 	static constexpr Types::int_t MAX_VALUE = INT32_MAX;
 };
 
 template<>
-struct NumerLimit<Types::long_t>
+struct NumberLimit<Types::long_t>
 {
 	static constexpr Types::long_t MIN_VALUE = INT64_MIN;
 	static constexpr Types::long_t MAX_VALUE = INT64_MAX;
 };
 
 template<>
-struct NumerLimit<Types::uichar_t>
+struct NumberLimit<Types::uichar_t>
 {
 	static constexpr Types::uichar_t MIN_VALUE = 0;
 	static constexpr Types::uichar_t MAX_VALUE = UINT8_MAX;
 };
 
 template<>
-struct NumerLimit<Types::ushort_t>
+struct NumberLimit<Types::ushort_t>
 {
 	static constexpr Types::ushort_t MIN_VALUE = 0;
 	static constexpr Types::ushort_t MAX_VALUE = UINT16_MAX;
 };
 
 template<>
-struct NumerLimit<Types::uint_t>
+struct NumberLimit<Types::uint_t>
 {
 	static constexpr Types::uint_t MIN_VALUE = 0;
 	static constexpr Types::uint_t MAX_VALUE = UINT32_MAX;
 };
 
 template<>
-struct NumerLimit<Types::ulong_t>
+struct NumberLimit<Types::ulong_t>
 {
 	static constexpr Types::ulong_t MIN_VALUE = 0;
 	static constexpr Types::ulong_t MAX_VALUE = UINT64_MAX;
