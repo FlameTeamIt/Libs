@@ -17,7 +17,7 @@ NamedPipeStreamTest::~NamedPipeStreamTest() = default;
 int NamedPipeStreamTest::vStart()
 {
 	NamedPipeStream stream;
-	stream.open("/tmp/test.named.pipe", true);
+	stream.open("\\\\.\\pipe\\test.named.pipe", true);
 
 	std::array<byte_t, 16> writtableArray;
 	std::array<byte_t, 16> readableArray;
