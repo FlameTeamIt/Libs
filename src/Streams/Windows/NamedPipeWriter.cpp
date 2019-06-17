@@ -1,8 +1,8 @@
-﻿#include <FlameIDE/Common/Macroses/DetectOs.hpp>
+#include <FlameIDE/Common/Macroses/DetectOs.hpp>
 
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 
-#include <FlameIDE/../../src/Streams/Windows/InternalWinApiFunctions.hpp>
+#include <FlameIDE/../../src/Streams/CommonFuncitons.hpp>
 #include <FlameIDE/Streams/NamedPipeWriter.hpp>
 
 namespace flame_ide
@@ -19,16 +19,16 @@ NamedPipeWriter::NamedPipeWriter(NamedPipeWriter &&writer) noexcept :
 }
 
 NamedPipeWriter::NamedPipeWriter(const char *name, bool deletePipe) noexcept :
-		Parent(makeNamedPipe(name, os::ActionType::WRITER).writer, true)
-		, fname(name)
-		, delPipe(deletePipe)
+		Parent(makeNamedWriter(name).fd, true), fname(name), delPipe(deletePipe)
 {}
 
 NamedPipeWriter::~NamedPipeWriter() noexcept
 {
 	if (delPipe)
 	{
-		this->setFileDescriptor(os::INVALID_DESCRIPTOR, false);
+		auto fd = getFileDescriptor();
+		destroyNamedWriter(Descriptors::ResultValue{ fd, os::STATUS_SUCCESS });
+		setFileDescriptor(os::INVALID_DESCRIPTOR, false);
 	}
 }
 
@@ -44,19 +44,21 @@ NamedPipeWriter &NamedPipeWriter::operator=(NamedPipeWriter &&writer) noexcept
 
 SizeTraits::SsizeType NamedPipeWriter::write(InputByteRange range) noexcept
 {
-	return this->FileStreamWriter::write(range);
+	auto result = this->FileStreamWriter::write(range);
+	return result;
 }
 
 SizeTraits::SsizeType NamedPipeWriter::write(InputCircularByteRange range) noexcept
 {
-	return this->FileStreamWriter::write(range);
+	auto result = this->FileStreamWriter::write(range);
+	return result;
 }
 
 os::Status NamedPipeWriter::open(const char *name, bool deletePipe) noexcept
 {
-	this->setFileDescriptor(os::INVALID_DESCRIPTOR, false);
+	setFileDescriptor(os::INVALID_DESCRIPTOR, false);
 
-	os::FileDescriptor fd = makeNamedPipe(name, os::ActionType::WRITER).writer;
+	os::FileDescriptor fd = makeNamedWriter(name).fd;
 	if (fd < 0)
 	{
 		return GetLastError();

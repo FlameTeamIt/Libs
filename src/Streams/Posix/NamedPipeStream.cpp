@@ -4,7 +4,7 @@
 
 #include <FlameIDE/Streams/NamedPipeStream.hpp>
 
-#include <FlameIDE/../../src/Streams/Posix/InternalPosixFunctions.hpp>
+#include "../CommonFuncitons.hpp"
 
 #include <unistd.h>
 
@@ -14,116 +14,99 @@ namespace flame_ide
 {namespace streams
 {
 
-//NamedPipeStream::NamedPipeStream() noexcept = default;
+NamedPipeStream::NamedPipeStream() noexcept = default;
 
-//NamedPipeStream::NamedPipeStream(NamedPipeStream &&stream) noexcept :
-//		fname(move(stream.fname))
-//		, writer(move(stream.writer))
-//		, reader(move(stream.reader))
-//		, delPipe(stream.delPipe)
-//{
-//	stream.delPipe = false;
-//}
+NamedPipeStream::NamedPipeStream(NamedPipeStream &&stream) noexcept :
+		writer(move(stream.writer))
+		, reader(move(stream.reader))
+{}
 
-//NamedPipeStream::NamedPipeStream(const char *name, bool deletePipe) noexcept :
-//		fname(name)
-//		, writer(makeFifo(name, os::ActionType::BIDIRECTIONAL))
-//		, reader(writer.getFileDescriptor(true), false)
-//		, delPipe(deletePipe)
-//{}
+NamedPipeStream::NamedPipeStream(const char *name, bool deletePipe) noexcept
+{
+	auto descriptors = makeNamedPipe(name, os::ActionType::BIDIRECTIONAL);
 
-//NamedPipeStream::~NamedPipeStream() noexcept
-//{
-//	deinit();
-//}
+	writer.setFileDescriptor(descriptors.writer.fd, true);
+	writer.setName(name, deletePipe);
 
-//NamedPipeStream &NamedPipeStream::operator=(NamedPipeStream &&stream) noexcept
-//{
-//	deinit();
+	reader.setFileDescriptor(descriptors.reader.fd, true);
+}
 
-//	fname = move(stream.fname);
-//	writer = move(stream.writer);
-//	reader = move(stream.reader);
-//	delPipe = stream.delPipe;
+NamedPipeStream::~NamedPipeStream() noexcept
+{
+	deinit();
+}
 
-//	stream.delPipe = false;
+NamedPipeStream &NamedPipeStream::operator=(NamedPipeStream &&stream) noexcept
+{
+	deinit();
 
-//	return *this;
-//}
+	writer = move(stream.writer);
+	reader = move(stream.reader);
 
-//SizeTraits::SsizeType NamedPipeStream::read(OutputByteRange range) noexcept
-//{
-//	return reader.read(range);
-//}
+	return *this;
+}
 
-//SizeTraits::SsizeType NamedPipeStream::read(OutputCircularByteRange range) noexcept
-//{
-//	return reader.read(range);
-//}
+SizeTraits::SsizeType NamedPipeStream::read(OutputByteRange range) noexcept
+{
+	return reader.read(range);
+}
 
-//SizeTraits::SsizeType NamedPipeStream::write(InputByteRange range) noexcept
-//{
-//	return writer.write(range);
-//}
+SizeTraits::SsizeType NamedPipeStream::read(OutputCircularByteRange range) noexcept
+{
+	return reader.read(range);
+}
 
-//SizeTraits::SsizeType NamedPipeStream::write(InputCircularByteRange range) noexcept
-//{
-//	return writer.write(range);
-//}
+SizeTraits::SsizeType NamedPipeStream::write(InputByteRange range) noexcept
+{
+	return writer.write(range);
+}
 
-//void NamedPipeStream::flush() noexcept
-//{
-//	writer.flush();
-//}
+SizeTraits::SsizeType NamedPipeStream::write(InputCircularByteRange range) noexcept
+{
+	return writer.write(range);
+}
 
-//void NamedPipeStream::setFileDescriptor(os::FileDescriptor fileDescriptor
-//		, bool owner) noexcept
-//{
-//	writer.setFileDescriptor(fileDescriptor, owner);
-//	reader.setFileDescriptor(fileDescriptor, false);
-//}
+void NamedPipeStream::flush() noexcept
+{
+	writer.flush();
+}
 
-//os::FileDescriptor NamedPipeStream::getFileDescriptor(bool continueOwning) noexcept
-//{
-//	return writer.getFileDescriptor(continueOwning);
-//}
+os::FileDescriptor NamedPipeStream::getReaderFileDescriptor(
+		bool continueOwning) noexcept
+{
+	return reader.getFileDescriptor(continueOwning);
+}
 
-//os::Status NamedPipeStream::open(const char *name, bool deletePipe) noexcept
-//{
-//	deinit();
+os::FileDescriptor NamedPipeStream::getWriterFileDescriptor(
+		bool continueOwning) noexcept
+{
+	return writer.getFileDescriptor(continueOwning);
+}
 
-//	fname = name;
-//	delPipe = deletePipe;
+os::Status NamedPipeStream::open(const char *name, bool deletePipe) noexcept
+{
+	deinit();
 
-//	os::FileDescriptor fd = makeFifo(name, os::ActionType::BIDIRECTIONAL);
-//	if (fd < 0)
-//	{
-//		return fd;
-//	}
-//	writer.setFileDescriptor(fd);
-//	reader.setFileDescriptor(writer.getFileDescriptor(true), false);
+	auto descriptors = makeNamedPipe(name, os::ActionType::BIDIRECTIONAL);
 
-//	return os::STATUS_SUCCESS;
-//}
+	writer.setFileDescriptor(descriptors.writer.fd, true);
+	writer.setName(name, deletePipe);
 
-//const templates::String &NamedPipeStream::getName() const noexcept
-//{
-//	return fname;
-//}
+	reader.setFileDescriptor(descriptors.reader.fd, true);
 
-//void NamedPipeStream::deinit()
-//{
-//	os::FileDescriptor fd = writer.getFileDescriptor();
-//	if (fd > 0)
-//	{
-//		::close(fd);
-//		if (delPipe)
-//		{
-//			::remove(fname.data());
-//		}
-//		fd = os::INVALID_DESCRIPTOR;
-//	}
-//}
+	return os::STATUS_SUCCESS;
+}
+
+const templates::String &NamedPipeStream::getName() const noexcept
+{
+	return writer.getName();
+}
+
+void NamedPipeStream::deinit()
+{
+	reader = NamedPipeReader{};
+	writer = NamedPipeWriter{};
+}
 
 }}
 

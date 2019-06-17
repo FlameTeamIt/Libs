@@ -1,10 +1,10 @@
-﻿set(NAME Windows)
+set(NAME Windows)
 
 set(MODULE_WITH_FILES TRUE)
 set(MODULES FALSE)
 
 set_object_module(
-	${NAME}Streams
+	WindowsStreams
 	${MODULE_WITH_FILES}
 	${MODULES}
 	LIST_OF_MODULES)

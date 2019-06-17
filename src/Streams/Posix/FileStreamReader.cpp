@@ -61,7 +61,7 @@ SizeTraits::SsizeType FileStreamReader::read(OutputByteRange range) noexcept
 SizeTraits::SsizeType FileStreamReader::read(OutputCircularByteRange range) noexcept
 {
 	auto ranges = Parent::getContinuousOutputRanges(range);
-	SizeTraits::SsizeType countBytes[ranges.CAPACITY] = {
+	SizeTraits::SsizeType countBytes[ranges.capacity()] = {
 			read(ranges[0]), stream_utils::INVALID_COUNT_BYTES
 	};
 	if (countBytes[0] != stream_utils::INVALID_COUNT_BYTES)

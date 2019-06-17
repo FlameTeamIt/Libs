@@ -2,7 +2,7 @@
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
-#include "InternalPosixFunctions.hpp"
+#include "../CommonFuncitons.hpp"
 
 #include <FlameIDE/Streams/NamedPipeWriter.hpp>
 
@@ -22,7 +22,7 @@ NamedPipeWriter::NamedPipeWriter(NamedPipeWriter &&writer) noexcept :
 }
 
 NamedPipeWriter::NamedPipeWriter(const char *name, bool deletePipe) noexcept :
-		Parent(makeFifo(name, os::ActionType::WRITER), true)
+		Parent(makeNamedWriter(name).fd, true)
 		, fname(name)
 		, delPipe(deletePipe)
 {}
@@ -60,7 +60,7 @@ os::Status NamedPipeWriter::open(const char *name, bool deletePipe) noexcept
 {
 	this->setFileDescriptor(os::INVALID_DESCRIPTOR, false);
 
-	os::FileDescriptor fd = makeFifo(name, os::ActionType::WRITER);
+	os::FileDescriptor fd = makeNamedWriter(name).fd;
 	if (fd < 0)
 	{
 		return os::INVALID_DESCRIPTOR;
@@ -74,6 +74,12 @@ os::Status NamedPipeWriter::open(const char *name, bool deletePipe) noexcept
 const templates::String &NamedPipeWriter::getName() const noexcept
 {
 	return fname;
+}
+
+void NamedPipeWriter::setName(const templates::String &name, bool deletePipe)
+{
+	fname = name;
+	delPipe = deletePipe;
 }
 
 }}

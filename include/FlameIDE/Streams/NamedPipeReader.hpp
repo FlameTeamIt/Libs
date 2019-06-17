@@ -27,7 +27,7 @@ public:
 	/// @param name
 	/// @param deletePipe
 	///
-	NamedPipeReader(const char *name, bool deletePipe = true) noexcept;
+	NamedPipeReader(const char *name) noexcept;
 
 	virtual ~NamedPipeReader() noexcept;
 
@@ -43,7 +43,7 @@ public:
 	/// @param deletePipe
 	/// @return
 	///
-	os::Status open(const char *name, bool deletePipe = true) noexcept;
+	os::Status open(const char *name) noexcept;
 
 	///
 	/// @brief getName
@@ -53,7 +53,6 @@ public:
 
 protected:
 	templates::String fname; ///<
-	bool delPipe; ///<
 };
 
 }}

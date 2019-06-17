@@ -1,4 +1,4 @@
-﻿#ifndef FLAMEIDE_COMMON_OSTYPES_WINDOWS_HPP
+#ifndef FLAMEIDE_COMMON_OSTYPES_WINDOWS_HPP
 #define FLAMEIDE_COMMON_OSTYPES_WINDOWS_HPP
 
 #include <FlameIDE/Common/Macroses/DetectOs.hpp>
@@ -16,7 +16,7 @@ namespace flame_ide
 {
 
 template<>
-struct NumerLimit<LONG>
+struct NumberLimit<LONG>
 {
 	static constexpr LONG MIN_VALUE = INT32_MIN;
 	static constexpr LONG MAX_VALUE = INT32_MAX;
@@ -140,7 +140,7 @@ constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = OS_DESCRIPTOR_INITIALIZE
 
 using OsSemaphoreValue = LONG;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1;
-constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID = NumerLimit<OsSemaphoreValue>::MIN_VALUE;
+constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID = NumberLimit<OsSemaphoreValue>::MIN_VALUE;
 
 struct OsSemaphoreContext
 {
@@ -150,6 +150,8 @@ struct OsSemaphoreContext
 constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = {
 	OS_DESCRIPTOR_INITIALIZER, OS_SEMAPHORE_VALUE_INVALID
 };
+
+constexpr DWORD OS_INBOUND_BUFFER_SIZE = 1024;
 
 }}}
 
