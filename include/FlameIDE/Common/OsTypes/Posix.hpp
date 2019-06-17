@@ -71,7 +71,7 @@ constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreConte
 using OsSemaphoreValue = unsigned int;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1u;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
-		NumerLimit<OsSemaphoreValue>::MAX_VALUE;
+		NumberLimit<OsSemaphoreValue>::MAX_VALUE;
 
 }}}
 
