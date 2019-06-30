@@ -9,6 +9,7 @@ set(FLAME_TEST_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 set(FLAME_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(FLAME_INCLUDE_SUBMODLUES_PATH ${FLAME_INCLUDE_PATH}/FlameIDE)
 
+include(cmake/Options.cmake)
 include(cmake/Common.cmake)
 include(cmake/Headers.cmake)
 

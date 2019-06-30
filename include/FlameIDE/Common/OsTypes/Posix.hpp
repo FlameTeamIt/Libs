@@ -7,18 +7,57 @@
 
 #include <sys/socket.h>
 #include <sys/un.h>
-#include <aio.h>
 #include <pthread.h>
 #include <semaphore.h>
 
 #include <FlameIDE/Common/Traits/Numbers.hpp>
+#include <FlameIDE/Common/OsTypes/PosixAsync.hpp>
 
 namespace flame_ide
 {namespace os
 {namespace posix
 {
 
-using OsFileDescriptor = int;
+union OsFileDescriptor
+{
+public:
+	using DefaultFd = int;
+	enum class TypedFd : int
+	{};
+
+	constexpr OsFileDescriptor() : OsFileDescriptor(DefaultFd{-1})
+	{}
+
+	constexpr OsFileDescriptor(TypedFd fd) : typedFd(fd)
+	{}
+
+	constexpr OsFileDescriptor(DefaultFd fd) : defaultFd(fd)
+	{}
+
+	constexpr operator int() noexcept
+	{
+		return defaultFd;
+	}
+
+	constexpr operator const int() const noexcept
+	{
+		return defaultFd;
+	}
+
+	constexpr bool operator==(OsFileDescriptor fd) const noexcept
+	{
+		return defaultFd == fd.defaultFd;
+	}
+
+	constexpr bool operator!=(OsFileDescriptor fd) const noexcept
+	{
+		return !(operator==(fd));
+	}
+
+private:
+	DefaultFd defaultFd;
+	TypedFd typedFd;
+};
 constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = -1;
 
 using OsStatus = int;
@@ -32,18 +71,6 @@ struct OsSocket
 constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
 		{}, OS_INVALID_DESCRIPTOR
 };
-
-struct OsAsyncIoContext : public ::aiocb
-{
-	constexpr OsAsyncIoContext() : ::aiocb{}
-	{
-		aio_nbytes = 0;
-		aio_fildes = OS_INVALID_DESCRIPTOR;
-		aio_offset = 0;
-		aio_buf = nullptr;
-	}
-};
-constexpr OsAsyncIoContext OS_ASYNC_CONTEXT_INITIALIZER = OsAsyncIoContext{};
 
 struct OsThreadContext
 {
@@ -71,7 +98,7 @@ constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreConte
 using OsSemaphoreValue = unsigned int;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1u;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
-		NumerLimit<OsSemaphoreValue>::MAX_VALUE;
+		NumberLimit<OsSemaphoreValue>::MAX_VALUE;
 
 }}}
 
