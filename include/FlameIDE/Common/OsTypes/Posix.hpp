@@ -73,6 +73,8 @@ constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1u;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
 		NumberLimit<OsSemaphoreValue>::MAX_VALUE;
 
+constexpr char OS_PLATFORM_PREFIX[] = "/tmp/";
+
 }}}
 
 #define FLAMEIDE_OS_NAMESPACE flame_ide::os::posix

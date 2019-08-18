@@ -85,7 +85,6 @@ enum class ActionMethod
 };
 
 /// @brief The StreamType enum
-
 enum class StreamType
 {
 	MEMORY
@@ -94,6 +93,9 @@ enum class StreamType
 	, FILE
 	, SOCKET
 };
+
+/// @brief PLATFORM_PREFIX
+constexpr auto PIPE_NAME_PREFIX = FLAMEIDE_OS_NAMESPACE::OS_PLATFORM_PREFIX;
 
 }}
 

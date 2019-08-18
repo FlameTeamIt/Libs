@@ -153,6 +153,8 @@ constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = {
 
 constexpr DWORD OS_INBOUND_BUFFER_SIZE = 1024;
 
+constexpr char OS_PLATFORM_PREFIX[] = "\\\\.\\pipe\\";
+
 }}}
 
 #define FLAMEIDE_OS_NAMESPACE flame_ide::os::windows
