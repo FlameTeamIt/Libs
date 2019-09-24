@@ -4,7 +4,7 @@
  * IMPLIED OR EXPRESS WARRANTY; there is no warranty of MERCHANTABILITY, FITNESS FOR A
  * PARTICULAR PURPOSE or NONINFRINGEMENT of the rights of others.
  */
-        
+
 /* Latest version of the specification:
  * http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/pkcs11-base-v2.40.html
  */
@@ -70,9 +70,9 @@ extern "C" {
  * #define CK_PTR far *
  *
  * In a typical UNIX environment, it might be defined by:
- *
- * #define CK_PTR *
- *
+ */
+#define CK_PTR *
+/*
  *
  * 2. CK_DECLARE_FUNCTION(returnType, name): A macro which makes
  * an importable Cryptoki library function declaration out of a
@@ -97,10 +97,10 @@ extern "C" {
  *   returnType __export _far _pascal name
  *
  * In a UNIX environment, it might be defined by:
- *
- * #define CK_DECLARE_FUNCTION(returnType, name) \
- *   returnType name
- *
+ */
+#define CK_DECLARE_FUNCTION(returnType, name) \
+	returnType name
+/*
  *
  * 3. CK_DECLARE_FUNCTION_POINTER(returnType, name): A macro
  * which makes a Cryptoki API function pointer declaration or
@@ -109,6 +109,7 @@ extern "C" {
  *
  * // Define funcPtr to be a pointer to a Cryptoki API function
  * // taking arguments args and returning CK_RV.
+ *
  * CK_DECLARE_FUNCTION_POINTER(CK_RV, funcPtr)(args);
  *
  * or
@@ -134,10 +135,10 @@ extern "C" {
  *   returnType __export _far _pascal (* name)
  *
  * In a UNIX environment, it might be defined by:
- *
- * #define CK_DECLARE_FUNCTION_POINTER(returnType, name) \
- *   returnType (* name)
- *
+ */
+#define CK_DECLARE_FUNCTION_POINTER(returnType, name) \
+	returnType (* name)
+/*
  *
  * 4. CK_CALLBACK_FUNCTION(returnType, name): A macro which makes
  * a function pointer type for an application callback out of
@@ -166,10 +167,9 @@ extern "C" {
  *   returnType _far _pascal (* name)
  *
  * In a UNIX environment, it might be defined by:
- *
- * #define CK_CALLBACK_FUNCTION(returnType, name) \
- *   returnType (* name)
- *
+ */
+#define CK_CALLBACK_FUNCTION(returnType, name) returnType (* name)
+/*
  *
  * 5. NULL_PTR: This macro is the value of a NULL pointer.
  *
@@ -180,7 +180,6 @@ extern "C" {
  * #define NULL_PTR 0
  * #endif
  */
-
 
 /* All the various Cryptoki types and #define'd values are in the
  * file pkcs11t.h.
@@ -260,6 +259,8 @@ struct CK_FUNCTION_LIST {
 #ifdef __cplusplus
 }
 #endif
+
+#undef CK_PTR
 
 #endif /* _PKCS11_H_ */
 
