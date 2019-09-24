@@ -1,6 +1,7 @@
 set(FLAME_MODULES
     Bus
     Common
+    Crypto
     Streams
     Templates
     Threads
