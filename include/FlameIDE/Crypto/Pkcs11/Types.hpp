@@ -4,5 +4,6 @@
 #include <FlameIDE/Crypto/Pkcs11/Types/ValueTypes.hpp>
 #include <FlameIDE/Crypto/Pkcs11/Types/Enums.hpp>
 #include <FlameIDE/Crypto/Pkcs11/Types/Structs.hpp>
+#include <FlameIDE/Crypto/Pkcs11/Types/Callbacks.hpp>
 
 #endif // FLAMEIDE_CRYPTO_PKCS11_TYPES_HPP
