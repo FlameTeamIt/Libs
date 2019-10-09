@@ -175,11 +175,10 @@ extern "C" {
  *
  * In any ANSI/ISO C environment (and in many others as well),
  * this should best be defined by
- *
- * #ifndef NULL_PTR
- * #define NULL_PTR 0
- * #endif
  */
+#ifndef NULL_PTR
+#define NULL_PTR 0
+#endif
 
 /* All the various Cryptoki types and #define'd values are in the
  * file pkcs11t.h.
