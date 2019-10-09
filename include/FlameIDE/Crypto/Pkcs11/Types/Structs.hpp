@@ -103,8 +103,6 @@ using PbeParamsPtr = CK_PBE_PARAMS_PTR;
 using KeyWrapSetOaepParams = CK_KEY_WRAP_SET_OAEP_PARAMS;
 using KeyWrapSetOaepParamsPtr = CK_KEY_WRAP_SET_OAEP_PARAMS_PTR;
 
-
-
 using Ssl3RandomData = CK_SSL3_RANDOM_DATA;
 
 using Ssl3MasterKeyDeriveParams = CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
@@ -154,8 +152,6 @@ using OtpParamsPtr = CK_OTP_PARAMS_PTR;
 
 using OtpSignatureInfo = CK_OTP_SIGNATURE_INFO;
 using OtpSignatureInfoPtr = CK_OTP_SIGNATURE_INFO_PTR;
-
-
 
 using KipParams = CK_KIP_PARAMS;
 using KipParamsPtr = CK_KIP_PARAMS_PTR;
@@ -213,6 +209,10 @@ using Gostr3410_KeyWrapParamsPtr = CK_GOSTR3410_KEY_WRAP_PARAMS_PTR;
 
 using SeedCbcEncryptDataParams = CK_SEED_CBC_ENCRYPT_DATA_PARAMS;
 using SeedCbcEncryptDataParamsPtr = CK_SEED_CBC_ENCRYPT_DATA_PARAMS_PTR;
+
+using FunctionList = CK_FUNCTION_LIST;
+using FunctionListPtr = CK_FUNCTION_LIST_PTR;
+using FunctionListPtrPtr = CK_FUNCTION_LIST_PTR_PTR;
 
 } // namespace structs
 } // namespace pkcs11
