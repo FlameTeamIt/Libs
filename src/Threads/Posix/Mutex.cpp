@@ -16,7 +16,7 @@ namespace flame_ide
 static inline bool operator!=(const os::MutexContext &contex1
 		, const os::MutexContext &contex2)
 {
-	return memcmp(&contex1, &contex2, sizeof (os::MutexContext));
+	return memcmp(&contex1, &contex2, sizeof(os::MutexContext));
 }
 
 static inline bool operator==(const os::MutexContext &contex1
