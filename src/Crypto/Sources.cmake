@@ -1,3 +1,3 @@
 set (SOURCE_LIST
-	./Pkcs11/InitializationArguments.cpp
+	./Pkcs11/InitializeArgs.cpp
 )
