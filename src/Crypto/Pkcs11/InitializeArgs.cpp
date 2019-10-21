@@ -1,5 +1,4 @@
-#include <FlameIDE/Crypto/Pkcs11/InitializationArguments.hpp>
-#include <FlameIDE/Crypto/Pkcs11/Types.hpp>
+#include <FlameIDE/Crypto/Pkcs11/InitializeArgs.hpp>
 
 #include <FlameIDE/Threads/Mutex.hpp>
 #include <FlameIDE/Templates/Allocator/ObjectAllocator.hpp>
@@ -11,6 +10,8 @@ namespace pkcs11
 
 namespace // anonymous
 {
+
+using ReturnType = enums::ReturnType;
 
 using Mutex = threads::Mutex;
 using MutexAllocator = templates::allocator::ObjectAllocator<Mutex>;
@@ -110,7 +111,7 @@ CK_RV unlockMutex(CK_VOID_PTR mutex)
 
 } // namespace anonymous
 
-InitializationArguments::InitializationArguments() noexcept :
+InitializeArgs::InitializeArgs() noexcept :
 		CK_C_INITIALIZE_ARGS{
 				cryptoki::createMutex, cryptoki::destroyMutex
 				, cryptoki::lockMutex, cryptoki::unlockMutex
@@ -119,7 +120,7 @@ InitializationArguments::InitializationArguments() noexcept :
 		}
 {}
 
-InitializationArguments::InitializationArguments(const InitializationArguments &args)
+InitializeArgs::InitializeArgs(const InitializeArgs &args)
 		noexcept :
 		CK_C_INITIALIZE_ARGS{
 				args.CreateMutex, args.DestroyMutex
@@ -128,7 +129,7 @@ InitializationArguments::InitializationArguments(const InitializationArguments &
 		}
 {}
 
-InitializationArguments::InitializationArguments(InitializationArguments &&args)
+InitializeArgs::InitializeArgs(InitializeArgs &&args)
 	noexcept :
 	CK_C_INITIALIZE_ARGS{
 		args.CreateMutex, args.DestroyMutex
@@ -137,12 +138,12 @@ InitializationArguments::InitializationArguments(InitializationArguments &&args)
 	}
 {
 	args.setCallbacks(Callbacks{});
-	args.flags = static_cast<CK_FLAGS>(Flags::NO_FLAGS);
+	args.flags = static_cast<value_types::Flags>(Flags::OS_LOCKING_OK);
 	args.pReserved = nullptr;
 }
 
-InitializationArguments::InitializationArguments(const Callbacks &callbacks
-		, Flags initFlags, ResevedType reseved) noexcept :
+InitializeArgs::InitializeArgs(const Callbacks &callbacks
+		, Flags initFlags, Reseved reseved) noexcept :
 		CK_C_INITIALIZE_ARGS{
 				callbacks.createMutexCallback, callbacks.destroyMutexCallback
 				, callbacks.lockMutexCallback, callbacks.unlockMutexCallback
@@ -150,12 +151,14 @@ InitializationArguments::InitializationArguments(const Callbacks &callbacks
 		}
 {}
 
-InitializationArguments &InitializationArguments::operator=(
-		const InitializationArguments &args) noexcept
+InitializeArgs &InitializeArgs::operator=(
+		const InitializeArgs &args) noexcept
 {
 	setCallbacks(Callbacks{
-			args.CreateMutex, args.DestroyMutex
-			, args.LockMutex, args.UnlockMutex
+			args.CreateMutex
+			, args.DestroyMutex
+			, args.LockMutex
+			, args.UnlockMutex
 	});
 	flags = args.flags;
 	pReserved = args.pReserved;
@@ -163,19 +166,18 @@ InitializationArguments &InitializationArguments::operator=(
 	return *this;
 }
 
-InitializationArguments &InitializationArguments::operator=(
-		InitializationArguments &&args) noexcept
+InitializeArgs &InitializeArgs::operator=(
+		InitializeArgs &&args) noexcept
 {
-	this->operator=(static_cast<const InitializationArguments &>(args));
+	this->operator=(static_cast<const InitializeArgs &>(args));
 
 	args.setCallbacks(Callbacks{});
-	args.flags = static_cast<CK_FLAGS>(Flags::NO_FLAGS);
 	args.pReserved = nullptr;
 
 	return *this;
 }
 
-void InitializationArguments::setCallbacks(const Callbacks &callbacks) noexcept
+void InitializeArgs::setCallbacks(const Callbacks &callbacks) noexcept
 {
 	CreateMutex = callbacks.createMutexCallback;
 	DestroyMutex = callbacks.destroyMutexCallback;

@@ -1,22 +1,27 @@
-#ifndef FLAMEIDE_CRYPTO_PKCS11_INITIALIZATIONARGUMENTS_HPP
-#define FLAMEIDE_CRYPTO_PKCS11_INITIALIZATIONARGUMENTS_HPP
+#ifndef FLAMEIDE_CRYPTO_PKCS11_INITIALIZEARGS_HPP
+#define FLAMEIDE_CRYPTO_PKCS11_INITIALIZEARGS_HPP
 
-#include "cryptoki/pkcs11.h"
+#include <FlameIDE/Crypto/Pkcs11/Types/ValueTypes.hpp>
+#include <FlameIDE/Crypto/Pkcs11/Types/Structs.hpp>
+#include <FlameIDE/Crypto/Pkcs11/Types/Callbacks.hpp>
+#include <FlameIDE/Crypto/Pkcs11/Types/Enums.hpp>
 
 namespace flame_ide
 {
 namespace pkcs11
 {
 
-/// @brief The InitializationArguments class
-class InitializationArguments : public CK_C_INITIALIZE_ARGS
+/// @brief The INITIALIZEARGS class
+class InitializeArgs : public structs::IntializeArgs
 {
 public:
-	using ResevedType = decltype(CK_C_INITIALIZE_ARGS::pReserved);
-	using CallbackCreateMutex = decltype(CK_C_INITIALIZE_ARGS::CreateMutex);
-	using CallbackDestroyMutex = decltype(CK_C_INITIALIZE_ARGS::DestroyMutex);
-	using CallbackLockMutex = decltype(CK_C_INITIALIZE_ARGS::LockMutex);
-	using CallbackUnlockMutex = decltype(CK_C_INITIALIZE_ARGS::UnlockMutex);
+	using Parent = structs::IntializeArgs;
+
+	using Reseved = value_types::ValuePtr;
+	using CallbackCreateMutex = callbacks::CreateMutex;
+	using CallbackDestroyMutex = callbacks::DestroyMutex;
+	using CallbackLockMutex = callbacks::LockMutex;
+	using CallbackUnlockMutex = callbacks::UnlockMutex;
 
 	/// @brief The Callbacks struct
 	struct Callbacks
@@ -27,42 +32,91 @@ public:
 		CallbackUnlockMutex unlockMutexCallback = {};
 	};
 
-	/// @brief The Flags enum
-	enum class Flags : CK_FLAGS
-	{
-		NO_FLAGS
-		, LIBRARY_CANT_CREATE_OS_THREADS = CKF_LIBRARY_CANT_CREATE_OS_THREADS
-		, OS_LOCKING_OK = CKF_OS_LOCKING_OK
-	};
+	using Flags = enums::InitializeArgsFlags;
 
-	InitializationArguments() noexcept;
-	InitializationArguments(const InitializationArguments &args) noexcept;
-	InitializationArguments(InitializationArguments &&args) noexcept;
+	InitializeArgs() noexcept;
+	InitializeArgs(const InitializeArgs &args) noexcept;
+	InitializeArgs(InitializeArgs &&args) noexcept;
 
-	/// @brief InitializationArguments
+	/// @brief InitializeArgs
 	/// @param callbacks
 	/// @param flags
 	/// @param reseved
-	InitializationArguments(const Callbacks &callbacks, Flags flags
-			, ResevedType reseved) noexcept;
+	InitializeArgs(const Callbacks &callbacks, Flags flags
+			, Reseved reseved) noexcept;
 
-	InitializationArguments &operator=(const InitializationArguments &args) noexcept;
-	InitializationArguments &operator=(InitializationArguments &&args) noexcept;
+	InitializeArgs &operator=(const InitializeArgs &args) noexcept;
+	InitializeArgs &operator=(InitializeArgs &&args) noexcept;
 
 	/// @brief setCallbacks
 	/// @param callbacks
 	void setCallbacks(const Callbacks &callbacks) noexcept;
 
+protected:
+	inline auto &getCreateMutex() noexcept
+	{
+		return CreateMutex;
+	}
+	inline const auto &getCreateMutex() const noexcept
+	{
+		return CreateMutex;
+	}
+
+	inline auto &getDestroyMutex() noexcept
+	{
+		return DestroyMutex;
+	}
+	inline const auto &getDestroyMutex() const noexcept
+	{
+		return DestroyMutex;
+	}
+
+	inline auto &getLockMutex() noexcept
+	{
+		return LockMutex;
+	}
+	inline const auto &getLockMutex() const noexcept
+	{
+		return LockMutex;
+	}
+
+	inline auto &getUnlockMutex() noexcept
+	{
+		return UnlockMutex;
+	}
+	inline const auto &getUnlockMutex() const noexcept
+	{
+		return UnlockMutex;
+	}
+
+	inline auto &getFlags() noexcept
+	{
+		return flags;
+	}
+	inline const auto &getFlags() const noexcept
+	{
+		return flags;
+	}
+
+	inline auto &getReserved() noexcept
+	{
+		return pReserved;
+	}
+	inline const auto &getReserved() const noexcept
+	{
+		return pReserved;
+	}
+
 private:
-	using CK_C_INITIALIZE_ARGS::CreateMutex;
-	using CK_C_INITIALIZE_ARGS::DestroyMutex;
-	using CK_C_INITIALIZE_ARGS::LockMutex;
-	using CK_C_INITIALIZE_ARGS::UnlockMutex;
-	using CK_C_INITIALIZE_ARGS::flags;
-	using CK_C_INITIALIZE_ARGS::pReserved;
+	using Parent::CreateMutex;
+	using Parent::DestroyMutex;
+	using Parent::LockMutex;
+	using Parent::UnlockMutex;
+	using Parent::flags;
+	using Parent::pReserved;
 };
 
 } // namespace pkcs11
 } // namespace flame_ide
 
-#endif // FLAMEIDE_CRYPTO_PKCS11_INITIALIZATIONARGUMENTS_HPP
+#endif // FLAMEIDE_CRYPTO_PKCS11_INITIALIZEARGS_HPP
