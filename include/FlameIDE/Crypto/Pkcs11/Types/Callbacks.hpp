@@ -15,7 +15,7 @@ using Notify = CK_NOTIFY;
 using CreateMutex = CK_CREATEMUTEX;
 using DestroyMutex = CK_DESTROYMUTEX;
 using LockMutex = CK_LOCKMUTEX;
-using UnlockeMutex = CK_UNLOCKMUTEX;
+using UnlockMutex = CK_UNLOCKMUTEX;
 
 /* General-purpose */
 
