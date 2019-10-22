@@ -38,6 +38,11 @@ public:
 	Mechanism(Mechanism &&) noexcept = default;
 
 	/// @brief Mechanism
+	/// @param cryptokiMechanism
+	Mechanism(const Parent &cryptokiMechanism) : Parent{ cryptokiMechanism }
+	{}
+
+	/// @brief Mechanism
 	/// @param type
 	/// @param paramterPtr
 	/// @param paramterSize

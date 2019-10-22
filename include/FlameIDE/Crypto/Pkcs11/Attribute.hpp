@@ -34,6 +34,11 @@ public:
 	Attribute(Attribute &&) noexcept = default;
 
 	/// @brief Attribute
+	/// @param cyptokiAttribute
+	Attribute(const Parent &cyptokiAttribute) : Parent{ cyptokiAttribute }
+	{}
+
+	/// @brief Attribute
 	/// @param initType
 	/// @param initPtr
 	/// @param initSize
