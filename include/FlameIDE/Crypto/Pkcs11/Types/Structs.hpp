@@ -1,7 +1,7 @@
 #ifndef FLAMEDE_CRYPRO_PKCS11_TYPES_STRUCTS_HPP
 #define FLAMEDE_CRYPRO_PKCS11_TYPES_STRUCTS_HPP
 
-#include "../cryptoki/pkcs11.h"
+#include <FlameIDE/Crypto/Pkcs11/CryptokiPkcs11.hpp>
 
 namespace flame_ide
 {

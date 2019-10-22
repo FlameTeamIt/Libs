@@ -5,6 +5,8 @@
 
 #include <FlameIDE/Crypto/Pkcs11/Types/ValueTypes.hpp>
 
+#include <FlameIDE/Common/Traits/ReferenceWrapper.hpp>
+
 namespace flame_ide
 {
 namespace pkcs11
@@ -1008,7 +1010,8 @@ FLAG_OPERATORS(WaitForSlotEventFlags)
 
 
 /// @brief The MessageGenerationFunction enum
-enum class RsaMessageGenerationFunction : flame_ide::pkcs11::value_types::RsaPkcsMgf
+enum class RsaMessageGenerationFunction
+		: flame_ide::pkcs11::value_types::RsaPkcsMessageGenerationFunction
 {
 	SHA1 = CKG_MGF1_SHA1
 	, SHA256 = CKG_MGF1_SHA256
@@ -1016,7 +1019,8 @@ enum class RsaMessageGenerationFunction : flame_ide::pkcs11::value_types::RsaPkc
 	, SHA512 = CKG_MGF1_SHA512
 	, SHA224 = CKG_MGF1_SHA224
 };
-UNDERLYING_TYPE(RsaMessageGenerationFunction, flame_ide::pkcs11::value_types::RsaPkcsMgf)
+UNDERLYING_TYPE(RsaMessageGenerationFunction
+		, flame_ide::pkcs11::value_types::RsaPkcsMessageGenerationFunction)
 
 
 /// @brief The RsaPkcsOaepSource enum
@@ -1125,6 +1129,42 @@ value(EnumType enumValue) noexcept
 		typename utils::UnderlyingType<EnumType>::Type
 	>(enumValue);
 	return realValue;
+}
+
+template<typename EnumType>
+constexpr typename utils::UnderlyingType<EnumType>::Type &
+reference(EnumType &enumValue) noexcept
+{
+	auto realValue = reinterpret_cast<
+		typename utils::UnderlyingType<EnumType>::Type *
+	>(&enumValue);
+	return *realValue;
+}
+
+template<typename EnumType>
+constexpr EnumType &
+reference(typename utils::UnderlyingType<EnumType>::Type &value) noexcept
+{
+	auto realValue = reinterpret_cast<EnumType *>(&value);
+	return *realValue;
+}
+
+template<typename EnumType>
+constexpr const typename utils::UnderlyingType<EnumType>::Type &
+reference(const EnumType &enumValue) noexcept
+{
+	auto realValue = reinterpret_cast<
+		const typename utils::UnderlyingType<EnumType>::Type *
+	>(&enumValue);
+	return *realValue;
+}
+
+template<typename EnumType>
+constexpr const EnumType &
+reference(const typename utils::UnderlyingType<EnumType>::Type &value) noexcept
+{
+	auto realValue = reinterpret_cast<const EnumType *>(&value);
+	return *realValue;
 }
 
 
