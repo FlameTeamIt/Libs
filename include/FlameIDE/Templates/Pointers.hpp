@@ -66,25 +66,35 @@ template<typename T
 UNIQUE_TYPE makeUnique(Args &&...args);
 
 // FIXME: Не совсем понятно, как привидить типы при разных аллокаторах
-//template<
-//	typename T, typename U
-//	, typename Traits = ContainerTraits<T>
-//	, typename Allocator = allocator::ObjectAllocator<T>
-//	, typename Counter = pointer_utils::Counter<SizeTraits::SizeType>
-//	, typename CounterAllocator = allocator::ObjectAllocator<Counter>
-//> inline
-//SHARED_TYPE staticPointerCast(SHARED_U_TYPE &pointer) noexcept;
-//template<
-//	typename T, typename U
-//	, typename Traits = ContainerTraits<T>
-//	, typename Allocator = allocator::ObjectAllocator
-//> inline
-//UNIQUE_TYPE staticPointerCast(UNIQUE_U_TYPE &pointer) noexcept;
+template<
+	typename T, typename U
+	, typename Traits = ContainerTraits<T>
+	, typename Allocator = allocator::ObjectAllocator<T>
+	, typename Counter = pointer_utils::Counter<SizeTraits::SizeType>
+	, typename CounterAllocator = allocator::ObjectAllocator<Counter>
+	, typename TraitsU = ContainerTraits<T>
+	, typename AllocatorU = allocator::ObjectAllocator<T>
+	, typename CounterU = pointer_utils::Counter<SizeTraits::SizeType>
+	, typename CounterAllocatorU = allocator::ObjectAllocator<Counter>
+> inline
+SHARED_TYPE staticPointerCast(
+		SharedPointer<U, TraitsU, AllocatorU, Counter, CounterU> &pointer
+) noexcept;
+template<
+	typename T, typename U
+	, typename Traits = ContainerTraits<T>
+	, typename Allocator = allocator::ObjectAllocator<T>
+	, typename TraitsU = allocator::ObjectAllocator<U>
+	, typename AllocatorU = allocator::ObjectAllocator<U>
+> inline
+UNIQUE_TYPE staticPointerCast(UniquePointer<U, TraitsU, AllocatorU>  &pointer) noexcept;
 
 //template<
 //	typename T, typename U
 //	, typename Traits = ContainerTraits<T>
-//	, typename Allocator = allocator::ObjectAllocator
+//	, typename Allocator = allocator::ObjectAllocator<T>
+//	, typename TraitsU = ContainerTraits<U>
+//	, typename AllocatorU = allocator::ObjectAllocator<U>
 //> inline
 //SHARED_TYPE reiterpretPointerCast(SHARED_U_TYPE &pointer) noexcept;
 //template<
@@ -185,6 +195,10 @@ private:
 	mutable PointerCounter objectCounter;
 };
 
+/// @brief The UniquePointer class
+/// @tparam T
+/// @tparam Traits
+/// @tparam Allocator
 template<typename T, typename Traits, typename Allocator>
 class UniquePointer
 {
