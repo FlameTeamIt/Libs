@@ -2,6 +2,7 @@
 #define FLAMEIDE_STREAMS_TESTS_NAMEDPIPEREADERTEST_HPP
 
 #include <tests/Test.hpp>
+#include "NamePipeThread.hpp"
 
 namespace flame_ide
 {namespace streams

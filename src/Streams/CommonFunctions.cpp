@@ -115,7 +115,15 @@ Descriptors makeNamedPipe(const char *pipeName, os::ActionType action) noexcept
 
 Descriptors destroyNamedPipe(Descriptors descriptors) noexcept
 {
+	DestroyNamedPipeThread thread{ descriptors.reader, os::ActionType::READER };
+	thread.run();
+	auto status = destroyNamedWriter(descriptors.writer);
 
+	Descriptors resultDescriptors {
+		Descriptors::ResultValue{ os::INVALID_DESCRIPTOR, thread.getResult() }
+		, Descriptors::ResultValue{ os::INVALID_DESCRIPTOR, status }
+	};
+	return resultDescriptors;
 }
 
 }}
