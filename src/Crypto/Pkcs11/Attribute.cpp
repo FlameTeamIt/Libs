@@ -5,22 +5,18 @@ namespace flame_ide
 namespace pkcs11
 {
 
-Attribute::Attribute(EnumType initType, ValuePtr initPtr, ValueSize initSize) noexcept :
-		CK_ATTRIBUTE{ enums::value(initType), initPtr, initSize }
+Attribute::Attribute(EnumType initType, ValuePtr initPtr, ValueSize initSize) noexcept
+		: Parent{ enums::value(initType), initPtr, initSize }
 {}
 
-enums::Attribute &Attribute::getType() noexcept
+Attribute::EnumType &Attribute::getType() noexcept
 {
-	enums::Attribute *typeValue = reinterpret_cast<enums::Attribute *>(&type);
-	return *typeValue;
+	return enums::reference<EnumType>(type);
 }
 
 const enums::Attribute &Attribute::getType() const noexcept
 {
-	const enums::Attribute *typeValue = reinterpret_cast<
-		const enums::Attribute *
-	>(&type);
-	return *typeValue;
+	return enums::reference<EnumType>(getConstReference(type));
 }
 
 Attribute::ValuePtr &Attribute::getValuePointer() noexcept
