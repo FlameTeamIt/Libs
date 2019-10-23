@@ -39,8 +39,6 @@ public:
 	char &getChar();
 	const char &getChar() const;
 
-	friend std::iostream &operator<<(std::iostream &cout, const TestClass &obj);
-
 private:
 	void clean();
 

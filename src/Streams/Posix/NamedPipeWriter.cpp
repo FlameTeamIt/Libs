@@ -2,11 +2,8 @@
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
-#include "../CommonFuncitons.hpp"
-
 #include <FlameIDE/Streams/NamedPipeWriter.hpp>
-
-#include <unistd.h>
+#include <FlameIDE/../../src/Streams/CommonFuncitons.hpp>
 
 namespace flame_ide
 {namespace streams
@@ -78,7 +75,7 @@ const templates::String &NamedPipeWriter::getName() const noexcept
 
 void NamedPipeWriter::setName(const templates::String &name, bool deletePipe)
 {
-	fname = name;
+	fname = templates::String(os::PIPE_NAME_PREFIX) + name;
 	delPipe = deletePipe;
 }
 
