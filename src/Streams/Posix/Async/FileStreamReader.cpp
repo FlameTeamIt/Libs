@@ -1,8 +1,8 @@
 #include <FlameIDE/Streams/Async/FileStreamReader.hpp>
 
-#if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
+#ifdef FLAMEIDE_ENABLE_ASYNC
 
-#include <FlameIDE/Common/OsTypes.hpp>
+#if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
 namespace flame_ide
 {namespace streams
@@ -18,3 +18,5 @@ namespace flame_ide
 }}}
 
 #endif // FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
+
+#ednif // FLAMEIDE_ENABLE_ASYNC

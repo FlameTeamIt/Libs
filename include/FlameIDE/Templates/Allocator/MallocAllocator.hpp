@@ -28,7 +28,7 @@ public:
 	MallocAllocator() = default;
 	MallocAllocator(const MallocAllocator<Traits> &) = default;
 	MallocAllocator(MallocAllocator<Traits> &&) noexcept = default;
-	~MallocAllocator() = default;
+	virtual ~MallocAllocator() = default;
 	MallocAllocator &operator=(const MallocAllocator<Traits> &) = default;
 	MallocAllocator &operator=(MallocAllocator<Traits> &&) noexcept = default;
 
@@ -60,6 +60,12 @@ protected:
 	/// Pointer to raw memory or nullptr
 	///
 	virtual void vDeallocate(VoidPointer pointer) noexcept;
+
+	///
+	/// @brief vMaxAllocateSize
+	/// @return
+	///
+	virtual SizeType vMaxAllocateSize() const noexcept;
 };
 
 }}}
@@ -89,6 +95,12 @@ void MallocAllocator<Traits>::vDeallocate(
 		typename MallocAllocator<Traits>::VoidPointer pointer) noexcept
 {
 	free(pointer);
+}
+
+template<typename Traits>
+typename MallocAllocator<Traits>::SizeType MallocAllocator<Traits>::vMaxAllocateSize() const noexcept
+{
+	return NumberLimit<SizeType>::MAX_VALUE;
 }
 
 }}}
