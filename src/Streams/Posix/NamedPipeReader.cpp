@@ -2,11 +2,8 @@
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
-#include "../CommonFuncitons.hpp"
-
 #include <FlameIDE/Streams/NamedPipeReader.hpp>
-
-#include <unistd.h>
+#include <FlameIDE/../../src/Streams/CommonFuncitons.hpp>
 
 namespace flame_ide
 {namespace streams
@@ -20,7 +17,8 @@ NamedPipeReader::NamedPipeReader(NamedPipeReader &&reader) noexcept :
 {}
 
 NamedPipeReader::NamedPipeReader(const char *name) noexcept :
-		Parent(makeNamedReader(name).fd), fname(name)
+		Parent(makeNamedReader(name).fd)
+		, fname(templates::String(os::PIPE_NAME_PREFIX) + name)
 {
 }
 
@@ -63,7 +61,6 @@ const templates::String &NamedPipeReader::getName() const noexcept
 {
 	return fname;
 }
-
 
 }}
 

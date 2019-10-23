@@ -1,6 +1,8 @@
 #ifndef FLAMEIDE_STREAMS_ASYNC_FILESTREAMREADER_HPP
 #define FLAMEIDE_STREAMS_ASYNC_FILESTREAMREADER_HPP
 
+#ifdef FLAMEIDE_ENABLE_ASYNC
+
 #include <FlameIDE/Streams/StreamUtils.hpp>
 #include <FlameIDE/Common/OsTypes.hpp>
 
@@ -71,5 +73,7 @@ protected:
 };
 
 }}}
+
+#endif // FLAMEIDE_ENABLE_ASYNC
 
 #endif // FLAMEIDE_STREAMS_ASYNC_FILESTREAMREADER_HPP
