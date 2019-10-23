@@ -119,13 +119,6 @@ constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
 		::SOCKADDR_IN{}, ::SOCKET{}
 };
 
-struct OsAsyncIoContext: public ::OVERLAPPED
-{
-	constexpr OsAsyncIoContext() noexcept : ::OVERLAPPED{}
-	{}
-};
-constexpr OsAsyncIoContext OS_ASYNC_CONTEXT_INITIALIZER = OsAsyncIoContext{};
-
 using OsThreadContext = OsFileDescriptor;
 constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OS_DESCRIPTOR_INITIALIZER;
 
@@ -152,6 +145,8 @@ constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = {
 };
 
 constexpr DWORD OS_INBOUND_BUFFER_SIZE = 1024;
+
+constexpr char OS_PLATFORM_PREFIX[] = "\\\\.\\pipe\\";
 
 }}}
 

@@ -1,6 +1,8 @@
 #ifndef FLAMEIDE_STREAMS_ASYNC_FILESTREAMWRITER_HPP
 #define FLAMEIDE_STREAMS_ASYNC_FILESTREAMWRITER_HPP
 
+#ifdef FLAMEIDE_ENABLE_ASYNC
+
 #include <FlameIDE/Streams/StreamUtils.hpp>
 #include <FlameIDE/Common/OsTypes.hpp>
 
@@ -72,5 +74,7 @@ private:
 	InputCircularByteRange inputRange; ///<
 };
 }}}
+
+#endif // FLAMEIDE_ENABLE_ASYNC
 
 #endif // FLAMEIDE_STREAMS_ASYNC_FILESTREAMWRITER_HPP

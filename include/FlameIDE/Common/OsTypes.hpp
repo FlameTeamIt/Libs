@@ -28,13 +28,6 @@ constexpr Socket SOCKET_INITIALIZER =
 		FLAMEIDE_OS_NAMESPACE::OS_SOCKET_INITIALIZER;
 
 /// @brief
-using AsyncIoContext = FLAMEIDE_OS_NAMESPACE::OsAsyncIoContext;
-
-/// @brief
-constexpr AsyncIoContext ASYNC_CONTEXT_INITIALIZER =
-		FLAMEIDE_OS_NAMESPACE::OS_ASYNC_CONTEXT_INITIALIZER;
-
-/// @brief
 using ThreadContext = FLAMEIDE_OS_NAMESPACE::OsThreadContext;
 
 /// @brief
@@ -85,7 +78,6 @@ enum class ActionMethod
 };
 
 /// @brief The StreamType enum
-
 enum class StreamType
 {
 	MEMORY
@@ -94,6 +86,20 @@ enum class StreamType
 	, FILE
 	, SOCKET
 };
+
+#ifdef FLAMEIDE_ENABLE_ASYNC
+
+/// @brief
+using AsyncIoContext = FLAMEIDE_OS_NAMESPACE::OsAsyncIoContext;
+
+/// @brief
+constexpr AsyncIoContext ASYNC_CONTEXT_INITIALIZER =
+		FLAMEIDE_OS_NAMESPACE::OS_ASYNC_CONTEXT_INITIALIZER;
+
+#endif // FLAMEIDE_ENABLE_ASYNC
+
+/// @brief PLATFORM_PREFIX
+constexpr auto PIPE_NAME_PREFIX = FLAMEIDE_OS_NAMESPACE::OS_PLATFORM_PREFIX;
 
 }}
 
