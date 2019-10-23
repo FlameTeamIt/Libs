@@ -22,7 +22,7 @@ enum
 PipeStream::PipeStream() noexcept : status(os::STATUS_SUCCESS), reader(), writer()
 {
 	os::FileDescriptor fds[PIPE_COUNT];
-	status = pipe(fds);
+	status = pipe(reinterpret_cast<int*>(fds));
 	if (status != os::INVALID_DESCRIPTOR)
 	{
 		reader.setFileDescriptor(fds[PIPE_READER]);

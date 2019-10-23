@@ -165,20 +165,22 @@ public:
 	template<typename IntType>
 	ConstReference operator[](IntType integer) const noexcept;
 
-	// TODO: Not implement
 	Me &operator+=(const T &object);
 	Me &operator+=(T &&object);
-//	template<typename IntType>
-//	Me &operator+=(IntType integer);
-//	Me &operator+=(const Me &string);
-//	template<typename InputIterator>
-//	Me &operator+=(Range<InputIterator> range);
 
 	// TODO: Not implement
-//	Me &operator-=(Iterator it);
-//	Me &operator-=(ReverseIterator it);
-//	Me &operator-=(Range<Iterator> range);
-//	Me &operator-=(Range<ReverseIterator> range);
+	template<typename IntType>
+	Me &operator+=(IntType integer);
+	Me &operator+=(const Me &string);
+
+	template<typename InputIterator>
+	Me &operator+=(Range<InputIterator> range);
+
+	// TODO: Not implement
+	Me &operator-=(Iterator it);
+	Me &operator-=(ReverseIterator it);
+	Me &operator-=(Range<Iterator> range);
+	Me &operator-=(Range<ReverseIterator> range);
 
 	SizeType length() const noexcept;
 	SizeType capacity() const noexcept;
@@ -213,8 +215,10 @@ public:
 
 	void insert(Iterator it, ConstReference object);
 	void insert(Iterator it, MoveReference object);
+
 	template<typename InputIterator>
 	void insert(Iterator it, InputIterator itBegin, InputIterator itEnd);
+
 	void insert(Iterator it, PointerToConst array);
 
 	void erase(Iterator it);
@@ -233,10 +237,12 @@ private:
 	Pointer tail;
 };
 
-template<typename T, typename Traits, typename Allocator, typename IntType>
+template<typename T, typename Traits, typename Allocator
+	, typename IntType, typename EnableType>
 STRING_TYPE operator+(const STRING_TYPE &string, IntType integer);
 
-template<typename T, typename Traits, typename Allocator, typename IntType>
+template<typename T, typename Traits, typename Allocator
+	, typename IntType, typename EnableType>
 STRING_TYPE operator+(IntType integer, const STRING_TYPE &string);
 
 TEMPLATE_TYPE
@@ -472,7 +478,6 @@ STRING_TYPE &STRING_TYPE::operator+=(const T &object)
 	return *this;
 }
 
-// TODO: implement
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator+=(T &&object)
 {
@@ -481,46 +486,58 @@ STRING_TYPE &STRING_TYPE::operator+=(T &&object)
 }
 
 // TODO: implement
-//TEMPLATE_TYPE
-//template<typename IntType>
-//STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
-//{
+TEMPLATE_TYPE
+template<typename IntType>
+STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
+{
 
-//	return *this;
-//}
-
-// TODO: implement
-//TEMPLATE_TYPE
-//STRING_TYPE &STRING_TYPE::operator+=(const Me &string)
-//{
-//	return *this;
-//}
+	return *this;
+}
 
 // TODO: implement
-//TEMPLATE_TYPE
-//template<typename InputIterator>
-//STRING_TYPE &STRING_TYPE::operator+=(Range<InputIterator> range)
-//{}
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator+=(const Me &string)
+{
+	return *this;
+}
 
 // TODO: implement
-//TEMPLATE_TYPE
-//STRING_TYPE &STRING_TYPE::operator-=(Iterator it)
-//{}
+TEMPLATE_TYPE
+template<typename InputIterator>
+STRING_TYPE &STRING_TYPE::operator+=(Range<InputIterator> range)
+{
+	return *this;
+}
 
 // TODO: implement
-//TEMPLATE_TYPE
-//STRING_TYPE &STRING_TYPE::operator-=(ReverseIterator it)
-//{}
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator-=(Iterator it)
+{
+	erase(it);
+	return *this;
+}
 
 // TODO: implement
-//TEMPLATE_TYPE
-//STRING_TYPE &STRING_TYPE::operator-=(Range<Iterator> range)
-//{}
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator-=(ReverseIterator it)
+{
+	erase(it.internalData());
+	return *this;
+}
 
 // TODO: implement
-//TEMPLATE_TYPE
-//STRING_TYPE &STRING_TYPE::operator-=(Range<ReverseIterator> range)
-//{}
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator-=(Range<Iterator> range)
+{
+	return *this;
+}
+
+// TODO: implement
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator-=(Range<ReverseIterator> range)
+{
+	return *this;
+}
 
 TEMPLATE_TYPE
 typename STRING_TYPE::SizeType STRING_TYPE::length() const noexcept
@@ -816,7 +833,10 @@ void STRING_TYPE::insert(typename STRING_TYPE::Iterator it
 		Range<InputIterator> range(itBegin, itEnd);
 		if (it == end())
 			for (auto &itInsert : range)
+			{
 				pushBack(itInsert);
+
+			}
 		else
 		{
 			Range<Iterator> initRange(end(), end() + rangeSize);
@@ -965,8 +985,74 @@ String NumberConverter<NumberType, true>::convert(NumberType)
 template<typename IntValue>
 String toString(IntValue value)
 {
-	return string_utils::NumberConverter<IntValue, isFloatType<IntValue>()>::convert(value);
+	return string_utils::NumberConverter<
+		IntValue
+		, isFloatType<IntValue>()
+	>::convert(value);
 }
+
+template<typename T
+	, typename Traits
+	, typename Allocator
+	, typename IntType
+	, typename EnableType =
+			typename EnableType<
+				IsIntegralType<IntType>::VALUE
+						|| IsFloatType<IntType>::VALUE
+				, IntType
+			>::Type
+>
+STRING_TYPE operator+(const STRING_TYPE &string, IntType integer)
+{
+	STRING_TYPE resultString = string;
+	resultString += toString(integer);
+	return resultString;
+}
+
+template<typename T
+	, typename Traits
+	, typename Allocator
+	, typename IntType
+	, typename EnableType =
+			typename EnableType<
+				IsIntegralType<IntType>::VALUE
+						|| IsFloatType<IntType>::VALUE
+				, IntType
+			>::Type
+>
+STRING_TYPE operator+(IntType integer, const STRING_TYPE &string)
+{
+	STRING_TYPE resultString = toString(integer);
+	resultString += string;
+	return resultString;
+}
+
+TEMPLATE_TYPE
+STRING_TYPE operator+(const STRING_TYPE &string1, const STRING_TYPE &string2)
+{
+	STRING_TYPE resultString = string1;
+	resultString += string2;
+	return resultString;
+}
+
+TEMPLATE_TYPE
+STRING_TYPE operator+(const STRING_TYPE &string
+		, typename STRING_TYPE::PointerToConst array)
+{
+	STRING_TYPE resultString = string;
+	resultString += array;
+	return resultString;
+}
+
+TEMPLATE_TYPE
+STRING_TYPE operator+(typename STRING_TYPE::PointerToConst array
+		, const STRING_TYPE &string)
+{
+	STRING_TYPE resultString = array;
+	resultString += string;
+	return resultString;
+}
+
 
 }}
 
