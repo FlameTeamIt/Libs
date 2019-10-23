@@ -3,12 +3,7 @@
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
 #include <FlameIDE/Streams/NamedPipeStream.hpp>
-
-#include "../CommonFuncitons.hpp"
-
-#include <unistd.h>
-
-// FIXME: Broken NamedPipeStream.
+#include "FlameIDE/../../src/Streams/CommonFuncitons.hpp"
 
 namespace flame_ide
 {namespace streams

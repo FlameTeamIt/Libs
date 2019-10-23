@@ -17,7 +17,8 @@ struct RaiiCaller
 		ctorCall();
 	}
 
-	RaiiCaller(DestructorCall &&initDtorCall) noexcept : dtorCall(move(initDtorCall))
+	RaiiCaller(DestructorCall &&initDtorCall) noexcept :
+			dtorCall(move(initDtorCall))
 	{}
 
 	~RaiiCaller() noexcept
