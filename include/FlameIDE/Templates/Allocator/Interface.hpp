@@ -22,7 +22,7 @@ public:
 	BaseAllocator() noexcept = default;
 	BaseAllocator(const BaseAllocator &) noexcept = default;
 	BaseAllocator(BaseAllocator &&) noexcept = default;
-	~BaseAllocator() noexcept = default;
+	virtual ~BaseAllocator() noexcept = default;
 	BaseAllocator &operator=(const BaseAllocator &) noexcept = default;
 	BaseAllocator &operator=(BaseAllocator &&) noexcept = default;
 

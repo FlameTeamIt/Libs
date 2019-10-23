@@ -1,5 +1,7 @@
 #include <FlameIDE/Streams/Async/FileStreamWriter.hpp>
 
+#ifdef FLAMEIDE_ENABLE_ASYNC
+
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
 namespace flame_ide
@@ -16,3 +18,5 @@ namespace flame_ide
 }}}
 
 #endif // FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
+
+#endif // FLAMEIDE_ENABLE_ASYNC
