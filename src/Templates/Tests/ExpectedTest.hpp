@@ -17,7 +17,7 @@ public:
 	virtual ~ExpectedTest();
 
 private:
-	virtual int vStart();
+	virtual int vStart() override;
 };
 
 }}}
