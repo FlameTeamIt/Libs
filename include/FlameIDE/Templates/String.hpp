@@ -127,7 +127,7 @@ private:
 
 
 TEMPLATE_TYPE
-class BasicString
+class BasicString : protected Allocator
 {
 public:
 	using Me = STRING_TYPE;
@@ -228,10 +228,14 @@ public:
 
 	static constexpr Type NULL_SYMBOL = Type();
 
+protected:
+	using Allocator::createArray;
+	using Allocator::reallocateArray;
+	using Allocator::freeArray;
+
 private:
 	inline SizeType nextCapacity() const noexcept;
 
-	Allocator allocator;
 	SizeType stringCapacity;
 	Pointer head;
 	Pointer tail;
@@ -327,16 +331,16 @@ SizeTraits::SizeType bufferSize(IntType integer)
 
 TEMPLATE_TYPE
 STRING_TYPE::BasicString() noexcept
-		: allocator()
+		: Allocator()
 		, stringCapacity()
 		, head(nullptr), tail(nullptr)
 {}
 
 TEMPLATE_TYPE
 STRING_TYPE::BasicString(const STRING_TYPE &string) noexcept
-		: allocator(string.allocator)
+		: Allocator(string)
 		, stringCapacity(string.length() + SizeType(1))
-		, head(allocator.createArray(stringCapacity))
+		, head(createArray(stringCapacity))
 		, tail(head + stringCapacity - SizeType(1))
 {
 	Pointer pointer = head;
@@ -350,7 +354,7 @@ STRING_TYPE::BasicString(const STRING_TYPE &string) noexcept
 
 TEMPLATE_TYPE
 STRING_TYPE::BasicString(STRING_TYPE &&string) noexcept
-		: allocator(string.allocator)
+		: Allocator(string)
 		, stringCapacity(string.stringCapacity)
 		, head(string.head)
 		, tail(string.tail)
@@ -362,9 +366,9 @@ STRING_TYPE::BasicString(STRING_TYPE &&string) noexcept
 
 TEMPLATE_TYPE
 STRING_TYPE::BasicString(typename STRING_TYPE::PointerToConst rawString) noexcept
-		: allocator()
+		: Allocator()
 		, stringCapacity(rawStringLength(rawString) + SizeType(1))
-		, head(allocator.createArray(stringCapacity))
+		, head(createArray(stringCapacity))
 		, tail(head + stringCapacity - SizeType(1))
 {
 	Iterator it = begin();
@@ -380,7 +384,7 @@ TEMPLATE_TYPE
 STRING_TYPE::~BasicString() noexcept
 {
 	clean();
-	allocator.freeArray(head);
+	freeArray(head);
 }
 
 TEMPLATE_TYPE
@@ -411,10 +415,10 @@ STRING_TYPE &STRING_TYPE::operator=(STRING_TYPE &&string) noexcept
 	clean();
 	if (head)
 	{
-		allocator.freeArray(head);
+		freeArray(head);
 	}
 
-	allocator = string.allocator;
+	Allocator::operator=(string);
 	stringCapacity = string.stringCapacity;
 	head = string.head;
 	tail = string.tail;
@@ -667,7 +671,7 @@ void STRING_TYPE::resize(typename STRING_TYPE::SizeType newSize)
 	{
 		if (newSize > stringCapacity)
 		{
-			auto tmp = allocator.reallocateArray(head, newSize);
+			auto tmp = reallocateArray(head, newSize);
 			if (tmp != head)
 			{
 				tail = (tail - head) + tmp;
@@ -678,7 +682,7 @@ void STRING_TYPE::resize(typename STRING_TYPE::SizeType newSize)
 	}
 	else
 	{
-		head = allocator.createArray(newSize);
+		head = createArray(newSize);
 		*(tail = head) = NULL_SYMBOL;
 		stringCapacity = newSize;
 	}
