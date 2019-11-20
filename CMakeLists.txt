@@ -2,18 +2,24 @@ cmake_minimum_required(VERSION 3.14)
 project(Flame)
 
 set(CMAKE_MAIN_TARGET_NAME ${CMAKE_PROJECT_NAME})
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ./cmake)
-set(CMAKE_ENABLE_TESTS TRUE)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+set(FLAME_CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 set(FLAME_TEST_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 set(FLAME_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(FLAME_INCLUDE_SUBMODLUES_PATH ${FLAME_INCLUDE_PATH}/FlameIDE)
+set(FLAME_SOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-include(cmake/Options.cmake)
-include(cmake/Common.cmake)
-include(cmake/Headers.cmake)
+include(${FLAME_CMAKE_MODULE_PATH}/Options.cmake)
+include(${FLAME_CMAKE_MODULE_PATH}/Common.cmake)
+include(${FLAME_CMAKE_MODULE_PATH}/Variables.cmake)
+include(${FLAME_CMAKE_MODULE_PATH}/Functions.cmake)
 
-include_directories(${FLAME_INCLUDE_PATH} ${FLAME_TEST_PATH})
-add_subdirectory(src)
+include(${FLAME_CMAKE_MODULE_PATH}/SourceModules.cmake)
+include(${FLAME_CMAKE_MODULE_PATH}/HeaderModules.cmake)
+include(${FLAME_CMAKE_MODULE_PATH}/TestModules.cmake)
 
-add_subdirectory(tests)
+add_subdirectory(${FLAME_INCLUDE_SUBMODLUES_PATH})
+add_subdirectory(${FLAME_SOURCE_PATH})
+#add_subdirectory(tests)

@@ -1,15 +1,29 @@
+include(CheckIncludeFile)
+
 set(FLAME_PLATFORM Posix)
 
-find_library(PTHREAD_LIBRARY pthread)
-set(FLAME_LIBRARIES ${PTHREAD_LIBRARY})
+set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
+find_library(PTHREAD_STATIC_LIBRARY pthread)
+add_library(PTHREAD_STATIC STATIC IMPORTED ${PTHREAD_STATIC_LIBRARY})
 
-include(CheckIncludeFile)
-if(FLAMEIDE_ENABLE_ASYNC)
+set(CMAKE_FIND_LIBRARY_SUFFIXES .so)
+find_library(PTHREAD_SHARED_LIBRARY pthread)
+add_library(PTHREAD_SHARED SHARED IMPORTED ${PTHREAD_SHARED_LIBRARY})
+
+set(FLAME_DEPENDENCY_SHARED_LIBRARIES
+		${PTHREAD_SHARED_LIBRARY}
+)
+
+set(FLAME_DEPENDENCY_STATIC_LIBRARIES
+		${PTHREAD_STATIC_LIBRARY}
+)
+
+if(FLAME_ENABLE_ASYNC)
 	set(CHECK_AIO_H)
 	check_include_file("aio.h" CHECK_AIO_H)
 	if(NOT CHECK_AIO_H)
 		message(FATAL_ERROR "Not found 'aio.h'")
 	else()
-		add_definitions("-DFLAMEIDE_ENABLE_ASYNC=1")
+		add_definitions("-DFLAME_ENABLE_ASYNC=1")
 	endif()
 endif()
