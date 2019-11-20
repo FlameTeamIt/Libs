@@ -1,0 +1,4 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/ByteOrder.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/DetectOs.hpp
+)

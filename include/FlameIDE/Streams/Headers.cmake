@@ -1,0 +1,15 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/FileStreamReader.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FileStreamWriter.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/NamedPipeReader.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/NamedPipeStream.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/NamedPipeWriter.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/PipeStream.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/RamStream.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Reader.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Socket.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SocketClient.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SocketServer.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StreamUtils.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Writer.hpp
+)
