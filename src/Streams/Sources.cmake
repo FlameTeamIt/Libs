@@ -1,5 +1,5 @@
 set (SOURCE_LIST
-	./CommonFunctions.cpp
-	./RamStream.cpp
-	./StreamUtils.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/CommonFunctions.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/RamStream.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StreamUtils.cpp
 )

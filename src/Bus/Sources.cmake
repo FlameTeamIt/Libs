@@ -1,3 +1,3 @@
 set (SOURCE_LIST
-	./MsgInterface.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MsgInterface.cpp
 )

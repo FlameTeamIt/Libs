@@ -1,5 +1,5 @@
 set (SOURCE_LIST
-	./Mutex.cpp
-	./Semaphore.cpp
-	./Thread.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Mutex.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Semaphore.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Thread.cpp
 )

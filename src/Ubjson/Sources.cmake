@@ -1,6 +1,6 @@
 set (SOURCE_LIST
-	./Array.cpp
-	./Object.cpp
-	./Pair.cpp
-	./String.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Array.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Object.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Pair.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/String.cpp
 )

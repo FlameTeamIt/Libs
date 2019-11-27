@@ -22,5 +22,5 @@ include(${FLAME_CMAKE_MODULE_PATH}/HeaderModules.cmake)
 include(${FLAME_CMAKE_MODULE_PATH}/TestModules.cmake)
 
 add_subdirectory(${FLAME_INCLUDE_SUBMODLUES_PATH})
-add_subdirectory(${FLAME_SOURCE_PATH})
-#add_subdirectory(tests)
+add_subdirectory(${FLAME_SOURCE_SUBMODLUES_PATH})
+#add_subdirectory(${FLAME_TEST_SUBMODLUES_PATH})

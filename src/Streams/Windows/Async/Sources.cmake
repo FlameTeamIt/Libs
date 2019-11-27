@@ -1,4 +1,4 @@
 set (SOURCE_LIST
-	./FileStreamReader.cpp
-	./FileStreamWriter.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FileStreamReader.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FileStreamWriter.cpp
 )
