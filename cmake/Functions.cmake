@@ -1,3 +1,8 @@
+function(create_alias_name CURRENT_PROJECT_NAME ALIASED_NAME)
+	string(REPLACE "${FLAME_NAME_SEPARATOR}" "${FLAME_ALIAS_SEPARATOR}" ${ALIASED_NAME} ${${CURRENT_PROJECT_NAME}})
+	set(${ALIASED_NAME} ${${ALIASED_NAME}} PARENT_SCOPE)
+endfunction(create_alias_name)
+
 function(create_library_alias TARGET_NAME TARGET_ALIAS)
 	add_library(${TARGET_ALIAS} ALIAS ${TARGET_NAME})
 endfunction(create_library_alias)
