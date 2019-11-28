@@ -16,7 +16,10 @@ set(SOURCE_LIST_FILE
 
 if ("${FLAME_PLATFORM}" STREQUAL "Windows")
 	compile_library(
-		${FLAME_CMAKE_DEBUG} ${FLAME_STATIC} ${FLAME_SHARED}
+		${FLAME_DEBUG}
+
+		${FLAME_STATIC}
+		${FLAME_SHARED}
 
 		LIBRARY_NAME              ${NAME}
 

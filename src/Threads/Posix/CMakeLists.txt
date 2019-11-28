@@ -8,7 +8,10 @@ set(SOURCE_LIST_FILE       ${CMAKE_CURRENT_SOURCE_DIR}/Sources.cmake)
 
 if ("${FLAME_PLATFORM}" STREQUAL "Posix")
 	compile_library(
-		${FLAME_CMAKE_DEBUG} ${FLAME_STATIC} ${FLAME_SHARED}
+		${FLAME_DEBUG}
+
+		${FLAME_STATIC}
+		${FLAME_SHARED}
 
 		LIBRARY_NAME              ${NAME}
 
