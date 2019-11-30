@@ -16,6 +16,8 @@ include(${FLAME_CMAKE_MODULE_PATH}/Options.cmake)
 include(${FLAME_CMAKE_MODULE_PATH}/Common.cmake)
 include(${FLAME_CMAKE_MODULE_PATH}/Variables.cmake)
 include(${FLAME_CMAKE_MODULE_PATH}/Functions.cmake)
+include(${FLAME_CMAKE_MODULE_PATH}/LibraryFunctions.cmake)
+include(${FLAME_CMAKE_MODULE_PATH}/GlobalProperties.cmake)
 
 include(${FLAME_CMAKE_MODULE_PATH}/SourceModules.cmake)
 include(${FLAME_CMAKE_MODULE_PATH}/HeaderModules.cmake)
