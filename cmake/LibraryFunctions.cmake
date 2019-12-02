@@ -174,7 +174,7 @@ function(inetrnal_compile_shared_library)
 	)
 	set(LISTS
 		"DEPENDENCY_OBJECT_LIST"
-		"DEPENDENCY_STATIC_LIST"
+		"DEPENDENCY_SHARED_LIST"
 	)
 	cmake_parse_arguments("SHARED"
 		"${OPTIONS}" "${VALUES}" "${LISTS}" "${ARGN}"

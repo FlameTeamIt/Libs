@@ -31,3 +31,9 @@ function(add_to_global_property PROPERTY_NAME ADDITION_VALUE)
 	list(APPEND VALUE ${ADDITION_VALUE})
 	set_global_property(${PROPERTY_NAME} "${VALUE}")
 endfunction(add_to_global_property)
+
+
+function(remove_source_dir PATH REMOVE_PATH OUT)
+	string(REPLACE "${REMOVE_PATH}" "" ${OUT} "${PATH}")
+	set(${OUT} "${${OUT}}" PARENT_SCOPE)
+endfunction(remove_source_dir)
