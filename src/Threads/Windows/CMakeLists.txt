@@ -11,7 +11,6 @@ if ("${FLAME_PLATFORM}" STREQUAL "Windows")
 		${FLAME_DEBUG}
 
 		${FLAME_STATIC}
-		${FLAME_SHARED}
 
 		LIBRARY_NAME              ${NAME}
 
