@@ -26,3 +26,5 @@ src/Templates/build/*
 
 *.pro.*
 
+CMakeLists.txt.*
+
