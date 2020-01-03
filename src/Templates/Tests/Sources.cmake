@@ -7,6 +7,7 @@ set (SOURCE_LIST
 	./CircularArrayTest.cpp
 	./CircularIteratorTest.cpp
 	./CircularVectorTest.cpp
+	./FutureTest.cpp
 	./HybridVectorTest.cpp
 	./IntegerIteratorTest.cpp
 	./ListTest.cpp
