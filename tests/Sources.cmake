@@ -1,3 +1,3 @@
 set (SOURCE_LIST
-	./main.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )

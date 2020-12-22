@@ -1,5 +1,7 @@
 .codelite/*
 
+cmake/CMakeFlameResolver
+
 Debug/*
 Release/*
 
