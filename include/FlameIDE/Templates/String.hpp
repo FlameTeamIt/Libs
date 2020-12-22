@@ -127,7 +127,7 @@ private:
 
 
 TEMPLATE_TYPE
-class BasicString
+class BasicString : protected Allocator
 {
 public:
 	using Me = STRING_TYPE;
@@ -150,14 +150,14 @@ public:
 	using ReverseIterator = flame_ide::templates::ReverseIterator<Iterator>;
 	using ConstReverseIterator = flame_ide::templates::ConstIterator<ReverseIterator>;
 
-	BasicString();
-	BasicString(const Me &string);
+	BasicString() noexcept;
+	BasicString(const Me &string) noexcept;
 	BasicString(Me &&string) noexcept;
-	BasicString(PointerToConst rawString);
-	~BasicString();
-	Me &operator=(const Me &string);
+	BasicString(PointerToConst rawString) noexcept;
+	~BasicString() noexcept;
+	Me &operator=(const Me &string) noexcept;
 	Me &operator=(Me &&string) noexcept;
-	Me &operator=(PointerToConst array);
+	Me &operator=(PointerToConst array) noexcept;
 
 	template<typename IntType>
 	Reference operator[](IntType integer) noexcept;
@@ -165,20 +165,22 @@ public:
 	template<typename IntType>
 	ConstReference operator[](IntType integer) const noexcept;
 
-	// TODO: Not implement
 	Me &operator+=(const T &object);
 	Me &operator+=(T &&object);
-//	template<typename IntType>
-//	Me &operator+=(IntType integer);
-//	Me &operator+=(const Me &string);
-//	template<typename InputIterator>
-//	Me &operator+=(Range<InputIterator> range);
 
 	// TODO: Not implement
-//	Me &operator-=(Iterator it);
-//	Me &operator-=(ReverseIterator it);
-//	Me &operator-=(Range<Iterator> range);
-//	Me &operator-=(Range<ReverseIterator> range);
+	template<typename IntType>
+	Me &operator+=(IntType integer);
+	Me &operator+=(const Me &string);
+
+	template<typename InputIterator>
+	Me &operator+=(Range<InputIterator> range);
+
+	// TODO: Not implement
+	Me &operator-=(Iterator it);
+	Me &operator-=(ReverseIterator it);
+	Me &operator-=(Range<Iterator> range);
+	Me &operator-=(Range<ReverseIterator> range);
 
 	SizeType length() const noexcept;
 	SizeType capacity() const noexcept;
@@ -213,8 +215,10 @@ public:
 
 	void insert(Iterator it, ConstReference object);
 	void insert(Iterator it, MoveReference object);
+
 	template<typename InputIterator>
 	void insert(Iterator it, InputIterator itBegin, InputIterator itEnd);
+
 	void insert(Iterator it, PointerToConst array);
 
 	void erase(Iterator it);
@@ -224,19 +228,25 @@ public:
 
 	static constexpr Type NULL_SYMBOL = Type();
 
+protected:
+	using Allocator::createArray;
+	using Allocator::reallocateArray;
+	using Allocator::freeArray;
+
 private:
 	inline SizeType nextCapacity() const noexcept;
 
-	Allocator allocator;
 	SizeType stringCapacity;
 	Pointer head;
 	Pointer tail;
 };
 
-template<typename T, typename Traits, typename Allocator, typename IntType>
+template<typename T, typename Traits, typename Allocator
+	, typename IntType, typename EnableType>
 STRING_TYPE operator+(const STRING_TYPE &string, IntType integer);
 
-template<typename T, typename Traits, typename Allocator, typename IntType>
+template<typename T, typename Traits, typename Allocator
+	, typename IntType, typename EnableType>
 STRING_TYPE operator+(IntType integer, const STRING_TYPE &string);
 
 TEMPLATE_TYPE
@@ -320,17 +330,17 @@ SizeTraits::SizeType bufferSize(IntType integer)
 }
 
 TEMPLATE_TYPE
-STRING_TYPE::BasicString()
-		: allocator()
+STRING_TYPE::BasicString() noexcept
+		: Allocator()
 		, stringCapacity()
 		, head(nullptr), tail(nullptr)
 {}
 
 TEMPLATE_TYPE
-STRING_TYPE::BasicString(const STRING_TYPE &string)
-		: allocator(string.allocator)
+STRING_TYPE::BasicString(const STRING_TYPE &string) noexcept
+		: Allocator(string)
 		, stringCapacity(string.length() + SizeType(1))
-		, head(allocator.createArray(stringCapacity))
+		, head(createArray(stringCapacity))
 		, tail(head + stringCapacity - SizeType(1))
 {
 	Pointer pointer = head;
@@ -344,7 +354,7 @@ STRING_TYPE::BasicString(const STRING_TYPE &string)
 
 TEMPLATE_TYPE
 STRING_TYPE::BasicString(STRING_TYPE &&string) noexcept
-		: allocator(string.allocator)
+		: Allocator(string)
 		, stringCapacity(string.stringCapacity)
 		, head(string.head)
 		, tail(string.tail)
@@ -355,10 +365,10 @@ STRING_TYPE::BasicString(STRING_TYPE &&string) noexcept
 }
 
 TEMPLATE_TYPE
-STRING_TYPE::BasicString(typename STRING_TYPE::PointerToConst rawString)
-		: allocator()
+STRING_TYPE::BasicString(typename STRING_TYPE::PointerToConst rawString) noexcept
+		: Allocator()
 		, stringCapacity(rawStringLength(rawString) + SizeType(1))
-		, head(allocator.createArray(stringCapacity))
+		, head(createArray(stringCapacity))
 		, tail(head + stringCapacity - SizeType(1))
 {
 	Iterator it = begin();
@@ -371,14 +381,14 @@ STRING_TYPE::BasicString(typename STRING_TYPE::PointerToConst rawString)
 }
 
 TEMPLATE_TYPE
-STRING_TYPE::~BasicString()
+STRING_TYPE::~BasicString() noexcept
 {
 	clean();
-	allocator.freeArray(head);
+	freeArray(head);
 }
 
 TEMPLATE_TYPE
-STRING_TYPE &STRING_TYPE::operator=(const STRING_TYPE &string)
+STRING_TYPE &STRING_TYPE::operator=(const STRING_TYPE &string) noexcept
 {
 	if (capacity() >= string.length())
 	{
@@ -405,10 +415,10 @@ STRING_TYPE &STRING_TYPE::operator=(STRING_TYPE &&string) noexcept
 	clean();
 	if (head)
 	{
-		allocator.freeArray(head);
+		freeArray(head);
 	}
 
-	allocator = string.allocator;
+	Allocator::operator=(string);
 	stringCapacity = string.stringCapacity;
 	head = string.head;
 	tail = string.tail;
@@ -420,7 +430,7 @@ STRING_TYPE &STRING_TYPE::operator=(STRING_TYPE &&string) noexcept
 }
 
 TEMPLATE_TYPE
-STRING_TYPE &STRING_TYPE::operator=(typename STRING_TYPE::PointerToConst array)
+STRING_TYPE &STRING_TYPE::operator=(typename STRING_TYPE::PointerToConst array) noexcept
 {
 	clean();
 	const auto arraySize = rawStringLength(array) + SizeType(1);
@@ -472,7 +482,6 @@ STRING_TYPE &STRING_TYPE::operator+=(const T &object)
 	return *this;
 }
 
-// TODO: implement
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator+=(T &&object)
 {
@@ -481,46 +490,58 @@ STRING_TYPE &STRING_TYPE::operator+=(T &&object)
 }
 
 // TODO: implement
-//TEMPLATE_TYPE
-//template<typename IntType>
-//STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
-//{
+TEMPLATE_TYPE
+template<typename IntType>
+STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
+{
 
-//	return *this;
-//}
-
-// TODO: implement
-//TEMPLATE_TYPE
-//STRING_TYPE &STRING_TYPE::operator+=(const Me &string)
-//{
-//	return *this;
-//}
+	return *this;
+}
 
 // TODO: implement
-//TEMPLATE_TYPE
-//template<typename InputIterator>
-//STRING_TYPE &STRING_TYPE::operator+=(Range<InputIterator> range)
-//{}
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator+=(const Me &string)
+{
+	return *this;
+}
 
 // TODO: implement
-//TEMPLATE_TYPE
-//STRING_TYPE &STRING_TYPE::operator-=(Iterator it)
-//{}
+TEMPLATE_TYPE
+template<typename InputIterator>
+STRING_TYPE &STRING_TYPE::operator+=(Range<InputIterator> range)
+{
+	return *this;
+}
 
 // TODO: implement
-//TEMPLATE_TYPE
-//STRING_TYPE &STRING_TYPE::operator-=(ReverseIterator it)
-//{}
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator-=(Iterator it)
+{
+	erase(it);
+	return *this;
+}
 
 // TODO: implement
-//TEMPLATE_TYPE
-//STRING_TYPE &STRING_TYPE::operator-=(Range<Iterator> range)
-//{}
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator-=(ReverseIterator it)
+{
+	erase(it.internalData());
+	return *this;
+}
 
 // TODO: implement
-//TEMPLATE_TYPE
-//STRING_TYPE &STRING_TYPE::operator-=(Range<ReverseIterator> range)
-//{}
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator-=(Range<Iterator> range)
+{
+	return *this;
+}
+
+// TODO: implement
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator-=(Range<ReverseIterator> range)
+{
+	return *this;
+}
 
 TEMPLATE_TYPE
 typename STRING_TYPE::SizeType STRING_TYPE::length() const noexcept
@@ -650,7 +671,7 @@ void STRING_TYPE::resize(typename STRING_TYPE::SizeType newSize)
 	{
 		if (newSize > stringCapacity)
 		{
-			auto tmp = allocator.reallocateArray(head, newSize);
+			auto tmp = reallocateArray(head, newSize);
 			if (tmp != head)
 			{
 				tail = (tail - head) + tmp;
@@ -661,7 +682,7 @@ void STRING_TYPE::resize(typename STRING_TYPE::SizeType newSize)
 	}
 	else
 	{
-		head = allocator.createArray(newSize);
+		head = createArray(newSize);
 		*(tail = head) = NULL_SYMBOL;
 		stringCapacity = newSize;
 	}
@@ -816,7 +837,10 @@ void STRING_TYPE::insert(typename STRING_TYPE::Iterator it
 		Range<InputIterator> range(itBegin, itEnd);
 		if (it == end())
 			for (auto &itInsert : range)
+			{
 				pushBack(itInsert);
+
+			}
 		else
 		{
 			Range<Iterator> initRange(end(), end() + rangeSize);
@@ -965,8 +989,74 @@ String NumberConverter<NumberType, true>::convert(NumberType)
 template<typename IntValue>
 String toString(IntValue value)
 {
-	return string_utils::NumberConverter<IntValue, isFloatType<IntValue>()>::convert(value);
+	return string_utils::NumberConverter<
+		IntValue
+		, isFloatType<IntValue>()
+	>::convert(value);
 }
+
+template<typename T
+	, typename Traits
+	, typename Allocator
+	, typename IntType
+	, typename EnableType =
+			typename EnableType<
+				IsIntegralType<IntType>::VALUE
+						|| IsFloatType<IntType>::VALUE
+				, IntType
+			>::Type
+>
+STRING_TYPE operator+(const STRING_TYPE &string, IntType integer)
+{
+	STRING_TYPE resultString = string;
+	resultString += toString(integer);
+	return resultString;
+}
+
+template<typename T
+	, typename Traits
+	, typename Allocator
+	, typename IntType
+	, typename EnableType =
+			typename EnableType<
+				IsIntegralType<IntType>::VALUE
+						|| IsFloatType<IntType>::VALUE
+				, IntType
+			>::Type
+>
+STRING_TYPE operator+(IntType integer, const STRING_TYPE &string)
+{
+	STRING_TYPE resultString = toString(integer);
+	resultString += string;
+	return resultString;
+}
+
+TEMPLATE_TYPE
+STRING_TYPE operator+(const STRING_TYPE &string1, const STRING_TYPE &string2)
+{
+	STRING_TYPE resultString = string1;
+	resultString += string2;
+	return resultString;
+}
+
+TEMPLATE_TYPE
+STRING_TYPE operator+(const STRING_TYPE &string
+		, typename STRING_TYPE::PointerToConst array)
+{
+	STRING_TYPE resultString = string;
+	resultString += array;
+	return resultString;
+}
+
+TEMPLATE_TYPE
+STRING_TYPE operator+(typename STRING_TYPE::PointerToConst array
+		, const STRING_TYPE &string)
+{
+	STRING_TYPE resultString = array;
+	resultString += string;
+	return resultString;
+}
+
 
 }}
 

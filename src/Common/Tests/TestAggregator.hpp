@@ -4,6 +4,7 @@
 #include <tests/Test.hpp>
 
 namespace flame_ide
+{namespace common
 {namespace tests
 {
 
@@ -14,6 +15,6 @@ public:
 	~TestAggregator() = default;
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_COMMON_TESTAGGREGATOR_HPP

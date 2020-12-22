@@ -9,20 +9,16 @@ namespace flame_ide
 {namespace streams
 {
 
-class PipeStream;
-
 ///
 /// @brief The FileStreamReader class
 ///
 class FileStreamReader: public stream_utils::AbstractByteStreamReader
 {
 public:
-	friend class PipeStream;
-
 	using Parent = stream_utils::AbstractByteStreamReader;
 
-	FileStreamReader();
-	FileStreamReader(const FileStreamReader &) = delete;
+	FileStreamReader() noexcept;
+	FileStreamReader(const FileStreamReader &) noexcept = delete;
 	FileStreamReader(FileStreamReader &&reader) noexcept;
 
 	///
@@ -33,7 +29,7 @@ public:
 	FileStreamReader(os::FileDescriptor fileDescriptor
 			, bool owner = true) noexcept;
 
-	virtual ~FileStreamReader();
+	virtual ~FileStreamReader() noexcept;
 
 	FileStreamReader &operator=(const FileStreamReader &) = delete;
 	FileStreamReader &operator=(FileStreamReader &&reader) noexcept;

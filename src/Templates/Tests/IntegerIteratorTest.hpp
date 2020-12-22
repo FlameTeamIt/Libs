@@ -5,6 +5,7 @@
 #include <FlameIDE/Templates/IntegerIterator.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -18,6 +19,6 @@ private:
 	virtual int vStart();
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_INTEGERITERATORTEST_HPP

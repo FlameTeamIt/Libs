@@ -111,55 +111,6 @@ public:
 protected:
 	virtual int vStart() = 0;
 
-	enum MessageType
-	{
-		EMPTY
-		, INFO
-		, WARNING
-		, ERROR
-	};
-
-	static void printMessage(MessageType messageType, const std::string &message)
-	{
-		printMessage(messageType, message.c_str());
-	}
-
-	static void printMessage(MessageType messageType, const char *message)
-	{
-		struct
-		{
-			const char *EMPTY = "";
-			const char *INFO = "INFO";
-			const char *WARINIG = "WARINIG";
-			const char *ERROR = "ERROR";
-		} messageTypeTexts;
-
-		const char *messageTypeText = [&messageTypeTexts](MessageType messageType)
-		{
-			switch (messageType)
-			{
-				case MessageType::EMPTY:
-				{
-					return messageTypeTexts.EMPTY;
-				}
-				case MessageType::INFO:
-				{
-					return messageTypeTexts.INFO;
-				}
-				case MessageType::WARNING:
-				{
-					return messageTypeTexts.WARINIG;
-				}
-				case MessageType::ERROR:
-				{
-					return messageTypeTexts.ERROR;
-				}
-			}
-		} (messageType);
-
-		std::cout << messageTypeText << ": " << message << std::endl;
-	}
-
 	template<typename Function>
 	static ResultType doTestCase(const char *name, Function &&function)
 	{

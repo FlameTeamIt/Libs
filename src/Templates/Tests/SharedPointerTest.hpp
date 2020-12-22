@@ -9,6 +9,7 @@
 #include <memory>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -25,6 +26,6 @@ private:
 	std::shared_ptr<TestClass> stdpointer;
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_SHAREDPOINTERTEST_HPP

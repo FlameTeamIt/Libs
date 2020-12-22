@@ -7,21 +7,22 @@
 #include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Streams/PipeStream.hpp>
 
-enum
-{
-	PIPE_READER
-	, PIPE_WRITER
-	, PIPE_COUNT
-};
-
 namespace flame_ide
 {namespace streams
 {
 
-PipeStream::PipeStream() noexcept : status(os::SUCCESS_STATUS), reader(), writer()
+enum
+{
+	PIPE_READER = static_cast<int>(os::ActionType::READER)
+	, PIPE_WRITER  = static_cast<int>(os::ActionType::WRITER)
+	, PIPE_COUNT
+};
+
+
+PipeStream::PipeStream() noexcept : status(os::STATUS_SUCCESS), reader(), writer()
 {
 	os::FileDescriptor fds[PIPE_COUNT];
-	status = pipe(fds);
+	status = pipe(reinterpret_cast<int*>(fds));
 	if (status != os::INVALID_DESCRIPTOR)
 	{
 		reader.setFileDescriptor(fds[PIPE_READER]);
@@ -36,14 +37,14 @@ PipeStream::PipeStream(PipeStream &&pipes) noexcept :
 
 PipeStream::PipeStream(os::FileDescriptor fileDescriptorReader, bool readerOwn
 		, os::FileDescriptor fileDescriptorWriter, bool writerOwn) noexcept :
-		status(os::SUCCESS_STATUS)
+		status(os::STATUS_SUCCESS)
 		, reader(fileDescriptorReader, readerOwn)
 		, writer(fileDescriptorWriter, writerOwn)
 {}
 
 PipeStream &PipeStream::operator=(PipeStream &&pipes) noexcept
 {
-	status = os::SUCCESS_STATUS;
+	status = os::STATUS_SUCCESS;
 	reader = flame_ide::move(pipes.reader);
 	writer = flame_ide::move(pipes.writer);
 	return *this;

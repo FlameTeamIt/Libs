@@ -287,6 +287,69 @@ struct MakeUnsigned<Types::long_t>
 	using Type = Types::ulong_t;
 };
 
+///
+/// @brief The NumerLimit struct
+///
+template<typename IntType>
+struct NumberLimit
+{};
+
+template<>
+struct NumberLimit<Types::ichar_t>
+{
+	static constexpr Types::ichar_t MIN_VALUE = INT8_MIN;
+	static constexpr Types::ichar_t MAX_VALUE = INT8_MAX;
+};
+
+template<>
+struct NumberLimit<Types::short_t>
+{
+	static constexpr Types::short_t MIN_VALUE = INT16_MIN;
+	static constexpr Types::short_t MAX_VALUE = INT16_MAX;
+};
+
+template<>
+struct NumberLimit<Types::int_t>
+{
+	static constexpr Types::int_t MIN_VALUE = INT32_MIN;
+	static constexpr Types::int_t MAX_VALUE = INT32_MAX;
+};
+
+template<>
+struct NumberLimit<Types::long_t>
+{
+	static constexpr Types::long_t MIN_VALUE = INT64_MIN;
+	static constexpr Types::long_t MAX_VALUE = INT64_MAX;
+};
+
+template<>
+struct NumberLimit<Types::uichar_t>
+{
+	static constexpr Types::uichar_t MIN_VALUE = 0;
+	static constexpr Types::uichar_t MAX_VALUE = UINT8_MAX;
+};
+
+template<>
+struct NumberLimit<Types::ushort_t>
+{
+	static constexpr Types::ushort_t MIN_VALUE = 0;
+	static constexpr Types::ushort_t MAX_VALUE = UINT16_MAX;
+};
+
+template<>
+struct NumberLimit<Types::uint_t>
+{
+	static constexpr Types::uint_t MIN_VALUE = 0;
+	static constexpr Types::uint_t MAX_VALUE = UINT32_MAX;
+};
+
+template<>
+struct NumberLimit<Types::ulong_t>
+{
+	static constexpr Types::ulong_t MIN_VALUE = 0;
+	static constexpr Types::ulong_t MAX_VALUE = UINT64_MAX;
+};
+
 }
 
 #endif // FLAMEIDE_COMMON_TRAITS_NUMBERS_HPP

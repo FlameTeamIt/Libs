@@ -6,6 +6,7 @@
 #include <FlameIDE/Templates/Iterator/CircularIterator.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -21,6 +22,6 @@ private:
 };
 
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_CIRCULARITERATORTEST_HPP

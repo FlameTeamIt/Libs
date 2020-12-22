@@ -6,6 +6,7 @@
 #include <FlameIDE/Templates/ByteOrder.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -20,6 +21,6 @@ private:
 	virtual int vStart();
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_BYTEORDERTEST_HPP

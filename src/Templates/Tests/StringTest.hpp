@@ -5,6 +5,7 @@
 #include <FlameIDE/Templates/String.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -21,6 +22,6 @@ private:
 	std::string stdstring;
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_STRINGTEST_HPP

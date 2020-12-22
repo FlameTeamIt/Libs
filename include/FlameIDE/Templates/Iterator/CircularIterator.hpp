@@ -42,8 +42,8 @@ public:
 	>;
 	using Range = templates::Range<IteratorType>;
 
-	CircularIterator() = default;
-	CircularIterator(const Me &) = default;
+	CircularIterator() noexcept = default;
+	CircularIterator(const Me &) noexcept = default;
 	CircularIterator(IteratorType iterator, Range containerActualRange)
 			: Parent(iterator)
 			, range(containerActualRange)
@@ -77,8 +77,8 @@ public:
 	>;
 	using Range = templates::Range<IteratorType>;
 
-	CircularIterator() = default;
-	CircularIterator(const Me &) = default;
+	CircularIterator() noexcept = default;
+	CircularIterator(const Me &) noexcept = default;
 	CircularIterator(IteratorType iterator, Range containerActualRange)
 			: Parent(iterator)
 			, range(containerActualRange)
@@ -114,8 +114,8 @@ public:
 	>;
 	using Range = templates::Range<IteratorType>;
 
-	CircularIterator() = default;
-	CircularIterator(const Me &) = default;
+	CircularIterator() noexcept = default;
+	CircularIterator(const Me &) noexcept = default;
 	CircularIterator(IteratorType iterator, Range containerActualRange)
 			: Parent(iterator)
 			, range(containerActualRange)

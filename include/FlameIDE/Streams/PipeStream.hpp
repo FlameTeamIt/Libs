@@ -18,17 +18,58 @@ public:
 	using Parent = stream_utils::AbstractByteStream;
 
 	PipeStream() noexcept;
-	PipeStream(const PipeStream &) = delete;
+	PipeStream(const PipeStream &) noexcept = delete;
 	PipeStream(PipeStream &&pipes) noexcept;
 
+	///
+	/// @brief PipeStream
+	/// @param fileDescriptorReader
+	/// @param readerOwn
+	/// @param fileDescriptorWriter
+	/// @param writerOwn
+	///
 	PipeStream(os::FileDescriptor fileDescriptorReader, bool readerOwn
 			, os::FileDescriptor fileDescriptorWriter, bool writerOwn) noexcept;
 
 	virtual ~PipeStream() noexcept = default;
 
-	PipeStream &operator=(const PipeStream &) = delete;
+	PipeStream &operator=(const PipeStream &) noexcept = delete;
 	PipeStream &operator=(PipeStream &&) noexcept;
 
+	///
+	/// @brief setReaderFileDescriptor
+	/// @param fileDescriptor
+	/// @param owner
+	///
+	void setReaderFileDescriptor(os::FileDescriptor fileDescriptor
+			, bool owner = true) noexcept;
+
+	///
+	/// @brief setFileDescriptor
+	/// @param fileDescriptor
+	/// @param owner
+	///
+	void setWriterFileDescriptor(os::FileDescriptor fileDescriptor
+			, bool owner = true) noexcept;
+
+	///
+	/// @brief getReaderFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
+	os::FileDescriptor getReaderFileDescriptor(bool continueOwning = false) noexcept;
+
+	///
+	/// @brief getWriterFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
+	os::FileDescriptor getWriterFileDescriptor(bool continueOwning = false) noexcept;
+
+	///
+	/// @brief getStatus
+	/// @return
+	///
 	os::Status getStatus() const;
 
 protected:
@@ -37,12 +78,13 @@ protected:
 
 	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
 	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept;
+
 	virtual void flush() noexcept;
 
 private:
-	os::Status status;
-	FileStreamReader reader;
-	FileStreamWriter writer;
+	os::Status status; ///<
+	FileStreamReader reader; ///<
+	FileStreamWriter writer; ///<
 };
 
 }}

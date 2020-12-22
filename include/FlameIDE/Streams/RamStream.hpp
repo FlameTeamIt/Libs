@@ -8,13 +8,16 @@ namespace flame_ide
 {namespace streams
 {
 
+///
+/// @brief The RamStream class
+///
 class RamStream: public stream_utils::AbstractByteStream
 {
 public:
 	using Parent = stream_utils::AbstractByteStream;
 
-	RamStream();
-	virtual ~RamStream();
+	RamStream() noexcept;
+	virtual ~RamStream() noexcept;
 
 	virtual SizeTraits::SsizeType read(Parent::OutputByteRange range) noexcept;
 	virtual SizeTraits::SsizeType read(Parent::OutputCircularByteRange range) noexcept;
@@ -25,7 +28,7 @@ public:
 	virtual void flush() noexcept;
 
 private:
-	templates::Vector<stream_utils::Byte> buffer;
+	templates::Vector<stream_utils::Byte> buffer; ///<
 };
 
 }}

@@ -9,6 +9,7 @@
 #include <list>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -25,6 +26,6 @@ private:
 	std::list<TestClass> stdlist;
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_LISTTEST_HPP

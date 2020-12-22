@@ -1,59 +1,13 @@
 #ifndef FLAMEIDE_STREAMS_NAMEDPIPESTREAM_HPP
 #define FLAMEIDE_STREAMS_NAMEDPIPESTREAM_HPP
 
-#include <FlameIDE/Streams/StreamUtils.hpp>
-
-#include <FlameIDE/Common/OsTypes.hpp>
+#include <FlameIDE/Streams/NamedPipeReader.hpp>
+#include <FlameIDE/Streams/NamedPipeWriter.hpp>
+#include <FlameIDE/Templates/String.hpp>
 
 namespace flame_ide
 {namespace streams
 {
-
-///
-/// @brief The NamedPipeStreamReader class
-///
-class NamedPipeStreamReader: public stream_utils::AbstractByteStreamReader
-{
-public:
-	using Parent = stream_utils::AbstractByteStreamReader;
-
-	NamedPipeStreamReader() noexcept;
-	NamedPipeStreamReader(const char *name) noexcept;
-	NamedPipeStreamReader(os::FileDescriptor fileDescriptor) noexcept;
-	virtual ~NamedPipeStreamReader() noexcept;
-
-	os::Status open(const char *name) noexcept;
-
-	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept;
-	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept;
-
-private:
-	os::Status status;
-	os::FileDescriptor fd;
-};
-
-///
-/// @brief The NamedPipeStreamWriter class
-///
-class NamedPipeStreamWriter: public stream_utils::AbstractByteStreamWriter
-{
-public:
-	using Parent = stream_utils::AbstractByteStreamWriter;
-
-	NamedPipeStreamWriter();
-	NamedPipeStreamWriter(const char *name) noexcept;
-	NamedPipeStreamWriter(os::FileDescriptor fileDescriptor) noexcept;
-	~NamedPipeStreamWriter() noexcept;
-
-	os::Status open(const char *name) noexcept;
-
-	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
-	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept;
-
-private:
-	os::Status status;
-	os::FileDescriptor fd;
-};
 
 ///
 /// @brief The NamedPipeStream class
@@ -63,10 +17,21 @@ class NamedPipeStream: public stream_utils::AbstractByteStream
 public:
 	using Parent = stream_utils::AbstractByteStream;
 
-	NamedPipeStream();
-	virtual ~NamedPipeStream();
+	NamedPipeStream() noexcept;
+	NamedPipeStream(const NamedPipeStream &stream) noexcept = delete;
+	NamedPipeStream(NamedPipeStream &&stream) noexcept;
 
-	os::Status open(const char *name) noexcept;
+	///
+	/// @brief NamedPipeStream
+	/// @param name
+	/// @param deletePipe
+	///
+	NamedPipeStream(const char *name, bool deletePipe = true) noexcept;
+
+	virtual ~NamedPipeStream() noexcept;
+
+	NamedPipeStream &operator=(const NamedPipeStream &stream) noexcept = delete;
+	NamedPipeStream &operator=(NamedPipeStream &&stream) noexcept;
 
 	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept;
 	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept;
@@ -74,9 +39,50 @@ public:
 	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
 	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept;
 
+	virtual void flush() noexcept;
+
+	///
+	/// @brief setFileDescriptor
+	/// @param fileDescriptor
+	/// @param owner
+	///
+	void setFileDescriptor(os::FileDescriptor fileDescriptor
+			, bool owner = true) noexcept;
+
+	///
+	/// @brief getReaderFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
+	os::FileDescriptor getReaderFileDescriptor(bool continueOwning = false) noexcept;
+
+	///
+	/// @brief getWriterFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
+	os::FileDescriptor getWriterFileDescriptor(bool continueOwning = false) noexcept;
+
+	///
+	/// @brief open
+	/// @param name
+	/// @param deletePipe
+	/// @return
+	///
+	os::Status open(const char *name, bool deletePipe = true) noexcept;
+
+	///
+	/// @brief getName
+	/// @return
+	///
+	const templates::String &getName() const noexcept;
+
 private:
-	NamedPipeStreamReader writer;
-	NamedPipeStreamReader reader;
+	void init();
+	void deinit();
+
+	NamedPipeWriter writer; ///<
+	NamedPipeReader reader; ///<
 };
 
 }}

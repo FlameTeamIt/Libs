@@ -7,6 +7,10 @@ namespace flame_ide
 {namespace streams
 {
 
+///
+/// @brief The Reader class
+/// @tparam CircularByteBuffer
+///
 template<typename CircularByteBuffer>
 class Reader
 {
@@ -25,7 +29,7 @@ public:
 	///
 	Reader(stream_utils::AbstractByteStreamReader &baseReaderImpl) noexcept;
 
-	~Reader() = default;
+	~Reader() noexcept = default;
 
 	Reader &operator=(const Reader &reader) noexcept = delete;
 	Reader &operator=(Reader &&reader) noexcept = default;
@@ -65,8 +69,8 @@ public:
 	bool empty() const noexcept;
 
 protected:
-	CircularByteBuffer buffer;
-	stream_utils::AbstractByteStreamReader *readerImpl;
+	CircularByteBuffer buffer; ///<
+	stream_utils::AbstractByteStreamReader *readerImpl; ///<
 };
 
 }}

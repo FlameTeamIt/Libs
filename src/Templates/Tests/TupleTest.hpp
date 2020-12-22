@@ -6,6 +6,7 @@
 #include <FlameIDE/Templates/Tuple.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -21,7 +22,6 @@ private:
 	flame_ide::templates::Tuple<char, short, int, long> tuple;
 };
 
-
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_TUPLETEST_HPP

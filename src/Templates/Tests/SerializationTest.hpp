@@ -7,6 +7,7 @@
 #include <FlameIDE/Templates/Serialization.hpp>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -45,6 +46,6 @@ private:
 	bool beSpec64();
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_SERIALIZATIONTEST_HPP

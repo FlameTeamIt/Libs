@@ -14,7 +14,7 @@ public:
 	using Me = Range<InputIterator>;
 	using Iterator = InputIterator;
 
-	Range() = delete;
+	Range() noexcept = default;
 	Range(const Me &) noexcept;
 	Range(Me &&) noexcept = default;
 	Range(Iterator itBegin, Iterator itEnd) noexcept;

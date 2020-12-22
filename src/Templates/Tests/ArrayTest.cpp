@@ -1,7 +1,7 @@
 #include "ArrayTest.hpp"
 
 using namespace flame_ide;
-using namespace flame_ide::test;
+using namespace flame_ide::templates::test;
 
 ArrayTest::ArrayTest() : AbstractTest("Array")
 		, array{{

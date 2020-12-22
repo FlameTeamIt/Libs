@@ -1,7 +1,7 @@
 #include "TupleTest.hpp"
 
 using namespace flame_ide;
-using namespace flame_ide::test;
+using namespace flame_ide::templates::test;
 
 TupleTest::TupleTest()
 		: AbstractTest("Tuple")

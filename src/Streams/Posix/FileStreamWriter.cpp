@@ -9,7 +9,7 @@ namespace flame_ide
 {namespace streams
 {
 
-FileStreamWriter::FileStreamWriter() : fd(os::INVALID_DESCRIPTOR)
+FileStreamWriter::FileStreamWriter() noexcept : fd(os::INVALID_DESCRIPTOR), own(false)
 {}
 
 FileStreamWriter::FileStreamWriter(FileStreamWriter &&writer) noexcept :

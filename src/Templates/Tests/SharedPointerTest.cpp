@@ -1,6 +1,7 @@
 #include "SharedPointerTest.hpp"
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -48,4 +49,4 @@ int SharedPointerTest::vStart()
 	return 0;
 }
 
-}}
+}}}

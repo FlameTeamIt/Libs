@@ -9,7 +9,7 @@ namespace flame_ide
 {namespace streams
 {
 
-FileStreamReader::FileStreamReader() : fd(os::INVALID_DESCRIPTOR)
+FileStreamReader::FileStreamReader() noexcept : fd(os::INVALID_DESCRIPTOR), own(false)
 {}
 
 FileStreamReader::FileStreamReader(FileStreamReader &&reader) noexcept :
@@ -24,7 +24,7 @@ FileStreamReader::FileStreamReader(os::FileDescriptor fileDescriptor
 		fd(fileDescriptor), own(owner)
 {}
 
-FileStreamReader::~FileStreamReader()
+FileStreamReader::~FileStreamReader() noexcept
 {
 	if (own && fd != os::INVALID_DESCRIPTOR)
 	{
@@ -61,7 +61,7 @@ SizeTraits::SsizeType FileStreamReader::read(OutputByteRange range) noexcept
 SizeTraits::SsizeType FileStreamReader::read(OutputCircularByteRange range) noexcept
 {
 	auto ranges = Parent::getContinuousOutputRanges(range);
-	SizeTraits::SsizeType countBytes[ranges.CAPACITY] = {
+	SizeTraits::SsizeType countBytes[ranges.capacity()] = {
 			read(ranges[0]), stream_utils::INVALID_COUNT_BYTES
 	};
 	if (countBytes[0] != stream_utils::INVALID_COUNT_BYTES)

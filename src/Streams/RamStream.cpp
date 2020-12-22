@@ -4,8 +4,8 @@ namespace flame_ide
 {namespace streams
 {
 
-RamStream::RamStream() = default;
-RamStream::~RamStream() = default;
+RamStream::RamStream() noexcept = default;
+RamStream::~RamStream() noexcept = default;
 
 SizeTraits::SsizeType RamStream::read(Parent::OutputByteRange range) noexcept
 {

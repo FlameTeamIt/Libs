@@ -43,7 +43,7 @@ struct DefaultTraits
 
 	using Reference = Type &;
 	using MoveReference =  Type &&;
-	using ConstReference = Type const&;
+	using ConstReference = Type const &;
 
 	using Pointer = Type *;
 	using PointerToConst = Type const*;
@@ -52,6 +52,29 @@ struct DefaultTraits
 	using VoidPointer = void *;
 };
 
+template<typename T>
+struct DefaultTraits<const T>
+{
+	using Type = const T;
+	using Reference = const Type &;
+	using ConstReference = const Type &;
+	using MoveReference = const Type &&;
+
+	using Pointer = const Type *;
+	using PointerToConst = const Type *;
+	using COnstPointer = const Type *const;
+
+	using VoidPointer = const void *;
+};
+
+template<>
+struct DefaultTraits<void>
+{
+	using Pointer = void *;
+	using VoidToConst = void const *;
+	using ConstPointer = void *const;
+	using ConstPointerToConst = void const *const;
+};
 
 ///
 /// @brief Removing pointer from type.

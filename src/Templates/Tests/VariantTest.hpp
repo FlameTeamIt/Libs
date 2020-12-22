@@ -8,6 +8,7 @@
 #include "TestClass.hpp"
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -23,6 +24,6 @@ private:
 	bool testVariant();
 };
 
-}}
+}}}
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_VARIANTTEST_HPP

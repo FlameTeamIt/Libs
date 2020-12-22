@@ -5,23 +5,23 @@
 #include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Streams/PipeStream.hpp>
 
-enum
-{
-	PIPE_READER
-	, PIPE_WRITER
-	, PIPE_COUNT
-};
-
 namespace flame_ide
 {namespace streams
 {
 
-PipeStream::PipeStream() noexcept : status(os::SUCCESS_STATUS), reader(), writer()
+enum
+{
+	PIPE_READER = static_cast<int32_t>(os::ActionType::READER)
+	, PIPE_WRITER = static_cast<int32_t>(os::ActionType::WRITER)
+	, PIPE_COUNT
+};
+
+PipeStream::PipeStream() noexcept : status(os::STATUS_SUCCESS), reader(), writer()
 {
 	os::FileDescriptor fds[PIPE_COUNT];
 	status = ::CreatePipe(
-			&fds[PIPE_READER]
-			, &fds[PIPE_WRITER]
+			&fds[PIPE_READER].handle
+			, &fds[PIPE_WRITER].handle
 			, nullptr
 			, 0);
 	if (status)
@@ -38,17 +38,37 @@ PipeStream::PipeStream(PipeStream &&pipes) noexcept :
 
 PipeStream::PipeStream(os::FileDescriptor fileDescriptorReader, bool readerOwn
 		, os::FileDescriptor fileDescriptorWriter, bool writerOwn) noexcept :
-		status(os::SUCCESS_STATUS)
+		status(os::STATUS_SUCCESS)
 		, reader(fileDescriptorReader, readerOwn)
 		, writer(fileDescriptorWriter, writerOwn)
 {}
 
 PipeStream &PipeStream::operator=(PipeStream &&pipes) noexcept
 {
-	status = os::SUCCESS_STATUS;
+	status = os::STATUS_SUCCESS;
 	reader = flame_ide::move(pipes.reader);
 	writer = flame_ide::move(pipes.writer);
 	return *this;
+}
+
+void PipeStream::setReaderFileDescriptor(os::FileDescriptor fileDescriptor, bool owner) noexcept
+{
+	reader.setFileDescriptor(fileDescriptor, owner);
+}
+
+void PipeStream::setWriterFileDescriptor(os::FileDescriptor fileDescriptor, bool owner) noexcept
+{
+	writer.setFileDescriptor(fileDescriptor, owner);
+}
+
+os::FileDescriptor PipeStream::getReaderFileDescriptor(bool continueOwning) noexcept
+{
+	return reader.getFileDescriptor(continueOwning);
+}
+
+os::FileDescriptor PipeStream::getWriterFileDescriptor(bool continueOwning) noexcept
+{
+	return writer.getFileDescriptor(continueOwning);
 }
 
 os::Status PipeStream::getStatus() const
@@ -100,8 +120,6 @@ void PipeStream::flush() noexcept
 {
 	writer.flush();
 }
-
-
 
 }}
 

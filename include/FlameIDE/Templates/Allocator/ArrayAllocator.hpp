@@ -34,7 +34,7 @@ public:
 	ArrayAllocator() = default;
 	ArrayAllocator(const Me &) = default;
 	ArrayAllocator(Me &&) noexcept = default;
-	~ArrayAllocator() = default;
+	virtual ~ArrayAllocator() = default;
 	Me &operator=(const Me &) = default;
 	Me &operator=(Me &&) noexcept = default;
 

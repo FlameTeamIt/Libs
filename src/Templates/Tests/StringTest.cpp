@@ -4,7 +4,7 @@
 
 #define TO_TEXT(some) #some
 
-using namespace flame_ide::test;
+using namespace flame_ide::templates::test;
 
 StringTest::StringTest() : AbstractTest("String")
 		, string(TEST_STRING)

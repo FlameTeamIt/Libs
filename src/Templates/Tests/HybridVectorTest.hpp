@@ -9,6 +9,7 @@
 #include <vector>
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -46,6 +47,6 @@ private:
 	using HybConstVectorIterator = HybVector::ConstIterator;
 };
 
-}}
+}}}
 
-#endif // HYBRIDVECTORTEST_HPP
+#endif // FLAMEIDE_TEMPLATES_TESTS_HYBRIDVECTORTEST_HPP

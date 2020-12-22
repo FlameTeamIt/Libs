@@ -9,27 +9,29 @@ namespace flame_ide
 {namespace streams
 {
 
-class PipeStream;
-
+///
+/// @brief The FileStreamWriter class
 ///
 class FileStreamWriter: public stream_utils::AbstractByteStreamWriter
 {
 public:
 	using Parent = stream_utils::AbstractByteStreamWriter;
 
-	friend class PipeStream;
-
-	FileStreamWriter();
-	FileStreamWriter(const FileStreamWriter &) = delete;
+	FileStreamWriter() noexcept;
+	FileStreamWriter(const FileStreamWriter &) noexcept = delete;
 	FileStreamWriter(FileStreamWriter &&writer) noexcept;
 
+	///
+	/// @brief FileStreamWriter
+	/// @param fileDescriptor
+	/// @param owner
 	///
 	FileStreamWriter(os::FileDescriptor fileDescriptor
 			, bool owner = true) noexcept;
 
 	virtual ~FileStreamWriter() noexcept;
 
-	FileStreamWriter &operator=(const FileStreamWriter &) = delete;
+	FileStreamWriter &operator=(const FileStreamWriter &) noexcept = delete;
 	FileStreamWriter &operator=(FileStreamWriter &&writer) noexcept;
 
 	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept;
@@ -38,15 +40,23 @@ public:
 	virtual void flush() noexcept;
 
 	///
+	/// @brief setFileDescriptor
+	/// @param fileDescriptor
+	/// @param owner
+	///
 	void setFileDescriptor(os::FileDescriptor fileDescriptor
 			, bool owner = true) noexcept;
 
 	///
+	/// @brief getFileDescriptor
+	/// @param continueOwning
+	/// @return
+	///
 	os::FileDescriptor getFileDescriptor(bool continueOwning = false) noexcept;
 
 private:
-	os::FileDescriptor fd; ///
-	bool own; ///
+	os::FileDescriptor fd; ///<
+	bool own; ///<
 };
 
 

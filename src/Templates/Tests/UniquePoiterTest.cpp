@@ -1,7 +1,7 @@
 #include "UniquePoiterTest.hpp"
 
 using namespace flame_ide;
-using namespace flame_ide::test;
+using namespace flame_ide::templates::test;
 
 UniquePointerTest::UniquePointerTest() : AbstractTest("UniquePointer")
 		, pointer {{1000, 100, 10, '1'}}

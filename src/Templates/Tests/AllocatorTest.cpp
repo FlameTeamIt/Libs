@@ -1,6 +1,7 @@
 ﻿#include "AllocatorTest.hpp"
 
 namespace flame_ide
+{namespace templates
 {namespace test
 {
 
@@ -175,4 +176,4 @@ int ArrayAllocator::vStart()
 	return 0;
 }
 
-}}
+}}}
