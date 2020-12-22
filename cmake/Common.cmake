@@ -1,6 +1,0 @@
-if (UNIX)
-	include(${FLAME_CMAKE_MODULE_PATH}/Unix.cmake)
-endif (UNIX)
-if (WIN32)
-	include(${FLAME_CMAKE_MODULE_PATH}/Windows.cmake)
-endif (WIN32)

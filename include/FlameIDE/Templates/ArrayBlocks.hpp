@@ -37,7 +37,7 @@ struct Node
 	using SizeType = typename Traits::SizeType;
 	using SsizeType = typename Traits::SsizeType;
 
-	using Block = Array<T, SIZE, Traits>;
+	using Block = Array<T, SIZE, false, Traits>;
 
 	Node();
 	Node(const Me &);

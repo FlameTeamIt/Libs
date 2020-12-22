@@ -9,6 +9,7 @@ set (HEADER_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/ByteOrder.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CircularArray.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CircularVector.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/CommandPattern.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CycleInteger.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Expected.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/HybridVector.hpp

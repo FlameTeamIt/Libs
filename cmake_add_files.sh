@@ -184,5 +184,6 @@ add_sources src true
 add_headers src false
 add_headers include/FlameIDE true
 
-add_sources tests false
-add_tests src true
+add_sources tests true
+add_headers tests true
+add_tests src false

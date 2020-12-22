@@ -2,6 +2,7 @@
 #define FLAMEIDE_UBJSON_TRAITS_HPP
 
 #include <FlameIDE/Common/Traits.hpp>
+
 #include <FlameIDE/Templates/Variant.hpp>
 
 #include <FlameIDE/Ubjson/Types.hpp>

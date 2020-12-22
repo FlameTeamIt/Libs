@@ -1,15 +1,12 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(NAME "Common${FLAME_NAME_SEPARATOR}Macroses")
+set(NAME "Common.Macroses")
 set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::Common::Macroses::Headers)
-set(HEADER_LIST_FILE ${CMAKE_CURRENT_SOURCE_DIR}/Headers.cmake)
-set(RESULT_TARGET_NAME)
+get_sources(FILE_LIST)
 
-header_library(
-	LIBRARY_NAME       "${NAME}"
+flame_header_library(
+	NAME               "${NAME}"
 	LIBRARY_ALIAS_NAME "${LIBRARY_ALIAS_NAME}"
-	HEADER_LIST_FILE   "${HEADER_LIST_FILE}"
-	INCLUDE_PATH       "${FLAME_INCLUDE_PATH}"
-
-	${FLAME_CMAKE_DEBUG}
+	HEADER_LIST        "${FILE_LIST}"
+	INCLUDE_PATHS      "${FLAME_INCLUDE_PATH}"
 )
