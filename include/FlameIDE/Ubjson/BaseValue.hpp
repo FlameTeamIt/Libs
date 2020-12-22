@@ -8,7 +8,7 @@ namespace flame_ide
 {namespace ubjson
 {
 
-namespace utils
+namespace base_value_utils
 {
 
 template<EnumeratedType UBJSON_TYPE>
@@ -38,11 +38,11 @@ struct TraitValues
 }
 
 template<EnumeratedType UBJSON_TYPE, bool IS_ALLOCATED = FalseType::VALUE>
-class BaseValue: public utils::TraitValues<UBJSON_TYPE>
+class BaseValue: public base_value_utils::TraitValues<UBJSON_TYPE>
 {
 public:
 	using Me = BaseValue<UBJSON_TYPE, IS_ALLOCATED>;
-	using Parent = utils::TraitValues<UBJSON_TYPE>;
+	using Parent = base_value_utils::TraitValues<UBJSON_TYPE>;
 	using typename Parent::ValueType;
 
 	BaseValue() = default;
@@ -90,11 +90,11 @@ private:
 };
 
 template<EnumeratedType UBJSON_TYPE>
-class BaseValue<UBJSON_TYPE, TrueType::VALUE>: public utils::TraitValues<UBJSON_TYPE>
+class BaseValue<UBJSON_TYPE, TrueType::VALUE>: public base_value_utils::TraitValues<UBJSON_TYPE>
 {
 public:
 	using Me = BaseValue<UBJSON_TYPE, TrueType::VALUE>;
-	using Parent = utils::TraitValues<UBJSON_TYPE>;
+	using Parent = base_value_utils::TraitValues<UBJSON_TYPE>;
 	using typename Parent::ValueType;
 
 	BaseValue() = default;

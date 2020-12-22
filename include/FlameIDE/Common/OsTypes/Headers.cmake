@@ -1,0 +1,6 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/Posix.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/PosixAsync.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Windows.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WindowsAsync.hpp
+)
