@@ -15,10 +15,6 @@ class StreamOut
 {
 };
 
-class Stream
-{
-};
-
 }}
 
 #endif // FLAMEIDE_UBJSON_STREAM_HPP

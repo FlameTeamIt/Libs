@@ -78,7 +78,6 @@ enum class ActionMethod
 };
 
 /// @brief The StreamType enum
-
 enum class StreamType
 {
 	MEMORY
@@ -98,6 +97,9 @@ constexpr AsyncIoContext ASYNC_CONTEXT_INITIALIZER =
 		FLAMEIDE_OS_NAMESPACE::OS_ASYNC_CONTEXT_INITIALIZER;
 
 #endif // FLAMEIDE_ENABLE_ASYNC
+
+/// @brief PLATFORM_PREFIX
+constexpr auto PIPE_NAME_PREFIX = FLAMEIDE_OS_NAMESPACE::OS_PLATFORM_PREFIX;
 
 }}
 

@@ -1,37 +1,19 @@
-set(FLAME_MODULES
-    Bus
-    Common
-    Crypto
-    Streams
-    Templates
-    Threads
-    Ubjson
+cmake_minimum_required(VERSION 3.14)
+
+set(SOURCE_MODULES
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Bus
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Crypto
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Streams
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Streams/Posix
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Streams/Posix/Async
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Streams/Windows
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Streams/Windows/Async
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Threads
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Threads/Posix
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Threads/Windows
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Ubjson
 )
 
-foreach(module ${FLAME_MODULES})
-    message(${module})
-
-    add_subdirectory(${module})
-
-    if (${module}_MODULES)
-        message("\t" "Add ${module}_MODULES")
-        set(FLAME_SUBMODULES ${FLAME_SUBMODULES}
-            ${${module}_MODULES}
-        )
-    endif()
-
-    if (${module}_TEST_MODULE)
-        message("\t" "Add ${module}_TEST_MODULE")
-        set(FLAME_TEST_SUBMODULES ${FLAME_TEST_SUBMODULES}
-            ${${module}_TEST_MODULE}
-        )
-    endif()
-
+foreach(module ${SOURCE_MODULES})
+	add_subdirectory(${module})
 endforeach()
-add_library(${CMAKE_PROJECT_NAME} ${FLAME_SUBMODULES})
-
-set(FLAME_TEST_SUBMODULES
-    ${FLAME_TEST_SUBMODULES}
-    ${FLAME_SUBMODULES}
-    PARENT_SCOPE
-)

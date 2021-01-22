@@ -4,6 +4,7 @@
 #include <FlameIDE/Threads/Thread.hpp>
 
 #include <fcntl.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include <errno.h>
 
@@ -53,6 +54,23 @@ Descriptors::ResultValue makeFifo(const char *fifoName, os::ActionType action) n
 	return Descriptors::ResultValue{ fd, status };
 }
 
+os::Status commonClose(Descriptors::ResultValue descriptor)
+{
+	if (!descriptor.status)
+	{
+		auto result = close(descriptor.fd);
+		if (result < 0)
+		{
+			return -errno;
+		}
+		return result;
+	}
+	else
+	{
+		return descriptor.status;
+	}
+}
+
 } // anonymous
 
 Descriptors::ResultValue makeNamedReader(const char *pipeName) noexcept
@@ -65,6 +83,16 @@ Descriptors::ResultValue makeNamedWriter(const char *pipeName) noexcept
 {
 	Descriptors::ResultValue fd = makeFifo(pipeName, os::ActionType::WRITER);
 	return fd;
+}
+
+os::Status destroyNamedReader(Descriptors::ResultValue descriptor) noexcept
+{
+	return commonClose(descriptor);
+}
+
+os::Status destroyNamedWriter(Descriptors::ResultValue descriptor) noexcept
+{
+	return commonClose(descriptor);
 }
 
 }}
