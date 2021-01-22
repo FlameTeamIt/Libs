@@ -17,6 +17,8 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/CircularVectorTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ExpectedTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ExpectedTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FutureTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FutureTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/HybridVectorTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/HybridVectorTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/IntegerIteratorTest.cpp

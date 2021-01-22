@@ -1,6 +1,20 @@
 #ifndef FLAMEIDE_TEMPLATES_WIDEINT_HPP
 #define FLAMEIDE_TEMPLATES_WIDEINT_HPP
 
+/*
+ * В данном файле представлен интерфейс и частичная реализация WideInt с
+ * фиксированным количеством бит.
+ * Что нужно сделать:
+ * 1. Необходимо полностью реализовать класс.
+ * 2. Должна быть поддержка как знакового числа, так и беззнакового.
+ * 3. Обезательно всё noexcept.
+ * 3.1. В случае, если это невозможно, можно изменить интерфейс, добавив метод проверки
+ * состояния с возвратом соотвествующего enum class.
+ * 4. C++14 (если необходимо, можно и на 17-й стандарт перейти - в настройках CMake стандарт не указан)
+ * 5. Тест лежит в src/ (если не создан, то желательно бы создать)
+ * 6. ... по вопросам, общаться ко мне @AntonKashcheev :)
+ */
+
 #include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Templates/Array.hpp>
 #include <FlameIDE/Templates/Serialization.hpp>
@@ -22,7 +36,7 @@ namespace flame_ide
 
 // class define
 
-template<Types::ulong_t BITS, bool SIGNED = false>
+template<Types::ulong_t BITS, bool SIGNED>
 class WideInt
 {
 public:
@@ -46,6 +60,8 @@ public:
 	// TODO: check this
 	template<Types::ulong_t BITS1, bool SIGNED1>
 	WideInt(const WideInt<BITS1, SIGNED1> &value);
+
+	WideInt(const char_t *stringNumber);
 
 	template<typename PrimitiveType>
 	Me &operator=(PrimitiveType value);
