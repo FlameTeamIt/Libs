@@ -1,4 +1,6 @@
 set (SOURCE_LIST
-	./TestAggregator.cpp
-	./Utils.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Utils.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Utils.hpp
 )

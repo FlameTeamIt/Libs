@@ -32,13 +32,22 @@ struct FalseType: public IntegralConstant<bool, false>
 
 
 ///
+/// @brief The ResultType struct
+///
+template<typename T>
+struct ResultType
+{
+	using Type = T;
+};
+
+///
 /// @brief Default type traits
 /// @tparam Raw type.
 ///
 template<typename T>
-struct DefaultTraits
+struct DefaultTraits: public ResultType<T>
 {
-	using Type = T;
+	using typename ResultType<T>::Type;
 	using ConstType = Type const;
 
 	using Reference = Type &;
@@ -66,6 +75,8 @@ struct DefaultTraits<const T>
 
 	using VoidPointer = const void *;
 };
+template<typename T>
+using ConstTraits = DefaultTraits<const T>;
 
 template<>
 struct DefaultTraits<void>
@@ -75,6 +86,7 @@ struct DefaultTraits<void>
 	using ConstPointer = void *const;
 	using ConstPointerToConst = void const *const;
 };
+using VoidTraits = DefaultTraits<void>;
 
 ///
 /// @brief Removing pointer from type.

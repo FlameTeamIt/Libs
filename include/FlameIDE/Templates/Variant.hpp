@@ -166,6 +166,10 @@ public:
 
 	Variant() noexcept;
 
+	Variant(const Me &variant) noexcept;
+
+	Variant(Me &&variant) noexcept;
+
 	template<typename T>
 	Variant(const T &initObject) noexcept;
 
@@ -437,11 +441,25 @@ VariantStructGetterSetter<false>::getConst(const VariantStruct<Arg, Args...> &me
 	return me.data.pack.template get<T>();
 }
 
-}
+} // namespace variant_utils
 
 template<typename Arg, typename ...Args>
 Variant<Arg, Args...>::Variant() noexcept : currentIndex(-1)
 {}
+
+template<typename Arg, typename ...Args>
+Variant<Arg, Args...>::Variant(const Me &variant) noexcept
+{
+	value.assign(variant.getCurrentIndex(), variant.value);
+	currentIndex = variant.getCurrentIndex();
+}
+
+template<typename Arg, typename ...Args>
+Variant<Arg, Args...>::Variant(Me &&variant) noexcept
+{
+	value.assign(variant.getCurrentIndex(), move(variant.value));
+	currentIndex = variant.getCurrentIndex();
+}
 
 template<typename Arg, typename ...Args> template<typename T>
 Variant<Arg, Args...>::Variant(const T &initObject) noexcept
@@ -468,25 +486,25 @@ Variant<Arg, Args...>::~Variant() noexcept
 }
 
 template<typename Arg, typename ...Args>
-Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(const Me &me) noexcept
+Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(const Me &variant) noexcept
 {
-	if (&me != this && me.isSet())
+	if (&variant != this && variant.isSet())
 	{
 		reset();
-		value.assign(me.getCurrentIndex(), me.value);
-		currentIndex = me.getCurrentIndex();
+		value.assign(variant.getCurrentIndex(), variant.value);
+		currentIndex = variant.getCurrentIndex();
 	}
 	return *this;
 }
 
 template<typename Arg, typename ...Args>
-Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(Me &&me) noexcept
+Variant<Arg, Args...> &Variant<Arg, Args...>::operator=(Me &&variant) noexcept
 {
-	if (&me != this && me.isSet())
+	if (&variant != this && variant.isSet())
 	{
 		reset();
-		value.assign(me.getCurrentIndex(), move(me.value));
-		currentIndex = me.getCurrentIndex();
+		value.assign(variant.getCurrentIndex(), move(variant.value));
+		currentIndex = variant.getCurrentIndex();
 	}
 	return *this;
 }
@@ -504,7 +522,7 @@ bool Variant<Arg, Args...>::operator==(const Me &variant) noexcept
 template<typename Arg, typename ...Args>
 bool Variant<Arg, Args...>::operator!=(const Me &variant) noexcept
 {
-	return !this->operator==(variant);
+	return !(*this == variant);
 }
 
 template<typename Arg, typename ...Args>

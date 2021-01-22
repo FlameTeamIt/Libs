@@ -88,6 +88,9 @@ template<typename T>
 struct IsPointer: public FalseType
 {};
 
+///
+/// \brief The IsPointer<T *> struct
+///
 template<typename T>
 struct IsPointer<T *>: public TrueType
 {};
@@ -118,6 +121,9 @@ template<typename T>
 struct IsConst: public FalseType
 {};
 
+///
+/// \brief The IsConst<const T> struct
+///
 template<typename T>
 struct IsConst<const T>: public TrueType
 {};
@@ -154,6 +160,9 @@ template<typename T>
 struct IsRvalue: public FalseType
 {};
 
+///
+/// \brief The IsRvalue<T &&> struct
+///
 template<typename T>
 struct IsRvalue<T &&>: public TrueType
 {};
@@ -210,6 +219,9 @@ template<typename ...Args>
 struct IsUniqueParameterPack: public TrueType
 {};
 
+///
+/// \brief The IsUniqueParameterPack<Arg, Args...> struct
+///
 template<typename Arg, typename ...Args>
 struct IsUniqueParameterPack<Arg, Args...>
 {
@@ -229,6 +241,9 @@ struct GetIndexOfType
 	static constexpr Types::ssize_t INDEX = -1;
 };
 
+///
+/// \brief The GetIndexOfType<T, Arg, Args...> struct
+///
 template<typename T, typename Arg, typename ...Args>
 struct GetIndexOfType<T, Arg, Args...>
 {
@@ -244,6 +259,64 @@ struct GetIndexOfType<T>
 {
 	static constexpr Types::ssize_t INDEX = -1;
 };
+
+///
+/// @brief The FunctionReturnValueType struct
+///
+template <typename T>
+struct FunctionReturnValueType;
+
+///
+/// @brief The FunctionReturnValueType<ReturnType(*)(Args...)> struct
+///
+template <typename ReturnType, typename... Args>
+struct FunctionReturnValueType<ReturnType(*)(Args...)>
+{
+	using Type = ReturnType;
+};
+
+///
+/// @brief The FunctionReturnValueType<ReturnType(ObjectType::*)(Args...)> struct
+///
+template <typename ReturnType, typename ObjectType, typename... Args>
+struct FunctionReturnValueType<ReturnType(ObjectType::*)(Args...)>
+{
+	using Type = ReturnType;
+};
+
+///
+/// @brief The FunctionReturnValueType<ReturnType(ObjectType::*)(Args...) const> struct
+///
+template <typename ReturnType, typename ObjectType, typename... Args>
+struct FunctionReturnValueType<ReturnType(ObjectType::*)(Args...) const>
+{
+	using Type = ReturnType;
+};
+
+///
+/// @brief The FunctionReturnValueType<ReturnType(ObjectType::*)(Args...) volatile> struct
+///
+template <typename ReturnType, typename ObjectType, typename... Args>
+struct FunctionReturnValueType<ReturnType(ObjectType::*)(Args...) volatile>
+{
+	using Type = ReturnType;
+};
+
+///
+/// @brief The FunctionReturnValueType<ReturnType(ObjectType::*)(Args...) const volatile>
+/// struct
+///
+template <typename ReturnType, typename ObjectType, typename... Args>
+struct FunctionReturnValueType<ReturnType(ObjectType::*)(Args...) const volatile>
+{
+	using Type = ReturnType;
+};
+
+///
+/// @brief The ReturnValue alias
+///
+template <typename T>
+using FunctionReturnType = typename FunctionReturnValueType<T>::Type;
 
 }
 

@@ -10,12 +10,8 @@ namespace flame_ide
 {namespace allocator
 {
 
-///
 /// @brief Allocator, using malloc() as base function
-///
-/// @tparam Traits
-/// View flame_ide::ContainerTraits
-///
+/// @tparam Traits View flame_ide::ContainerTraits
 template<typename Traits = flame_ide::SizeTraits>
 class MallocAllocator: public BaseAllocator<Traits>
 {
@@ -33,39 +29,24 @@ public:
 	MallocAllocator &operator=(MallocAllocator<Traits> &&) noexcept = default;
 
 protected:
-	///
 	/// @brief Low-level function for allocate raw memory. Using malloc()
-	///
-	/// @param size
-	/// Count need bytes
-	///
+	/// @param size Count need bytes
 	/// @return Pointer to raw memory or nullptr
-	///
-	virtual VoidPointer vAllocate(typename Traits::SizeType size) noexcept;
+	virtual VoidPointer vAllocate(typename Traits::SizeType size) noexcept override;
 
-	///
 	/// @brief Low-level function for reallocate raw memory. Using realloc()
-	///
 	/// @param pointer Pointer to raw memry
 	/// @param size Count bytes
-	///
 	/// @return Pointer to reallocated memory or nullptr
-	///
-	virtual VoidPointer vReallocate(VoidPointer pointer, typename Traits::SizeType size) noexcept;
+	virtual VoidPointer vReallocate(VoidPointer pointer, typename Traits::SizeType size) noexcept override;
 
-	///
 	/// @brief Low-level function for deallocate raw memory. Using free()
-	///
-	/// @param pointer
-	/// Pointer to raw memory or nullptr
-	///
-	virtual void vDeallocate(VoidPointer pointer) noexcept;
+	/// @param pointer Pointer to raw memory or nullptr
+	virtual void vDeallocate(VoidPointer pointer) noexcept override;
 
-	///
-	/// @brief vMaxAllocateSize
-	/// @return
-	///
-	virtual SizeType vMaxAllocateSize() const noexcept;
+	/// @brief Get max allocate size in bytes.
+	/// @return Max allocate size in bytes.
+	virtual SizeType vMaxAllocateSize() const noexcept override;
 };
 
 }}}
