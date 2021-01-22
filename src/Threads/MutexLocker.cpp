@@ -14,4 +14,14 @@ Mutex::Locker::~Locker() noexcept
 	mtx.unlock();
 }
 
+Mutex::UniqueLocker::UniqueLocker(Mutex &initMtx) noexcept : mtx(&initMtx)
+{
+	mtx->lock();
+}
+
+Mutex::UniqueLocker::~UniqueLocker() noexcept
+{
+	mtx->unlock();
+}
+
 }}
