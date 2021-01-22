@@ -168,28 +168,16 @@ using UnsignedInt = WideInt<COUNT_BITS, false>;
 
 // traits
 
-template<Types::ulong_t BITS>
-struct MakeSignedType<templates::WideInt<BITS, true>>
+template<Types::ulong_t BITS, bool SIGNED>
+struct MakeSigned<templates::WideInt<BITS, SIGNED>>
 {
-	using Type = templates::WideInt<BITS, true>;
+	using Type = templates::WideInt<BITS, (SIGNED ? SIGNED : !SIGNED)>;
 };
 
-template<Types::ulong_t BITS>
-struct MakeSignedType<templates::WideInt<BITS, false>>
+template<Types::ulong_t BITS, bool SIGNED>
+struct MakeUnsigned<templates::WideInt<BITS, SIGNED>>
 {
-	using Type = templates::WideInt<BITS, true>;
-};
-
-template<Types::ulong_t BITS>
-struct MakeUnsignedType<templates::WideInt<BITS, true>>
-{
-	using Type = templates::WideInt<BITS, false>;
-};
-
-template<Types::ulong_t BITS>
-struct MakeUnsignedType<templates::WideInt<BITS, false>>
-{
-	using Type = templates::WideInt<BITS, false>;
+	using Type = templates::WideInt<BITS, (SIGNED ? !SIGNED : SIGNED)>;
 };
 
 namespace templates

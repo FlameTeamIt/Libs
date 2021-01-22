@@ -73,7 +73,7 @@ using ReturnType = ::CK_RV; // CKR_*
 
 using IntializeArgsFlags = ::CK_FLAGS; // CKF_*
 
-using RsaPkcsMgf = ::CK_RSA_PKCS_MGF_TYPE; // CKG_*
+using RsaPkcsMessageGenerationFunction = ::CK_RSA_PKCS_MGF_TYPE; // CKG_*
 
 using RsaPkcsOaepSource = ::CK_RSA_PKCS_OAEP_SOURCE_TYPE;
 using RsaPkcsOaepSourcePtr = ::CK_RSA_PKCS_OAEP_SOURCE_TYPE_PTR;

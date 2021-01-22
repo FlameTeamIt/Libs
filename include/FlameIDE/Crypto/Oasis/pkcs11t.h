@@ -4,7 +4,7 @@
  * IMPLIED OR EXPRESS WARRANTY; there is no warranty of MERCHANTABILITY, FITNESS FOR A
  * PARTICULAR PURPOSE or NONINFRINGEMENT of the rights of others.
  */
-        
+
 
 /* See top of pkcs11.h for information about the macros that
  * must be defined and the structure-packing conventions that
@@ -314,7 +314,7 @@ typedef CK_ULONG          CK_OBJECT_CLASS;
 #define CKO_DOMAIN_PARAMETERS 0x00000006UL
 #define CKO_MECHANISM         0x00000007UL
 #define CKO_OTP_KEY           0x00000008UL
-#define CKO_PROFILE           0x00000009UL 
+#define CKO_PROFILE           0x00000009UL
 
 #define CKO_VENDOR_DEFINED    0x80000000UL
 
@@ -2218,7 +2218,7 @@ typedef CK_PRF_DATA_PARAM CK_PTR CK_PRF_DATA_PARAM_PTR;
 
 
 typedef struct CK_SP800_108_COUNTER_FORMAT
-{ 
+{
    CK_BBOOL           bLittleEndian;
    CK_ULONG		ulWidthInBits;
 } CK_SP800_108_COUNTER_FORMAT;
@@ -2228,7 +2228,7 @@ typedef CK_SP800_108_COUNTER_FORMAT CK_PTR CK_SP800_108_COUNTER_FORMAT_PTR;
 typedef CK_ULONG CK_SP800_108_DKM_LENGTH_METHOD;
 
 typedef struct CK_SP800_108_DKM_LENGTH_FORMAT
-{ 
+{
    CK_SP800_108_DKM_LENGTH_METHOD  dkmLengthMethod;
    CK_BBOOL                        bLittleEndian;
    CK_ULONG		             ulWidthInBits;
@@ -2380,13 +2380,13 @@ typedef struct CK_XEDDSA_PARAMS {
 typedef CK_XEDDSA_PARAMS CK_PTR CK_XEDDSA_PARAMS_PTR;
 
 typedef struct CK_HKDF_PARAMS {
-   CK_BOOL bExtract;
-   CK_BOOL bExpand;
+   CK_BBOOL bExtract;
+   CK_BBOOL bExpand;
    CK_MECHANISM_TYPE prfHashMechanism;
    CK_ULONG ulSaltType;
    CK_BYTE_PTR pSalt;
    CK_ULONG ulSaltLen;
-   CK_HANDLE hSaltKey;
+   CK_OBJECT_HANDLE hSaltKey;
    CK_BYTE_PTR pInfo;
    CK_ULONG ulInfoLen;
 } CK_HKDF_PARAMS;
