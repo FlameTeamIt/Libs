@@ -1,12 +1,8 @@
-/* Copyright (c) OASIS Open 2016. All Rights Reserved./
- * /Distributed under the terms of the OASIS IPR Policy,
+/* Copyright (c) OASIS Open 2016-2020. All Rights Reserved.
+ * Distributed under the terms of the OASIS IPR Policy,
  * [http://www.oasis-open.org/policies-guidelines/ipr], AS-IS, WITHOUT ANY
  * IMPLIED OR EXPRESS WARRANTY; there is no warranty of MERCHANTABILITY, FITNESS FOR A
  * PARTICULAR PURPOSE or NONINFRINGEMENT of the rights of others.
- */
-
-/* Latest version of the specification:
- * http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/pkcs11-base-v2.40.html
  */
 
 #ifndef _PKCS11_H_
@@ -29,8 +25,7 @@ extern "C" {
  * convention on packing is that structures should be 1-byte
  * aligned.
  *
- * If you're using Microsoft Developer Studio 5.0 to produce
- * Win32 stuff, this might be done by using the following
+ * If you're using Windows this might be done by using the following
  * preprocessor directive before including pkcs11.h or pkcs11t.h:
  *
  * #pragma pack(push, cryptoki, 1)
@@ -39,13 +34,6 @@ extern "C" {
  * pkcs11.h or pkcs11t.h:
  *
  * #pragma pack(pop, cryptoki)
- *
- * If you're using an earlier version of Microsoft Developer
- * Studio to produce Win16 stuff, this might be done by using
- * the following preprocessor directive before including
- * pkcs11.h or pkcs11t.h:
- *
- * #pragma pack(1)
  *
  * In a UNIX environment, you're on your own for this.  You might
  * not need to do (or be able to do!) anything.
@@ -59,20 +47,14 @@ extern "C" {
  *
  * typedef CK_BYTE CK_PTR CK_BYTE_PTR;
  *
- * If you're using Microsoft Developer Studio 5.0 to produce
- * Win32 stuff, it might be defined by:
+ * If you're using windows, it might be defined by:
  *
  * #define CK_PTR *
  *
- * If you're using an earlier version of Microsoft Developer
- * Studio to produce Win16 stuff, it might be defined by:
- *
- * #define CK_PTR far *
- *
  * In a typical UNIX environment, it might be defined by:
- */
-#define CK_PTR *
-/*
+ *
+ * #define CK_PTR *
+ *
  *
  * 2. CK_DECLARE_FUNCTION(returnType, name): A macro which makes
  * an importable Cryptoki library function declaration out of a
@@ -83,24 +65,17 @@ extern "C" {
  *   CK_VOID_PTR pReserved
  * );
  *
- * If you're using Microsoft Developer Studio 5.0 to declare a
- * function in a Win32 Cryptoki .dll, it might be defined by:
+ * If you're using Windows to declare a function in a Win32 cryptoki .dll, 
+ * it might be defined by:
  *
  * #define CK_DECLARE_FUNCTION(returnType, name) \
  *   returnType __declspec(dllimport) name
  *
- * If you're using an earlier version of Microsoft Developer
- * Studio to declare a function in a Win16 Cryptoki .dll, it
- * might be defined by:
+ * In a UNIX environment, it might be defined by:
  *
  * #define CK_DECLARE_FUNCTION(returnType, name) \
- *   returnType __export _far _pascal name
+ *   returnType name
  *
- * In a UNIX environment, it might be defined by:
- */
-#define CK_DECLARE_FUNCTION(returnType, name) \
-	returnType name
-/*
  *
  * 3. CK_DECLARE_FUNCTION_POINTER(returnType, name): A macro
  * which makes a Cryptoki API function pointer declaration or
@@ -109,7 +84,6 @@ extern "C" {
  *
  * // Define funcPtr to be a pointer to a Cryptoki API function
  * // taking arguments args and returning CK_RV.
- *
  * CK_DECLARE_FUNCTION_POINTER(CK_RV, funcPtr)(args);
  *
  * or
@@ -121,24 +95,17 @@ extern "C" {
  * typedef CK_DECLARE_FUNCTION_POINTER(CK_RV, funcPtrType)(args);
  * funcPtrType funcPtr;
  *
- * If you're using Microsoft Developer Studio 5.0 to access
+ * If you're using Windows to access
  * functions in a Win32 Cryptoki .dll, in might be defined by:
  *
  * #define CK_DECLARE_FUNCTION_POINTER(returnType, name) \
  *   returnType __declspec(dllimport) (* name)
  *
- * If you're using an earlier version of Microsoft Developer
- * Studio to access functions in a Win16 Cryptoki .dll, it might
- * be defined by:
+ * In a UNIX environment, it might be defined by:
  *
  * #define CK_DECLARE_FUNCTION_POINTER(returnType, name) \
- *   returnType __export _far _pascal (* name)
+ *   returnType (* name)
  *
- * In a UNIX environment, it might be defined by:
- */
-#define CK_DECLARE_FUNCTION_POINTER(returnType, name) \
-	returnType (* name)
-/*
  *
  * 4. CK_CALLBACK_FUNCTION(returnType, name): A macro which makes
  * a function pointer type for an application callback out of
@@ -154,31 +121,27 @@ extern "C" {
  * typedef CK_CALLBACK_FUNCTION(CK_RV, myCallbackType)(args);
  * myCallbackType myCallback;
  *
- * If you're using Microsoft Developer Studio 5.0 to do Win32
- * Cryptoki development, it might be defined by:
+ * If you're using Windows, it might be defined by:
  *
  * #define CK_CALLBACK_FUNCTION(returnType, name) \
  *   returnType (* name)
  *
- * If you're using an earlier version of Microsoft Developer
- * Studio to do Win16 development, it might be defined by:
+ * In a UNIX environment, it might be defined by:
  *
  * #define CK_CALLBACK_FUNCTION(returnType, name) \
- *   returnType _far _pascal (* name)
+ *   returnType (* name)
  *
- * In a UNIX environment, it might be defined by:
- */
-#define CK_CALLBACK_FUNCTION(returnType, name) returnType (* name)
-/*
  *
  * 5. NULL_PTR: This macro is the value of a NULL pointer.
  *
  * In any ANSI/ISO C environment (and in many others as well),
  * this should best be defined by
+ *
+ * #ifndef NULL_PTR
+ * #define NULL_PTR 0
+ * #endif
  */
-#ifndef NULL_PTR
-#define NULL_PTR 0
-#endif
+
 
 /* All the various Cryptoki types and #define'd values are in the
  * file pkcs11t.h.
@@ -238,6 +201,22 @@ extern "C" {
 #define CK_PKCS11_FUNCTION_INFO(name) \
   __PASTE(CK_,name) name;
 
+/* Create the 3.0 Function list */
+struct CK_FUNCTION_LIST_3_0 {
+
+  CK_VERSION    version;  /* Cryptoki version */
+
+/* Pile all the function pointers into the CK_FUNCTION_LIST. */
+/* pkcs11f.h has all the information about the Cryptoki
+ * function prototypes.
+ */
+#include "pkcs11f.h"
+
+};
+
+#define CK_PKCS11_2_0_ONLY 1
+
+/* Continue to define the old CK_FUNCTION_LIST */
 struct CK_FUNCTION_LIST {
 
   CK_VERSION    version;  /* Cryptoki version */
@@ -251,6 +230,7 @@ struct CK_FUNCTION_LIST {
 };
 
 #undef CK_PKCS11_FUNCTION_INFO
+#undef CK_PKCS11_2_0_ONLY
 
 
 #undef __PASTE
@@ -258,8 +238,6 @@ struct CK_FUNCTION_LIST {
 #ifdef __cplusplus
 }
 #endif
-
-#undef CK_PTR
 
 #endif /* _PKCS11_H_ */
 
