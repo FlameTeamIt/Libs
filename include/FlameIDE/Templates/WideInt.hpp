@@ -153,25 +153,25 @@ using UnsignedInt = WideInt<COUNT_BITS, false>;
 // traits
 
 template<Types::ulong_t BITS>
-struct MakeSigned<templates::WideInt<BITS, true>>
+struct MakeSignedType<templates::WideInt<BITS, true>>
 {
 	using Type = templates::WideInt<BITS, true>;
 };
 
 template<Types::ulong_t BITS>
-struct MakeSigned<templates::WideInt<BITS, false>>
+struct MakeSignedType<templates::WideInt<BITS, false>>
 {
 	using Type = templates::WideInt<BITS, true>;
 };
 
 template<Types::ulong_t BITS>
-struct MakeUnsigned<templates::WideInt<BITS, true>>
+struct MakeUnsignedType<templates::WideInt<BITS, true>>
 {
 	using Type = templates::WideInt<BITS, false>;
 };
 
 template<Types::ulong_t BITS>
-struct MakeUnsigned<templates::WideInt<BITS, false>>
+struct MakeUnsignedType<templates::WideInt<BITS, false>>
 {
 	using Type = templates::WideInt<BITS, false>;
 };
