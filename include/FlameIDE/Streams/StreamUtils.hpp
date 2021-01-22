@@ -168,6 +168,8 @@ class AbstractByteStream: public AbstractByteStreamReader
 		, public AbstractByteStreamWriter
 {
 public:
+	virtual ~AbstractByteStream() noexcept = default;
+
 	///
 	/// @brief getReader
 	/// @return
