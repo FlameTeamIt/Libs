@@ -1,10 +1,9 @@
-#ifndef FLAMEDE_CRYPRO_PKCS11_TYPES_ENUMS_HPP
-#define FLAMEDE_CRYPRO_PKCS11_TYPES_ENUMS_HPP
+#ifndef FLAMEDE_CRYPTO_PKCS11_TYPES_ENUMS_HPP
+#define FLAMEDE_CRYPTO_PKCS11_TYPES_ENUMS_HPP
 
 // OTP - one time password
 
 #include <FlameIDE/Crypto/Pkcs11/Types/ValueTypes.hpp>
-
 #include <FlameIDE/Common/Traits/ReferenceWrapper.hpp>
 
 namespace flame_ide
@@ -1172,4 +1171,4 @@ reference(const typename utils::UnderlyingType<EnumType>::Type &value) noexcept
 } // namespace pkcs11
 } // namespace flame_ide
 
-#endif // FLAMEDE_CRYPRO_PKCS11_TYPES_ENUMS_HPP
+#endif // FLAMEDE_CRYPTO_PKCS11_TYPES_ENUMS_HPP

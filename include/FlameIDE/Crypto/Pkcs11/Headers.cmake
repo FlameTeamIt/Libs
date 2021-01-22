@@ -1,6 +1,5 @@
 set (HEADER_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/Attribute.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/CryptokiPkcs11.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Date.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/InitializeArgs.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Mechanism.hpp

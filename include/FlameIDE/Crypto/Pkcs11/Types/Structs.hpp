@@ -1,7 +1,7 @@
-#ifndef FLAMEDE_CRYPRO_PKCS11_TYPES_STRUCTS_HPP
-#define FLAMEDE_CRYPRO_PKCS11_TYPES_STRUCTS_HPP
+#ifndef FLAMEDE_CRYPTO_PKCS11_TYPES_STRUCTS_HPP
+#define FLAMEDE_CRYPTO_PKCS11_TYPES_STRUCTS_HPP
 
-#include <FlameIDE/Crypto/Pkcs11/CryptokiPkcs11.hpp>
+#include <FlameIDE/Crypto/Oasis/Oasis.hpp>
 
 namespace flame_ide
 {
@@ -218,4 +218,4 @@ using FunctionListPtrPtr = CK_FUNCTION_LIST_PTR_PTR;
 } // namespace pkcs11
 } // namespace flame_ide
 
-#endif // FLAMEDE_CRYPRO_PKCS11_TYPES_STRUCTS_HPP
+#endif // FLAMEDE_CRYPTO_PKCS11_TYPES_STRUCTS_HPP

@@ -1,7 +1,7 @@
-#ifndef FLAMEDE_CRYPRO_PKCS11_TYPES_CALLBACKS_HPP
-#define FLAMEDE_CRYPRO_PKCS11_TYPES_CALLBACKS_HPP
+#ifndef FLAMEDE_CRYPTO_PKCS11_TYPES_CALLBACKS_HPP
+#define FLAMEDE_CRYPTO_PKCS11_TYPES_CALLBACKS_HPP
 
-#include <FlameIDE/Crypto/Pkcs11/CryptokiPkcs11.hpp>
+#include <FlameIDE/Crypto/Oasis/Oasis.hpp>
 
 namespace flame_ide
 {
@@ -13,7 +13,7 @@ namespace callbacks
 // CK_RV (*)(CK_SESSION_HANDLE hSession
 //           , CK_NOTIFICATION event
 //           , CK_VOID_PTR pApplication
-using Notify = ::CK_NOTIFY;
+//using Notify = ::CK_NOTIFY;
 
 // CK_RV (*)(CK_VOID_PTR_PTR ppMutex)
 using CreateMutex = ::CK_CREATEMUTEX;
@@ -439,4 +439,4 @@ using WaitForSlotEvent = ::CK_C_WaitForSlotEvent;
 } // namespace pkcs11
 } // namespace flame_ide
 
-#endif // FLAMEDE_CRYPRO_PKCS11_TYPES_CALLBACKS_HPP
+#endif // FLAMEDE_CRYPTO_PKCS11_TYPES_CALLBACKS_HPP

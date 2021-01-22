@@ -84,7 +84,7 @@ add_headers()
 	for dir in ${directories[*]}; do
 
 		cd $dir &>/dev/null
-		local inc_files=($(find -maxdepth 1 -type f -name "*.hpp" | sort))
+		local inc_files=($(find -maxdepth 1 -type f -name "*.hpp" | sort) $(find -maxdepth 1 -type f -name "*.h" | sort))
 		cd - &>/dev/null
 
 		if (( ${#inc_files[*]} != 0 ))

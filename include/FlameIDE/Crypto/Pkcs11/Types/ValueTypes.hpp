@@ -1,7 +1,7 @@
-#ifndef FLAMEDE_CRYPRO_PKCS11_TYPES_VALUETYPES_HPP
-#define FLAMEDE_CRYPRO_PKCS11_TYPES_VALUETYPES_HPP
+#ifndef FLAMEDE_CRYPTO_PKCS11_TYPES_VALUETYPES_HPP
+#define FLAMEDE_CRYPTO_PKCS11_TYPES_VALUETYPES_HPP
 
-#include <FlameIDE/Crypto/Pkcs11/CryptokiPkcs11.hpp>
+#include <FlameIDE/Crypto/Oasis/Oasis.hpp>
 
 namespace flame_ide
 {
@@ -116,4 +116,4 @@ using CertificateCategory = ::CK_CERTIFICATE_CATEGORY;
 } // namespace pkcs11
 } // namespace flame_ide
 
-#endif // FLAMEDE_CRYPRO_PKCS11_TYPES_VALUETYPES_HPP
+#endif // FLAMEDE_CRYPTO_PKCS11_TYPES_VALUETYPES_HPP
