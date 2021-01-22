@@ -4,4 +4,5 @@ set (HEADER_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/Defaults.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Fuctional.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Numbers.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ReferenceWrapper.hpp
 )

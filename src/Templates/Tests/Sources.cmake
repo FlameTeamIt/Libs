@@ -7,6 +7,8 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/AsIntegralTypeTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BitsTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BitsTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuilderTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuilderTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ByteOrderTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ByteOrderTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CircularArrayTest.cpp
