@@ -1,4 +1,4 @@
-﻿#include <FlameIDE/Common/Macroses/DetectOs.hpp>
+#include <FlameIDE/Common/Macroses/DetectOs.hpp>
 
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 
@@ -40,6 +40,7 @@ Semaphore::Semaphore(Semaphore &&semaphore) noexcept : context(semaphore.context
 
 Semaphore::Semaphore(os::SemaphoreValue initValue) noexcept :
 		context(createContext(initValue))
+		, status(os::STATUS_SUCCESS)
 {
 	if (context == os::SEMAPHORE_CONTEXT_INITIALIZER)
 	{
@@ -73,23 +74,36 @@ Semaphore &Semaphore::operator=(Semaphore &&semaphore) noexcept
 
 void Semaphore::post() noexcept
 {
-	if (!ReleaseSemaphore(context.object, 1, &context.value))
+	if (!ReleaseSemaphore(context.object, 1, nullptr))
 	{
 		status = GetLastError();
 	}
+	context.value = InterlockedIncrement(&context.value);
 }
 
 void Semaphore::wait() noexcept
 {
-	if (WaitForSingleObject(context.object, INFINITE))
+	os::Status statusLocal = WaitForSingleObject(context.object, 0);
+	switch(statusLocal)
 	{
-		status = GetLastError();
+		case WAIT_OBJECT_0:
+		{
+			context.value = InterlockedDecrement(&context.value);
+			break;
+		}
+
+		case WAIT_TIMEOUT:
+		default:
+		{
+			status = GetLastError();
+			break;
+		}
 	}
 }
 
 os::SemaphoreValue Semaphore::getValue() const noexcept
 {
-	return context.value;
+	return InterlockedAdd(&context.value, 0);
 }
 
 os::Status Semaphore::getStatus() const noexcept

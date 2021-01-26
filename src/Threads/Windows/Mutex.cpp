@@ -1,4 +1,4 @@
-﻿#include <FlameIDE/Common/Macroses/DetectOs.hpp>
+#include <FlameIDE/Common/Macroses/DetectOs.hpp>
 
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 
@@ -73,7 +73,7 @@ Mutex::State Mutex::getState() const noexcept
 	switch(statusLocal)
 	{
 		case WAIT_OBJECT_0:
-			if (ReleaseMutex(context))
+			if (!ReleaseMutex(context))
 			{
 				status = GetLastError();
 				return State::INVALID;

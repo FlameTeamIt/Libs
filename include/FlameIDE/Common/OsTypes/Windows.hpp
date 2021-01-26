@@ -9,6 +9,7 @@
 
 #include <winsock2.h>
 #include <windows.h>
+#include <winnt.h>
 
 #include <FlameIDE/Common/Traits/Numbers.hpp>
 

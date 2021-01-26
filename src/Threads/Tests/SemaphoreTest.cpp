@@ -19,14 +19,14 @@ int SemaphoreTest::vStart()
 	thread1.join();
 
 	IN_CASE_CHECK(sem.getValue() == 0);
+	IN_CASE_CHECK(sem.getStatus() == 0);
 
 	SemaphorePosterTestThread thread2(sem);
 	thread2.run();
 	thread2.join();
 
 	IN_CASE_CHECK(sem.getValue() == 1);
-
-	return 0;
+	IN_CASE_CHECK_END(sem.getStatus() == 0);
 }
 
 }}}

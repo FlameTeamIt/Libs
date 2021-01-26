@@ -18,15 +18,13 @@ int MutexTest::vStart()
 	thread1.run();
 	thread1.join();
 
-	IN_CASE_CHECK(mutex.getState() == Mutex::State::LOCKED)
+	IN_CASE_CHECK(mutex.getState() == Mutex::State::LOCKED);
 
 	MutexUnlockerTestThread thread2(mutex);
 	thread2.run();
 	thread2.join();
 
-	IN_CASE_CHECK(mutex.getState() == Mutex::State::UNLOCKED)
-
-	return 0;
+	IN_CASE_CHECK_END(mutex.getState() == Mutex::State::UNLOCKED);
 }
 
 }}}
