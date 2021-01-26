@@ -3,8 +3,6 @@
 
 #include <FlameIDE/Common/OsTypes.hpp>
 
-#include <mutex>
-
 namespace flame_ide
 {namespace threads
 {
