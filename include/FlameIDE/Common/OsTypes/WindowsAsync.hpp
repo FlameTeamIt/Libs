@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_COMMON_OSTYPES_WINDOWS_HPP
 #define FLAMEIDE_COMMON_OSTYPES_WINDOWS_HPP
 
-#include <FlameIDE/Common/Macroses/DetectOs.hpp>
+#include <FlameIDE/Common/Macros/DetectOs.hpp>
 
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 

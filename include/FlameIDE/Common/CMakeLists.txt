@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 set(NAME Common)
 set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::Common::Headers)
 set(DEPENDENCY_LIST
-	${FLAME_NAMESPACE}::Common::Macroses::Headers
+	${FLAME_NAMESPACE}::Common::Macros::Headers
 	${FLAME_NAMESPACE}::Common::OsTypes::Headers
 	${FLAME_NAMESPACE}::Common::Traits::Headers
 )

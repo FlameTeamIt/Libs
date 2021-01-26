@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(NAME "Common.Macroses")
-set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::Common::Macroses::Headers)
+set(NAME "Common.Macros")
+set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::Common::Macros::Headers)
 get_sources(FILE_LIST)
 
 flame_header_library(

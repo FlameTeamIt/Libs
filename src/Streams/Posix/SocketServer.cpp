@@ -1,4 +1,4 @@
-﻿#include <FlameIDE/Common/Macroses.hpp>
+﻿#include <FlameIDE/Common/Macros.hpp>
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 

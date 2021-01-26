@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_COMMON_OSTYPES_POSIXASYNC_HPP
 #define FLAMEIDE_COMMON_OSTYPES_POSIXASYNC_HPP
 
-#include <FlameIDE/Common/Macroses/DetectOs.hpp>
+#include <FlameIDE/Common/Macros/DetectOs.hpp>
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 

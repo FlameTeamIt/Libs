@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_COMMON_MACROSES_BYTEORDER_HPP
 #define FLAMEIDE_COMMON_MACROSES_BYTEORDER_HPP
 
-#include <FlameIDE/Common/Macroses/DetectOs.hpp>
+#include <FlameIDE/Common/Macros/DetectOs.hpp>
 
 #if FLAMEIDE_OS_CURRENT < FLAMEIDE_OS_WINDOWS
 #	define FLAMEIDE_ORDER_LITTLE_ENDIAN          __ORDER_LITTLE_ENDIAN__
