@@ -29,6 +29,7 @@ set (HEADER_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/SimpleAlgorithms.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/StaticAllocator.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/String.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StringConvertions.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Templates.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ThreadSafeObject.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Trees.hpp
