@@ -14,22 +14,11 @@ namespace flame_ide
 ///
 /// @brief The SocketClient class
 ///
-class SocketClient: public stream_utils::AbstractByteStream
+class SocketClient: public Socket
 {
 public:
 	SocketClient() noexcept;
 	~SocketClient() noexcept;
-
-	virtual SizeTraits::SsizeType read(OutputByteRange range) noexcept = 0;
-	virtual SizeTraits::SsizeType read(OutputCircularByteRange range) noexcept = 0;
-
-	virtual SizeTraits::SsizeType write(InputByteRange range) noexcept = 0;
-	virtual SizeTraits::SsizeType write(InputCircularByteRange range) noexcept = 0;
-
-	virtual void flush() noexcept = 0;
-
-private:
-	Socket socket; ///<
 };
 
 }}
