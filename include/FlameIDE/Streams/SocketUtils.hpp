@@ -3,6 +3,7 @@
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
 #include <FlameIDE/Templates/SimpleAlgorithms.hpp>
+#include <FlameIDE/Templates/Expected.hpp>
 
 namespace flame_ide
 {namespace streams
@@ -25,7 +26,11 @@ enum class TcpType
 template<flame_ide::size_t IP_ADDRESS_STRING_SIZE>
 struct IpAddressString
 {
+	static_assert (IP_ADDRESS_STRING_SIZE > 2, "Invalid string size");
+
 	using Me = IpAddressString<IP_ADDRESS_STRING_SIZE>;
+
+	static constexpr flame_ide::size_t MAX_LENGTH = IP_ADDRESS_STRING_SIZE - 1;
 
 	IpAddressString() noexcept;
 	IpAddressString(const Me &address) noexcept;
@@ -37,25 +42,38 @@ struct IpAddressString
 /// @brief IPv4
 class Ipv4
 {
-	static constexpr flame_ide::size_t COUNT_SPLITTERS = 3;
-	static constexpr flame_ide::size_t COUNT_NUMBERS = 4;
-	static constexpr flame_ide::size_t NUMBER_STRING_SIZE = 3;
-	static constexpr flame_ide::size_t MAX_STRING_SIZE =
-			COUNT_NUMBERS * NUMBER_STRING_SIZE + COUNT_SPLITTERS;
+public:
+	struct Traits
+	{
+		static constexpr flame_ide::size_t COUNT_SPLITTERS = 3;
+		static constexpr flame_ide::size_t COUNT_NUMBERS = 4;
+		static constexpr flame_ide::size_t NUMBER_STRING_SIZE = 3;
+		static constexpr flame_ide::size_t MAX_STRING_SIZE =
+				COUNT_NUMBERS * NUMBER_STRING_SIZE + COUNT_SPLITTERS;
+		using ValueType = flame_ide::uichar_t;
+		using PortType = flame_ide::ushort_t;
+	};
+	using AddressString = IpAddressString<Traits::MAX_STRING_SIZE + 1>;
+	using ExpectedAddress = templates::Expected<Ipv4, int>;
 
 public:
-	using AddressString = IpAddressString<MAX_STRING_SIZE + 1>;
-
 	Ipv4() noexcept;
 	Ipv4(const Ipv4 &address) noexcept;
 	Ipv4(const char* address) noexcept;
 	Ipv4 &operator=(const Ipv4 &address) noexcept;
 
-	AddressString getAddress() const noexcept;
+private:
+	Ipv4(const ExpectedAddress &expectedAddress) noexcept;
 
 public:
-	flame_ide::uichar_t addressNumber[COUNT_NUMBERS];
-	flame_ide::ushort_t port;
+	AddressString getAddress() const noexcept;
+
+	static ExpectedAddress make(const char* address);
+
+public:
+	Traits::ValueType addressNumber[Traits::COUNT_NUMBERS];
+	Traits::PortType port;
+
 };
 
 /// @brief IPv6
@@ -96,7 +114,7 @@ IpAddressString<IP_ADDRESS_STRING_SIZE>::IpAddressString() noexcept
 			templates::makeRange(value)
 			, [](auto &i)
 			{
-				i = decltype(i){};
+				i = typename RemoveAll<decltype(i)>::Type{};
 			}
 	);
 }

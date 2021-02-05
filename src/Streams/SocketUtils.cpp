@@ -1,10 +1,51 @@
 #include <FlameIDE/Streams/SocketUtils.hpp>
 #include <FlameIDE/Templates/String.hpp>
+#include <FlameIDE/Templates/StringConvertions.hpp>
 
 namespace flame_ide
 {namespace streams
 {namespace socket_utils
 {
+
+namespace
+{
+
+Ipv4::ExpectedAddress stringToIpv4(const char *address)
+{
+	Ipv4::ExpectedAddress result(int{-1});
+	const auto addressSize = templates::String::rawStringLength(address);
+	if (addressSize >= Ipv4::AddressString::MAX_LENGTH)
+	{
+		return result;
+	}
+
+	auto range = templates::makeRange<const char*>(address, address + addressSize);
+	flame_ide::size_t counter{};
+	templates::foreach(
+			range
+			, [&counter](char value)
+			{
+				if (value == ':')
+				{
+					++counter;
+				}
+			}
+	);
+	if (counter < Ipv4::Traits::COUNT_SPLITTERS)
+	{
+		return result;
+	}
+
+	result = Ipv4{};
+	return result;
+}
+
+Ipv4::AddressString ipv4ToString(const Ipv4 &address)
+{
+
+}
+
+} // namespace anonymous
 
 Ipv4::Ipv4() noexcept :
 	port{}
@@ -28,8 +69,25 @@ Ipv4::Ipv4(const Ipv4 &address) noexcept :
 
 }
 
-Ipv4::Ipv4(const char* address) noexcept
+Ipv4::Ipv4(const char* address) noexcept : Ipv4(stringToIpv4(address))
 {}
+
+Ipv4::Ipv4(const Ipv4::ExpectedAddress &expectAddress) noexcept
+{
+	expectAddress.ifError(
+			[this](int)
+			{
+				*this = Ipv4{};
+			}
+	)
+	.ifResult(
+			[this](const Ipv4 &address)
+			{
+				*this = address;
+			}
+	)
+	.done();
+}
 
 Ipv4 &Ipv4::operator=(const Ipv4 &address) noexcept
 {
