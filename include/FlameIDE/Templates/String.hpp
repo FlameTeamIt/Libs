@@ -791,64 +791,6 @@ typename STRING_TYPE::SizeType STRING_TYPE::rawStringLength(
 	return length;
 }
 
-namespace string_utils
-{
-
-template<typename NumberType, bool IS_FLOAT>
-String NumberConverter<NumberType, IS_FLOAT>::convert(NumberType value)
-{
-	String string;
-	SizeTraits::SizeType buffer = string_utils::BufferSize<NumberType>::get(value);
-	string.reserve(buffer);
-
-	if (isSigned<NumberType>())
-	{
-		if (value < 0)
-		{
-			string.pushBack('-');
-			value *= -1;
-			--buffer;
-		}
-	}
-
-	SizeTraits::SizeType dec = 1;
-	for (decltype(buffer) i = 1; i < buffer; ++i)
-	{
-		dec *= static_cast<SizeTraits::SizeType>(10);
-	}
-
-	for (decltype(buffer) i = 0; i < buffer; ++i)
-	{
-		auto result = value / dec;
-		string.pushBack(String::Type('0' + result));
-		value %= dec;
-		dec /= static_cast<SizeTraits::SizeType>(10);
-	}
-
-	return string;
-}
-
-// TODO: Implement
-template<typename NumberType>
-String NumberConverter<NumberType, true>::convert(NumberType)
-{
-	static_assert(!isFloatType<NumberType>(), "Not implemented.");
-
-	String string;
-	return string;
-}
-
-}
-
-template<typename IntValue>
-String toString(IntValue value)
-{
-	return string_utils::NumberConverter<
-		IntValue
-		, isFloatType<IntValue>()
-	>::convert(value);
-}
-
 template<typename T
 	, typename Traits
 	, typename Allocator

@@ -1,5 +1,7 @@
 #include "StringTest.hpp"
 
+#include <FlameIDE/Templates/StringConvertions.hpp>
+
 #define TEST_STRING "Hello, world!"
 
 #define TO_TEXT(some) #some
