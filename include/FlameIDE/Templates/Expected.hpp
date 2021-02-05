@@ -16,6 +16,8 @@ class Expected
 public:
 	static_assert (!ComparingTypes<Result, Error>::VALUE, "Types can be different");
 
+	using Me = Expected<Result, Error>;
+
 	Expected() noexcept = default;
 	Expected(const Expected<Result, Error> &expected) noexcept = default;
 	Expected(Expected<Result, Error> &&expected) noexcept = default;
@@ -26,24 +28,45 @@ public:
 	Expected(const Error &error) noexcept;
 	Expected(Error &&error) noexcept;
 
+	Me &operator=(const Me &) = default;
+	Me &operator=(Me &&) = default;
+
+	Me &operator=(const Result &) noexcept;
+	Me &operator=(Result &&) noexcept;
+
+	Me &operator=(const Error &) noexcept;
+	Me &operator=(Error &&) noexcept;
+
 	/// @brief ifResult
-	/// @tparam Function
+	/// @tparam Function functional object, labda or function pointer.
+	/// Need type - 'void(Result&&)' or 'void(Result)'
 	/// @param function
 	/// @return
 	template<typename Function>
-	Expected<Result, Error> &ifResult(Function &&function);
+	Me &ifResult(Function &&function);
+
+	/// @brief ifResult
+	/// @tparam Function functional object, labda or function pointer.
+	/// Need type - 'void(const Result &)' or 'void(Result)'
+	/// @param function
+	/// @return
+	template<typename Function>
+	const Me &ifResult(Function &&function) const;
 
 	/// @brief ifError
 	/// @tparam Function
 	/// @param function
 	/// @return
 	template<typename Function>
-	Expected<Result, Error> &ifError(Function &&function);
+	Me &ifError(Function &&function);
 
-	void done();
+	template<typename Function>
+	const Me &ifError(Function &&function) const;
+
+	void done() const;
 
 private:
-	Variant<Result, Error> variant;
+	mutable Variant<Result, Error> variant;
 };
 
 } // namespace templates
@@ -72,6 +95,38 @@ Expected<Result, Error>::Expected(Error &&error) noexcept : variant{ move(error)
 {}
 
 template<typename Result, typename Error>
+Expected<Result, Error> &
+Expected<Result, Error>::operator=(const Result &result) noexcept
+{
+	variant.set(result);
+	return *this;
+}
+
+template<typename Result, typename Error>
+Expected<Result, Error> &
+Expected<Result, Error>::operator=(Result &&result) noexcept
+{
+	variant.set(move(result));
+	return *this;
+}
+
+template<typename Result, typename Error>
+Expected<Result, Error> &
+Expected<Result, Error>::operator=(const Error &error) noexcept
+{
+	variant.set(move(error));
+	return *this;
+}
+
+template<typename Result, typename Error>
+Expected<Result, Error> &
+Expected<Result, Error>::operator=(Error &&error) noexcept
+{
+	variant.set(move(error));
+	return *this;
+}
+
+template<typename Result, typename Error>
 template<typename Function>
 Expected<Result, Error> &
 Expected<Result, Error>::ifResult(Function &&function)
@@ -80,6 +135,19 @@ Expected<Result, Error>::ifResult(Function &&function)
 	if (result)
 	{
 		function(move(*result));
+	}
+	return *this;
+}
+
+template<typename Result, typename Error>
+template<typename Function>
+const Expected<Result, Error> &
+Expected<Result, Error>::ifResult(Function &&function) const
+{
+	const Result* result = variant.template get<Result>();
+	if (result)
+	{
+		function(*result);
 	}
 	return *this;
 }
@@ -98,7 +166,20 @@ Expected<Result, Error>::ifError(Function &&function)
 }
 
 template<typename Result, typename Error>
-void Expected<Result, Error>::done()
+template<typename Function>
+const Expected<Result, Error> &
+Expected<Result, Error>::ifError(Function &&function) const
+{
+	const Error* error = variant.template get<Error>();
+	if (error)
+	{
+		function(*error);
+	}
+	return *this;
+}
+
+template<typename Result, typename Error>
+void Expected<Result, Error>::done() const
 {
 	variant.reset();
 }
