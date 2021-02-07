@@ -19,6 +19,7 @@
 #include <FlameIDE/../../src/Templates/Tests/AsIntegralTypeTest.hpp>
 #include <FlameIDE/../../src/Templates/Tests/FutureTest.hpp>
 #include <FlameIDE/../../src/Templates/Tests/ExpectedTest.hpp>
+#include <FlameIDE/../../src/Templates/Tests/StringConvertionsTest.hpp>
 
 #include <FlameIDE/../../src/Templates/Tests/TestAggregator.hpp>
 
@@ -53,6 +54,7 @@ TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 	pushBackTest(std::make_shared<test::AsIntegralTypeTest>());
 	pushBackTest(std::make_shared<test::FutureTest>());
 	pushBackTest(std::make_shared<test::ExpectedTest>());
+	pushBackTest(std::make_shared<test::StringConvertionsTest>());
 }
 
 }}}

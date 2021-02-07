@@ -31,6 +31,8 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/SerializationTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SharedPointerTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SharedPointerTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StringConvertionsTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StringConvertionsTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/StringTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/StringTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.cpp
