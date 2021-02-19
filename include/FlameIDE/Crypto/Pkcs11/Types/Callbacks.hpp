@@ -13,7 +13,7 @@ namespace callbacks
 // CK_RV (*)(CK_SESSION_HANDLE hSession
 //           , CK_NOTIFICATION event
 //           , CK_VOID_PTR pApplication
-//using Notify = ::CK_NOTIFY;
+using Notify = ::CK_NOTIFY;
 
 // CK_RV (*)(CK_VOID_PTR_PTR ppMutex)
 using CreateMutex = ::CK_CREATEMUTEX;
