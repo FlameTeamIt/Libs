@@ -6,12 +6,12 @@
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
+#include <FlameIDE/Common/Traits/Numbers.hpp>
 
 #include <winsock2.h>
 #include <windows.h>
 #include <winnt.h>
 
-#include <FlameIDE/Common/Traits/Numbers.hpp>
 
 namespace flame_ide
 {
