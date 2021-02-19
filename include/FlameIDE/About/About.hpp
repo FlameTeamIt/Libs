@@ -1,8 +1,19 @@
-#ifndef ABOUT_H
-#define ABOUT_H
+#ifndef FLAMEIDE_ABOUT_ABOUT_HPP
+#define FLAMEIDE_ABOUT_ABOUT_HPP
 
-#ifndef BUILD_NUMBER
-#define BUILD_NUMBER 1000
+#ifndef FLAMEIDE_VERSION
+#	ifndef FLAMEIDE_VERSION_MAJOR
+#		define FLAMEIDE_VERSION_MAJOR 0
+#	endif
+#	ifndef FLAMEIDE_VERSION_MINOR
+#		define FLAMEIDE_VERSION_MINOR 0
+#	endif
+#	ifndef FLAMEIDE_VERSION_PATCH
+#		define FLAMEIDE_VERSION_PATCH 1
+#	endif
+#	ifndef FLAMEIDE_VERSION_BUILD_NUMBER
+#		define FLAMEIDE_VERSION_BUILD_NUMBER 1
+#	endif
 #endif
 
 #ifndef __DATE__
@@ -18,28 +29,20 @@ namespace flame_ide
 
 struct About
 {
-	About();
-	
-	const unsigned long buid_number;
-	const unsigned int major_version;
-	const unsigned int minor_version;
-	const unsigned int patch_version;
-	
+	About() = default;
+
+	const unsigned int major = FLAMEIDE_VERSION_MAJOR;
+	const unsigned int minor = FLAMEIDE_VERSION_MINOR;
+	const unsigned int patch = FLAMEIDE_VERSION_PATCH;
+	const unsigned long build  = FLAMEIDE_VERSION_BUILD_NUMBER;
+
 #ifdef __GNUG__
 	const char* date = __DATE__;
 	const char* time = __TIME__;
 #endif
 };
 
-About::About()
-	: buid_number(BUILD_NUMBER)
-	,major_version(0)
-	,minor_version(0)
-	,patch_version(1)
-{}
-
 }
 
-
-#endif // ABOUT_H
+#endif // FLAMEIDE_ABOUT_ABOUT_HPP
 

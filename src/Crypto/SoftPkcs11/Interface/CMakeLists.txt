@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.14)
+
+set(NAME "Crypto.SoftPkcs11.Interface")
+set(SUBALIAS_NAME "Crypto::SoftPkcs11::Interface")
+set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
+get_sources(FILE_LIST)
+
+set(DEPENDENCY_HEADER_TARGETS
+	"${FLAME_NAMESPACE}::Crypto::Oasis::Headers"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Headers"
+)
+
+flame_compile_library(
+	NAME "${NAME}"
+	SOURCE_LIST "${FILE_LIST}"
+	INCLUDE_PATHS "${INCLUDE_PATHS}"
+	DEPENDENCY_HEADER_TARGETS     "${DEPENDENCY_HEADER_TARGETS}"
+	INDEPENDENT_OBJECT_ALIAS_NAME
+		"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Object::Independ"
+	NOT_MAKE_POSITION_DEPENDENT_OBJECTS
+)

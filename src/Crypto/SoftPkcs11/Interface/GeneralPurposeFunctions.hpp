@@ -1,0 +1,23 @@
+#ifndef FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_INTERFACE_GENERALPURPOSEFUNCTIONS_HPP
+#define FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_INTERFACE_GENERALPURPOSEFUNCTIONS_HPP
+
+#include <FlameIDE/Crypto/Oasis/Oasis.hpp>
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+CK_RV C_Initialize(CK_VOID_PTR pInitArgs);
+
+CK_RV C_Finalize(CK_VOID_PTR pReserved);
+
+CK_RV C_GetInfo(CK_INFO_PTR pInfo);
+
+CK_RV C_GetFunctionList(CK_FUNCTION_LIST_PTR_PTR ppFunctionList);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_INTERFACE_GENERALPURPOSEFUNCTIONS_HPP
