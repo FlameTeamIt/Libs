@@ -10,28 +10,28 @@ namespace flame_ide
 {
 
 ///
-/// \brief getFunctionStatus
-/// \param session
-/// \return
+/// @brief getFunctionStatus
+/// @param session
+/// @return
 ///
 pkcs11::value_types::ReturnType getFunctionStatus(
 		pkcs11::value_types::SessionHandle session
 );
 
 ///
-/// \brief cancelFunction
-/// \param session
-/// \return
+/// @brief cancelFunction
+/// @param session
+/// @return
 ///
 pkcs11::value_types::ReturnType cancelFunction(
 		pkcs11::value_types::SessionHandle session
 );
 
 ///
-/// \brief waitForSlotEvent
-/// \param flags
-/// \param slotId
-/// \return
+/// @brief waitForSlotEvent
+/// @param flags
+/// @param slotId
+/// @return
 ///
 pkcs11::value_types::ReturnType waitForSlotEvent(
 		pkcs11::value_types::Flags flags

@@ -9,13 +9,13 @@ extern "C"
 #endif
 
 ///
-/// \brief C_OpenSession
-/// \param slotId
-/// \param flags
-/// \param pApplication
-/// \param Notify
-/// \param phSession
-/// \return
+/// @brief C_OpenSession
+/// @param slotId
+/// @param flags
+/// @param pApplication
+/// @param Notify
+/// @param phSession
+/// @return
 ///
 CK_RV C_OpenSession(
 		CK_SLOT_ID slotId
@@ -26,24 +26,24 @@ CK_RV C_OpenSession(
 );
 
 ///
-/// \brief C_CloseSession
-/// \param hSession
-/// \return
+/// @brief C_CloseSession
+/// @param hSession
+/// @return
 ///
 CK_RV C_CloseSession(CK_SESSION_HANDLE hSession);
 
 ///
-/// \brief C_CloseAllSessions
-/// \param slotId
-/// \return
+/// @brief C_CloseAllSessions
+/// @param slotId
+/// @return
 ///
 CK_RV C_CloseAllSessions(CK_SLOT_ID slotId);
 
 ///
-/// \brief C_GetSessionInfo
-/// \param hSession
-/// \param pInfo
-/// \return
+/// @brief C_GetSessionInfo
+/// @param hSession
+/// @param pInfo
+/// @return
 ///
 CK_RV C_GetSessionInfo(
 		CK_SESSION_HANDLE hSession
@@ -51,11 +51,11 @@ CK_RV C_GetSessionInfo(
 );
 
 ///
-/// \brief C_GetOperationState
-/// \param hSession
-/// \param pOperationState
-/// \param pulOperationStateLen
-/// \return
+/// @brief C_GetOperationState
+/// @param hSession
+/// @param pOperationState
+/// @param pulOperationStateLen
+/// @return
 ///
 CK_RV C_GetOperationState(
 		CK_SESSION_HANDLE hSession
@@ -64,13 +64,13 @@ CK_RV C_GetOperationState(
 );
 
 ///
-/// \brief C_SetOperationState
-/// \param hSession
-/// \param pOperationState
-/// \param ulOperationStateLen
-/// \param hEncryptionKey
-/// \param hAuthenticationKey
-/// \return
+/// @brief C_SetOperationState
+/// @param hSession
+/// @param pOperationState
+/// @param ulOperationStateLen
+/// @param hEncryptionKey
+/// @param hAuthenticationKey
+/// @return
 ///
 CK_RV C_SetOperationState(
 		CK_SESSION_HANDLE hSession
@@ -81,12 +81,12 @@ CK_RV C_SetOperationState(
 );
 
 ///
-/// \brief C_Login
-/// \param hSession
-/// \param userType
-/// \param pPin
-/// \param ulPinLen
-/// \return
+/// @brief C_Login
+/// @param hSession
+/// @param userType
+/// @param pPin
+/// @param ulPinLen
+/// @return
 ///
 CK_RV C_Login(
 		CK_SESSION_HANDLE hSession
@@ -96,9 +96,9 @@ CK_RV C_Login(
 );
 
 ///
-/// \brief C_Logout
-/// \param hSession
-/// \return
+/// @brief C_Logout
+/// @param hSession
+/// @return
 ///
 CK_RV C_Logout(CK_SESSION_HANDLE hSession);
 

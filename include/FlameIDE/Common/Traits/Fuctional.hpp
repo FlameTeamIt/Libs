@@ -89,7 +89,7 @@ struct IsPointer: public FalseType
 {};
 
 ///
-/// \brief The IsPointer<T *> struct
+/// @brief The IsPointer<T *> struct
 ///
 template<typename T>
 struct IsPointer<T *>: public TrueType
@@ -122,7 +122,7 @@ struct IsConst: public FalseType
 {};
 
 ///
-/// \brief The IsConst<const T> struct
+/// @brief The IsConst<const T> struct
 ///
 template<typename T>
 struct IsConst<const T>: public TrueType
@@ -161,7 +161,7 @@ struct IsRvalue: public FalseType
 {};
 
 ///
-/// \brief The IsRvalue<T &&> struct
+/// @brief The IsRvalue<T &&> struct
 ///
 template<typename T>
 struct IsRvalue<T &&>: public TrueType
@@ -220,7 +220,7 @@ struct IsUniqueParameterPack: public TrueType
 {};
 
 ///
-/// \brief The IsUniqueParameterPack<Arg, Args...> struct
+/// @brief The IsUniqueParameterPack<Arg, Args...> struct
 ///
 template<typename Arg, typename ...Args>
 struct IsUniqueParameterPack<Arg, Args...>
@@ -242,7 +242,7 @@ struct GetIndexOfType
 };
 
 ///
-/// \brief The GetIndexOfType<T, Arg, Args...> struct
+/// @brief The GetIndexOfType<T, Arg, Args...> struct
 ///
 template<typename T, typename Arg, typename ...Args>
 struct GetIndexOfType<T, Arg, Args...>

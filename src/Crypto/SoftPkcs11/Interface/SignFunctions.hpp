@@ -9,11 +9,11 @@ extern "C"
 #endif
 
 ///
-/// \brief C_SignInit
-/// \param hSession
-/// \param pMechanism
-/// \param hKey
-/// \return
+/// @brief C_SignInit
+/// @param hSession
+/// @param pMechanism
+/// @param hKey
+/// @return
 ///
 CK_RV C_SignInit(
 		CK_SESSION_HANDLE hSession
@@ -22,13 +22,13 @@ CK_RV C_SignInit(
 );
 
 ///
-/// \brief C_Sign
-/// \param hSession
-/// \param pData
-/// \param ulDataLen
-/// \param pSignature
-/// \param pulSignatureLen
-/// \return
+/// @brief C_Sign
+/// @param hSession
+/// @param pData
+/// @param ulDataLen
+/// @param pSignature
+/// @param pulSignatureLen
+/// @return
 ///
 CK_RV C_Sign(
 		CK_SESSION_HANDLE hSession
@@ -39,11 +39,11 @@ CK_RV C_Sign(
 );
 
 ///
-/// \brief C_SignUpdate
-/// \param hSession
-/// \param pPart
-/// \param ulPartLen
-/// \return
+/// @brief C_SignUpdate
+/// @param hSession
+/// @param pPart
+/// @param ulPartLen
+/// @return
 ///
 CK_RV C_SignUpdate(
 		CK_SESSION_HANDLE hSession
@@ -52,11 +52,11 @@ CK_RV C_SignUpdate(
 );
 
 ///
-/// \brief C_SignFinal
-/// \param hSession
-/// \param pSignature
-/// \param pulSignatureLen
-/// \return
+/// @brief C_SignFinal
+/// @param hSession
+/// @param pSignature
+/// @param pulSignatureLen
+/// @return
 ///
 CK_RV C_SignFinal(
 		CK_SESSION_HANDLE hSession
@@ -65,11 +65,11 @@ CK_RV C_SignFinal(
 );
 
 ///
-/// \brief C_SignRecoverInit
-/// \param hSession
-/// \param pMechanism
-/// \param hKey
-/// \return
+/// @brief C_SignRecoverInit
+/// @param hSession
+/// @param pMechanism
+/// @param hKey
+/// @return
 ///
 CK_RV C_SignRecoverInit(
 		CK_SESSION_HANDLE hSession
@@ -78,13 +78,13 @@ CK_RV C_SignRecoverInit(
 );
 
 ///
-/// \brief C_SignRecover
-/// \param hSession
-/// \param pData
-/// \param ulDataLen
-/// \param pSignature
-/// \param pulSignatureLen
-/// \return
+/// @brief C_SignRecover
+/// @param hSession
+/// @param pData
+/// @param ulDataLen
+/// @param pSignature
+/// @param pulSignatureLen
+/// @return
 ///
 CK_RV C_SignRecover(
 		CK_SESSION_HANDLE hSession

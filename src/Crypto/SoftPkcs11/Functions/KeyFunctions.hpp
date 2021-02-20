@@ -11,13 +11,13 @@ namespace flame_ide
 {
 
 ///
-/// \brief generateKey
-/// \param session
-/// \param mechanism
-/// \param attributeList
-/// \param attributeListLength
-/// \param key
-/// \return
+/// @brief generateKey
+/// @param session
+/// @param mechanism
+/// @param attributeList
+/// @param attributeListLength
+/// @param key
+/// @return
 ///
 pkcs11::value_types::ReturnType generateKey(
 		pkcs11::value_types::SessionHandle session
@@ -28,16 +28,16 @@ pkcs11::value_types::ReturnType generateKey(
 );
 
 ///
-/// \brief generateKeyPair
-/// \param session
-/// \param mechanism
-/// \param publicKeyAttrbuteList
-/// \param publicKeyAttributeListLength
-/// \param privateKeyTemplate
-/// \param privateKeyAttributeCount
-/// \param publicKey
-/// \param privateKey
-/// \return
+/// @brief generateKeyPair
+/// @param session
+/// @param mechanism
+/// @param publicKeyAttrbuteList
+/// @param publicKeyAttributeListLength
+/// @param privateKeyTemplate
+/// @param privateKeyAttributeCount
+/// @param publicKey
+/// @param privateKey
+/// @return
 ///
 pkcs11::value_types::ReturnType generateKeyPair(
 		pkcs11::value_types::SessionHandle session
@@ -51,14 +51,14 @@ pkcs11::value_types::ReturnType generateKeyPair(
 );
 
 ///
-/// \brief wrapKey
-/// \param session
-/// \param mechanism
-/// \param hWrappingKey
-/// \param hKey
-/// \param pWrappedKey
-/// \param pulWrappedKeyLen
-/// \return
+/// @brief wrapKey
+/// @param session
+/// @param mechanism
+/// @param hWrappingKey
+/// @param hKey
+/// @param pWrappedKey
+/// @param pulWrappedKeyLen
+/// @return
 ///
 pkcs11::value_types::ReturnType wrapKey(
 		pkcs11::value_types::SessionHandle session
@@ -70,16 +70,16 @@ pkcs11::value_types::ReturnType wrapKey(
 );
 
 ///
-/// \brief unwrapKey
-/// \param session
-/// \param mechanism
-/// \param unwrappingKey
-/// \param wrappedKey
-/// \param wrappedKeyLength
-/// \param pTemplate
-/// \param ulAttributeCount
-/// \param phKey
-/// \return
+/// @brief unwrapKey
+/// @param session
+/// @param mechanism
+/// @param unwrappingKey
+/// @param wrappedKey
+/// @param wrappedKeyLength
+/// @param pTemplate
+/// @param ulAttributeCount
+/// @param phKey
+/// @return
 ///
 pkcs11::value_types::ReturnType unwrapKey(
 		pkcs11::value_types::SessionHandle session
@@ -93,14 +93,14 @@ pkcs11::value_types::ReturnType unwrapKey(
 );
 
 ///
-/// \brief deriveKey
-/// \param session
-/// \param mechanism
-/// \param baseKey
-/// \param attributeList
-/// \param attributeListLength
-/// \param key
-/// \return
+/// @brief deriveKey
+/// @param session
+/// @param mechanism
+/// @param baseKey
+/// @param attributeList
+/// @param attributeListLength
+/// @param key
+/// @return
 ///
 pkcs11::value_types::ReturnType deriveKey(
 		pkcs11::value_types::SessionHandle session

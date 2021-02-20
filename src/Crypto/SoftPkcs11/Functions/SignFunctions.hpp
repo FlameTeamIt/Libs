@@ -11,11 +11,11 @@ namespace flame_ide
 {
 
 ///
-/// \brief init
-/// \param session
-/// \param mechanism
-/// \param object
-/// \return
+/// @brief init
+/// @param session
+/// @param mechanism
+/// @param object
+/// @return
 ///
 pkcs11::value_types::ReturnType init(
 		pkcs11::value_types::SessionHandle session
@@ -24,11 +24,11 @@ pkcs11::value_types::ReturnType init(
 );
 
 ///
-/// \brief update
-/// \param session
-/// \param dataPart
-/// \param dataPartLength
-/// \return
+/// @brief update
+/// @param session
+/// @param dataPart
+/// @param dataPartLength
+/// @return
 ///
 pkcs11::value_types::ReturnType update(
 		pkcs11::value_types::SessionHandle session
@@ -37,11 +37,11 @@ pkcs11::value_types::ReturnType update(
 );
 
 ///
-/// \brief final
-/// \param session
-/// \param signature
-/// \param signatureLength
-/// \return
+/// @brief final
+/// @param session
+/// @param signature
+/// @param signatureLength
+/// @return
 ///
 pkcs11::value_types::ReturnType final(
 		pkcs11::value_types::SessionHandle session
@@ -50,13 +50,13 @@ pkcs11::value_types::ReturnType final(
 );
 
 ///
-/// \brief full
-/// \param session
-/// \param data
-/// \param dataLength
-/// \param signature
-/// \param signatureLength
-/// \return
+/// @brief full
+/// @param session
+/// @param data
+/// @param dataLength
+/// @param signature
+/// @param signatureLength
+/// @return
 ///
 pkcs11::value_types::ReturnType full(
 		pkcs11::value_types::SessionHandle session
@@ -70,11 +70,11 @@ namespace recover
 {
 
 ///
-/// \brief init
-/// \param session
-/// \param mechanism
-/// \param key
-/// \return
+/// @brief init
+/// @param session
+/// @param mechanism
+/// @param key
+/// @return
 ///
 pkcs11::value_types::ReturnType init(
 		pkcs11::value_types::SessionHandle session
@@ -83,13 +83,13 @@ pkcs11::value_types::ReturnType init(
 );
 
 ///
-/// \brief full
-/// \param session
-/// \param data
-/// \param dataLength
-/// \param signature
-/// \param signatureLength
-/// \return
+/// @brief full
+/// @param session
+/// @param data
+/// @param dataLength
+/// @param signature
+/// @param signatureLength
+/// @return
 ///
 pkcs11::value_types::ReturnType full(
 		pkcs11::value_types::SessionHandle session

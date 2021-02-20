@@ -11,12 +11,12 @@ namespace flame_ide
 {
 
 ///
-/// \brief create
-/// \param session
-/// \param attributeList
-/// \param attributeListLength
-/// \param object
-/// \return
+/// @brief create
+/// @param session
+/// @param attributeList
+/// @param attributeListLength
+/// @param object
+/// @return
 ///
 pkcs11::value_types::ReturnType create(
 		pkcs11::value_types::SessionHandle session
@@ -26,13 +26,13 @@ pkcs11::value_types::ReturnType create(
 );
 
 ///
-/// \brief copy
-/// \param session
-/// \param object
-/// \param attributeList
-/// \param attributeListLength
-/// \param newObject
-/// \return
+/// @brief copy
+/// @param session
+/// @param object
+/// @param attributeList
+/// @param attributeListLength
+/// @param newObject
+/// @return
 ///
 pkcs11::value_types::ReturnType copy(
 		pkcs11::value_types::SessionHandle session
@@ -43,10 +43,10 @@ pkcs11::value_types::ReturnType copy(
 );
 
 ///
-/// \brief destroy
-/// \param session
-/// \param object
-/// \return
+/// @brief destroy
+/// @param session
+/// @param object
+/// @return
 ///
 pkcs11::value_types::ReturnType destroy(
 		pkcs11::value_types::SessionHandle session
@@ -54,11 +54,11 @@ pkcs11::value_types::ReturnType destroy(
 );
 
 ///
-/// \brief getSize
-/// \param session
-/// \param object
-/// \param pulSize
-/// \return
+/// @brief getSize
+/// @param session
+/// @param object
+/// @param pulSize
+/// @return
 ///
 pkcs11::value_types::ReturnType getSize(
 		pkcs11::value_types::SessionHandle session
@@ -67,12 +67,12 @@ pkcs11::value_types::ReturnType getSize(
 );
 
 ///
-/// \brief getAttributeValue
-/// \param session
-/// \param object
-/// \param attributeList
-/// \param attributeListLength
-/// \return
+/// @brief getAttributeValue
+/// @param session
+/// @param object
+/// @param attributeList
+/// @param attributeListLength
+/// @return
 ///
 pkcs11::value_types::ReturnType getAttributeValue(
 		pkcs11::value_types::SessionHandle session
@@ -82,12 +82,12 @@ pkcs11::value_types::ReturnType getAttributeValue(
 );
 
 ///
-/// \brief setAttributeValue
-/// \param session
-/// \param object
-/// \param attributeList
-/// \param attributeListLength
-/// \return
+/// @brief setAttributeValue
+/// @param session
+/// @param object
+/// @param attributeList
+/// @param attributeListLength
+/// @return
 ///
 pkcs11::value_types::ReturnType setAttributeValue(
 		pkcs11::value_types::SessionHandle session
@@ -97,11 +97,11 @@ pkcs11::value_types::ReturnType setAttributeValue(
 );
 
 ///
-/// \brief findInit
-/// \param session
-/// \param attributeList
-/// \param attributeListLength
-/// \return
+/// @brief findInit
+/// @param session
+/// @param attributeList
+/// @param attributeListLength
+/// @return
 ///
 pkcs11::value_types::ReturnType findInit(
 		pkcs11::value_types::SessionHandle session
@@ -110,12 +110,12 @@ pkcs11::value_types::ReturnType findInit(
 );
 
 ///
-/// \brief find
-/// \param session
-/// \param object
-/// \param maxObjectCount
-/// \param objectCount
-/// \return
+/// @brief find
+/// @param session
+/// @param object
+/// @param maxObjectCount
+/// @param objectCount
+/// @return
 ///
 pkcs11::value_types::ReturnType find(
 		pkcs11::value_types::SessionHandle session
@@ -125,9 +125,9 @@ pkcs11::value_types::ReturnType find(
 );
 
 ///
-/// \brief findFinal
-/// \param session
-/// \return
+/// @brief findFinal
+/// @param session
+/// @return
 ///
 pkcs11::value_types::ReturnType findFinal(
 		pkcs11::value_types::SessionHandle session

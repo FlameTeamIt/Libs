@@ -9,12 +9,12 @@ extern "C"
 #endif
 
 ///
-/// \brief C_CreateObject
-/// \param hSession
-/// \param pTemplate
-/// \param ulCount
-/// \param phObject
-/// \return
+/// @brief C_CreateObject
+/// @param hSession
+/// @param pTemplate
+/// @param ulCount
+/// @param phObject
+/// @return
 ///
 CK_RV C_CreateObject(
 		CK_SESSION_HANDLE hSession
@@ -24,13 +24,13 @@ CK_RV C_CreateObject(
 );
 
 ///
-/// \brief C_CopyObject
-/// \param hSession
-/// \param hObject
-/// \param pTemplate
-/// \param ulCount
-/// \param phNewObject
-/// \return
+/// @brief C_CopyObject
+/// @param hSession
+/// @param hObject
+/// @param pTemplate
+/// @param ulCount
+/// @param phNewObject
+/// @return
 ///
 CK_RV C_CopyObject(
 		CK_SESSION_HANDLE hSession
@@ -41,10 +41,10 @@ CK_RV C_CopyObject(
 );
 
 ///
-/// \brief C_DestroyObject
-/// \param hSession
-/// \param hObject
-/// \return
+/// @brief C_DestroyObject
+/// @param hSession
+/// @param hObject
+/// @return
 ///
 CK_RV C_DestroyObject(
 		CK_SESSION_HANDLE hSession
@@ -52,11 +52,11 @@ CK_RV C_DestroyObject(
 );
 
 ///
-/// \brief C_GetObjectSize
-/// \param hSession
-/// \param hObject
-/// \param pulSize
-/// \return
+/// @brief C_GetObjectSize
+/// @param hSession
+/// @param hObject
+/// @param pulSize
+/// @return
 ///
 CK_RV C_GetObjectSize(
 		CK_SESSION_HANDLE hSession
@@ -65,12 +65,12 @@ CK_RV C_GetObjectSize(
 );
 
 ///
-/// \brief C_GetAttributeValue
-/// \param hSession
-/// \param hObject
-/// \param pTemplate
-/// \param ulCount
-/// \return
+/// @brief C_GetAttributeValue
+/// @param hSession
+/// @param hObject
+/// @param pTemplate
+/// @param ulCount
+/// @return
 ///
 CK_RV C_GetAttributeValue(
 		CK_SESSION_HANDLE hSession
@@ -80,12 +80,12 @@ CK_RV C_GetAttributeValue(
 );
 
 ///
-/// \brief C_SetAttributeValue
-/// \param hSession
-/// \param hObject
-/// \param pTemplate
-/// \param ulCount
-/// \return
+/// @brief C_SetAttributeValue
+/// @param hSession
+/// @param hObject
+/// @param pTemplate
+/// @param ulCount
+/// @return
 ///
 CK_RV C_SetAttributeValue(
 		CK_SESSION_HANDLE hSession
@@ -95,11 +95,11 @@ CK_RV C_SetAttributeValue(
 );
 
 ///
-/// \brief C_FindObjectsInit
-/// \param hSession
-/// \param pTemplate
-/// \param ulCount
-/// \return
+/// @brief C_FindObjectsInit
+/// @param hSession
+/// @param pTemplate
+/// @param ulCount
+/// @return
 ///
 CK_RV C_FindObjectsInit(
 		CK_SESSION_HANDLE hSession
@@ -108,12 +108,12 @@ CK_RV C_FindObjectsInit(
 );
 
 ///
-/// \brief C_FindObjects
-/// \param hSession
-/// \param phObject
-/// \param ulMaxObjectCount
-/// \param pulObjectCount
-/// \return
+/// @brief C_FindObjects
+/// @param hSession
+/// @param phObject
+/// @param ulMaxObjectCount
+/// @param pulObjectCount
+/// @return
 ///
 CK_RV C_FindObjects(
 		CK_SESSION_HANDLE hSession

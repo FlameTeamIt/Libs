@@ -10,11 +10,11 @@ namespace flame_ide
 {
 
 ///
-/// \brief seedRandom
-/// \param session
-/// \param seed
-/// \param seedLength
-/// \return
+/// @brief seedRandom
+/// @param session
+/// @param seed
+/// @param seedLength
+/// @return
 ///
 pkcs11::value_types::ReturnType seedRandom(
 		pkcs11::value_types::SessionHandle session
@@ -23,11 +23,11 @@ pkcs11::value_types::ReturnType seedRandom(
 );
 
 ///
-/// \brief generateRandom
-/// \param session
-/// \param randomData
-/// \param randomLength
-/// \return
+/// @brief generateRandom
+/// @param session
+/// @param randomData
+/// @param randomLength
+/// @return
 ///
 pkcs11::value_types::ReturnType generateRandom(
 		pkcs11::value_types::SessionHandle session

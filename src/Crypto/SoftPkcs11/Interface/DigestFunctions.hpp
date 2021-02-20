@@ -9,10 +9,10 @@ extern "C"
 #endif
 
 ///
-/// \brief C_DigestInit
-/// \param hSession
-/// \param pMechanism
-/// \return
+/// @brief C_DigestInit
+/// @param hSession
+/// @param pMechanism
+/// @return
 ///
 CK_RV C_DigestInit(
 		CK_SESSION_HANDLE hSession
@@ -20,13 +20,13 @@ CK_RV C_DigestInit(
 );
 
 ///
-/// \brief C_Digest
-/// \param hSession
-/// \param pData
-/// \param ulDataLen
-/// \param pDigest
-/// \param pulDigestLen
-/// \return
+/// @brief C_Digest
+/// @param hSession
+/// @param pData
+/// @param ulDataLen
+/// @param pDigest
+/// @param pulDigestLen
+/// @return
 ///
 CK_RV C_Digest(
 		CK_SESSION_HANDLE hSession
@@ -37,11 +37,11 @@ CK_RV C_Digest(
 );
 
 ///
-/// \brief C_DigestUpdate
-/// \param hSession
-/// \param pPart
-/// \param ulPartLen
-/// \return
+/// @brief C_DigestUpdate
+/// @param hSession
+/// @param pPart
+/// @param ulPartLen
+/// @return
 ///
 CK_RV C_DigestUpdate(
 		CK_SESSION_HANDLE hSession
@@ -50,10 +50,10 @@ CK_RV C_DigestUpdate(
 );
 
 ///
-/// \brief C_DigestKey
-/// \param hSession
-/// \param hKey
-/// \return
+/// @brief C_DigestKey
+/// @param hSession
+/// @param hKey
+/// @return
 ///
 CK_RV C_DigestKey(
 		CK_SESSION_HANDLE hSession
@@ -61,11 +61,11 @@ CK_RV C_DigestKey(
 );
 
 ///
-/// \brief C_DigestFinal
-/// \param hSession
-/// \param pDigest
-/// \param pulDigestLen
-/// \return
+/// @brief C_DigestFinal
+/// @param hSession
+/// @param pDigest
+/// @param pulDigestLen
+/// @return
 ///
 CK_RV C_DigestFinal(
 		CK_SESSION_HANDLE hSession

@@ -9,13 +9,13 @@ extern "C"
 #endif
 
 ///
-/// \brief C_GenerateKey
-/// \param hSession
-/// \param pMechanism
-/// \param pTemplate
-/// \param ulCount
-/// \param phKey
-/// \return
+/// @brief C_GenerateKey
+/// @param hSession
+/// @param pMechanism
+/// @param pTemplate
+/// @param ulCount
+/// @param phKey
+/// @return
 ///
 CK_RV C_GenerateKey(
 		CK_SESSION_HANDLE hSession
@@ -26,16 +26,16 @@ CK_RV C_GenerateKey(
 );
 
 ///
-/// \brief C_GenerateKeyPair
-/// \param hSession
-/// \param pMechanism
-/// \param pPublicKeyTemplate
-/// \param ulPublicKeyAttributeCount
-/// \param pPrivateKeyTemplate
-/// \param ulPrivateKeyAttributeCount
-/// \param phPublicKey
-/// \param phPrivateKey
-/// \return
+/// @brief C_GenerateKeyPair
+/// @param hSession
+/// @param pMechanism
+/// @param pPublicKeyTemplate
+/// @param ulPublicKeyAttributeCount
+/// @param pPrivateKeyTemplate
+/// @param ulPrivateKeyAttributeCount
+/// @param phPublicKey
+/// @param phPrivateKey
+/// @return
 ///
 CK_RV C_GenerateKeyPair(
 		CK_SESSION_HANDLE hSession
@@ -49,14 +49,14 @@ CK_RV C_GenerateKeyPair(
 );
 
 ///
-/// \brief C_WrapKey
-/// \param hSession
-/// \param pMechanism
-/// \param hWrappingKey
-/// \param hKey
-/// \param pWrappedKey
-/// \param pulWrappedKeyLen
-/// \return
+/// @brief C_WrapKey
+/// @param hSession
+/// @param pMechanism
+/// @param hWrappingKey
+/// @param hKey
+/// @param pWrappedKey
+/// @param pulWrappedKeyLen
+/// @return
 ///
 CK_RV C_WrapKey(
 		CK_SESSION_HANDLE hSession
@@ -68,16 +68,16 @@ CK_RV C_WrapKey(
 );
 
 ///
-/// \brief C_UnwrapKey
-/// \param hSession
-/// \param pMechanism
-/// \param hUnwrappingKey
-/// \param pWrappedKey
-/// \param ulWrappedKeyLen
-/// \param pTemplate
-/// \param ulAttributeCount
-/// \param phKey
-/// \return
+/// @brief C_UnwrapKey
+/// @param hSession
+/// @param pMechanism
+/// @param hUnwrappingKey
+/// @param pWrappedKey
+/// @param ulWrappedKeyLen
+/// @param pTemplate
+/// @param ulAttributeCount
+/// @param phKey
+/// @return
 ///
 CK_RV C_UnwrapKey(
 		CK_SESSION_HANDLE hSession
@@ -91,14 +91,14 @@ CK_RV C_UnwrapKey(
 );
 
 ///
-/// \brief C_DeriveKey
-/// \param hSession
-/// \param pMechanism
-/// \param hBaseKey
-/// \param pTemplate
-/// \param ulAttributeCount
-/// \param phKey
-/// \return
+/// @brief C_DeriveKey
+/// @param hSession
+/// @param pMechanism
+/// @param hBaseKey
+/// @param pTemplate
+/// @param ulAttributeCount
+/// @param phKey
+/// @return
 ///
 CK_RV C_DeriveKey(
 		CK_SESSION_HANDLE hSession

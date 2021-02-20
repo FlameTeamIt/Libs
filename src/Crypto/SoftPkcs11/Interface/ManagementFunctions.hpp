@@ -9,11 +9,11 @@ extern "C"
 #endif
 
 ///
-/// \brief C_GetSlotList
-/// \param tokenPresent
-/// \param pSlotList
-/// \param pulCount
-/// \return
+/// @brief C_GetSlotList
+/// @param tokenPresent
+/// @param pSlotList
+/// @param pulCount
+/// @return
 ///
 CK_RV C_GetSlotList(
 		CK_BBOOL tokenPresent
@@ -22,10 +22,10 @@ CK_RV C_GetSlotList(
 );
 
 ///
-/// \brief C_GetSlotInfo
-/// \param slotId
-/// \param pInfo
-/// \return
+/// @brief C_GetSlotInfo
+/// @param slotId
+/// @param pInfo
+/// @return
 ///
 CK_RV C_GetSlotInfo(
 		CK_SLOT_ID slotId
@@ -33,10 +33,10 @@ CK_RV C_GetSlotInfo(
 );
 
 ///
-/// \brief C_GetTokenInfo
-/// \param slotId
-/// \param pInfo
-/// \return
+/// @brief C_GetTokenInfo
+/// @param slotId
+/// @param pInfo
+/// @return
 ///
 CK_RV C_GetTokenInfo(
 		CK_SLOT_ID slotId
@@ -44,11 +44,11 @@ CK_RV C_GetTokenInfo(
 );
 
 ///
-/// \brief C_GetMechanismList
-/// \param slotId
-/// \param pMechanismList
-/// \param pulCount
-/// \return
+/// @brief C_GetMechanismList
+/// @param slotId
+/// @param pMechanismList
+/// @param pulCount
+/// @return
 ///
 CK_RV C_GetMechanismList(
 		CK_SLOT_ID slotId
@@ -57,11 +57,11 @@ CK_RV C_GetMechanismList(
 );
 
 ///
-/// \brief C_GetMechanismInfo
-/// \param slotId
-/// \param type
-/// \param pInfo
-/// \return
+/// @brief C_GetMechanismInfo
+/// @param slotId
+/// @param type
+/// @param pInfo
+/// @return
 ///
 CK_RV C_GetMechanismInfo(
 		CK_SLOT_ID slotId
@@ -70,12 +70,12 @@ CK_RV C_GetMechanismInfo(
 );
 
 ///
-/// \brief C_InitToken
-/// \param slotId
-/// \param pPin
-/// \param ulPinLen
-/// \param pLabel
-/// \return
+/// @brief C_InitToken
+/// @param slotId
+/// @param pPin
+/// @param ulPinLen
+/// @param pLabel
+/// @return
 ///
 CK_RV C_InitToken(
 		CK_SLOT_ID slotId
@@ -85,11 +85,11 @@ CK_RV C_InitToken(
 );
 
 ///
-/// \brief C_InitPIN
-/// \param hSession
-/// \param pPin
-/// \param ulPinLen
-/// \return
+/// @brief C_InitPIN
+/// @param hSession
+/// @param pPin
+/// @param ulPinLen
+/// @return
 ///
 CK_RV C_InitPIN(
 		CK_SESSION_HANDLE hSession
@@ -98,13 +98,13 @@ CK_RV C_InitPIN(
 );
 
 ///
-/// \brief C_SetPIN
-/// \param hSession
-/// \param pOldPin
-/// \param ulOldLen
-/// \param pNewPin
-/// \param ulNewLen
-/// \return
+/// @brief C_SetPIN
+/// @param hSession
+/// @param pOldPin
+/// @param ulOldLen
+/// @param pNewPin
+/// @param ulNewLen
+/// @return
 ///
 CK_RV C_SetPIN(
 		CK_SESSION_HANDLE hSession

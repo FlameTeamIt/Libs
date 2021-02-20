@@ -11,11 +11,11 @@ namespace flame_ide
 {
 
 ///
-/// \brief getSlotList
-/// \param tokenPresent
-/// \param list
-/// \param count
-/// \return
+/// @brief getSlotList
+/// @param tokenPresent
+/// @param list
+/// @param count
+/// @return
 ///
 pkcs11::value_types::ReturnType getSlotList(
 		pkcs11::value_types::Bool tokenPresent
@@ -24,10 +24,10 @@ pkcs11::value_types::ReturnType getSlotList(
 );
 
 ///
-/// \brief getSlotInfo
-/// \param id
-/// \param info
-/// \return
+/// @brief getSlotInfo
+/// @param id
+/// @param info
+/// @return
 ///
 pkcs11::value_types::ReturnType getSlotInfo(
 		pkcs11::value_types::SlotId id
@@ -35,10 +35,10 @@ pkcs11::value_types::ReturnType getSlotInfo(
 );
 
 ///
-/// \brief getTokenInfo
-/// \param slotId
-/// \param tokenInfo
-/// \return
+/// @brief getTokenInfo
+/// @param slotId
+/// @param tokenInfo
+/// @return
 ///
 pkcs11::value_types::ReturnType getTokenInfo(
 		pkcs11::value_types::SlotId slotId
@@ -46,11 +46,11 @@ pkcs11::value_types::ReturnType getTokenInfo(
 );
 
 ///
-/// \brief getMechanismList
-/// \param slotId
-/// \param mechanismList
-/// \param mechanismCount
-/// \return
+/// @brief getMechanismList
+/// @param slotId
+/// @param mechanismList
+/// @param mechanismCount
+/// @return
 ///
 pkcs11::value_types::ReturnType getMechanismList(
 		pkcs11::value_types::SlotId slotId
@@ -59,11 +59,11 @@ pkcs11::value_types::ReturnType getMechanismList(
 );
 
 ///
-/// \brief getMechanismInfo
-/// \param slotId
-/// \param mechanismType
-/// \param mechanismInfo
-/// \return
+/// @brief getMechanismInfo
+/// @param slotId
+/// @param mechanismType
+/// @param mechanismInfo
+/// @return
 ///
 pkcs11::value_types::ReturnType getMechanismInfo(
 		pkcs11::value_types::SlotId slotId
@@ -72,12 +72,12 @@ pkcs11::value_types::ReturnType getMechanismInfo(
 );
 
 ///
-/// \brief initToken
-/// \param slotId
-/// \param pin
-/// \param pinLenength
-/// \param label
-/// \return
+/// @brief initToken
+/// @param slotId
+/// @param pin
+/// @param pinLenength
+/// @param label
+/// @return
 ///
 pkcs11::value_types::ReturnType initToken(
 		pkcs11::value_types::SlotId slotId
@@ -87,11 +87,11 @@ pkcs11::value_types::ReturnType initToken(
 );
 
 ///
-/// \brief initPin
-/// \param session
-/// \param pin
-/// \param pinLength
-/// \return
+/// @brief initPin
+/// @param session
+/// @param pin
+/// @param pinLength
+/// @return
 ///
 pkcs11::value_types::ReturnType initPin(
 		pkcs11::value_types::SessionHandle session
@@ -100,13 +100,13 @@ pkcs11::value_types::ReturnType initPin(
 );
 
 ///
-/// \brief setPin
-/// \param session
-/// \param oldPin
-/// \param oldLength
-/// \param newPin
-/// \param newLength
-/// \return
+/// @brief setPin
+/// @param session
+/// @param oldPin
+/// @param oldLength
+/// @param newPin
+/// @param newLength
+/// @return
 ///
 pkcs11::value_types::ReturnType setPin(
 		pkcs11::value_types::SessionHandle session

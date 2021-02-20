@@ -10,13 +10,13 @@ namespace flame_ide
 {
 
 ///
-/// \brief digestEncryptUpdate
-/// \param session
-/// \param dataPart
-/// \param dataPartLength
-/// \param encryptedDataPart
-/// \param encryptedDataPartLength
-/// \return
+/// @brief digestEncryptUpdate
+/// @param session
+/// @param dataPart
+/// @param dataPartLength
+/// @param encryptedDataPart
+/// @param encryptedDataPartLength
+/// @return
 ///
 pkcs11::value_types::ReturnType digestEncryptUpdate(
 		pkcs11::value_types::SessionHandle session
@@ -27,13 +27,13 @@ pkcs11::value_types::ReturnType digestEncryptUpdate(
 );
 
 ///
-/// \brief decryptDigestUpdate
-/// \param session
-/// \param encryptedDataPart
-/// \param encryptedDataPartLength
-/// \param dataPart
-/// \param dataPartLength
-/// \return
+/// @brief decryptDigestUpdate
+/// @param session
+/// @param encryptedDataPart
+/// @param encryptedDataPartLength
+/// @param dataPart
+/// @param dataPartLength
+/// @return
 ///
 pkcs11::value_types::ReturnType decryptDigestUpdate(
 		pkcs11::value_types::SessionHandle session
@@ -44,13 +44,13 @@ pkcs11::value_types::ReturnType decryptDigestUpdate(
 );
 
 ///
-/// \brief signEncryptUpdate
-/// \param session
-/// \param dataPart
-/// \param dataPartLength
-/// \param encryptedDataPart
-/// \param encryptedDataPartLength
-/// \return
+/// @brief signEncryptUpdate
+/// @param session
+/// @param dataPart
+/// @param dataPartLength
+/// @param encryptedDataPart
+/// @param encryptedDataPartLength
+/// @return
 ///
 pkcs11::value_types::ReturnType signEncryptUpdate(
 		pkcs11::value_types::SessionHandle session
@@ -61,13 +61,13 @@ pkcs11::value_types::ReturnType signEncryptUpdate(
 );
 
 ///
-/// \brief decryptVerifyUpdate
-/// \param session
-/// \param encryptedDataPart
-/// \param encryptedDataPartLength
-/// \param dataPart
-/// \param dataPartLength
-/// \return
+/// @brief decryptVerifyUpdate
+/// @param session
+/// @param encryptedDataPart
+/// @param encryptedDataPartLength
+/// @param dataPart
+/// @param dataPartLength
+/// @return
 ///
 pkcs11::value_types::ReturnType decryptVerifyUpdate(
 		pkcs11::value_types::SessionHandle session

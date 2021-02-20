@@ -9,25 +9,25 @@ extern "C"
 #endif
 
 ///
-/// \brief C_GetFunctionStatus
-/// \param hSession
-/// \return
+/// @brief C_GetFunctionStatus
+/// @param hSession
+/// @return
 ///
 CK_RV C_GetFunctionStatus(CK_SESSION_HANDLE hSession);
 
 ///
-/// \brief C_CancelFunction
-/// \param hSession
-/// \return
+/// @brief C_CancelFunction
+/// @param hSession
+/// @return
 ///
 CK_RV C_CancelFunction(CK_SESSION_HANDLE hSession);
 
 ///
-/// \brief C_WaitForSlotEvent
-/// \param flags
-/// \param pSlot
-/// \param pReserved
-/// \return
+/// @brief C_WaitForSlotEvent
+/// @param flags
+/// @param pSlot
+/// @param pReserved
+/// @return
 ///
 CK_RV C_WaitForSlotEvent(
 		CK_FLAGS flags

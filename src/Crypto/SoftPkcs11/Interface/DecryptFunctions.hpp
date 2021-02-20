@@ -9,11 +9,11 @@ extern "C"
 #endif
 
 ///
-/// \brief C_DecryptInit
-/// \param hSession
-/// \param pMechanism
-/// \param hKey
-/// \return
+/// @brief C_DecryptInit
+/// @param hSession
+/// @param pMechanism
+/// @param hKey
+/// @return
 ///
 CK_RV C_DecryptInit(
 		CK_SESSION_HANDLE hSession
@@ -22,13 +22,13 @@ CK_RV C_DecryptInit(
 );
 
 ///
-/// \brief C_Decrypt
-/// \param hSession
-/// \param pEncryptedData
-/// \param ulEncryptedDataLen
-/// \param pData
-/// \param pulDataLen
-/// \return
+/// @brief C_Decrypt
+/// @param hSession
+/// @param pEncryptedData
+/// @param ulEncryptedDataLen
+/// @param pData
+/// @param pulDataLen
+/// @return
 ///
 CK_RV C_Decrypt(
 		CK_SESSION_HANDLE hSession
@@ -39,13 +39,13 @@ CK_RV C_Decrypt(
 );
 
 ///
-/// \brief C_DecryptUpdate
-/// \param hSession
-/// \param pEncryptedPart
-/// \param ulEncryptedPartLen
-/// \param pPart
-/// \param pulPartLen
-/// \return
+/// @brief C_DecryptUpdate
+/// @param hSession
+/// @param pEncryptedPart
+/// @param ulEncryptedPartLen
+/// @param pPart
+/// @param pulPartLen
+/// @return
 ///
 CK_RV C_DecryptUpdate(
 		CK_SESSION_HANDLE hSession
@@ -56,11 +56,11 @@ CK_RV C_DecryptUpdate(
 );
 
 ///
-/// \brief C_DecryptFinal
-/// \param hSession
-/// \param pLastPart
-/// \param pulLastPartLen
-/// \return
+/// @brief C_DecryptFinal
+/// @param hSession
+/// @param pLastPart
+/// @param pulLastPartLen
+/// @return
 ///
 CK_RV C_DecryptFinal(
 		CK_SESSION_HANDLE hSession

@@ -12,13 +12,13 @@ namespace flame_ide
 {
 
 ///
-/// \brief open
-/// \param slotId
-/// \param flags
-/// \param application
-/// \param notifyCallback
-/// \param session
-/// \return
+/// @brief open
+/// @param slotId
+/// @param flags
+/// @param application
+/// @param notifyCallback
+/// @param session
+/// @return
 ///
 pkcs11::value_types::ReturnType open(
 		pkcs11::value_types::SlotId slotId
@@ -29,24 +29,24 @@ pkcs11::value_types::ReturnType open(
 );
 
 ///
-/// \brief close
-/// \param session
-/// \return
+/// @brief close
+/// @param session
+/// @return
 ///
 pkcs11::value_types::ReturnType close(pkcs11::value_types::SessionHandle session);
 
 ///
-/// \brief closeAll
-/// \param slotId
-/// \return
+/// @brief closeAll
+/// @param slotId
+/// @return
 ///
 pkcs11::value_types::ReturnType closeAll(pkcs11::value_types::SlotId slotId);
 
 ///
-/// \brief getInfo
-/// \param session
-/// \param info
-/// \return
+/// @brief getInfo
+/// @param session
+/// @param info
+/// @return
 ///
 pkcs11::value_types::ReturnType getInfo(
 		pkcs11::value_types::SessionHandle session
@@ -54,11 +54,11 @@ pkcs11::value_types::ReturnType getInfo(
 );
 
 ///
-/// \brief getOperationState
-/// \param session
-/// \param operationState
-/// \param operationStateLength
-/// \return
+/// @brief getOperationState
+/// @param session
+/// @param operationState
+/// @param operationStateLength
+/// @return
 ///
 pkcs11::value_types::ReturnType getOperationState(
 		pkcs11::value_types::SessionHandle session
@@ -67,13 +67,13 @@ pkcs11::value_types::ReturnType getOperationState(
 );
 
 ///
-/// \brief setOperationState
-/// \param session
-/// \param operationState
-/// \param operationStateLength
-/// \param encryptionKey
-/// \param authenticationKey
-/// \return
+/// @brief setOperationState
+/// @param session
+/// @param operationState
+/// @param operationStateLength
+/// @param encryptionKey
+/// @param authenticationKey
+/// @return
 ///
 pkcs11::value_types::ReturnType setOperationState(
 		pkcs11::value_types::SessionHandle session
@@ -84,12 +84,12 @@ pkcs11::value_types::ReturnType setOperationState(
 );
 
 ///
-/// \brief login
-/// \param session
-/// \param userType
-/// \param pin
-/// \param pinLength
-/// \return
+/// @brief login
+/// @param session
+/// @param userType
+/// @param pin
+/// @param pinLength
+/// @return
 ///
 pkcs11::value_types::ReturnType login(
 		pkcs11::value_types::SessionHandle session
@@ -99,9 +99,9 @@ pkcs11::value_types::ReturnType login(
 );
 
 ///
-/// \brief logout
-/// \param session
-/// \return
+/// @brief logout
+/// @param session
+/// @return
 ///
 pkcs11::value_types::ReturnType logout(pkcs11::value_types::SessionHandle session);
 

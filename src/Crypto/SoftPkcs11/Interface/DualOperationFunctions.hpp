@@ -9,13 +9,13 @@ extern "C"
 #endif
 
 ///
-/// \brief C_DigestEncryptUpdate
-/// \param hSession
-/// \param pPart
-/// \param ulPartLen
-/// \param pEncryptedPart
-/// \param pulEncryptedPartLen
-/// \return
+/// @brief C_DigestEncryptUpdate
+/// @param hSession
+/// @param pPart
+/// @param ulPartLen
+/// @param pEncryptedPart
+/// @param pulEncryptedPartLen
+/// @return
 ///
 CK_RV C_DigestEncryptUpdate(
 		CK_SESSION_HANDLE hSession
@@ -26,13 +26,13 @@ CK_RV C_DigestEncryptUpdate(
 );
 
 ///
-/// \brief C_DecryptDigestUpdate
-/// \param hSession
-/// \param pEncryptedPart
-/// \param ulEncryptedPartLen
-/// \param pPart
-/// \param pulPartLen
-/// \return
+/// @brief C_DecryptDigestUpdate
+/// @param hSession
+/// @param pEncryptedPart
+/// @param ulEncryptedPartLen
+/// @param pPart
+/// @param pulPartLen
+/// @return
 ///
 CK_RV C_DecryptDigestUpdate(
 		CK_SESSION_HANDLE hSession
@@ -43,13 +43,13 @@ CK_RV C_DecryptDigestUpdate(
 );
 
 ///
-/// \brief C_SignEncryptUpdate
-/// \param hSession
-/// \param pPart
-/// \param ulPartLen
-/// \param pEncryptedPart
-/// \param pulEncryptedPartLen
-/// \return
+/// @brief C_SignEncryptUpdate
+/// @param hSession
+/// @param pPart
+/// @param ulPartLen
+/// @param pEncryptedPart
+/// @param pulEncryptedPartLen
+/// @return
 ///
 CK_RV C_SignEncryptUpdate(
 		CK_SESSION_HANDLE hSession
@@ -60,13 +60,13 @@ CK_RV C_SignEncryptUpdate(
 );
 
 ///
-/// \brief C_DecryptVerifyUpdate
-/// \param hSession
-/// \param pEncryptedPart
-/// \param ulEncryptedPartLen
-/// \param pPart
-/// \param pulPartLen
-/// \return
+/// @brief C_DecryptVerifyUpdate
+/// @param hSession
+/// @param pEncryptedPart
+/// @param ulEncryptedPartLen
+/// @param pPart
+/// @param pulPartLen
+/// @return
 ///
 CK_RV C_DecryptVerifyUpdate(
 		CK_SESSION_HANDLE hSession

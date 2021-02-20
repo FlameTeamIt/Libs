@@ -9,11 +9,11 @@ extern "C"
 #endif
 
 ///
-/// \brief C_VerifyInit
-/// \param hSession
-/// \param pMechanism
-/// \param hKey
-/// \return
+/// @brief C_VerifyInit
+/// @param hSession
+/// @param pMechanism
+/// @param hKey
+/// @return
 ///
 CK_RV C_VerifyInit(
 		CK_SESSION_HANDLE hSession
@@ -22,13 +22,13 @@ CK_RV C_VerifyInit(
 );
 
 ///
-/// \brief C_Verify
-/// \param hSession
-/// \param pData
-/// \param ulDataLen
-/// \param pSignature
-/// \param ulSignatureLen
-/// \return
+/// @brief C_Verify
+/// @param hSession
+/// @param pData
+/// @param ulDataLen
+/// @param pSignature
+/// @param ulSignatureLen
+/// @return
 ///
 CK_RV C_Verify(
 		CK_SESSION_HANDLE hSession
@@ -39,11 +39,11 @@ CK_RV C_Verify(
 );
 
 ///
-/// \brief C_VerifyUpdate
-/// \param hSession
-/// \param pPart
-/// \param ulPartLen
-/// \return
+/// @brief C_VerifyUpdate
+/// @param hSession
+/// @param pPart
+/// @param ulPartLen
+/// @return
 ///
 CK_RV C_VerifyUpdate(
 		CK_SESSION_HANDLE hSession
@@ -52,11 +52,11 @@ CK_RV C_VerifyUpdate(
 );
 
 ///
-/// \brief C_VerifyFinal
-/// \param hSession
-/// \param pSignature
-/// \param ulSignatureLen
-/// \return
+/// @brief C_VerifyFinal
+/// @param hSession
+/// @param pSignature
+/// @param ulSignatureLen
+/// @return
 ///
 CK_RV C_VerifyFinal(
 		CK_SESSION_HANDLE hSession
@@ -65,11 +65,11 @@ CK_RV C_VerifyFinal(
 );
 
 ///
-/// \brief C_VerifyRecoverInit
-/// \param hSession
-/// \param pMechanism
-/// \param hKey
-/// \return
+/// @brief C_VerifyRecoverInit
+/// @param hSession
+/// @param pMechanism
+/// @param hKey
+/// @return
 ///
 CK_RV C_VerifyRecoverInit(
 		CK_SESSION_HANDLE hSession
@@ -78,13 +78,13 @@ CK_RV C_VerifyRecoverInit(
 );
 
 ///
-/// \brief C_VerifyRecover
-/// \param hSession
-/// \param pSignature
-/// \param ulSignatureLen
-/// \param pData
-/// \param pulDataLen
-/// \return
+/// @brief C_VerifyRecover
+/// @param hSession
+/// @param pSignature
+/// @param ulSignatureLen
+/// @param pData
+/// @param pulDataLen
+/// @return
 ///
 CK_RV C_VerifyRecover(
 		CK_SESSION_HANDLE hSession

@@ -9,11 +9,11 @@ extern "C"
 #endif
 
 ///
-/// \brief C_SeedRandom
-/// \param hSession
-/// \param pSeed
-/// \param ulSeedLen
-/// \return
+/// @brief C_SeedRandom
+/// @param hSession
+/// @param pSeed
+/// @param ulSeedLen
+/// @return
 ///
 CK_RV C_SeedRandom(
 		CK_SESSION_HANDLE hSession
@@ -22,11 +22,11 @@ CK_RV C_SeedRandom(
 );
 
 ///
-/// \brief C_GenerateRandom
-/// \param hSession
-/// \param RandomData
-/// \param ulRandomLen
-/// \return
+/// @brief C_GenerateRandom
+/// @param hSession
+/// @param RandomData
+/// @param ulRandomLen
+/// @return
 ///
 CK_RV C_GenerateRandom(
 		CK_SESSION_HANDLE hSession
