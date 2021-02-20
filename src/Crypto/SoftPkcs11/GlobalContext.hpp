@@ -4,6 +4,8 @@
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mutex.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Functions.hpp>
 
+#include <FlameIDE/Crypto/Pkcs11/Types/Structs.hpp>
+
 namespace flame_ide
 {namespace soft_pkcs11
 {
@@ -18,7 +20,7 @@ public:
 		flame_ide::pkcs11::callbacks::LockMutex lock       = nullptr;
 		flame_ide::pkcs11::callbacks::UnlockMutex unlock   = nullptr;
 
-		flame_ide::pkcs11::callbacks::Notify notify = nullptr;
+		flame_ide::pkcs11::callbacks::Notify notify = nullptr; // TODO: by sessions
 	};
 
 	struct GeneralPurposeCallbacks
@@ -197,7 +199,13 @@ public:
 	static GlobalContext &get() noexcept;
 
 public:
+	~GlobalContext() noexcept;
+
 	Mutex createMutex() noexcept;
+
+	pkcs11::structs::FunctionListPtr getFunctionList() noexcept;
+
+	pkcs11::enums::ReturnType getStatus() const noexcept;
 
 public:
 	ExternalCallbacks externalCallbacks;
@@ -215,7 +223,18 @@ public:
 	ParallelManagementCallbacks parallelManagementCallbacks;
 	OtherCallbacks otherCallbacks;
 
-	flame_ide::pkcs11::enums::InitializeArgsFlags initFlags;
+	pkcs11::enums::InitializeArgsFlags initFlags
+			= pkcs11::enums::InitializeArgsFlags::LIBRARY_CANT_CREATE_OS_THREADS;
+
+	const pkcs11::structs::Version oasisVersion = { 2, 40 };
+
+private:
+	GlobalContext() noexcept;
+
+private:
+	pkcs11::structs::FunctionListPtr functionList = nullptr;
+
+	pkcs11::enums::ReturnType status = pkcs11::enums::ReturnType::OK;
 };
 
 }}
