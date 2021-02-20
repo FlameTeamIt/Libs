@@ -19,7 +19,7 @@ CK_RV C_Initialize(CK_VOID_PTR pInitArgs);
 ///
 /// @brief Indicates that an application is done with the Cryptoki library
 /// @param pReserved reserved; should be NULL_PTR
-/// @return
+/// @return See CKR_* values
 ///
 CK_RV C_Finalize(CK_VOID_PTR pReserved);
 
