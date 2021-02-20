@@ -30,16 +30,25 @@ class Function
 template<typename ResultType, typename ...ArgumetTypes>
 class Function<ResultType(ArgumetTypes...)>
 {
-	class AbstractCaller;
-
 public:
+	using Me = Function<ResultType(ArgumetTypes...)>;
+	using Callback = ResultType(*)(ArgumetTypes...);
+
+	Function() noexcept = default;
+	Function(Me &&function) noexcept = default;
+
+	Function(Callback clallback);
+
+	template<typename Functor>
+	Function(Functor &&functor);
+
+	~Function() noexcept = default;
 
 private:
 	class AbstractCaller
 	{
 	public:
 		virtual ~AbstractCaller() = default;
-
 		virtual void call() = 0;
 	};
 
