@@ -12,12 +12,10 @@ namespace flame_ide
 
 ///
 /// \brief initialize
-/// \param initArgs
+/// \param arguments
 /// \return
 ///
-pkcs11::value_types::ReturnType initialize(
-		pkcs11::value_types::ValuePtr initArgs
-);
+pkcs11::value_types::ReturnType initialize(pkcs11::value_types::ValuePtr arguments);
 
 ///
 /// \brief finalize
