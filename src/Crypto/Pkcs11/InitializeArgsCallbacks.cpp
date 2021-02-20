@@ -63,7 +63,7 @@ ReturnType unlockMutexWrapper(Mutex &mutex)
 
 CK_RV createMutex(CK_VOID_PTR_PTR mutex)
 {
-	if (mutex && *mutex)
+	if (mutex)
 	{
 		MutexPtr mutexPtr = reinterpret_cast<MutexPtr>(*mutex);
 		ReturnType result = flame_ide::pkcs11::createMutexWrapper(mutexPtr);

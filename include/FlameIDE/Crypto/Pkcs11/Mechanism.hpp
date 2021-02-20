@@ -14,7 +14,7 @@ namespace flame_ide
 namespace pkcs11
 {
 
-class Mechanism : public structs::Mechanism
+class Mechanism : private structs::Mechanism
 {
 	using Parent = structs::Mechanism;
 

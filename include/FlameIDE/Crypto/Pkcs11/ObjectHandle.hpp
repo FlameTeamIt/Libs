@@ -16,9 +16,9 @@ class ObjectHandle
 {
 public:
 	using Value = value_types::ObjectHandle;
-	static constexpr Value INVALID_VALUE = NumberLimit<
-		templates::bits::MinimalType<sizeof(Value) * 8>::Type
-	>::MAX_VALUE;
+	static constexpr Value INVALID_VALUE = static_cast<Value>(
+			enums::SpecialValue::INVALID_HANDLE
+	);
 
 	ObjectHandle() noexcept;
 	ObjectHandle(ObjectHandle &&handle) noexcept;

@@ -56,7 +56,7 @@ using ObjectHandlePtr = ::CK_OBJECT_HANDLE_PTR;
 using ObjectClass = ::CK_OBJECT_CLASS;
 using ObjectClassPtr = ::CK_OBJECT_CLASS_PTR;
 
-using HwFeature = ::CK_HW_FEATURE_TYPE; // CKH_*
+using HardwareFeature = ::CK_HW_FEATURE_TYPE; // CKH_*
 
 using Key = ::CK_KEY_TYPE; // CKK_*
 
@@ -71,7 +71,7 @@ using MechanismInfoFlags = ::CK_FLAGS; // CKF_*
 
 using ReturnType = ::CK_RV; // CKR_*
 
-using IntializeArgsFlags = ::CK_FLAGS; // CKF_*
+using InitializeArgsFlags = ::CK_FLAGS; // CKF_*
 
 using RsaPkcsMessageGenerationFunction = ::CK_RSA_PKCS_MGF_TYPE; // CKG_*
 

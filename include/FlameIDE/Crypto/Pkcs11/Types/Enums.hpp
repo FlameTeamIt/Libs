@@ -49,6 +49,7 @@ using UnderlyingTypeValue = typename UnderlyingType<EnumType>::Type;
 	OPERATOR(EnumType, &) \
 	OPERATOR(EnumType, |)
 
+//	}
 
 /// @brief The Version enum
 enum class Version : flame_ide::pkcs11::value_types::Byte
@@ -175,14 +176,14 @@ UNDERLYING_TYPE(ObjectClass, flame_ide::pkcs11::value_types::ObjectClass)
 
 
 /// @brief The HwFeature enum
-enum class HwFeature : flame_ide::pkcs11::value_types::HwFeature
+enum class HardwareFeature : flame_ide::pkcs11::value_types::HardwareFeature
 {
 	MONOTONIC_COUNTER = CKH_MONOTONIC_COUNTER
 	, CLOCK = CKH_CLOCK
 	, USER_INTERFACE = CKH_USER_INTERFACE
 	, VENDOR_DEFINED = CKH_VENDOR_DEFINED
 };
-UNDERLYING_TYPE(HwFeature, flame_ide::pkcs11::value_types::HwFeature)
+UNDERLYING_TYPE(HardwareFeature, flame_ide::pkcs11::value_types::HardwareFeature)
 
 
 /// @brief The Key enum
@@ -1166,9 +1167,12 @@ reference(const typename utils::UnderlyingType<EnumType>::Type &value) noexcept
 	return *realValue;
 }
 
-
 } // namespace enums
 } // namespace pkcs11
 } // namespace flame_ide
+
+#undef FLAG_OPERATORS
+#undef OPERATOR
+#undef UNDERLYING_TYPE
 
 #endif // FLAMEDE_CRYPTO_PKCS11_TYPES_ENUMS_HPP

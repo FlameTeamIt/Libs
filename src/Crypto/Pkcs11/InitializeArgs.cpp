@@ -8,16 +8,16 @@ namespace pkcs11
 {
 
 InitializeArgs::InitializeArgs() noexcept :
-		CK_C_INITIALIZE_ARGS{
+		structs::InitializeArgs {
 				createMutex, destroyMutex
 				, lockMutex, unlockMutex
-				, static_cast<CK_FLAGS>(Flags::OS_LOCKING_OK)
+				, enums::value(Flags::OS_LOCKING_OK)
 				, nullptr
 		}
 {}
 
 InitializeArgs::InitializeArgs(const InitializeArgs &args) noexcept :
-		CK_C_INITIALIZE_ARGS{
+		structs::InitializeArgs {
 				args.CreateMutex, args.DestroyMutex
 				, args.LockMutex, args.UnlockMutex
 				, args.flags, args.pReserved
@@ -25,20 +25,25 @@ InitializeArgs::InitializeArgs(const InitializeArgs &args) noexcept :
 {}
 
 InitializeArgs::InitializeArgs(InitializeArgs &&args) noexcept :
-	CK_C_INITIALIZE_ARGS{
-		args.CreateMutex, args.DestroyMutex
-		, args.LockMutex, args.UnlockMutex
-		, args.flags, args.pReserved
-	}
+		structs::InitializeArgs {
+			args.CreateMutex, args.DestroyMutex
+			, args.LockMutex, args.UnlockMutex
+			, args.flags, args.pReserved
+		}
 {
 	args.setCallbacks(Callbacks{});
 	args.flags = static_cast<value_types::Flags>(Flags::OS_LOCKING_OK);
 	args.pReserved = nullptr;
 }
 
+InitializeArgs::InitializeArgs(const structs::InitializeArgs &args) noexcept :
+		structs::InitializeArgs { args }
+{}
+
+
 InitializeArgs::InitializeArgs(const Callbacks &callbacks
 		, Flags initFlags, Reseved reseved) noexcept :
-		CK_C_INITIALIZE_ARGS{
+		structs::InitializeArgs{
 				callbacks.createMutexCallback, callbacks.destroyMutexCallback
 				, callbacks.lockMutexCallback, callbacks.unlockMutexCallback
 				, static_cast<CK_FLAGS>(initFlags), reseved

@@ -1,10 +1,7 @@
 #ifndef FLAMEIDE_CRYPTO_PKCS11_INITIALIZEARGS_HPP
 #define FLAMEIDE_CRYPTO_PKCS11_INITIALIZEARGS_HPP
 
-#include <FlameIDE/Crypto/Pkcs11/Types/ValueTypes.hpp>
-#include <FlameIDE/Crypto/Pkcs11/Types/Structs.hpp>
-#include <FlameIDE/Crypto/Pkcs11/Types/Callbacks.hpp>
-#include <FlameIDE/Crypto/Pkcs11/Types/Enums.hpp>
+#include <FlameIDE/Crypto/Pkcs11/Types.hpp>
 
 namespace flame_ide
 {
@@ -12,10 +9,10 @@ namespace pkcs11
 {
 
 /// @brief The INITIALIZEARGS class
-class InitializeArgs : public structs::IntializeArgs
+class InitializeArgs : private structs::InitializeArgs
 {
 public:
-	using Parent = structs::IntializeArgs;
+	using Parent = structs::InitializeArgs;
 
 	using Reseved = value_types::ValuePtr;
 	using CallbackCreateMutex = callbacks::CreateMutex;
@@ -39,6 +36,10 @@ public:
 	InitializeArgs(InitializeArgs &&args) noexcept;
 
 	/// @brief InitializeArgs
+	/// @param args
+	InitializeArgs(const structs::InitializeArgs &args) noexcept;
+
+	/// @brief InitializeArgs
 	/// @param callbacks
 	/// @param flags
 	/// @param reseved
@@ -52,7 +53,7 @@ public:
 	/// @param callbacks
 	void setCallbacks(const Callbacks &callbacks) noexcept;
 
-protected:
+public:
 	inline auto &getCreateMutex() noexcept
 	{
 		return CreateMutex;
@@ -91,11 +92,11 @@ protected:
 
 	inline auto &getFlags() noexcept
 	{
-		return flags;
+		return reinterpret_cast<Flags &>((flags));
 	}
 	inline const auto &getFlags() const noexcept
 	{
-		return flags;
+		return reinterpret_cast<const Flags &>((flags));
 	}
 
 	inline auto &getReserved() noexcept

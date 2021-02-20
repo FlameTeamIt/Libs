@@ -40,8 +40,8 @@ using FunctionList = CK_FUNCTION_LIST;
 using FunctionListPtr = CK_FUNCTION_LIST_PTR;
 using FunctionListPtrPtr = CK_FUNCTION_LIST_PTR_PTR;
 
-using IntializeArgs = CK_C_INITIALIZE_ARGS;
-using IntializeArgsPtr = CK_C_INITIALIZE_ARGS_PTR;
+using InitializeArgs = CK_C_INITIALIZE_ARGS;
+using InitializeArgsPtr = CK_C_INITIALIZE_ARGS_PTR;
 
 using RsaPkcsOaepParams = CK_RSA_PKCS_OAEP_PARAMS;
 using RsaPkcsOaepParamsPtr = CK_RSA_PKCS_OAEP_PARAMS_PTR;
