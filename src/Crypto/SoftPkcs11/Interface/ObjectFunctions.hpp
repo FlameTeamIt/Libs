@@ -9,119 +9,96 @@ extern "C"
 #endif
 
 ///
-/// @brief C_CreateObject
-/// @param hSession
-/// @param pTemplate
-/// @param ulCount
-/// @param phObject
-/// @return
+/// @brief Creates a new object
+/// @param[in] hSession The session's handle
+/// @param[in] pTemplate The object's template
+/// @param[in] ulCount Attributes in template
+/// @param[out] phObject Gets new object's handle
+/// @return See CKR_* values
 ///
-CK_RV C_CreateObject(
-		CK_SESSION_HANDLE hSession
-		, CK_ATTRIBUTE_PTR pTemplate
-		, CK_ULONG ulCount
-		, CK_OBJECT_HANDLE_PTR phObject
-);
+CK_RV C_CreateObject(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pTemplate
+		, CK_ULONG ulCount, CK_OBJECT_HANDLE_PTR phObject);
 
 ///
-/// @brief C_CopyObject
-/// @param hSession
-/// @param hObject
-/// @param pTemplate
-/// @param ulCount
-/// @param phNewObject
-/// @return
+/// @brief Copies an object, creating a new object for the copy
+/// @param[in] hSession The session's handle
+/// @param[in] hObject The object's handle
+/// @param[in] pTemplate Template for new object
+/// @param[in] ulCount Attributes in template
+/// @param[out] phNewObject Receives handle of copy
+/// @return See CKR_* values
 ///
-CK_RV C_CopyObject(
-		CK_SESSION_HANDLE hSession
-		, CK_OBJECT_HANDLE hObject
-		, CK_ATTRIBUTE_PTR pTemplate
-		, CK_ULONG ulCount
-		, CK_OBJECT_HANDLE_PTR phNewObject
-);
+CK_RV C_CopyObject(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hObject
+		, CK_ATTRIBUTE_PTR pTemplate, CK_ULONG ulCount
+		, CK_OBJECT_HANDLE_PTR phNewObject);
 
 ///
-/// @brief C_DestroyObject
-/// @param hSession
-/// @param hObject
-/// @return
+/// @brief Destroys an object
+/// @param[in] hSession The session's handle
+/// @param[in] hObject The object's handle
+/// @return See CKR_* values
 ///
-CK_RV C_DestroyObject(
-		CK_SESSION_HANDLE hSession
-		, CK_OBJECT_HANDLE hObject
-);
+CK_RV C_DestroyObject(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hObject);
 
 ///
-/// @brief C_GetObjectSize
-/// @param hSession
-/// @param hObject
-/// @param pulSize
-/// @return
+/// @brief Gets the size of an object in bytes
+/// @param[in] hSession The session's handle
+/// @param[in] hObject The object's handle
+/// @param[out] pulSize Receives size of object
+/// @return See CKR_* values
 ///
-CK_RV C_GetObjectSize(
-		CK_SESSION_HANDLE hSession
-		, CK_OBJECT_HANDLE hObject
-		, CK_ULONG_PTR pulSize
-);
+CK_RV C_GetObjectSize(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hObject
+		, CK_ULONG_PTR pulSize);
 
 ///
-/// @brief C_GetAttributeValue
-/// @param hSession
-/// @param hObject
-/// @param pTemplate
-/// @param ulCount
-/// @return
+/// @brief Obtains the value of one or more object attributes
+/// @param[in] hSession The session's handle
+/// @param[in] hObject The object's handle
+/// @param[out] pTemplate Specifies attrs; gets
+/// @param[in] ulCount Attributes in template
+/// @return See CKR_* values
 ///
-CK_RV C_GetAttributeValue(
-		CK_SESSION_HANDLE hSession
-		, CK_OBJECT_HANDLE hObject
-		, CK_ATTRIBUTE_PTR pTemplate
-		, CK_ULONG ulCount
-);
+CK_RV C_GetAttributeValue(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hObject
+		, CK_ATTRIBUTE_PTR pTemplate, CK_ULONG ulCount);
 
 ///
-/// @brief C_SetAttributeValue
-/// @param hSession
-/// @param hObject
-/// @param pTemplate
-/// @param ulCount
-/// @return
+/// @brief Modifies the value of one or more object attributes
+/// @param[in] hSession The session's handle
+/// @param[in] hObject The object's handle
+/// @param[in] pTemplate Specifies attrs and values
+/// @param[in] ulCount Attributes in template
+/// @return See CKR_* values
 ///
-CK_RV C_SetAttributeValue(
-		CK_SESSION_HANDLE hSession
-		, CK_OBJECT_HANDLE hObject
-		, CK_ATTRIBUTE_PTR pTemplate
-		, CK_ULONG ulCount
-);
+CK_RV C_SetAttributeValue(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hObject
+		, CK_ATTRIBUTE_PTR pTemplate, CK_ULONG ulCount);
 
 ///
-/// @brief C_FindObjectsInit
-/// @param hSession
-/// @param pTemplate
-/// @param ulCount
-/// @return
+/// @brief initializes a search for token and session objects that match a template
+/// @param[in] hSession The session's handle
+/// @param[in] pTemplate Attribute values to match
+/// @param[in] ulCount Attrs in search template
+/// @return See CKR_* values
 ///
-CK_RV C_FindObjectsInit(
-		CK_SESSION_HANDLE hSession
-		, CK_ATTRIBUTE_PTR pTemplate
-		, CK_ULONG ulCount
-);
+CK_RV C_FindObjectsInit(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pTemplate
+		, CK_ULONG ulCount);
 
 ///
-/// @brief C_FindObjects
-/// @param hSession
-/// @param phObject
-/// @param ulMaxObjectCount
-/// @param pulObjectCount
-/// @return
+/// @brief Continues a search for token and session objects that match a template,
+/// obtaining additional object handles
+/// @param[in] hSession Session's handle
+/// @param[out] phObject Gets object handles
+/// @param[in] ulMaxObjectCount Max handles to get
+/// @param[out] pulObjectCount Actual count returned
+/// @return See CKR_* values
 ///
-CK_RV C_FindObjects(
-		CK_SESSION_HANDLE hSession
-		, CK_OBJECT_HANDLE_PTR phObject
-		, CK_ULONG ulMaxObjectCount
-		, CK_ULONG_PTR pulObjectCount
-);
+CK_RV C_FindObjects(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE_PTR phObject
+		, CK_ULONG ulMaxObjectCount, CK_ULONG_PTR pulObjectCount);
 
+///
+/// @brief Finishes a search for token and session objects
+/// @param[in] hSession The session's handle
+/// @return See CKR_* values
+///
 CK_RV C_FindObjectsFinal(CK_SESSION_HANDLE hSession);
 
 #ifdef __cplusplus
