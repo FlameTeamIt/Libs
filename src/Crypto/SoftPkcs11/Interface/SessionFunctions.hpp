@@ -9,96 +9,77 @@ extern "C"
 #endif
 
 ///
-/// @brief C_OpenSession
-/// @param slotId
-/// @param flags
-/// @param pApplication
-/// @param Notify
-/// @param phSession
-/// @return
+/// @brief Opens a session between an application and a token
+/// @param[in] slotId The slot's ID
+/// @param[in] flags From CK_SESSION_INFO
+/// @param[in] pApplication Passed to callback
+/// @param[in] Notify Callback function
+/// @param[out] phSession Gets session handle
+/// @return See CKR_* values
 ///
-CK_RV C_OpenSession(
-		CK_SLOT_ID slotId
-		, CK_FLAGS flags
-		, CK_VOID_PTR pApplication
-		, CK_NOTIFY Notify
-		, CK_SESSION_HANDLE_PTR phSession
-);
+CK_RV C_OpenSession(CK_SLOT_ID slotId, CK_FLAGS flags, CK_VOID_PTR pApplication
+		, CK_NOTIFY Notify, CK_SESSION_HANDLE_PTR phSession);
 
 ///
-/// @brief C_CloseSession
-/// @param hSession
-/// @return
+/// @brief Closes a session between an application and a token
+/// @param[in] hSession the Session's handle
+/// @return See CKR_* values
 ///
 CK_RV C_CloseSession(CK_SESSION_HANDLE hSession);
 
 ///
-/// @brief C_CloseAllSessions
-/// @param slotId
-/// @return
+/// @brief Closes all sessions with a token
+/// @param[in] slotId The token's slot
+/// @return See CKR_* values
 ///
 CK_RV C_CloseAllSessions(CK_SLOT_ID slotId);
 
 ///
-/// @brief C_GetSessionInfo
-/// @param hSession
-/// @param pInfo
-/// @return
+/// @brief Obtains information about the session
+/// @param[in] hSession The session's handle
+/// @param[out] pInfo Receives session info
+/// @return See CKR_* values
 ///
-CK_RV C_GetSessionInfo(
-		CK_SESSION_HANDLE hSession
-		, CK_SESSION_INFO_PTR pInfo
-);
+CK_RV C_GetSessionInfo(CK_SESSION_HANDLE hSession, CK_SESSION_INFO_PTR pInfo);
 
 ///
-/// @brief C_GetOperationState
-/// @param hSession
-/// @param pOperationState
-/// @param pulOperationStateLen
-/// @return
+/// @brief Obtains the state of the cryptographic operation in a session
+/// @param[in] hSession Session's handle
+/// @param[out] pOperationState Gets state
+/// @param[out] pulOperationStateLen Gets state length
+/// @return See CKR_* values
 ///
-CK_RV C_GetOperationState(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pOperationState
-		, CK_ULONG_PTR pulOperationStateLen
-);
+CK_RV C_GetOperationState(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pOperationState
+		, CK_ULONG_PTR pulOperationStateLen);
 
 ///
-/// @brief C_SetOperationState
-/// @param hSession
-/// @param pOperationState
-/// @param ulOperationStateLen
-/// @param hEncryptionKey
-/// @param hAuthenticationKey
-/// @return
+/// @brief Restores the state of the cryptographic operation in a session
+/// @param[in] hSession Session's handle
+/// @param[in] pOperationState Holds state
+/// @param[in] ulOperationStateLen Holds state length
+/// @param[in] hEncryptionKey Encryption/decryption key
+/// @param[in] hAuthenticationKey Sign/verify key
+/// @return See CKR_* values
 ///
-CK_RV C_SetOperationState(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pOperationState
-		, CK_ULONG ulOperationStateLen
-		, CK_OBJECT_HANDLE hEncryptionKey
-		, CK_OBJECT_HANDLE hAuthenticationKey
-);
+CK_RV C_SetOperationState(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pOperationState
+		, CK_ULONG ulOperationStateLen, CK_OBJECT_HANDLE hEncryptionKey
+		, CK_OBJECT_HANDLE hAuthenticationKey);
 
 ///
-/// @brief C_Login
-/// @param hSession
-/// @param userType
-/// @param pPin
-/// @param ulPinLen
-/// @return
+/// @brief Logs a user into a token
+/// @param hSession The session's handle
+/// @param userType The user type
+/// @param pPin The user's PIN
+/// @param ulPinLen The length of the PIN
+/// @return See CKR_* values
 ///
-CK_RV C_Login(
-		CK_SESSION_HANDLE hSession
-		, CK_USER_TYPE userType
-		, CK_UTF8CHAR_PTR pPin
-		, CK_ULONG ulPinLen
-);
+CK_RV C_Login(CK_SESSION_HANDLE hSession, CK_USER_TYPE userType
+		, CK_UTF8CHAR_PTR pPin, CK_ULONG ulPinLen);
 
 ///
-/// @brief C_Logout
-/// @param hSession
-/// @return
+/// @brief Logs a user out from a token
+/// @param[in] hSession The session's handle
+/// @return See CKR_* values
 ///
 CK_RV C_Logout(CK_SESSION_HANDLE hSession);
 
