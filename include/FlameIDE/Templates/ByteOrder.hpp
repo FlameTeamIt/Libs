@@ -206,7 +206,7 @@ private:
 	static Types::ichar_t reverseBytes(Types::ichar_t value)
 	{
 		using ValueType = decltype(value);
-		using ValueUType = typename MakeUnsigned<ValueType>::Type;
+		using ValueUType = typename MakeUnsignedTrait<ValueType>::Type;
 		return static_cast<ValueType>(
 				reverseBytes(static_cast<ValueUType>(value))
 		);
@@ -214,7 +214,7 @@ private:
 	static Types::short_t reverseBytes(Types::short_t value)
 	{
 		using ValueType = decltype(value);
-		using ValueUType = typename MakeUnsigned<ValueType>::Type;
+		using ValueUType = typename MakeUnsignedTrait<ValueType>::Type;
 		return static_cast<ValueType>(
 				reverseBytes(static_cast<ValueUType>(value))
 		);
@@ -222,7 +222,7 @@ private:
 	static Types::int_t reverseBytes(Types::int_t value)
 	{
 		using ValueType = decltype(value);
-		using ValueUType = typename MakeUnsigned<ValueType>::Type;
+		using ValueUType = typename MakeUnsignedTrait<ValueType>::Type;
 		return static_cast<ValueType>(
 				reverseBytes(static_cast<ValueUType>(value))
 		);
@@ -230,7 +230,7 @@ private:
 	static Types::long_t reverseBytes(Types::long_t value)
 	{
 		using ValueType = decltype(value);
-		using ValueUType = typename MakeUnsigned<ValueType>::Type;
+		using ValueUType = typename MakeUnsignedTrait<ValueType>::Type;
 		return static_cast<ValueType>(
 				reverseBytes(static_cast<ValueUType>(value))
 		);

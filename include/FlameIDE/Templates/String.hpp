@@ -797,8 +797,8 @@ template<typename T
 	, typename IntType
 	, typename EnableType =
 			typename EnableType<
-				IsIntegralType<IntType>::VALUE
-						|| IsFloatType<IntType>::VALUE
+				IsIntegralTrait<IntType>::VALUE
+						|| IsFloatTrait<IntType>::VALUE
 				, IntType
 			>::Type
 >
@@ -815,8 +815,8 @@ template<typename T
 	, typename IntType
 	, typename EnableType =
 			typename EnableType<
-				IsIntegralType<IntType>::VALUE
-						|| IsFloatType<IntType>::VALUE
+				IsIntegralTrait<IntType>::VALUE
+						|| IsFloatTrait<IntType>::VALUE
 				, IntType
 			>::Type
 >

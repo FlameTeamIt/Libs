@@ -8,9 +8,9 @@
 namespace flame_ide
 {
 
-/**
- * @brief Aliases to primitive fixed size types.
- */
+///
+/// @brief Aliases to primitive fixed size types.
+///
 struct Types: public NonCreational
 {
 	using char_t = flame_ide::char_t;
@@ -36,319 +36,345 @@ struct Types: public NonCreational
 	using diff_t = flame_ide::diff_t;
 };
 
-/**
- * @brief The IsPrimitiveType struct
- */
-template<typename T>
-struct IsPrimitiveType: public FalseType
-{};
-
-template<>
-struct IsPrimitiveType<Types::char_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::ichar_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::short_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::int_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::long_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::uichar_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::ushort_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::uint_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::ulong_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::float_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::double_t>: public TrueType
-{};
-
-template<>
-struct IsPrimitiveType<Types::ldouble_t>: public TrueType
-{};
-
-
 ///
-/// @brief The IsFloatType struct
+/// @brief The IsPrimitiveTrait struct
 ///
 template<typename T>
-struct IsFloatType: public FalseType
+struct IsPrimitiveTrait: public FalseType
 {};
 
 template<>
-struct IsFloatType<Types::float_t>: public TrueType
+struct IsPrimitiveTrait<Types::char_t>: public TrueType
 {};
 
 template<>
-struct IsFloatType<Types::double_t>: public TrueType
+struct IsPrimitiveTrait<Types::ichar_t>: public TrueType
 {};
 
 template<>
-struct IsFloatType<Types::ldouble_t>: public TrueType
+struct IsPrimitiveTrait<Types::short_t>: public TrueType
 {};
+
+template<>
+struct IsPrimitiveTrait<Types::int_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveTrait<Types::long_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveTrait<Types::uichar_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveTrait<Types::ushort_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveTrait<Types::uint_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveTrait<Types::ulong_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveTrait<Types::float_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveTrait<Types::double_t>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveTrait<Types::ldouble_t>: public TrueType
+{};
+
+template<typename T>
+constexpr auto IsPrimitiveValue = IsPrimitiveTrait<T>::VALUE;
 
 
 ///
-/// @brief The IsSigned struct
+/// @brief The IsFloatTrait struct
 ///
 template<typename T>
-struct IsSigned: public FalseType
+struct IsFloatTrait: public FalseType
+{};
+
+template<>
+struct IsFloatTrait<Types::float_t>: public TrueType
+{};
+
+template<>
+struct IsFloatTrait<Types::double_t>: public TrueType
+{};
+
+template<>
+struct IsFloatTrait<Types::ldouble_t>: public TrueType
+{};
+
+template<typename T>
+constexpr auto IsFloatValue = IsFloatTrait<T>::VALUE;
+
+///
+/// @brief The IsSignedTrait struct
+///
+template<typename T>
+struct IsSignedTrait: public FalseType
 {
-	static_assert(IsPrimitiveType<typename RemoveAll<T>::Type>::VALUE
+	static_assert(IsPrimitiveTrait<typename RemoveAll<T>::Type>::VALUE
 			, "It is not a primitive type.");
-	static_assert(!IsFloatType<typename RemoveAll<T>::Type>::VALUE
+	static_assert(!IsFloatTrait<typename RemoveAll<T>::Type>::VALUE
 			, "It's a float type.");
 };
 
 template<>
-struct IsSigned<Types::uichar_t>: public FalseType
+struct IsSignedTrait<Types::uichar_t>: public FalseType
 {};
 
 template<>
-struct IsSigned<Types::ushort_t>: public FalseType
+struct IsSignedTrait<Types::ushort_t>: public FalseType
 {};
 
 template<>
-struct IsSigned<Types::uint_t>: public FalseType
+struct IsSignedTrait<Types::uint_t>: public FalseType
 {};
 
 template<>
-struct IsSigned<Types::ulong_t>: public FalseType
+struct IsSignedTrait<Types::ulong_t>: public FalseType
 {};
 
 template<>
-struct IsSigned<Types::ichar_t>: public TrueType
+struct IsSignedTrait<Types::ichar_t>: public TrueType
 {};
 
 template<>
-struct IsSigned<Types::short_t>: public TrueType
+struct IsSignedTrait<Types::short_t>: public TrueType
 {};
 
 template<>
-struct IsSigned<Types::int_t>: public TrueType
+struct IsSignedTrait<Types::int_t>: public TrueType
 {};
 
 template<>
-struct IsSigned<Types::long_t>: public TrueType
+struct IsSignedTrait<Types::long_t>: public TrueType
 {};
 
+template<typename T>
+constexpr auto IsSignedValue = IsSignedTrait<T>::VALUE;
 
 ///
-/// @brief The IsUnsigned struct
+/// @brief The IsUnsignedTrait struct
 ///
 template<typename T>
-struct IsUnsigned: public FalseType
+struct IsUnsignedTrait: public FalseType
 {
-	static_assert(IsPrimitiveType<typename RemoveAll<T>::Type>::VALUE
+	static_assert(IsPrimitiveTrait<typename RemoveAll<T>::Type>::VALUE
 			, "It is not a primitive type.");
-	static_assert(!IsFloatType<typename RemoveAll<T>::Type>::VALUE
+	static_assert(!IsFloatTrait<typename RemoveAll<T>::Type>::VALUE
 			, "It's a float type.");
 };
 
 template<>
-struct IsUnsigned<Types::uichar_t>: public TrueType
+struct IsUnsignedTrait<Types::uichar_t>: public TrueType
 {};
 
 template<>
-struct IsUnsigned<Types::ushort_t>: public TrueType
+struct IsUnsignedTrait<Types::ushort_t>: public TrueType
 {};
 
 template<>
-struct IsUnsigned<Types::uint_t>: public TrueType
+struct IsUnsignedTrait<Types::uint_t>: public TrueType
 {};
 
 template<>
-struct IsUnsigned<Types::ulong_t>: public TrueType
+struct IsUnsignedTrait<Types::ulong_t>: public TrueType
 {};
 
 template<>
-struct IsUnsigned<Types::ichar_t>: public FalseType
+struct IsUnsignedTrait<Types::ichar_t>: public FalseType
 {};
 
 template<>
-struct IsUnsigned<Types::short_t>: public FalseType
+struct IsUnsignedTrait<Types::short_t>: public FalseType
 {};
 
 template<>
-struct IsUnsigned<Types::int_t>: public FalseType
+struct IsUnsignedTrait<Types::int_t>: public FalseType
 {};
 
 template<>
-struct IsUnsigned<Types::long_t>: public FalseType
+struct IsUnsignedTrait<Types::long_t>: public FalseType
 {};
 
+template<typename T>
+constexpr auto IsUnsignedValue = IsUnsignedTrait<T>::VALUE;
 
 ///
 /// @brief The IsIntegralType struct
 ///
 template<typename Type>
-struct IsIntegralType: public IntegralConstant<
-			bool, IsPrimitiveType<Type>::VALUE && !IsFloatType<Type>::VALUE
+struct IsIntegralTrait: public IntegralConstant<
+			bool, IsPrimitiveTrait<Type>::VALUE && !IsFloatTrait<Type>::VALUE
 		>
 {};
 
+template<typename T>
+constexpr auto IsIntegralValue = IsIntegralTrait<T>::VALUE;
 
 ///
-/// @brief The MakeSigned struct
+/// @brief The MakeSignedTrait struct
 ///
 template<typename IntType>
-struct MakeSigned
+struct MakeSignedTrait
 {
-	static_assert(IsPrimitiveType<typename RemoveAll<IntType>::Type>::VALUE
+	static_assert(IsPrimitiveTrait<typename RemoveAll<IntType>::Type>::VALUE
 			, "It is not a primitive type.");
 
-	static_assert(!IsFloatType<typename RemoveAll<IntType>::Type>::VALUE
+	static_assert(!IsFloatTrait<typename RemoveAll<IntType>::Type>::VALUE
 			, "It is only for integer types.");
 
 	using Type = IntType;
 };
 
 template<>
-struct MakeSigned<Types::uichar_t>
+struct MakeSignedTrait<Types::uichar_t>
 {
 	using Type = Types::ichar_t;
 };
 
 template<>
-struct MakeSigned<Types::ushort_t>
+struct MakeSignedTrait<Types::ushort_t>
 {
 	using Type = Types::short_t;
 };
 
 template<>
-struct MakeSigned<Types::uint_t>
+struct MakeSignedTrait<Types::uint_t>
 {
 	using Type = Types::int_t;
 };
 
 template<>
-struct MakeSigned<Types::ulong_t>
+struct MakeSignedTrait<Types::ulong_t>
 {
 	using Type = Types::long_t;
 };
 
+template<typename T>
+using MakeSignedType = typename MakeSignedTrait<T>::Type;
+
+///
+/// @brief The MakeUnsignedTrait struct
+///
 template<typename IntType>
-struct MakeUnsigned
+struct MakeUnsignedTrait
 {
-	static_assert(IsPrimitiveType<typename RemoveAll<IntType>::Type>::VALUE
+	static_assert(IsPrimitiveTrait<typename RemoveAll<IntType>::Type>::VALUE
 			, "It is not a primitive type.");
 
-	static_assert(!IsFloatType<typename RemoveAll<IntType>::Type>::VALUE
+	static_assert(!IsFloatTrait<typename RemoveAll<IntType>::Type>::VALUE
 			, "It is only for integer types.");
 
 	using Type = IntType;
 };
 
 template<>
-struct MakeUnsigned<Types::ichar_t>
+struct MakeUnsignedTrait<Types::ichar_t>
 {
 	using Type = Types::uichar_t;
 };
 
 template<>
-struct MakeUnsigned<Types::short_t>
+struct MakeUnsignedTrait<Types::short_t>
 {
 	using Type = Types::ushort_t;
 };
 
 template<>
-struct MakeUnsigned<Types::int_t>
+struct MakeUnsignedTrait<Types::int_t>
 {
 	using Type = Types::uint_t;
 };
 
 template<>
-struct MakeUnsigned<Types::long_t>
+struct MakeUnsignedTrait<Types::long_t>
 {
 	using Type = Types::ulong_t;
 };
 
+template<typename T>
+using MakeUnsignedType = typename MakeUnsignedTrait<T>::Type;
+
 ///
-/// @brief The NumerLimit struct
+/// @brief The NumerLimitTrait struct
 ///
 template<typename IntType>
-struct NumberLimit
+struct NumberLimitTrait
 {};
 
 template<>
-struct NumberLimit<Types::ichar_t>
+struct NumberLimitTrait<Types::ichar_t>
 {
 	static constexpr Types::ichar_t MIN_VALUE = INT8_MIN;
 	static constexpr Types::ichar_t MAX_VALUE = INT8_MAX;
 };
 
 template<>
-struct NumberLimit<Types::short_t>
+struct NumberLimitTrait<Types::short_t>
 {
 	static constexpr Types::short_t MIN_VALUE = INT16_MIN;
 	static constexpr Types::short_t MAX_VALUE = INT16_MAX;
 };
 
 template<>
-struct NumberLimit<Types::int_t>
+struct NumberLimitTrait<Types::int_t>
 {
 	static constexpr Types::int_t MIN_VALUE = INT32_MIN;
 	static constexpr Types::int_t MAX_VALUE = INT32_MAX;
 };
 
 template<>
-struct NumberLimit<Types::long_t>
+struct NumberLimitTrait<Types::long_t>
 {
 	static constexpr Types::long_t MIN_VALUE = INT64_MIN;
 	static constexpr Types::long_t MAX_VALUE = INT64_MAX;
 };
 
 template<>
-struct NumberLimit<Types::uichar_t>
+struct NumberLimitTrait<Types::uichar_t>
 {
 	static constexpr Types::uichar_t MIN_VALUE = 0;
 	static constexpr Types::uichar_t MAX_VALUE = UINT8_MAX;
 };
 
 template<>
-struct NumberLimit<Types::ushort_t>
+struct NumberLimitTrait<Types::ushort_t>
 {
 	static constexpr Types::ushort_t MIN_VALUE = 0;
 	static constexpr Types::ushort_t MAX_VALUE = UINT16_MAX;
 };
 
 template<>
-struct NumberLimit<Types::uint_t>
+struct NumberLimitTrait<Types::uint_t>
 {
 	static constexpr Types::uint_t MIN_VALUE = 0;
 	static constexpr Types::uint_t MAX_VALUE = UINT32_MAX;
 };
 
 template<>
-struct NumberLimit<Types::ulong_t>
+struct NumberLimitTrait<Types::ulong_t>
 {
 	static constexpr Types::ulong_t MIN_VALUE = 0;
 	static constexpr Types::ulong_t MAX_VALUE = UINT64_MAX;
 };
+
+template<typename T>
+constexpr auto NumberLimitMinValue = NumberLimitTrait<T>::MIN_VALUE;
+
+template<typename T>
+constexpr auto NumberLimitMaxValue = NumberLimitTrait<T>::MAX_VALUE;
 
 }
 

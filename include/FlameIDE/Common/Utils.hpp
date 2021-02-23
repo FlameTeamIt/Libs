@@ -218,35 +218,35 @@ template<typename T> inline constexpr
 bool isPrimitiveType() noexcept
 {
 	using Type = typename RemoveAll<T>::Type;
-	return IsPrimitiveType<Type>::VALUE;
+	return IsPrimitiveTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isFloatType() noexcept
 {
 	using Type = typename RemoveAll<T>::Type;
-	return IsFloatType<Type>::VALUE;
+	return IsFloatTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isIntegralType() noexcept
 {
 	using Type = typename RemoveAll<T>::Type;
-	return IsIntegralType<Type>::VALUE;
+	return IsIntegralTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isSigned() noexcept
 {
 	using Type = typename RemoveAll<T>::Type;
-	return IsSigned<Type>::VALUE;
+	return IsSignedTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isUnsigned() noexcept
 {
 	using Type = typename RemoveAll<T>::Type;
-	return IsUnsigned<Type>::VALUE;
+	return IsUnsignedTrait<Type>::VALUE;
 }
 
 template<typename T, typename U> inline constexpr

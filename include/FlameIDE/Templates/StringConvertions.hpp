@@ -134,7 +134,7 @@ SizeTraits::SizeType BufferSize<IntType, SIGNED>::get(IntType integer)
 		++signedValue;
 		integer *= -1;
 	}
-	typename MakeUnsigned<IntType>::Type value = integer;
+	typename MakeUnsignedTrait<IntType>::Type value = integer;
 
 	return signedValue + NumberChecker<0ULL, 9ULL, 1>::get(value);
 }

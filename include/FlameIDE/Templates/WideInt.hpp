@@ -221,7 +221,7 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 	template<typename PrimitiveType>
 	static void operatorInit(Array &array, PrimitiveType value) // ctor()
 	{
-		static_assert(IsIntegralType<PrimitiveType>::VALUE, "It is not a integral type");
+		static_assert(IsIntegralTrait<PrimitiveType>::VALUE, "It is not a integral type");
 
 		constexpr Types::size_t SPECIALIZED_VALUE_INIT_SIZE =
 				(COUNT_BYTES >= sizeof(PrimitiveType))
@@ -334,7 +334,7 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 	static void operatorConvert(const Array &array, PrimitiveType &value) // operator smth_type()
 	{
 		static_assert (!isConst<decltype(value)>(), "Value cannot be contant");
-		static_assert(IsIntegralType<PrimitiveType>::VALUE, "It is not a integral type");
+		static_assert(IsIntegralTrait<PrimitiveType>::VALUE, "It is not a integral type");
 
 		constexpr Types::size_t SPECIALIZED_VALUE_INIT_SIZE =
 				(COUNT_BYTES >= sizeof(PrimitiveType))
@@ -419,7 +419,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT::WideInt(PrimitiveType value)
 {
-	static_assert(IsPrimitiveType<PrimitiveType>::VALUE, "It is not a primitive type");
+	static_assert(IsPrimitiveTrait<PrimitiveType>::VALUE, "It is not a primitive type");
 
 	using RealType = typename RemoveAll<PrimitiveType>::Type;
 	using Operations = wideint_utils::PrimitiveTypeOperationsImpl<
@@ -433,7 +433,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator=(PrimitiveType value)
 {
-	static_assert(IsPrimitiveType<PrimitiveType>::VALUE, "It is not a primitive type");
+	static_assert(IsPrimitiveTrait<PrimitiveType>::VALUE, "It is not a primitive type");
 	using RealType = typename RemoveAll<decltype(value)>::Type;
 	using Operations = wideint_utils::PrimitiveTypeOperationsImpl<
 		COUNT_BYTES, isIntegralType<RealType>()

@@ -87,17 +87,6 @@ enum class StreamType
 	, SOCKET
 };
 
-#ifdef FLAMEIDE_ENABLE_ASYNC
-
-/// @brief
-using AsyncIoContext = FLAMEIDE_OS_NAMESPACE::OsAsyncIoContext;
-
-/// @brief
-constexpr AsyncIoContext ASYNC_CONTEXT_INITIALIZER =
-		FLAMEIDE_OS_NAMESPACE::OS_ASYNC_CONTEXT_INITIALIZER;
-
-#endif // FLAMEIDE_ENABLE_ASYNC
-
 /// @brief PLATFORM_PREFIX
 constexpr auto PIPE_NAME_PREFIX = FLAMEIDE_OS_NAMESPACE::OS_PLATFORM_PREFIX;
 
