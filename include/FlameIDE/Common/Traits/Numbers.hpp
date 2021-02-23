@@ -371,10 +371,10 @@ struct NumberLimitTrait<Types::ulong_t>
 };
 
 template<typename T>
-constexpr auto NumberLimitMinValue = NumberLimitTrait<T>::MIN_VALUE;
+constexpr auto NumberLimitValueMin = NumberLimitTrait<T>::MIN_VALUE;
 
 template<typename T>
-constexpr auto NumberLimitMaxValue = NumberLimitTrait<T>::MAX_VALUE;
+constexpr auto NumberLimitValueMax = NumberLimitTrait<T>::MAX_VALUE;
 
 }
 

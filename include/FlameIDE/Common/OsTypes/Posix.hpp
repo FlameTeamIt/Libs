@@ -91,7 +91,7 @@ constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreConte
 using OsSemaphoreValue = unsigned int;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1u;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
-		NumberLimit<OsSemaphoreValue>::MAX_VALUE;
+		NumberLimitValueMax<OsSemaphoreValue>;
 
 constexpr char OS_PLATFORM_PREFIX[] = "/tmp/";
 
