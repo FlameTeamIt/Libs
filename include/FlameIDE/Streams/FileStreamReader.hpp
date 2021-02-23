@@ -3,7 +3,7 @@
 
 #include <FlameIDE/Streams/StreamUtils.hpp>
 
-#include <FlameIDE/Common/OsTypes.hpp>
+#include <FlameIDE/Os/Types.hpp>
 
 namespace flame_ide
 {namespace streams

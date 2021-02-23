@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 set(NAME Threads)
 set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::Threads::Headers)
 set(DEPENDENCY_LIST
-	${FLAME_NAMESPACE}::Common::OsTypes::Headers
+	${FLAME_NAMESPACE}::Os::Headers
 )
 get_sources(FILE_LIST)
 

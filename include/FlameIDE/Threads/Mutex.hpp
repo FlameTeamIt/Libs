@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_THREADS_MUTEX_HPP
 #define FLAMEIDE_THREADS_MUTEX_HPP
 
-#include <FlameIDE/Common/OsTypes.hpp>
+#include <FlameIDE/Os/Types.hpp>
 
 namespace flame_ide
 {namespace threads

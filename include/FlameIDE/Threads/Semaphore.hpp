@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_THREADS_SEMAPHORE_HPP
 #define FLAMEIDE_THREADS_SEMAPHORE_HPP
 
-#include <FlameIDE/Common/OsTypes.hpp>
+#include <FlameIDE/Os/Types.hpp>
 
 namespace flame_ide
 {namespace threads

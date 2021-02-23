@@ -4,6 +4,7 @@ set(NAME Streams)
 set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::Streams::Headers)
 set(DEPENDENCY_LIST
 	${FLAME_NAMESPACE}::Common::Headers
+	${FLAME_NAMESPACE}::Os::Headers
 	${FLAME_NAMESPACE}::Templates::Headers
 )
 get_sources(FILE_LIST)
