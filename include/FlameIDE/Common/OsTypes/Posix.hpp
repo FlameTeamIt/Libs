@@ -5,13 +5,12 @@
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
+#include <FlameIDE/Common/Traits/Numbers.hpp>
+
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <pthread.h>
 #include <semaphore.h>
-
-#include <FlameIDE/Common/Traits/Numbers.hpp>
-#include <FlameIDE/Common/OsTypes/PosixAsync.hpp>
 
 namespace flame_ide
 {namespace os
