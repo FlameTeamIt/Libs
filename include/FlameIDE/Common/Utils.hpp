@@ -32,7 +32,7 @@ bool isConst() noexcept;
 /// @tparam First param.
 ///
 template<typename T> constexpr inline
-typename RemoveReference<T>::Type&& move(T &&reference) noexcept;
+typename RemoveReferenceTrait<T>::Type&& move(T &&reference) noexcept;
 
 ///
 /// @brief std::forward alternative.
@@ -217,35 +217,35 @@ namespace flame_ide
 template<typename T> inline constexpr
 bool isPrimitiveType() noexcept
 {
-	using Type = typename RemoveAll<T>::Type;
+	using Type = typename RemoveAllTrait<T>::Type;
 	return IsPrimitiveTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isFloatType() noexcept
 {
-	using Type = typename RemoveAll<T>::Type;
+	using Type = typename RemoveAllTrait<T>::Type;
 	return IsFloatTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isIntegralType() noexcept
 {
-	using Type = typename RemoveAll<T>::Type;
+	using Type = typename RemoveAllTrait<T>::Type;
 	return IsIntegralTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isSigned() noexcept
 {
-	using Type = typename RemoveAll<T>::Type;
+	using Type = typename RemoveAllTrait<T>::Type;
 	return IsSignedTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isUnsigned() noexcept
 {
-	using Type = typename RemoveAll<T>::Type;
+	using Type = typename RemoveAllTrait<T>::Type;
 	return IsUnsignedTrait<Type>::VALUE;
 }
 
@@ -262,9 +262,9 @@ bool isConst() noexcept
 }
 
 template<typename T> constexpr inline
-typename RemoveReference<T>::Type &&move(T &&reference) noexcept
+typename RemoveReferenceTrait<T>::Type &&move(T &&reference) noexcept
 {
-	return static_cast<typename RemoveReference<T>::Type &&>(reference);
+	return static_cast<typename RemoveReferenceTrait<T>::Type &&>(reference);
 }
 
 template<class T> constexpr inline
@@ -308,14 +308,14 @@ bool isEqual(Iterator1 start1, Iterator1 end1
 {
 	static_assert(
 			!isSameTypes<
-				typename RemoveAll<decltype(*start1)>::Type
-				, typename RemoveAll<decltype(*start2)>::Type
+				typename RemoveAllTrait<decltype(*start1)>::Type
+				, typename RemoveAllTrait<decltype(*start2)>::Type
 			>()
 			, "Types is not equal."
 	);
 
-	typename RemoveAll<Iterator1>::Type it1 = start1;
-	typename RemoveAll<Iterator2>::Type it2 = start2;
+	typename RemoveAllTrait<Iterator1>::Type it1 = start1;
+	typename RemoveAllTrait<Iterator2>::Type it2 = start2;
 	for (; (it1 != end1) && (it2 != end2); ++it1, ++it2)
 	{
 		if ((it1 == end1) || (it2 == end2) || (*it1 != *it2))

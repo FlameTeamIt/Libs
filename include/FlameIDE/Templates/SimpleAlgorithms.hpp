@@ -69,8 +69,8 @@ Types::size_t copy(IteratorInput start, IteratorInput end
 {
 	static_assert(
 			isSameTypes<
-				typename RemoveAll<decltype(*start)>::Type
-				, typename RemoveAll<decltype(*out)>::Type
+				typename RemoveAllTrait<decltype(*start)>::Type
+				, typename RemoveAllTrait<decltype(*out)>::Type
 			>()
 			, "Types is not equal."
 	);

@@ -118,7 +118,7 @@ IpAddressString<IP_ADDRESS_STRING_SIZE>::IpAddressString() noexcept
 			templates::makeRange(value)
 			, [](auto &i)
 			{
-				i = typename RemoveAll<decltype(i)>::Type{};
+				i = typename RemoveAllTrait<decltype(i)>::Type{};
 			}
 	);
 }

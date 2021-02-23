@@ -321,7 +321,7 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 
 	static void operatorBitwiseNegation(Array &array)
 	{
-		using Type = typename RemoveAll<decltype(*(array.begin()))>::Type;
+		using Type = typename RemoveAllTrait<decltype(*(array.begin()))>::Type;
 		for (auto &i : array)
 		{
 			i = Type(~i);
@@ -402,7 +402,7 @@ inline PrimitiveType operatorConvert(const Array &array)
 {
 	PrimitiveType value;
 	using Operations = wideint_utils::PrimitiveTypeOperationsImpl<
-		Array::CAPACITY, isIntegralType<typename RemoveAll<decltype(value)>::Type>()
+		Array::CAPACITY, isIntegralType<typename RemoveAllTrait<decltype(value)>::Type>()
 	>;
 	Operations::operatorConvert(array, value);
 	return value;
@@ -421,7 +421,7 @@ WIDE_INT::WideInt(PrimitiveType value)
 {
 	static_assert(IsPrimitiveTrait<PrimitiveType>::VALUE, "It is not a primitive type");
 
-	using RealType = typename RemoveAll<PrimitiveType>::Type;
+	using RealType = typename RemoveAllTrait<PrimitiveType>::Type;
 	using Operations = wideint_utils::PrimitiveTypeOperationsImpl<
 		COUNT_BYTES, isIntegralType<RealType>()
 	>;
@@ -434,7 +434,7 @@ template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator=(PrimitiveType value)
 {
 	static_assert(IsPrimitiveTrait<PrimitiveType>::VALUE, "It is not a primitive type");
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	using Operations = wideint_utils::PrimitiveTypeOperationsImpl<
 		COUNT_BYTES, isIntegralType<RealType>()
 	>;
@@ -449,7 +449,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator<<=(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	static_assert(!isFloatType<RealType>(), "It is a float type.");
 	using Operations = wideint_utils::PrimitiveTypeOperationsImpl<
@@ -473,7 +473,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator>>=(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	static_assert(!isFloatType<RealType>(), "It is a float type.");
 	using Operations = wideint_utils::PrimitiveTypeOperationsImpl<
@@ -497,7 +497,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator&=(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	static_assert(!isFloatType<RealType>(), "It is a float type.");
 	return *this;
@@ -515,7 +515,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator|=(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	static_assert(!isFloatType<RealType>(), "It is a float type.");
 	return *this;
@@ -533,7 +533,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator+=(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	return *this;
 }
@@ -550,7 +550,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator-=(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	return *this;
 }
@@ -567,7 +567,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator*=(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	return *this;
 }
@@ -584,7 +584,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator/=(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	return *this;
 }
@@ -605,7 +605,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator<<(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	static_assert(!isFloatType<RealType>(), "It is a float type.");
 	return *this;
@@ -623,7 +623,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator>>(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	static_assert(!isFloatType<RealType>(), "It is a float type.");
 	return *this;
@@ -645,7 +645,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator&(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	return *this;
 }
@@ -662,7 +662,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator|(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	return *this;
 }
@@ -685,7 +685,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator+(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	return *this;
 }
@@ -702,7 +702,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator-(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	return *this;
 }
@@ -723,7 +723,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator*(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	return *this;
 }
@@ -740,7 +740,7 @@ TEMPLATE_WIDE_INT
 template<typename PrimitiveType>
 WIDE_INT &WIDE_INT::operator/(PrimitiveType value)
 {
-	using RealType = typename RemoveAll<decltype(value)>::Type;
+	using RealType = typename RemoveAllTrait<decltype(value)>::Type;
 	static_assert(isPrimitiveType<RealType>(), "It is not a primitive type.");
 	return *this;
 }

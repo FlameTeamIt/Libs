@@ -123,9 +123,9 @@ constexpr auto IsFloatValue = IsFloatTrait<T>::VALUE;
 template<typename T>
 struct IsSignedTrait: public FalseType
 {
-	static_assert(IsPrimitiveTrait<typename RemoveAll<T>::Type>::VALUE
+	static_assert(IsPrimitiveTrait<typename RemoveAllTrait<T>::Type>::VALUE
 			, "It is not a primitive type.");
-	static_assert(!IsFloatTrait<typename RemoveAll<T>::Type>::VALUE
+	static_assert(!IsFloatTrait<typename RemoveAllTrait<T>::Type>::VALUE
 			, "It's a float type.");
 };
 
@@ -170,9 +170,9 @@ constexpr auto IsSignedValue = IsSignedTrait<T>::VALUE;
 template<typename T>
 struct IsUnsignedTrait: public FalseType
 {
-	static_assert(IsPrimitiveTrait<typename RemoveAll<T>::Type>::VALUE
+	static_assert(IsPrimitiveTrait<typename RemoveAllTrait<T>::Type>::VALUE
 			, "It is not a primitive type.");
-	static_assert(!IsFloatTrait<typename RemoveAll<T>::Type>::VALUE
+	static_assert(!IsFloatTrait<typename RemoveAllTrait<T>::Type>::VALUE
 			, "It's a float type.");
 };
 
@@ -229,10 +229,10 @@ constexpr auto IsIntegralValue = IsIntegralTrait<T>::VALUE;
 template<typename IntType>
 struct MakeSignedTrait
 {
-	static_assert(IsPrimitiveTrait<typename RemoveAll<IntType>::Type>::VALUE
+	static_assert(IsPrimitiveTrait<typename RemoveAllTrait<IntType>::Type>::VALUE
 			, "It is not a primitive type.");
 
-	static_assert(!IsFloatTrait<typename RemoveAll<IntType>::Type>::VALUE
+	static_assert(!IsFloatTrait<typename RemoveAllTrait<IntType>::Type>::VALUE
 			, "It is only for integer types.");
 
 	using Type = IntType;
@@ -271,10 +271,10 @@ using MakeSignedType = typename MakeSignedTrait<T>::Type;
 template<typename IntType>
 struct MakeUnsignedTrait
 {
-	static_assert(IsPrimitiveTrait<typename RemoveAll<IntType>::Type>::VALUE
+	static_assert(IsPrimitiveTrait<typename RemoveAllTrait<IntType>::Type>::VALUE
 			, "It is not a primitive type.");
 
-	static_assert(!IsFloatTrait<typename RemoveAll<IntType>::Type>::VALUE
+	static_assert(!IsFloatTrait<typename RemoveAllTrait<IntType>::Type>::VALUE
 			, "It is only for integer types.");
 
 	using Type = IntType;

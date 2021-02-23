@@ -17,10 +17,10 @@ struct VariantStruct
 	using Me = VariantStruct<Args...>;
 
 	template<typename T>
-	typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer get();
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer get();
 
 	template<typename T>
-	typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst get() const;
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst get() const;
 
 	template<typename T>
 	bool set(const T &object);
@@ -43,10 +43,10 @@ struct VariantStruct<Arg, Args...>
 	using Me = VariantStruct<Arg, Args...>;
 
 	template<typename T>
-	typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer get();
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer get();
 
 	template<typename T>
-	typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst get() const;
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst get() const;
 
 	template<typename T>
 	Types::ssize_t set(const T &object);
@@ -80,10 +80,10 @@ struct VariantStruct<>
 	using Me = VariantStruct<>;
 
 	template<typename T>
-	typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer get();
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer get();
 
 	template<typename T>
-	typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst get() const;
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst get() const;
 
 	template<typename T>
 	Types::ssize_t set(const T &object);
@@ -122,11 +122,11 @@ struct VariantStructGetterSetter
 	Types::ssize_t set(VariantStruct<Arg, Args...> &me, T &&object);
 
 	template<typename T, typename Arg, typename ...Args> static inline
-	typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer
 	get(VariantStruct<Arg, Args...> &me);
 
 	template<typename T, typename Arg, typename ...Args> static inline
-	typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst
 	getConst(const VariantStruct<Arg, Args...> &me);
 };
 
@@ -140,11 +140,11 @@ struct VariantStructGetterSetter<false>
 	Types::ssize_t set(VariantStruct<Arg, Args...> &me, T &&object);
 
 	template<typename T, typename Arg, typename ...Args> static inline
-	typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer
 	get(VariantStruct<Arg, Args...> &me);
 
 	template<typename T, typename Arg, typename ...Args> static inline
-	typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst
 	getConst(const VariantStruct<Arg, Args...> &me);
 };
 
@@ -205,10 +205,10 @@ public:
 	Types::ssize_t getCurrentIndex() const;
 
 	template<typename T>
-	typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer get();
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer get();
 
 	template<typename T>
-	typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst get() const;
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst get() const;
 
 	template<typename T>
 	bool get(T &object) const;
@@ -269,14 +269,14 @@ namespace variant_utils
 {
 
 template<typename Arg, typename ...Args> template<typename T>
-typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer
+typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer
 VariantStruct<Arg, Args...>::get()
 {
 	return VariantStructGetterSetter<isSameTypes<T, Arg>()>::template get<T>(*this);
 }
 
 template<typename Arg, typename ...Args> template<typename T>
-typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst
+typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst
 VariantStruct<Arg, Args...>::get() const
 {
 	return VariantStructGetterSetter<isSameTypes<T, Arg>()>
@@ -355,14 +355,14 @@ bool VariantStruct<Arg, Args...>::equal(const Me &variantStruct, Types::ssize_t 
 }
 
 template<typename T>
-typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer
+typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer
 VariantStruct<>::get()
 {
 	return nullptr;
 }
 
 template<typename T>
-typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst
+typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst
 VariantStruct<>::get() const
 {
 	return nullptr;
@@ -398,14 +398,14 @@ Types::ssize_t VariantStructGetterSetter<IS_SAME_TYPES>::set(
 }
 
 template<bool IS_SAME_TYPES> template<typename T, typename Arg, typename ...Args> inline
-typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer
+typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer
 VariantStructGetterSetter<IS_SAME_TYPES>::get(VariantStruct<Arg, Args...> &me)
 {
 	return &me.data.arg;
 }
 
 template<bool IS_SAME_TYPES> template<typename T, typename Arg, typename ...Args> inline
-typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst
+typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst
 VariantStructGetterSetter<IS_SAME_TYPES>::getConst(const VariantStruct<Arg, Args...> &me)
 {
 	return &me.data.arg;
@@ -428,14 +428,14 @@ Types::ssize_t VariantStructGetterSetter<false>::set(
 }
 
 template<typename T, typename Arg, typename ...Args> inline
-typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer
+typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer
 VariantStructGetterSetter<false>::get(VariantStruct<Arg, Args...> &me)
 {
 	return me.data.pack.template get<T>();
 }
 
 template<typename T, typename Arg, typename ...Args> inline
-typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst
+typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst
 VariantStructGetterSetter<false>::getConst(const VariantStruct<Arg, Args...> &me)
 {
 	return me.data.pack.template get<T>();
@@ -465,8 +465,8 @@ template<typename Arg, typename ...Args> template<typename T>
 Variant<Arg, Args...>::Variant(const T &initObject) noexcept
 {
 	InitStruct<
-		typename RemoveAll<T>::Type
-		, ComparingTypes<Me, typename RemoveAll<T>::Type>::VALUE
+		typename RemoveAllTrait<T>::Type
+		, ComparingTypes<Me, typename RemoveAllTrait<T>::Type>::VALUE
 	>::exec(*this, initObject);
 }
 
@@ -474,8 +474,8 @@ template<typename Arg, typename ...Args> template<typename T>
 Variant<Arg, Args...>::Variant(T &&initObject) noexcept
 {
 	InitStruct<
-		typename RemoveAll<T>::Type
-		, ComparingTypes<Me, typename RemoveAll<T>::Type>::VALUE
+		typename RemoveAllTrait<T>::Type
+		, ComparingTypes<Me, typename RemoveAllTrait<T>::Type>::VALUE
 	>::execMove(*this, move(initObject));
 }
 
@@ -591,7 +591,7 @@ Types::ssize_t Variant<Arg, Args...>::getCurrentIndex() const
 }
 
 template<typename Arg, typename ...Args> template<typename T>
-typename DefaultTraits<typename RemoveAll<T>::Type>::Pointer
+typename DefaultTraits<typename RemoveAllTrait<T>::Type>::Pointer
 Variant<Arg, Args...>::get()
 {
 	constexpr Types::ssize_t TYPE_INDEX = GetIndexOfType<T, Arg, Args...>::INDEX;
@@ -606,7 +606,7 @@ Variant<Arg, Args...>::get()
 }
 
 template<typename Arg, typename ...Args> template<typename T>
-typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst
+typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst
 Variant<Arg, Args...>::get() const
 {
 	constexpr Types::ssize_t TYPE_INDEX = GetIndexOfType<T, Arg, Args...>::INDEX;
@@ -623,7 +623,7 @@ Variant<Arg, Args...>::get() const
 template<typename Arg, typename ...Args> template<typename T>
 bool Variant<Arg, Args...>::get(T &object) const
 {
-	typename DefaultTraits<typename RemoveAll<T>::Type>::PointerToConst obj = get();
+	typename DefaultTraits<typename RemoveAllTrait<T>::Type>::PointerToConst obj = get();
 	if (obj)
 	{
 		object = *obj;

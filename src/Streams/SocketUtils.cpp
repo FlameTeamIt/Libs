@@ -55,7 +55,7 @@ Ipv4::Ipv4() noexcept :
 			templates::makeRange(addressNumber)
 			, [](auto &i)
 			{
-				i = typename RemoveAll<decltype(i)>::Type{};
+				i = typename RemoveAllTrait<decltype(i)>::Type{};
 			}
 	);
 }
@@ -120,7 +120,7 @@ Ipv6::Ipv6() noexcept
 			templates::makeRange(addressNumber)
 			, [](auto &i)
 			{
-				i = typename RemoveAll<decltype(i)>::Type{};
+				i = typename RemoveAllTrait<decltype(i)>::Type{};
 			}
 	);
 }

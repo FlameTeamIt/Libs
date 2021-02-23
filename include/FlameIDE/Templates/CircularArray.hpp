@@ -379,7 +379,7 @@ TEMPLATE_DEFINE template<typename InputIterator>
 void CIRCULAR_ARRAY_TYPE::pushBack(const Range<InputIterator> &range) noexcept
 {
 	static_assert(
-			isSameTypes<typename RemoveAll<decltype(*range.begin())>::Type, Type>()
+			isSameTypes<typename RemoveAllTrait<decltype(*range.begin())>::Type, Type>()
 			, "Invalid 'InputIterator' type"
 	);
 	auto rangeSize = countIterations(range);
@@ -397,7 +397,7 @@ TEMPLATE_DEFINE template<typename InputIterator>
 void CIRCULAR_ARRAY_TYPE::pushBack(Range<InputIterator> &&range) noexcept
 {
 	static_assert(
-			isSameTypes<typename RemoveAll<decltype(*range.begin())>::Type, Type>()
+			isSameTypes<typename RemoveAllTrait<decltype(*range.begin())>::Type, Type>()
 			, "Invalid 'InputIterator' type"
 	);
 	auto rangeSize = countIterations(range);

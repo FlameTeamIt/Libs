@@ -60,7 +60,7 @@ private:
 	{
 		static inline void init(Pointer iterator, ArgHead &&argHead, Args &&...args)
 		{
-			using ArgHeadType = typename RemoveAll<decltype(argHead)>::Type;
+			using ArgHeadType = typename RemoveAllTrait<decltype(argHead)>::Type;
 			static_assert(ComparingTypes<Type, ArgHeadType>::VALUE, "Include type error.");
 			*iterator = forward<decltype(argHead)>(argHead);
 			Helper<Args...>::init(++iterator, forward<decltype(args)>(args)...);
@@ -73,8 +73,8 @@ private:
 		static inline void init(Pointer iterator, Arg &&arg)
 		{
 			static_assert(ComparingTypes<
-						typename RemovePointer<Pointer>::Type
-						, typename RemoveAll<Arg>::Type
+						typename RemovePointerTrait<Pointer>::Type
+						, typename RemoveAllTrait<Arg>::Type
 					>::VALUE
 					, "no possible to use this ");
 			*iterator = forward<decltype(arg)>(arg);
