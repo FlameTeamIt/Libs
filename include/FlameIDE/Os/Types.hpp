@@ -90,6 +90,9 @@ enum class StreamType
 /// @brief PLATFORM_PREFIX
 constexpr auto PIPE_NAME_PREFIX = FLAMEIDE_OS_NAMESPACE::OS_PLATFORM_PREFIX;
 
+/// @brief Library handler
+using LibraryHandle = FLAMEIDE_OS_NAMESPACE::OsLibraryHandle;
+constexpr auto LIBRARY_HANDLE_INVALID = FLAMEIDE_OS_NAMESPACE::OS_LIBRARY_HANDLE_INVALID;
 
 }} // namespace flame_ide::os
 

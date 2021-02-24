@@ -12,6 +12,7 @@
 #include <sys/un.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <dlfcn.h>
 
 namespace flame_ide
 {namespace os
@@ -96,6 +97,16 @@ constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
 		NumberLimitTrait<OsSemaphoreValue>::MAX_VALUE;
 
 constexpr char OS_PLATFORM_PREFIX[] = "/tmp/";
+
+struct OsLibraryHandle
+{
+	using Handle = decltype(dlopen(nullptr, 0));
+	using Symbol = decltype(dlsym(Handle{}, nullptr));
+	static constexpr auto OPEN_FLAG = RTLD_LAZY;
+
+	Handle address = Handle{};
+};
+constexpr OsLibraryHandle OS_LIBRARY_HANDLE_INVALID = OsLibraryHandle{};
 
 }}} // flame_ide::os::posix
 
