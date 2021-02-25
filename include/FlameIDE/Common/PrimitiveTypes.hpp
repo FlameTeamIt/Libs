@@ -4,6 +4,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#if defined(NULL)
+#	undef NULL
+#endif // defined(NULL)
+
 namespace flame_ide
 {
 

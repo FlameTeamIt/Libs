@@ -4,7 +4,7 @@
 // OTP - one time password
 
 #include <FlameIDE/Crypto/Pkcs11/Types/ValueTypes.hpp>
-#include <FlameIDE/Common/Traits/ReferenceWrapper.hpp>
+#include <FlameIDE/Common/ReferenceWrapper.hpp>
 
 namespace flame_ide
 {
