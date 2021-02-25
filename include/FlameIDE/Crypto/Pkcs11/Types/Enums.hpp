@@ -17,12 +17,12 @@ namespace utils
 {
 
 template<typename EnumType>
-struct UnderlyingType
+struct UnderlyingTypeTrait
 {
 	using Type = void;
 };
 template<typename EnumType>
-using UnderlyingTypeValue = typename UnderlyingType<EnumType>::Type;
+using UnderlyingType = typename UnderlyingTypeTrait<EnumType>::Type;
 
 } // namespace utils
 
@@ -30,7 +30,7 @@ using UnderlyingTypeValue = typename UnderlyingType<EnumType>::Type;
 	namespace utils \
 	{ \
 		template<> \
-		struct UnderlyingType<EnumType> \
+		struct UnderlyingTypeTrait<EnumType> \
 		{ \
 			using Type = RealType; \
 		}; \
@@ -39,9 +39,9 @@ using UnderlyingTypeValue = typename UnderlyingType<EnumType>::Type;
 #define OPERATOR(EnumType, _OPERATOR_) \
 	constexpr EnumType operator _OPERATOR_ (EnumType value1, EnumType value2) \
 	{ \
-		auto realValue1 = static_cast<utils::UnderlyingTypeValue<EnumType>>(value1); \
-		auto realValue2 = static_cast<utils::UnderlyingTypeValue<EnumType>>(value2); \
-		utils::UnderlyingTypeValue<EnumType> result = realValue1 _OPERATOR_ realValue2; \
+		auto realValue1 = static_cast<utils::UnderlyingType<EnumType>>(value1); \
+		auto realValue2 = static_cast<utils::UnderlyingType<EnumType>>(value2); \
+		utils::UnderlyingType<EnumType> result = realValue1 _OPERATOR_ realValue2; \
 		return static_cast<EnumType>(result); \
 	}
 
@@ -1122,46 +1122,46 @@ namespace enums
 /// @tparam EnumType
 /// @param enumValue
 template<typename EnumType>
-constexpr typename utils::UnderlyingType<EnumType>::Type
+constexpr typename utils::UnderlyingTypeTrait<EnumType>::Type
 value(EnumType enumValue) noexcept
 {
 	auto realValue = static_cast<
-		typename utils::UnderlyingType<EnumType>::Type
+		typename utils::UnderlyingTypeTrait<EnumType>::Type
 	>(enumValue);
 	return realValue;
 }
 
 template<typename EnumType>
-constexpr typename utils::UnderlyingType<EnumType>::Type &
+constexpr typename utils::UnderlyingTypeTrait<EnumType>::Type &
 reference(EnumType &enumValue) noexcept
 {
 	auto realValue = reinterpret_cast<
-		typename utils::UnderlyingType<EnumType>::Type *
+		typename utils::UnderlyingTypeTrait<EnumType>::Type *
 	>(&enumValue);
 	return *realValue;
 }
 
 template<typename EnumType>
 constexpr EnumType &
-reference(typename utils::UnderlyingType<EnumType>::Type &value) noexcept
+reference(typename utils::UnderlyingTypeTrait<EnumType>::Type &value) noexcept
 {
 	auto realValue = reinterpret_cast<EnumType *>(&value);
 	return *realValue;
 }
 
 template<typename EnumType>
-constexpr const typename utils::UnderlyingType<EnumType>::Type &
+constexpr const typename utils::UnderlyingTypeTrait<EnumType>::Type &
 reference(const EnumType &enumValue) noexcept
 {
 	auto realValue = reinterpret_cast<
-		const typename utils::UnderlyingType<EnumType>::Type *
+		const typename utils::UnderlyingTypeTrait<EnumType>::Type *
 	>(&enumValue);
 	return *realValue;
 }
 
 template<typename EnumType>
 constexpr const EnumType &
-reference(const typename utils::UnderlyingType<EnumType>::Type &value) noexcept
+reference(const typename utils::UnderlyingTypeTrait<EnumType>::Type &value) noexcept
 {
 	auto realValue = reinterpret_cast<const EnumType *>(&value);
 	return *realValue;
