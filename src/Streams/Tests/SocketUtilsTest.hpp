@@ -8,7 +8,7 @@ namespace flame_ide
 {namespace tests
 {
 
-class SocketUtilsTest : public ::AbstractTest
+class SocketUtilsTest: public ::AbstractTest
 {
 public:
 	SocketUtilsTest();

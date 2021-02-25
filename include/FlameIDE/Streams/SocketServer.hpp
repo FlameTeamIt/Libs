@@ -13,7 +13,7 @@ namespace flame_ide
 class SocketServer
 {
 public:
-	class Connection : public stream_utils::AbstractByteStream
+	class Connection: public stream_utils::AbstractByteStream
 	{
 	public:
 		friend class flame_ide::streams::SocketServer;

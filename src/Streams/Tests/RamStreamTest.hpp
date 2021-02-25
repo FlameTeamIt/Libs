@@ -8,7 +8,7 @@ namespace flame_ide
 {namespace tests
 {
 
-class RamStreamTest : public ::AbstractTest
+class RamStreamTest: public ::AbstractTest
 {
 public:
 	RamStreamTest();

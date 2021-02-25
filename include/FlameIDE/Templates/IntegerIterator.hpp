@@ -67,7 +67,7 @@ class Iterator< \
 	, templates::IteratorCategory::RANDOM_ACCESS \
 	, ContainerTraits<CURRENT_ITERATOR_TYPE> \
 	, CURRENT_ITERATOR_TYPE \
-> : public iterator_utils::BaseIterator< \
+>: public iterator_utils::BaseIterator< \
 		CURRENT_ITERATOR_TYPE \
 		, IteratorCategory::RANDOM_ACCESS \
 		, IteratorAccess::NON_CONSTANT \
