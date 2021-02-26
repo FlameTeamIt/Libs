@@ -2,7 +2,7 @@
 
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 
-#include <FlameIDE/Common/OsTypes.hpp>
+#include <FlameIDE/Os/Types.hpp>
 #include <FlameIDE/Threads/Mutex.hpp>
 
 namespace flame_ide
