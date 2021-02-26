@@ -27,7 +27,7 @@ Mechanism::ParameterPtr &Mechanism::getParameterPointer() noexcept
 
 Mechanism::ParameterPtrToConst Mechanism::getParameterPointer() const noexcept
 {
-	return pParameter;
+	return static_cast<ParameterPtrToConst>(pParameter);
 }
 
 Mechanism::ParameterSize &Mechanism::getParameterSize() noexcept
@@ -42,16 +42,16 @@ Mechanism::ParameterSize Mechanism::getParameterSize() const noexcept
 
 Mechanism::ParameterRange Mechanism::getParameterReange() noexcept
 {
-	byte_t *begin = reinterpret_cast<byte_t *>(pParameter);
-	byte_t *end = begin + ulParameterLen;
+	auto begin = reinterpret_cast<ParameterRange::Iterator>(pParameter);
+	auto end = begin + ulParameterLen;
 	ParameterRange range{ begin, end };
 	return range;
 }
 
 Mechanism::ConstParameterRange Mechanism::getParameterReange() const noexcept
 {
-	const byte_t *begin = reinterpret_cast<const byte_t *>(pParameter);
-	const byte_t *end = begin + ulParameterLen;
+	auto begin = reinterpret_cast<ConstParameterRange::Iterator>(pParameter);
+	auto end = begin + ulParameterLen;
 	ConstParameterRange range{ begin, end };
 	return range;
 }
@@ -62,6 +62,11 @@ void Mechanism::set(EnumType type, ParameterPtr paramterPtr
 	mechanism = enums::value(type);
 	pParameter = paramterPtr;
 	ulParameterLen = paramterSize;
+}
+
+void Mechanism::set(EnumType type, ParameterRange paramter) noexcept
+{
+	set(type, paramter.begin(), paramter.end() - paramter.begin());
 }
 
 } // namespace pkcs11

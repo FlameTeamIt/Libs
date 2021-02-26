@@ -1034,7 +1034,7 @@ UNDERLYING_TYPE(RsaPkcsOaepSource, flame_ide::pkcs11::value_types::RsaPkcsOaepSo
 /// @brief The EcKdf enum
 enum class EcKdf : flame_ide::pkcs11::value_types::EcKdf
 {
-	NULL = CKD_NULL
+	NONE = CKD_NULL
 	, SHA1 = CKD_SHA1_KDF
 
 	, SHA1_ASN1 = CKD_SHA1_KDF_ASN1
