@@ -1,6 +1,7 @@
 #ifndef FLAMEIDE_COMMON_TRAITS_CONTAINERTRAITS_HPP
 #define FLAMEIDE_COMMON_TRAITS_CONTAINERTRAITS_HPP
 
+#include <FlameIDE/Common/Traits/CreationProhibitions.hpp>
 #include <FlameIDE/Common/Traits/Numbers.hpp>
 #include <FlameIDE/Common/Byte.hpp>
 
@@ -10,7 +11,7 @@ namespace flame_ide
 ///
 /// @brief Default size, diff and traits.
 ///
-struct SizeTraits
+struct SizeTraits: public NonCreational
 {
 	using SizeType = Types::size_t;
 	using SsizeType = Types::ssize_t;

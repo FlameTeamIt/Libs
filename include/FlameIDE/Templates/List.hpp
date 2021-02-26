@@ -42,13 +42,13 @@ namespace list_utils
 {
 
 template<typename T, typename Traits>
-struct Node: public Traits
+struct Node
 {
 	using Me = Node<T, Traits>;
 
-	using typename Traits::Type;
-	using typename Traits::ConstReference;
-	using typename Traits::MoveReference;
+	using Type = typename Traits::Type;
+	using ConstReference = typename Traits::ConstReference;
+	using MoveReference = typename Traits::MoveReference;
 
 	Node() = default;
 	Node(const Me &) = default;

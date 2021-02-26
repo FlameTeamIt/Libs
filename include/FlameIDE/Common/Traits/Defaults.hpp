@@ -71,7 +71,7 @@ struct DefaultTraits<const T>: public NonCreational
 
 	using Pointer = const Type *;
 	using PointerToConst = const Type *;
-	using COnstPointer = const Type *const;
+	using ConstPointer = const Type *const;
 
 	using VoidPointer = const void *;
 };
@@ -82,7 +82,7 @@ template<>
 struct DefaultTraits<void>: NonCreational
 {
 	using Pointer = void *;
-	using VoidToConst = void const *;
+	using PointerToConst = void const *;
 	using ConstPointer = void *const;
 	using ConstPointerToConst = void const *const;
 };
