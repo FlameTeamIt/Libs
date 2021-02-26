@@ -18,7 +18,7 @@ namespace flame_ide
 {
 
 template<>
-struct NumberLimit<LONG>
+struct NumberLimitTrait<LONG>
 {
 	static constexpr LONG MIN_VALUE = INT32_MIN;
 	static constexpr LONG MAX_VALUE = INT32_MAX;
@@ -135,7 +135,9 @@ constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = OS_DESCRIPTOR_INITIALIZE
 
 using OsSemaphoreValue = LONG;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1;
-constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID = NumberLimit<OsSemaphoreValue>::MIN_VALUE;
+constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID = NumberLimitTrait<
+	OsSemaphoreValue
+>::MIN_VALUE;
 
 struct OsSemaphoreContext
 {
