@@ -15,7 +15,7 @@ pkcs11::value_types::ReturnType getFunctionStatus(
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
-pkcs11::value_types::ReturnType cancelStatus(
+pkcs11::value_types::ReturnType cancelFunction(
 		pkcs11::value_types::SessionHandle session
 )
 {
