@@ -9,64 +9,48 @@ extern "C"
 #endif
 
 ///
-/// @brief C_EncryptInit
-/// @param hSession
-/// @param pMechanism
-/// @param hKey
-/// @return
+/// @brief Initializes an encryption operation
+/// @param[in] hSession The session's handle
+/// @param[in] pMechanism The encryption mechanism
+/// @param[in] hKey Handle of encryption key
+/// @return See CKR_* values
 ///
-CK_RV C_EncryptInit(
-		CK_SESSION_HANDLE hSession
-		, CK_MECHANISM_PTR pMechanism
-		, CK_OBJECT_HANDLE hKey
-);
+CK_RV C_EncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism
+		, CK_OBJECT_HANDLE hKey);
 
 ///
-/// @brief C_Encrypt
-/// @param hSession
-/// @param pData
-/// @param ulDataLen
-/// @param pEncryptedData
-/// @param pulEncryptedDataLen
-/// @return
+/// @brief Encrypt single-part data
+/// @param[in] hSession Session's handle
+/// @param[in] pData The plaintext data
+/// @param[in] ulDataLen Bytes of plaintext
+/// @param[out] pEncryptedData Gets ciphertext
+/// @param[out] pulEncryptedDataLen Gets c-text size
+/// @return See CKR_* values
 ///
-CK_RV C_Encrypt(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pData
-		, CK_ULONG ulDataLen
-		, CK_BYTE_PTR pEncryptedData
-		, CK_ULONG_PTR pulEncryptedDataLen
-);
+CK_RV C_Encrypt(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pData, CK_ULONG ulDataLen
+		, CK_BYTE_PTR pEncryptedData, CK_ULONG_PTR pulEncryptedDataLen);
 
 ///
-/// @brief C_EncryptUpdate
-/// @param hSession
-/// @param pPart
-/// @param ulPartLen
-/// @param pEncryptedPart
-/// @param pulEncryptedPartLen
-/// @return
+/// @brief Continue a multiple-part encryption operation
+/// @param[in] hSession Session's handle
+/// @param[in] pPart The plaintext data
+/// @param[in] ulPartLen Plaintext data len
+/// @param[out] pEncryptedPart Gets ciphertext
+/// @param[out] pulEncryptedPartLen Gets ciphertext size
+/// @return See CKR_* values
 ///
-CK_RV C_EncryptUpdate(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pPart
-		, CK_ULONG ulPartLen
-		, CK_BYTE_PTR pEncryptedPart
-		, CK_ULONG_PTR pulEncryptedPartLen
-);
+CK_RV C_EncryptUpdate(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pPart, CK_ULONG ulPartLen
+		, CK_BYTE_PTR pEncryptedPart, CK_ULONG_PTR pulEncryptedPartLen);
 
 ///
-/// @brief C_EncryptFinal
-/// @param hSession
-/// @param pLastEncryptedPart
-/// @param pulLastEncryptedPartLen
-/// @return
+/// @brief Finish a multiple-part encryption operation
+/// @param[in] hSession Session handle
+/// @param[out] pLastEncryptedPart Last ciphertext
+/// @param[out] pulLastEncryptedPartLen Gets last size
+/// @return See CKR_* values
 ///
-CK_RV C_EncryptFinal(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pLastEncryptedPart
-		, CK_ULONG_PTR pulLastEncryptedPartLen
-);
+CK_RV C_EncryptFinal(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pLastEncryptedPart
+		, CK_ULONG_PTR pulLastEncryptedPartLen);
 
 #ifdef __cplusplus
 }

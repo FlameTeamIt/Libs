@@ -9,64 +9,50 @@ extern "C"
 #endif
 
 ///
-/// @brief C_DecryptInit
-/// @param hSession
-/// @param pMechanism
-/// @param hKey
-/// @return
+/// @brief Initialize a decryption operation
+/// @param[in] hSession The session's handle
+/// @param[in] pMechanism The decryption mechanism
+/// @param[in] hKey Handle of decryption key
+/// @return See CKR_* values
 ///
-CK_RV C_DecryptInit(
-		CK_SESSION_HANDLE hSession
-		, CK_MECHANISM_PTR pMechanism
-		, CK_OBJECT_HANDLE hKey
-);
+CK_RV C_DecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism
+		, CK_OBJECT_HANDLE hKey);
 
 ///
-/// @brief C_Decrypt
-/// @param hSession
-/// @param pEncryptedData
-/// @param ulEncryptedDataLen
-/// @param pData
-/// @param pulDataLen
-/// @return
+/// @brief Decrypt encrypted data in a single part
+/// @param[in] hSession Session's handle
+/// @param[in] pEncryptedData Cipher text
+/// @param[in] ulEncryptedDataLen Ciphertext length
+/// @param[out] pData Gets plain text
+/// @param[out] pulDataLen Gets plain text size
+/// @return See CKR_* values
 ///
-CK_RV C_Decrypt(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pEncryptedData
-		, CK_ULONG ulEncryptedDataLen
-		, CK_BYTE_PTR pData
-		, CK_ULONG_PTR pulDataLen
-);
+CK_RV C_Decrypt(CK_SESSION_HANDLE hSession
+		, CK_BYTE_PTR pEncryptedData, CK_ULONG ulEncryptedDataLen
+		, CK_BYTE_PTR pData, CK_ULONG_PTR pulDataLen);
 
 ///
-/// @brief C_DecryptUpdate
-/// @param hSession
-/// @param pEncryptedPart
-/// @param ulEncryptedPartLen
-/// @param pPart
-/// @param pulPartLen
-/// @return
+/// @brief Continue a multiple-part decryption operation
+/// @param[in] hSession Session's handle
+/// @param[in] pEncryptedPart Encrypted data
+/// @param[in] ulEncryptedPartLen Input length
+/// @param[out] pPart Gets plain text
+/// @param[out] pulPartLen Plain text size
+/// @return See CKR_* values
 ///
-CK_RV C_DecryptUpdate(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pEncryptedPart
-		, CK_ULONG ulEncryptedPartLen
-		, CK_BYTE_PTR pPart
-		, CK_ULONG_PTR pulPartLen
-);
+CK_RV C_DecryptUpdate(CK_SESSION_HANDLE hSession
+		, CK_BYTE_PTR pEncryptedPart, CK_ULONG ulEncryptedPartLen
+		, CK_BYTE_PTR pPart, CK_ULONG_PTR pulPartLen);
 
 ///
-/// @brief C_DecryptFinal
-/// @param hSession
-/// @param pLastPart
-/// @param pulLastPartLen
-/// @return
+/// @brief Finish a multiple-part decryption operation
+/// @param[in] hSession The session's handle
+/// @param[out] pLastPart Gets plain text
+/// @param[out] pulLastPartLen Plain text size
+/// @return See CKR_* values
 ///
-CK_RV C_DecryptFinal(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pLastPart
-		, CK_ULONG_PTR pulLastPartLen
-);
+CK_RV C_DecryptFinal(CK_SESSION_HANDLE hSession
+		, CK_BYTE_PTR pLastPart, CK_ULONG_PTR pulLastPartLen);
 
 #ifdef __cplusplus
 }
