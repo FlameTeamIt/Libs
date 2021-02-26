@@ -14,7 +14,8 @@ set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Interface::Object::Independ"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Object::Independ"
 	"${FLAME_NAMESPACE}::Threads::Object::Independ"
-	"Threads::Threads"
+	"${FLAME_NAMESPACE}::Threads::${FLAME_PLATFORM}::Object::Independ"
+	${FLAME_DEPENDENCY_SHARED_LIBRARIES}
 )
 if(FLAME_MAKE_SHARED)
 	set(MAKE_SHARED MAKE_SHARED)
