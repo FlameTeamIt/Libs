@@ -2,4 +2,6 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/GlobalContext.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Mechanisms.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Mutex.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Session.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Storage.cpp
 )
