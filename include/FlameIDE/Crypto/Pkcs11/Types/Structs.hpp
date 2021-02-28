@@ -49,13 +49,13 @@ using RsaPkcsOaepParamsPtr = CK_RSA_PKCS_OAEP_PARAMS_PTR;
 using RsaPkcsPssParams = CK_RSA_PKCS_PSS_PARAMS;
 using RsaPkcsPssParamsPtr = CK_RSA_PKCS_PSS_PARAMS_PTR;
 
-using Ecdh1DeriveParams = CK_ECDH1_DERIVE_PARAMS;
+using EcDh1DeriveParams = CK_ECDH1_DERIVE_PARAMS;
 using Ecdh1DeriveParamsPtr = CK_ECDH1_DERIVE_PARAMS_PTR;
 
-using Ecdh2DeriveParams = CK_ECDH2_DERIVE_PARAMS;
+using EcDh2DeriveParams = CK_ECDH2_DERIVE_PARAMS;
 using Ecdh2DeriveParamsPtr = CK_ECDH2_DERIVE_PARAMS_PTR;
 
-using EcmqvDeriveparams = CK_ECMQV_DERIVE_PARAMS;
+using EcMqvDeriveParams = CK_ECMQV_DERIVE_PARAMS;
 using EcmqvDeriveparamsPtr = CK_ECMQV_DERIVE_PARAMS_PTR;
 
 using X9Dh1DeriveParams = CK_X9_42_DH1_DERIVE_PARAMS;
@@ -204,8 +204,8 @@ using TlsMacParamsPtr = CK_TLS_MAC_PARAMS_PTR;
 using Gostr3410DeriveParams = CK_GOSTR3410_DERIVE_PARAMS;
 using Gostr3410DeriveParamsPtr = CK_GOSTR3410_DERIVE_PARAMS_PTR;
 
-using Gostr3410_KeyWrapParams = CK_GOSTR3410_KEY_WRAP_PARAMS;
-using Gostr3410_KeyWrapParamsPtr = CK_GOSTR3410_KEY_WRAP_PARAMS_PTR;
+using Gostr3410KeyWrapParams = CK_GOSTR3410_KEY_WRAP_PARAMS;
+using Gostr3410KeyWrapParamsPtr = CK_GOSTR3410_KEY_WRAP_PARAMS_PTR;
 
 using SeedCbcEncryptDataParams = CK_SEED_CBC_ENCRYPT_DATA_PARAMS;
 using SeedCbcEncryptDataParamsPtr = CK_SEED_CBC_ENCRYPT_DATA_PARAMS_PTR;

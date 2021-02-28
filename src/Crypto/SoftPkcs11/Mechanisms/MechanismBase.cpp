@@ -15,20 +15,10 @@ MechanismBase::getType() const noexcept
 	return pkcs11::enums::Mechanism::VENDOR_DEFINED;
 }
 
-pkcs11::structs::Mechanism
-MechanismBase::getNative() const noexcept
-{
-	return pkcs11::structs::Mechanism {
-		pkcs11::enums::value(getType())
-		, nullptr
-		, 0
-	};
-}
-
 pkcs11::structs::MechanismInfo
 MechanismBase::getInfo() const noexcept
 {
-	return pkcs11::structs::MechanismInfo{
+	return pkcs11::structs::MechanismInfo {
 		pkcs11::value_types::Ulong{}
 		, pkcs11::value_types::Ulong{}
 		, pkcs11::value_types::Flags{}
@@ -59,5 +49,10 @@ MechanismBase::getVerifier() noexcept
 	return ExpectedVerifier{ pkcs11::enums::ReturnType::MECHANISM_INVALID };
 }
 
+pkcs11::enums::ReturnType
+MechanismBase::processParameter(const Parameter &) noexcept
+{
+	return pkcs11::enums::ReturnType::ARGUMENTS_BAD;
+}
 
 }}}
