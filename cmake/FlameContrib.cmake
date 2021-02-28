@@ -19,6 +19,7 @@ function(download_resolver)
 		message(STATUS "Not need to clone ${RESOLVER_NAME} version=${RESOLVER_VERSION}")
 	endif()
 	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${RESOLVER_PATH}/cmake" PARENT_SCOPE)
+	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${RESOLVER_PATH}")
 endfunction()
 
 download_resolver()
