@@ -15,6 +15,8 @@ struct SecurId: public MechanismBase
 	virtual ~SecurId() noexcept override;
 
 	virtual pkcs11::enums::Mechanism getType() const noexcept override;
+
+	virtual pkcs11::structs::MechanismInfo getInfo() const noexcept override;
 };
 
 }}} // namespace flame_ide::soft_pkcs11::mechanisms
