@@ -72,10 +72,7 @@ GlobalContext &GlobalContext::get() noexcept
 
 Mutex GlobalContext::createMutex() noexcept
 {
-	if (enums::value(
-			initFlags
-			& enums::InitializeArgsFlags::LIBRARY_CANT_CREATE_OS_THREADS
-	))
+	if (enums::value( initFlags & enums::InitializeArgsFlags::OS_LOCKING_OK ))
 	{
 		return Mutex {
 				externalCallbacks.create, externalCallbacks.destroy
