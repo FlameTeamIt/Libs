@@ -165,11 +165,11 @@ using GcmParamsPtr = CK_GCM_PARAMS_PTR;
 using CcmParams = CK_CCM_PARAMS;
 using CcmParamsPtr = CK_CCM_PARAMS_PTR;
 
-using AesGcmParams = CK_AES_GCM_PARAMS;
-using AesGcmParamsPtr = CK_AES_GCM_PARAMS_PTR;
+//using AesGcmParams = CK_AES_GCM_PARAMS; // Deprecated
+//using AesGcmParamsPtr = CK_AES_GCM_PARAMS_PTR; // Deprecated
 
-using AesCcmParams = CK_AES_CCM_PARAMS;
-using AesCcmParamsPtr = CK_AES_CCM_PARAMS_PTR;
+//using AesCcmParams = CK_AES_CCM_PARAMS; // Deprecated
+//using AesCcmParamsPtr = CK_AES_CCM_PARAMS_PTR; // Deprecated
 
 using CamelliaCtrParams = CK_CAMELLIA_CTR_PARAMS;
 using CamelliaCtrParamsPtr = CK_CAMELLIA_CTR_PARAMS_PTR;

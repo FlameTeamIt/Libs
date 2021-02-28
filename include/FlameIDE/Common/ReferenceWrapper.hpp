@@ -53,7 +53,13 @@ template<typename T>
 ReferenceWrapper<T> makeReferenceWrapper(T &value) noexcept;
 
 template<typename T>
+ReferenceWrapper<T> makeReferenceWrapper(T *value) noexcept;
+
+template<typename T>
 ConstReferenceWrapper<T> makeConstReferenceWrapper(T &value) noexcept;
+
+template<typename T>
+ConstReferenceWrapper<T> makeConstReferenceWrapper(const T *value) noexcept;
 
 template<typename T>
 T &getReference(T &value) noexcept;
@@ -100,7 +106,19 @@ ReferenceWrapper<T> makeReferenceWrapper(T &value) noexcept
 }
 
 template<typename T>
+ReferenceWrapper<T> makeReferenceWrapper(T *value) noexcept
+{
+	return ReferenceWrapper<T>{ value };
+}
+
+template<typename T>
 ConstReferenceWrapper<T> makeConstReferenceWrapper(T &value) noexcept
+{
+	return ConstReferenceWrapper<T>{ value };
+}
+
+template<typename T>
+ConstReferenceWrapper<T> makeConstReferenceWrapper(const T *value) noexcept
 {
 	return ConstReferenceWrapper<T>{ value };
 }
