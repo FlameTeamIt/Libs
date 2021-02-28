@@ -5,4 +5,6 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/InitializeArgsCallbacks.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Mechanism.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ObjectHandle.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Session.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Token.cpp
 )

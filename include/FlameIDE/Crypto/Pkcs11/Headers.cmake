@@ -4,5 +4,7 @@ set (HEADER_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/InitializeArgs.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Mechanism.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ObjectHandle.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Session.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Token.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Types.hpp
 )
