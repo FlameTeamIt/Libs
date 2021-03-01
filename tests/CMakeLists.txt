@@ -10,6 +10,7 @@ set(TEST_MODULES
 	${FLAME_SOURCE_SUBMODLUES_PATH}/Streams/Tests
 	${FLAME_SOURCE_SUBMODLUES_PATH}/Threads/Tests
 	${FLAME_SOURCE_SUBMODLUES_PATH}/Common/Tests
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Os/Tests
 )
 
 foreach(module ${TEST_MODULES})
@@ -32,6 +33,7 @@ set(DEPENDENCY_TARGET_LIST
 	"${FLAME_NAMESPACE}::Streams::Tests::Static"
 	"${FLAME_NAMESPACE}::Threads::Tests::Static"
 	"${FLAME_NAMESPACE}::Common::Tests::Static"
+	"${FLAME_NAMESPACE}::Os::Tests::Static"
 )
 
 flame_compile_binary(
