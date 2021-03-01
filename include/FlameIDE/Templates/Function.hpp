@@ -53,7 +53,7 @@ private:
 	};
 
 	template<typename CallContext>
-	class Caller : public AbstractCaller
+	class Caller: public AbstractCaller
 	{
 	};
 

@@ -102,8 +102,8 @@ private:
 	using Parent::pValue;
 	using Parent::ulValueLen;
 };
-using AttributeRange = templates::Range<Attribute *>;
-using CryptokiAttributeRange = templates::Range<CK_ATTRIBUTE *>;
+using AttributeRange = templates::Range<ContainerTraits<Attribute>::Pointer>;
+using CryptokiAttributeRange = templates::Range<structs::AttributePtr>;
 
 } // namespace pkcs11
 } // namespace flame_ide

@@ -9,90 +9,75 @@ extern "C"
 #endif
 
 ///
-/// @brief C_SignInit
-/// @param hSession
-/// @param pMechanism
-/// @param hKey
-/// @return
+/// @brief Initialize a signature (private key encryption) operation, where
+/// the signature is (will be) an appendix to the data, and plain text cannot be
+/// recovered from the signature
+/// @param[in] hSession The session's handle
+/// @param[in] pMechanism The signature mechanism
+/// @param[in] hKey Handle of signature key
+/// @return See CKR_* values
 ///
-CK_RV C_SignInit(
-		CK_SESSION_HANDLE hSession
-		, CK_MECHANISM_PTR pMechanism
-		, CK_OBJECT_HANDLE hKey
-);
+CK_RV C_SignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism
+		, CK_OBJECT_HANDLE hKey);
 
 ///
-/// @brief C_Sign
-/// @param hSession
-/// @param pData
-/// @param ulDataLen
-/// @param pSignature
-/// @param pulSignatureLen
-/// @return
+/// @brief Sign (encrypts with private key) data in a single part, where
+/// the signature is (will be) an appendix to the data, and plaintext cannot be
+/// recovered from the signature
+/// @param[in] hSession The session's handle
+/// @param[in] pData The data to sign
+/// @param[in] ulDataLen Count of bytes to sign
+/// @param[out] pSignature Gets the signature
+/// @param[out] pulSignatureLen Gets signature length
+/// @return See CKR_* values
 ///
-CK_RV C_Sign(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pData
-		, CK_ULONG ulDataLen
-		, CK_BYTE_PTR pSignature
-		, CK_ULONG_PTR pulSignatureLen
-);
+CK_RV C_Sign(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pData, CK_ULONG ulDataLen
+		, CK_BYTE_PTR pSignature, CK_ULONG_PTR pulSignatureLen);
 
 ///
-/// @brief C_SignUpdate
-/// @param hSession
-/// @param pPart
-/// @param ulPartLen
-/// @return
+/// @brief Сontinue a multiple-part signature operation, where the signature is
+/// (will be) an appendix to the data, and plaintext cannot be recovered from
+/// the signature
+/// @param[in] hSessionThe session's handle
+/// @param[in] pPart The data to sign
+/// @param[in] ulPartLen Count of bytes to sign
+/// @return See CKR_* values
 ///
-CK_RV C_SignUpdate(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pPart
-		, CK_ULONG ulPartLen
-);
+CK_RV C_SignUpdate(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pPart, CK_ULONG ulPartLen);
 
 ///
-/// @brief C_SignFinal
-/// @param hSession
-/// @param pSignature
-/// @param pulSignatureLen
-/// @return
+/// @brief Finish a multiple-part signature operation, returning the signature
+/// @param[in] hSession The session's handle
+/// @param[out] pSignature Gets the signature
+/// @param[out] pulSignatureLen Gets signature length
+/// @return See CKR_* values
 ///
-CK_RV C_SignFinal(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pSignature
-		, CK_ULONG_PTR pulSignatureLen
-);
+CK_RV C_SignFinal(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pSignature
+		, CK_ULONG_PTR pulSignatureLen);
 
 ///
-/// @brief C_SignRecoverInit
-/// @param hSession
-/// @param pMechanism
-/// @param hKey
-/// @return
+/// @brief Initialize a signature operation, where the data can be recovered from
+/// the signature
+/// @param[in] hSession The session's handle
+/// @param[in] pMechanism The signature mechanism
+/// @param[in] hKey Handle of the signature key
+/// @return See CKR_* values
 ///
-CK_RV C_SignRecoverInit(
-		CK_SESSION_HANDLE hSession
-		, CK_MECHANISM_PTR pMechanism
-		, CK_OBJECT_HANDLE hKey
-);
+CK_RV C_SignRecoverInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism
+		, CK_OBJECT_HANDLE hKey);
 
 ///
-/// @brief C_SignRecover
-/// @param hSession
-/// @param pData
-/// @param ulDataLen
-/// @param pSignature
-/// @param pulSignatureLen
-/// @return
+/// @brief Sign data in a single operation, where the data can be recovered from
+/// the signature
+/// @param[in] hSession The session's handle
+/// @param[in] pData The data to sign
+/// @param[in] ulDataLen Count of bytes to sign
+/// @param[out] pSignature Gets the signature
+/// @param[out] pulSignatureLen Gets signature length
+/// @return See CKR_* values
 ///
-CK_RV C_SignRecover(
-		CK_SESSION_HANDLE hSession
-		, CK_BYTE_PTR pData
-		, CK_ULONG ulDataLen
-		, CK_BYTE_PTR pSignature
-		, CK_ULONG_PTR pulSignatureLen
-);
+CK_RV C_SignRecover(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pData, CK_ULONG ulDataLen
+		, CK_BYTE_PTR pSignature, CK_ULONG_PTR pulSignatureLen);
 
 #ifdef __cplusplus
 }

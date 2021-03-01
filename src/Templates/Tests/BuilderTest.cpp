@@ -9,7 +9,7 @@ namespace flame_ide
 namespace // anonymous
 {
 
-class TestBuildStep1 : public builder_utils::Substep<
+class TestBuildStep1: public builder_utils::Substep<
 	TestBuildStep1, TestClass, int, int(0)
 >
 {

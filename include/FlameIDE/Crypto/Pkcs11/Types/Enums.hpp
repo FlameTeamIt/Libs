@@ -4,7 +4,7 @@
 // OTP - one time password
 
 #include <FlameIDE/Crypto/Pkcs11/Types/ValueTypes.hpp>
-#include <FlameIDE/Common/Traits/ReferenceWrapper.hpp>
+#include <FlameIDE/Common/ReferenceWrapper.hpp>
 
 namespace flame_ide
 {
@@ -17,12 +17,12 @@ namespace utils
 {
 
 template<typename EnumType>
-struct UnderlyingType
+struct UnderlyingTypeTrait
 {
 	using Type = void;
 };
 template<typename EnumType>
-using UnderlyingTypeValue = typename UnderlyingType<EnumType>::Type;
+using UnderlyingType = typename UnderlyingTypeTrait<EnumType>::Type;
 
 } // namespace utils
 
@@ -30,7 +30,7 @@ using UnderlyingTypeValue = typename UnderlyingType<EnumType>::Type;
 	namespace utils \
 	{ \
 		template<> \
-		struct UnderlyingType<EnumType> \
+		struct UnderlyingTypeTrait<EnumType> \
 		{ \
 			using Type = RealType; \
 		}; \
@@ -39,9 +39,9 @@ using UnderlyingTypeValue = typename UnderlyingType<EnumType>::Type;
 #define OPERATOR(EnumType, _OPERATOR_) \
 	constexpr EnumType operator _OPERATOR_ (EnumType value1, EnumType value2) \
 	{ \
-		auto realValue1 = static_cast<utils::UnderlyingTypeValue<EnumType>>(value1); \
-		auto realValue2 = static_cast<utils::UnderlyingTypeValue<EnumType>>(value2); \
-		utils::UnderlyingTypeValue<EnumType> result = realValue1 _OPERATOR_ realValue2; \
+		auto realValue1 = static_cast<utils::UnderlyingType<EnumType>>(value1); \
+		auto realValue2 = static_cast<utils::UnderlyingType<EnumType>>(value2); \
+		utils::UnderlyingType<EnumType> result = realValue1 _OPERATOR_ realValue2; \
 		return static_cast<EnumType>(result); \
 	}
 
@@ -192,7 +192,7 @@ enum class Key : flame_ide::pkcs11::value_types::Key
 	RSA = CKK_RSA
 	, DSA = CKK_DSA
 	, DH = CKK_DH
-	, ECDSA = CKK_ECDSA
+//	, ECDSA = CKK_ECDSA // Deprecated
 	, EC = CKK_EC
 	, X9_42_DH = CKK_X9_42_DH
 	, KEA = CKK_KEA
@@ -204,7 +204,7 @@ enum class Key : flame_ide::pkcs11::value_types::Key
 	, DES3 = CKK_DES3
 	, CAST = CKK_CAST
 	, CAST3 = CKK_CAST3
-	, CAST5 = CKK_CAST5
+//	, CAST5 = CKK_CAST5 // Deprecated
 	, CAST128 = CKK_CAST128
 	, RC5 = CKK_RC5
 	, IDEA = CKK_IDEA
@@ -374,13 +374,13 @@ enum class Attribute : flame_ide::pkcs11::value_types::Attribute
 
 	, DESTROYABLE = CKA_DESTROYABLE
 
-	, ECDSA_PARAMS = CKA_ECDSA_PARAMS
+//	, ECDSA_PARAMS = CKA_ECDSA_PARAMS // Deprecated
 	, EC_PARAMS = CKA_EC_PARAMS
 
 	, EC_POINT = CKA_EC_POINT
 
-	, SECONDARY_AUTH = CKA_SECONDARY_AUTH
-	, AUTH_PIN_FLAGS = CKA_AUTH_PIN_FLAGS
+//	, SECONDARY_AUTH = CKA_SECONDARY_AUTH // Deprecated
+//	, AUTH_PIN_FLAGS = CKA_AUTH_PIN_FLAGS // Deprecated
 
 	, ALWAYS_AUTHENTICATE = CKA_ALWAYS_AUTHENTICATE
 
@@ -589,17 +589,17 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, CAST3_MAC_GENERAL = CKM_CAST3_MAC_GENERAL
 	, CAST3_CBC_PAD = CKM_CAST3_CBC_PAD
 
-	, CAST5_KEY_GEN = CKM_CAST5_KEY_GEN
+//	, CAST5_KEY_GEN = CKM_CAST5_KEY_GEN // Deprecated
 	, CAST128_KEY_GEN = CKM_CAST128_KEY_GEN
-	, CAST5_ECB = CKM_CAST5_ECB
+//	, CAST5_ECB = CKM_CAST5_ECB // Deprecated
 	, CAST128_ECB = CKM_CAST128_ECB
-	, CAST5_CBC = CKM_CAST5_CBC
+//	, CAST5_CBC = CKM_CAST5_CBC // Deprecated
 	, CAST128_CBC = CKM_CAST128_CBC
-	, CAST5_MAC = CKM_CAST5_MAC
+//	, CAST5_MAC = CKM_CAST5_MAC // Deprecated
 	, CAST128_MAC = CKM_CAST128_MAC
-	, CAST5_MAC_GENERAL = CKM_CAST5_MAC_GENERAL
+//	, CAST5_MAC_GENERAL = CKM_CAST5_MAC_GENERAL // Deprecated
 	, CAST128_MAC_GENERAL = CKM_CAST128_MAC_GENERAL
-	, CAST5_CBC_PAD = CKM_CAST5_CBC_PAD
+//	, CAST5_CBC_PAD = CKM_CAST5_CBC_PAD // Deprecated
 	, CAST128_CBC_PAD = CKM_CAST128_CBC_PAD
 	, RC5_KEY_GEN = CKM_RC5_KEY_GEN
 	, RC5_ECB = CKM_RC5_ECB
@@ -646,9 +646,9 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, PBE_MD5_DES_CBC = CKM_PBE_MD5_DES_CBC
 	, PBE_MD5_CAST_CBC = CKM_PBE_MD5_CAST_CBC
 	, PBE_MD5_CAST3_CBC = CKM_PBE_MD5_CAST3_CBC
-	, PBE_MD5_CAST5_CBC = CKM_PBE_MD5_CAST5_CBC
+//	, PBE_MD5_CAST5_CBC = CKM_PBE_MD5_CAST5_CBC // Deprecated
 	, PBE_MD5_CAST128_CBC = CKM_PBE_MD5_CAST128_CBC
-	, PBE_SHA1_CAST5_CBC = CKM_PBE_SHA1_CAST5_CBC
+//	, PBE_SHA1_CAST5_CBC = CKM_PBE_SHA1_CAST5_CBC // Deprecated
 	, PBE_SHA1_CAST128_CBC = CKM_PBE_SHA1_CAST128_CBC
 	, PBE_SHA1_RC4_128 = CKM_PBE_SHA1_RC4_128
 	, PBE_SHA1_RC4_40 = CKM_PBE_SHA1_RC4_40
@@ -738,7 +738,7 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, BATON_SHUFFLE = CKM_BATON_SHUFFLE
 	, BATON_WRAP = CKM_BATON_WRAP
 
-	, ECDSA_KEY_PAIR_GEN = CKM_ECDSA_KEY_PAIR_GEN
+//	, ECDSA_KEY_PAIR_GEN = CKM_ECDSA_KEY_PAIR_GEN // Deprecated
 	, EC_KEY_PAIR_GEN = CKM_EC_KEY_PAIR_GEN
 
 	, ECDSA = CKM_ECDSA
@@ -851,7 +851,7 @@ enum class MechanismFlags : flame_ide::pkcs11::value_types::Flags
 	, EC_F_P = CKF_EC_F_P
 	, EC_F_2M = CKF_EC_F_2M
 	, EC_ECPARAMETERS = CKF_EC_ECPARAMETERS
-	, EC_NAMEDCURVE = CKF_EC_NAMEDCURVE
+//	, EC_NAMEDCURVE = CKF_EC_NAMEDCURVE
 	, EC_UNCOMPRESS = CKF_EC_UNCOMPRESS
 	, EC_COMPRESS = CKF_EC_COMPRESS
 
@@ -1034,7 +1034,7 @@ UNDERLYING_TYPE(RsaPkcsOaepSource, flame_ide::pkcs11::value_types::RsaPkcsOaepSo
 /// @brief The EcKdf enum
 enum class EcKdf : flame_ide::pkcs11::value_types::EcKdf
 {
-	NULL = CKD_NULL
+	NONE = CKD_NULL
 	, SHA1 = CKD_SHA1_KDF
 
 	, SHA1_ASN1 = CKD_SHA1_KDF_ASN1
@@ -1122,46 +1122,46 @@ namespace enums
 /// @tparam EnumType
 /// @param enumValue
 template<typename EnumType>
-constexpr typename utils::UnderlyingType<EnumType>::Type
+constexpr typename utils::UnderlyingTypeTrait<EnumType>::Type
 value(EnumType enumValue) noexcept
 {
 	auto realValue = static_cast<
-		typename utils::UnderlyingType<EnumType>::Type
+		typename utils::UnderlyingTypeTrait<EnumType>::Type
 	>(enumValue);
 	return realValue;
 }
 
 template<typename EnumType>
-constexpr typename utils::UnderlyingType<EnumType>::Type &
+constexpr typename utils::UnderlyingTypeTrait<EnumType>::Type &
 reference(EnumType &enumValue) noexcept
 {
 	auto realValue = reinterpret_cast<
-		typename utils::UnderlyingType<EnumType>::Type *
+		typename utils::UnderlyingTypeTrait<EnumType>::Type *
 	>(&enumValue);
 	return *realValue;
 }
 
 template<typename EnumType>
 constexpr EnumType &
-reference(typename utils::UnderlyingType<EnumType>::Type &value) noexcept
+reference(typename utils::UnderlyingTypeTrait<EnumType>::Type &value) noexcept
 {
 	auto realValue = reinterpret_cast<EnumType *>(&value);
 	return *realValue;
 }
 
 template<typename EnumType>
-constexpr const typename utils::UnderlyingType<EnumType>::Type &
+constexpr const typename utils::UnderlyingTypeTrait<EnumType>::Type &
 reference(const EnumType &enumValue) noexcept
 {
 	auto realValue = reinterpret_cast<
-		const typename utils::UnderlyingType<EnumType>::Type *
+		const typename utils::UnderlyingTypeTrait<EnumType>::Type *
 	>(&enumValue);
 	return *realValue;
 }
 
 template<typename EnumType>
 constexpr const EnumType &
-reference(const typename utils::UnderlyingType<EnumType>::Type &value) noexcept
+reference(const typename utils::UnderlyingTypeTrait<EnumType>::Type &value) noexcept
 {
 	auto realValue = reinterpret_cast<const EnumType *>(&value);
 	return *realValue;

@@ -3,6 +3,7 @@
 
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mutex.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Functions.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms.hpp>
 
 #include <FlameIDE/Crypto/Pkcs11/Types/Structs.hpp>
 
@@ -207,6 +208,8 @@ public:
 
 	pkcs11::enums::ReturnType getStatus() const noexcept;
 
+
+
 public:
 	ExternalCallbacks externalCallbacks;
 	GeneralPurposeCallbacks generalPurposeCallbacks;
@@ -235,6 +238,8 @@ private:
 	pkcs11::structs::FunctionListPtr functionList = nullptr;
 
 	pkcs11::enums::ReturnType status = pkcs11::enums::ReturnType::OK;
+
+	Mechanisms mechanisms;
 };
 
 }}

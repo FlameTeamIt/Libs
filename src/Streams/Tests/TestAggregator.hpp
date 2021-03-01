@@ -8,7 +8,7 @@ namespace flame_ide
 {namespace tests
 {
 
-class TestAggregator : public ::TestAggregator
+class TestAggregator: public ::TestAggregator
 {
 public:
 	TestAggregator();
