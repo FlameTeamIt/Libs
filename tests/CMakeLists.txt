@@ -17,23 +17,3 @@ foreach(module ${TEST_MODULES})
 	remove_source_dir("${OUT_DIR}" "/Tests" OUT_DIR)
 	add_subdirectory(${module} ${CMAKE_CURRENT_BINARY_DIR}/${OUT_DIR})
 endforeach()
-
-set(NAME "Tests")
-set(ALIAS_NAME "Flame::Tests")
-get_sources(FILE_LIST)
-
-set(INCLUDE_PATHS
-	${FLAME_INCLUDE_PATH}
-	${FLAME_INCLUDE_TEST_PATH}
-)
-
-flame_compile_binary(
-	NAME "${NAME}"
-	ALIAS_NAME "${ALIAS_NAME}"
-	SOURCE_LIST "${FILE_LIST}"
-	#INSTALL_PATH
-	INCLUDE_PATHS "${INCLUDE_PATHS}"
-	#HEADER_LIST
-	#COMMPILE_FLAGS"
-	#LINK_FLAGS"
-)
