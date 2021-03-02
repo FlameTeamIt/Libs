@@ -12,7 +12,7 @@ add_sources()
 	local ADD_TO_MODULE_LIST=$2
 
 	local CMAKE_VARNAME="SOURCE_LIST"
-	local MODULE_LIST_FILE=$SOURCE_MODULES_FILENAME
+ 	local MODULE_LIST_FILE=$SOURCE_MODULES_FILENAME
 
 	if [[ "$ADD_TO_MODULE_LIST" == "true" ]]
 	then
@@ -180,10 +180,7 @@ add_tests()
 }
 
 
-add_sources src true
+add_sources src false
 add_headers src false
-add_headers include/FlameIDE true
-
-add_sources tests true
-add_headers tests true
+add_headers include/FlameIDE false
 add_tests src false
