@@ -27,13 +27,6 @@ set(INCLUDE_PATHS
 	${FLAME_INCLUDE_TEST_PATH}
 )
 
-set(DEPENDENCY_TARGET_LIST
-	"${FLAME_NAMESPACE}::Templates::Tests::Static"
-	"${FLAME_NAMESPACE}::Streams::Tests::Static"
-	"${FLAME_NAMESPACE}::Threads::Tests::Static"
-	"${FLAME_NAMESPACE}::Common::Tests::Static"
-)
-
 flame_compile_binary(
 	NAME "${NAME}"
 	ALIAS_NAME "${ALIAS_NAME}"
@@ -43,5 +36,4 @@ flame_compile_binary(
 	#HEADER_LIST
 	#COMMPILE_FLAGS"
 	#LINK_FLAGS"
-	DEPENDENCY_TARGET_LIST "${DEPENDENCY_TARGET_LIST}"
 )
