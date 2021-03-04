@@ -2,7 +2,7 @@
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
-#include <FlameIDE/Common/OsTypes.hpp>
+#include <FlameIDE/Os/Types.hpp>
 
 namespace flame_ide
 {namespace streams

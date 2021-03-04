@@ -184,7 +184,17 @@ public:
 	Pointer operator->() noexcept;
 	PointerToConst operator->() const noexcept;
 
+	operator bool() const noexcept;
+
 	void clean();
+
+	Pointer pointer() noexcept;
+
+	PointerToConst pointer() const noexcept;
+
+	Reference reference() noexcept;
+
+	ConstReference reference() const noexcept;
 
 private:
 	using PointerCounter = typename ContainerTraits<Counter>::Pointer;
@@ -227,7 +237,17 @@ public:
 	Pointer operator->() noexcept;
 	PointerToConst operator->() const noexcept;
 
+	operator bool() const noexcept;
+
 	void clean();
+
+	Pointer pointer() noexcept;
+
+	PointerToConst pointer() const noexcept;
+
+	Reference reference() noexcept;
+
+	ConstReference reference() const noexcept;
 
 private:
 	Allocator allocator;
@@ -356,6 +376,12 @@ typename SHARED_TYPE::PointerToConst SHARED_TYPE::operator->() const noexcept
 }
 
 SHARED_TEMPLATE_DEFINE
+SHARED_TYPE::operator bool() const noexcept
+{
+	return operator->();
+}
+
+SHARED_TEMPLATE_DEFINE
 void SHARED_TYPE::clean()
 {
 	if (object && objectCounter && !--(*objectCounter) )
@@ -366,6 +392,30 @@ void SHARED_TYPE::clean()
 		object = nullptr;
 		objectCounter = nullptr;
 	}
+}
+
+SHARED_TEMPLATE_DEFINE
+typename SHARED_TYPE::Pointer SHARED_TYPE::pointer() noexcept
+{
+	return operator*();
+}
+
+SHARED_TEMPLATE_DEFINE
+typename SHARED_TYPE::PointerToConst SHARED_TYPE::pointer() const noexcept
+{
+	return operator*();
+}
+
+SHARED_TEMPLATE_DEFINE
+typename SHARED_TYPE::Reference SHARED_TYPE::reference() noexcept
+{
+	return operator->();
+}
+
+SHARED_TEMPLATE_DEFINE
+typename SHARED_TYPE::ConstReference SHARED_TYPE::reference() const noexcept
+{
+	return operator->();
 }
 
 // UniquePointer
@@ -434,6 +484,12 @@ typename UNIQUE_TYPE::PointerToConst UNIQUE_TYPE::operator->() const noexcept
 }
 
 UNIQUE_TEMPLATE_DEFINE
+UNIQUE_TYPE::operator bool() const noexcept
+{
+	return operator->();
+}
+
+UNIQUE_TEMPLATE_DEFINE
 void UNIQUE_TYPE::clean()
 {
 	if (object)
@@ -441,6 +497,30 @@ void UNIQUE_TYPE::clean()
 		allocator.destroy(object);
 		object = nullptr;
 	}
+}
+
+UNIQUE_TEMPLATE_DEFINE
+typename UNIQUE_TYPE::Pointer UNIQUE_TYPE::pointer() noexcept
+{
+	return operator->();
+}
+
+UNIQUE_TEMPLATE_DEFINE
+typename UNIQUE_TYPE::PointerToConst UNIQUE_TYPE::pointer() const noexcept
+{
+	return operator->();
+}
+
+UNIQUE_TEMPLATE_DEFINE
+typename UNIQUE_TYPE::Reference UNIQUE_TYPE::reference() noexcept
+{
+	return operator*();
+}
+
+UNIQUE_TEMPLATE_DEFINE
+typename UNIQUE_TYPE::ConstReference UNIQUE_TYPE::reference() const noexcept
+{
+	return operator*();
 }
 
 }}

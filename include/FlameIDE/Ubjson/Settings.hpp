@@ -8,7 +8,7 @@ namespace flame_ide
 {namespace ubjson
 {
 
-struct Settings : public NonCreational
+struct Settings: public NonCreational
 {
 	static constexpr size_t MAX_STATIC_SIZE = 32;
 };

@@ -23,13 +23,17 @@ public:
 	using EnumType = enums::Mechanism;
 
 	using ParameterPtr = value_types::ValuePtr;
-	using ParameterPtrToConst = const void *;
+	using ParameterPtrToConst = ConstTraits<
+		RemoveAllType<value_types::ValuePtr>
+	>::PointerToConst;
 	using ParameterSize = value_types::Ulong;
 
-	using ParameterRange = templates::Range<byte_t *>;
-	using ConstParameterRange = templates::Range<const byte_t *>;
+	using ParameterRange = templates::Range<DefaultTraits<byte_t>::Pointer>;
+	using ConstParameterRange = templates::Range<DefaultTraits<byte_t>::PointerToConst>;
 
-	using CryptokiParameterRange = templates::Range<value_types::Byte *>;
+	using CryptokiParameterRange = templates::Range<
+		DefaultTraits<value_types::Byte>::Pointer
+	>;
 
 	Mechanism() noexcept : Parent{ enums::value(EnumType::VENDOR_DEFINED), nullptr, 0 }
 	{}
@@ -52,9 +56,9 @@ public:
 	/// @brief Attribute
 	/// @param initType
 	/// @param range
-	Mechanism(EnumType initType, ParameterRange range) noexcept
+	Mechanism(EnumType type, ParameterRange range) noexcept
 			: Mechanism(
-					initType
+					type
 					, static_cast<ParameterPtr>(&*range.begin())
 					, static_cast<ParameterSize>(range.end() - range.begin())
 			)
@@ -63,10 +67,10 @@ public:
 	/// @brief Attribute
 	/// @param initType
 	/// @param range
-	Mechanism(EnumType initType, CryptokiParameterRange range) noexcept
+	Mechanism(EnumType type, CryptokiParameterRange range) noexcept
 			: Mechanism(
-					initType
-					, static_cast<ParameterPtr>(&*range.begin())
+					type
+					, static_cast<ParameterPtr>(range.begin())
 					, static_cast<ParameterSize>(range.end() - range.begin())
 			)
 	{}
@@ -103,7 +107,10 @@ public:
 	/// @return
 	ConstParameterRange getParameterReange() const noexcept;
 
-	void set(EnumType type, ParameterPtr paramterPtr , ParameterSize paramterSize) noexcept;
+	void set(EnumType type, ParameterPtr paramterPtr
+			, ParameterSize paramterSize) noexcept;
+
+	void set(EnumType type, ParameterRange paramterSize) noexcept;
 
 private:
 	using Parent::mechanism;

@@ -14,7 +14,7 @@ namespace flame_ide
 {namespace tests
 {
 
-class NamedPipeThreadCreation : public threads::Thread
+class NamedPipeThreadCreation: public threads::Thread
 {
 public:
 	NamedPipeThreadCreation(const char *initName, os::ActionType initAction) noexcept :
