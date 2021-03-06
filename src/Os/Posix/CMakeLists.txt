@@ -5,9 +5,6 @@ if("${FLAME_PLATFORM}" STREQUAL "Posix")
 	get_sources(FILE_LIST)
 
 	set(DEPENDENCY_HEADER_TARGETS ${FLAME_NAMESPACE}::Os::Headers)
-	find_static_library(dl dl.static)
-	find_shared_library(dl dl.shared)
-
 	flame_compile_library(
 		NAME "${NAME}"
 		SOURCE_LIST "${FILE_LIST}"

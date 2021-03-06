@@ -6,22 +6,12 @@ get_sources(FILE_LIST)
 set(DEPENDENCY_HEADER_TARGETS ${FLAME_NAMESPACE}::Os::Headers)
 set(DEPENDENCY_TARGETS_FOR_STATIC
 	"${FLAME_NAMESPACE}::${NAME}::${FLAME_PLATFORM}::Object"
+	${CMAKE_DL_LIBS}
 )
 set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::${NAME}::${FLAME_PLATFORM}::Object::Independ"
+	${CMAKE_DL_LIBS}
 )
-
-if("${FLAME_PLATFORM}" STREQUAL "Posix")
-	find_static_library(dl "dl::static")
-	find_shared_library(dl "dl::shared")
-
-	if (NOT (TARGET dl::static))
-		message_fatal("dl::static")
-	endif()
-	if (NOT (TARGET dl::shared))
-		message_fatal("dl::shared")
-	endif()
-endif()
 
 if(FLAME_MAKE_STATIC)
 	set(MAKE_STATIC MAKE_STATIC)
