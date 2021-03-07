@@ -14,7 +14,10 @@ public:
 
 	Library(Library &&library) noexcept;
 
-	Library(const char *libraryPath);
+	/// @brief Contructor
+	/// @param[in] name Library name without suffix and prefix
+	/// @param[in] directory Library location. Optional parameter
+	Library(const char *name, const char *directory = nullptr);
 
 	~Library() noexcept;
 
@@ -22,8 +25,8 @@ public:
 
 	operator bool() const noexcept;
 
-	template<typename Symbol>
-	Symbol find(const char *name) noexcept;
+	template<typename SymbolType>
+	SymbolType find(const char *name) noexcept;
 
 private:
 	Library(LibraryHandle libraryHandle) noexcept;
@@ -40,10 +43,10 @@ namespace flame_ide
 {namespace os
 {
 
-template<typename Symbol>
-Symbol Library::find(const char *name) noexcept
+template<typename SymbolType>
+SymbolType Library::find(const char *name) noexcept
 {
-	return reinterpret_cast<Symbol>(internalFind(name));
+	return reinterpret_cast<SymbolType>(internalFind(name));
 }
 
 }}
