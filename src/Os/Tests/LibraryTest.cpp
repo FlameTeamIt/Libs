@@ -19,6 +19,7 @@ int LibraryTest::vStart()
 	Library library("SoftPkcs11");
 	if (!library)
 	{
+		std::cout << "Library not loaded" << std::endl;
 		return FAILED;
 	}
 
@@ -27,6 +28,7 @@ int LibraryTest::vStart()
 	);
 	if (!getfuncitonList)
 	{
+		std::cout << "Symbol not found loaded" << std::endl;
 		return FAILED;
 	}
 

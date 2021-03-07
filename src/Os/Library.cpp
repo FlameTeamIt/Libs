@@ -47,8 +47,8 @@ LibraryHandle getHandle(const char *name, const char *directory)
 						librarySuffixShared
 				)
 		);
-		fullPathStatic.insert(fullPathStatic.end(), char{});
 
+		fullPathStatic.insert(fullPathStatic.end(), char{});
 		return library::open(fullPathStatic.data());
 	}
 	else

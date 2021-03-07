@@ -62,12 +62,13 @@ UNDERLYING_TYPE(Version, flame_ide::pkcs11::value_types::Byte)
 
 
 /// @brief The Bool enum
-enum class Bool : flame_ide::pkcs11::value_types::Bool
-{
-	TRUE = CK_TRUE
-	, FALSE = CK_FALSE
-};
-UNDERLYING_TYPE(Bool, flame_ide::pkcs11::value_types::Bool)
+// TODO: Failed build on Windows
+//enum class Bool : flame_ide::pkcs11::value_types::Bool
+//{
+//	TRUE = CK_TRUE
+//	, FALSE = CK_FALSE
+//};
+//UNDERLYING_TYPE(Bool, flame_ide::pkcs11::value_types::Bool)
 
 
 /// @brief The SpecialValue enum
@@ -293,13 +294,14 @@ UNDERLYING_TYPE(OtpFormat, flame_ide::pkcs11::value_types::Ulong)
 
 
 /// @brief The OtpParam enum
-enum class OtpParamAttributes : flame_ide::pkcs11::value_types::Ulong
-{
-	IGNORED = CK_OTP_PARAM_IGNORED
-	, OPTIONAL = CK_OTP_PARAM_OPTIONAL
-	, MANDATORY = CK_OTP_PARAM_MANDATORY
-};
-UNDERLYING_TYPE(OtpParamAttributes, flame_ide::pkcs11::value_types::Ulong)
+// TODO: Failed build on Windows
+//enum class OtpParamAttributes : flame_ide::pkcs11::value_types::Ulong
+//{
+//	IGNORED = CK_OTP_PARAM_IGNORED
+//	, OPTIONAL = CK_OTP_PARAM_OPTIONAL
+//	, MANDATORY = CK_OTP_PARAM_MANDATORY
+//};
+//UNDERLYING_TYPE(OtpParamAttributes, flame_ide::pkcs11::value_types::Ulong)
 
 
 /// @brief The Attribute enum
