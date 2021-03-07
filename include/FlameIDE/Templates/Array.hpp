@@ -814,7 +814,7 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 		}
 		else
 		{
-			placementNew<Type>(tail);
+			emplaceNew<Type>(tail);
 
 			Range<ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1))
 					, viewNew(--viewOld.begin(), --viewOld.end());
@@ -843,7 +843,7 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 		Range<InputIterator> range(itBegin, itEnd);
 		if (it == end())
 		{
-			for (Reference itInsert : range)
+			for (auto &itInsert : range)
 			{
 				pushBack(itInsert);
 			}
