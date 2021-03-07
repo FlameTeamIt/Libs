@@ -108,6 +108,11 @@ struct OsLibraryHandle
 };
 constexpr OsLibraryHandle OS_LIBRARY_HANDLE_INVALID = OsLibraryHandle{};
 
+constexpr char OS_LIBRARY_PREFIX[] = "lib";
+constexpr char OS_LIBRARY_SUFFIX_SHARED[] = ".so";
+
+constexpr char OS_DIRECTORY_SLASH = '/';
+
 }}} // flame_ide::os::posix
 
 #define FLAMEIDE_OS_NAMESPACE flame_ide::os::posix
