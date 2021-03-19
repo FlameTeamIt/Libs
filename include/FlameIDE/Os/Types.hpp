@@ -4,6 +4,14 @@
 #include <FlameIDE/Os/Posix/Types.hpp>
 #include <FlameIDE/Os/Windows/Types.hpp>
 
+#if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
+#	define FLAMEIDE_OS_NAMESPACE ::flame_ide::os::posix
+#endif // FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
+
+#if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
+#	define FLAMEIDE_OS_NAMESPACE ::flame_ide::os::windows
+#endif // FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
+
 namespace flame_ide
 {namespace os
 {
@@ -100,5 +108,7 @@ constexpr auto LIBRARY_SUFFIX_SHARED = FLAMEIDE_OS_NAMESPACE::OS_LIBRARY_SUFFIX_
 constexpr auto DIRECTORY_SLASH = FLAMEIDE_OS_NAMESPACE::OS_DIRECTORY_SLASH;
 
 }} // namespace flame_ide::os
+
+#undef FLAMEIDE_OS_NAMESPACE
 
 #endif // FLAMEIDE_OS_TYPES_HPP

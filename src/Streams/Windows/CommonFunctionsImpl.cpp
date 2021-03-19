@@ -78,7 +78,7 @@ os::Status destroyNamedReader(Descriptors::ResultValue descriptor) noexcept
 {
 	if (!::DisconnectNamedPipe(descriptor.fd))
 	{
-		return -::GetLastError();
+		return ::GetLastError();
 	}
 
 	if (!CloseHandle(descriptor.fd))

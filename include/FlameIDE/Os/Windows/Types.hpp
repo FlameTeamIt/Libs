@@ -13,7 +13,6 @@
 #include <windows.h>
 #include <winnt.h>
 
-
 namespace flame_ide
 {
 
@@ -167,8 +166,6 @@ constexpr char OS_LIBRARY_SUFFIX_SHARED[] = ".dll";
 constexpr char OS_DIRECTORY_SLASH = '\\';
 
 }}} // namespace flame_ide::os::windows
-
-#define FLAMEIDE_OS_NAMESPACE flame_ide::os::windows
 
 #endif // FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 

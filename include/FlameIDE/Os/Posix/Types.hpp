@@ -115,8 +115,6 @@ constexpr char OS_DIRECTORY_SLASH = '/';
 
 }}} // flame_ide::os::posix
 
-#define FLAMEIDE_OS_NAMESPACE flame_ide::os::posix
-
 #endif // FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
 #endif // FLAMEIDE_OS_POSIX_TYPES_HPP
