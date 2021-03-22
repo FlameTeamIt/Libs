@@ -18,7 +18,7 @@ pkcs11::structs::MechanismInfo HotpKeyGenerator::getInfo() const noexcept
 	pkcs11::structs::MechanismInfo info = MechanismBase::getInfo();
 	info.flags = pkcs11::enums::value(
 			pkcs11::enums::MechanismFlags::GENERATE
-			& pkcs11::enums::MechanismFlags::GENERATE_KEY_PAIR
+			| pkcs11::enums::MechanismFlags::GENERATE_KEY_PAIR
 	);
 	return info;
 }

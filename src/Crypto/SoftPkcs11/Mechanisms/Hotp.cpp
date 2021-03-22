@@ -18,7 +18,7 @@ pkcs11::structs::MechanismInfo Hotp::getInfo() const noexcept
 	pkcs11::structs::MechanismInfo info = MechanismBase::getInfo();
 	info.flags = pkcs11::enums::value(
 			pkcs11::enums::MechanismFlags::SIGN
-			& pkcs11::enums::MechanismFlags::VERIFY
+			| pkcs11::enums::MechanismFlags::VERIFY
 	);
 	return info;
 }
