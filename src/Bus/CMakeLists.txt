@@ -23,6 +23,10 @@ flame_compile_library(
 		"${FLAME_NAMESPACE}::${NAME}::Object::Independ"
 	STATIC_ALIAS_NAME "${FLAME_NAMESPACE}::${NAME}::Static"
 	SHARED_ALIAS_NAME "${FLAME_NAMESPACE}::${NAME}::Shared"
+
+	NO_RTTI
+	NO_EXCEPTIONS
+
 	${MAKE_SHARED}
 	${MAKE_STATIC}
 )
