@@ -11,6 +11,7 @@ set(SOURCE_MODULES
 	${FLAME_SOURCE_SUBMODLUES_PATH}/Crypto/SoftPkcs11/Functions
 	${FLAME_SOURCE_SUBMODLUES_PATH}/Crypto/SoftPkcs11/Interface
 	${FLAME_SOURCE_SUBMODLUES_PATH}/Crypto/SoftPkcs11/Mechanisms
+	${FLAME_SOURCE_SUBMODLUES_PATH}/Crypto/SoftPkcs11/Mechanisms/Rsa
 
 	${FLAME_SOURCE_SUBMODLUES_PATH}/Os
 	${FLAME_SOURCE_SUBMODLUES_PATH}/Os/Posix
@@ -30,5 +31,3 @@ set(SOURCE_MODULES
 foreach(module ${SOURCE_MODULES})
 	add_subdirectory(${module})
 endforeach()
-
-flame_resolve_targets()

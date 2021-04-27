@@ -124,7 +124,6 @@ LibraryHandle getHandle(const char *name, const char *directory) noexcept
 
 		return library::open(fullPathString.data());
 	}
-
 }
 
 }}} // namespace anonymous

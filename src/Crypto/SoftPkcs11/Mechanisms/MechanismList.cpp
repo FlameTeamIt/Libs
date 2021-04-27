@@ -1,20 +1,29 @@
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/MechanismList.hpp>
 
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RsaPkcsKeyPairGenerator.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RsaPkcs.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa9796.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RsaXdot509.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/RsaPkcsKeyPairGenerator.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/RsaPkcs.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/Rsa9796.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/RsaXdot509.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/Sha1RsaPkcs.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/RsaPkcsOaep.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/RsaX9dot31KeyPairGenerator.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/RsaX9dot31.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/Sha1RsaX9dot31.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/RsaPkcsPss.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/Sha1RsaPkcsPss.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/Sha256RsaPkcs.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/Sha384RsaPkcs.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/Sha512RsaPkcs.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/Sha256RsaPkcsPss.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/Sha384RsaPkcsPss.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/Sha512RsaPkcsPss.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/RsaPkcsTpm11.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Rsa/RsaPkcsOaepTpm11.hpp>
+
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Md2RsaPkcs.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Md5RsaPkcs.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha1RsaPkcs.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RipeMd128RsaPkcs.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RipeMd160RsaPkcs.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RsaPkcsOaep.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RsaX9dot31KeyPairGenerator.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RsaX9dot31.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha1RsaX9dot31.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RsaPkcsPss.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha1RsaPkcsPss.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/DsaKeyPairGenerator.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Dsa.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/DsaSha1.hpp>
@@ -28,12 +37,6 @@
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/X9dot42DiffieHellmanDerive.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/X9dot42DiffieHellmanHybridDerive.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/X9dot42MqvDerive.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha256RsaPkcs.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha384RsaPkcs.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha512RsaPkcs.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha256RsaPkcsPss.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha384RsaPkcsPss.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha512RsaPkcsPss.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha224RsaPkcs.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha224RsaPkcsPss.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Sha512dot224.hpp>
@@ -330,8 +333,6 @@
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/AesCfb1.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/AesKeyWrap.hpp>
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/AesKeyWrapPad.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RsaPkcsTpm11.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/RsaPkcsOaepTpm11.hpp>
 
 namespace flame_ide
 {namespace soft_pkcs11
@@ -340,21 +341,31 @@ namespace flame_ide
 
 struct MechanismList::List
 {
+	// RSA
 	RsaPkcsKeyPairGenerator rsaPkcsKeyPairGenerator;
 	RsaPkcs rsaPkcs;
 	Rsa9796 rsa9796;
 	RsaXdot509 rsaXdot509;
-	Md2RsaPkcs md2RsaPkcs;
-	Md5RsaPkcs md5RsaPkcs;
 	Sha1RsaPkcs sha1RsaPkcs;
-	RipeMd128RsaPkcs ripeMd128RsaPkcs;
-	RipeMd160RsaPkcs ripeMd160RsaPkcs;
 	RsaPkcsOaep rsaPkcsOaep;
 	RsaX9dot31KeyPairGenerator rsaX9dot31KeyPairGenerator;
 	RsaX9dot31 rsaX9dot31;
 	Sha1RsaX9dot31 sha1RsaX9dot31;
 	RsaPkcsPss rsaPkcsPss;
 	Sha1RsaPkcsPss sha1RsaPkcsPss;
+	Sha256RsaPkcs sha256RsaPkcs;
+	Sha384RsaPkcs sha384RsaPkcs;
+	Sha512RsaPkcs sha512RsaPkcs;
+	Sha256RsaPkcsPss sha256RsaPkcsPss;
+	Sha384RsaPkcsPss sha384RsaPkcsPss;
+	Sha512RsaPkcsPss sha512RsaPkcsPss;
+	RsaPkcsTpm11 rsaPkcsTpm11;
+	RsaPkcsOaepTpm11 rsaPkcsOaepTpm11;
+
+	Md2RsaPkcs md2RsaPkcs;
+	Md5RsaPkcs md5RsaPkcs;
+	RipeMd128RsaPkcs ripeMd128RsaPkcs;
+	RipeMd160RsaPkcs ripeMd160RsaPkcs;
 	DsaKeyPairGenerator dsaKeyPairGenerator;
 	Dsa dsa;
 	DsaSha1 dsaSha1;
@@ -368,12 +379,6 @@ struct MechanismList::List
 	X9dot42DiffieHellmanDerive x9dot42DiffieHellmanDerive;
 	X9dot42DiffieHellmanHybridDerive x9dot42DiffieHellmanHybridDerive;
 	X9dot42MqvDerive x9dot42MqvDerive;
-	Sha256RsaPkcs sha256RsaPkcs;
-	Sha384RsaPkcs sha384RsaPkcs;
-	Sha512RsaPkcs sha512RsaPkcs;
-	Sha256RsaPkcsPss sha256RsaPkcsPss;
-	Sha384RsaPkcsPss sha384RsaPkcsPss;
-	Sha512RsaPkcsPss sha512RsaPkcsPss;
 	Sha224RsaPkcs sha224RsaPkcs;
 	Sha224RsaPkcsPss sha224RsaPkcsPss;
 	Sha512dot224 sha512dot224;
@@ -670,8 +675,6 @@ struct MechanismList::List
 	AesCfb1 aesCfb1;
 	AesKeyWrap aesKeyWrap;
 	AesKeyWrapPad aesKeyWrapPad;
-	RsaPkcsTpm11 rsaPkcsTpm11;
-	RsaPkcsOaepTpm11 rsaPkcsOaepTpm11;
 
 	MechanismBase *operator()(pkcs11::enums::Mechanism type)
 	{
