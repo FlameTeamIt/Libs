@@ -13,10 +13,8 @@ set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Functions::Object::Independ"
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Interface::Object::Independ"
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Mechanisms::Object::Independ"
-	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Object::Independ"
-	"${FLAME_NAMESPACE}::Threads::Object::Independ"
-	"${FLAME_NAMESPACE}::Threads::${FLAME_PLATFORM}::Object::Independ"
-	${FLAME_DEPENDENCY_SHARED_LIBRARIES}
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::NoThread::Object::Independ"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexStub::Object::Independ"
 )
 if(FLAME_MAKE_SHARED)
 	set(MAKE_SHARED MAKE_SHARED)

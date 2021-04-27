@@ -67,9 +67,9 @@ CK_RV createMutex(CK_VOID_PTR_PTR mutex)
 	{
 		MutexPtr mutexPtr = reinterpret_cast<MutexPtr>(*mutex);
 		ReturnType result = flame_ide::pkcs11::createMutexWrapper(mutexPtr);
-		return static_cast<CK_RV>(result);
+		return pkcs11::enums::value(result);
 	}
-	return static_cast<CK_RV>(ReturnType::ARGUMENTS_BAD);
+	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
 CK_RV destroyMutex(CK_VOID_PTR mutex)
@@ -78,9 +78,9 @@ CK_RV destroyMutex(CK_VOID_PTR mutex)
 	{
 		MutexPtr mutexPtr = reinterpret_cast<MutexPtr>(mutex);
 		ReturnType result = flame_ide::pkcs11::destroyMutexWrapper(mutexPtr);
-		return static_cast<CK_RV>(result);
+		return pkcs11::enums::value(result);
 	}
-	return static_cast<CK_RV>(ReturnType::ARGUMENTS_BAD);
+	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
 CK_RV lockMutex(CK_VOID_PTR mutex)
@@ -89,9 +89,9 @@ CK_RV lockMutex(CK_VOID_PTR mutex)
 	{
 		MutexPtr mutexPtr = reinterpret_cast<MutexPtr>(mutex);
 		ReturnType result = flame_ide::pkcs11::lockMutexWrapper(*mutexPtr);
-		return static_cast<CK_RV>(result);
+		return pkcs11::enums::value(result);
 	}
-	return static_cast<CK_RV>(ReturnType::ARGUMENTS_BAD);
+	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
 CK_RV unlockMutex(CK_VOID_PTR mutex)
@@ -100,9 +100,9 @@ CK_RV unlockMutex(CK_VOID_PTR mutex)
 	{
 		MutexPtr mutexPtr = reinterpret_cast<MutexPtr>(mutex);
 		ReturnType result = flame_ide::pkcs11::unlockMutexWrapper(*mutexPtr);
-		return static_cast<CK_RV>(result);
+		return pkcs11::enums::value(result);
 	}
-	return static_cast<CK_RV>(ReturnType::ARGUMENTS_BAD);
+	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
 } // namespace pkcs11
