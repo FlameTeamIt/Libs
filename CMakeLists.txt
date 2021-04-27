@@ -57,5 +57,3 @@ endfunction()
 add_subdirectory(${FLAME_INCLUDE_SUBMODLUES_PATH})
 add_subdirectory(${FLAME_SOURCE_SUBMODLUES_PATH})
 add_subdirectory(${FLAME_TEST_SUBMODLUES_PATH})
-
-flame_resolve_targets()

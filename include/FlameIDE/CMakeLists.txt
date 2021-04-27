@@ -37,3 +37,5 @@ set(HEADER_MODULES
 foreach(module ${HEADER_MODULES})
 	add_subdirectory(${module})
 endforeach()
+
+flame_resolve_targets()
