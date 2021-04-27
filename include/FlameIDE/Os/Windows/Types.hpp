@@ -152,6 +152,20 @@ constexpr DWORD OS_INBOUND_BUFFER_SIZE = 1024;
 
 constexpr char OS_PLATFORM_PREFIX[] = "\\\\.\\pipe\\";
 
+struct OsLibraryHandle
+{
+	using Handle = decltype(LoadLibraryA(nullptr));
+	using Symbol = decltype(GetProcAddress(Handle{}, nullptr));
+
+	Handle address = Handle{};
+};
+constexpr OsLibraryHandle OS_LIBRARY_HANDLE_INVALID = OsLibraryHandle{};
+
+constexpr char OS_LIBRARY_PREFIX[] = "lib"; // TODO: only for MinGW
+constexpr char OS_LIBRARY_SUFFIX_SHARED[] = ".dll";
+
+constexpr char OS_DIRECTORY_SLASH = '\\';
+
 }}} // namespace flame_ide::os::windows
 
 #define FLAMEIDE_OS_NAMESPACE flame_ide::os::windows

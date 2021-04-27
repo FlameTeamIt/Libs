@@ -11,9 +11,14 @@ namespace flame_ide
 #	define FLAMEIDE_CONSTANT_MAX_STATIC_SIZE flame_ide::size_t(32)
 #endif
 
+#ifndef FLAMEIDE_CONSTANT_MAX_STATIC_STRING_SIZE
+#	define FLAMEIDE_CONSTANT_MAX_STATIC_STRING_SIZE flame_ide::size_t(2048)
+#endif
+
 struct Constants: public NonCreational
 {
 	static constexpr flame_ide::size_t MAX_STATIC_SIZE = FLAMEIDE_CONSTANT_MAX_STATIC_SIZE;
+	static constexpr flame_ide::size_t MAX_STATIC_STRING_SIZE = FLAMEIDE_CONSTANT_MAX_STATIC_STRING_SIZE;
 };
 
 #undef FLAMEIDE_CONSTANT_MAX_STATIC_SIZE

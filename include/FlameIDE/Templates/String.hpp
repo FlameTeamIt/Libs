@@ -87,6 +87,8 @@ public:
 	Me &operator+=(const T &object);
 	Me &operator+=(T &&object);
 
+	Me &operator+=(PointerToConst string);
+
 	// TODO: Not implement
 	template<typename IntType>
 	Me &operator+=(IntType integer);
@@ -340,6 +342,13 @@ TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator+=(T &&object)
 {
 	pushBack(object);
+	return *this;
+}
+
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator+=(PointerToConst string)
+{
+	pushBack(string);
 	return *this;
 }
 
@@ -786,8 +795,11 @@ TEMPLATE_TYPE
 typename STRING_TYPE::SizeType STRING_TYPE::rawStringLength(
 		typename STRING_TYPE::PointerToConst rawString)
 {
-	SizeType length;
-	for (length = 0; rawString[length] != NULL_SYMBOL; ++length);
+	SizeType length = 0;
+	if (rawString)
+	{
+		for (; rawString[length] != NULL_SYMBOL; ++length);
+	}
 	return length;
 }
 
