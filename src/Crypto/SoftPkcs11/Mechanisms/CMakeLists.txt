@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(NAME "Crypto.SoftPkcs11.Mechanisms")
+set(NAME "SoftPkcs11.Mechanisms")
 set(SUBALIAS_NAME "Crypto::SoftPkcs11::Mechanisms")
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
 get_sources(FILE_LIST)

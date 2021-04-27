@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(NAME "Crypto.SoftPkcs11.Interface")
+set(NAME "SoftPkcs11.Interface")
 set(SUBALIAS_NAME "Crypto::SoftPkcs11::Interface")
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
 get_sources(FILE_LIST)
