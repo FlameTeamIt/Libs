@@ -1,9 +1,11 @@
-﻿#include <FlameIDE/Common/Macros/DetectOs.hpp>
+#include <FlameIDE/Common/Macros/DetectOs.hpp>
 
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 
-#include <FlameIDE/Os/Types.hpp>
 #include <FlameIDE/Threads/Thread.hpp>
+
+#include <FlameIDE/Os/Types.hpp>
+#include <FlameIDE/Os/Constants.hpp>
 
 namespace flame_ide
 {namespace threads
@@ -23,7 +25,6 @@ Thread::Thread(Thread &&thread) noexcept :
 
 Thread::~Thread() noexcept
 {
-	auto initializer = os::THREAD_CONTEXT_INITIALIZER;
 	if (context != os::THREAD_CONTEXT_INITIALIZER)
 	{
 		join();

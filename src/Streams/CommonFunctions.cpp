@@ -1,5 +1,7 @@
 #include <FlameIDE/../../src/Streams/CommonFuncitons.hpp>
 
+#include <FlameIDE/Os/Constants.hpp>
+
 #include <FlameIDE/Threads/Thread.hpp>
 
 #include <errno.h>

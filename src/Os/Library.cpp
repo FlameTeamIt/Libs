@@ -3,6 +3,7 @@
 #include <FlameIDE/../../src/Os/LibraryFunctions.hpp>
 
 #include <FlameIDE/Common/Constants.hpp>
+#include <FlameIDE/Os/Constants.hpp>
 #include <FlameIDE/Templates/Array.hpp>
 #include <FlameIDE/Templates/String.hpp>
 

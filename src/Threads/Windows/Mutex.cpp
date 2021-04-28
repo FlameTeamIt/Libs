@@ -3,6 +3,8 @@
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 
 #include <FlameIDE/Os/Types.hpp>
+#include <FlameIDE/Os/Constants.hpp>
+
 #include <FlameIDE/Threads/Mutex.hpp>
 
 namespace flame_ide

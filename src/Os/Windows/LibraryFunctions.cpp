@@ -1,5 +1,7 @@
 #include <FlameIDE/../../src/Os/LibraryFunctions.hpp>
 
+#include <FlameIDE/Os/Constants.hpp>
+
 namespace flame_ide
 {namespace os
 {namespace library

@@ -5,6 +5,7 @@
 #include <FlameIDE/Common/Byte.hpp>
 
 #include <FlameIDE/Os/Types.hpp>
+#include <FlameIDE/Os/Constants.hpp>
 
 #include <FlameIDE/Templates/Range.hpp>
 #include <FlameIDE/Templates/Iterator/Iterator.hpp>

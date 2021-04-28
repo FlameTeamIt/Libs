@@ -1,4 +1,7 @@
 #include "../CommonFuncitons.hpp"
+
+#include <FlameIDE/Os/Constants.hpp>
+
 #include <FlameIDE/Threads/Thread.hpp>
 
 #include <iostream>
