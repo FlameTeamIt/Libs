@@ -106,23 +106,16 @@ union OsFileDescriptor
 	::HANDLE handle;
 	flame_ide::ssize_t value;
 };
-constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = OsFileDescriptor(flame_ide::ssize_t(-1));
-constexpr OsFileDescriptor OS_DESCRIPTOR_INITIALIZER = OsFileDescriptor(flame_ide::ssize_t{});
 
 using OsStatus = DWORD;
-constexpr OsStatus OS_STATUS_SUCCESS = 0;
 
 struct OsSocket
 {
 	::SOCKADDR_IN sockaddr;
 	::SOCKET sock;
 };
-constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
-		::SOCKADDR_IN{}, ::SOCKET{}
-};
 
 using OsThreadContext = OsFileDescriptor;
-constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OS_DESCRIPTOR_INITIALIZER;
 
 struct OsThreadTaskTrait : NonCreational
 {
@@ -131,26 +124,14 @@ struct OsThreadTaskTrait : NonCreational
 };
 
 using OsMutexContext = OsFileDescriptor;
-constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = OS_DESCRIPTOR_INITIALIZER;
 
 using OsSemaphoreValue = LONG;
-constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1;
-constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID = NumberLimitTrait<
-	OsSemaphoreValue
->::MIN_VALUE;
 
 struct OsSemaphoreContext
 {
 	OsFileDescriptor object;
 	OsSemaphoreValue value;
 };
-constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = {
-	OS_DESCRIPTOR_INITIALIZER, OS_SEMAPHORE_VALUE_INVALID
-};
-
-constexpr DWORD OS_INBOUND_BUFFER_SIZE = 1024;
-
-constexpr char OS_PLATFORM_PREFIX[] = "\\\\.\\pipe\\";
 
 struct OsLibraryHandle
 {
@@ -159,16 +140,10 @@ struct OsLibraryHandle
 
 	Handle address = Handle{};
 };
-constexpr OsLibraryHandle OS_LIBRARY_HANDLE_INVALID = OsLibraryHandle{};
-
-constexpr char OS_LIBRARY_PREFIX[] = "lib"; // TODO: only for MinGW
-constexpr char OS_LIBRARY_SUFFIX_SHARED[] = ".dll";
-
-constexpr char OS_DIRECTORY_SLASH = '\\';
 
 }}} // namespace flame_ide::os::windows
 
-#define FLAMEIDE_OS_NAMESPACE flame_ide::os::windows
+#define FLAMEIDE_OS_NAMESPACE ::flame_ide::os::windows
 
 #endif // FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 

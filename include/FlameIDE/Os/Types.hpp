@@ -12,27 +12,13 @@ namespace flame_ide
 using FileDescriptor = FLAMEIDE_OS_NAMESPACE::OsFileDescriptor;
 
 /// @brief
-constexpr FileDescriptor INVALID_DESCRIPTOR =
-		FLAMEIDE_OS_NAMESPACE::OS_INVALID_DESCRIPTOR;
-
-/// @brief
 using Status = FLAMEIDE_OS_NAMESPACE::OsStatus;
 
 /// @brief
-constexpr Status STATUS_SUCCESS =
-		FLAMEIDE_OS_NAMESPACE::OS_STATUS_SUCCESS;
-
-/// @brief
 using Socket = FLAMEIDE_OS_NAMESPACE::OsSocket;
-constexpr Socket SOCKET_INITIALIZER =
-		FLAMEIDE_OS_NAMESPACE::OS_SOCKET_INITIALIZER;
 
 /// @brief
 using ThreadContext = FLAMEIDE_OS_NAMESPACE::OsThreadContext;
-
-/// @brief
-constexpr ThreadContext THREAD_CONTEXT_INITIALIZER =
-		FLAMEIDE_OS_NAMESPACE::OS_THREAD_CONTEXT_INITIALIZER;
 
 /// @brief
 using ThreadTaskTrait = FLAMEIDE_OS_NAMESPACE::OsThreadTaskTrait;
@@ -41,26 +27,13 @@ using ThreadTaskTrait = FLAMEIDE_OS_NAMESPACE::OsThreadTaskTrait;
 using MutexContext = FLAMEIDE_OS_NAMESPACE::OsMutexContext;
 
 /// @brief
-constexpr MutexContext MUTEX_CONTEXT_INITIALIZER =
-		FLAMEIDE_OS_NAMESPACE::OS_MUTEX_CONTEXT_INITIALIZER;
-
-/// @brief
 using SemaphoreContext = FLAMEIDE_OS_NAMESPACE::OsSemaphoreContext;
-
-/// @brief
-constexpr SemaphoreContext SEMAPHORE_CONTEXT_INITIALIZER =
-		FLAMEIDE_OS_NAMESPACE::OS_SEMAPHORE_CONTEXT_INITIALIZER;
 
 /// @brief
 using SemaphoreValue = FLAMEIDE_OS_NAMESPACE::OsSemaphoreValue;
 
-/// @brief
-constexpr SemaphoreValue SEMAPHORE_VALUE_DEFAULT =
-		FLAMEIDE_OS_NAMESPACE::OS_SEMAPHORE_VALUE_DEFAULT;
-
-/// @brief
-constexpr SemaphoreValue SEMAPHORE_VALUE_INVALID =
-		FLAMEIDE_OS_NAMESPACE::OS_SEMAPHORE_VALUE_INVALID;
+/// @brief Library handler
+using LibraryHandle = FLAMEIDE_OS_NAMESPACE::OsLibraryHandle;
 
 /// @brief The ActionType enum
 enum class ActionType
@@ -86,18 +59,6 @@ enum class StreamType
 	, FILE
 	, SOCKET
 };
-
-/// @brief PLATFORM_PREFIX
-constexpr auto PIPE_NAME_PREFIX = FLAMEIDE_OS_NAMESPACE::OS_PLATFORM_PREFIX;
-
-/// @brief Library handler
-using LibraryHandle = FLAMEIDE_OS_NAMESPACE::OsLibraryHandle;
-constexpr auto LIBRARY_HANDLE_INVALID = FLAMEIDE_OS_NAMESPACE::OS_LIBRARY_HANDLE_INVALID;
-
-constexpr auto LIBRARY_PREFIX = FLAMEIDE_OS_NAMESPACE::OS_LIBRARY_PREFIX;
-constexpr auto LIBRARY_SUFFIX_SHARED = FLAMEIDE_OS_NAMESPACE::OS_LIBRARY_SUFFIX_SHARED;
-
-constexpr auto DIRECTORY_SLASH = FLAMEIDE_OS_NAMESPACE::OS_DIRECTORY_SLASH;
 
 }} // namespace flame_ide::os
 

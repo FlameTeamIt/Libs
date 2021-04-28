@@ -53,18 +53,13 @@ public:
 private:
 	DefaultFd defaultFd;
 };
-constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = -1;
 
 using OsStatus = int;
-constexpr OsStatus OS_STATUS_SUCCESS = 0;
 
 struct OsSocket
 {
 	::sockaddr_un sockaddr;
 	OsFileDescriptor fd;
-};
-constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
-		{}, OS_INVALID_DESCRIPTOR
 };
 
 struct OsThreadContext
@@ -72,7 +67,6 @@ struct OsThreadContext
 	pthread_t object;
 	pthread_attr_t attributes;
 };
-constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OsThreadContext{};
 struct OsThreadTaskTrait : NonCreational
 {
 	using ReturnType = void *;
@@ -85,18 +79,9 @@ struct OsMutexContext
 	pthread_mutex_t object;
 	pthread_mutexattr_t attributes;
 };
-constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = {
-	PTHREAD_MUTEX_INITIALIZER, {}
-};
 
 using OsSemaphoreContext = ::sem_t;
-constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreContext{};
 using OsSemaphoreValue = unsigned int;
-constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1u;
-constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
-		NumberLimitTrait<OsSemaphoreValue>::MAX_VALUE;
-
-constexpr char OS_PLATFORM_PREFIX[] = "/tmp/";
 
 struct OsLibraryHandle
 {
@@ -106,16 +91,10 @@ struct OsLibraryHandle
 
 	Handle address = Handle{};
 };
-constexpr OsLibraryHandle OS_LIBRARY_HANDLE_INVALID = OsLibraryHandle{};
-
-constexpr char OS_LIBRARY_PREFIX[] = "lib";
-constexpr char OS_LIBRARY_SUFFIX_SHARED[] = ".so";
-
-constexpr char OS_DIRECTORY_SLASH = '/';
 
 }}} // flame_ide::os::posix
 
-#define FLAMEIDE_OS_NAMESPACE flame_ide::os::posix
+#define FLAMEIDE_OS_NAMESPACE ::flame_ide::os::posix
 
 #endif // FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
