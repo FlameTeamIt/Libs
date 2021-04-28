@@ -38,7 +38,11 @@ constexpr char OS_PLATFORM_PREFIX[] = "\\\\.\\pipe\\";
 
 constexpr OsLibraryHandle OS_LIBRARY_HANDLE_INVALID = OsLibraryHandle{};
 
-constexpr char OS_LIBRARY_PREFIX[] = "lib"; // TODO: only for MinGW
+#if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_MSVC
+constexpr char OS_LIBRARY_PREFIX[] = "";
+#else // FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_MSVC
+constexpr char OS_LIBRARY_PREFIX[] = "lib";
+#endif // FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_MSVC
 constexpr char OS_LIBRARY_SUFFIX_SHARED[] = ".dll";
 
 constexpr char OS_DIRECTORY_SLASH = '\\';
