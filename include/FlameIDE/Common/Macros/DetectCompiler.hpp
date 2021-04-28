@@ -27,13 +27,13 @@
 #	define FLAMEIDE_EXPORT CMAKE_RESOLVER_EXPORT
 #else
 // GCC
-#	if (defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)) && !defined(__clang__)
+#	if (defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__))
 #		undef FLAMEIDE_COMPILER
 #		define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_GCC
 #		define FLAMEIDE_EXPORT __attribute__((visibility("default")))
 #	endif // GCC
 // MSVC
-#	if defined(_MSC_VER) && !defined(__clang__)
+#	if defined(_MSC_VER)
 #		undef FLAMEIDE_COMPILER
 #		define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_MSVC
 #		define FLAMEIDE_EXPORT __declspec(dllexport)
