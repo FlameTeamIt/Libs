@@ -62,4 +62,6 @@ enum class StreamType
 
 }} // namespace flame_ide::os
 
+#undef FLAMEIDE_OS_NAMESPACE
+
 #endif // FLAMEIDE_OS_TYPES_HPP

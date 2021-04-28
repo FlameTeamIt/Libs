@@ -1,8 +1,8 @@
 #ifndef FLAMEIDE_OS_LIBRARY_HPP
 #define FLAMEIDE_OS_LIBRARY_HPP
 
-#include <FlameIDE/Os/Types.hpp>
 #include <FlameIDE/Common/Traits/Fuctional.hpp>
+#include <FlameIDE/Os/Types.hpp>
 
 namespace flame_ide
 {namespace os

@@ -8,19 +8,46 @@
 
 #define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_INVALID
 
-#if defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)
-#	undef FLAMEIDE_COMPILER
-#	define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_GCC
-#elif defined(__clang__)
-#	undef FLAMEIDE_COMPILER
-#	define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_CLANG
-#elif defined(_MSC_VER)
-#	undef FLAMEIDE_COMPILER
-#	define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_MSVC
-#endif
-
-#if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_INVALID
-#	error "Not supported compiler"
+#if defined(CMAKE_RESOLVER_COMPILER_CURRENT)
+// GCC
+#	if CMAKE_RESOLVER_COMPILER_GCC == CMAKE_RESOLVER_COMPILER_CURRENT
+#		undef FLAMEIDE_COMPILER
+#		define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_GCC
+#	endif
+// MSVC
+#	if CMAKE_RESOLVER_COMPILER_MSVC == CMAKE_RESOLVER_COMPILER_CURRENT
+#		undef FLAMEIDE_COMPILER
+#		define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_MSVC
+#	endif
+// clang
+#	if CMAKE_RESOLVER_COMPILER_CLANG == CMAKE_RESOLVER_COMPILER_CURRENT
+#		undef FLAMEIDE_COMPILER
+#		define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_CLANG
+#	endif
+#	define FLAMEIDE_EXPORT CMAKE_RESOLVER_EXPORT
+#else
+// GCC
+#	if (defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)) && !defined(__clang__)
+#		undef FLAMEIDE_COMPILER
+#		define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_GCC
+#		define FLAMEIDE_EXPORT __attribute__((visibility("default")))
+#	endif // GCC
+// MSVC
+#	if defined(_MSC_VER) && !defined(__clang__)
+#		undef FLAMEIDE_COMPILER
+#		define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_MSVC
+#		define FLAMEIDE_EXPORT __declspec(dllexport)
+#	endif // MSVC
+// clang
+#	if defined(__clang__)
+#		undef FLAMEIDE_COMPILER
+#		define FLAMEIDE_COMPILER FLAMEIDE_COMPILER_CLANG
+#		define FLAMEIDE_EXPORT __attribute__((visibility(default)))
+#	endif // clang
+#
+#	if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_INVALID
+#		error "Not supported compiler"
+#	endif
 #endif
 
 #endif // FLAMEIDE_COMMON_MACROS_DETECTCOMPILER_HPP

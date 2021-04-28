@@ -20,7 +20,6 @@ namespace flame_ide
 {namespace os
 {
 
-
 Library::Library() noexcept : Library{ LIBRARY_HANDLE_INVALID }
 {}
 

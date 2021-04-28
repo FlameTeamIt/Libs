@@ -92,7 +92,7 @@ struct OsLibraryHandle
 	Handle address = Handle{};
 };
 
-}}} // flame_ide::os::posix
+}}} // namespace flame_ide::os::posix
 
 #define FLAMEIDE_OS_NAMESPACE ::flame_ide::os::posix
 

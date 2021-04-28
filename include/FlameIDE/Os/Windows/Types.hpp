@@ -13,7 +13,6 @@
 #include <windows.h>
 #include <winnt.h>
 
-
 namespace flame_ide
 {
 
