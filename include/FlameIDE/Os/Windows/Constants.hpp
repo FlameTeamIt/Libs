@@ -2,6 +2,7 @@
 #define FLAMEIDE_OS_WINDOWS_CONSTANTS_HPP
 
 #include <FlameIDE/Os/Windows/Types.hpp>
+#include <FlameIDE/Common/Macros/DetectCompiler.hpp>
 
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 
