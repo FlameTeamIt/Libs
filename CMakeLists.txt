@@ -36,6 +36,8 @@ include(FlameContrib)
 include(CmakeFlameResolver)
 enable_testing()
 
+set(FLAME_PLATFORM_DEFINES ON)
+
 function(get_sources OUTPUT_NAME)
 	set(SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/Sources.cmake")
 	if(EXISTS ${SOURCE_FILE})
