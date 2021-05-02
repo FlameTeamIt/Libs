@@ -1,11 +1,11 @@
+#include <FlameIDE/Threads/Mutex.hpp>
 #include <FlameIDE/Common/Macros/DetectOs.hpp>
+#include <FlameIDE/Os/Constants.hpp>
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
 #include <pthread.h>
 #include <errno.h>
-
-#include <FlameIDE/Threads/Mutex.hpp>
 
 // need static functions
 

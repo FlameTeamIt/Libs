@@ -2,6 +2,7 @@
 #define COMMONFUNCTIONS_HPP
 
 #include <FlameIDE/Os/Types.hpp>
+#include <FlameIDE/Os/Constants.hpp>
 
 namespace flame_ide
 {namespace streams
