@@ -18,3 +18,5 @@ foreach(module ${TEST_MODULES})
 	remove_source_dir("${OUT_DIR}" "/Tests" OUT_DIR)
 	add_subdirectory(${module} ${CMAKE_CURRENT_BINARY_DIR}/${OUT_DIR})
 endforeach()
+
+flame_resolve_targets()

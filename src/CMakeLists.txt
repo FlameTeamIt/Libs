@@ -31,3 +31,5 @@ set(SOURCE_MODULES
 foreach(module ${SOURCE_MODULES})
 	add_subdirectory(${module})
 endforeach()
+
+flame_resolve_targets()
