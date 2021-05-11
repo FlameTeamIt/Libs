@@ -8,13 +8,38 @@ namespace flame_ide
 namespace pkcs11
 {
 
-CK_RV createMutex(CK_VOID_PTR_PTR mutex);
+///
+/// @brief Allocate memory mutex and initialize
+/// @param[in,out] mutex non-null pointer for allocation
+/// @return CKR_OK for success
+/// @return CKR_HOST_MEMORY -- no memory
+/// @return CKR_ARGUMENTS_BAD -- invalid argument
+///
+CK_RV createMutex(CK_VOID_PTR_PTR mutex) noexcept;
 
-CK_RV destroyMutex(CK_VOID_PTR mutex);
+///
+/// @brief Deinitialize mutex and free memory
+/// @param[in,out] mutex pointer to allocated mutex
+/// @return CKR_OK for success
+/// @return CKR_ARGUMENTS_BAD -- invalid argument
+///
+CK_RV destroyMutex(CK_VOID_PTR mutex) noexcept;
 
-CK_RV lockMutex(CK_VOID_PTR mutex);
+///
+/// @brief Lock mutex
+/// @param[in,out] mutex pointer to allocated mutex
+/// @return CKR_OK for success
+/// @return CKR_ARGUMENTS_BAD -- invalid argument
+///
+CK_RV lockMutex(CK_VOID_PTR mutex) noexcept;
 
-CK_RV unlockMutex(CK_VOID_PTR mutex);
+///
+/// @brief unlockMutex
+/// @param[in,out] mutex pointer to allocated mutex
+/// @return CKR_OK for success
+/// @return CKR_ARGUMENTS_BAD -- invalid argument
+///
+CK_RV unlockMutex(CK_VOID_PTR mutex) noexcept;
 
 } // namespace pkcs11
 } // namespace flame_ide

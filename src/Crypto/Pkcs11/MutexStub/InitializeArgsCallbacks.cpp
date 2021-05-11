@@ -10,22 +10,22 @@ namespace flame_ide
 namespace pkcs11
 {
 
-CK_RV createMutex(CK_VOID_PTR_PTR)
+CK_RV createMutex(CK_VOID_PTR_PTR) noexcept
 {
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
-CK_RV destroyMutex(CK_VOID_PTR)
+CK_RV destroyMutex(CK_VOID_PTR) noexcept
 {
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
-CK_RV lockMutex(CK_VOID_PTR)
+CK_RV lockMutex(CK_VOID_PTR) noexcept
 {
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
-CK_RV unlockMutex(CK_VOID_PTR)
+CK_RV unlockMutex(CK_VOID_PTR) noexcept
 {
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }

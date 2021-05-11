@@ -19,7 +19,7 @@ using Mutex = threads::Mutex;
 using MutexAllocator = templates::allocator::ObjectAllocator<Mutex>;
 using MutexPtr = DefaultTraits<Mutex>::Pointer;
 
-ReturnType createMutexWrapper(MutexPtr &value)
+ReturnType createMutexWrapper(MutexPtr &value) noexcept
 {
 	MutexAllocator allocator;
 	MutexPtr mutexPtr = allocator.construct();
@@ -34,14 +34,14 @@ ReturnType createMutexWrapper(MutexPtr &value)
 	}
 }
 
-ReturnType destroyMutexWrapper(MutexPtr &mutex)
+ReturnType destroyMutexWrapper(MutexPtr &mutex) noexcept
 {
 	MutexAllocator allocator;
 	allocator.destroy(mutex);
 	return ReturnType::OK;
 }
 
-ReturnType lockMutexWrapper(Mutex &mutex)
+ReturnType lockMutexWrapper(Mutex &mutex) noexcept
 {
 	if (mutex.getState() == Mutex::State::UNLOCKED)
 	{
@@ -50,7 +50,7 @@ ReturnType lockMutexWrapper(Mutex &mutex)
 	return ReturnType::OK;
 }
 
-ReturnType unlockMutexWrapper(Mutex &mutex)
+ReturnType unlockMutexWrapper(Mutex &mutex) noexcept
 {
 	if (mutex.getState() == Mutex::State::LOCKED)
 	{
@@ -59,46 +59,53 @@ ReturnType unlockMutexWrapper(Mutex &mutex)
 	return ReturnType::OK;
 }
 
+inline MutexPtr getMutex(CK_VOID_PTR mutex) noexcept
+{
+	return reinterpret_cast<MutexPtr>(mutex);
+}
+
 } // namespace anonymous
 
-CK_RV createMutex(CK_VOID_PTR_PTR mutex)
+CK_RV createMutex(CK_VOID_PTR_PTR mutex) noexcept
 {
 	if (mutex)
 	{
-		MutexPtr mutexPtr = reinterpret_cast<MutexPtr>(*mutex);
+		MutexPtr mutexPtr = nullptr;
 		ReturnType result = flame_ide::pkcs11::createMutexWrapper(mutexPtr);
+		*mutex = mutexPtr;
+
 		return pkcs11::enums::value(result);
 	}
 	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
-CK_RV destroyMutex(CK_VOID_PTR mutex)
+CK_RV destroyMutex(CK_VOID_PTR mutex) noexcept
 {
 	if (mutex)
 	{
-		MutexPtr mutexPtr = reinterpret_cast<MutexPtr>(mutex);
+		MutexPtr mutexPtr = getMutex(mutex);
 		ReturnType result = flame_ide::pkcs11::destroyMutexWrapper(mutexPtr);
 		return pkcs11::enums::value(result);
 	}
 	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
-CK_RV lockMutex(CK_VOID_PTR mutex)
+CK_RV lockMutex(CK_VOID_PTR mutex) noexcept
 {
 	if (mutex)
 	{
-		MutexPtr mutexPtr = reinterpret_cast<MutexPtr>(mutex);
+		MutexPtr mutexPtr = getMutex(mutex);
 		ReturnType result = flame_ide::pkcs11::lockMutexWrapper(*mutexPtr);
 		return pkcs11::enums::value(result);
 	}
 	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
-CK_RV unlockMutex(CK_VOID_PTR mutex)
+CK_RV unlockMutex(CK_VOID_PTR mutex) noexcept
 {
 	if (mutex)
 	{
-		MutexPtr mutexPtr = reinterpret_cast<MutexPtr>(mutex);
+		MutexPtr mutexPtr = getMutex(mutex);
 		ReturnType result = flame_ide::pkcs11::unlockMutexWrapper(*mutexPtr);
 		return pkcs11::enums::value(result);
 	}
