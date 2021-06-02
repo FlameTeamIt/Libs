@@ -1,3 +1,4 @@
 set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/Library.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Pipe.cpp
 )
