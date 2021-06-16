@@ -60,6 +60,12 @@ enum class StreamType
 	, SOCKET
 };
 
+/// @brief The DescriptorPair struct
+struct DescriptorPair
+{
+	FileDescriptor descriptors[2];
+};
+
 }} // namespace flame_ide::os
 
 #undef FLAMEIDE_OS_NAMESPACE
