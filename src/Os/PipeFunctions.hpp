@@ -1,7 +1,9 @@
 #ifndef PIPEFUNCTIONS_HPP
 #define PIPEFUNCTIONS_HPP
 
+#include <FlameIDE/Templates/Expected.hpp>
 #include <FlameIDE/Os/Types.hpp>
+#include <FlameIDE/Os/Constants.hpp>
 
 namespace flame_ide
 {namespace os
@@ -9,12 +11,12 @@ namespace flame_ide
 
 struct PipeDescriptors
 {
-	FileDescriptor descriptors[2];
+	DescriptorPair pair = DESCRIPTOR_PAIR_INITIALIZER;
 };
 
-Status createPipes(PipeDescriptors &descriptors) noexcept;
+templates::Expected<PipeDescriptors, Status> createPipes() noexcept;
 
-Status destroyPipes(PipeDescriptors &descriptors) noexcept;
+void destroyPipes(PipeDescriptors &descriptors) noexcept;
 
 }} // namespace flame_ide::os
 

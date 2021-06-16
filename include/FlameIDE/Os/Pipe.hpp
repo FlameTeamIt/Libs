@@ -4,6 +4,8 @@
 #include <FlameIDE/Os/Types.hpp>
 #include <FlameIDE/Os/Constants.hpp>
 
+#include <FlameIDE/Common/Byte.hpp>
+
 namespace flame_ide
 {namespace os
 {
@@ -20,14 +22,26 @@ public:
 	Pipe &operator=(const Pipe &pipe) noexcept = delete;
 	Pipe &operator=(Pipe &&pipe) noexcept;
 
-	os::FileDescriptor getReader() const noexcept;
-	os::FileDescriptor getWriter() const noexcept;
+	const DescriptorPair &native() const noexcept;
 
 private:
-	static constexpr Types::size_t COUNT_PIPES = 2;
-	os::FileDescriptor descriptors[COUNT_PIPES];
+	os::DescriptorPair pair;
 	os::Status creationStatus = os::STATUS_SUCCESS;
 };
+
+/// @brief read
+/// @param pipe
+/// @param data
+/// @param size
+/// @return
+Types::ssize_t read(const Pipe &pipe, byte_t *data, Types::size_t size);
+
+/// @brief write
+/// @param pipe
+/// @param data
+/// @param size
+/// @return
+Types::ssize_t write(const Pipe &pipe, const byte_t *data, Types::size_t size);
 
 }} // namespace flame_ide::os
 

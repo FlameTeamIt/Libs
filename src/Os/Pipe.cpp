@@ -1,9 +1,9 @@
 #include <FlameIDE/Os/Pipe.hpp>
 
 #include <FlameIDE/../../src/Os/PipeFunctions.hpp>
+#include <FlameIDE/../../src/Os/CommonFunctions.hpp>
 
 #include <FlameIDE/Common/Utils.hpp>
-#include <FlameIDE/Common/Constants.hpp>
 
 namespace flame_ide
 {namespace os
@@ -11,7 +11,18 @@ namespace flame_ide
 
 Pipe::Pipe() noexcept
 {
-	creationStatus = createPipes(*reinterpret_cast<PipeDescriptors*>(descriptors));
+	auto expectPipes = createPipes();
+	expectPipes.ifResult(
+			[this](PipeDescriptors &&descriptors)
+			{
+				pair = descriptors.pair;
+			}
+	).ifError(
+			[this](Status &&status)
+			{
+				creationStatus = status;
+			}
+	).done();
 }
 
 Pipe::Pipe(Pipe &&pipe) noexcept
@@ -21,31 +32,40 @@ Pipe::Pipe(Pipe &&pipe) noexcept
 
 Pipe::~Pipe() noexcept
 {
-	if (descriptors[0] != INVALID_DESCRIPTOR && descriptors[1] != INVALID_DESCRIPTOR)
+	if (pair.descriptors[0] != INVALID_DESCRIPTOR && pair.descriptors[1] != INVALID_DESCRIPTOR)
 	{
-		destroyPipes(*reinterpret_cast<PipeDescriptors*>(descriptors));
+
+		destroyPipes(*reinterpret_cast<PipeDescriptors*>(pair.descriptors));
 	}
 }
 
 Pipe &Pipe::operator=(Pipe &&pipe) noexcept
 {
-	descriptors[0] = pipe.descriptors[0];
-	descriptors[1] = pipe.descriptors[1];
-
-	pipe.descriptors[0] = -1;
-	pipe.descriptors[1] = -1;
+	pair = pipe.pair;
+	pipe.pair = DESCRIPTOR_PAIR_INITIALIZER;
 
 	return *this;
 }
 
-os::FileDescriptor Pipe::getReader() const noexcept
+const DescriptorPair &Pipe::native() const noexcept
 {
-	return descriptors[static_cast<int>(ActionType::READER)];
+	return pair;
 }
 
-os::FileDescriptor Pipe::getWriter() const noexcept
+Types::ssize_t read(const Pipe &pipe, byte_t *data, Types::size_t size)
 {
-	return descriptors[static_cast<int>(ActionType::WRITER)];
+	FileDescriptor readFd = pipe.native().descriptors[
+			static_cast<int>(ActionType::READER)
+	];
+	return read(readFd, data, size);
+}
+
+Types::ssize_t write(const Pipe &pipe, const byte_t *data, Types::size_t size)
+{
+	FileDescriptor writeFd = pipe.native().descriptors[
+			static_cast<int>(ActionType::WRITER)
+	];
+	return write(writeFd, data, size);
 }
 
 }} // namespace flame_ide::os

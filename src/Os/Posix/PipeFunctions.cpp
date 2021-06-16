@@ -15,35 +15,27 @@ namespace flame_ide
 {namespace os
 {
 
-Status createPipes(PipeDescriptors &descriptors) noexcept
+templates::Expected<PipeDescriptors, Status> createPipes() noexcept
 {
-	Status status = pipe(reinterpret_cast<int*>(descriptors.descriptors));
+	PipeDescriptors descriptors = { -1, -1 };
+	Status status = pipe(reinterpret_cast<int*>(&descriptors.pair));
 	if (status)
 	{
-		return -errno;
+		return Status{ -errno };
 	}
-	if (fcntl(descriptors.descriptors[0]
+	if (fcntl(descriptors.pair.descriptors[0]
 			, F_SETPIPE_SZ
 			, flame_ide::Constants::MAX_PIPE_BUFFER_SIZE) < 0)
 	{
-		return -errno;
+		return Status{ -errno };
 	}
+	return descriptors;
 }
 
-Status destroyPipes(PipeDescriptors &descriptors) noexcept
+void destroyPipes(PipeDescriptors &pipe)
 {
-	Status status = STATUS_SUCCESS;
-	if (close(descriptors.descriptors[0]) < 0)
-	{
-		descriptors.descriptors[0] = -errno;
-		status = -1;
-	}
-	if (close(descriptors.descriptors[1]) < 0)
-	{
-		descriptors.descriptors[1] = -errno;
-		status = -1;
-	}
-	return status;
+	close(pipe.pair.descriptors[0]);
+	close(pipe.pair.descriptors[1]);
 }
 
 }} // namespace flame_ide::os
