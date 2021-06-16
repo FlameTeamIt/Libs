@@ -307,15 +307,15 @@ bool isEqual(Iterator1 start1, Iterator1 end1
 		, Iterator2 start2, Iterator2 end2)
 {
 	static_assert(
-			!isSameTypes<
+			isSameTypes<
 				typename RemoveAllTrait<decltype(*start1)>::Type
 				, typename RemoveAllTrait<decltype(*start2)>::Type
 			>()
 			, "Types is not equal."
 	);
 
-	typename RemoveAllTrait<Iterator1>::Type it1 = start1;
-	typename RemoveAllTrait<Iterator2>::Type it2 = start2;
+	auto it1 = start1;
+	auto it2 = start2;
 	for (; (it1 != end1) && (it2 != end2); ++it1, ++it2)
 	{
 		if ((it1 == end1) || (it2 == end2) || (*it1 != *it2))
