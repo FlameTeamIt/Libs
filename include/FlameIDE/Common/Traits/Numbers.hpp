@@ -20,8 +20,6 @@ struct Types: public NonCreational
 	using int_t = flame_ide::int_t;
 	using long_t = flame_ide::long_t;
 
-	using byte_t = flame_ide::uichar_t;
-
 	using uichar_t = flame_ide::uichar_t;
 	using ushort_t = flame_ide::ushort_t;
 	using uint_t = flame_ide::uint_t;
