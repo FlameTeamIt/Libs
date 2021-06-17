@@ -34,7 +34,6 @@ Pipe::~Pipe() noexcept
 {
 	if (pair.descriptors[0] != INVALID_DESCRIPTOR && pair.descriptors[1] != INVALID_DESCRIPTOR)
 	{
-
 		destroyPipes(*reinterpret_cast<PipeDescriptors*>(pair.descriptors));
 	}
 }
@@ -47,9 +46,21 @@ Pipe &Pipe::operator=(Pipe &&pipe) noexcept
 	return *this;
 }
 
+Status Pipe::getCreationStatus() const noexcept
+{
+	return creationStatus;
+}
+
 const DescriptorPair &Pipe::native() const noexcept
 {
 	return pair;
+}
+
+DescriptorPair Pipe::detachNative() noexcept
+{
+	DescriptorPair outPair = pair;
+	pair = DESCRIPTOR_PAIR_INITIALIZER;
+	return outPair;
 }
 
 Types::ssize_t read(const Pipe &pipe, byte_t *data, Types::size_t size)

@@ -22,11 +22,15 @@ public:
 	Pipe &operator=(const Pipe &pipe) noexcept = delete;
 	Pipe &operator=(Pipe &&pipe) noexcept;
 
+	Status getCreationStatus() const noexcept;
+
 	const DescriptorPair &native() const noexcept;
 
+	DescriptorPair detachNative() noexcept;
+
 private:
-	os::DescriptorPair pair;
-	os::Status creationStatus = os::STATUS_SUCCESS;
+	DescriptorPair pair;
+	Status creationStatus = os::STATUS_SUCCESS;
 };
 
 /// @brief read
