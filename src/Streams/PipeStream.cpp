@@ -1,11 +1,7 @@
-#include <FlameIDE/Common/Macros.hpp>
-
-#if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
-
-#include <unistd.h>
-
 #include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Streams/PipeStream.hpp>
+
+#include <FlameIDE/Os/Pipe.hpp>
 
 namespace flame_ide
 {namespace streams
@@ -15,18 +11,17 @@ enum
 {
 	PIPE_READER = static_cast<int>(os::ActionType::READER)
 	, PIPE_WRITER  = static_cast<int>(os::ActionType::WRITER)
-	, PIPE_COUNT
 };
-
 
 PipeStream::PipeStream() noexcept : status(os::STATUS_SUCCESS), reader(), writer()
 {
-	os::FileDescriptor fds[PIPE_COUNT];
-	status = pipe(reinterpret_cast<int*>(fds));
+	os::Pipe pipe;
+	status = pipe.getCreationStatus();
 	if (status != os::INVALID_DESCRIPTOR)
 	{
-		reader.setFileDescriptor(fds[PIPE_READER]);
-		writer.setFileDescriptor(fds[PIPE_WRITER]);
+		auto pair = pipe.detachNative();
+		reader.setFileDescriptor(pair.descriptors[PIPE_READER]);
+		writer.setFileDescriptor(pair.descriptors[PIPE_WRITER]);
 	}
 }
 
@@ -100,8 +95,4 @@ void PipeStream::flush() noexcept
 	writer.flush();
 }
 
-
-
 }}
-
-#endif // FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
