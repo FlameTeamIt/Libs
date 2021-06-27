@@ -29,6 +29,9 @@ if(FLAME_TESTING)
 
 			NO_RTTI
 			EXCEPTIONS
+
+			TEST
+			TEST_ARGUMENTS ""
 		)
 	endif()
 	if(FLAME_MAKE_SHARED)
@@ -45,6 +48,9 @@ if(FLAME_TESTING)
 
 			NO_RTTI
 			EXCEPTIONS
+
+			TEST
+			TEST_ARGUMENTS ""
 		)
 	endif()
 

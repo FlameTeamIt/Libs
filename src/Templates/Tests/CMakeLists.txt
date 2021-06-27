@@ -28,6 +28,9 @@ if(FLAME_TESTING)
 
 			NO_RTTI
 			EXCEPTIONS
+
+			TEST
+			TEST_ARGUMENTS ""
 		)
 		set(MAKE_STATIC MAKE_STATIC)
 	endif()
@@ -45,6 +48,9 @@ if(FLAME_TESTING)
 
 			NO_RTTI
 			EXCEPTIONS
+
+			TEST
+			TEST_ARGUMENTS ""
 		)
 	endif()
 
