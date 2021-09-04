@@ -72,7 +72,7 @@ GlobalContext &GlobalContext::get() noexcept
 
 Mutex GlobalContext::createMutex() noexcept
 {
-	if (enums::value( initFlags & enums::InitializeArgsFlags::OS_LOCKING_OK ))
+	if (enums::value(initFlags & enums::InitializeArgsFlags::OS_LOCKING_OK))
 	{
 		return Mutex {
 				externalCallbacks.create, externalCallbacks.destroy
@@ -95,4 +95,4 @@ enums::ReturnType GlobalContext::getStatus() const noexcept
 	return status;
 }
 
-}}
+}} // flame_ide::soft_pkcs11

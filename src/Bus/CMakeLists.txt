@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
+get_sources(FILE_LIST)
 
 set(NAME "Bus")
 set(INCLUDE_PATHS "${FLAME_INCLUDE_PATH}")
-get_sources(FILE_LIST)
 
 set(DEPENDENCY_HEADER_TARGETS "${FLAME_NAMESPACE}::${NAME}::Headers")
 

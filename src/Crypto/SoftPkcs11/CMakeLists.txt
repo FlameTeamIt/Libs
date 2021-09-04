@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.14)
 set(NAME "SoftPkcs11")
 set(SUBALIAS_NAME "Crypto::SoftPkcs11")
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
-get_sources(FILE_LIST)
 
 set(DEPENDENCY_HEADER_TARGETS
 	"${FLAME_NAMESPACE}::Crypto::Oasis::Headers"
@@ -21,6 +20,7 @@ if(FLAME_MAKE_SHARED)
 	set(MAKE_SHARED MAKE_SHARED)
 endif()
 
+get_sources(FILE_LIST)
 flame_compile_library(
 	NAME "${NAME}"
 	SOURCE_LIST "${FILE_LIST}"
@@ -37,3 +37,12 @@ flame_compile_library(
 
 	${MAKE_SHARED}
 )
+
+set(SOURCE_MODULES
+	${CMAKE_CURRENT_LIST_DIR}/Functions
+	${CMAKE_CURRENT_LIST_DIR}/Interface
+	${CMAKE_CURRENT_LIST_DIR}/Mechanisms
+)
+foreach(module ${SOURCE_MODULES})
+	add_subdirectory(${module})
+endforeach()

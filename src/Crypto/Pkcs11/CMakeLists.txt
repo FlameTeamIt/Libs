@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.14)
-get_sources(FILE_LIST)
 
 set(NAME "Crypto.Pkcs11")
 set(SUBALIAS_NAME "Crypto::Pkcs11")
@@ -24,6 +23,10 @@ endif()
 if(FLAME_MAKE_SHARED)
 	set(MAKE_SHARED MAKE_SHARED)
 endif()
+
+get_sources(FILE_LIST)
+
+# TODO: добавить возможность для библиотек отдельно задавать объединяемые объектники
 
 flame_compile_library(
 	NAME "${NAME}"
@@ -75,3 +78,11 @@ flame_compile_library(
 	${MAKE_SHARED}
 	${MAKE_STATIC}
 )
+
+set(SOURCE_MODULES
+	${CMAKE_CURRENT_LIST_DIR}/MutexReal
+	${CMAKE_CURRENT_LIST_DIR}/MutexStub
+)
+foreach(module ${SOURCE_MODULES})
+	add_subdirectory(${module})
+endforeach()

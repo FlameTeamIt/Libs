@@ -1,7 +1,8 @@
+cmake_minimum_required(VERSION 3.14)
+
 set(NAME "Os")
 set(NAME_ALIAS "${NAME}")
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
-get_sources(FILE_LIST)
 
 set(DEPENDENCY_HEADER_TARGETS ${FLAME_NAMESPACE}::Os::Headers)
 set(DEPENDENCY_TARGETS_FOR_STATIC
@@ -20,6 +21,7 @@ if(FLAME_MAKE_SHARED)
 	set(MAKE_SHARED MAKE_SHARED)
 endif()
 
+get_sources(FILE_LIST)
 flame_compile_library(
 	NAME "${NAME}"
 	SOURCE_LIST "${FILE_LIST}"
@@ -40,3 +42,11 @@ flame_compile_library(
 	${MAKE_STATIC}
 	${MAKE_SHARED}
 )
+
+set(SOURCE_MODULES
+	${CMAKE_CURRENT_LIST_DIR}/Posix
+	${CMAKE_CURRENT_LIST_DIR}/Windows
+)
+foreach(module ${SOURCE_MODULES})
+	add_subdirectory(${module})
+endforeach()
