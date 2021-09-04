@@ -1,19 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(Flame)
-
-# TODO
-# Надо подумать надо Muticonfig-ом
-# Есть проблема с тем, что могут внешние библиотеки линковаться
-# Как вариант обхода этого -- ввести external-линкующиеся библиотеки, и на них делать алиасы с типом сборки
-
-#	if ("${CMAKE_BUILD_TYPE}" STREQUAL "Multi")
-#		set(FLAME_BUILD_TYPES "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
-#		foreach(BUILD_TYPE ${FLAME_BUILD_TYPES})
-#			set(CMAKE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${BUILD_TYPE})
-#			file(MAKE_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
-#		endif()
-#	else()
+project(Flame LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -29,32 +16,40 @@ set(FLAME_CURRENT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(FLAME_ROOT_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/src)
 
 set(FLAME_INCLUDE_SUBMODLUES_PATH ${FLAME_INCLUDE_PATH}/FlameIDE)
-set(FLAME_SOURCE_SUBMODLUES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(FLAME_TEST_SUBMODLUES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+set(FLAME_SOURCE_SUBMODLUES_PATH ${FLAME_CURRENT_DIR}/src)
+set(FLAME_TEST_SUBMODLUES_PATH ${FLAME_CURRENT_DIR}/tests)
 
 include(FlameContrib)
 include(CmakeFlameResolver)
-enable_testing()
+flame_resolver_settings(
+	# Common options
+	#	CMAKE_DEBUG                    # OFF
+	#	CMAKE_DEBUG_SHOW_PARSE_RESULTS # OFF
+	#	PRINT_COMMON_STATISTIC         # OFF
+	#	PRINT_DETAILED_STATISTIC       # OFF
+	LOGGING                        # ON
+	CLEAN_AFTER_RESOLVE            # ON
+	THREADING                      # ON
+	TESTING                        # ON
+	ENABLE_INSTALL                 # ON
+	LOCAL_INSTALL                  # ON
 
-set(FLAME_PLATFORM_DEFINES ON)
+	# Code generation options
+	ONLY_POSITION_INDEPENDENT_OBJECTS # ON
+	MAKE_STATIC                       # ON
+	MAKE_SHARED                       # ON
+	#	MAKE_STANDALONE                   # OFF
+	EXPORT_ALL_SYMBOLS                # ON
 
-function(get_sources OUTPUT_NAME)
-	set(SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/Sources.cmake")
-	if(EXISTS ${SOURCE_FILE})
-		include(${SOURCE_FILE})
-		list(APPEND FILE_LIST ${SOURCE_LIST})
-		unset(SOURCE_LIST)
-	endif()
+	# Flag options
+	#	CXX_NO_RTTI       # OFF
+	#	CXX_NO_EXCEPTIONS # OFF
+	PLATFORM_DEFINES  # ON
 
-	set(HEADER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/Headers.cmake")
-	if(EXISTS ${HEADER_FILE})
-		include(${HEADER_FILE})
-		list(APPEND FILE_LIST ${HEADER_LIST})
-		unset(HEADER_LIST)
-	endif()
-
-	set(${OUTPUT_NAME} ${FILE_LIST} PARENT_SCOPE)
-endfunction()
+	# Values
+	PROJECT_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}
+	LOCAL_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install
+)
 
 add_subdirectory(${FLAME_INCLUDE_SUBMODLUES_PATH})
 add_subdirectory(${FLAME_SOURCE_SUBMODLUES_PATH})
