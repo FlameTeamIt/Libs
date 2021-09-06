@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(NAME "Templates${FLAME_NAME_SEPARATOR}Allocator")
+set(NAME "Templates.Allocator")
 set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::Templates::Allocator::Headers)
 set(DEPENDENCY_LIST
 	${FLAME_NAMESPACE}::Common::Headers
@@ -13,5 +13,5 @@ flame_header_library(
 	HEADER_LIST            "${FILE_LIST}"
 	DEPENDENCY_TARGET_LIST "${DEPENDENCY_LIST}"
 	INCLUDE_PATHS          "${FLAME_INCLUDE_PATH}"
-	INSTALL_DIR            "${FLAME_NAMESPACE}/Templates/Allocator"
+	INSTALL_SUBDIR         "${FLAME_NAMESPACE}/Templates/Allocator"
 )

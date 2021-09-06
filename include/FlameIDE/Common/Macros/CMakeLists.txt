@@ -9,5 +9,5 @@ flame_header_library(
 	LIBRARY_ALIAS_NAME "${LIBRARY_ALIAS_NAME}"
 	HEADER_LIST        "${FILE_LIST}"
 	INCLUDE_PATHS      "${FLAME_INCLUDE_PATH}"
-	INSTALL_DIR        "${FLAME_NAMESPACE}/Common/Macros"
+	INSTALL_SUBDIR     "${FLAME_NAMESPACE}/Common/Macros"
 )

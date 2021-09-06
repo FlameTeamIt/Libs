@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(NAME "Templates${FLAME_NAME_SEPARATOR}Serialization")
+set(NAME "Templates.Serialization")
 set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::Templates::Serialization::Headers)
 set(DEPENDENCY_LIST
 	${FLAME_NAMESPACE}::Common::Headers
@@ -13,5 +13,5 @@ flame_header_library(
 	HEADER_LIST            "${FILE_LIST}"
 	DEPENDENCY_TARGET_LIST "${DEPENDENCY_LIST}"
 	INCLUDE_PATHS          "${FLAME_INCLUDE_PATH}"
-	INSTALL_DIR            "${FLAME_NAMESPACE}/Templates/Serialization"
+	INSTALL_SUBDIR         "${FLAME_NAMESPACE}/Templates/Serialization"
 )
