@@ -42,7 +42,7 @@ template<typename InputIterator>
 Range<InputIterator>
 makeRange(InputIterator itBegin, InputIterator itEnd) noexcept;
 
-template<typename T, flame_ide::size_t SIZE>
+template<typename T, flame_ide::Types::size_t SIZE>
 Range<T*>
 makeRange(T (&array)[SIZE]) noexcept;
 
@@ -50,7 +50,7 @@ template<typename Container>
 Range<typename Container::ConstIterator>
 makeConstRange(const Container &container) noexcept;
 
-template<typename T, flame_ide::size_t SIZE>
+template<typename T, flame_ide::Types::size_t SIZE>
 Range<const T*>
 makeConstRange(const T (&array)[SIZE]) noexcept;
 
@@ -128,7 +128,7 @@ makeRange(InputIterator itBegin, InputIterator itEnd) noexcept
 	);
 }
 
-template<typename T, typename flame_ide::size_t SIZE>
+template<typename T, typename flame_ide::Types::size_t SIZE>
 Range<T*>
 makeRange(T (&array)[SIZE]) noexcept
 {
@@ -146,7 +146,7 @@ makeConstRange(const Container &container) noexcept
 	);
 }
 
-template<typename T, flame_ide::size_t SIZE>
+template<typename T, flame_ide::Types::size_t SIZE>
 Range<const T*>
 makeConstRange(const T (&array)[SIZE]) noexcept
 {

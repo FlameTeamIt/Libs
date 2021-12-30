@@ -14,7 +14,7 @@ struct PipeDescriptors
 	DescriptorPair pair = DESCRIPTOR_PAIR_INITIALIZER;
 };
 
-templates::Expected<PipeDescriptors, Status> createPipes() noexcept;
+Status createPipes(PipeDescriptors &pipes) noexcept;
 
 void destroyPipes(PipeDescriptors &descriptors) noexcept;
 

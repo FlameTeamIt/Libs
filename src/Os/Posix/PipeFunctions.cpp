@@ -15,9 +15,8 @@ namespace flame_ide
 {namespace os
 {
 
-templates::Expected<PipeDescriptors, Status> createPipes() noexcept
+Status createPipes(PipeDescriptors &descriptors) noexcept
 {
-	PipeDescriptors descriptors = { -1, -1 };
 	Status status = pipe(reinterpret_cast<int*>(&descriptors.pair));
 	if (status)
 	{
@@ -25,11 +24,11 @@ templates::Expected<PipeDescriptors, Status> createPipes() noexcept
 	}
 	if (fcntl(descriptors.pair.descriptors[0]
 			, F_SETPIPE_SZ
-			, flame_ide::Constants::MAX_PIPE_BUFFER_SIZE) < 0)
+			, flame_ide::Constants::PIPE_BUFFER_SIZE) < 0)
 	{
 		return Status{ -errno };
 	}
-	return descriptors;
+	return 0;
 }
 
 void destroyPipes(PipeDescriptors &pipe)

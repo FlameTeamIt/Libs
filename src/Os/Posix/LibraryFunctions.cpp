@@ -1,3 +1,7 @@
+#include <FlameIDE/Common/Macros.hpp>
+
+#if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
+
 #include <FlameIDE/../../src/Os/LibraryFunctions.hpp>
 
 #include <FlameIDE/Os/Constants.hpp>
@@ -26,3 +30,5 @@ void close(LibraryHandle &handle) noexcept
 }
 
 }}} // namespace flame_ide::os::library
+
+#endif // FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL

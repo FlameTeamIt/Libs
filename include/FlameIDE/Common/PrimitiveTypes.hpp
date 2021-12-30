@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 namespace flame_ide
+{namespace primitive_types
 {
 
 using diff_t = ::ptrdiff_t;
@@ -23,6 +24,13 @@ using float_t = float;
 using double_t = double;
 using ldouble_t = long double;
 
-}
+}} // namespace flame_ide::primitive_types
+
+namespace flame_ide
+{
+
+using namespace flame_ide::primitive_types;
+
+} // namespace flame_ide
 
 #endif // FLAMEIDE_COMMON_PRIMITIVE_TYPES_HPP

@@ -31,13 +31,15 @@ struct AbstractByteStreamReader
 {
 	///
 	using ByteIterator = templates::Iterator<
-		Byte *, templates::IteratorCategory::RANDOM_ACCESS
+		Byte *
+		, templates::IteratorCategory::RANDOM_ACCESS
 		, ContainerTraits<Byte>, void
 	>;
 
 	///
 	using CircularByteIterator = templates::CircularIterator<
-		ByteIterator, templates::IteratorCategory::RANDOM_ACCESS
+		ByteIterator
+		, templates::IteratorCategory::RANDOM_ACCESS
 		, ContainerTraits<Byte>, void
 	>;
 

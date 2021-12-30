@@ -1,13 +1,13 @@
 #ifndef FLAMEIDE_UBJSON_TYPES_HPP
 #define FLAMEIDE_UBJSON_TYPES_HPP
 
-#include <FlameIDE/Common/PrimitiveTypes.hpp>
+#include <FlameIDE/Common/Traits/Numbers.hpp>
 
 namespace flame_ide
 {namespace ubjson
 {
 
-enum class Type : uichar_t
+enum class Type : Types::uichar_t
 {
 	NULLVAL = 'Z'
 	, NOOP = 'N'
@@ -30,7 +30,7 @@ enum class Type : uichar_t
 	, ERROR = 0xFF
 };
 
-enum EnumeratedType : uichar_t
+enum EnumeratedType : Types::uichar_t
 {
 	NULLVAL
 	, NOOP

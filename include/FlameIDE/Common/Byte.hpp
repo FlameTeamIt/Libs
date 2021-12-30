@@ -7,7 +7,7 @@
 namespace flame_ide
 {
 
-enum class byte_t: uichar_t
+enum class byte_t: Types::uichar_t
 {};
 
 template<typename IntegerType>
@@ -54,7 +54,7 @@ namespace flame_ide
 template<typename IntegerType>
 constexpr byte_t operator<<(byte_t byteValue, IntegerType shiftValue)
 {
-	using uchar_t = uichar_t;
+	using uchar_t = Types::uichar_t;
 	static_assert(IsIntegralTrait<IntegerType>::VALUE, "Type is not integral.");
 	return static_cast<byte_t>(
 			static_cast<uchar_t>(byteValue) << shiftValue

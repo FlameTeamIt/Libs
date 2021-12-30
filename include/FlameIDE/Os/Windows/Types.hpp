@@ -114,8 +114,18 @@ struct OsSocket
 	::SOCKET sock;
 };
 
-using OsThreadContext = OsFileDescriptor;
-
+struct OsThreadAttributes
+{
+	SECURITY_ATTRIBUTES threadAttributes;
+	SIZE_T stackSize;
+	DWORD creationFlags;
+	LPDWORD threadId;
+};
+struct OsThreadContext
+{
+	OsFileDescriptor object;
+	OsThreadAttributes attributes;
+};
 struct OsThreadTaskTrait : NonCreational
 {
 	using ReturnType = DWORD;

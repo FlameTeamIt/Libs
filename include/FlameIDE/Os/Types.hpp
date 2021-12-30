@@ -14,14 +14,33 @@ using FileDescriptor = FLAMEIDE_OS_NAMESPACE::OsFileDescriptor;
 /// @brief
 using Status = FLAMEIDE_OS_NAMESPACE::OsStatus;
 
+using Address = FLAMEIDE_OS_NAMESPACE::OsAddressContext;
+
 /// @brief
-using Socket = FLAMEIDE_OS_NAMESPACE::OsSocket;
+using Socket = FLAMEIDE_OS_NAMESPACE::OsSocketContext;
 
 /// @brief
 using ThreadContext = FLAMEIDE_OS_NAMESPACE::OsThreadContext;
 
 /// @brief
+using ThreadAttributes = FLAMEIDE_OS_NAMESPACE::OsThreadAttributes;
+
+/// @brief
 using ThreadTaskTrait = FLAMEIDE_OS_NAMESPACE::OsThreadTaskTrait;
+
+/// @brief
+struct ThreadTask
+{
+public:
+	inline operator bool()
+	{
+		return taskValue && argumentValue;
+	}
+
+public:
+	ThreadTaskTrait::TaskType taskValue;
+	ThreadTaskTrait::ArgumentType argumentValue;
+};
 
 /// @brief
 using MutexContext = FLAMEIDE_OS_NAMESPACE::OsMutexContext;

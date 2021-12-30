@@ -75,7 +75,7 @@ struct ValueTraits<EnumeratedType::INT8>
 	static constexpr Type VALUE_TYPE = Type::INT8;
 	static constexpr Type VALUE_TYPE_CLOSE = Type::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
-	using ValueType = ichar_t;
+	using ValueType = Types::ichar_t;
 };
 
 template<>
@@ -84,7 +84,7 @@ struct ValueTraits<EnumeratedType::UINT8>
 	static constexpr Type VALUE_TYPE = Type::UINT8;
 	static constexpr Type VALUE_TYPE_CLOSE = Type::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
-	using ValueType = uichar_t;
+	using ValueType = Types::uichar_t;
 };
 
 template<>
@@ -93,7 +93,7 @@ struct ValueTraits<EnumeratedType::INT16>
 	static constexpr Type VALUE_TYPE = Type::INT16;
 	static constexpr Type VALUE_TYPE_CLOSE = Type::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
-	using ValueType = short_t;
+	using ValueType = Types::short_t;
 };
 
 template<>
@@ -102,7 +102,7 @@ struct ValueTraits<EnumeratedType::INT32>
 	static constexpr Type VALUE_TYPE = Type::INT32;
 	static constexpr Type VALUE_TYPE_CLOSE = Type::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
-	using ValueType = int_t;
+	using ValueType = Types::int_t;
 };
 
 template<>
@@ -111,7 +111,7 @@ struct ValueTraits<EnumeratedType::INT64>
 	static constexpr Type VALUE_TYPE = Type::INT64;
 	static constexpr Type VALUE_TYPE_CLOSE = Type::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
-	using ValueType = long_t;
+	using ValueType = Types::long_t;
 };
 
 template<>
@@ -120,7 +120,7 @@ struct ValueTraits<EnumeratedType::FLOAT32>
 	static constexpr Type VALUE_TYPE = Type::FLOAT32;
 	static constexpr Type VALUE_TYPE_CLOSE = Type::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
-	using ValueType = float_t;
+	using ValueType = Types::float_t;
 };
 
 template<>
@@ -129,7 +129,7 @@ struct ValueTraits<EnumeratedType::FLOAT64>
 	static constexpr Type VALUE_TYPE = Type::FLOAT64;
 	static constexpr Type VALUE_TYPE_CLOSE = Type::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
-	using ValueType = double_t;
+	using ValueType = Types::double_t;
 };
 
 template<>
@@ -138,7 +138,7 @@ struct ValueTraits<EnumeratedType::CHAR>
 	static constexpr Type VALUE_TYPE = Type::CHAR;
 	static constexpr Type VALUE_TYPE_CLOSE = Type::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
-	using ValueType = char_t;
+	using ValueType = Types::char_t;
 };
 
 template<>

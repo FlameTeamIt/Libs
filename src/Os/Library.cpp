@@ -71,7 +71,7 @@ namespace flame_ide
 
 LibraryHandle getHandle(const char *name, const char *directory) noexcept
 {
-	constexpr size_t maxPathLength = Constants::MAX_STATIC_STRING_SIZE;
+	constexpr size_t maxPathLength = Constants::STATIC_STRING_SIZE;
 
 	const char *libraryPrefix = os::LIBRARY_PREFIX;
 	const char *librarySuffixShared = os::LIBRARY_SUFFIX_SHARED;

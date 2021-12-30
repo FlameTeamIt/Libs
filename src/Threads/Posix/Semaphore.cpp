@@ -5,6 +5,7 @@
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
 #include <pthread.h>
+#include <string.h>
 #include <errno.h>
 
 // need static functions

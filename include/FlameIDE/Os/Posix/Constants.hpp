@@ -14,8 +14,28 @@ constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = -1;
 
 constexpr OsStatus OS_STATUS_SUCCESS = 0;
 
-constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
-		{}, OS_INVALID_DESCRIPTOR
+constexpr OsAddressContext OS_IPV4_ADDRESS_INITIALIZER = {
+		::sockaddr_in{ AF_INET, 0, {}, {} }, ::sockaddr_in6{}, true
+};
+
+constexpr OsAddressContext OS_IPV6_ADDRESS_INITIALIZER = {
+		::sockaddr_in{}, ::sockaddr_in6{ AF_INET6, {}, {}, {}, {} }, false
+};
+
+constexpr OsAddressContext OS_IPV4_ADDRESS_LOOPBACK = {
+	::sockaddr_in{ AF_INET, 0, {INADDR_LOOPBACK}, {} }, {}, true
+};
+
+constexpr OsAddressContext OS_IPV6_ADDRESS_LOOPBACK = {
+	::sockaddr_in{}, ::sockaddr_in6{ AF_INET6, 0, {}, IN6ADDR_LOOPBACK_INIT, {} }, false
+};
+
+constexpr OsSocketContext OS_SOCKET_IPV4_INITIALIZER = OsSocketContext {
+		OS_INVALID_DESCRIPTOR, OS_IPV4_ADDRESS_INITIALIZER
+};
+
+constexpr OsSocketContext OS_SOCKET_IPV6_INITIALIZER = OsSocketContext {
+		OS_INVALID_DESCRIPTOR, OS_IPV6_ADDRESS_INITIALIZER
 };
 
 constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OsThreadContext{};

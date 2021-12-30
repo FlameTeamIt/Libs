@@ -11,18 +11,12 @@ namespace flame_ide
 
 Pipe::Pipe() noexcept
 {
-	auto expectPipes = createPipes();
-	expectPipes.ifResult(
-			[this](PipeDescriptors &&descriptors)
-			{
-				pair = descriptors.pair;
-			}
-	).ifError(
-			[this](Status &&status)
-			{
-				creationStatus = status;
-			}
-	).done();
+	auto &descriptors = *reinterpret_cast<PipeDescriptors*>(pair.descriptors);
+	auto result = createPipes(descriptors);
+	if (result)
+	{
+		creationStatus = result;
+	}
 }
 
 Pipe::Pipe(Pipe &&pipe) noexcept

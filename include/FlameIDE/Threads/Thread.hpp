@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_THREADS_THREAD_HPP
 #define FLAMEIDE_THREADS_THREAD_HPP
 
-#include <FlameIDE/Os/Types.hpp>
+#include <FlameIDE/Os/Thread.hpp>
 
 namespace flame_ide
 {namespace threads
@@ -45,7 +45,7 @@ protected:
 	///
 	virtual void vRun() = 0;
 
-	os::ThreadContext context; ///<
+	os::Thread object; ///<
 
 private:
 	///
@@ -54,11 +54,11 @@ private:
 	/// @return
 	///
 	static os::ThreadTaskTrait::ReturnType
-	task(os::ThreadTaskTrait::ArgumentType data) noexcept;
+	task(Thread *thread) noexcept;
 
 	os::Status status; ///<
 };
 
-}}
+}} // namespace flame_ide::threads
 
 #endif // FLAMEIDE_THREADS_THREAD_HPP
