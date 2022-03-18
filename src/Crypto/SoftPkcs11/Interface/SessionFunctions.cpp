@@ -84,3 +84,25 @@ CK_RV C_Logout(CK_SESSION_HANDLE hSession)
 			.sessionCallbacks
 			.logout(hSession);
 }
+
+// v3.0
+
+CK_RV C_LoginUser(CK_SESSION_HANDLE hSession, CK_USER_TYPE userType
+		, CK_UTF8CHAR_PTR pPin, CK_ULONG ulPinLen
+		, CK_UTF8CHAR_PTR pUsername, CK_ULONG ulUsernameLen)
+{
+	return flame_ide::soft_pkcs11::GlobalContext::get()
+			.sessionCallbacks
+			.loginUser(
+					hSession, userType
+					, pPin, ulPinLen
+					, pUsername, ulUsernameLen
+			);
+}
+
+CK_RV C_SessionCancel(CK_SESSION_HANDLE hSession, CK_FLAGS flags)
+{
+	return flame_ide::soft_pkcs11::GlobalContext::get()
+			.sessionCallbacks
+			.sessionCancel(hSession, flags);
+}

@@ -1,4 +1,5 @@
 #include <FlameIDE/Crypto/Pkcs11/Date.hpp>
+#include <FlameIDE/Common/Utils.hpp>
 
 namespace flame_ide
 {
@@ -16,14 +17,8 @@ enum class CompareResult
 };
 
 template<typename T, Types::size_t INDEX, Types::size_t SIZE>
-struct DoSomeByIndex
+struct DoSomeByIndex: public flame_ide::DoSomeByIndex<T, INDEX, SIZE>
 {
-	static void copy(T (& dest)[SIZE], const T (& src)[SIZE])
-	{
-		dest[INDEX] = src[INDEX];
-		DoSomeByIndex<T, INDEX + 1, SIZE>::copy(dest, src);
-	}
-
 	static CompareResult compare(const T (& array1)[SIZE], const T (& array2)[SIZE])
 	{
 		if (array1[INDEX] == array2[INDEX])
@@ -42,23 +37,14 @@ struct DoSomeByIndex
 };
 
 template<typename T, Types::size_t SIZE>
-struct DoSomeByIndex<T, SIZE, SIZE>
+struct DoSomeByIndex<T, SIZE, SIZE>: public flame_ide::DoSomeByIndex<T, SIZE, SIZE>
 {
-	static void copy(T (&)[SIZE], const T (&)[SIZE])
-	{}
-
 	static CompareResult compare(const T (&)[SIZE], const T (&)[SIZE])
 	{
 		return CompareResult::EQUAL;
 	}
 };
 
-
-template<typename T, Types::size_t SIZE>
-void copy(T (& dest)[SIZE], const T (& src)[SIZE])
-{
-	DoSomeByIndex<T, Types::size_t{ 0 }, SIZE>::copy(dest, src);
-}
 
 template<typename T, Types::size_t SIZE>
 CompareResult compare(const T (& arr1)[SIZE], const T (& arr2)[SIZE])

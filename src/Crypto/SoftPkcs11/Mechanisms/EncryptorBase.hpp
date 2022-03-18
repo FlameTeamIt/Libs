@@ -9,8 +9,22 @@ namespace flame_ide
 class EncryptorBase
 {
 public:
+	using InitCallback = void (*)(void);
+	using UpdateCallback = void (*)(void);
+	using FinalCallback = void (*)(void);
+
+public:
 	EncryptorBase() noexcept;
-	virtual ~EncryptorBase() noexcept;
+	~EncryptorBase() noexcept;
+
+	void init();
+	void update();
+	void final();
+
+protected:
+	InitCallback initCallback;
+	UpdateCallback updateCallback;
+	FinalCallback finalCallback;
 };
 
 }}} // namespace flame_ide::soft_pkcs11::mechanisms

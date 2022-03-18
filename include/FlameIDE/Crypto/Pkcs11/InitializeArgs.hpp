@@ -9,7 +9,7 @@ namespace pkcs11
 {
 
 /// @brief The INITIALIZEARGS class
-class InitializeArgs : private structs::InitializeArgs
+class InitializeArgs: private structs::InitializeArgs
 {
 public:
 	using Parent = structs::InitializeArgs;

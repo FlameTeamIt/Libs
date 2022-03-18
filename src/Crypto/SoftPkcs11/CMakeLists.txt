@@ -13,9 +13,9 @@ set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Functions::Object::Independ"
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Interface::Object::Independ"
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Mechanisms::Object::Independ"
-	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Mechanisms::Rsa::Object::Independ"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::NoThread::Object::Independ"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexStub::Object::Independ"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object::Independ"
 )
 if(FLAME_MAKE_SHARED)
 	set(MAKE_SHARED MAKE_SHARED)

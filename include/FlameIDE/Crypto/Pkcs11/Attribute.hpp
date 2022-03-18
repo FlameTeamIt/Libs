@@ -14,7 +14,7 @@ namespace pkcs11
 {
 
 /// @brief The Attribute class
-class Attribute : public structs::Attribute
+class Attribute: public structs::Attribute
 {
 	using Parent = structs::Attribute;
 

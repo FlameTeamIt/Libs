@@ -12,10 +12,12 @@ set(DEPENDENCY_HEADER_TARGETS
 set(DEPENDENCY_TARGETS_FOR_STATIC
 	"${FLAME_NAMESPACE}::Threads::Static"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexReal::Object"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object"
 )
 set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::Threads::Shared"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexReal::Object"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object"
 )
 
 if(FLAME_MAKE_STATIC)
@@ -52,9 +54,11 @@ set(DEPENDENCY_HEADER_TARGETS
 )
 set(DEPENDENCY_TARGETS_FOR_STATIC
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexStub::Object"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object"
 )
 set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexStub::Object::Independ"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object::Independ"
 )
 flame_compile_library(
 	NAME "${NAME}"

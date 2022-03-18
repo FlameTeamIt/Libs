@@ -1,5 +1,6 @@
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Functions/VerifyFunctions.hpp>
 
+#include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Crypto/Pkcs11/Types/Enums.hpp>
 
 namespace flame_ide
@@ -14,6 +15,10 @@ pkcs11::value_types::ReturnType init(
 		, pkcs11::value_types::ObjectHandle key
 )
 {
+	flame_ide::unused(session);
+	flame_ide::unused(mechanism);
+	flame_ide::unused(key);
+
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
@@ -23,6 +28,10 @@ pkcs11::value_types::ReturnType update(
 		, pkcs11::value_types::Ulong dataPartLength
 )
 {
+	flame_ide::unused(session);
+	flame_ide::unused(dataPart);
+	flame_ide::unused(dataPartLength);
+
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
@@ -32,6 +41,10 @@ pkcs11::value_types::ReturnType final(
 		, pkcs11::value_types::Ulong signatureLength
 )
 {
+	flame_ide::unused(session);
+	flame_ide::unused(signature);
+	flame_ide::unused(signatureLength);
+
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
@@ -43,6 +56,12 @@ pkcs11::value_types::ReturnType full(
 		, pkcs11::value_types::Ulong signatureLength
 )
 {
+	flame_ide::unused(session);
+	flame_ide::unused(data);
+	flame_ide::unused(dataLength);
+	flame_ide::unused(signature);
+	flame_ide::unused(signatureLength);
+
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
@@ -55,6 +74,10 @@ pkcs11::value_types::ReturnType init(
 		, pkcs11::value_types::ObjectHandle key
 )
 {
+	flame_ide::unused(session);
+	flame_ide::unused(mechanism);
+	flame_ide::unused(key);
+
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
@@ -66,6 +89,12 @@ pkcs11::value_types::ReturnType full(
 		, pkcs11::value_types::UlongPtr signatureLength
 )
 {
+	flame_ide::unused(session);
+	flame_ide::unused(data);
+	flame_ide::unused(dataLength);
+	flame_ide::unused(signature);
+	flame_ide::unused(signatureLength);
+
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 

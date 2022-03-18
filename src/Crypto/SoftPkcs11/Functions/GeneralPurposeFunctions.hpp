@@ -43,6 +43,34 @@ pkcs11::value_types::ReturnType getFunctionList(
 		pkcs11::structs::FunctionListPtrPtr functionList
 );
 
+// v3.0
+
+///
+/// @brief getIterfaceList
+/// @param interfaces
+/// @param count
+/// @return
+///
+pkcs11::value_types::ReturnType getIterfaceList(
+		pkcs11::structs::InterfacePtr interfaces
+		, pkcs11::value_types::UlongPtr count
+);
+
+///
+/// @brief getIterface
+/// @param interfaceName
+/// @param version
+/// @param interface
+/// @param flags
+/// @return
+///
+pkcs11::value_types::ReturnType getIterface(
+		pkcs11::value_types::Utf8CharPtr interfaceName
+		, pkcs11::structs::VersionPtr version
+		, pkcs11::structs::InterfacePtrPtr interface
+		, pkcs11::value_types::Flags flags
+);
+
 }}}} // flame_ide::soft_pkcs11::functions::general_purpose
 
 #endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_FUNCTIONS_GENERALPURPOSEFUNCTIONS_HPP

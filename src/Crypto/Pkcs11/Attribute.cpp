@@ -6,8 +6,11 @@ namespace pkcs11
 {
 
 Attribute::Attribute(EnumType initType, ValuePtr initPtr, ValueSize initSize) noexcept
-		: Parent{ enums::value(initType), initPtr, initSize }
-{}
+{
+	this->type = enums::value(initType);
+	this->pValue = initPtr;
+	this->ulValueLen = initSize;
+}
 
 Attribute::EnumType &Attribute::getType() noexcept
 {

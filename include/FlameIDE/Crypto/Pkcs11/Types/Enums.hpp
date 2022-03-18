@@ -49,7 +49,6 @@ using UnderlyingType = typename UnderlyingTypeTrait<EnumType>::Type;
 	OPERATOR(EnumType, &) \
 	OPERATOR(EnumType, |)
 
-//	}
 
 /// @brief The Version enum
 enum class Version : flame_ide::pkcs11::value_types::Byte
@@ -62,26 +61,29 @@ UNDERLYING_TYPE(Version, flame_ide::pkcs11::value_types::Byte)
 
 
 /// @brief The Bool enum
-// TODO: Failed build on Windows
-//enum class Bool : flame_ide::pkcs11::value_types::Bool
-//{
-//	TRUE = CK_TRUE
-//	, FALSE = CK_FALSE
-//};
-//UNDERLYING_TYPE(Bool, flame_ide::pkcs11::value_types::Bool)
+enum class Bool : flame_ide::pkcs11::value_types::Bool
+{
+	OASIS_TRUE = CK_TRUE
+	, OASIS_FALSE = CK_FALSE
+};
+UNDERLYING_TYPE(Bool, flame_ide::pkcs11::value_types::Bool)
 
 
-/// @brief The SpecialValue enum
+/// @brief Some special values for certain CK_ULONG variables
 enum class SpecialValue : flame_ide::pkcs11::value_types::Ulong
 {
 	UNAVAILABLE_INFORMATION = CK_UNAVAILABLE_INFORMATION
 	, EFFECTIVELY_INFINITE = CK_EFFECTIVELY_INFINITE
+
+	/// @brief The following value is always invalid if used as a session
+	/// handle or object handle
 	, INVALID_HANDLE = CK_INVALID_HANDLE
 };
 UNDERLYING_TYPE(SpecialValue, flame_ide::pkcs11::value_types::Ulong)
 
 
-/// @brief The Notification enum
+/// @brief Enumerates the types of notifications that Cryptoki provides to
+/// an application
 enum Notification : flame_ide::pkcs11::value_types::Notification
 {
 	SURRENDER = CKN_SURRENDER
@@ -90,11 +92,16 @@ enum Notification : flame_ide::pkcs11::value_types::Notification
 UNDERLYING_TYPE(Notification, flame_ide::pkcs11::value_types::Notification)
 
 
-/// @brief The SlotFlags enum
+/// @brief Bit flags that provide capabilities of the slot
 enum class SlotFlags : flame_ide::pkcs11::value_types::Flags
 {
+	/// @brief A token is there
 	TOKEN_PRESENT = CKF_TOKEN_PRESENT
+
+	/// @brief Removable devices
 	, REMOVABLE_DEVICE = CKF_REMOVABLE_DEVICE
+
+	/// @brief Hardware slot
 	, HW_SLOT = CKF_HW_SLOT
 };
 UNDERLYING_TYPE(SlotFlags, flame_ide::pkcs11::value_types::Flags)
@@ -104,47 +111,129 @@ FLAG_OPERATORS(SlotFlags)
 /// @brief The TokenInfoFlags enum
 enum class TokenInfoFlags : flame_ide::pkcs11::value_types::Flags
 {
+	/// @brief Has random # generator
 	RNG = CKF_RNG
+
+	/// @brief Token is write-protected
 	, WRITE_PROTECTED = CKF_WRITE_PROTECTED
+
+	/// @brief User must login
 	, LOGIN_REQUIRED = CKF_LOGIN_REQUIRED
+
+	/// @brief Normal user's PIN is set
 	, USER_PIN_INITIALIZED = CKF_USER_PIN_INITIALIZED
+
+	/// @brief If it is set,
+	/// that means that *every* time the state of cryptographic
+	/// operations of a session is successfully saved, all keys
+	/// needed to continue those operations are stored in the state
 	, RESTORE_KEY_NOT_NEEDED = CKF_RESTORE_KEY_NOT_NEEDED
+
+	/// @brief If it is set, that means
+	/// that the token has some sort of clock. The time on that
+	/// clock is returned in the token info structure
 	, CLOCK_ON_TOKEN = CKF_CLOCK_ON_TOKEN
+
+	/// @brief If it is
+	/// set, that means that there is some way for the user to login
+	/// without sending a PIN through the Cryptoki library itself
 	, PROTECTED_AUTHENTICATION_PATH = CKF_PROTECTED_AUTHENTICATION_PATH
+
+	/// @brief If it is true,
+	/// that means that a single session with the token can perform
+	/// dual simultaneous cryptographic operations (digest and
+	/// encrypt; decrypt and digest; sign and encrypt; and decrypt
+	/// and sign)
 	, DUAL_CRYPTO_OPERATIONS = CKF_DUAL_CRYPTO_OPERATIONS
+
+	/// @brief If it is true, the
+	/// token has been initialized using C_InitializeToken or an
+	/// equivalent mechanism outside the scope of PKCS #11.
+	/// Calling C_InitializeToken when this flag is set will cause
+	/// the token to be reinitialized.
 	, TOKEN_INITIALIZED = CKF_TOKEN_INITIALIZED
+
+	/// @brief If it is
+	/// true, the token supports secondary authentication for
+	/// private key objects.
 	, SECONDARY_AUTHENTICATION = CKF_SECONDARY_AUTHENTICATION
+
+	/// @brief If it is true, an
+	/// incorrect user login PIN has been entered at least once
+	/// since the last successful authentication.
 	, USER_PIN_COUNT_LOW = CKF_USER_PIN_COUNT_LOW
+
+	/// @brief If it is true,
+	/// supplying an incorrect user PIN will it to become locked.
 	, USER_PIN_FINAL_TRY = CKF_USER_PIN_FINAL_TRY
+
+	/// @brief If it is true, the
+	/// user PIN has been locked. User login to the token is not
+	/// possible.
 	, USER_PIN_LOCKED = CKF_USER_PIN_LOCKED
+
+	/// @brief If it is true,
+	/// the user PIN value is the default value set by token
+	/// initialization or manufacturing, or the PIN has been
+	/// expired by the card.
 	, USER_PIN_TO_BE_CHANGED = CKF_USER_PIN_TO_BE_CHANGED
+
+	/// @brief If it is true, an
+	/// incorrect SO login PIN has been entered at least once since
+	/// the last successful authentication.
 	, SO_PIN_COUNT_LOW = CKF_SO_PIN_COUNT_LOW
+
+	/// @brief If it is true,
+	/// supplying an incorrect SO PIN will it to become locked.
 	, SO_PIN_FINAL_TRY = CKF_SO_PIN_FINAL_TRY
+
+	/// @brief If it is true, the SO
+	/// PIN has been locked. SO login to the token is not possible.
 	, SO_PIN_LOCKED = CKF_SO_PIN_LOCKED
+
+	/// @brief If it is true,
+	/// the SO PIN value is the default value set by token
+	/// initialization or manufacturing, or the PIN has been
+	/// expired by the card.
 	, SO_PIN_TO_BE_CHANGED = CKF_SO_PIN_TO_BE_CHANGED
+
 	, ERROR_STATE = CKF_ERROR_STATE
 };
 UNDERLYING_TYPE(TokenInfoFlags, flame_ide::pkcs11::value_types::Flags)
 FLAG_OPERATORS(TokenInfoFlags)
 
 
-/// @brief The User enum
+/// @brief Enumerates the types of Cryptoki users
 enum class User : flame_ide::pkcs11::value_types::User
 {
+	/// @brief Security Officer
 	SECURITY_OFFICER = CKU_SO
+
+	/// @brief Normal user
 	, USER = CKU_USER
+
+	/// @brief Context specific
 	, CONTEXT_SPECIFIC = CKU_CONTEXT_SPECIFIC
 };
 UNDERLYING_TYPE(User, flame_ide::pkcs11::value_types::User)
 
 
-/// @brief The State enum
+/// @brief Enumerates the session states
 enum State : flame_ide::pkcs11::value_types::State
 {
+	/// @brief Read-only
 	RO_PUBLIC_SESSION = CKS_RO_PUBLIC_SESSION
+
+	/// @brief Read-only
 	, RO_USER_FUNCTIONS = CKS_RO_USER_FUNCTIONS
+
+	/// @brief Read-write
 	, RW_PUBLIC_SESSION = CKS_RW_PUBLIC_SESSION
+
+	/// @brief Read-write
 	, RW_USER_FUNCTIONS = CKS_RW_USER_FUNCTIONS
+
+	/// @brief Read-write
 	, RW_SO_FUNCTIONS = CKS_RW_SO_FUNCTIONS
 };
 UNDERLYING_TYPE(State, flame_ide::pkcs11::value_types::State)
@@ -153,14 +242,17 @@ UNDERLYING_TYPE(State, flame_ide::pkcs11::value_types::State)
 /// @brief The SessionFlags enum
 enum class SessionFlags : flame_ide::pkcs11::value_types::Flags
 {
+	/// @brief Session is r/w
 	RW_SESSION = CKF_RW_SESSION
+
+	/// @brief No parallel
 	, SERIAL_SESSION = CKF_SERIAL_SESSION
 };
 UNDERLYING_TYPE(SessionFlags, flame_ide::pkcs11::value_types::Flags)
 FLAG_OPERATORS(SessionFlags)
 
 
-/// @brief The ObjectClass enum
+/// @brief Classes of objects
 enum class ObjectClass : flame_ide::pkcs11::value_types::ObjectClass
 {
 	DATA = CKO_DATA
@@ -172,11 +264,28 @@ enum class ObjectClass : flame_ide::pkcs11::value_types::ObjectClass
 	, DOMAIN_PARAMETERS = CKO_DOMAIN_PARAMETERS
 	, MECHANISM = CKO_MECHANISM
 	, OTP_KEY = CKO_OTP_KEY
+
+	// v3.0
+	, PROFILE = CKO_PROFILE
+
+	, VENDOR_DEFINED = CKO_VENDOR_DEFINED
 };
 UNDERLYING_TYPE(ObjectClass, flame_ide::pkcs11::value_types::ObjectClass)
 
 
-/// @brief The HwFeature enum
+enum class ProfileId : flame_ide::pkcs11::value_types::ProfileId
+{
+	INVALID_ID = CKP_INVALID_ID
+	, BASELINE_PROVIDER = CKP_BASELINE_PROVIDER
+	, EXTENDED_PROVIDER = CKP_EXTENDED_PROVIDER
+	, AUTHENTICATION_TOKEN = CKP_AUTHENTICATION_TOKEN
+	, PUBLIC_CERTIFICATES_TOKEN = CKP_PUBLIC_CERTIFICATES_TOKEN
+	, VENDOR_DEFINED = CKP_VENDOR_DEFINED
+};
+UNDERLYING_TYPE(ProfileId, flame_ide::pkcs11::value_types::ProfileId)
+
+
+/// @brief The HardwareFeature enum
 enum class HardwareFeature : flame_ide::pkcs11::value_types::HardwareFeature
 {
 	MONOTONIC_COUNTER = CKH_MONOTONIC_COUNTER
@@ -186,8 +295,7 @@ enum class HardwareFeature : flame_ide::pkcs11::value_types::HardwareFeature
 };
 UNDERLYING_TYPE(HardwareFeature, flame_ide::pkcs11::value_types::HardwareFeature)
 
-
-/// @brief The Key enum
+/// @brief Key type identifiers
 enum class Key : flame_ide::pkcs11::value_types::Key
 {
 	RSA = CKK_RSA
@@ -236,20 +344,38 @@ enum class Key : flame_ide::pkcs11::value_types::Key
 	, GOSTR3411 = CKK_GOSTR3411
 	, GOST28147 = CKK_GOST28147
 
+	// v3.0
+	, CHACHA20 = CKK_CHACHA20
+	, POLY1305 = CKK_POLY1305
+	, AES_XTS = CKK_AES_XTS
+	, SHA3_224_HMAC = CKK_SHA3_224_HMAC
+	, SHA3_256_HMAC = CKK_SHA3_256_HMAC
+	, SHA3_384_HMAC = CKK_SHA3_384_HMAC
+	, SHA3_512_HMAC = CKK_SHA3_512_HMAC
+	, BLAKE2B_160_HMAC = CKK_BLAKE2B_160_HMAC
+	, BLAKE2B_256_HMAC = CKK_BLAKE2B_256_HMAC
+	, BLAKE2B_384_HMAC = CKK_BLAKE2B_384_HMAC
+	, BLAKE2B_512_HMAC = CKK_BLAKE2B_512_HMAC
+	, SALSA20 = CKK_SALSA20
+	, X2RATCHET = CKK_X2RATCHET
+	, EC_EDWARDS = CKK_EC_EDWARDS
+	, EC_MONTGOMERY = CKK_EC_MONTGOMERY
+	, HKDF = CKK_HKDF
+
 	, VENDOR_DEFINED = CKK_VENDOR_DEFINED
 };
 UNDERLYING_TYPE(Key, flame_ide::pkcs11::value_types::Key)
 
 
 /// @brief The CertificateCategory enum
-enum class CertificateCategory : flame_ide::pkcs11::value_types::Ulong
+enum class CertificateCategory : flame_ide::pkcs11::value_types::CertificateCategory
 {
 	UNSPECIFIED = CK_CERTIFICATE_CATEGORY_UNSPECIFIED
 	, TOKEN_USER = CK_CERTIFICATE_CATEGORY_TOKEN_USER
 	, AUTHORITY = CK_CERTIFICATE_CATEGORY_AUTHORITY
 	, OTHER_ENTITY = CK_CERTIFICATE_CATEGORY_OTHER_ENTITY
 };
-UNDERLYING_TYPE(CertificateCategory, flame_ide::pkcs11::value_types::Ulong)
+UNDERLYING_TYPE(CertificateCategory, flame_ide::pkcs11::value_types::CertificateCategory)
 
 
 /// @brief The SecurityDomain enum
@@ -261,6 +387,7 @@ enum class SecurityDomain : flame_ide::pkcs11::value_types::Ulong
 	, THIRD_PARTY = CK_SECURITY_DOMAIN_THIRD_PARTY
 };
 UNDERLYING_TYPE(SecurityDomain, flame_ide::pkcs11::value_types::Ulong)
+
 
 /// @brief The Certificate enum
 enum class Certificate : flame_ide::pkcs11::value_types::Certificate
@@ -294,14 +421,13 @@ UNDERLYING_TYPE(OtpFormat, flame_ide::pkcs11::value_types::Ulong)
 
 
 /// @brief The OtpParam enum
-// TODO: Failed build on Windows
-//enum class OtpParamAttributes : flame_ide::pkcs11::value_types::Ulong
-//{
-//	IGNORED = CK_OTP_PARAM_IGNORED
-//	, OPTIONAL = CK_OTP_PARAM_OPTIONAL
-//	, MANDATORY = CK_OTP_PARAM_MANDATORY
-//};
-//UNDERLYING_TYPE(OtpParamAttributes, flame_ide::pkcs11::value_types::Ulong)
+enum class OtpParamAttributes : flame_ide::pkcs11::value_types::Ulong
+{
+	PARAM_IGNORED = CK_OTP_PARAM_IGNORED
+	, PARAM_OPTIONAL = CK_OTP_PARAM_OPTIONAL
+	, PARAM_MANDATORY = CK_OTP_PARAM_MANDATORY
+};
+UNDERLYING_TYPE(OtpParamAttributes, flame_ide::pkcs11::value_types::Ulong)
 
 
 /// @brief The Attribute enum
@@ -311,6 +437,10 @@ enum class Attribute : flame_ide::pkcs11::value_types::Attribute
 	, TOKEN = CKA_TOKEN
 	, PRIVATE = CKA_PRIVATE
 	, LABEL = CKA_LABEL
+
+	// v3.0
+	, UNIQUE_ID = CKA_UNIQUE_ID
+
 	, APPLICATION = CKA_APPLICATION
 	, VALUE = CKA_VALUE
 	, OBJECT_ID = CKA_OBJECT_ID
@@ -430,6 +560,9 @@ enum class Attribute : flame_ide::pkcs11::value_types::Attribute
 	, SUPPORTED_CMS_ATTRIBUTES = CKA_SUPPORTED_CMS_ATTRIBUTES
 	, ALLOWED_MECHANISMS = CKA_ALLOWED_MECHANISMS
 
+	// v3.0
+	, PROFILE_ID = CKA_PROFILE_ID
+
 	, VENDOR_DEFINED = CKA_VENDOR_DEFINED
 };
 UNDERLYING_TYPE(Attribute, flame_ide::pkcs11::value_types::Attribute)
@@ -465,6 +598,12 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, DSA_SHA384 = CKM_DSA_SHA384
 	, DSA_SHA512 = CKM_DSA_SHA512
 
+	// v3.0
+	, DSA_SHA3_224 = CKM_DSA_SHA3_224
+	, DSA_SHA3_256 = CKM_DSA_SHA3_256
+	, DSA_SHA3_384 = CKM_DSA_SHA3_384
+	, DSA_SHA3_512 = CKM_DSA_SHA3_512
+
 	, DH_PKCS_KEY_PAIR_GEN = CKM_DH_PKCS_KEY_PAIR_GEN
 	, DH_PKCS_DERIVE = CKM_DH_PKCS_DERIVE
 
@@ -497,44 +636,44 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, SHA512_T_HMAC_GENERAL = CKM_SHA512_T_HMAC_GENERAL
 	, SHA512_T_KEY_DERIVATION = CKM_SHA512_T_KEY_DERIVATION
 
-	// pkcs#11 v3.0
-//	, SHA3_256_RSA_PKCS = CKM_SHA3_256_RSA_PKCS
-//	, SHA3_384_RSA_PKCS = CKM_SHA3_384_RSA_PKCS
-//	, SHA3_512_RSA_PKCS = CKM_SHA3_512_RSA_PKCS
-//	, SHA3_256_RSA_PKCS_PSS = CKM_SHA3_256_RSA_PKCS_PSS
-//	, SHA3_384_RSA_PKCS_PSS = CKM_SHA3_384_RSA_PKCS_PSS
-//	, SHA3_512_RSA_PKCS_PSS = CKM_SHA3_512_RSA_PKCS_PSS
-//	, SHA3_224_RSA_PKCS = CKM_SHA3_224_RSA_PKCS
-//	, SHA3_224_RSA_PKCS_PSS = CKM_SHA3_224_RSA_PKCS_PSS
+	// v3.0
+	, SHA3_256_RSA_PKCS = CKM_SHA3_256_RSA_PKCS
+	, SHA3_384_RSA_PKCS = CKM_SHA3_384_RSA_PKCS
+	, SHA3_512_RSA_PKCS = CKM_SHA3_512_RSA_PKCS
+	, SHA3_256_RSA_PKCS_PSS = CKM_SHA3_256_RSA_PKCS_PSS
+	, SHA3_384_RSA_PKCS_PSS = CKM_SHA3_384_RSA_PKCS_PSS
+	, SHA3_512_RSA_PKCS_PSS = CKM_SHA3_512_RSA_PKCS_PSS
+	, SHA3_224_RSA_PKCS = CKM_SHA3_224_RSA_PKCS
+	, SHA3_224_RSA_PKCS_PSS = CKM_SHA3_224_RSA_PKCS_PSS
 
 	, RC2_KEY_GEN = CKM_RC2_KEY_GEN
 	, RC2_ECB = CKM_RC2_ECB
 	, RC2_CBC = CKM_RC2_CBC
 	, RC2_MAC = CKM_RC2_MAC
-
 	, RC2_MAC_GENERAL = CKM_RC2_MAC_GENERAL
 	, RC2_CBC_PAD = CKM_RC2_CBC_PAD
 
 	, RC4_KEY_GEN = CKM_RC4_KEY_GEN
 	, RC4 = CKM_RC4
+
 	, DES_KEY_GEN = CKM_DES_KEY_GEN
 	, DES_ECB = CKM_DES_ECB
 	, DES_CBC = CKM_DES_CBC
 	, DES_MAC = CKM_DES_MAC
-
 	, DES_MAC_GENERAL = CKM_DES_MAC_GENERAL
 	, DES_CBC_PAD = CKM_DES_CBC_PAD
 
 	, DES2_KEY_GEN = CKM_DES2_KEY_GEN
+
 	, DES3_KEY_GEN = CKM_DES3_KEY_GEN
 	, DES3_ECB = CKM_DES3_ECB
 	, DES3_CBC = CKM_DES3_CBC
 	, DES3_MAC = CKM_DES3_MAC
-
 	, DES3_MAC_GENERAL = CKM_DES3_MAC_GENERAL
 	, DES3_CBC_PAD = CKM_DES3_CBC_PAD
 	, DES3_CMAC_GENERAL = CKM_DES3_CMAC_GENERAL
 	, DES3_CMAC = CKM_DES3_CMAC
+
 	, CDMF_KEY_GEN = CKM_CDMF_KEY_GEN
 	, CDMF_ECB = CKM_CDMF_ECB
 	, CDMF_CBC = CKM_CDMF_CBC
@@ -548,23 +687,21 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, DES_CFB8 = CKM_DES_CFB8
 
 	, MD2 = CKM_MD2
-
 	, MD2_HMAC = CKM_MD2_HMAC
 	, MD2_HMAC_GENERAL = CKM_MD2_HMAC_GENERAL
 
 	, MD5 = CKM_MD5
-
 	, MD5_HMAC = CKM_MD5_HMAC
 	, MD5_HMAC_GENERAL = CKM_MD5_HMAC_GENERAL
 
 	, SHA_1 = CKM_SHA_1
-
 	, SHA_1_HMAC = CKM_SHA_1_HMAC
 	, SHA_1_HMAC_GENERAL = CKM_SHA_1_HMAC_GENERAL
 
 	, RIPEMD128 = CKM_RIPEMD128
 	, RIPEMD128_HMAC = CKM_RIPEMD128_HMAC
 	, RIPEMD128_HMAC_GENERAL = CKM_RIPEMD128_HMAC_GENERAL
+
 	, RIPEMD160 = CKM_RIPEMD160
 	, RIPEMD160_HMAC = CKM_RIPEMD160_HMAC
 	, RIPEMD160_HMAC_GENERAL = CKM_RIPEMD160_HMAC_GENERAL
@@ -572,21 +709,51 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, SHA256 = CKM_SHA256
 	, SHA256_HMAC = CKM_SHA256_HMAC
 	, SHA256_HMAC_GENERAL = CKM_SHA256_HMAC_GENERAL
+
 	, SHA224 = CKM_SHA224
 	, SHA224_HMAC = CKM_SHA224_HMAC
 	, SHA224_HMAC_GENERAL = CKM_SHA224_HMAC_GENERAL
+
 	, SHA384 = CKM_SHA384
 	, SHA384_HMAC = CKM_SHA384_HMAC
 	, SHA384_HMAC_GENERAL = CKM_SHA384_HMAC_GENERAL
+
 	, SHA512 = CKM_SHA512
 	, SHA512_HMAC = CKM_SHA512_HMAC
 	, SHA512_HMAC_GENERAL = CKM_SHA512_HMAC_GENERAL
+
 	, SECURID_KEY_GEN = CKM_SECURID_KEY_GEN
 	, SECURID = CKM_SECURID
+
 	, HOTP_KEY_GEN = CKM_HOTP_KEY_GEN
 	, HOTP = CKM_HOTP
+
 	, ACTI = CKM_ACTI
 	, ACTI_KEY_GEN = CKM_ACTI_KEY_GEN
+
+	// v3.0
+	, SHA3_256 = CKM_SHA3_256
+	, SHA3_256_HMAC = CKM_SHA3_256_HMAC
+	, SHA3_256_HMAC_GENERAL = CKM_SHA3_256_HMAC_GENERAL
+	, SHA3_256_KEY_GEN = CKM_SHA3_256_KEY_GEN
+
+	// v3.0
+	, SHA3_224 = CKM_SHA3_224
+	, SHA3_224_HMAC = CKM_SHA3_224_HMAC
+	, SHA3_224_HMAC_GENERAL = CKM_SHA3_224_HMAC_GENERAL
+	, SHA3_224_KEY_GEN = CKM_SHA3_224_KEY_GEN
+
+	// v3.0
+	, SHA3_384 = CKM_SHA3_384
+	, SHA3_384_HMAC = CKM_SHA3_384_HMAC
+	, SHA3_384_HMAC_GENERAL = CKM_SHA3_384_HMAC_GENERAL
+	, SHA3_384_KEY_GEN = CKM_SHA3_384_KEY_GEN
+
+	// v3.0
+	, SHA3_512 = CKM_SHA3_512
+	, SHA3_512_HMAC = CKM_SHA3_512_HMAC
+	, SHA3_512_HMAC_GENERAL = CKM_SHA3_512_HMAC_GENERAL
+	, SHA3_512_KEY_GEN = CKM_SHA3_512_KEY_GEN
 
 	, CAST_KEY_GEN = CKM_CAST_KEY_GEN
 	, CAST_ECB = CKM_CAST_ECB
@@ -594,6 +761,7 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, CAST_MAC = CKM_CAST_MAC
 	, CAST_MAC_GENERAL = CKM_CAST_MAC_GENERAL
 	, CAST_CBC_PAD = CKM_CAST_CBC_PAD
+
 	, CAST3_KEY_GEN = CKM_CAST3_KEY_GEN
 	, CAST3_ECB = CKM_CAST3_ECB
 	, CAST3_CBC = CKM_CAST3_CBC
@@ -601,6 +769,7 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, CAST3_MAC_GENERAL = CKM_CAST3_MAC_GENERAL
 	, CAST3_CBC_PAD = CKM_CAST3_CBC_PAD
 
+	// NOTE: CAST128 and CAST5 are the same algorithm
 //	, CAST5_KEY_GEN = CKM_CAST5_KEY_GEN // Deprecated
 	, CAST128_KEY_GEN = CKM_CAST128_KEY_GEN
 //	, CAST5_ECB = CKM_CAST5_ECB // Deprecated
@@ -613,29 +782,36 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, CAST128_MAC_GENERAL = CKM_CAST128_MAC_GENERAL
 //	, CAST5_CBC_PAD = CKM_CAST5_CBC_PAD // Deprecated
 	, CAST128_CBC_PAD = CKM_CAST128_CBC_PAD
+
 	, RC5_KEY_GEN = CKM_RC5_KEY_GEN
 	, RC5_ECB = CKM_RC5_ECB
 	, RC5_CBC = CKM_RC5_CBC
 	, RC5_MAC = CKM_RC5_MAC
 	, RC5_MAC_GENERAL = CKM_RC5_MAC_GENERAL
 	, RC5_CBC_PAD = CKM_RC5_CBC_PAD
+
 	, IDEA_KEY_GEN = CKM_IDEA_KEY_GEN
 	, IDEA_ECB = CKM_IDEA_ECB
 	, IDEA_CBC = CKM_IDEA_CBC
 	, IDEA_MAC = CKM_IDEA_MAC
 	, IDEA_MAC_GENERAL = CKM_IDEA_MAC_GENERAL
 	, IDEA_CBC_PAD = CKM_IDEA_CBC_PAD
+
 	, GENERIC_SECRET_KEY_GEN = CKM_GENERIC_SECRET_KEY_GEN
+
 	, CONCATENATE_BASE_AND_KEY = CKM_CONCATENATE_BASE_AND_KEY
 	, CONCATENATE_BASE_AND_DATA = CKM_CONCATENATE_BASE_AND_DATA
 	, CONCATENATE_DATA_AND_BASE = CKM_CONCATENATE_DATA_AND_BASE
+
 	, XOR_BASE_AND_DATA = CKM_XOR_BASE_AND_DATA
+
 	, EXTRACT_KEY_FROM_KEY = CKM_EXTRACT_KEY_FROM_KEY
+
 	, SSL3_PRE_MASTER_KEY_GEN = CKM_SSL3_PRE_MASTER_KEY_GEN
 	, SSL3_MASTER_KEY_DERIVE = CKM_SSL3_MASTER_KEY_DERIVE
 	, SSL3_KEY_AND_MAC_DERIVE = CKM_SSL3_KEY_AND_MAC_DERIVE
-
 	, SSL3_MASTER_KEY_DERIVE_DH = CKM_SSL3_MASTER_KEY_DERIVE_DH
+
 	, TLS_PRE_MASTER_KEY_GEN = CKM_TLS_PRE_MASTER_KEY_GEN
 	, TLS_MASTER_KEY_DERIVE = CKM_TLS_MASTER_KEY_DERIVE
 	, TLS_KEY_AND_MAC_DERIVE = CKM_TLS_KEY_AND_MAC_DERIVE
@@ -645,8 +821,11 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 
 	, SSL3_MD5_MAC = CKM_SSL3_MD5_MAC
 	, SSL3_SHA1_MAC = CKM_SSL3_SHA1_MAC
+
 	, MD5_KEY_DERIVATION = CKM_MD5_KEY_DERIVATION
+
 	, MD2_KEY_DERIVATION = CKM_MD2_KEY_DERIVATION
+
 	, SHA1_KEY_DERIVATION = CKM_SHA1_KEY_DERIVATION
 
 	, SHA256_KEY_DERIVATION = CKM_SHA256_KEY_DERIVATION
@@ -654,13 +833,25 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, SHA512_KEY_DERIVATION = CKM_SHA512_KEY_DERIVATION
 	, SHA224_KEY_DERIVATION = CKM_SHA224_KEY_DERIVATION
 
+	// v3.0
+	, SHA3_256_KEY_DERIVE = CKM_SHA3_256_KEY_DERIVE
+	, SHA3_224_KEY_DERIVE = CKM_SHA3_224_KEY_DERIVE
+	, SHA3_384_KEY_DERIVE = CKM_SHA3_384_KEY_DERIVE
+	, SHA3_512_KEY_DERIVE = CKM_SHA3_512_KEY_DERIVE
+
+	// v3.0
+	, SHAKE_128_KEY_DERIVE = CKM_SHAKE_128_KEY_DERIVE
+	, SHAKE_256_KEY_DERIVE = CKM_SHAKE_256_KEY_DERIVE
+
 	, PBE_MD2_DES_CBC = CKM_PBE_MD2_DES_CBC
+
 	, PBE_MD5_DES_CBC = CKM_PBE_MD5_DES_CBC
 	, PBE_MD5_CAST_CBC = CKM_PBE_MD5_CAST_CBC
 	, PBE_MD5_CAST3_CBC = CKM_PBE_MD5_CAST3_CBC
 //	, PBE_MD5_CAST5_CBC = CKM_PBE_MD5_CAST5_CBC // Deprecated
 	, PBE_MD5_CAST128_CBC = CKM_PBE_MD5_CAST128_CBC
 //	, PBE_SHA1_CAST5_CBC = CKM_PBE_SHA1_CAST5_CBC // Deprecated
+
 	, PBE_SHA1_CAST128_CBC = CKM_PBE_SHA1_CAST128_CBC
 	, PBE_SHA1_RC4_128 = CKM_PBE_SHA1_RC4_128
 	, PBE_SHA1_RC4_40 = CKM_PBE_SHA1_RC4_40
@@ -682,12 +873,14 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 
 	, TLS10_MAC_SERVER = CKM_TLS10_MAC_SERVER
 	, TLS10_MAC_CLIENT = CKM_TLS10_MAC_CLIENT
+
 	, TLS12_MAC = CKM_TLS12_MAC
 	, TLS12_KDF = CKM_TLS12_KDF
 	, TLS12_MASTER_KEY_DERIVE = CKM_TLS12_MASTER_KEY_DERIVE
 	, TLS12_KEY_AND_MAC_DERIVE = CKM_TLS12_KEY_AND_MAC_DERIVE
 	, TLS12_MASTER_KEY_DERIVE_DH = CKM_TLS12_MASTER_KEY_DERIVE_DH
 	, TLS12_KEY_SAFE_DERIVE = CKM_TLS12_KEY_SAFE_DERIVE
+
 	, TLS_MAC = CKM_TLS_MAC
 	, TLS_KDF = CKM_TLS_KDF
 
@@ -695,6 +888,7 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, KEY_WRAP_SET_OAEP = CKM_KEY_WRAP_SET_OAEP
 
 	, CMS_SIG = CKM_CMS_SIG
+
 	, KIP_DERIVE = CKM_KIP_DERIVE
 	, KIP_WRAP = CKM_KIP_WRAP
 	, KIP_MAC = CKM_KIP_MAC
@@ -738,10 +932,13 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, SKIPJACK_WRAP = CKM_SKIPJACK_WRAP
 	, SKIPJACK_PRIVATE_WRAP = CKM_SKIPJACK_PRIVATE_WRAP
 	, SKIPJACK_RELAYX = CKM_SKIPJACK_RELAYX
+
 	, KEA_KEY_PAIR_GEN = CKM_KEA_KEY_PAIR_GEN
 	, KEA_KEY_DERIVE = CKM_KEA_KEY_DERIVE
 	, KEA_DERIVE = CKM_KEA_DERIVE
+
 	, FORTEZZA_TIMESTAMP = CKM_FORTEZZA_TIMESTAMP
+
 	, BATON_KEY_GEN = CKM_BATON_KEY_GEN
 	, BATON_ECB128 = CKM_BATON_ECB128
 	, BATON_ECB96 = CKM_BATON_ECB96
@@ -762,9 +959,11 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 
 	, ECDH1_DERIVE = CKM_ECDH1_DERIVE
 	, ECDH1_COFACTOR_DERIVE = CKM_ECDH1_COFACTOR_DERIVE
+
 	, ECMQV_DERIVE = CKM_ECMQV_DERIVE
 
 	, ECDH_AES_KEY_WRAP = CKM_ECDH_AES_KEY_WRAP
+
 	, RSA_AES_KEY_WRAP = CKM_RSA_AES_KEY_WRAP
 
 	, JUNIPER_KEY_GEN = CKM_JUNIPER_KEY_GEN
@@ -773,7 +972,12 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, JUNIPER_COUNTER = CKM_JUNIPER_COUNTER
 	, JUNIPER_SHUFFLE = CKM_JUNIPER_SHUFFLE
 	, JUNIPER_WRAP = CKM_JUNIPER_WRAP
+
 	, FASTHASH = CKM_FASTHASH
+
+	// v3.0
+	, AES_XTS = CKM_AES_XTS
+	, AES_XTS_KEY_GEN = CKM_AES_XTS_KEY_GEN
 
 	, AES_KEY_GEN = CKM_AES_KEY_GEN
 	, AES_ECB = CKM_AES_ECB
@@ -787,7 +991,6 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, AES_CTS = CKM_AES_CTS
 	, AES_CMAC = CKM_AES_CMAC
 	, AES_CMAC_GENERAL = CKM_AES_CMAC_GENERAL
-
 	, AES_XCBC_MAC = CKM_AES_XCBC_MAC
 	, AES_XCBC_MAC_96 = CKM_AES_XCBC_MAC_96
 	, AES_GMAC = CKM_AES_GMAC
@@ -801,8 +1004,10 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 
 	, DES_ECB_ENCRYPT_DATA = CKM_DES_ECB_ENCRYPT_DATA
 	, DES_CBC_ENCRYPT_DATA = CKM_DES_CBC_ENCRYPT_DATA
+
 	, DES3_ECB_ENCRYPT_DATA = CKM_DES3_ECB_ENCRYPT_DATA
 	, DES3_CBC_ENCRYPT_DATA = CKM_DES3_CBC_ENCRYPT_DATA
+
 	, AES_ECB_ENCRYPT_DATA = CKM_AES_ECB_ENCRYPT_DATA
 	, AES_CBC_ENCRYPT_DATA = CKM_AES_CBC_ENCRYPT_DATA
 
@@ -811,17 +1016,30 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, GOSTR3410_WITH_GOSTR3411 = CKM_GOSTR3410_WITH_GOSTR3411
 	, GOSTR3410_KEY_WRAP = CKM_GOSTR3410_KEY_WRAP
 	, GOSTR3410_DERIVE = CKM_GOSTR3410_DERIVE
+
 	, GOSTR3411 = CKM_GOSTR3411
 	, GOSTR3411_HMAC = CKM_GOSTR3411_HMAC
+
 	, GOST28147_KEY_GEN = CKM_GOST28147_KEY_GEN
 	, GOST28147_ECB = CKM_GOST28147_ECB
 	, GOST28147 = CKM_GOST28147
 	, GOST28147_MAC = CKM_GOST28147_MAC
 	, GOST28147_KEY_WRAP = CKM_GOST28147_KEY_WRAP
 
+	// v3.0
+	, CHACHA20_KEY_GEN = CKM_CHACHA20_KEY_GEN
+	, CHACHA20 = CKM_CHACHA20
+
+	// v3.0
+	, POLY1305_KEY_GEN = CKM_POLY1305_KEY_GEN
+	, POLY1305 = CKM_POLY1305
+
 	, DSA_PARAMETER_GEN = CKM_DSA_PARAMETER_GEN
+
 	, DH_PKCS_PARAMETER_GEN = CKM_DH_PKCS_PARAMETER_GEN
+
 	, X9_42_DH_PARAMETER_GEN = CKM_X9_42_DH_PARAMETER_GEN
+
 	, DSA_PROBABLISTIC_PARAMETER_GEN = CKM_DSA_PROBABLISTIC_PARAMETER_GEN
 	, DSA_SHAWE_TAYLOR_PARAMETER_GEN = CKM_DSA_SHAWE_TAYLOR_PARAMETER_GEN
 
@@ -829,13 +1047,102 @@ enum class Mechanism : flame_ide::pkcs11::value_types::Mechanism
 	, AES_CFB64 = CKM_AES_CFB64
 	, AES_CFB8 = CKM_AES_CFB8
 	, AES_CFB128 = CKM_AES_CFB128
-
 	, AES_CFB1 = CKM_AES_CFB1
 	, AES_KEY_WRAP = CKM_AES_KEY_WRAP
 	, AES_KEY_WRAP_PAD = CKM_AES_KEY_WRAP_PAD
+	// v3.0
+	, AES_KEY_WRAP_KWP = CKM_AES_KEY_WRAP_KWP
 
 	, RSA_PKCS_TPM_1_1 = CKM_RSA_PKCS_TPM_1_1
 	, RSA_PKCS_OAEP_TPM_1_1 = CKM_RSA_PKCS_OAEP_TPM_1_1
+
+	// v3.0
+	, SHA_1_KEY_GEN = CKM_SHA_1_KEY_GEN
+	, SHA224_KEY_GEN = CKM_SHA224_KEY_GEN
+	, SHA256_KEY_GEN = CKM_SHA256_KEY_GEN
+	, SHA384_KEY_GEN = CKM_SHA384_KEY_GEN
+	, SHA512_KEY_GEN = CKM_SHA512_KEY_GEN
+	, SHA512_224_KEY_GEN = CKM_SHA512_224_KEY_GEN
+	, SHA512_256_KEY_GEN = CKM_SHA512_256_KEY_GEN
+	, SHA512_T_KEY_GEN = CKM_SHA512_T_KEY_GEN
+
+	// v3.0
+	, MECHANISM_NULL = CKM_NULL
+
+	// v3.0
+	, BLAKE2B_160 = CKM_BLAKE2B_160
+	, BLAKE2B_160_HMAC = CKM_BLAKE2B_160_HMAC
+	, BLAKE2B_160_HMAC_GENERAL = CKM_BLAKE2B_160_HMAC_GENERAL
+	, BLAKE2B_160_KEY_DERIVE = CKM_BLAKE2B_160_KEY_DERIVE
+	, BLAKE2B_160_KEY_GEN = CKM_BLAKE2B_160_KEY_GEN
+
+	// v3.0
+	, BLAKE2B_256 = CKM_BLAKE2B_256
+	, BLAKE2B_256_HMAC = CKM_BLAKE2B_256_HMAC
+
+	// v3.0
+	, E2B_256_HMAC_GENERAL = CKM_BLAKE2B_256_HMAC_GENERAL
+
+	// v3.0
+	, BLAKE2B_256_KEY_DERIVE = CKM_BLAKE2B_256_KEY_DERIVE
+	, BLAKE2B_256_KEY_GEN = CKM_BLAKE2B_256_KEY_GEN
+
+	// v3.0
+	, BLAKE2B_384 = CKM_BLAKE2B_384
+	, BLAKE2B_384_HMAC = CKM_BLAKE2B_384_HMAC
+	, BLAKE2B_384_HMAC_GENERAL = CKM_BLAKE2B_384_HMAC_GENERAL
+	, BLAKE2B_384_KEY_DERIVE = CKM_BLAKE2B_384_KEY_DERIVE
+	, BLAKE2B_384_KEY_GEN = CKM_BLAKE2B_384_KEY_GEN
+
+	// v3.0
+	, BLAKE2B_512 = CKM_BLAKE2B_512
+	, BLAKE2B_512_HMAC = CKM_BLAKE2B_512_HMAC
+	, BLAKE2B_512_HMAC_GENERAL = CKM_BLAKE2B_512_HMAC_GENERAL
+	, BLAKE2B_512_KEY_DERIVE = CKM_BLAKE2B_512_KEY_DERIVE
+	, BLAKE2B_512_KEY_GEN = CKM_BLAKE2B_512_KEY_GEN
+
+	// v3.0
+	, SALSA20 = CKM_SALSA20
+
+	// v3.0
+	, CHACHA20_POLY1305 = CKM_CHACHA20_POLY1305
+	, SALSA20_POLY1305 = CKM_SALSA20_POLY1305
+
+	// v3.0
+	, X3DH_INITIALIZE = CKM_X3DH_INITIALIZE
+	, X3DH_RESPOND = CKM_X3DH_RESPOND
+
+	// v3.0
+	, X2RATCHET_INITIALIZE = CKM_X2RATCHET_INITIALIZE
+	, X2RATCHET_RESPOND = CKM_X2RATCHET_RESPOND
+	, X2RATCHET_ENCRYPT = CKM_X2RATCHET_ENCRYPT
+	, X2RATCHET_DECRYPT = CKM_X2RATCHET_DECRYPT
+
+	// v3.0
+	, XEDDSA = CKM_XEDDSA
+
+	// v3.0
+	, HKDF_DERIVE = CKM_HKDF_DERIVE
+	, HKDF_DATA = CKM_HKDF_DATA
+	, HKDF_KEY_GEN = CKM_HKDF_KEY_GEN
+
+	// v3.0
+	, ECDSA_SHA3_224 = CKM_ECDSA_SHA3_224
+	, ECDSA_SHA3_256 = CKM_ECDSA_SHA3_256
+	, ECDSA_SHA3_384 = CKM_ECDSA_SHA3_384
+	, ECDSA_SHA3_512 = CKM_ECDSA_SHA3_512
+
+	// v3.0
+	, EC_EDWARDS_KEY_PAIR_GEN = CKM_EC_EDWARDS_KEY_PAIR_GEN
+	, EC_MONTGOMERY_KEY_PAIR_GEN = CKM_EC_MONTGOMERY_KEY_PAIR_GEN
+
+	// v3.0
+	, EDDSA = CKM_EDDSA
+
+	// v3.0
+	, SP800_108_COUNTER_KDF = CKM_SP800_108_COUNTER_KDF
+	, SP800_108_FEEDBACK_KDF = CKM_SP800_108_FEEDBACK_KDF
+	, SP800_108_DOUBLE_PIPELINE_KDF = CKM_SP800_108_DOUBLE_PIPELINE_KDF
 
 	, VENDOR_DEFINED = CKM_VENDOR_DEFINED
 };
@@ -846,6 +1153,14 @@ UNDERLYING_TYPE(Mechanism, flame_ide::pkcs11::value_types::Mechanism)
 enum class MechanismFlags : flame_ide::pkcs11::value_types::Flags
 {
 	HW = CKF_HW
+
+	// v3.0
+	, MESSAGE_ENCRYPT = CKF_MESSAGE_ENCRYPT
+	, MESSAGE_DECRYPT = CKF_MESSAGE_DECRYPT
+	, MESSAGE_SIGN = CKF_MESSAGE_SIGN
+	, MESSAGE_VERIFY = CKF_MESSAGE_VERIFY
+	, MULTI_MESSGE = CKF_MULTI_MESSGE
+	, FIND_OBJECTS = CKF_FIND_OBJECTS
 
 	, ENCRYPT = CKF_ENCRYPT
 	, DECRYPT = CKF_DECRYPT
@@ -863,9 +1178,13 @@ enum class MechanismFlags : flame_ide::pkcs11::value_types::Flags
 	, EC_F_P = CKF_EC_F_P
 	, EC_F_2M = CKF_EC_F_2M
 	, EC_ECPARAMETERS = CKF_EC_ECPARAMETERS
-//	, EC_NAMEDCURVE = CKF_EC_NAMEDCURVE
+	, EC_OID = CKF_EC_OID
+	//, EC_NAMEDCURVE = CKF_EC_NAMEDCURVE // Deprecated
 	, EC_UNCOMPRESS = CKF_EC_UNCOMPRESS
 	, EC_COMPRESS = CKF_EC_COMPRESS
+
+	// v3.0
+	, EC_CURVENAME = CKF_EC_CURVENAME
 
 	, EXTENSION = CKF_EXTENSION
 };
@@ -903,6 +1222,10 @@ enum class ReturnType : flame_ide::pkcs11::value_types::ReturnType
 	, DEVICE_REMOVED = CKR_DEVICE_REMOVED
 	, ENCRYPTED_DATA_INVALID = CKR_ENCRYPTED_DATA_INVALID
 	, ENCRYPTED_DATA_LEN_RANGE = CKR_ENCRYPTED_DATA_LEN_RANGE
+
+	// v3.0
+	, AEAD_DECRYPT_FAILED = CKR_AEAD_DECRYPT_FAILED
+
 	, FUNCTION_CANCELED = CKR_FUNCTION_CANCELED
 	, FUNCTION_NOT_PARALLEL = CKR_FUNCTION_NOT_PARALLEL
 
@@ -996,9 +1319,31 @@ enum class ReturnType : flame_ide::pkcs11::value_types::ReturnType
 
 	, FUNCTION_REJECTED = CKR_FUNCTION_REJECTED
 
+	// v3.0
+	, TOKEN_RESOURCE_EXCEEDED = CKR_TOKEN_RESOURCE_EXCEEDED
+
 	, VENDOR_DEFINED = CKR_VENDOR_DEFINED
 };
 UNDERLYING_TYPE(ReturnType, flame_ide::pkcs11::value_types::ReturnType)
+
+
+enum class InterfaceFlags : flame_ide::pkcs11::value_types::Flags
+{
+	NONE
+	, END_OF_MESSAGE = CKF_END_OF_MESSAGE
+};
+UNDERLYING_TYPE(InterfaceFlags, flame_ide::pkcs11::value_types::Flags)
+FLAG_OPERATORS(InterfaceFlags)
+
+
+/// @brief Get functionlist flags
+enum class FunctionListFlags : flame_ide::pkcs11::value_types::Flags
+{
+	NULL_VALUE
+	, FORK_SAFE = CKF_INTERFACE_FORK_SAFE
+};
+UNDERLYING_TYPE(FunctionListFlags, flame_ide::pkcs11::value_types::Flags)
+FLAG_OPERATORS(FunctionListFlags)
 
 
 /// @brief The InitializeArgsFlags enum
@@ -1056,6 +1401,25 @@ enum class EcKdf : flame_ide::pkcs11::value_types::EcKdf
 	, SHA384 = CKD_SHA384_KDF
 	, SHA512 = CKD_SHA512_KDF
 	, CPDIVERSIFY = CKD_CPDIVERSIFY_KDF
+
+	// v3.0
+	, SHA3_224_KDF = CKD_SHA3_224_KDF
+	, SHA3_256_KDF = CKD_SHA3_256_KDF
+	, SHA3_384_KDF = CKD_SHA3_384_KDF
+	, SHA3_512_KDF = CKD_SHA3_512_KDF
+	, SHA1_KDF_SP800 = CKD_SHA1_KDF_SP800
+	, SHA224_KDF_SP800 = CKD_SHA224_KDF_SP800
+	, SHA256_KDF_SP800 = CKD_SHA256_KDF_SP800
+	, SHA384_KDF_SP800 = CKD_SHA384_KDF_SP800
+	, SHA512_KDF_SP800 = CKD_SHA512_KDF_SP800
+	, SHA3_224_KDF_SP800 = CKD_SHA3_224_KDF_SP800
+	, SHA3_256_KDF_SP800 = CKD_SHA3_256_KDF_SP800
+	, SHA3_384_KDF_SP800 = CKD_SHA3_384_KDF_SP800
+	, SHA3_512_KDF_SP800 = CKD_SHA3_512_KDF_SP800
+	, BLAKE2B_160_KDF = CKD_BLAKE2B_160_KDF
+	, BLAKE2B_256_KDF = CKD_BLAKE2B_256_KDF
+	, BLAKE2B_384_KDF = CKD_BLAKE2B_384_KDF
+	, BLAKE2B_512_KDF = CKD_BLAKE2B_512_KDF
 };
 UNDERLYING_TYPE(EcKdf, flame_ide::pkcs11::value_types::EcKdf)
 
@@ -1114,6 +1478,37 @@ enum class OtpParamFlags : flame_ide::pkcs11::value_types::Flags
 UNDERLYING_TYPE(OtpParamFlags, flame_ide::pkcs11::value_types::Flags)
 FLAG_OPERATORS(OtpParamFlags)
 
+
+// v3.0
+
+
+enum class GeneratorFunction : flame_ide::pkcs11::value_types::Flags
+{
+	NO_GENERATE = CKG_NO_GENERATE
+	, GENERATE = CKG_GENERATE
+	, GENERATE_COUNTER = CKG_GENERATE_COUNTER
+	, GENERATE_RANDOM = CKG_GENERATE_RANDOM
+};
+UNDERLYING_TYPE(GeneratorFunction, flame_ide::pkcs11::value_types::Flags)
+
+
+enum class NistSp800dot108 : flame_ide::pkcs11::value_types::Flags
+{
+	ITERATION_VARIABLE = CK_SP800_108_ITERATION_VARIABLE
+	, OPTIONAL_COUNTER = CK_SP800_108_OPTIONAL_COUNTER
+	, DKM_LENGTH = CK_SP800_108_DKM_LENGTH
+	, BYTE_ARRAY = CK_SP800_108_BYTE_ARRAY
+};
+UNDERLYING_TYPE(NistSp800dot108, flame_ide::pkcs11::value_types::Flags)
+
+
+enum class HkdfSalt : flame_ide::pkcs11::value_types::Flags
+{
+	SALT_NULL = CKF_HKDF_SALT_NULL
+	, SALT_DATA = CKF_HKDF_SALT_DATA
+	, SALT_KEY = CKF_HKDF_SALT_KEY
+};
+UNDERLYING_TYPE(HkdfSalt, flame_ide::pkcs11::value_types::Flags)
 
 #undef FLAG_OPERATORS
 #undef OPERATOR

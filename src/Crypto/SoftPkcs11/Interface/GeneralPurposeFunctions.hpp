@@ -37,6 +37,27 @@ CK_RV C_GetInfo(CK_INFO_PTR pInfo);
 ///
 CK_RV C_GetFunctionList(CK_FUNCTION_LIST_PTR_PTR ppFunctionList);
 
+// v3.0
+
+///
+/// @brief Returns all the interfaces supported by the module
+/// @param pInterfacesList Returned interfaces
+/// @param pulCount Number of interfaces returned
+/// @return See CKR_* values
+///
+CK_RV C_GetInterfaceList(CK_INTERFACE_PTR pInterfacesList, CK_ULONG_PTR pulCount);
+
+///
+/// @brief Returns a specific interface from the module
+/// @param pInterfaceName Name of the interface
+/// @param pVersion Version of the interface
+/// @param ppInterface Returned interface
+/// @param flags Flags controlling the semantics of the interface
+/// @return See CKR_* values
+///
+CK_RV C_GetInterface(CK_UTF8CHAR_PTR pInterfaceName, CK_VERSION_PTR pVersion,
+		CK_INTERFACE_PTR_PTR ppInterface, CK_FLAGS flags);
+
 #ifdef __cplusplus
 }
 #endif

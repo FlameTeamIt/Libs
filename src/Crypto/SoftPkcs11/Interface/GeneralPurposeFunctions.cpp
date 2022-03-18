@@ -29,3 +29,21 @@ CK_RV C_GetFunctionList(CK_FUNCTION_LIST_PTR_PTR ppFunctionList)
 			.generalPurposeCallbacks
 			.getFunctionList(ppFunctionList);
 }
+
+// v3.0
+
+CK_RV C_GetInterfaceList(CK_INTERFACE_PTR pInterfacesList, CK_ULONG_PTR pulCount)
+{
+	return flame_ide::soft_pkcs11::GlobalContext::get()
+			.generalPurposeCallbacks
+			.getInterfaceList(pInterfacesList, pulCount);
+}
+
+CK_RV C_GetInterface(CK_UTF8CHAR_PTR pInterfaceName, CK_VERSION_PTR pVersion,
+		CK_INTERFACE_PTR_PTR ppInterface, CK_FLAGS flags)
+{
+	return flame_ide::soft_pkcs11::GlobalContext::get()
+			.generalPurposeCallbacks
+			.getInterface(pInterfaceName, pVersion, ppInterface, flags);
+}
+

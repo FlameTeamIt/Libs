@@ -4,6 +4,7 @@ set(NAME Crypto.Pkcs11.Types)
 set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Headers)
 set(DEPENDENCY_LIST
 	${FLAME_NAMESPACE}::Crypto::Oasis::Headers
+	${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Headers
 )
 get_sources(FILE_LIST)
 

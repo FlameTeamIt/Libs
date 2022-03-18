@@ -318,6 +318,29 @@ struct FunctionReturnValueType<ReturnType(ObjectType::*)(Args...) const volatile
 template <typename T>
 using FunctionReturnType = typename FunctionReturnValueType<T>::Type;
 
+///
+/// @brief The DoSomeByIndex struct
+///
+template<typename T, Types::size_t INDEX, Types::size_t SIZE>
+struct DoSomeByIndex
+{
+	static void copy(T (&dest)[SIZE], const T (&src)[SIZE])
+	{
+		dest[INDEX] = src[INDEX];
+		DoSomeByIndex<T, INDEX + 1, SIZE>::copy(dest, src);
+	}
+};
+
+///
+/// @brief The DoSomeByIndex<T, SIZE, SIZE> struct
+///
+template<typename T, Types::size_t SIZE>
+struct DoSomeByIndex<T, SIZE, SIZE>
+{
+	static void copy(T (&)[SIZE], const T (&)[SIZE])
+	{}
+};
+
 }
 
 #endif // FLAMEIDE_COMMON_TRAITS_FUCTIONAL_HPP

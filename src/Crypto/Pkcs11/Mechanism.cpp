@@ -7,8 +7,11 @@ namespace pkcs11
 
 Mechanism::Mechanism(EnumType type, ParameterPtr paramterPtr
 		, ParameterSize paramterSize) noexcept
-		: Parent{ enums::value(type), paramterPtr, paramterSize }
-{}
+{
+	this->mechanism = enums::value(type);
+	this->pParameter = paramterPtr;
+	this->ulParameterLen = paramterSize;
+}
 
 Mechanism::EnumType &Mechanism::getType() noexcept
 {

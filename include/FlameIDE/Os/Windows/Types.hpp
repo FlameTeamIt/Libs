@@ -135,7 +135,7 @@ struct OsSemaphoreContext
 struct OsLibraryHandle
 {
 	using Handle = decltype(LoadLibraryA(nullptr));
-	using Symbol = decltype(GetProcAddress(Handle{}, nullptr));
+	using Symbol = void *; //decltype(GetProcAddress(Handle{}, nullptr));
 
 	Handle address = Handle{};
 };

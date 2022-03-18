@@ -110,6 +110,22 @@ using JavaMidpSecurityDomain = ::CK_JAVA_MIDP_SECURITY_DOMAIN;
 
 using CertificateCategory = ::CK_CERTIFICATE_CATEGORY;
 
+/* v3.0 */
+
+using ProfileId = ::CK_PROFILE_ID;
+
+// Typedefs for Flexible KDF
+using PrfData = ::CK_PRF_DATA_TYPE;
+using NistSp800dot108Prf = ::CK_SP800_108_PRF_TYPE;
+
+using NistSp800dot108DkmLengthMethod = ::CK_SP800_108_DKM_LENGTH_METHOD;
+
+using X3DhKdf = ::CK_X3DH_KDF_TYPE;
+
+using X2RatchetKdf = ::CK_X2RATCHET_KDF_TYPE;
+
+using XeddsaHash = ::CK_XEDDSA_HASH_TYPE;
+
 /// @}
 
 } // namespace value_types

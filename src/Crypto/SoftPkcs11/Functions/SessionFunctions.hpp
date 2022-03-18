@@ -105,6 +105,39 @@ pkcs11::value_types::ReturnType login(
 ///
 pkcs11::value_types::ReturnType logout(pkcs11::value_types::SessionHandle session);
 
+// v3.0
+
+///
+/// @brief loginUser
+/// @param session
+/// @param user
+/// @param pin
+/// @param pinLength
+/// @param username
+/// @param usernameLength
+/// @return
+///
+pkcs11::value_types::ReturnType loginUser(
+		pkcs11::value_types::SessionHandle session
+		, pkcs11::value_types::User user
+		, pkcs11::value_types::Utf8CharPtr pin
+		, pkcs11::value_types::Ulong pinLength
+		, pkcs11::value_types::Utf8CharPtr username
+		, pkcs11::value_types::Ulong usernameLength
+);
+
+///
+/// @brief sessionCancel
+/// @param session
+/// @param flags
+/// @return
+///
+pkcs11::value_types::ReturnType sessionCancel(
+		pkcs11::value_types::SessionHandle session
+		, pkcs11::value_types::Flags flags
+);
+
+
 }}}} // flame_ide::soft_pkcs11::functions::session
 
 #endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_FUNCTIONS_SESSIONFUNCTIONS_HPP

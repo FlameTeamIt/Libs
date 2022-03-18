@@ -36,12 +36,12 @@ public:
 	using Parameter = templates::Variant<
 		pkcs11::structs::RsaPkcsOaepParams
 		, pkcs11::structs::RsaPkcsPssParams
-		, pkcs11::structs::EcDh1DeriveParams
-		, pkcs11::structs::EcDh2DeriveParams
+		, pkcs11::structs::ElipticCurveDiffieHellman1DeriveParams
+		, pkcs11::structs::ElipticCurveDiffieHellman2DeriveParams
 		, pkcs11::structs::EcMqvDeriveParams
-		, pkcs11::structs::X9Dh1DeriveParams
-		, pkcs11::structs::X9Dh2DeriveParams
-		, pkcs11::structs::X9MqvDeriveParams
+		, pkcs11::structs::X9dot42DiffieHellman1DeriveParams
+		, pkcs11::structs::X9dot42DiffieHellman2DeriveParams
+		, pkcs11::structs::X9dot42MqvDeriveParams
 		, pkcs11::structs::KeaDeriveParams
 		, pkcs11::structs::Rc2CbcParams
 		, pkcs11::structs::Rc2MacGeneralParams
@@ -82,26 +82,79 @@ public:
 		, pkcs11::structs::Gostr3410DeriveParams
 		, pkcs11::structs::Gostr3410KeyWrapParams
 		, pkcs11::structs::SeedCbcEncryptDataParams
+
+		// v3.0
+		, pkcs11::structs::PrfDataParam
+		, pkcs11::structs::NistSp800Hyphen108CounterFormat
+		, pkcs11::structs::NistSp800Hyphen108DkmLengthFormat
+		, pkcs11::structs::DerivedKey
+		, pkcs11::structs::NistSp800Hyphen108KdfParams
+		, pkcs11::structs::NistSp800Hyphen108FeedbackKdfParams
+		, pkcs11::structs::EdDsaParams
+		, pkcs11::structs::ChaCha20Params
+		, pkcs11::structs::Salsa20Params
+		, pkcs11::structs::Salsa20ChaCha20Poly1305Params
+		, pkcs11::structs::Salsa20ChaCha20Poly1305MessageParams
+		, pkcs11::structs::ExtendedTripleDiffieHellmanInitiateParams
+		, pkcs11::structs::ExtendedTripleDiffieHellmanRespondParams
+		, pkcs11::structs::DoubleRatchetInitializeParams
+		, pkcs11::structs::DoubleRatchetRespondParams
+		, pkcs11::structs::ExtendedEdDsaParams
+		, pkcs11::structs::HkdfParams
 	>;
 
+	using GetTypeCallback = pkcs11::enums::Mechanism (*) (const MechanismBase *);
+	using GetInfoCallback = pkcs11::structs::MechanismInfo (*) (const MechanismBase *);
+
+	using GetEncryptorCallback = ExpectedEncryptor (*) (MechanismBase *);
+	using GetDecryptorCallback = ExpectedDecryptor (*) (MechanismBase *);
+	using GetSignerCallback = ExpectedSigner (*) (MechanismBase *);
+	using GetVerifierCallback = ExpectedVerifier (*) (MechanismBase *);
+	using ProcessParameterCallback = pkcs11::enums::ReturnType (*)(
+			MechanismBase *, const Parameter &
+	);
+
+public:
 	MechanismBase() noexcept;
 
-	virtual ~MechanismBase() noexcept;
+	~MechanismBase() noexcept;
 
-	virtual pkcs11::enums::Mechanism getType() const noexcept;
+	pkcs11::enums::Mechanism getType() const noexcept;
 
-	virtual pkcs11::structs::MechanismInfo getInfo() const noexcept;
+	pkcs11::structs::MechanismInfo getInfo() const noexcept;
 
-	virtual ExpectedEncryptor getEncryptor() noexcept;
+	ExpectedEncryptor getEncryptor() noexcept;
 
-	virtual ExpectedDecryptor getDecryptor() noexcept;
+	ExpectedDecryptor getDecryptor() noexcept;
 
-	virtual ExpectedSigner getSigner() noexcept;
+	ExpectedSigner getSigner() noexcept;
 
-	virtual ExpectedVerifier getVerifier() noexcept;
+	ExpectedVerifier getVerifier() noexcept;
 
-	virtual pkcs11::enums::ReturnType
-	processParameter(const Parameter &paramter) noexcept;
+	pkcs11::enums::ReturnType processParameter(
+			const Parameter &paramter
+	) noexcept;
+
+protected:
+	MechanismBase(
+			GetTypeCallback getTypeCallback
+			, GetInfoCallback getInfoCallback
+			, GetEncryptorCallback getEncryptorCallback
+			, GetDecryptorCallback getDecryptorCallback
+			, GetSignerCallback getSignerCallback
+			, GetVerifierCallback getVerifierCallback
+			, ProcessParameterCallback processParameterCallback
+	) noexcept;
+
+protected:
+	GetTypeCallback getTypeCallback;
+	GetInfoCallback getInfoCallback;
+
+	GetEncryptorCallback getEncryptorCallback;
+	GetDecryptorCallback getDecryptorCallback;
+	GetSignerCallback getSignerCallback;
+	GetVerifierCallback getVerifierCallback;
+	ProcessParameterCallback processParameterCallback;
 };
 
 }}} // namespace flame_ide::soft_pkcs11::mechanisms

@@ -9,8 +9,28 @@ namespace flame_ide
 class VerifierBase
 {
 public:
+	using InitCallback = void (*)(void);
+	using UpdateCallback = void (*)(void);
+	using FinalCallback = void (*)(void);
+
+	using RecoverCallback = void (*)(void);
+
+public:
 	VerifierBase() noexcept;
-	virtual ~VerifierBase() noexcept;
+	~VerifierBase() noexcept;
+
+	void init(void);
+	void update(void);
+	void final(void);
+
+	void recover (void);
+
+protected:
+	InitCallback initCallback;
+	UpdateCallback updateCallback;
+	FinalCallback finalCallback;
+
+	RecoverCallback recoverCallback;
 };
 
 }}} // namespace flame_ide::soft_pkcs11::mechanisms
