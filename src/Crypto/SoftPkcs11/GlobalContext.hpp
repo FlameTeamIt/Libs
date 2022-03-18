@@ -11,15 +11,6 @@ namespace flame_ide
 {namespace soft_pkcs11
 {
 
-class Pkcs11Interface: public pkcs11::structs::Interface
-{
-public:
-	Pkcs11Interface(pkcs11::structs::FunctionList3 &functionList);
-
-private:
-	pkcs11::value_types::Utf8Char name[sizeof("PKCS 11")];
-};
-
 struct GlobalContext
 {
 public:
@@ -33,36 +24,30 @@ public:
 
 	pkcs11::enums::ReturnType getStatus() const noexcept;
 
+	const Callbacks &callbacks() const;
+
 public:
 	static GlobalContext &get() noexcept;
 
-public:
-	ExternalCallbacks externalCallbacks;
-	GeneralPurposeCallbacks generalPurposeCallbacks;
-	ManagementCallbacks managementCallbacks;
-	SessionCallbacks sessionCallbacks;
-	ObjectCallbacks objectCallbacks;
-	EncryptCallbacks encryptCallbacks;
-	DecryptCallbacks decryptCallbacks;
-	DigestCallbacks digestCallbacks;
-	SignCallbacks signCallbacks;
-	VerifyCallbacks verifyCallbacks;
-	DualOperationCallbacks dualOperationCallbacks;
-	KeyCallbacks keyCallbacks;
-	ParallelManagementCallbacks parallelManagementCallbacks;
-	RandomGenerationCallbacks randomGenerationCallbacks;
+private:
+	class Pkcs11Interface: public pkcs11::structs::Interface
+	{
+	public:
+		Pkcs11Interface(pkcs11::structs::FunctionList3 &functionList);
 
-	// v3.0
-	MessageEncriptionFunctions messageEncriptionFunctions;
-	MessageDecriptionFunctions messageDecriptionFunctions;
-	MessageSignFunctions messageSignFunctions;
-	MessageVerifyFunctions messageVerifyFunctions;
+	private:
+		pkcs11::value_types::Utf8Char name[sizeof("PKCS 11")];
+	};
 
-	pkcs11::enums::InitializeArgsFlags initFlags
-			= pkcs11::enums::InitializeArgsFlags::LIBRARY_CANT_CREATE_OS_THREADS;
 
 private:
 	GlobalContext() noexcept;
+
+private:
+	Callbacks internalCallbacks;
+
+	pkcs11::enums::InitializeArgsFlags initFlags
+			= pkcs11::enums::InitializeArgsFlags::LIBRARY_CANT_CREATE_OS_THREADS;
 
 private:
 	pkcs11::structs::FunctionList functionList = createFunctionList();

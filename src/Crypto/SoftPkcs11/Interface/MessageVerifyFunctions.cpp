@@ -8,8 +8,10 @@ CK_RV C_MessageVerifyInit(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageVerifyFunctions
-			.verifyMessageInit(hSession, pMechanism, hKey);
+			.callbacks()
+			.message
+			.verify
+			.init(hSession, pMechanism, hKey);
 }
 
 CK_RV C_VerifyMessage(
@@ -23,8 +25,10 @@ CK_RV C_VerifyMessage(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageVerifyFunctions
-			.verifyMessage(
+			.callbacks()
+			.message
+			.verify
+			.full(
 					hSession, pParameter, ulParameterLen
 					, pData, ulDataLen
 					, pSignature, ulSignatureLen
@@ -38,8 +42,10 @@ CK_RV C_VerifyMessageBegin(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageVerifyFunctions
-			.verifyMessageBegin(hSession, pParameter, ulParameterLen);
+			.callbacks()
+			.message
+			.verify
+			.begin(hSession, pParameter, ulParameterLen);
 }
 
 CK_RV C_VerifyMessageNext(
@@ -53,8 +59,10 @@ CK_RV C_VerifyMessageNext(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageVerifyFunctions
-			.verifyMessageNext(
+			.callbacks()
+			.message
+			.verify
+			.next(
 					hSession, pParameter, ulParameterLen
 					, pData, ulDataLen
 					, pSignature, ulSignatureLen
@@ -64,6 +72,8 @@ CK_RV C_VerifyMessageNext(
 CK_RV C_MessageVerifyFinal(CK_SESSION_HANDLE hSession)
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageVerifyFunctions
-			.verifyMessageFinal(hSession);
+			.callbacks()
+			.message
+			.verify
+			.final(hSession);
 }

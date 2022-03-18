@@ -8,8 +8,10 @@ CK_RV C_MessageEncryptInit(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageEncriptionFunctions
-			.encryptMessageInit(hSession, pMechanism, hKey);
+			.callbacks()
+			.message
+			.encrypt
+			.init(hSession, pMechanism, hKey);
 }
 
 CK_RV C_EncryptMessage(
@@ -25,8 +27,10 @@ CK_RV C_EncryptMessage(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageEncriptionFunctions
-			.encryptMessage(
+			.callbacks()
+			.message
+			.encrypt
+			.full(
 					hSession, pParameter, ulParameterLen
 					, pAssociatedData, ulAssociatedDataLen
 					, pPlaintext, ulPlaintextLen
@@ -43,8 +47,10 @@ CK_RV C_EncryptMessageBegin(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageEncriptionFunctions
-			.encryptMessageBegin(
+			.callbacks()
+			.message
+			.encrypt
+			.begin(
 					hSession, pParameter, ulParameterLen
 					, pAssociatedData, ulAssociatedDataLen
 			);
@@ -62,8 +68,10 @@ CK_RV C_EncryptMessageNext(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageEncriptionFunctions
-			.encryptMessageNext(
+			.callbacks()
+			.message
+			.encrypt
+			.next(
 					hSession, pParameter, ulParameterLen
 					, pPlaintextPart, ulPlaintextPartLen
 					, pCiphertextPart, pulCiphertextPartLen
@@ -74,6 +82,8 @@ CK_RV C_EncryptMessageNext(
 CK_RV C_MessageEncryptFinal(CK_SESSION_HANDLE hSession)
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageEncriptionFunctions
-			.encryptMessageFinal(hSession);
+			.callbacks()
+			.message
+			.encrypt
+			.final(hSession);
 }

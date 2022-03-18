@@ -9,14 +9,6 @@ namespace flame_ide
 
 using namespace flame_ide::pkcs11;
 
-Pkcs11Interface::Pkcs11Interface(pkcs11::structs::FunctionList3 &functionList)
-		: name{ "PKCS 11" }
-{
-	pInterfaceName = name;
-	pFunctionList = &functionList;
-	flags = 0;
-}
-
 GlobalContext::GlobalContext() noexcept
 		: interface{ functionList3 }
 {}
@@ -29,8 +21,10 @@ Mutex GlobalContext::createMutex() noexcept
 	if (enums::value(initFlags & enums::InitializeArgsFlags::OS_LOCKING_OK))
 	{
 		return Mutex {
-				externalCallbacks.create, externalCallbacks.destroy
-				, externalCallbacks.lock, externalCallbacks.unlock
+				callbacks().external.create
+				, callbacks().external.destroy
+				, callbacks().external.lock
+				, callbacks().external.unlock
 		};
 	}
 	else
@@ -58,6 +52,16 @@ GlobalContext &GlobalContext::get() noexcept
 {
 	static GlobalContext globalContext;
 	return globalContext;
+}
+
+//
+
+GlobalContext::Pkcs11Interface::Pkcs11Interface(pkcs11::structs::FunctionList3 &functionList)
+		: name{ "PKCS 11" }
+{
+	pInterfaceName = name;
+	pFunctionList = &functionList;
+	flags = 0;
 }
 
 }}

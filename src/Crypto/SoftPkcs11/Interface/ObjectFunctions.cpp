@@ -10,7 +10,8 @@ CK_RV C_CreateObject(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.objectCallbacks
+			.callbacks()
+			.object
 			.create(hSession, pTemplate, ulCount, phObject);
 }
 
@@ -23,7 +24,8 @@ CK_RV C_CopyObject(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.objectCallbacks
+			.callbacks()
+			.object
 			.copy(hSession, hObject, pTemplate, ulCount, phNewObject);
 }
 
@@ -33,7 +35,8 @@ CK_RV C_DestroyObject(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.objectCallbacks
+			.callbacks()
+			.object
 			.destroy(hSession, hObject);
 }
 
@@ -44,7 +47,8 @@ CK_RV C_GetObjectSize(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.objectCallbacks
+			.callbacks()
+			.object
 			.getSize(hSession, hObject, pulSize);
 }
 
@@ -56,7 +60,8 @@ CK_RV C_GetAttributeValue(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.objectCallbacks
+			.callbacks()
+			.object
 			.getAttributeValue(hSession, hObject, pTemplate, ulCount);
 }
 
@@ -68,7 +73,8 @@ CK_RV C_SetAttributeValue(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.objectCallbacks
+			.callbacks()
+			.object
 			.setAttributeValue(hSession, hObject, pTemplate, ulCount);
 }
 
@@ -79,7 +85,8 @@ CK_RV C_FindObjectsInit(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.objectCallbacks
+			.callbacks()
+			.object
 			.findInit(hSession, pTemplate, ulCount);
 }
 
@@ -91,13 +98,15 @@ CK_RV C_FindObjects(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.objectCallbacks
+			.callbacks()
+			.object
 			.find(hSession, phObject, ulMaxObjectCount, pulObjectCount);
 }
 
 CK_RV C_FindObjectsFinal(CK_SESSION_HANDLE hSession)
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.objectCallbacks
+			.callbacks()
+			.object
 			.findFinal(hSession);
 }

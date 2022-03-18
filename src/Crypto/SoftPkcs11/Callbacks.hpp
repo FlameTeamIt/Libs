@@ -7,10 +7,6 @@ namespace flame_ide
 {namespace soft_pkcs11
 {
 
-pkcs11::structs::FunctionList createFunctionList() noexcept;
-
-pkcs11::structs::FunctionList3 createFunctionList3() noexcept;
-
 struct ExternalCallbacks
 {
 	flame_ide::pkcs11::callbacks::CreateMutex create   = nullptr;
@@ -232,64 +228,98 @@ struct RandomGenerationCallbacks
 };
 
 // v3.0
-struct MessageEncriptionFunctions
+struct MessageEncryptionFunctions
 {
-	const flame_ide::pkcs11::callbacks::MessageEncryptInit encryptMessageInit
+	const flame_ide::pkcs11::callbacks::MessageEncryptInit init
 			= flame_ide::soft_pkcs11::functions::message::encryptInit;
-	const flame_ide::pkcs11::callbacks::EncryptMessage encryptMessage
+	const flame_ide::pkcs11::callbacks::EncryptMessage full
 			= flame_ide::soft_pkcs11::functions::message::encrypt;
-	const flame_ide::pkcs11::callbacks::EncryptMessageBegin encryptMessageBegin
+	const flame_ide::pkcs11::callbacks::EncryptMessageBegin begin
 			= flame_ide::soft_pkcs11::functions::message::encryptBegin;
-	const flame_ide::pkcs11::callbacks::EncryptMessageNext encryptMessageNext
+	const flame_ide::pkcs11::callbacks::EncryptMessageNext next
 			= flame_ide::soft_pkcs11::functions::message::encryptNext;
-	const flame_ide::pkcs11::callbacks::EncryptMessageFinal encryptMessageFinal
+	const flame_ide::pkcs11::callbacks::EncryptMessageFinal final
 			= flame_ide::soft_pkcs11::functions::message::encryptFinal;
 };
 
 // v3.0
-struct MessageDecriptionFunctions
+struct MessageDecryptionFunctions
 {
-	const flame_ide::pkcs11::callbacks::MessageDecryptInit decryptMessageInit
+	const flame_ide::pkcs11::callbacks::MessageDecryptInit init
 			= flame_ide::soft_pkcs11::functions::message::decryptInit;
-	const flame_ide::pkcs11::callbacks::DecryptMessage decryptMessage
+	const flame_ide::pkcs11::callbacks::DecryptMessage full
 			= flame_ide::soft_pkcs11::functions::message::decrypt;
-	const flame_ide::pkcs11::callbacks::DecryptMessageBegin decryptMessageBegin
+	const flame_ide::pkcs11::callbacks::DecryptMessageBegin begin
 			= flame_ide::soft_pkcs11::functions::message::decryptBegin;
-	const flame_ide::pkcs11::callbacks::DecryptMessageNext decryptMessageNext
+	const flame_ide::pkcs11::callbacks::DecryptMessageNext next
 			= flame_ide::soft_pkcs11::functions::message::decryptNext;
-	const flame_ide::pkcs11::callbacks::MessageDecryptFinal decryptMessageFinal
+	const flame_ide::pkcs11::callbacks::MessageDecryptFinal final
 			= flame_ide::soft_pkcs11::functions::message::decryptFinal;
 };
 
 // v3.0
 struct MessageSignFunctions
 {
-	const flame_ide::pkcs11::callbacks::MessageSignInit signMessageInit
+	const flame_ide::pkcs11::callbacks::MessageSignInit init
 			= flame_ide::soft_pkcs11::functions::message::signInit;
-	const flame_ide::pkcs11::callbacks::SignMessage signMessage
+	const flame_ide::pkcs11::callbacks::SignMessage full
 			= flame_ide::soft_pkcs11::functions::message::sign;
-	const flame_ide::pkcs11::callbacks::SignMessageBegin signMessageBegin
+	const flame_ide::pkcs11::callbacks::SignMessageBegin begin
 			= flame_ide::soft_pkcs11::functions::message::signBegin;
-	const flame_ide::pkcs11::callbacks::SignMessageNext signMessageNext
+	const flame_ide::pkcs11::callbacks::SignMessageNext next
 			= flame_ide::soft_pkcs11::functions::message::signNext;
-	const flame_ide::pkcs11::callbacks::MessageSignFinal signMessageFinal
+	const flame_ide::pkcs11::callbacks::MessageSignFinal final
 			= flame_ide::soft_pkcs11::functions::message::signFinal;
 };
 
 // v3.0
 struct MessageVerifyFunctions
 {
-	const flame_ide::pkcs11::callbacks::MessageVerifyInit verifyMessageInit
+	const flame_ide::pkcs11::callbacks::MessageVerifyInit init
 			= flame_ide::soft_pkcs11::functions::message::verifyInit;
-	const flame_ide::pkcs11::callbacks::VerifyMessage verifyMessage
+	const flame_ide::pkcs11::callbacks::VerifyMessage full
 			= flame_ide::soft_pkcs11::functions::message::verify;
-	const flame_ide::pkcs11::callbacks::VerifyMessageBegin verifyMessageBegin
+	const flame_ide::pkcs11::callbacks::VerifyMessageBegin begin
 			= flame_ide::soft_pkcs11::functions::message::verifyBegin;
-	const flame_ide::pkcs11::callbacks::VerifyMessageNext verifyMessageNext
+	const flame_ide::pkcs11::callbacks::VerifyMessageNext next
 			= flame_ide::soft_pkcs11::functions::message::verifyNext;
-	const flame_ide::pkcs11::callbacks::MessageVerifyFinal verifyMessageFinal
+	const flame_ide::pkcs11::callbacks::MessageVerifyFinal final
 			= flame_ide::soft_pkcs11::functions::message::verifyFinal;
 };
+
+
+// Aggregator
+struct Callbacks
+{
+	ExternalCallbacks external;
+	GeneralPurposeCallbacks generalPurpose;
+	ManagementCallbacks management;
+	SessionCallbacks session;
+	ObjectCallbacks object;
+	EncryptCallbacks encrypt;
+	DecryptCallbacks decrypt;
+	DigestCallbacks digest;
+	SignCallbacks sign;
+	VerifyCallbacks verify;
+	DualOperationCallbacks dualOperations;
+	KeyCallbacks key;
+	ParallelManagementCallbacks parallelManagement;
+	RandomGenerationCallbacks randomGeneration;
+
+	// v3.0
+	struct
+	{
+		MessageEncryptionFunctions encrypt;
+		MessageDecryptionFunctions decrypt;
+		MessageSignFunctions sign;
+		MessageVerifyFunctions verify;
+	} message;
+
+};
+
+pkcs11::structs::FunctionList createFunctionList() noexcept;
+
+pkcs11::structs::FunctionList3 createFunctionList3() noexcept;
 
 }} // flame_ide::soft_pkcs11
 

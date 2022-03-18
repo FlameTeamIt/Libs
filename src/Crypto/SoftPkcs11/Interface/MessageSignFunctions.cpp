@@ -8,8 +8,10 @@ CK_RV C_MessageSignInit(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageSignFunctions
-			.signMessageInit(hSession, pMechanism, hKey);
+			.callbacks()
+			.message
+			.sign
+			.init(hSession, pMechanism, hKey);
 }
 
 CK_RV C_SignMessage(
@@ -23,8 +25,10 @@ CK_RV C_SignMessage(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageSignFunctions
-			.signMessage(
+			.callbacks()
+			.message
+			.sign
+			.full(
 					hSession, pParameter, ulParameterLen
 					, pData, ulDataLen
 					, pSignature, pulSignatureLen
@@ -38,8 +42,10 @@ CK_RV C_SignMessageBegin(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageSignFunctions
-			.signMessageBegin(hSession, pParameter, ulParameterLen);
+			.callbacks()
+			.message
+			.sign
+			.begin(hSession, pParameter, ulParameterLen);
 }
 
 CK_RV C_SignMessageNext(
@@ -53,8 +59,10 @@ CK_RV C_SignMessageNext(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageSignFunctions
-			.signMessageNext(
+			.callbacks()
+			.message
+			.sign
+			.next(
 					hSession, pParameter, ulParameterLen
 					, pData, ulDataLen
 					, pSignature, pulSignatureLen
@@ -64,6 +72,8 @@ CK_RV C_SignMessageNext(
 CK_RV C_MessageSignFinal(CK_SESSION_HANDLE hSession)
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.messageSignFunctions
-			.signMessageFinal(hSession);
+			.callbacks()
+			.message
+			.sign
+			.final(hSession);
 }

@@ -11,7 +11,8 @@ CK_RV C_DigestEncryptUpdate(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.dualOperationCallbacks
+			.callbacks()
+			.dualOperations
 			.digestEncryptUpdate(
 					hSession, pPart, ulPartLen, pEncryptedPart, pulEncryptedPartLen
 			);
@@ -26,7 +27,8 @@ CK_RV C_DecryptDigestUpdate(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.dualOperationCallbacks
+			.callbacks()
+			.dualOperations
 			.decryptDigestUpdate(
 					hSession, pEncryptedPart, ulEncryptedPartLen, pPart, pulPartLen
 			);
@@ -41,7 +43,8 @@ CK_RV C_SignEncryptUpdate(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.dualOperationCallbacks
+			.callbacks()
+			.dualOperations
 			.signEncryptUpdate(
 					hSession, pPart, ulPartLen, pEncryptedPart, pulEncryptedPartLen
 			);
@@ -56,7 +59,8 @@ CK_RV C_DecryptVerifyUpdate(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.dualOperationCallbacks
+			.callbacks()
+			.dualOperations
 			.decryptVerifyUpdate(
 					hSession, pEncryptedPart, ulEncryptedPartLen, pPart, pulPartLen
 			);
