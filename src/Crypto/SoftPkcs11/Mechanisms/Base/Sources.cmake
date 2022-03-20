@@ -1,0 +1,8 @@
+set (SOURCE_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/Decryptor.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Digister.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Encryptor.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Mechanism.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Signer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Verifier.cpp
+)

@@ -1,32 +1,38 @@
-#ifndef FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_DECRYPTORBASE_HPP
-#define FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_DECRYPTORBASE_HPP
+#ifndef FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_SIGNER_HPP
+#define FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_SIGNER_HPP
 
 namespace flame_ide
 {namespace soft_pkcs11
 {namespace mechanisms
 {
 
-class DecryptorBase
+class Signer
 {
 public:
 	using InitCallback = void (*)(void);
 	using UpdateCallback = void (*)(void);
 	using FinalCallback = void (*)(void);
 
+	using RecoverCallback = void (*)(void);
+
 public:
-	DecryptorBase() noexcept;
-	~DecryptorBase() noexcept;
+	Signer() noexcept;
+	~Signer() noexcept;
 
 	void init();
 	void update();
 	void final();
 
+	void recover();
+
 protected:
 	InitCallback initCallback;
 	UpdateCallback updateCallback;
 	FinalCallback finalCallback;
+
+	RecoverCallback recoverCallback;
 };
 
 }}} // namespace flame_ide::soft_pkcs11::mechanisms
 
-#endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_DECRYPTORBASE_HPP
+#endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_SIGNER_HPP

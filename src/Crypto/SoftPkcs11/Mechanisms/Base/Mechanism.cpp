@@ -1,4 +1,4 @@
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/MechanismBase.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Base/Mechanism.hpp>
 
 namespace flame_ide
 {namespace soft_pkcs11
@@ -7,19 +7,19 @@ namespace flame_ide
 
 // callbacks
 
-static pkcs11::enums::Mechanism getType(const MechanismBase *);
-static pkcs11::structs::MechanismInfo getInfo(const MechanismBase *);
-static MechanismBase::ExpectedEncryptor getEncryptor(MechanismBase *);
-static MechanismBase::ExpectedDecryptor getDecryptor(MechanismBase *);
-static MechanismBase::ExpectedSigner getSigner(MechanismBase *);
-static MechanismBase::ExpectedVerifier getVerifier(MechanismBase *);
-static pkcs11::enums::ReturnType processParameter(MechanismBase *
-		, const MechanismBase::Parameter &);
+static pkcs11::enums::Mechanism getType(const Mechanism *);
+static pkcs11::structs::MechanismInfo getInfo(const Mechanism *);
+static Mechanism::ExpectedEncryptor getEncryptor(Mechanism *);
+static Mechanism::ExpectedDecryptor getDecryptor(Mechanism *);
+static Mechanism::ExpectedSigner getSigner(Mechanism *);
+static Mechanism::ExpectedVerifier getVerifier(Mechanism *);
+static pkcs11::enums::ReturnType processParameter(Mechanism *
+		, const Mechanism::Parameter &);
 
 //
 
-MechanismBase::MechanismBase() noexcept :
-		MechanismBase(
+Mechanism::Mechanism() noexcept :
+		Mechanism(
 				flame_ide::soft_pkcs11::mechanisms::getType
 				, flame_ide::soft_pkcs11::mechanisms::getInfo
 				, flame_ide::soft_pkcs11::mechanisms::getEncryptor
@@ -30,47 +30,47 @@ MechanismBase::MechanismBase() noexcept :
 		)
 {}
 
-MechanismBase::~MechanismBase() noexcept
+Mechanism::~Mechanism() noexcept
 {}
 
-pkcs11::enums::Mechanism MechanismBase::getType() const noexcept
+pkcs11::enums::Mechanism Mechanism::getType() const noexcept
 {
 	return getTypeCallback(this);
 }
 
-pkcs11::structs::MechanismInfo MechanismBase::getInfo() const noexcept
+pkcs11::structs::MechanismInfo Mechanism::getInfo() const noexcept
 {
 	return getInfoCallback(this);
 }
 
-MechanismBase::ExpectedEncryptor MechanismBase::getEncryptor() noexcept
+Mechanism::ExpectedEncryptor Mechanism::getEncryptor() noexcept
 {
 	return getEncryptorCallback(this);
 }
 
-MechanismBase::ExpectedDecryptor MechanismBase::getDecryptor() noexcept
+Mechanism::ExpectedDecryptor Mechanism::getDecryptor() noexcept
 {
 	return getDecryptorCallback(this);
 }
 
-MechanismBase::ExpectedSigner MechanismBase::getSigner() noexcept
+Mechanism::ExpectedSigner Mechanism::getSigner() noexcept
 {
 	return getSignerCallback(this);
 }
 
-MechanismBase::ExpectedVerifier MechanismBase::getVerifier() noexcept
+Mechanism::ExpectedVerifier Mechanism::getVerifier() noexcept
 {
 	return getVerifierCallback(this);
 }
 
-pkcs11::enums::ReturnType MechanismBase::processParameter(const Parameter &parameter) noexcept
+pkcs11::enums::ReturnType Mechanism::processParameter(const Parameter &parameter) noexcept
 {
 	return processParameterCallback(this, parameter);
 }
 
 //
 
-MechanismBase::MechanismBase(
+Mechanism::Mechanism(
 		GetTypeCallback getTypeCallback
 		, GetInfoCallback getInfoCallback
 		, GetEncryptorCallback getEncryptorCallback
@@ -91,12 +91,12 @@ MechanismBase::MechanismBase(
 
 //
 
-static pkcs11::enums::Mechanism getType(const MechanismBase *)
+static pkcs11::enums::Mechanism getType(const Mechanism *)
 {
 	return pkcs11::enums::Mechanism::VENDOR_DEFINED;
 }
 
-static pkcs11::structs::MechanismInfo getInfo(const MechanismBase *)
+static pkcs11::structs::MechanismInfo getInfo(const Mechanism *)
 {
 	return pkcs11::structs::MechanismInfo {
 		pkcs11::value_types::Ulong{}
@@ -105,36 +105,36 @@ static pkcs11::structs::MechanismInfo getInfo(const MechanismBase *)
 	};
 }
 
-static MechanismBase::ExpectedEncryptor getEncryptor(MechanismBase *)
+static Mechanism::ExpectedEncryptor getEncryptor(Mechanism *)
 {
-	return MechanismBase::ExpectedEncryptor {
+	return Mechanism::ExpectedEncryptor {
 			pkcs11::enums::ReturnType::MECHANISM_INVALID
 	};
 }
 
-static MechanismBase::ExpectedDecryptor getDecryptor(MechanismBase *)
+static Mechanism::ExpectedDecryptor getDecryptor(Mechanism *)
 {
-	return MechanismBase::ExpectedDecryptor {
+	return Mechanism::ExpectedDecryptor {
 			pkcs11::enums::ReturnType::MECHANISM_INVALID
 	};
 }
 
-static MechanismBase::ExpectedSigner getSigner(MechanismBase *)
+static Mechanism::ExpectedSigner getSigner(Mechanism *)
 {
-	return MechanismBase::ExpectedSigner {
+	return Mechanism::ExpectedSigner {
 			pkcs11::enums::ReturnType::MECHANISM_INVALID
 	};
 }
 
-static MechanismBase::ExpectedVerifier getVerifier(MechanismBase *)
+static Mechanism::ExpectedVerifier getVerifier(Mechanism *)
 {
-	return MechanismBase::ExpectedVerifier {
+	return Mechanism::ExpectedVerifier {
 			pkcs11::enums::ReturnType::MECHANISM_INVALID
 	};
 }
 
-static pkcs11::enums::ReturnType processParameter(MechanismBase *
-		, const MechanismBase::Parameter &)
+static pkcs11::enums::ReturnType processParameter(Mechanism *
+		, const Mechanism::Parameter &)
 {
 	return pkcs11::enums::ReturnType::ARGUMENTS_BAD;
 }

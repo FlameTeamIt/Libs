@@ -12,7 +12,7 @@ set(DEPENDENCY_HEADER_TARGETS
 set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Functions::Object::Independ"
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Interface::Object::Independ"
-	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Mechanisms::Object::Independ"
+	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Mechanisms::Base::Object::Independ"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::NoThread::Object::Independ"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexStub::Object::Independ"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object::Independ"

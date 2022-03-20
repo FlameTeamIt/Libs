@@ -1,5 +1,5 @@
-#ifndef FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_MECHANISMBASE_HPP
-#define FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_MECHANISMBASE_HPP
+#ifndef FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_MECHANISM_HPP
+#define FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_MECHANISM_HPP
 
 #include <FlameIDE/Crypto/Pkcs11/Types/Structs.hpp>
 #include <FlameIDE/Crypto/Pkcs11/Types/Enums.hpp>
@@ -7,30 +7,30 @@
 #include <FlameIDE/Templates/Expected.hpp>
 #include <FlameIDE/Templates/Variant.hpp>
 
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/EncryptorBase.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/DecryptorBase.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/SignerBase.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/VerifierBase.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Base/Encryptor.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Base/Decryptor.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Base/Signer.hpp>
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Mechanisms/Base/Verifier.hpp>
 
 namespace flame_ide
 {namespace soft_pkcs11
 {namespace mechanisms
 {
 
-class MechanismBase
+class Mechanism
 {
 public:
 	using ExpectedEncryptor = templates::Expected<
-		EncryptorBase *, pkcs11::enums::ReturnType
+		Encryptor *, pkcs11::enums::ReturnType
 	>;
 	using ExpectedDecryptor = templates::Expected<
-		DecryptorBase *, pkcs11::enums::ReturnType
+		Decryptor *, pkcs11::enums::ReturnType
 	>;
 	using ExpectedSigner = templates::Expected<
-		SignerBase *, pkcs11::enums::ReturnType
+		Signer *, pkcs11::enums::ReturnType
 	>;
 	using ExpectedVerifier = templates::Expected<
-		VerifierBase *, pkcs11::enums::ReturnType
+		Verifier *, pkcs11::enums::ReturnType
 	>;
 
 	using Parameter = templates::Variant<
@@ -103,21 +103,21 @@ public:
 		, pkcs11::structs::HkdfParams
 	>;
 
-	using GetTypeCallback = pkcs11::enums::Mechanism (*) (const MechanismBase *);
-	using GetInfoCallback = pkcs11::structs::MechanismInfo (*) (const MechanismBase *);
+	using GetTypeCallback = pkcs11::enums::Mechanism (*) (const Mechanism *);
+	using GetInfoCallback = pkcs11::structs::MechanismInfo (*) (const Mechanism *);
 
-	using GetEncryptorCallback = ExpectedEncryptor (*) (MechanismBase *);
-	using GetDecryptorCallback = ExpectedDecryptor (*) (MechanismBase *);
-	using GetSignerCallback = ExpectedSigner (*) (MechanismBase *);
-	using GetVerifierCallback = ExpectedVerifier (*) (MechanismBase *);
+	using GetEncryptorCallback = ExpectedEncryptor (*) (Mechanism *);
+	using GetDecryptorCallback = ExpectedDecryptor (*) (Mechanism *);
+	using GetSignerCallback = ExpectedSigner (*) (Mechanism *);
+	using GetVerifierCallback = ExpectedVerifier (*) (Mechanism *);
 	using ProcessParameterCallback = pkcs11::enums::ReturnType (*)(
-			MechanismBase *, const Parameter &
+			Mechanism *, const Parameter &
 	);
 
 public:
-	MechanismBase() noexcept;
+	Mechanism() noexcept;
 
-	~MechanismBase() noexcept;
+	~Mechanism() noexcept;
 
 	pkcs11::enums::Mechanism getType() const noexcept;
 
@@ -136,7 +136,7 @@ public:
 	) noexcept;
 
 protected:
-	MechanismBase(
+	Mechanism(
 			GetTypeCallback getTypeCallback
 			, GetInfoCallback getInfoCallback
 			, GetEncryptorCallback getEncryptorCallback
@@ -159,4 +159,4 @@ protected:
 
 }}} // namespace flame_ide::soft_pkcs11::mechanisms
 
-#endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_MECHANISMBASE_HPP
+#endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_MECHANISM_HPP
