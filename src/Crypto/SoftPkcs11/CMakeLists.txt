@@ -7,13 +7,13 @@ get_sources(FILE_LIST)
 
 set(DEPENDENCY_HEADER_TARGETS
 	"${FLAME_NAMESPACE}::Crypto::Oasis::Headers"
-	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Headers"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Headers"
 )
 set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Functions::Object::Independ"
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Interface::Object::Independ"
+#	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Mechanisms::Object::Independ"
 	"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Mechanisms::Base::Object::Independ"
-	"${FLAME_NAMESPACE}::Crypto::Pkcs11::NoThread::Object::Independ"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexStub::Object::Independ"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object::Independ"
 )

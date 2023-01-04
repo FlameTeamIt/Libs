@@ -34,7 +34,13 @@ using UnderlyingType = typename UnderlyingTypeTrait<EnumType>::Type;
 		{ \
 			using Type = RealType; \
 		}; \
-	}
+	} \
+	\
+	EnumType to ## EnumType(RealType value) \
+	{ \
+		return static_cast<EnumType>(value);\
+	} \
+	\
 
 #define OPERATOR(EnumType, _OPERATOR_) \
 	constexpr EnumType operator _OPERATOR_ (EnumType value1, EnumType value2) \
@@ -503,7 +509,6 @@ enum class Attribute : flame_ide::pkcs11::value_types::Attribute
 
 	, MODIFIABLE = CKA_MODIFIABLE
 	, COPYABLE = CKA_COPYABLE
-
 	, DESTROYABLE = CKA_DESTROYABLE
 
 //	, ECDSA_PARAMS = CKA_ECDSA_PARAMS // Deprecated

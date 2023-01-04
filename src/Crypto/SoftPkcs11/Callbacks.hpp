@@ -289,7 +289,7 @@ struct MessageVerifyFunctions
 
 
 // Aggregator
-struct Callbacks
+struct CallbackAggregator
 {
 	ExternalCallbacks external;
 	GeneralPurposeCallbacks generalPurpose;

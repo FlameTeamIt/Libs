@@ -1,14 +1,14 @@
 #ifndef FLAMEIDE_OS_LIBRARY_HPP
 #define FLAMEIDE_OS_LIBRARY_HPP
 
+#include <FlameIDE/Common/Traits/CreationProhibitions.hpp>
 #include <FlameIDE/Common/Traits/Fuctional.hpp>
-#include <FlameIDE/Os/Types.hpp>
 
 namespace flame_ide
 {namespace os
 {
 
-class Library
+class Library: public flame_ide::NonCopy
 {
 public:
 	Library() noexcept;
@@ -35,12 +35,10 @@ public:
 	SymbolType find(const char *name) noexcept;
 
 private:
-	Library(LibraryHandle libraryHandle) noexcept;
-
-	LibraryHandle::Symbol internalFind(const char *name) noexcept;
+	void *internalFind(const char *name) noexcept;
 
 private:
-	LibraryHandle handle;
+	void *handle;
 };
 
 }} // namespace flame_ide::os
@@ -52,10 +50,9 @@ namespace flame_ide
 template<typename SymbolType>
 SymbolType Library::find(const char *name) noexcept
 {
-	static_assert(IsPointer<SymbolType>::VALUE, "Is not a pointer type");
 	return reinterpret_cast<SymbolType>(internalFind(name));
 }
 
-}}
+}} // namespace flame_ide::os
 
 #endif // FLAMEIDE_OS_LIBRARY_HPP

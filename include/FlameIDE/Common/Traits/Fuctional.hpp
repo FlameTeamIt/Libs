@@ -185,6 +185,15 @@ struct ChooseType<true, T1, T2>: public NonCreational
 };
 
 ///
+/// @brief The ChooseType<_Tp1, T1, T2> struct
+///
+template<typename T1, typename T2>
+struct ChooseType<false, T1, T2>: public NonCreational
+{
+    using Type = T2;
+};
+
+///
 /// @brief The EnableType<_Tp1, T1> struct
 ///
 template<bool CONDITION_RESULT, typename T1>
@@ -201,15 +210,6 @@ struct EnableType<true, T1>: public NonCreational
 {
 	static constexpr bool VALUE = true;
 	using Type = T1;
-};
-
-///
-/// @brief The ChooseType<_Tp1, T1, T2> struct
-///
-template<typename T1, typename T2>
-struct ChooseType<false, T1, T2>: public NonCreational
-{
-	using Type = T2;
 };
 
 ///

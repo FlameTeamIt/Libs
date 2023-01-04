@@ -2,7 +2,7 @@
 
 #include <FlameIDE/Os/Library.hpp>
 
-#include <FlameIDE/Crypto/Pkcs11/Types.hpp>
+#include <FlameIDE/Crypto/Pkcs11/Types/Callbacks.hpp>
 
 namespace flame_ide
 {namespace os

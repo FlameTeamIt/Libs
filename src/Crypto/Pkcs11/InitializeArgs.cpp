@@ -3,8 +3,8 @@
 #include <FlameIDE/../../src/Crypto/Pkcs11/InitializeArgsCallbacks.hpp>
 
 namespace flame_ide
-{
-namespace pkcs11
+{namespace pkcs11
+{namespace wrapper
 {
 
 InitializeArgs::InitializeArgs() noexcept :
@@ -32,7 +32,7 @@ InitializeArgs::InitializeArgs(InitializeArgs &&args) noexcept :
 		}
 {
 	args.setCallbacks(Callbacks{});
-	args.flags = static_cast<value_types::Flags>(Flags::OS_LOCKING_OK);
+	args.flags = pkcs11::enums::value(Flags::OS_LOCKING_OK);
 	args.pReserved = nullptr;
 }
 
@@ -46,7 +46,7 @@ InitializeArgs::InitializeArgs(const Callbacks &callbacks
 		structs::InitializeArgs{
 				callbacks.createMutexCallback, callbacks.destroyMutexCallback
 				, callbacks.lockMutexCallback, callbacks.unlockMutexCallback
-				, static_cast<CK_FLAGS>(initFlags), reseved
+				, pkcs11::enums::value(initFlags), reseved
 		}
 {}
 
@@ -80,5 +80,9 @@ void InitializeArgs::setCallbacks(const Callbacks &callbacks) noexcept
 	UnlockMutex = callbacks.unlockMutexCallback;
 }
 
-} // namespace pkcs11
-} // namespace flame_ide
+structs::InitializeArgs InitializeArgs::getOriginal() const noexcept
+{
+	return *this;
+}
+
+}}} // namespace flame_ide::pkcs11::wrapper

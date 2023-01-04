@@ -1,11 +1,20 @@
 #ifndef FLAMEIDE_SRC_CRYPTO_PKCS11_INITIALIZEARGSCALLBACKS_HPP
 #define FLAMEIDE_SRC_CRYPTO_PKCS11_INITIALIZEARGSCALLBACKS_HPP
 
-#include <FlameIDE/Crypto/Oasis/Oasis.hpp>
+#include <FlameIDE/Crypto/Pkcs11/Types/ValueTypes.hpp>
 
 namespace flame_ide
+{namespace pkcs11
+{namespace value_types
 {
-namespace pkcs11
+
+using MutexPtr = ValuePtr;
+using MutexPtrPtr = ValuePtrPtr;
+
+}}} // namespace flame_ide::pkcs11::value_types
+
+namespace flame_ide
+{namespace pkcs11
 {
 
 ///
@@ -15,7 +24,7 @@ namespace pkcs11
 /// @return CKR_HOST_MEMORY -- no memory
 /// @return CKR_ARGUMENTS_BAD -- invalid argument
 ///
-CK_RV createMutex(CK_VOID_PTR_PTR mutex) noexcept;
+value_types::ReturnType createMutex(value_types::MutexPtrPtr mutex) noexcept;
 
 ///
 /// @brief Deinitialize mutex and free memory
@@ -23,7 +32,7 @@ CK_RV createMutex(CK_VOID_PTR_PTR mutex) noexcept;
 /// @return CKR_OK for success
 /// @return CKR_ARGUMENTS_BAD -- invalid argument
 ///
-CK_RV destroyMutex(CK_VOID_PTR mutex) noexcept;
+value_types::ReturnType destroyMutex(value_types::MutexPtr mutex) noexcept;
 
 ///
 /// @brief Lock mutex
@@ -31,7 +40,7 @@ CK_RV destroyMutex(CK_VOID_PTR mutex) noexcept;
 /// @return CKR_OK for success
 /// @return CKR_ARGUMENTS_BAD -- invalid argument
 ///
-CK_RV lockMutex(CK_VOID_PTR mutex) noexcept;
+value_types::ReturnType lockMutex(value_types::MutexPtr mutex) noexcept;
 
 ///
 /// @brief unlockMutex
@@ -39,9 +48,8 @@ CK_RV lockMutex(CK_VOID_PTR mutex) noexcept;
 /// @return CKR_OK for success
 /// @return CKR_ARGUMENTS_BAD -- invalid argument
 ///
-CK_RV unlockMutex(CK_VOID_PTR mutex) noexcept;
+value_types::ReturnType unlockMutex(value_types::MutexPtr mutex) noexcept;
 
-} // namespace pkcs11
-} // namespace flame_ide
+}} // namespace flame_ide::pkcs11
 
 #endif // FLAMEIDE_SRC_CRYPTO_PKCS11_INITIALIZEARGSCALLBACKS_HPP

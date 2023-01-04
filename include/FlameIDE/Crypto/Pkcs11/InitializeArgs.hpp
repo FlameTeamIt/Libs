@@ -1,11 +1,14 @@
 #ifndef FLAMEIDE_CRYPTO_PKCS11_INITIALIZEARGS_HPP
 #define FLAMEIDE_CRYPTO_PKCS11_INITIALIZEARGS_HPP
 
-#include <FlameIDE/Crypto/Pkcs11/Types.hpp>
+#include "FlameIDE/Crypto/Pkcs11/Types/Structs/InitializeArgs.hpp"
+#include <FlameIDE/Crypto/Pkcs11/Types/Enums.hpp>
+#include <FlameIDE/Crypto/Pkcs11/Types/Callbacks.hpp>
+#include <FlameIDE/Crypto/Pkcs11/Types/Structs.hpp>
 
 namespace flame_ide
-{
-namespace pkcs11
+{namespace pkcs11
+{namespace wrapper
 {
 
 /// @brief The INITIALIZEARGS class
@@ -52,6 +55,10 @@ public:
 	/// @brief setCallbacks
 	/// @param callbacks
 	void setCallbacks(const Callbacks &callbacks) noexcept;
+
+	/// @brief getOriginal
+	/// @return
+	structs::InitializeArgs getOriginal() const noexcept;
 
 public:
 	inline auto &getCreateMutex() noexcept
@@ -117,7 +124,6 @@ private:
 	using Parent::pReserved;
 };
 
-} // namespace pkcs11
-} // namespace flame_ide
+}}} // namespace flame_ide::pkcs11::wrapper
 
 #endif // FLAMEIDE_CRYPTO_PKCS11_INITIALIZEARGS_HPP

@@ -102,12 +102,12 @@ public:
 	BaseValue(Me &&) = default;
 
 	BaseValue(const ValueType &initValue) :
-			value(templates::makeShared<ValueType>(initValue))
+			value(templates::SharedPointer<ValueType>(initValue))
 	{}
 
 	BaseValue(ValueType &&initValue) :
 			value(
-					templates::makeShared<ValueType>(flame_ide::move(initValue))
+					templates::SharedPointer<ValueType>(flame_ide::move(initValue))
 			)
 	{}
 
@@ -120,7 +120,7 @@ public:
 	{
 		if (!value)
 		{
-			value = templates::makeShared<ValueType>(assigninigValue);
+			value = templates::SharedPointer<ValueType>(assigninigValue);
 		}
 		else
 		{
@@ -132,7 +132,7 @@ public:
 	{
 		if (!value)
 		{
-			value = templates::makeShared<ValueType>(flame_ide::move(assigninigValue));
+			value = templates::SharedPointer<ValueType>(flame_ide::move(assigninigValue));
 		}
 		else
 		{

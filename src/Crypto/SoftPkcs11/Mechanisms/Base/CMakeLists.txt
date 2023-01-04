@@ -7,7 +7,7 @@ get_sources(FILE_LIST)
 
 set(DEPENDENCY_HEADER_TARGETS
 	"${FLAME_NAMESPACE}::Crypto::Oasis::Headers"
-	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Headers"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Headers"
 )
 
 flame_compile_library(
