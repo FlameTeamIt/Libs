@@ -1,12 +1,12 @@
-#ifndef FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_VERIFIERBASE_HPP
-#define FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_VERIFIERBASE_HPP
+#ifndef FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_VERIFIER_HPP
+#define FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_VERIFIER_HPP
 
 namespace flame_ide
 {namespace soft_pkcs11
 {namespace mechanisms
 {
 
-class VerifierBase
+class Verifier
 {
 public:
 	using InitCallback = void (*)(void);
@@ -16,8 +16,8 @@ public:
 	using RecoverCallback = void (*)(void);
 
 public:
-	VerifierBase() noexcept;
-	~VerifierBase() noexcept;
+	Verifier() noexcept;
+	~Verifier() noexcept;
 
 	void init(void);
 	void update(void);
@@ -35,4 +35,4 @@ protected:
 
 }}} // namespace flame_ide::soft_pkcs11::mechanisms
 
-#endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_VERIFIERBASE_HPP
+#endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_VERIFIER_HPP

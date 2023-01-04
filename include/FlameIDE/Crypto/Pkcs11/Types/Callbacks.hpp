@@ -594,6 +594,105 @@ using VerifyMessageNext = ::CK_C_VerifyMessageNext;
 // CK_RV(*)(CK_SESSION_HANDLE hSession)
 using MessageVerifyFinal = ::CK_C_MessageVerifyFinal;
 
+namespace names
+{
+
+constexpr char Initialize[] = "C_Initialize";
+constexpr char Finalize[] = "C_Finalize";
+constexpr char GetInfo[] = "C_GetInfo";
+constexpr char GetFunctionList[] = "C_GetFunctionList";
+constexpr char GetSlotList[] = "C_GetSlotList";
+constexpr char GetSlotInfo[] = "C_GetSlotInfo";
+constexpr char GetMechanismList[] = "C_GetMechanismList";
+constexpr char GetMechanismInfo[] = "C_GetMechanismInfo";
+constexpr char InitPin[] = "C_InitPIN";
+constexpr char SetPin[] = "C_SetPIN";
+constexpr char OpenSession[] = "C_OpenSession";
+constexpr char CloseSession[] = "C_CloseSession";
+constexpr char CloseAllSessions[] = "C_CloseAllSessions";
+constexpr char GetSessionInfo[] = "C_GetSessionInfo";
+constexpr char GetOperationState[] = "C_GetOperationState";
+constexpr char SetOperationState[] = "C_SetOperationState";
+constexpr char Login[] = "C_Login";
+constexpr char Logout[] = "C_Logout";
+constexpr char CreateObject[] = "C_CreateObject";
+constexpr char CopyObject[] = "C_CopyObject";
+constexpr char DestroyObject[] = "C_DestroyObject";
+constexpr char GetObjectSize[] = "C_GetObjectSize";
+constexpr char GetAttributeValue[] = "C_GetAttributeValue";
+constexpr char SetAttributeValue[] = "C_SetAttributeValue";
+constexpr char FindObjectsInit[] = "C_FindObjectsInit";
+constexpr char FindObjects[] = "C_FindObjects";
+constexpr char FindObjectsFinal[] = "C_FindObjectsFinal";
+constexpr char EncryptInit[] = "C_EncryptInit";
+constexpr char Encrypt[] = "C_Encrypt";
+constexpr char EncryptUpdate[] = "C_EncryptUpdate";
+constexpr char EncryptFinal[] = "C_EncryptFinal";
+constexpr char DecryptInit[] = "C_DecryptInit";
+constexpr char Decrypt[] = "C_Decrypt";
+constexpr char DecryptUpdate[] = "C_DecryptUpdate";
+constexpr char DecryptFinal[] = "C_DecryptFinal";
+constexpr char DigestInit[] = "C_DigestInit";
+constexpr char Digest[] = "C_Digest";
+constexpr char DigestUpdate[] = "C_DigestUpdate";
+constexpr char DigestKey[] = "C_DigestKey";
+constexpr char DigestFinal[] = "C_DigestFinal";
+constexpr char SignInit[] = "C_SignInit";
+constexpr char Sign[] = "C_Sign";
+constexpr char SignUpdate[] = "C_SignUpdate";
+constexpr char SignFinal[] = "C_SignFinal";
+constexpr char SignRecoverInit[] = "C_SignRecoverInit";
+constexpr char SignRecover[] = "C_SignRecover";
+constexpr char VerifyInit[] = "C_VerifyInit";
+constexpr char Verify[] = "C_Verify";
+constexpr char VerifyUpdate[] = "C_VerifyUpdate";
+constexpr char VerifyFinal[] = "C_VerifyFinal";
+constexpr char VerifyRecoverInit[] = "C_VerifyRecoverInit";
+constexpr char VerifyRecover[] = "C_VerifyRecover";
+constexpr char DigestEncryptUpdate[] = "C_DigestEncryptUpdate";
+constexpr char DecryptDigestUpdate[] = "C_DecryptDigestUpdate";
+constexpr char SignEncryptUpdate[] = "C_SignEncryptUpdate";
+constexpr char DecryptVerifyUpdate[] = "C_DecryptVerifyUpdate";
+constexpr char GenerateKey[] = "C_GenerateKey";
+constexpr char GenerateKeyPair[] = "C_GenerateKeyPair";
+constexpr char WrapKey[] = "C_WrapKey";
+constexpr char UnwrapKey[] = "C_UnwrapKey";
+constexpr char DeriveKey[] = "C_DeriveKey";
+constexpr char SeedRandom[] = "C_SeedRandom";
+constexpr char GenerateRandom[] = "C_GenerateRandom";
+constexpr char GetFunctionStatus[] = "C_GetFunctionStatus";
+constexpr char CancelFunction[] = "C_CancelFunction";
+constexpr char WaitForSlotEvent[] = "C_WaitForSlotEvent";
+
+// v3.0
+
+constexpr char GetInterfaceList[] = "C_GetInterfaceList";
+constexpr char GetInterface[] = "C_GetInterface";
+constexpr char LoginUser[] = "C_LoginUser";
+constexpr char SessionCancel[] = "C_SessionCancel";
+constexpr char MessageEncryptInit[] = "C_MessageEncryptInit";
+constexpr char EncryptMessage[] = "C_EncryptMessage";
+constexpr char EncryptMessageBegin[] = "C_EncryptMessageBegin";
+constexpr char EncryptMessageNext[] = "C_EncryptMessageNext";
+constexpr char EncryptMessageFinal[] = "C_MessageEncryptFinal";
+constexpr char MessageDecryptInit[] = "C_MessageDecryptInit";
+constexpr char DecryptMessage[] = "C_DecryptMessage";
+constexpr char DecryptMessageBegin[] = "C_DecryptMessageBegin";
+constexpr char DecryptMessageNext[] = "C_DecryptMessageNext";
+constexpr char MessageDecryptFinal[] = "C_MessageDecryptFinal";
+constexpr char MessageSignInit[] = "C_MessageSignInit";
+constexpr char SignMessage[] = "C_SignMessage";
+constexpr char SignMessageBegin[] = "C_SignMessageBegin";
+constexpr char SignMessageNext[] = "C_SignMessageNext";
+constexpr char MessageSignFinal[] = "C_MessageSignFinal";
+constexpr char MessageVerifyInit[] = "C_MessageVerifyInit";
+constexpr char VerifyMessage[] = "C_VerifyMessage";
+constexpr char VerifyMessageBegin[] = "C_VerifyMessageBegin";
+constexpr char VerifyMessageNext[] = "C_VerifyMessageNext";
+constexpr char MessageVerifyFinal[] = "C_MessageVerifyFinal";
+
+} // namespace names
+
 } // namespace callbacks
 } // namespace pkcs11
 } // namespace flame_ide

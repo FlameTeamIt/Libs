@@ -20,22 +20,20 @@ pkcs11::value_types::ReturnType initialize(pkcs11::value_types::ValuePtr argumen
 		return pkcs11::enums::value(pkcs11::enums::ReturnType::ARGUMENTS_BAD);
 	}
 
-	pkcs11::InitializeArgs initializeArgs {
-		*static_cast<pkcs11::structs::InitializeArgsPtr>(arguments)
-	};
-	auto &context = GlobalContext::get();
-	if (pkcs11::enums::value(
-			pkcs11::enums::InitializeArgsFlags::OS_LOCKING_OK & initializeArgs.getFlags()
-	))
-	{
-		context.externalCallbacks.create = initializeArgs.getCreateMutex();
-		context.externalCallbacks.destroy = initializeArgs.getDestroyMutex();
-		context.externalCallbacks.lock = initializeArgs.getLockMutex();
-		context.externalCallbacks.unlock = initializeArgs.getUnlockMutex();
-	}
-	context.initFlags = initializeArgs.getFlags();
+	pkcs11::structs::InitializeArgs& initializeArgs
+			= *static_cast<pkcs11::structs::InitializeArgs*>(arguments);
 
-	// TODO
+	GlobalContext &context = GlobalContext::get();
+	if (pkcs11::enums::value(pkcs11::enums::InitializeArgsFlags::OS_LOCKING_OK)
+			& initializeArgs.flags)
+	{
+//		context.setExternalCallbacks(
+//				initializeArgs.CreateMutex
+//				, initializeArgs.DestroyMutex
+//				, initializeArgs.LockMutex
+//				, initializeArgs.UnlockMutex
+//		);
+	}
 
 	return pkcs11::enums::value(context.getStatus());
 }
@@ -43,7 +41,6 @@ pkcs11::value_types::ReturnType initialize(pkcs11::value_types::ValuePtr argumen
 pkcs11::value_types::ReturnType finalize(pkcs11::value_types::ValuePtr /* reserved */)
 {
 	// TODO
-
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 

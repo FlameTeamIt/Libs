@@ -6,8 +6,7 @@
 #include <FlameIDE/Templates/Allocator/ObjectAllocator.hpp>
 
 namespace flame_ide
-{
-namespace pkcs11
+{namespace pkcs11
 {
 
 namespace // anonymous
@@ -66,7 +65,7 @@ inline MutexPtr getMutex(CK_VOID_PTR mutex) noexcept
 
 } // namespace anonymous
 
-CK_RV createMutex(CK_VOID_PTR_PTR mutex) noexcept
+value_types::ReturnType createMutex(value_types::MutexPtrPtr mutex) noexcept
 {
 	if (mutex)
 	{
@@ -79,7 +78,7 @@ CK_RV createMutex(CK_VOID_PTR_PTR mutex) noexcept
 	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
-CK_RV destroyMutex(CK_VOID_PTR mutex) noexcept
+value_types::ReturnType destroyMutex(value_types::MutexPtr mutex) noexcept
 {
 	if (mutex)
 	{
@@ -90,7 +89,7 @@ CK_RV destroyMutex(CK_VOID_PTR mutex) noexcept
 	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
-CK_RV lockMutex(CK_VOID_PTR mutex) noexcept
+value_types::ReturnType lockMutex(value_types::MutexPtr mutex) noexcept
 {
 	if (mutex)
 	{
@@ -101,7 +100,7 @@ CK_RV lockMutex(CK_VOID_PTR mutex) noexcept
 	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
-CK_RV unlockMutex(CK_VOID_PTR mutex) noexcept
+value_types::ReturnType unlockMutex(value_types::MutexPtr mutex) noexcept
 {
 	if (mutex)
 	{
@@ -112,5 +111,4 @@ CK_RV unlockMutex(CK_VOID_PTR mutex) noexcept
 	return pkcs11::enums::value(ReturnType::ARGUMENTS_BAD);
 }
 
-} // namespace pkcs11
-} // namespace flame_ide
+}} // namespace flame_ide::pkcs11

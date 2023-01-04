@@ -1,12 +1,12 @@
-#ifndef FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_DIGISTERBASE_HPP
-#define FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_DIGISTERBASE_HPP
+#ifndef FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_DIGISTER_HPP
+#define FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_DIGISTER_HPP
 
 namespace flame_ide
 {namespace soft_pkcs11
 {namespace mechanisms
 {
 
-class DigisterBase
+class Digister
 {
 public:
 	using InitCallback = void (*)(void);
@@ -16,8 +16,8 @@ public:
 	using KeyCallback = void (*)(void);
 
 public:
-	DigisterBase() noexcept;
-	~DigisterBase() noexcept;
+	Digister() noexcept;
+	~Digister() noexcept;
 
 	void init();
 	void update();
@@ -33,4 +33,4 @@ protected:
 
 }}} // namespace flame_ide::soft_pkcs11::mechanisms
 
-#endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_DIGISTERBASE_HPP
+#endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_MECHANISMS_DIGISTER_HPP

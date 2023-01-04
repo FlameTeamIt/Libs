@@ -1,6 +1,7 @@
 #ifndef FLAMEIDE_COMMON_REFERENCE_WRAPPER_HPP
 #define FLAMEIDE_COMMON_REFERENCE_WRAPPER_HPP
 
+#include "FlameIDE/Common/Traits/Numbers.hpp"
 #include <FlameIDE/Common/Traits/ContainerTraits.hpp>
 
 namespace flame_ide
@@ -38,6 +39,12 @@ public:
 	/// @brief operator bool
 	///
 	operator bool() const noexcept;
+
+	///
+	/// @brief operator->()
+	/// @return
+	///
+	Pointer operator->() const noexcept;
 
 private:
 	mutable Pointer value; ///<
@@ -95,6 +102,13 @@ template<typename T, typename Traits>
 ReferenceWrapper<T, Traits>::operator bool() const noexcept
 {
 	return value != nullptr;
+}
+
+template<typename T, typename Traits>
+typename ReferenceWrapper<T, Traits>::Pointer
+ReferenceWrapper<T, Traits>::operator->() const noexcept
+{
+	return value;
 }
 
 // functions

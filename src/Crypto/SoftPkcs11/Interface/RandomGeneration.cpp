@@ -9,7 +9,8 @@ CK_RV C_SeedRandom(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.randomGenerationCallbacks
+			.callbacks()
+			.randomGeneration
 			.seedRandom(hSession, pSeed, ulSeedLen);
 }
 
@@ -20,6 +21,7 @@ CK_RV C_GenerateRandom(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.randomGenerationCallbacks
+			.callbacks()
+			.randomGeneration
 			.generateRandom(hSession, RandomData, ulRandomLen);
 }

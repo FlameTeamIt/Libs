@@ -9,7 +9,8 @@ CK_RV C_GetSlotList(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.managementCallbacks
+			.callbacks()
+			.management
 			.getSlotList(tokenPresent, pSlotList, pulCount);
 }
 
@@ -19,7 +20,8 @@ CK_RV C_GetSlotInfo(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.managementCallbacks
+			.callbacks()
+			.management
 			.getSlotInfo(slotId, pInfo);
 }
 
@@ -29,7 +31,8 @@ CK_RV C_GetTokenInfo(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.managementCallbacks
+			.callbacks()
+			.management
 			.getTokenInfo(slotId, pInfo);
 }
 
@@ -40,7 +43,8 @@ CK_RV C_GetMechanismList(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.managementCallbacks
+			.callbacks()
+			.management
 			.getMechanismList(slotId, pMechanismList, pulCount);
 }
 
@@ -51,7 +55,8 @@ CK_RV C_GetMechanismInfo(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.managementCallbacks
+			.callbacks()
+			.management
 			.getMechanismInfo(slotId, type, pInfo);
 }
 
@@ -63,7 +68,8 @@ CK_RV C_InitToken(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.managementCallbacks
+			.callbacks()
+			.management
 			.initToken(slotId, pPin, ulPinLen, pLabel);
 }
 
@@ -74,7 +80,8 @@ CK_RV C_InitPIN(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.managementCallbacks
+			.callbacks()
+			.management
 			.initPin(hSession, pPin, ulPinLen);
 }
 
@@ -87,6 +94,7 @@ CK_RV C_SetPIN(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.managementCallbacks
+			.callbacks()
+			.management
 			.setPin(hSession, pOldPin, ulOldLen, pNewPin, ulNewLen);
 }

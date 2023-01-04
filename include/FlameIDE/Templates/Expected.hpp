@@ -17,6 +17,8 @@ public:
 	static_assert (!ComparingTypes<Result, Error>::VALUE, "Types can be different");
 
 	using Me = Expected<Result, Error>;
+	using ResultType = Result;
+	using ErrorType = Error;
 
 	Expected() noexcept = default;
 	Expected(const Expected<Result, Error> &expected) noexcept = default;

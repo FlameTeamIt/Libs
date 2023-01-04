@@ -3,17 +3,20 @@
 
 #include <FlameIDE/Templates/Allocator.hpp>
 
+#include <FlameIDE/Templates/Variant.hpp>
+
 #define SHARED_TEMPLATE_DEFINE \
 	template< \
-		typename T, typename Traits, typename Allocator, \
-		typename Counter, typename CounterAllocator \
+		typename T, typename Traits \
+		, template<typename> class Allocator \
+		, typename Counter \
 	>
 
 #define UNIQUE_TEMPLATE_DEFINE \
 	template<typename T, typename Traits, typename Allocator>
 
 #define SHARED_TYPE \
-	SharedPointer<T, Traits, Allocator, Counter, CounterAllocator>
+	SharedPointer<T, Traits, Allocator, Counter>
 
 #define UNIQUE_TYPE \
 	UniquePointer<T, Traits, Allocator>
@@ -30,64 +33,76 @@ namespace pointer_utils
 template<typename CounterType>
 struct Counter;
 
-}
+template<
+	typename T
+	, typename ObjectCounter = Counter<SizeTraits::SizeType>
+>
+struct Members;
 
-template<typename T
+} // namespace pointer_utils
+
+template<
+	typename T
 	, typename Traits = ContainerTraits<T>
-	, typename Allocator = allocator::ObjectAllocator<T>
+	, template<typename> class Allocator = allocator::DefaultObjectAllocator
 	, typename Counter = pointer_utils::Counter<SizeTraits::SizeType>
-	, typename CounterAllocator = allocator::ObjectAllocator<Counter>
 >
 class SharedPointer;
 
-template<typename T
+template<
+	typename T
 	, typename Traits = ContainerTraits<T>
 >
 class WeakPointer;
 
-template<typename T
-	, typename Traits = ContainerTraits<T>
-	, typename Allocator = allocator::ObjectAllocator<T>
-	, typename Counter = pointer_utils::Counter<SizeTraits::SizeType>
-	, typename CounterAllocator = allocator::ObjectAllocator<Counter>
-	, typename ...Args>
-SHARED_TYPE makeShared(Args &&...args);
+//template<
+//	typename T
+//	, typename Traits = ContainerTraits<T>
+//	, template<typename> class Allocator = allocator::DefaultObjectAllocator
+//	, typename Counter = pointer_utils::Counter<SizeTraits::SizeType>
+//	, typename CounterAllocator = allocator::ObjectAllocator<Counter>
+//	, typename ...Args
+//>
+//SHARED_TYPE makeShared(Args &&...args);
 
-template<typename T
+template<
+	typename T
 	, typename Traits = ContainerTraits<T>
 	, typename Allocator = allocator::ObjectAllocator<T, Traits>
 >
 class UniquePointer;
 
-template<typename T
-	, typename Traits = ContainerTraits<T>
-	, typename Allocator = allocator::ObjectAllocator<T, Traits>
-	, typename ...Args>
-UNIQUE_TYPE makeUnique(Args &&...args);
+//template<
+//	typename T
+//	, typename Traits = ContainerTraits<T>
+//	, typename Allocator = allocator::ObjectAllocator<T, Traits>
+//	, typename ...Args
+//>
+//UNIQUE_TYPE makeUnique(Args &&...args);
 
 // FIXME: Не совсем понятно, как привидить типы при разных аллокаторах
-template<
-	typename T, typename U
-	, typename Traits = ContainerTraits<T>
-	, typename Allocator = allocator::ObjectAllocator<T>
-	, typename Counter = pointer_utils::Counter<SizeTraits::SizeType>
-	, typename CounterAllocator = allocator::ObjectAllocator<Counter>
-	, typename TraitsU = ContainerTraits<T>
-	, typename AllocatorU = allocator::ObjectAllocator<T>
-	, typename CounterU = pointer_utils::Counter<SizeTraits::SizeType>
-	, typename CounterAllocatorU = allocator::ObjectAllocator<Counter>
-> inline
-SHARED_TYPE staticPointerCast(
-		SharedPointer<U, TraitsU, AllocatorU, Counter, CounterU> &pointer
-) noexcept;
-template<
-	typename T, typename U
-	, typename Traits = ContainerTraits<T>
-	, typename Allocator = allocator::ObjectAllocator<T>
-	, typename TraitsU = allocator::ObjectAllocator<U>
-	, typename AllocatorU = allocator::ObjectAllocator<U>
-> inline
-UNIQUE_TYPE staticPointerCast(UniquePointer<U, TraitsU, AllocatorU>  &pointer) noexcept;
+//template<
+//	typename T, typename U
+//	, typename Traits = ContainerTraits<T>
+//	, typename Allocator = allocator::ObjectAllocator<T>
+//	, typename Counter = pointer_utils::Counter<SizeTraits::SizeType>
+//	, typename CounterAllocator = allocator::ObjectAllocator<Counter>
+//	, typename TraitsU = ContainerTraits<T>
+//	, typename AllocatorU = allocator::ObjectAllocator<T>
+//	, typename CounterU = pointer_utils::Counter<SizeTraits::SizeType>
+//	, typename CounterAllocatorU = allocator::ObjectAllocator<Counter>
+//> inline
+//SHARED_TYPE staticPointerCast(
+//		SharedPointer<U, TraitsU, AllocatorU, Counter, CounterU> &pointer
+//) noexcept;
+//template<
+//	typename T, typename U
+//	, typename Traits = ContainerTraits<T>
+//	, typename Allocator = allocator::ObjectAllocator<T>
+//	, typename TraitsU = allocator::ObjectAllocator<U>
+//	, typename AllocatorU = allocator::ObjectAllocator<U>
+//> inline
+//UNIQUE_TYPE staticPointerCast(UniquePointer<U, TraitsU, AllocatorU> &pointer) noexcept;
 
 //template<
 //	typename T, typename U
@@ -116,45 +131,48 @@ namespace pointer_utils
 {
 
 template<typename CounterType>
-struct Counter
+struct Counter: public flame_ide::NonAssignable
 {
-	Counter();
-	Counter(const Counter<CounterType> &) = delete;
-	Counter(Counter<CounterType> &&) = delete;
+	Counter() noexcept;
 	~Counter() = default;
 
-	Counter<CounterType> &operator++()
-	{
-		++counter;
-		return *this;
-	}
-	Counter<CounterType> &operator--()
-	{
-		--counter;
-		return *this;
-	}
+	Counter<CounterType> &operator++();
+	Counter<CounterType> &operator--();
 
-	CounterType get() const noexcept
-	{
-		return counter;
-	}
+	CounterType get() const noexcept;
 
-	operator bool()
-	{
-		return counter;
-	}
+	operator bool() const noexcept;
 
-	static constexpr CounterType NULL_VALUE = CounterType();
-
+public:
+	static constexpr CounterType NULL_VALUE = CounterType{};
 	CounterType counter;
+};
+
+template<typename T, typename ObjectCounter>
+struct Members: public flame_ide::NonAssignable
+{
+public:
+	Members() noexcept = default;
+
+	template<typename ...Args>
+	Members(Args &&...args) :
+			counter{}
+			, object(flame_ide::forward<decltype(args)>(args)...)
+	{}
+
+	~Members() noexcept = default;
+
+public:
+	ObjectCounter counter;
+	T object;
 };
 
 }
 
 template<
-	typename T
-	, typename Traits, typename Allocator
-	, typename Counter, typename CounterAllocator
+	typename T, typename Traits
+	, template<typename> class Allocator
+	, typename Counter
 >
 class SharedPointer
 {
@@ -170,13 +188,18 @@ public:
 	using Me = SHARED_TYPE;
 
 	SharedPointer() noexcept = default;
-	SharedPointer(const Me &) noexcept;
-	SharedPointer(Me &&) noexcept;
-	SharedPointer(ConstReference obj) noexcept;
-	SharedPointer(MoveReference obj) noexcept;
-	~SharedPointer();
-	Me &operator=(const Me &) noexcept;
-	Me &operator=(Me &&) noexcept;
+	SharedPointer(const Me &point) noexcept;
+	SharedPointer(Me &&point) noexcept;
+//	SharedPointer(ConstReference obj) noexcept;
+//	SharedPointer(MoveReference obj) noexcept;
+
+	template<typename ...Args>
+	SharedPointer(Args &&...args) noexcept;
+
+	~SharedPointer() noexcept;
+
+	Me &operator=(const Me &pointer) noexcept;
+	Me &operator=(Me &&pointer) noexcept;
 
 	Reference operator*() noexcept;
 	ConstReference operator*() const noexcept;
@@ -186,7 +209,7 @@ public:
 
 	operator bool() const noexcept;
 
-	void clean();
+	void clean() noexcept;
 
 	Pointer pointer() noexcept;
 
@@ -197,12 +220,8 @@ public:
 	ConstReference reference() const noexcept;
 
 private:
-	using PointerCounter = typename ContainerTraits<Counter>::Pointer;
-
-	mutable Allocator allocator;
-	mutable CounterAllocator counterAllocator;
-	mutable Pointer object;
-	mutable PointerCounter objectCounter;
+	mutable Allocator<pointer_utils::Members<T, Counter>> allocator;
+	mutable pointer_utils::Members<T, Counter> *members;
 };
 
 /// @brief The UniquePointer class
@@ -227,7 +246,9 @@ public:
 	UniquePointer(Me &&) noexcept;
 	UniquePointer(ConstReference object) noexcept;
 	UniquePointer(MoveReference object) noexcept;
-	~UniquePointer();
+
+	~UniquePointer() noexcept;
+
 	Me &operator=(const Me &) = delete;
 	Me &operator=(Me &&) noexcept;
 
@@ -239,7 +260,7 @@ public:
 
 	operator bool() const noexcept;
 
-	void clean();
+	void clean() noexcept;
 
 	Pointer pointer() noexcept;
 
@@ -266,56 +287,76 @@ namespace pointer_utils
 {
 
 template<typename CounterType>
-Counter<CounterType>::Counter() : counter(Counter<CounterType>::NULL_VALUE)
+Counter<CounterType>::Counter() noexcept : counter(Counter<CounterType>::NULL_VALUE)
 {}
 
+template<typename CounterType>
+Counter<CounterType> &Counter<CounterType>::operator++()
+{
+	++counter;
+	return *this;
 }
+
+template<typename CounterType>
+Counter<CounterType> &Counter<CounterType>::operator--()
+{
+	--counter;
+	return *this;
+}
+
+template<typename CounterType>
+CounterType Counter<CounterType>::get() const noexcept
+{
+	return counter;
+}
+
+template<typename CounterType>
+Counter<CounterType>::operator bool() const noexcept
+{
+	return NULL_VALUE != counter;
+}
+
+} // namespace pointer_utils
 
 // SharedPointer
 
 SHARED_TEMPLATE_DEFINE
 SHARED_TYPE::SharedPointer(const SHARED_TYPE &pointer) noexcept
 		: allocator(pointer.allocator)
-		, counterAllocator(pointer.counterAllocator)
-		, object(pointer.object)
-		, objectCounter(pointer.objectCounter)
+		, members(pointer.members)
 {
-	++(*objectCounter);
+	++(members->counter);
 }
 
 SHARED_TEMPLATE_DEFINE
 SHARED_TYPE::SharedPointer(SHARED_TYPE &&pointer) noexcept
 		: allocator(pointer.allocator)
-		, counterAllocator(pointer.counterAllocator)
-		, object(pointer.object)
-		, objectCounter(pointer.objectCounter)
+		, members(pointer.members)
 {
-	pointer.object = nullptr;
-	pointer.objectCounter = nullptr;
+	pointer.members = nullptr;
 }
 
+//SHARED_TEMPLATE_DEFINE
+//SHARED_TYPE::SharedPointer(typename SHARED_TYPE::ConstReference obj) noexcept
+//		: allocator()
+//		, members{allocator.construct(obj)}
+//{}
+
+//SHARED_TEMPLATE_DEFINE
+//SHARED_TYPE::SharedPointer(typename SHARED_TYPE::MoveReference obj) noexcept
+//		: allocator()
+//		, members{allocator.construct(flame_ide::move(obj))}
+//{}
+
 SHARED_TEMPLATE_DEFINE
-SHARED_TYPE::SharedPointer(typename SHARED_TYPE::ConstReference obj) noexcept
+template<typename ...Args>
+SHARED_TYPE::SharedPointer(Args &&...args) noexcept
 		: allocator()
-		, counterAllocator()
-		, object(allocator.construct(obj))
-		, objectCounter(counterAllocator.construct())
-{
-	++(*objectCounter);
-}
+		, members{allocator.construct(flame_ide::forward<Args>(args)...)}
+{}
 
 SHARED_TEMPLATE_DEFINE
-SHARED_TYPE::SharedPointer(typename SHARED_TYPE::MoveReference obj) noexcept
-		: allocator()
-		, counterAllocator()
-		, object(allocator.construct(obj))
-		, objectCounter(counterAllocator.construct())
-{
-	++(*objectCounter);
-}
-
-SHARED_TEMPLATE_DEFINE
-SHARED_TYPE::~SharedPointer()
+SHARED_TYPE::~SharedPointer() noexcept
 {
 	clean();
 }
@@ -326,11 +367,9 @@ SHARED_TYPE &SHARED_TYPE::operator=(const SHARED_TYPE &pointer) noexcept
 	clean();
 
 	allocator = pointer.allocator;
-	counterAllocator = pointer.counterAllocator;
-	object = pointer.object;
-	objectCounter = pointer.objectCounter;
+	members = pointer.members;
 
-	++(*objectCounter);
+	++(members->counter);
 
 	return *this;
 }
@@ -340,13 +379,10 @@ SHARED_TYPE &SHARED_TYPE::operator=(SHARED_TYPE &&pointer) noexcept
 {
 	clean();
 
-	allocator = pointer.allocator;
-	counterAllocator = pointer.counterAllocator;
-	object = pointer.object;
-	objectCounter = pointer.objectCounter;
+	allocator = flame_ide::move(pointer.allocator);
+	members = pointer.members;
 
-	pointer.object = nullptr;
-	pointer.objectCounter = nullptr;
+	pointer.members = nullptr;
 
 	return *this;
 }
@@ -354,25 +390,25 @@ SHARED_TYPE &SHARED_TYPE::operator=(SHARED_TYPE &&pointer) noexcept
 SHARED_TEMPLATE_DEFINE
 typename SHARED_TYPE::Reference SHARED_TYPE::operator*() noexcept
 {
-	return *object;
+	return members->object;
 }
 
 SHARED_TEMPLATE_DEFINE
 typename SHARED_TYPE::ConstReference SHARED_TYPE::operator*() const noexcept
 {
-	return *object;
+	return members->object;
 }
 
 SHARED_TEMPLATE_DEFINE
 typename SHARED_TYPE::Pointer SHARED_TYPE::operator->() noexcept
 {
-	return object;
+	return &members->object;
 }
 
 SHARED_TEMPLATE_DEFINE
 typename SHARED_TYPE::PointerToConst SHARED_TYPE::operator->() const noexcept
 {
-	return object;
+	return &members->object;
 }
 
 SHARED_TEMPLATE_DEFINE
@@ -382,15 +418,12 @@ SHARED_TYPE::operator bool() const noexcept
 }
 
 SHARED_TEMPLATE_DEFINE
-void SHARED_TYPE::clean()
+void SHARED_TYPE::clean() noexcept
 {
-	if (object && objectCounter && !--(*objectCounter) )
+	if (members && !--(members->counter) )
 	{
-		allocator.destroy(object);
-		counterAllocator.destroy(objectCounter);
-
-		object = nullptr;
-		objectCounter = nullptr;
+		allocator.destroy(members);
+		members = nullptr;
 	}
 }
 
@@ -454,7 +487,7 @@ UNIQUE_TYPE &UNIQUE_TYPE::operator=(UNIQUE_TYPE &&pointer) noexcept
 }
 
 UNIQUE_TEMPLATE_DEFINE
-UNIQUE_TYPE::~UniquePointer()
+UNIQUE_TYPE::~UniquePointer() noexcept
 {
 	clean();
 }
@@ -490,7 +523,7 @@ UNIQUE_TYPE::operator bool() const noexcept
 }
 
 UNIQUE_TEMPLATE_DEFINE
-void UNIQUE_TYPE::clean()
+void UNIQUE_TYPE::clean() noexcept
 {
 	if (object)
 	{
@@ -523,7 +556,7 @@ typename UNIQUE_TYPE::ConstReference UNIQUE_TYPE::reference() const noexcept
 	return operator*();
 }
 
-}}
+}} // namespace flame_ide::templates
 
 #undef SHARED_TEMPLATE_DEFINE
 #undef UNIQUE_TEMPLATE_DEFINE

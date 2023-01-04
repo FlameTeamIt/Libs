@@ -11,60 +11,61 @@ namespace flame_ide
 {namespace soft_pkcs11
 {
 
-class Pkcs11Interface: public pkcs11::structs::Interface
+class GlobalContext
 {
-public:
-	Pkcs11Interface(pkcs11::structs::FunctionList3 &functionList);
-
 private:
-	pkcs11::value_types::Utf8Char name[sizeof("PKCS 11")];
-};
+	GlobalContext() noexcept;
 
-struct GlobalContext
-{
-public:
 	~GlobalContext() noexcept;
 
-	Mutex createMutex() noexcept;
+public: // General purpose
+	pkcs11::enums::ReturnType initialize(
+			const pkcs11::structs::InitializeArgs &args
+	) noexcept;
+
+	pkcs11::enums::ReturnType finalize() noexcept;
+
+	pkcs11::structs::Info getInfo() noexcept;
 
 	pkcs11::structs::FunctionListPtr getFunctionList() noexcept;
 
+	void getInterfaceList();
+
 	pkcs11::structs::InterfacePtr getInterface() noexcept;
 
+public:
 	pkcs11::enums::ReturnType getStatus() const noexcept;
+
+	const CallbackAggregator &callbacks() const;
+
+	Mutex createMutex() noexcept;
 
 public:
 	static GlobalContext &get() noexcept;
 
-public:
-	ExternalCallbacks externalCallbacks;
-	GeneralPurposeCallbacks generalPurposeCallbacks;
-	ManagementCallbacks managementCallbacks;
-	SessionCallbacks sessionCallbacks;
-	ObjectCallbacks objectCallbacks;
-	EncryptCallbacks encryptCallbacks;
-	DecryptCallbacks decryptCallbacks;
-	DigestCallbacks digestCallbacks;
-	SignCallbacks signCallbacks;
-	VerifyCallbacks verifyCallbacks;
-	DualOperationCallbacks dualOperationCallbacks;
-	KeyCallbacks keyCallbacks;
-	ParallelManagementCallbacks parallelManagementCallbacks;
-	RandomGenerationCallbacks randomGenerationCallbacks;
+private:
+	class Pkcs11Interface: public pkcs11::structs::Interface
+	{
+	public:
+		Pkcs11Interface(pkcs11::structs::FunctionList3 &functionList);
 
-	// v3.0
-	MessageEncriptionFunctions messageEncriptionFunctions;
-	MessageDecriptionFunctions messageDecriptionFunctions;
-	MessageSignFunctions messageSignFunctions;
-	MessageVerifyFunctions messageVerifyFunctions;
-
-	pkcs11::enums::InitializeArgsFlags initFlags
-			= pkcs11::enums::InitializeArgsFlags::LIBRARY_CANT_CREATE_OS_THREADS;
+	private:
+		pkcs11::value_types::Utf8Char name[sizeof("PKCS 11")];
+	};
 
 private:
-	GlobalContext() noexcept;
+	void setExternalCallbacks(
+			pkcs11::callbacks::CreateMutex create
+			, pkcs11::callbacks::DestroyMutex destroy
+			, pkcs11::callbacks::LockMutex lock
+			, pkcs11::callbacks::UnlockMutex unlock
+	);
 
 private:
+	CallbackAggregator callbackAggregator;
+
+	pkcs11::enums::InitializeArgsFlags initFlags;
+
 	pkcs11::structs::FunctionList functionList = createFunctionList();
 	pkcs11::structs::FunctionList3 functionList3 = createFunctionList3();
 	Pkcs11Interface interface;

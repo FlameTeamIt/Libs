@@ -9,7 +9,8 @@ CK_RV C_EncryptInit(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.encryptCallbacks
+			.callbacks()
+			.encrypt
 			.init(hSession, pMechanism, hKey);
 }
 
@@ -22,7 +23,8 @@ CK_RV C_Encrypt(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.encryptCallbacks
+			.callbacks()
+			.encrypt
 			.full(hSession, pData, ulDataLen, pEncryptedData, pulEncryptedDataLen);
 }
 
@@ -35,7 +37,8 @@ CK_RV C_EncryptUpdate(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.encryptCallbacks
+			.callbacks()
+			.encrypt
 			.update(hSession, pPart, ulPartLen, pEncryptedPart, pulEncryptedPartLen);
 }
 
@@ -47,7 +50,8 @@ CK_RV C_EncryptFinal(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.encryptCallbacks
+			.callbacks()
+			.encrypt
 			.final(hSession, pLastEncryptedPart, pulLastEncryptedPartLen);
 }
 

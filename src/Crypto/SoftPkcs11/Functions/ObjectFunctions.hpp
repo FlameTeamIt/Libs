@@ -50,7 +50,7 @@ pkcs11::value_types::ReturnType copy(
 ///
 pkcs11::value_types::ReturnType destroy(
 		pkcs11::value_types::SessionHandle session
-		, CK_OBJECT_HANDLE object
+		, pkcs11::value_types::ObjectHandle object
 );
 
 ///

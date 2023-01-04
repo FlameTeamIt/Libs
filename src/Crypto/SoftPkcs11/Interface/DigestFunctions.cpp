@@ -8,7 +8,8 @@ CK_RV C_DigestInit(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.digestCallbacks
+			.callbacks()
+			.digest
 			.init(hSession, pMechanism);
 }
 
@@ -21,7 +22,8 @@ CK_RV C_Digest(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.digestCallbacks
+			.callbacks()
+			.digest
 			.full(hSession, pData, ulDataLen, pDigest, pulDigestLen);
 }
 
@@ -32,7 +34,8 @@ CK_RV C_DigestUpdate(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.digestCallbacks
+			.callbacks()
+			.digest
 			.update(hSession, pPart, ulPartLen);
 }
 
@@ -42,7 +45,8 @@ CK_RV C_DigestKey(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.digestCallbacks
+			.callbacks()
+			.digest
 			.key(hSession, hKey);
 }
 
@@ -53,6 +57,7 @@ CK_RV C_DigestFinal(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.digestCallbacks
+			.callbacks()
+			.digest
 			.final(hSession, pDigest, pulDigestLen);
 }
