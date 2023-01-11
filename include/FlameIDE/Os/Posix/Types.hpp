@@ -56,10 +56,21 @@ private:
 
 using OsStatus = int;
 
+struct OsSocketReceive;
 struct OsSocket
 {
-	::sockaddr_un sockaddr;
-	OsFileDescriptor fd;
+	::sockaddr_un address;
+	OsFileDescriptor descriptor;
+
+	OsSocket &operator=(const OsSocketReceive &socketReceive) noexcept;
+};
+
+struct OsSocketReceive
+{
+	::sockaddr_un address;
+	const OsFileDescriptor *descriptor;
+
+	OsSocketReceive &operator=(const OsSocket &socket) noexcept;
 };
 
 struct OsThreadContext

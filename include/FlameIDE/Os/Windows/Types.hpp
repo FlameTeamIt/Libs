@@ -108,10 +108,20 @@ union OsFileDescriptor
 
 using OsStatus = DWORD;
 
+struct OsSocketReceive;
 struct OsSocket
 {
-	::SOCKADDR_IN sockaddr;
-	::SOCKET sock;
+	::SOCKADDR_IN address = {};
+	::SOCKET descriptor = INVALID_SOCKET;
+
+	OsSocket &operator=(const OsSocketReceive &socketReceive) noexcept;
+};
+struct OsSocketReceive
+{
+	::SOCKADDR_IN address = {};
+	const ::SOCKET* descriptor = nullptr;
+
+	OsSocketReceive &operator=(const OsSocket &socket) noexcept;
 };
 
 using OsThreadContext = OsFileDescriptor;
