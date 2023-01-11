@@ -18,6 +18,9 @@ public:
 
 private:
 	virtual int vStart();
+
+private:
+	int length() noexcept;
 };
 
 }}}
