@@ -36,7 +36,7 @@ using UnderlyingType = typename UnderlyingTypeTrait<EnumType>::Type;
 		}; \
 	} \
 	\
-	EnumType to ## EnumType(RealType value) \
+	inline EnumType to ## EnumType(RealType value) \
 	{ \
 		return static_cast<EnumType>(value);\
 	} \
