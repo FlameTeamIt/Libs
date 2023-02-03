@@ -3,6 +3,8 @@
 #include <FlameIDE/Common/Traits/CreationProhibitions.hpp>
 #include <FlameIDE/Common/Traits/Numbers.hpp>
 
+#include <FlameIDE/Os/Constants.hpp>
+
 class WinSockLibrary: public flame_ide::NonAssignable
 {
 public:
@@ -33,20 +35,58 @@ namespace flame_ide
 {namespace os
 {namespace socket
 {
+namespace // anonymous
+{
 
-Socket udpCreateServerSocket(Ipv4::Port port) noexcept
+::SOCKET udpСreateSocket() noexcept
+{
+	return ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+}
+
+::SOCKET tcpCreateSocket() noexcept
+{
+	return ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+}
+
+::SOCKADDR_IN ipAddressServer(Ipv4::Port port) noexcept
+{
+	::SOCKADDR_IN sockaddr = SOCKET_INITIALIZER.address;
+	sockaddr.sin_family = AF_INET;
+	sockaddr.sin_port = ::htons(static_cast<Types::ushort_t>(port));
+	sockaddr.sin_addr.S_un.S_addr = INADDR_ANY;
+	return sockaddr;
+}
+
+::SOCKADDR_IN ipAddressClient(Ipv4::Address serverAddress) noexcept
+{
+	::SOCKADDR_IN sockaddr = SOCKET_INITIALIZER.address;
+	sockaddr.sin_family = AF_INET;
+	sockaddr.sin_port = ::htons(static_cast<Types::ushort_t>(serverAddress.port));
+	sockaddr.sin_addr.S_un.S_addr = ::inet_addr(serverAddress.ip);
+	return sockaddr;
+}
+
+} // namespace anonymous
+}}} // namespace flame_ide::os::socket
+
+namespace flame_ide
+{namespace os
+{namespace socket
+{
+
+// UDP
+
+Socket createUdpServer(Ipv4::Port port) noexcept
 {
 	Socket socket;
 
 	if (!winsockInit())
 		return socket;
 
-	socket.descriptor = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-	socket.address.sin_family = AF_INET;
-	socket.address.sin_port = ::htons(static_cast<Types::ushort_t>(port));
-	socket.address.sin_addr.S_un.S_addr = INADDR_ANY;
+	socket = Socket{ ipAddressServer(port), udpСreateSocket() };
 
-	const auto result = ::bind(socket.descriptor, (::SOCKADDR *)(&socket.address), sizeof(socket.address));
+	auto address = reinterpret_cast<const SOCKADDR *>(&socket.address);
+	const auto result = ::bind(socket.descriptor, address, sizeof(socket.address));
 	if (result == SOCKET_ERROR)
 	{
 		socket = Socket{};
@@ -54,60 +94,52 @@ Socket udpCreateServerSocket(Ipv4::Port port) noexcept
 	return socket;
 }
 
-Socket udpCreateClientSocket(const Ipv4& ipServer) noexcept
+Socket createUdpClient(Ipv4 ipServer) noexcept
 {
 	Socket socket;
 
 	if (!winsockInit())
 		return socket;
 
-	Ipv4::Address address = ipServer;
+	return Socket{ ipAddressClient(ipServer), udpСreateSocket() };
+}
 
-	socket.descriptor = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-	socket.address.sin_family = AF_INET;
-	socket.address.sin_port = ::htons(static_cast<Types::ushort_t>(address.port));
-	socket.address.sin_addr.S_un.S_addr = ::inet_addr(address.ip);
+// TCP
 
+Socket createTcpServer(Ipv4::Port port) noexcept
+{
+	Socket socket;
+
+	if (!winsockInit())
+		return socket;
+
+	socket = Socket{ ipAddressServer(port), tcpCreateSocket() };
+
+	auto address = reinterpret_cast<const SOCKADDR *>(&socket.address);
+	const auto result = ::bind(socket.descriptor, address, sizeof(socket.address));
+	if (result == SOCKET_ERROR)
+	{
+		socket = Socket{};
+	}
 	return socket;
 }
 
-void destroySocket(Socket &socket)
+Socket createTcpClient(Ipv4 ipServer) noexcept
+{
+	Socket socket;
+
+	if (!winsockInit())
+		return socket;
+
+	return Socket{ ipAddressClient(ipServer), udpСreateSocket() };
+}
+
+// Common
+
+void destroy(Socket &socket)
 {
 	::closesocket(socket.descriptor);
 	socket = Socket{};
-}
-
-Types::ssize_t
-udpSend(const Socket &socket, templates::Range<const byte_t *> range)
-{
-	const Types::size_t size = range.end() - range.begin();
-	const auto buffer = reinterpret_cast<const char *>(range.begin());
-	auto address = reinterpret_cast<const SOCKADDR *>(&socket.address);
-
-	auto result = ::sendto(socket.descriptor, buffer, size, 0, address, sizeof(socket.address));
-	if (result < 0)
-	{
-		return -WSAGetLastError();
-	}
-	return result;
-}
-
-Types::ssize_t
-udpReceive(const Socket &socket, templates::Range<byte_t *> range, SocketReceive &socketFrom)
-{
-	const Types::size_t size = range.end() - range.begin();
-
-	auto buffer = reinterpret_cast<char *>(range.begin());
-	auto address = reinterpret_cast<SOCKADDR *>(&socketFrom.address);
-	int addressLength = sizeof(socketFrom.address);
-
-	auto result = ::recvfrom(socket.descriptor, buffer, size, 0, address, &addressLength);
-	if (result < 0)
-	{
-		return -WSAGetLastError();
-	}
-	socketFrom.descriptor = &socket.descriptor;
-	return result;
 }
 
 }}} // namespace flame_ide::os::socket

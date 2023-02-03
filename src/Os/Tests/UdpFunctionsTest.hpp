@@ -16,6 +16,12 @@ public:
 
 private:
 	virtual int vStart();
+
+private:
+	int withoutWait() noexcept;
+	int wait() noexcept;
+
+	int pingPong() noexcept;
 };
 
 }}} // namespace flame_ide::os::tests

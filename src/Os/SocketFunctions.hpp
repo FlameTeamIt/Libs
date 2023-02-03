@@ -13,17 +13,21 @@ namespace flame_ide
 {namespace socket
 {
 
-Socket udpCreateServerSocket(Ipv4::Port port) noexcept;
+// UDP
 
-Socket udpCreateClientSocket(const Ipv4& ip) noexcept;
+Socket createUdpServer(Ipv4::Port port) noexcept;
 
-void destroySocket(Socket &socket);
+Socket createUdpClient(Ipv4 ipServer) noexcept;
 
-Types::ssize_t
-udpSend(const Socket &socket, templates::Range<const byte_t *> range);
+// TCP
 
-Types::ssize_t
-udpReceive(const Socket &socket, templates::Range<byte_t *> range, SocketReceive &socketFrom);
+Socket createTcpServer(Ipv4::Port port) noexcept;
+
+Socket createTcpClient(Ipv4 ipServer) noexcept;
+
+// Common
+
+void destroy(Socket &socket) noexcept;
 
 }}} // namespace flame_ide::os::socket
 
