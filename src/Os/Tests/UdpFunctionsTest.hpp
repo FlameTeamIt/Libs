@@ -12,10 +12,10 @@ class UdpFunctionsTest: public ::AbstractTest
 {
 public:
 	UdpFunctionsTest();
-	virtual ~UdpFunctionsTest();
+	virtual ~UdpFunctionsTest() override;
 
 private:
-	virtual int vStart();
+	virtual int vStart() override;
 
 private:
 	int withoutWait() noexcept;

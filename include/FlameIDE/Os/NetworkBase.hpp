@@ -10,7 +10,7 @@ namespace flame_ide
 {namespace os
 {
 
-class NetworkBase
+class NetworkBase: public NonCopy
 {
 public:
 	using Range = templates::Range<byte_t *>;
@@ -19,12 +19,26 @@ public:
 public:
 	~NetworkBase() noexcept;
 
+	operator bool() const noexcept;
+
+	Status getStatus() const noexcept;
+
 protected:
 	NetworkBase(Socket socket) noexcept;
-	NetworkBase(NetworkBase &&udp) noexcept;
+	NetworkBase(NetworkBase &&base) noexcept;
+
+	NetworkBase &operator=(NetworkBase &&base) noexcept;
+
+	void setStatus(Status status) noexcept;
+
+protected:
+	static Types::int_t checkStatus(Status status) noexcept;
 
 protected:
 	Socket socket;
+
+private:
+	Status status = 0;
 };
 
 }} // namespace flame_ide::os

@@ -15,6 +15,7 @@ constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = OsFileDescriptor(flame_ide::s
 constexpr OsFileDescriptor OS_DESCRIPTOR_INITIALIZER = OsFileDescriptor(flame_ide::ssize_t{});
 
 constexpr OsStatus OS_STATUS_SUCCESS = 0;
+constexpr OsStatus OS_STATUS_FAILED = -1;
 
 constexpr OsSocketAddressIn OS_SOCKET_ADDRESS_INITIALIZER = {};
 constexpr OsSocketDescriptor OS_SOCKET_DESCRIPTOR_INITIALIZER = {};

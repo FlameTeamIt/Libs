@@ -15,12 +15,25 @@ public:
 	class WithClient;
 
 public:
-	UdpServer() noexcept = delete;
+	using NetworkBase::Range;
+	using NetworkBase::ConstRange;
+
+public:
 	UdpServer(UdpServer &&udpServer) noexcept;
 	UdpServer(Ipv4::Port port) noexcept;
 	~UdpServer() noexcept = default;
 
+	UdpServer &operator=(UdpServer &&server) noexcept;
 	WithClient wait();
+
+public:
+	using NetworkBase::operator bool;
+	using NetworkBase::getStatus;
+
+private:
+	using NetworkBase::NetworkBase;
+	using NetworkBase::setStatus;
+	using NetworkBase::operator=;
 
 private:
 	using NetworkBase::socket;
@@ -46,9 +59,9 @@ public:
 
 	operator bool() const noexcept;
 
-	Types::ssize_t bytes() const noexcept;
-	Types::ssize_t receive(NetworkBase::Range range) noexcept;
-	Types::ssize_t send(NetworkBase::ConstRange range) noexcept;
+	Status getStatus() const noexcept;
+	Types::ssize_t receive(UdpServer::Range range) noexcept;
+	Types::ssize_t send(UdpServer::ConstRange range) noexcept;
 
 private:
 	Types::ssize_t receiveBytesResult;
