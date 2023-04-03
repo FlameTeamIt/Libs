@@ -8,4 +8,6 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/UdpFunctionsTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/UdpFunctionsTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UdpTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UdpTest.hpp
 )

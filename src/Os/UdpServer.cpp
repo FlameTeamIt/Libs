@@ -7,11 +7,19 @@ namespace flame_ide
 {namespace os
 {
 
-UdpServer::UdpServer(UdpServer &&udpServer) noexcept : NetworkBase(move(static_cast<NetworkBase &>(udpServer)))
+UdpServer::UdpServer(UdpServer &&udpServer) noexcept :
+		NetworkBase(move(static_cast<NetworkBase &&>(udpServer)))
 {}
 
 UdpServer::UdpServer(Ipv4::Port port) noexcept : NetworkBase(socket::createUdpServer(port))
 {}
+
+UdpServer &UdpServer::operator=(UdpServer &&server) noexcept
+{
+	NetworkBase &&base = static_cast<NetworkBase &&>(server);
+	operator=(move(base));
+	return *this;
+}
 
 UdpServer::WithClient UdpServer::wait() noexcept
 {
@@ -34,7 +42,7 @@ UdpServer::WithClient::WithClient(const SocketReceive &socket, Types::ssize_t re
 
 UdpServer::WithClient::operator bool() const noexcept
 {
-	return bytes() > 0;
+	return bytes() >= 0;
 }
 
 Types::ssize_t UdpServer::WithClient::bytes() const noexcept
