@@ -1,5 +1,7 @@
 #include <FlameIDE/Os/UdpServer.hpp>
 
+#include <FlameIDE/Os/Constants.hpp>
+
 #include <FlameIDE/../../src/Os/SocketFunctions.hpp>
 #include <FlameIDE/../../src/Os/UdpSocketFunctions.hpp>
 
@@ -42,10 +44,10 @@ UdpServer::WithClient::WithClient(const SocketReceive &socket, Types::ssize_t re
 
 UdpServer::WithClient::operator bool() const noexcept
 {
-	return bytes() >= 0;
+	return getStatus() >= 0;
 }
 
-Types::ssize_t UdpServer::WithClient::bytes() const noexcept
+Status UdpServer::WithClient::getStatus() const noexcept
 {
 	return receiveBytesResult;
 }
@@ -53,12 +55,22 @@ Types::ssize_t UdpServer::WithClient::bytes() const noexcept
 Types::ssize_t UdpServer::WithClient::receive(NetworkBase::Range range) noexcept
 {
 	SocketReceive receiveSocket;
-	return socket::udp::receiveServer(socket, range, {}, receiveSocket);
+	receiveBytesResult = socket::udp::receiveServer(socket, range, {}, receiveSocket);
+	if (getStatus() < 0)
+	{
+		return STATUS_FAILED;
+	}
+	return getStatus();
 }
 
 Types::ssize_t UdpServer::WithClient::send(NetworkBase::ConstRange range) noexcept
 {
-	return socket::udp::send(socket, range);
+	receiveBytesResult = socket::udp::send(socket, range);
+	if (getStatus() < 0)
+	{
+		return STATUS_FAILED;
+	}
+	return getStatus();
 }
 
 }} // namespace flame_ide::os
