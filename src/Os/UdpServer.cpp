@@ -25,7 +25,7 @@ UdpServer::WithClient UdpServer::wait() noexcept
 {
 	SocketReceive socketReceive;
 	Types::ssize_t result = socket::udp::waitServer(socket, socketReceive);
-	WithClient sendler{ socketReceive, result };
+	WithClient sendler{ socket, result };
 	return sendler;
 }
 
@@ -35,30 +35,29 @@ namespace flame_ide
 {namespace os
 {
 
-UdpServer::WithClient::WithClient(const SocketReceive &socket, Types::ssize_t result) noexcept :
+UdpServer::WithClient::WithClient(Socket &socket, Types::ssize_t result) noexcept :
 		receiveBytesResult(result)
-		, socket(socket)
+		, socketServer(&socket)
 {}
 
 UdpServer::WithClient::operator bool() const noexcept
 {
-	return bytes() >= 0;
+	return getStatus() >= 0;
 }
 
-Types::ssize_t UdpServer::WithClient::bytes() const noexcept
+Status UdpServer::WithClient::getStatus() const noexcept
 {
 	return receiveBytesResult;
 }
 
 Types::ssize_t UdpServer::WithClient::receive(NetworkBase::Range range) noexcept
 {
-	SocketReceive receiveSocket;
-	return socket::udp::receiveServer(socket, range, {}, receiveSocket);
+	return socket::udp::receiveServer(*socketServer, range, {}, socketClient);
 }
 
 Types::ssize_t UdpServer::WithClient::send(NetworkBase::ConstRange range) noexcept
 {
-	return socket::udp::send(socket, range);
+	return socket::udp::send(socketClient, range);
 }
 
 }} // namespace flame_ide::os

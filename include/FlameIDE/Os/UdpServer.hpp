@@ -52,7 +52,7 @@ class UdpServer::WithClient
 public:
 	WithClient() noexcept = default;
 	WithClient(const WithClient &) noexcept = default;
-	WithClient(const SocketReceive &socket, Types::ssize_t result) noexcept;
+	WithClient(Socket &socket, Types::ssize_t result) noexcept;
 	~WithClient() noexcept = default;
 
 	WithClient &operator=(const WithClient &) noexcept = default;
@@ -65,7 +65,8 @@ public:
 
 private:
 	Types::ssize_t receiveBytesResult;
-	SocketReceive socket;
+	SocketReceive socketClient;
+	Socket *socketServer;
 };
 
 }} // namespace flame_ide::os

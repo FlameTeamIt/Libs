@@ -40,12 +40,12 @@ namespace // anonymous
 
 ::SOCKET udpСreateSocket() noexcept
 {
-	return ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	return ::WSASocketA(AF_INET, SOCK_DGRAM, IPPROTO_UDP, nullptr, 0, WSA_FLAG_OVERLAPPED);
 }
 
 ::SOCKET tcpCreateSocket() noexcept
 {
-	return ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	return ::WSASocketA(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
 }
 
 ::SOCKADDR_IN ipAddressServer(Ipv4::Port port) noexcept
@@ -91,6 +91,7 @@ Socket createUdpServer(Ipv4::Port port) noexcept
 	{
 		socket = Socket{};
 	}
+
 	return socket;
 }
 

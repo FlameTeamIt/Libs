@@ -361,7 +361,7 @@ int UdpFunctionsTest::wait() noexcept
 
 int UdpFunctionsTest::pingPong() noexcept
 {
-	const Types::size_t count = 16;
+	const Types::size_t count = 65536;
 	UdpPong pong{ count };
 	UdpPing ping{ count };
 
