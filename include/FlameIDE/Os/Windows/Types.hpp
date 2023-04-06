@@ -17,10 +17,65 @@ namespace flame_ide
 {
 
 template<>
-struct NumberLimitTrait<LONG>
+struct IsPrimitiveTrait<::LONG>: public TrueType
+{};
+
+template<>
+struct IsPrimitiveTrait<::DWORD>: public TrueType
+{};
+
+template<>
+struct IsSignedTrait<::LONG>: public TrueType
+{};
+
+template<>
+struct IsSignedTrait<::DWORD>: public FalseType
+{};
+
+template<>
+struct IsUnsignedTrait<::LONG>: public FalseType
+{};
+
+template<>
+struct IsUnsignedTrait<::DWORD>: public TrueType
+{};
+
+template<>
+struct NumberLimitTrait<::LONG>
 {
 	static constexpr LONG MIN_VALUE = INT32_MIN;
 	static constexpr LONG MAX_VALUE = INT32_MAX;
+};
+
+template<>
+struct NumberLimitTrait<::DWORD>
+{
+	static constexpr LONG MIN_VALUE = 0;
+	static constexpr LONG MAX_VALUE = UINT32_MAX;
+};
+
+template<>
+struct MakeSignedTrait<::LONG>
+{
+	using Type = ::LONG;
+};
+
+template<>
+struct MakeSignedTrait<::DWORD>
+{
+	using Type = ::LONG;
+};
+
+template<>
+struct MakeUnsignedTrait<::LONG>
+{
+	using Type = ::DWORD;
+};
+
+template<>
+struct MakeUnsignedTrait<::DWORD>
+{
+	using Type = ::DWORD;
 };
 
 } // namespace flame_ide
@@ -106,7 +161,7 @@ union OsFileDescriptor
 	flame_ide::ssize_t value;
 };
 
-using OsStatus = DWORD;
+using OsStatus = flame_ide::MakeSignedType<::DWORD>;
 
 using OsSocketAddressIn = ::SOCKADDR_IN;
 using OsSocketDescriptor = ::SOCKET;
@@ -144,7 +199,6 @@ struct OsSocketReceive
 };
 
 using OsThreadContext = OsFileDescriptor;
-
 struct OsThreadTaskTrait : NonCreational
 {
 	using ReturnType = DWORD;
@@ -154,7 +208,6 @@ struct OsThreadTaskTrait : NonCreational
 using OsMutexContext = OsFileDescriptor;
 
 using OsSemaphoreValue = LONG;
-
 struct OsSemaphoreContext
 {
 	OsFileDescriptor object;
