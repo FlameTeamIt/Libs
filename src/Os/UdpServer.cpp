@@ -1,5 +1,7 @@
 #include <FlameIDE/Os/UdpServer.hpp>
 
+#include <FlameIDE/Os/Constants.hpp>
+
 #include <FlameIDE/../../src/Os/SocketFunctions.hpp>
 #include <FlameIDE/../../src/Os/UdpSocketFunctions.hpp>
 
@@ -52,12 +54,14 @@ Status UdpServer::WithClient::getStatus() const noexcept
 
 Types::ssize_t UdpServer::WithClient::receive(NetworkBase::Range range) noexcept
 {
-	return socket::udp::receiveServer(*socketServer, range, {}, socketClient);
+	receiveBytesResult = socket::udp::receiveServer(*socketServer, range, {}, socketClient);
+	return getStatus();
 }
 
 Types::ssize_t UdpServer::WithClient::send(NetworkBase::ConstRange range) noexcept
 {
-	return socket::udp::send(socketClient, range);
+	receiveBytesResult = socket::udp::send(socketClient, range);
+	return getStatus();
 }
 
 }} // namespace flame_ide::os
