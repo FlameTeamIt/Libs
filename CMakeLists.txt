@@ -33,26 +33,25 @@ flame_resolver_settings(
 	TESTING                        # ON
 	INSTALL                        # ON
 	LOCAL_INSTALL                  # ON
+	CMAKE_PACKAGING                # ON
 
 	# Code generation options
 	ONLY_POSITION_INDEPENDENT_OBJECTS # ON
 	MAKE_STATIC                       # ON
 	MAKE_SHARED                       # ON
-	#	MAKE_STANDALONE                   # OFF
+	#	MAKE_STANDALONE               # OFF
 	EXPORT_ALL_SYMBOLS                # ON
 
 	# Flag options
 	#	CXX_NO_RTTI       # OFF
 	#	CXX_NO_EXCEPTIONS # OFF
-	PLATFORM_DEFINES  # ON
+	PLATFORM_DEFINES   # ON
+	WARNINGS           # ON
+	#	WARNINGS_AS_ERRORS # OFF
 
 	# Values
 	PROJECT_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}
 	LOCAL_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install
-	INSTALL_BINARY_DIR bin
-	INSTALL_STATIC_DIR lib
-	INSTALL_SHARED_DIR lib
-	INSTALL_HEADER_DIR include
 )
 
 add_subdirectory(${FLAME_INCLUDE_SUBMODLUES_PATH})
