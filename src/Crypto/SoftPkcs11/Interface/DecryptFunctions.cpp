@@ -9,7 +9,8 @@ CK_RV C_DecryptInit(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.decryptCallbacks
+			.callbacks()
+			.decrypt
 			.init(hSession, pMechanism, hKey);
 }
 
@@ -22,7 +23,8 @@ CK_RV C_Decrypt(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.decryptCallbacks
+			.callbacks()
+			.decrypt
 			.full(
 					hSession, pEncryptedData, ulEncryptedDataLen, pData, pulDataLen
 			);
@@ -37,7 +39,8 @@ CK_RV C_DecryptUpdate(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.decryptCallbacks
+			.callbacks()
+			.decrypt
 			.update(
 					hSession, pEncryptedPart, ulEncryptedPartLen, pPart, pulPartLen
 			);
@@ -50,7 +53,8 @@ CK_RV C_DecryptFinal(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.decryptCallbacks
+			.callbacks()
+			.decrypt
 			.final(
 					hSession, pLastPart, pulLastPartLen
 			);

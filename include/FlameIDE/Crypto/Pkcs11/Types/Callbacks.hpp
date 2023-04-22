@@ -390,7 +390,7 @@ using GenerateKeyPair = ::CK_C_GenerateKeyPair;
 //           , CK_OBJECT_HANDLE hWrappingKey
 //           , CK_OBJECT_HANDLE hKey
 //           , CK_BYTE_PTR pWrappedKey
-//           , CK_ULONG_PTR pulWrappedKeyLen
+//           , CK_ULONG_PTR pulWrappedKeyLen)
 using WrapKey = ::CK_C_WrapKey;
 
 // CK_RV (*)(CK_SESSION_HANDLE hSession
@@ -400,7 +400,7 @@ using WrapKey = ::CK_C_WrapKey;
 //           , CK_ULONG ulWrappedKeyLen
 //           , CK_ATTRIBUTE_PTR pTemplate
 //           , CK_ULONG ulAttributeCount
-//           , CK_OBJECT_HANDLE_PTR phKey
+//           , CK_OBJECT_HANDLE_PTR phKey)
 using UnwrapKey = ::CK_C_UnwrapKey;
 
 // CK_RV (*)(CK_SESSION_HANDLE hSession
@@ -408,17 +408,17 @@ using UnwrapKey = ::CK_C_UnwrapKey;
 //           , CK_OBJECT_HANDLE hBaseKey
 //           , CK_ATTRIBUTE_PTR pTemplate
 //           , CK_ULONG ulAttributeCount
-//           , CK_OBJECT_HANDLE_PTR phKey
+//           , CK_OBJECT_HANDLE_PTR phKey)
 using DeriveKey = ::CK_C_DeriveKey;
 
 // CK_RV (*)(CK_SESSION_HANDLE hSession
 //           , CK_BYTE_PTR pSeed
-//           , CK_ULONG ulSeedLen
+//           , CK_ULONG ulSeedLen)
 using SeedRandom = ::CK_C_SeedRandom;
 
 // CK_RV (*)(CK_SESSION_HANDLE hSession
 //           , CK_BYTE_PTR RandomData
-//           , CK_ULONG ulRandomLen
+//           , CK_ULONG ulRandomLen)
 using GenerateRandom = ::CK_C_GenerateRandom;
 
 
@@ -432,8 +432,266 @@ using CancelFunction = ::CK_C_CancelFunction;
 
 // CK_RV (*)(CK_FLAGS flags
 //           , CK_SLOT_ID_PTR pSlot
-//           , CK_VOID_PTR pRserved
+//           , CK_VOID_PTR pRserved)
 using WaitForSlotEvent = ::CK_C_WaitForSlotEvent;
+
+
+/* v3.0 */
+
+// CK_RV(*)(CK_INTERFACE_PTR pInterfacesList
+//         , CK_ULONG_PTR pulCount)
+using GetInterfaceList = ::CK_C_GetInterfaceList;
+
+// CR_RV(*)(CK_UTF8CHAR_PTR pInterfaceName
+//          , CK_VERSION_PTR pVersion
+//          , CK_INTERFACE_PTR_PTR ppInterface
+//          , CK_FLAGS flags)
+using GetInterface = ::CK_C_GetInterface;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_USER_TYPE userType
+//          , CK_UTF8CHAR_PTR pPin
+//          , CK_ULONG ulPinLen
+//          , CK_UTF8CHAR_PTR pUsername
+//          , CK_ULONG ulUsernameLen)
+using LoginUser = ::CK_C_LoginUser;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_FLAGS flags)
+using SessionCancel = ::CK_C_SessionCancel;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_MECHANISM_PTR pMechanism
+//          , CK_OBJECT_HANDLE hKey)
+using MessageEncryptInit = ::CK_C_MessageEncryptInit;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen
+//          , CK_BYTE_PTR pAssociatedData
+//          , CK_ULONG ulAssociatedDataLen
+//          , CK_BYTE_PTR pPlaintext
+//          , CK_ULONG ulPlaintextLen
+//          , CK_BYTE_PTR pCiphertext
+//          , CK_ULONG_PTR pulCiphertextLen)
+using EncryptMessage = ::CK_C_EncryptMessage;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen
+//          , CK_BYTE_PTR pAssociatedData
+//          , CK_ULONG ulAssociatedDataLen)
+using EncryptMessageBegin = ::CK_C_EncryptMessageBegin;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen
+//          , CK_BYTE_PTR pPlaintextPart
+//          , CK_ULONG ulPlaintextPartLen
+//          , CK_BYTE_PTR pCiphertextPart
+//          , CK_ULONG_PTR pulCiphertextPartLen
+//          , CK_FLAGS flags)
+using EncryptMessageNext = ::CK_C_EncryptMessageNext;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession)
+using EncryptMessageFinal = ::CK_C_MessageEncryptFinal;
+
+//CK_RV(*)(CK_SESSION_HANDLE hSession
+//         , CK_MECHANISM_PTR pMechanism
+//         , CK_OBJECT_HANDLE hKey)
+using MessageDecryptInit = ::CK_C_MessageDecryptInit;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen
+//          , CK_BYTE_PTR pAssociatedData
+//          , CK_ULONG ulAssociatedDataLen
+//          , CK_BYTE_PTR pCiphertext
+//          , CK_ULONG ulCiphertextLen
+//          , CK_BYTE_PTR pPlaintext
+//          , CK_ULONG_PTR pulPlaintextLen)
+using DecryptMessage = ::CK_C_DecryptMessage;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen
+//          , CK_BYTE_PTR pAssociatedData
+//          , CK_ULONG ulAssociatedDataLen)
+using DecryptMessageBegin = ::CK_C_DecryptMessageBegin;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen
+//          , CK_BYTE_PTR pCiphertext
+//          , CK_ULONG ulCiphertextLen
+//          , CK_BYTE_PTR pPlaintext
+//          , CK_ULONG_PTR pulPlaintextLen
+//          , CK_FLAGS flags)
+using DecryptMessageNext = ::CK_C_DecryptMessageNext;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession)
+using MessageDecryptFinal = ::CK_C_MessageDecryptFinal;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_MECHANISM_PTR  pMechanism
+//          , CK_OBJECT_HANDLE  hKey)
+using MessageSignInit = ::CK_C_MessageSignInit;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen
+//          , CK_BYTE_PTR pData
+//          , CK_ULONG ulDataLen
+//          , CK_BYTE_PTR pSignature
+//          , CK_ULONG_PTR pulSignatureLen)
+using SignMessage = ::CK_C_SignMessage;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen)
+using SignMessageBegin = ::CK_C_SignMessageBegin;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen
+//          , CK_BYTE_PTR pData
+//          , CK_ULONG ulDataLen
+//          , CK_BYTE_PTR pSignature
+//          , CK_ULONG_PTR pulSignatureLen)
+using SignMessageNext = ::CK_C_SignMessageNext;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession)
+using MessageSignFinal = ::CK_C_MessageSignFinal;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_MECHANISM_PTR  pMechanism
+//          , CK_OBJECT_HANDLE  hKey)
+using MessageVerifyInit = ::CK_C_MessageVerifyInit;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen
+//          , CK_BYTE_PTR pData
+//          , CK_ULONG ulDataLen
+//          , CK_BYTE_PTR pSignature
+//          , CK_ULONG ulSignatureLen)
+using VerifyMessage = ::CK_C_VerifyMessage;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen)
+using VerifyMessageBegin = ::CK_C_VerifyMessageBegin;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession
+//          , CK_VOID_PTR pParameter
+//          , CK_ULONG ulParameterLen
+//          , CK_BYTE_PTR pData
+//          , CK_ULONG ulDataLen
+//          , CK_BYTE_PTR pSignature
+//          , CK_ULONG ulSignatureLen)
+using VerifyMessageNext = ::CK_C_VerifyMessageNext;
+
+// CK_RV(*)(CK_SESSION_HANDLE hSession)
+using MessageVerifyFinal = ::CK_C_MessageVerifyFinal;
+
+namespace names
+{
+
+constexpr char Initialize[] = "C_Initialize";
+constexpr char Finalize[] = "C_Finalize";
+constexpr char GetInfo[] = "C_GetInfo";
+constexpr char GetFunctionList[] = "C_GetFunctionList";
+constexpr char GetSlotList[] = "C_GetSlotList";
+constexpr char GetSlotInfo[] = "C_GetSlotInfo";
+constexpr char GetMechanismList[] = "C_GetMechanismList";
+constexpr char GetMechanismInfo[] = "C_GetMechanismInfo";
+constexpr char InitPin[] = "C_InitPIN";
+constexpr char SetPin[] = "C_SetPIN";
+constexpr char OpenSession[] = "C_OpenSession";
+constexpr char CloseSession[] = "C_CloseSession";
+constexpr char CloseAllSessions[] = "C_CloseAllSessions";
+constexpr char GetSessionInfo[] = "C_GetSessionInfo";
+constexpr char GetOperationState[] = "C_GetOperationState";
+constexpr char SetOperationState[] = "C_SetOperationState";
+constexpr char Login[] = "C_Login";
+constexpr char Logout[] = "C_Logout";
+constexpr char CreateObject[] = "C_CreateObject";
+constexpr char CopyObject[] = "C_CopyObject";
+constexpr char DestroyObject[] = "C_DestroyObject";
+constexpr char GetObjectSize[] = "C_GetObjectSize";
+constexpr char GetAttributeValue[] = "C_GetAttributeValue";
+constexpr char SetAttributeValue[] = "C_SetAttributeValue";
+constexpr char FindObjectsInit[] = "C_FindObjectsInit";
+constexpr char FindObjects[] = "C_FindObjects";
+constexpr char FindObjectsFinal[] = "C_FindObjectsFinal";
+constexpr char EncryptInit[] = "C_EncryptInit";
+constexpr char Encrypt[] = "C_Encrypt";
+constexpr char EncryptUpdate[] = "C_EncryptUpdate";
+constexpr char EncryptFinal[] = "C_EncryptFinal";
+constexpr char DecryptInit[] = "C_DecryptInit";
+constexpr char Decrypt[] = "C_Decrypt";
+constexpr char DecryptUpdate[] = "C_DecryptUpdate";
+constexpr char DecryptFinal[] = "C_DecryptFinal";
+constexpr char DigestInit[] = "C_DigestInit";
+constexpr char Digest[] = "C_Digest";
+constexpr char DigestUpdate[] = "C_DigestUpdate";
+constexpr char DigestKey[] = "C_DigestKey";
+constexpr char DigestFinal[] = "C_DigestFinal";
+constexpr char SignInit[] = "C_SignInit";
+constexpr char Sign[] = "C_Sign";
+constexpr char SignUpdate[] = "C_SignUpdate";
+constexpr char SignFinal[] = "C_SignFinal";
+constexpr char SignRecoverInit[] = "C_SignRecoverInit";
+constexpr char SignRecover[] = "C_SignRecover";
+constexpr char VerifyInit[] = "C_VerifyInit";
+constexpr char Verify[] = "C_Verify";
+constexpr char VerifyUpdate[] = "C_VerifyUpdate";
+constexpr char VerifyFinal[] = "C_VerifyFinal";
+constexpr char VerifyRecoverInit[] = "C_VerifyRecoverInit";
+constexpr char VerifyRecover[] = "C_VerifyRecover";
+constexpr char DigestEncryptUpdate[] = "C_DigestEncryptUpdate";
+constexpr char DecryptDigestUpdate[] = "C_DecryptDigestUpdate";
+constexpr char SignEncryptUpdate[] = "C_SignEncryptUpdate";
+constexpr char DecryptVerifyUpdate[] = "C_DecryptVerifyUpdate";
+constexpr char GenerateKey[] = "C_GenerateKey";
+constexpr char GenerateKeyPair[] = "C_GenerateKeyPair";
+constexpr char WrapKey[] = "C_WrapKey";
+constexpr char UnwrapKey[] = "C_UnwrapKey";
+constexpr char DeriveKey[] = "C_DeriveKey";
+constexpr char SeedRandom[] = "C_SeedRandom";
+constexpr char GenerateRandom[] = "C_GenerateRandom";
+constexpr char GetFunctionStatus[] = "C_GetFunctionStatus";
+constexpr char CancelFunction[] = "C_CancelFunction";
+constexpr char WaitForSlotEvent[] = "C_WaitForSlotEvent";
+
+// v3.0
+
+constexpr char GetInterfaceList[] = "C_GetInterfaceList";
+constexpr char GetInterface[] = "C_GetInterface";
+constexpr char LoginUser[] = "C_LoginUser";
+constexpr char SessionCancel[] = "C_SessionCancel";
+constexpr char MessageEncryptInit[] = "C_MessageEncryptInit";
+constexpr char EncryptMessage[] = "C_EncryptMessage";
+constexpr char EncryptMessageBegin[] = "C_EncryptMessageBegin";
+constexpr char EncryptMessageNext[] = "C_EncryptMessageNext";
+constexpr char EncryptMessageFinal[] = "C_MessageEncryptFinal";
+constexpr char MessageDecryptInit[] = "C_MessageDecryptInit";
+constexpr char DecryptMessage[] = "C_DecryptMessage";
+constexpr char DecryptMessageBegin[] = "C_DecryptMessageBegin";
+constexpr char DecryptMessageNext[] = "C_DecryptMessageNext";
+constexpr char MessageDecryptFinal[] = "C_MessageDecryptFinal";
+constexpr char MessageSignInit[] = "C_MessageSignInit";
+constexpr char SignMessage[] = "C_SignMessage";
+constexpr char SignMessageBegin[] = "C_SignMessageBegin";
+constexpr char SignMessageNext[] = "C_SignMessageNext";
+constexpr char MessageSignFinal[] = "C_MessageSignFinal";
+constexpr char MessageVerifyInit[] = "C_MessageVerifyInit";
+constexpr char VerifyMessage[] = "C_VerifyMessage";
+constexpr char VerifyMessageBegin[] = "C_VerifyMessageBegin";
+constexpr char VerifyMessageNext[] = "C_VerifyMessageNext";
+constexpr char MessageVerifyFinal[] = "C_MessageVerifyFinal";
+
+} // namespace names
 
 } // namespace callbacks
 } // namespace pkcs11

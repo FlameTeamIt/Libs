@@ -5,14 +5,16 @@
 CK_RV C_GetFunctionStatus(CK_SESSION_HANDLE hSession)
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.parallelManagementCallbacks
+			.callbacks()
+			.parallelManagement
 			.getFunctionStatus(hSession);
 }
 
 CK_RV C_CancelFunction(CK_SESSION_HANDLE hSession)
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.parallelManagementCallbacks
+			.callbacks()
+			.parallelManagement
 			.cancelfunciton(hSession);
 }
 
@@ -23,6 +25,7 @@ CK_RV C_WaitForSlotEvent(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.parallelManagementCallbacks
+			.callbacks()
+			.parallelManagement
 			.waitForSlotEvent(flags, pSlot, pReserved);
 }

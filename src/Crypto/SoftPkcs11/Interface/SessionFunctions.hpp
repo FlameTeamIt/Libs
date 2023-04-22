@@ -83,6 +83,30 @@ CK_RV C_Login(CK_SESSION_HANDLE hSession, CK_USER_TYPE userType
 ///
 CK_RV C_Logout(CK_SESSION_HANDLE hSession);
 
+// v3.0
+
+///
+/// @brief C_LoginUser
+/// @param hSession The session's handle
+/// @param userType The user type
+/// @param pPin The user's PIN
+/// @param ulPinLen The length of the PIN
+/// @param pUsername The user's name
+/// @param ulUsernameLen The length of the user's name
+/// @return See CKR_* values
+///
+CK_RV C_LoginUser(CK_SESSION_HANDLE hSession, CK_USER_TYPE userType
+		, CK_UTF8CHAR_PTR pPin, CK_ULONG ulPinLen
+		, CK_UTF8CHAR_PTR pUsername, CK_ULONG ulUsernameLen);
+
+///
+/// @brief C_SessionCancel
+/// @param hSession The session's handle
+/// @param flags Flags control which sessions are cancelled
+/// @return See CKR_* values
+///
+CK_RV C_SessionCancel(CK_SESSION_HANDLE hSession, CK_FLAGS flags);
+
 #ifdef __cplusplus
 }
 #endif

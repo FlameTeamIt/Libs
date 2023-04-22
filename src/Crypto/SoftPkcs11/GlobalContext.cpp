@@ -10,64 +10,41 @@ namespace flame_ide
 using namespace flame_ide::pkcs11;
 
 GlobalContext::GlobalContext() noexcept
-{
-	templates::allocator::ObjectAllocator<structs::FunctionList> allocator;
-	structs::FunctionList tmp = {
-		oasisVersion
-		//
-		, C_Initialize, C_Finalize, C_GetInfo, C_GetFunctionList
-		//
-		, C_GetSlotList, C_GetSlotInfo, C_GetTokenInfo, C_GetMechanismList
-		, C_GetMechanismInfo, C_InitToken, C_InitPIN, C_SetPIN
-		//
-		, C_OpenSession, C_CloseSession, C_CloseAllSessions, C_GetSessionInfo
-		, C_GetOperationState, C_SetOperationState, C_Login, C_Logout
-		//
-		, C_CreateObject, C_CopyObject, C_DestroyObject, C_GetObjectSize
-		, C_GetAttributeValue, C_SetAttributeValue
-		, C_FindObjectsInit, C_FindObjects, C_FindObjectsFinal
-		//
-		, C_EncryptInit, C_Encrypt, C_EncryptUpdate, C_EncryptFinal
-		//
-		, C_DecryptInit, C_Decrypt, C_DecryptUpdate, C_DecryptFinal
-		//
-		, C_DigestInit, C_Digest, C_DigestUpdate, C_DigestKey, C_DigestFinal
-		//
-		, C_SignInit, C_Sign, C_SignUpdate, C_SignFinal
-		, C_SignRecoverInit, C_SignRecover
-		//
-		, C_VerifyInit, C_Verify, C_VerifyUpdate, C_VerifyFinal
-		, C_VerifyRecoverInit, C_VerifyRecover
-		//
-		, C_DigestEncryptUpdate, C_DecryptDigestUpdate
-		, C_SignEncryptUpdate, C_DecryptVerifyUpdate
-		//
-		, C_GenerateKey, C_GenerateKeyPair, C_WrapKey, C_UnwrapKey, C_DeriveKey
-		//
-		, C_SeedRandom, C_GenerateRandom
-		//
-		, C_GetFunctionStatus, C_CancelFunction, C_WaitForSlotEvent
-	};
-	functionList = allocator.construct(tmp);
-	if (!functionList)
-	{
-		status = enums::ReturnType::HOST_MEMORY;
-	}
-}
+		: interface{ functionList3 }
+{}
 
 GlobalContext::~GlobalContext() noexcept
+{}
+
+// TODO
+pkcs11::enums::ReturnType GlobalContext::initialize(
+		const pkcs11::structs::InitializeArgs &args
+) noexcept
 {
-	if (functionList)
-	{
-		templates::allocator::ObjectAllocator<structs::FunctionList> allocator;
-		allocator.destroy(functionList);
-	}
 }
 
-GlobalContext &GlobalContext::get() noexcept
+// TODO
+pkcs11::enums::ReturnType GlobalContext::finalize() noexcept
+{}
+
+// TODO
+pkcs11::structs::Info GlobalContext::getInfo() noexcept
+{}
+
+// TODO
+structs::FunctionListPtr GlobalContext::getFunctionList() noexcept
 {
-	static GlobalContext globalContext;
-	return globalContext;
+	return &functionList;
+}
+
+// TODO
+void GlobalContext::getInterfaceList()
+{}
+
+// TODO
+structs::InterfacePtr GlobalContext::getInterface() noexcept
+{
+	return &interface;
 }
 
 Mutex GlobalContext::createMutex() noexcept
@@ -75,8 +52,10 @@ Mutex GlobalContext::createMutex() noexcept
 	if (enums::value(initFlags & enums::InitializeArgsFlags::OS_LOCKING_OK))
 	{
 		return Mutex {
-				externalCallbacks.create, externalCallbacks.destroy
-				, externalCallbacks.lock, externalCallbacks.unlock
+				callbacks().external.create
+				, callbacks().external.destroy
+				, callbacks().external.lock
+				, callbacks().external.unlock
 		};
 	}
 	else
@@ -85,14 +64,43 @@ Mutex GlobalContext::createMutex() noexcept
 	}
 }
 
-structs::FunctionListPtr GlobalContext::getFunctionList() noexcept
-{
-	return functionList;
-}
-
 enums::ReturnType GlobalContext::getStatus() const noexcept
 {
 	return status;
 }
 
-}} // flame_ide::soft_pkcs11
+const CallbackAggregator &GlobalContext::callbacks() const
+{
+	return callbackAggregator;
+}
+
+void GlobalContext::setExternalCallbacks(
+		pkcs11::callbacks::CreateMutex create
+		, pkcs11::callbacks::DestroyMutex destroy
+		, pkcs11::callbacks::LockMutex lock
+		, pkcs11::callbacks::UnlockMutex unlock
+)
+{
+	callbackAggregator.external = ExternalCallbacks {
+			create, destroy, lock, unlock
+	};
+}
+
+
+GlobalContext &GlobalContext::get() noexcept
+{
+	static GlobalContext globalContext;
+	return globalContext;
+}
+
+//
+
+GlobalContext::Pkcs11Interface::Pkcs11Interface(pkcs11::structs::FunctionList3 &functionList)
+		: name{ "PKCS 11" }
+{
+	pInterfaceName = name;
+	pFunctionList = &functionList;
+	flags = 0;
+}
+
+}} // namespace flame_ide::soft_pkcs11

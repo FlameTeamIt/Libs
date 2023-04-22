@@ -11,21 +11,24 @@ CK_RV C_OpenSession(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.sessionCallbacks
+			.callbacks()
+			.session
 			.open(slotId, flags, pApplication, Notify, phSession);
 }
 
 CK_RV C_CloseSession(CK_SESSION_HANDLE hSession)
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.sessionCallbacks
+			.callbacks()
+			.session
 			.close(hSession);
 }
 
 CK_RV C_CloseAllSessions(CK_SLOT_ID slotId)
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.sessionCallbacks
+			.callbacks()
+			.session
 			.closeAll(slotId);
 }
 
@@ -35,7 +38,8 @@ CK_RV C_GetSessionInfo(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.sessionCallbacks
+			.callbacks()
+			.session
 			.getInfo(hSession, pInfo);
 }
 
@@ -46,7 +50,8 @@ CK_RV C_GetOperationState(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.sessionCallbacks
+			.callbacks()
+			.session
 			.getOperationState(hSession, pOperationState, pulOperationStateLen);
 }
 
@@ -59,7 +64,8 @@ CK_RV C_SetOperationState(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.sessionCallbacks
+			.callbacks()
+			.session
 			.setOperationState(
 					hSession, pOperationState, ulOperationStateLen
 					, hEncryptionKey, hAuthenticationKey
@@ -74,13 +80,39 @@ CK_RV C_Login(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.sessionCallbacks
+			.callbacks()
+			.session
 			.login(hSession, userType, pPin, ulPinLen);
 }
 
 CK_RV C_Logout(CK_SESSION_HANDLE hSession)
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.sessionCallbacks
+			.callbacks()
+			.session
 			.logout(hSession);
+}
+
+// v3.0
+
+CK_RV C_LoginUser(CK_SESSION_HANDLE hSession, CK_USER_TYPE userType
+		, CK_UTF8CHAR_PTR pPin, CK_ULONG ulPinLen
+		, CK_UTF8CHAR_PTR pUsername, CK_ULONG ulUsernameLen)
+{
+	return flame_ide::soft_pkcs11::GlobalContext::get()
+			.callbacks()
+			.session
+			.loginUser(
+					hSession, userType
+					, pPin, ulPinLen
+					, pUsername, ulUsernameLen
+			);
+}
+
+CK_RV C_SessionCancel(CK_SESSION_HANDLE hSession, CK_FLAGS flags)
+{
+	return flame_ide::soft_pkcs11::GlobalContext::get()
+			.callbacks()
+			.session
+			.sessionCancel(hSession, flags);
 }

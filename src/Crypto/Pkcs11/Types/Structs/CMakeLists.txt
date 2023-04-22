@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.14)
+
+set(NAME "Crypto.Pkcs11.Types.Structs")
+set(SUBALIAS_NAME "Crypto::Pkcs11::Types::Structs")
+set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
+get_sources(FILE_LIST)
+
+set(DEPENDENCY_HEADER_TARGETS
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Structs::Headers"
+)
+
+flame_compile_library(
+	NAME "${NAME}"
+	SOURCE_LIST "${FILE_LIST}"
+	INCLUDE_PATHS "${INCLUDE_PATHS}"
+	DEPENDENCY_HEADER_TARGETS "${DEPENDENCY_HEADER_TARGETS}"
+	OBJECT_ALIAS_NAME "${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Object"
+	INDEPENDENT_OBJECT_ALIAS_NAME
+		"${FLAME_NAMESPACE}::${SUBALIAS_NAME}::Object::Independ"
+
+	NO_RTTI
+	NO_EXCEPTIONS
+)

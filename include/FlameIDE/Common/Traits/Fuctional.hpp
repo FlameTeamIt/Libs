@@ -185,6 +185,15 @@ struct ChooseType<true, T1, T2>: public NonCreational
 };
 
 ///
+/// @brief The ChooseType<_Tp1, T1, T2> struct
+///
+template<typename T1, typename T2>
+struct ChooseType<false, T1, T2>: public NonCreational
+{
+    using Type = T2;
+};
+
+///
 /// @brief The EnableType<_Tp1, T1> struct
 ///
 template<bool CONDITION_RESULT, typename T1>
@@ -201,15 +210,6 @@ struct EnableType<true, T1>: public NonCreational
 {
 	static constexpr bool VALUE = true;
 	using Type = T1;
-};
-
-///
-/// @brief The ChooseType<_Tp1, T1, T2> struct
-///
-template<typename T1, typename T2>
-struct ChooseType<false, T1, T2>: public NonCreational
-{
-	using Type = T2;
 };
 
 ///
@@ -317,6 +317,29 @@ struct FunctionReturnValueType<ReturnType(ObjectType::*)(Args...) const volatile
 ///
 template <typename T>
 using FunctionReturnType = typename FunctionReturnValueType<T>::Type;
+
+///
+/// @brief The DoSomeByIndex struct
+///
+template<typename T, Types::size_t INDEX, Types::size_t SIZE>
+struct DoSomeByIndex
+{
+	static void copy(T (&dest)[SIZE], const T (&src)[SIZE])
+	{
+		dest[INDEX] = src[INDEX];
+		DoSomeByIndex<T, INDEX + 1, SIZE>::copy(dest, src);
+	}
+};
+
+///
+/// @brief The DoSomeByIndex<T, SIZE, SIZE> struct
+///
+template<typename T, Types::size_t SIZE>
+struct DoSomeByIndex<T, SIZE, SIZE>
+{
+	static void copy(T (&)[SIZE], const T (&)[SIZE])
+	{}
+};
 
 }
 

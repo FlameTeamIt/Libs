@@ -9,7 +9,8 @@ CK_RV C_VerifyInit(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.verifyCallbacks
+			.callbacks()
+			.verify
 			.init(hSession, pMechanism, hKey);
 }
 
@@ -22,7 +23,8 @@ CK_RV C_Verify(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.verifyCallbacks
+			.callbacks()
+			.verify
 			.full(hSession, pData, ulDataLen, pSignature, ulSignatureLen);
 }
 
@@ -33,7 +35,8 @@ CK_RV C_VerifyUpdate(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.verifyCallbacks
+			.callbacks()
+			.verify
 			.update(hSession, pPart, ulPartLen);
 }
 
@@ -44,7 +47,8 @@ CK_RV C_VerifyFinal(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.verifyCallbacks
+			.callbacks()
+			.verify
 			.final(hSession, pSignature, ulSignatureLen);
 }
 
@@ -55,7 +59,8 @@ CK_RV C_VerifyRecoverInit(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.verifyCallbacks
+			.callbacks()
+			.verify
 			.recoverInit(hSession, pMechanism, hKey);
 }
 
@@ -68,6 +73,7 @@ CK_RV C_VerifyRecover(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.verifyCallbacks
+			.callbacks()
+			.verify
 			.recoverFull(hSession, pSignature, ulSignatureLen, pData, pulDataLen);
 }

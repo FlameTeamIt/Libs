@@ -6,9 +6,13 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/GeneralPurposeFunctions.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KeyFunctions.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ManagementFunctions.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MessageDecryptFunctions.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MessageEncryptFunctions.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MessageSignFunctions.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MessageVerifyFunctions.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ObjectFunctions.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/OtherFunctions.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ParallelManagementFunctions.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/RandomGeneration.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SessionFunctions.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SignFunctions.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/VerifyFunctions.cpp

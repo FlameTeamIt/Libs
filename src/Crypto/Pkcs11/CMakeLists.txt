@@ -7,14 +7,19 @@ set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
 set(DEPENDENCY_HEADER_TARGETS
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Headers"
 	"${FLAME_NAMESPACE}::Threads::Headers"
+	"${FLAME_NAMESPACE}::Templates::Headers"
 )
 set(DEPENDENCY_TARGETS_FOR_STATIC
+	"${FLAME_NAMESPACE}::Os::Static"
 	"${FLAME_NAMESPACE}::Threads::Static"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexReal::Object"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object"
 )
 set(DEPENDENCY_TARGETS_FOR_SHARED
+	"${FLAME_NAMESPACE}::Os::Shared"
 	"${FLAME_NAMESPACE}::Threads::Shared"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexReal::Object"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object"
 )
 
 if(FLAME_MAKE_STATIC)
@@ -54,10 +59,14 @@ set(DEPENDENCY_HEADER_TARGETS
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Headers"
 )
 set(DEPENDENCY_TARGETS_FOR_STATIC
+	"${FLAME_NAMESPACE}::Os::Static"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexStub::Object"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object"
 )
 set(DEPENDENCY_TARGETS_FOR_SHARED
+	"${FLAME_NAMESPACE}::Os::Shared"
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::MutexStub::Object::Independ"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Structs::Object::Independ"
 )
 flame_compile_library(
 	NAME "${NAME}"
@@ -82,6 +91,7 @@ flame_compile_library(
 set(SOURCE_MODULES
 	${CMAKE_CURRENT_LIST_DIR}/MutexReal
 	${CMAKE_CURRENT_LIST_DIR}/MutexStub
+	${CMAKE_CURRENT_LIST_DIR}/Types
 )
 foreach(module ${SOURCE_MODULES})
 	add_subdirectory(${module})

@@ -68,6 +68,13 @@ public:
 	void destroy(Pointer &pointer) noexcept;
 };
 
+template<typename T>
+using DefaultObjectAllocator = ObjectAllocator<
+	T
+	, flame_ide::ContainerTraits<T>
+	, MallocAllocator<flame_ide::ContainerTraits<T>>
+>;
+
 }}}
 
 namespace flame_ide

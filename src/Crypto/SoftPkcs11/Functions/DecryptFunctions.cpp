@@ -1,5 +1,6 @@
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Functions/DecryptFunctions.hpp>
 
+#include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Crypto/Pkcs11/Types/Enums.hpp>
 
 namespace flame_ide
@@ -14,6 +15,10 @@ pkcs11::value_types::ReturnType init(
 		, pkcs11::value_types::ObjectHandle object
 )
 {
+	flame_ide::unused(session);
+	flame_ide::unused(mechanism);
+	flame_ide::unused(object);
+
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
@@ -25,6 +30,12 @@ pkcs11::value_types::ReturnType update(
 		, pkcs11::value_types::UlongPtr dataPartLength
 )
 {
+	flame_ide::unused(session);
+	flame_ide::unused(encryptedDataPart);
+	flame_ide::unused(encryptedDataPartLength);
+	flame_ide::unused(dataPart);
+	flame_ide::unused(dataPartLength);
+
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
@@ -34,6 +45,10 @@ pkcs11::value_types::ReturnType final(
 		, pkcs11::value_types::UlongPtr lastPartLength
 )
 {
+	flame_ide::unused(session);
+	flame_ide::unused(lastPart);
+	flame_ide::unused(lastPartLength);
+
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 
@@ -45,6 +60,12 @@ pkcs11::value_types::ReturnType full(
 		, pkcs11::value_types::UlongPtr dataLength
 )
 {
+	flame_ide::unused(session);
+	flame_ide::unused(encryptedData);
+	flame_ide::unused(encryptedDataLength);
+	flame_ide::unused(data);
+	flame_ide::unused(dataLength);
+
 	return pkcs11::enums::value(pkcs11::enums::ReturnType::OK);
 }
 

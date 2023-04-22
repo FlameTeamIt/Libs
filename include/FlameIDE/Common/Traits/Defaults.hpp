@@ -225,6 +225,12 @@ struct RemoveAllTrait<T &&>: public NonCreational
 template<typename T>
 using RemoveAllType = typename RemoveVolatileTrait<T>::Type;
 
+template<typename T>
+struct WithParent: public T
+{
+	using Parent = T;
+};
+
 }
 
 #endif // FLAMEIDE_COMMON_TRAITS_DEFAULTS_HPP

@@ -14,7 +14,9 @@ LibraryHandle open(const char *path) noexcept
 
 LibraryHandle::Symbol findSymbol(LibraryHandle handle, const char *name) noexcept
 {
-	return GetProcAddress(handle.address, name);
+	return reinterpret_cast<LibraryHandle::Symbol>(
+			GetProcAddress(handle.address, name)
+	);
 }
 
 void close(LibraryHandle &handle) noexcept

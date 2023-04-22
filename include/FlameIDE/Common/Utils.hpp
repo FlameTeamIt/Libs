@@ -182,12 +182,21 @@ struct IsStaticCastable<F, T, decltype(static_cast<T>(declareValue<F>()))>: publ
 {};
 
 template<typename Iterator> inline
-auto getPointer(Iterator iterator) noexcept
-{
-	return &(*iterator);
-}
+auto getPointer(Iterator iterator) noexcept -> decltype(&(*iterator));
 
-}
+template<typename T, Types::size_t SIZE>
+void copy(T (& dest)[SIZE], const T (& src)[SIZE]);
+
+template<typename T>
+Types::size_t length(const T *array);
+
+template<typename T>
+void unused(const T &);
+
+template<typename T>
+void unused(T &&);
+
+} // namespace flame_ide
 
 template<typename T>
 inline void *operator new(flame_ide::SizeTraits::SizeType
@@ -386,6 +395,37 @@ typename Container::SizeType size(const Container &container)
 	return container.size();
 }
 
+template<typename Iterator> inline
+auto getPointer(Iterator iterator) noexcept -> decltype(&(*iterator))
+{
+	return &(*iterator);
 }
+
+template<typename T, Types::size_t SIZE>
+void copy(T (& dest)[SIZE], const T (& src)[SIZE])
+{
+	DoSomeByIndex<T, Types::size_t{ 0 }, SIZE>::copy(dest, src);
+}
+
+template<typename T>
+Types::size_t length(const T *array)
+{
+	const auto nullValue = T{};
+
+	Types::size_t length = 0;
+	for (auto it = array; *it != nullValue; ++it, ++length)
+	{}
+	return length;
+}
+
+template<typename T>
+void unused(const T &)
+{}
+
+template<typename T>
+void unused(T &&)
+{}
+
+} // namespace flame_ide
 
 #endif // FLAMEIDE_COMMON_UTILS_HPP

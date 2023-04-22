@@ -33,9 +33,25 @@
 
 /* Key management */
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Interface/KeyFunctions.hpp>
-#include <FlameIDE/../../src/Crypto/SoftPkcs11/Interface/OtherFunctions.hpp>
+
+/* Random generation */
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Interface/RandomGeneration.hpp>
 
 /* Parallel function management */
 #include <FlameIDE/../../src/Crypto/SoftPkcs11/Interface/ParallelManagementFunctions.hpp>
+
+// v3.0
+
+/* Message-based encryption functions */
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Interface/MessageEncryptFunctions.hpp>
+
+/* Message-based deecryption functions */
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Interface/MessageDecryptFunctions.hpp>
+
+/* Message-based signing and MACing functions */
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Interface/MessageSignFunctions.hpp>
+
+/* Message-based functions for verifying signatures and MACs */
+#include <FlameIDE/../../src/Crypto/SoftPkcs11/Interface/MessageVerifyFunctions.hpp>
 
 #endif // FLAMEIDE_SRC_CRYPTO_SOFTPKCS11_INTERFACE_HPP

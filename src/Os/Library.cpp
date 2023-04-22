@@ -1,9 +1,12 @@
+#include "FlameIDE/Common/Traits/ContainerTraits.hpp"
+#include "FlameIDE/Templates/Allocator/ObjectAllocator.hpp"
 #include <FlameIDE/Os/Library.hpp>
 
 #include <FlameIDE/../../src/Os/LibraryFunctions.hpp>
 
 #include <FlameIDE/Common/Constants.hpp>
 #include <FlameIDE/Os/Constants.hpp>
+#include <FlameIDE/Os/Types.hpp>
 #include <FlameIDE/Templates/Array.hpp>
 #include <FlameIDE/Templates/String.hpp>
 
@@ -14,51 +17,59 @@ namespace flame_ide
 
 LibraryHandle getHandle(const char *name, const char *directory) noexcept;
 
+LibraryHandle &handleRef(void *input)
+{
+	return *static_cast<LibraryHandle *>(input);
+}
+
 }}} // namespace anonymous
 
 namespace flame_ide
 {namespace os
 {
 
-Library::Library() noexcept : Library{ LIBRARY_HANDLE_INVALID }
-{}
+Library::Library() noexcept
+{
+	handle = templates::allocator::ObjectAllocator<LibraryHandle>().construct();
+	handleRef(handle) = LIBRARY_HANDLE_INVALID;
+}
 
 Library::Library(Library &&library) noexcept : handle{ library.handle }
 {
-	library.handle = LIBRARY_HANDLE_INVALID;
+	library.handle = nullptr;
 }
 
 Library::Library(const char *name, const char *directory)
-		: handle{ getHandle(name, directory) }
-{}
-
-Library::Library(LibraryHandle libraryHandle) noexcept
-		: handle{ libraryHandle }
-{}
+		: Library()
+{
+	handleRef(handle) = getHandle(name, directory);
+}
 
 Library::~Library() noexcept
 {
 	if (*this)
 	{
-		library::close(handle);
+		library::close(handleRef(handle));
+		ContainerTraits<LibraryHandle>::Pointer pointer = &handleRef(handle);
+		templates::allocator::ObjectAllocator<LibraryHandle>{}.destroy(pointer);
 	}
 }
 
 Library &Library::operator=(Library &&library) noexcept
 {
 	handle = library.handle;
-	library.handle = LIBRARY_HANDLE_INVALID;
+	library.handle = nullptr;
 	return *this;
 }
 
 Library::operator bool() const noexcept
 {
-	return handle.address != LIBRARY_HANDLE_INVALID.address;
+	return handleRef(handle).address != LIBRARY_HANDLE_INVALID.address;
 }
 
 LibraryHandle::Symbol Library::internalFind(const char *name) noexcept
 {
-	return library::findSymbol(handle, name);
+	return library::findSymbol(handleRef(handle), name);
 }
 
 }}

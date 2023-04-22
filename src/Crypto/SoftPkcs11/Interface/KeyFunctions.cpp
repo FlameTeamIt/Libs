@@ -11,7 +11,8 @@ CK_RV C_GenerateKey(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.keyCallbacks
+			.callbacks()
+			.key
 			.generateKey(hSession, pMechanism, pTemplate, ulCount, phKey);
 }
 
@@ -27,7 +28,8 @@ CK_RV C_GenerateKeyPair(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.keyCallbacks
+			.callbacks()
+			.key
 			.generateKeyPair(
 					hSession, pMechanism
 					, pPublicKeyTemplate, ulPublicKeyAttributeCount
@@ -46,7 +48,8 @@ CK_RV C_WrapKey(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.keyCallbacks
+			.callbacks()
+			.key
 			.wrapKey(
 					hSession, pMechanism
 					, hWrappingKey, hKey
@@ -66,7 +69,8 @@ CK_RV C_UnwrapKey(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.keyCallbacks
+			.callbacks()
+			.key
 			.unwrapKey(
 					hSession, pMechanism
 					, hUnwrappingKey, pWrappedKey, ulWrappedKeyLen
@@ -84,8 +88,11 @@ CK_RV C_DeriveKey(
 )
 {
 	return flame_ide::soft_pkcs11::GlobalContext::get()
-			.keyCallbacks
+			.callbacks()
+			.key
 			.deriveKey(
-					hSession, pMechanism, hBaseKey, pTemplate, ulAttributeCount, phKey
+					hSession, pMechanism, hBaseKey
+					, pTemplate, ulAttributeCount
+					, phKey
 			);
 }

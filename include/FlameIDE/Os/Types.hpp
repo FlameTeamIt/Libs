@@ -15,7 +15,16 @@ using FileDescriptor = FLAMEIDE_OS_NAMESPACE::OsFileDescriptor;
 using Status = FLAMEIDE_OS_NAMESPACE::OsStatus;
 
 /// @brief
+using SocketAddressIn = FLAMEIDE_OS_NAMESPACE::OsSocketAddressIn;
+
+/// @brief
+using SocketDescriptor = FLAMEIDE_OS_NAMESPACE::OsSocketDescriptor;
+
+/// @brief
 using Socket = FLAMEIDE_OS_NAMESPACE::OsSocket;
+
+/// @brief
+using SocketReceive = FLAMEIDE_OS_NAMESPACE::OsSocketReceive;
 
 /// @brief
 using ThreadContext = FLAMEIDE_OS_NAMESPACE::OsThreadContext;
@@ -61,6 +70,34 @@ enum class StreamType
 };
 
 }} // namespace flame_ide::os
+
+inline
+FLAMEIDE_OS_NAMESPACE::OsSocket::OsSocket(const OsSocketReceive &socket) noexcept
+{
+	operator=(socket);
+}
+
+inline FLAMEIDE_OS_NAMESPACE::OsSocket &
+FLAMEIDE_OS_NAMESPACE::OsSocket::operator=(const OsSocketReceive &socketReceive) noexcept
+{
+	address = socketReceive.address;
+	descriptor = *socketReceive.descriptor;
+	return *this;
+}
+
+inline
+FLAMEIDE_OS_NAMESPACE::OsSocketReceive::OsSocketReceive(const OsSocket &socket) noexcept
+{
+	operator=(socket);
+}
+
+inline FLAMEIDE_OS_NAMESPACE::OsSocketReceive &
+FLAMEIDE_OS_NAMESPACE::OsSocketReceive::operator=(const OsSocket &socket) noexcept
+{
+	address = socket.address;
+	descriptor = &socket.descriptor;
+	return *this;
+}
 
 #undef FLAMEIDE_OS_NAMESPACE
 

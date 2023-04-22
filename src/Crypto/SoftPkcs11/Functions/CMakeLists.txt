@@ -6,7 +6,7 @@ set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
 
 set(DEPENDENCY_HEADER_TARGETS
 	"${FLAME_NAMESPACE}::Crypto::Oasis::Headers"
-	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Headers"
+	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Types::Headers"
 )
 
 get_sources(FILE_LIST)
