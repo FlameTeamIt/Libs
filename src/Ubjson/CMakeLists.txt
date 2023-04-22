@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.14)
 set(NAME Ubjson)
 set(DEPENDENCY_HEADER_TARGETS ${FLAME_NAMESPACE}::${NAME}::Headers)
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
-get_sources(FILE_LIST)
 
 if(FLAME_MAKE_STATIC)
 	set(MAKE_STATIC MAKE_STATIC)
@@ -12,6 +11,7 @@ if(FLAME_MAKE_SHARED)
 	set(MAKE_SHARED MAKE_SHARED)
 endif()
 
+get_sources(FILE_LIST)
 flame_compile_library(
 	NAME ${NAME}
 	SOURCE_LIST "${FILE_LIST}"
