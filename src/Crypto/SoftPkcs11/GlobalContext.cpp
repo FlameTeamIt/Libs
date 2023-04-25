@@ -103,4 +103,4 @@ GlobalContext::Pkcs11Interface::Pkcs11Interface(pkcs11::structs::FunctionList3 &
 	flags = 0;
 }
 
-}}
+}} // namespace flame_ide::soft_pkcs11

@@ -3,12 +3,12 @@ cmake_minimum_required(VERSION 3.14)
 set(NAME "Crypto.Pkcs11.MutexStub")
 set(SUBALIAS_NAME "Crypto::Pkcs11::MutexStub")
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
-get_sources(FILE_LIST)
 
 set(DEPENDENCY_HEADER_TARGETS
 	"${FLAME_NAMESPACE}::Crypto::Pkcs11::Headers"
 )
 
+get_sources(FILE_LIST)
 flame_compile_library(
 	NAME "${NAME}"
 	SOURCE_LIST "${FILE_LIST}"
