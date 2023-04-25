@@ -84,6 +84,9 @@ template<typename Iterator1 , typename Iterator2>
 bool isEqual(Iterator1 start1, Iterator1 end1,
 		Iterator2 start2, Iterator2 end2);
 
+template<typename T, typename U>
+bool isEqual(const T &value1, const U &value2);
+
 ///
 /// @brief begin
 /// @param container
@@ -186,6 +189,9 @@ auto getPointer(Iterator iterator) noexcept -> decltype(&(*iterator));
 
 template<typename T, Types::size_t SIZE>
 void copy(T (& dest)[SIZE], const T (& src)[SIZE]);
+
+template<typename T, typename U>
+void copy(T &src, const U &dest, Types::size_t size);
 
 template<typename T>
 Types::size_t length(const T *array);
@@ -335,6 +341,24 @@ bool isEqual(Iterator1 start1, Iterator1 end1
 	return true;
 }
 
+template<typename T>
+bool isEqual(const T &value1, const T &value2)
+{
+	volatile const auto *v1 = reinterpret_cast<volatile const Types::uichar_t *>(
+			&value1
+	);
+	volatile const auto *v2 = reinterpret_cast<volatile const Types::uichar_t *>(
+			&value2
+	);
+
+	bool result = true;
+	for (Types::size_t i = 0; i < sizeof(value1) && result; ++i)
+	{
+		result = (v1[i] == v2[i]);
+	}
+	return result;
+}
+
 template<typename Container> inline
 typename Container::Iterator begin(Container &container)
 {
@@ -405,6 +429,18 @@ template<typename T, Types::size_t SIZE>
 void copy(T (& dest)[SIZE], const T (& src)[SIZE])
 {
 	DoSomeByIndex<T, Types::size_t{ 0 }, SIZE>::copy(dest, src);
+}
+
+template<typename T, typename U>
+void copy(T &dst, const U &src, Types::size_t size)
+{
+	volatile auto *out = reinterpret_cast<volatile Types::uichar_t *>(&dst);
+	volatile const auto *in = reinterpret_cast<volatile const Types::uichar_t *>(&src);
+
+	for (Types::size_t i = 0; i < size; ++i)
+	{
+		out[i] = in[i];
+	}
 }
 
 template<typename T>

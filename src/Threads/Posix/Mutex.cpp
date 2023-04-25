@@ -1,5 +1,6 @@
 #include <FlameIDE/Threads/Mutex.hpp>
 #include <FlameIDE/Common/Macros/DetectOs.hpp>
+#include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Os/Constants.hpp>
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
@@ -16,7 +17,7 @@ namespace flame_ide
 static inline bool operator!=(const os::MutexContext &contex1
 		, const os::MutexContext &contex2)
 {
-	return memcmp(&contex1, &contex2, sizeof(os::MutexContext));
+	return isEqual(contex1, contex2);
 }
 
 static inline bool operator==(const os::MutexContext &contex1

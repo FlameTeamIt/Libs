@@ -1,6 +1,7 @@
 #include <FlameIDE/Threads/Thread.hpp>
 
 #include <FlameIDE/Common/Macros/DetectOs.hpp>
+#include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Os/Constants.hpp>
 
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
@@ -40,7 +41,7 @@ Thread::Thread(Thread &&thread) noexcept :
 Thread::~Thread() noexcept
 {
 	auto initializer = os::THREAD_CONTEXT_INITIALIZER;
-	if (!memcmp(&context, &initializer, sizeof(os::ThreadContext)))
+	if (!isEqual(context, initializer))
 	{
 		join();
 		attributesDestroy(context.attributes);
@@ -50,8 +51,7 @@ Thread::~Thread() noexcept
 Thread &Thread::operator=(Thread &&thread) noexcept
 {
 	auto initializer = os::THREAD_CONTEXT_INITIALIZER;
-	if (status == os::STATUS_SUCCESS
-			&& memcmp(&context, &initializer, sizeof(os::ThreadContext)))
+	if (status == os::STATUS_SUCCESS && isEqual(context, initializer))
 	{
 		// FIXME: спорное решение
 		detach();

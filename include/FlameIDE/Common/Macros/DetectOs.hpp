@@ -2,10 +2,10 @@
 #define FLAMEIDE_COMMON_MACROS_DETECTOS_HPP
 
 #define FLAMEIDE_OS_NULL                         0
-#define FLAMEIDE_OS_LINUX                        1
-#define FLAMEIDE_OS_FREEBSD                      2
-#define FLAMEIDE_OS_MACOS                        4
-#define FLAMEIDE_OS_WINDOWS                      8
+#define FLAMEIDE_OS_LINUX                        1 << 0
+#define FLAMEIDE_OS_FREEBSD                      1 << 1
+#define FLAMEIDE_OS_MACOS                        1 << 2
+#define FLAMEIDE_OS_WINDOWS                      1 << 3
 
 // detect OS
 
