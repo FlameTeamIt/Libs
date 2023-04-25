@@ -1,0 +1,130 @@
+#include <FlameIDE/../../src/Os/UdpSocketFunctions.hpp>
+
+#include <fcntl.h>
+#include <sys/ioctl.h>
+
+namespace flame_ide
+{namespace os
+{namespace socket
+{namespace udp
+{
+
+static Types::ssize_t getReceivingBytes(SocketDescriptor descriptor) noexcept;
+
+}}}} // namespace flame_ide::os::socket::udp
+
+namespace flame_ide
+{namespace os
+{namespace socket
+{namespace udp
+{
+
+Types::ssize_t
+send(const Socket &socket, ConstByteRange range) noexcept
+{
+	const Types::size_t size = range.end() - range.begin();
+	const auto buffer = reinterpret_cast<const char *>(range.begin());
+	auto address = reinterpret_cast<const ::sockaddr *>(&socket.address);
+
+	auto result = ::sendto(
+			socket.descriptor, buffer, size, 0, address
+			, sizeof(socket.address)
+	);
+	if (result < 0)
+	{
+		return -errno;
+	}
+	return result;
+
+}
+
+Types::ssize_t receiveServer(
+		const Socket &socket, ByteRange range, int flags, SocketReceive &socketFrom
+) noexcept
+{
+	const Types::size_t size = range.end() - range.begin();
+	auto buffer = reinterpret_cast<char *>(range.begin());
+	auto address = reinterpret_cast<::sockaddr *>(&socketFrom.address);
+	unsigned addressLength = sizeof(socketFrom.address);
+
+	auto result = ::recvfrom(socket.descriptor, buffer, size, flags, address, &addressLength);
+	if (result < 0)
+	{
+		return -errno;
+	}
+	socketFrom.descriptor = &socket.descriptor;
+	return result;
+}
+
+
+Types::ssize_t receiveClient(const Socket &socket, ByteRange range, int flags) noexcept
+{
+	const Types::size_t size = range.end() - range.begin();
+	auto buffer = reinterpret_cast<char *>(range.begin());
+	auto tmpAddress = socket.address;
+	unsigned addressLength = sizeof(tmpAddress);
+
+	auto result = ::recvfrom(
+			socket.descriptor
+			, buffer, size
+			, flags
+			, reinterpret_cast<::sockaddr *>(&tmpAddress), &addressLength
+	);
+	if (result < 0)
+	{
+		return -errno;
+	}
+	return result;
+}
+
+Types::ssize_t waitServer(const Socket &socket, SocketReceive &socketFrom) noexcept
+{
+	auto byte = byte_t{};
+	auto result = receiveServer(
+			socket
+			, templates::makeRange(&byte, &byte + 1)
+			, MSG_PEEK
+			, socketFrom
+	);
+	if (result < 0 && result != -EMSGSIZE)
+	{
+		return result;
+	}
+	return getReceivingBytes(socket.descriptor);
+}
+
+Types::ssize_t waitClient(const Socket &socket) noexcept
+{
+	auto byte = byte_t{};
+	auto result = receiveClient(
+			socket
+			, templates::makeRange(&byte, &byte + 1)
+			, MSG_PEEK
+	);
+	if (result < 0 && result != -EMSGSIZE)
+	{
+		return result;
+	}
+	return getReceivingBytes(socket.descriptor);
+}
+
+}}}} // namespace flame_ide::os::socket::udp
+
+namespace flame_ide
+{namespace os
+{namespace socket
+{namespace udp
+{
+
+static Types::ssize_t getReceivingBytes(SocketDescriptor descriptor) noexcept
+{
+	int value = 0;
+	auto result = ::ioctl(descriptor, FIONREAD, &value);
+	if (result < 0)
+	{
+		return -errno;
+	}
+	return static_cast<Types::ssize_t>(value);
+}
+
+}}}} // namespace flame_ide::os::socket::udp
