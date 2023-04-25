@@ -5,6 +5,8 @@
 
 #include <FlameIDE/Common/Byte.hpp>
 
+#include <FlameIDE/Os/Constants.hpp>
+
 #include <FlameIDE/Templates/IntegerIterator.hpp>
 #include <FlameIDE/Templates/Range.hpp>
 #include <FlameIDE/Templates/RaiiCaller.hpp>
@@ -129,7 +131,7 @@ public:
 private:
 	void vRun() override
 	{
-		if (server.descriptor == INVALID_SOCKET)
+		if (server.descriptor == SOCKET_INVALID.descriptor)
 		{
 			std::cerr << "Pong (server): Invalid server socket" << std::endl;
 			result = AbstractTest::FAILED;
@@ -208,7 +210,7 @@ public:
 private:
 	void vRun() override
 	{
-		if (client.descriptor == INVALID_SOCKET)
+		if (client.descriptor == SOCKET_INVALID.descriptor)
 		{
 			std::cerr << "Ping (client): Invalid client socket" << std::endl;
 			result = AbstractTest::FAILED;

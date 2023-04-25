@@ -13,10 +13,15 @@ namespace flame_ide
 constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = -1;
 
 constexpr OsStatus OS_STATUS_SUCCESS = 0;
+constexpr OsStatus OS_STATUS_FAILED = -1;
 
-constexpr OsSocket OS_SOCKET_INITIALIZER = OsSocket {
-		{}, OS_INVALID_DESCRIPTOR
+constexpr OsSocketAddressIn OS_SOCKET_ADDRESS_INITIALIZER = {};
+constexpr OsSocketDescriptor OS_SOCKET_DESCRIPTOR_INITIALIZER = {};
+constexpr OsSocket OS_SOCKET_INITIALIZER = {
+		OS_SOCKET_ADDRESS_INITIALIZER, OS_SOCKET_DESCRIPTOR_INITIALIZER
 };
+
+constexpr OsSocket OS_SOCKET_INVALID = OsSocket{{}, OS_INVALID_DESCRIPTOR};
 
 constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OsThreadContext{};
 

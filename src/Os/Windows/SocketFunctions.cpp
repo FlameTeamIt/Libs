@@ -150,7 +150,7 @@ Socket createTcpClient(Ipv4 ipServer) noexcept
 void destroy(Socket &socket)
 {
 	::closesocket(socket.descriptor);
-	socket = Socket{};
+	socket = SOCKET_INVALID;
 }
 
 }}} // namespace flame_ide::os::socket

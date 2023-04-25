@@ -8,11 +8,13 @@
 #include <FlameIDE/Common/Traits/CreationProhibitions.hpp>
 #include <FlameIDE/Common/Traits/Numbers.hpp>
 
+#include <arpa/inet.h>
 #include <sys/socket.h>
-#include <sys/un.h>
+
+#include <errno.h>
+#include <dlfcn.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include <dlfcn.h>
 
 namespace flame_ide
 {namespace os
@@ -35,7 +37,7 @@ public:
 		return defaultFd;
 	}
 
-	constexpr operator const int() const noexcept
+	constexpr operator int() const noexcept
 	{
 		return defaultFd;
 	}
@@ -54,23 +56,42 @@ private:
 	DefaultFd defaultFd;
 };
 
-using OsStatus = int;
+using OsStatus = ::error_t;
+
+using OsSocketAddressIn = ::sockaddr_in;
+using OsSocketDescriptor = decltype(::socket({}, {}, {}));
 
 struct OsSocketReceive;
 struct OsSocket
 {
-	::sockaddr_un address;
-	OsFileDescriptor descriptor;
+	constexpr OsSocket() noexcept = default;
+	OsSocket(const OsSocket &) noexcept = default;
 
+	constexpr OsSocket(
+			const OsSocketAddressIn address, const OsSocketDescriptor descriptor
+	) noexcept : address{address}, descriptor{descriptor}
+	{}
+
+	OsSocket(const OsSocketReceive &) noexcept;
+
+	OsSocket &operator=(const OsSocket &) noexcept = default;
 	OsSocket &operator=(const OsSocketReceive &socketReceive) noexcept;
+
+	OsSocketAddressIn address = {};
+	OsSocketDescriptor descriptor = -1;
 };
 
 struct OsSocketReceive
 {
-	::sockaddr_un address;
-	const OsFileDescriptor *descriptor;
+	constexpr OsSocketReceive() noexcept = default;
+	OsSocketReceive(const OsSocketReceive &) noexcept = default;
+	OsSocketReceive(const OsSocket &) noexcept;
 
+	OsSocketReceive &operator=(const OsSocketReceive &) noexcept = default;
 	OsSocketReceive &operator=(const OsSocket &socket) noexcept;
+
+	OsSocketAddressIn address = {};
+	const OsSocketDescriptor *descriptor = nullptr;
 };
 
 struct OsThreadContext
@@ -78,7 +99,7 @@ struct OsThreadContext
 	pthread_t object;
 	pthread_attr_t attributes;
 };
-struct OsThreadTaskTrait : NonCreational
+struct OsThreadTaskTrait: public NonCreational
 {
 	using ReturnType = void *;
 	using ArgumentType = void *;
@@ -97,7 +118,7 @@ using OsSemaphoreValue = unsigned int;
 struct OsLibraryHandle
 {
 	using Handle = decltype(dlopen(nullptr, 0));
-	using Symbol = decltype(dlsym(Handle{}, nullptr));
+	using Symbol = decltype(dlsym((void *)(0x1), (const char *)(0x1)));
 	static constexpr auto OPEN_FLAG = RTLD_LAZY;
 
 	Handle address = Handle{};
