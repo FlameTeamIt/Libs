@@ -21,53 +21,67 @@ template<
 >
 class ConstCircularIterator;
 
-}}
+namespace defaults
+{
+
+template<typename IteratorType>
+using ConstCircularForwardIterator = ConstCircularIterator<
+	IteratorType, IteratorCategory::FORWARD
+>;
+
+template<typename IteratorType>
+using ConstCircularBidirectionalIterator = ConstCircularIterator<
+	IteratorType, IteratorCategory::BIDIRECTIONAL
+>;
+
+template<typename IteratorType>
+using ConstCircularRandomAccessIterator = ConstCircularIterator<
+	IteratorType, IteratorCategory::RANDOM_ACCESS
+>;
+
+} // namespace defaults
+
+}} // namespace flame_ide::templates
 
 namespace flame_ide
 {namespace templates
 {
 
 template<typename IteratorType, typename Traits, typename MetaType>
-class ConstCircularIterator<IteratorType, IteratorCategory::FORWARD
-	, Traits, MetaType>:
-		public ConstIterator<
-			IteratorType, IteratorCategory::FORWARD, Traits, MetaType
-		>
+class ConstCircularIterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>:
+		public ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>
 {
 public:
-	using Parent = ConstIterator<
-		IteratorType, IteratorCategory::FORWARD, Traits, MetaType
-	>;
-	using Me = ConstCircularIterator<
-		IteratorType, IteratorCategory::FORWARD, Traits, MetaType
-	>;
-	using Range = templates::Range<IteratorType>;
+using Parent = ConstIterator<
+IteratorType, IteratorCategory::FORWARD, Traits, MetaType
+>;
+using Me = ConstCircularIterator<
+IteratorType, IteratorCategory::FORWARD, Traits, MetaType
+>;
+using Range = templates::Range<IteratorType>;
 
-	ConstCircularIterator() noexcept = default;
-	ConstCircularIterator(const Me &) = default;
-	ConstCircularIterator(IteratorType iterator, Range containerActualRange)
-			: Parent(iterator)
-			, range(containerActualRange)
-	{}
-	~ConstCircularIterator() = default;
-	Me &operator=(const Me &) = default;
+ConstCircularIterator() noexcept = default;
+ConstCircularIterator(const Me &) = default;
+ConstCircularIterator(IteratorType iterator, Range containerActualRange)
+	: Parent(iterator)
+	, range(containerActualRange)
+{}
+~ConstCircularIterator() = default;
+Me &operator=(const Me &) = default;
 
-	FLAMEIDE_ITERATOR_OPERATOR_INC_POSTFIX
+FLAMEIDE_ITERATOR_OPERATOR_INC_POSTFIX
 
-	FLAMEIDE_CIRCULARITERATOR_OPERATOR_INC_PREFIX
+FLAMEIDE_CIRCULARITERATOR_OPERATOR_INC_PREFIX
 
 protected:
-	using Parent::internalData;
+using Parent::internalData;
 private:
-	mutable Range range;
+mutable Range range;
 };
 
 template<typename IteratorType, typename Traits, typename MetaType>
-class ConstCircularIterator<IteratorType, IteratorCategory::BIDIRECTIONAL
-	, Traits, MetaType>:
-		public ConstIterator<
-			IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType
-		>
+class ConstCircularIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>:
+		public ConstIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>
 {
 public:
 	using Parent = ConstIterator<
@@ -99,11 +113,8 @@ private:
 };
 
 template<typename IteratorType, typename Traits, typename MetaType>
-class ConstCircularIterator<IteratorType, IteratorCategory::RANDOM_ACCESS
-	, Traits, MetaType>:
-		public ConstIterator<
-			IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType
-		>
+class ConstCircularIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>:
+		public ConstIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>
 {
 public:
 	using Parent = ConstIterator<
@@ -139,7 +150,7 @@ private:
 	mutable Range range;
 };
 
-}}
+}} // namespace flame_ide::templates
 
 #include <FlameIDE/Templates/Iterator/UndefOperators.hpp>
 

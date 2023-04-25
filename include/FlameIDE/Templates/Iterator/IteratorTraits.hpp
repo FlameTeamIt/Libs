@@ -59,6 +59,6 @@ struct IteratorTraits: public ContainerTraits<typename GetType<IteratorType>::Ty
 
 } // namespace iterator_utils
 
-}}
+}} // namespace flame_ide::templates
 
 #endif // FLAMEIDE_TEMPLATES_ITERATOR_ITERATORTRAITS_HPP

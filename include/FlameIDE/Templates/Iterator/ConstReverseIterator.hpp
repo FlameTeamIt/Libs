@@ -17,18 +17,33 @@ template<typename IteratorType
 	, typename MetaType = void>
 class ConstReverseIterator;
 
-}}
+namespace defaults
+{
+
+template<typename IteratorType>
+using ConstReverseBidirectionalIterator = ConstReverseIterator<
+	IteratorType, IteratorCategory::BIDIRECTIONAL
+>;
+
+template<typename IteratorType>
+using ConstReverseRandomAccessIterator = ConstReverseIterator<
+	IteratorType, IteratorCategory::RANDOM_ACCESS
+>;
+
+} // namespace defaults
+
+}} // namespace flame_ide::templates
 
 namespace flame_ide
 {namespace templates
 {
 
 template<typename IteratorType, typename Traits, typename MetaType>
-class ConstReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL
-	, Traits, MetaType>:
-		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits
-			, MetaType>
+class ConstReverseIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>:
+		public iterator_utils::BaseIterator<
+			IteratorType, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits
+			, MetaType
+		>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
@@ -60,11 +75,11 @@ private:
 };
 
 template<typename IteratorType, typename Traits, typename MetaType>
-class ConstReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits
-	, MetaType>:
-		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits
-			, MetaType>
+class ConstReverseIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>:
+		public iterator_utils::BaseIterator<
+			IteratorType, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits
+			, MetaType
+		>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
@@ -110,7 +125,7 @@ private:
 	using Parent::wrappedIterator;
 };
 
-}}
+}} // namespace flame_ide::templates
 
 #include <FlameIDE/Templates/Iterator/UndefOperators.hpp>
 

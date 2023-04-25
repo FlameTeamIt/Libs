@@ -21,7 +21,27 @@ template<
 >
 class CircularIterator;
 
-}}
+namespace defaults
+{
+
+template<typename IteratorType>
+using CircularForwardIterator = CircularIterator<
+	IteratorType, IteratorCategory::FORWARD
+>;
+
+template<typename IteratorType>
+using CircularBidirectionalIterator = CircularIterator<
+	IteratorType, IteratorCategory::BIDIRECTIONAL
+>;
+
+template<typename IteratorType>
+using CircularRandomAccessIterator = CircularIterator<
+	IteratorType, IteratorCategory::RANDOM_ACCESS
+>;
+
+} // namespace defaults
+
+}} // namespace flame_ide::templates
 
 namespace flame_ide
 {namespace templates
@@ -29,9 +49,7 @@ namespace flame_ide
 
 template<typename IteratorType, typename Traits, typename MetaType>
 class CircularIterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>:
-		public Iterator<
-			IteratorType, IteratorCategory::FORWARD, Traits, MetaType
-		>
+		public Iterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>
 {
 public:
 	using Parent = Iterator<
@@ -62,11 +80,8 @@ private:
 };
 
 template<typename IteratorType, typename Traits, typename MetaType>
-class CircularIterator<IteratorType, IteratorCategory::BIDIRECTIONAL
-	, Traits, MetaType>:
-		public Iterator<
-			IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType
-		>
+class CircularIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>:
+		public Iterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>
 {
 public:
 	using Parent = Iterator<
@@ -99,11 +114,8 @@ private:
 };
 
 template<typename IteratorType, typename Traits, typename MetaType>
-class CircularIterator<IteratorType, IteratorCategory::RANDOM_ACCESS
-	, Traits, MetaType>:
-		public Iterator<
-			IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType
-		>
+class CircularIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>:
+		public Iterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>
 {
 public:
 	using Parent = Iterator<
@@ -140,7 +152,7 @@ private:
 	mutable Range range;
 };
 
-}}
+}} // namespace flame_ide::templates
 
 #include <FlameIDE/Templates/Iterator/UndefOperators.hpp>
 

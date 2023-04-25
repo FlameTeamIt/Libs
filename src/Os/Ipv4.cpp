@@ -32,7 +32,7 @@ bool convertIp(Ipv4::Number (& ipDest)[Ipv4::COUNT_NUMBERS], const char *ipSrc)
 	};
 	auto stringToNumberLambda = [](const char *begin, const char *end) -> Ipv4::Number
 	{
-		using ConstReverseIterator = templates::DefaultConstReverseBidirectionalIterator<
+		using ConstReverseIterator = templates::defaults::ConstReverseBidirectionalIterator<
 			const char *
 		>;
 

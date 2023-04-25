@@ -567,4 +567,3 @@ typename Parent::Reference operator[](IntType value) const noexcept           \
       return *(wrappedIt + value);                                            \
    }                                                                          \
 }
-
