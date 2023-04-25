@@ -28,6 +28,11 @@ Status NetworkBase::getStatus() const noexcept
 	return status;
 }
 
+const Socket &NetworkBase::native() const
+{
+	return socket;
+}
+
 // protected
 
 NetworkBase::NetworkBase(Socket socket) noexcept : socket{ socket }

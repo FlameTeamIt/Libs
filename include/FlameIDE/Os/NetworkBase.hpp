@@ -23,6 +23,8 @@ public:
 
 	Status getStatus() const noexcept;
 
+	const Socket &native() const;
+
 protected:
 	NetworkBase(Socket socket) noexcept;
 	NetworkBase(NetworkBase &&base) noexcept;
