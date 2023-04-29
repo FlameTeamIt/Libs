@@ -100,9 +100,9 @@ bool convertIp(char *ipDest, const Ipv4::Number (& ipSrc)[Ipv4::COUNT_NUMBERS])
 		if (value)
 			*(ipIt++) = value + ZERO;
 
-		value = (ipSrc[i] % HUNDERD_DEVIDER) / TEN_DEVIDER;
+		value = ipSrc[i] / TEN_DEVIDER;
 		if (value)
-			*(ipIt++) = value + ZERO;
+			*(ipIt++) = (value % TEN_DEVIDER) + ZERO;
 
 		value = (ipSrc[i] % HUNDERD_DEVIDER) % TEN_DEVIDER;
 		*(ipIt++) = value + ZERO;
