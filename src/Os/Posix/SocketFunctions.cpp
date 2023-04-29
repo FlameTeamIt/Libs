@@ -2,7 +2,9 @@
 
 #include <FlameIDE/Os/Constants.hpp>
 
+#include <fcntl.h>
 #include <unistd.h>
+#include <sys/ioctl.h>
 
 namespace flame_ide
 {namespace os
@@ -102,6 +104,43 @@ void destroy(Socket &socket) noexcept
 {
 	::close(socket.descriptor);
 	socket = SOCKET_INVALID;
+}
+
+//
+
+Status enableNonblock(Socket &socket) noexcept
+{
+	auto flags = ::fcntl(socket.descriptor, F_GETFL);
+	if (flags < 0)
+	{
+		return -errno;
+	}
+	auto result = ::fcntl(socket.descriptor, F_SETFL, flags | O_NONBLOCK);
+	if (result < 0)
+	{
+		return -errno;
+	}
+	return result;
+}
+
+Status disableNonblock(Socket &socket) noexcept
+{
+	auto flags = ::fcntl(socket.descriptor, F_GETFL);
+	if (flags < 0)
+	{
+		return -errno;
+	}
+	auto result = ::fcntl(socket.descriptor, F_SETFL, flags & (~O_NONBLOCK));
+	if (result < 0)
+	{
+		return -errno;
+	}
+	return result;
+}
+
+bool isNonblock(const Socket &socket) noexcept
+{
+	return (::fcntl(socket.descriptor, F_GETFL) & O_NONBLOCK);
 }
 
 }}} // namespace flame_ide::os::socket

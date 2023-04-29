@@ -91,4 +91,6 @@ if(FLAME_TESTING)
 		${MAKE_STATIC}
 		${MAKE_SHARED}
 	)
+
 endif()
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/Posix)

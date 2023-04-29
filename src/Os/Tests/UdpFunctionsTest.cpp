@@ -30,7 +30,8 @@ const Ipv4 ip = Ipv4::localhost(65001);
 struct UdpServerNoWaitThread: public threads::Thread
 {
 public:
-	UdpServerNoWaitThread() : server{ socket::createUdpServer(ip.operator Ipv4::Address().port) }
+	UdpServerNoWaitThread()
+			: server{ socket::createUdpServer(ip.operator Ipv4::Address().port) }
 	{}
 
 	~UdpServerNoWaitThread()
@@ -67,9 +68,8 @@ struct UdpServerWaitThread: public threads::Thread
 {
 public:
 	UdpServerWaitThread()
-	{
-		server = socket::createUdpServer(ip.operator Ipv4::Address().port);
-	}
+			: server{ socket::createUdpServer(ip.operator Ipv4::Address().port) }
+	{}
 
 	~UdpServerWaitThread()
 	{
@@ -296,11 +296,18 @@ int UdpFunctionsTest::vStart()
 				return wait();
 			}
 	));
-	CHECK_RESULT_SUCCESS_END(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 			"Ping - pong"
 			, [this]()
 			{
 				return pingPong();
+			}
+	));
+	CHECK_RESULT_SUCCESS_END(doTestCase(
+			"Enabling non-block"
+			, [this]()
+			{
+				return enablingNonBlock();
 			}
 	));
 }
@@ -378,6 +385,42 @@ int UdpFunctionsTest::pingPong() noexcept
 		return pong.threadResult();
 	}
 	return ping.threadResult();
+}
+
+int UdpFunctionsTest::enablingNonBlock() noexcept
+{
+	Socket server;
+	auto raii = templates::makeRaiiCaller(
+			[&server]()
+			{
+				server = socket::createUdpServer(ip.operator Ipv4::Address().port);
+			}
+			, [&server]()
+			{
+				socket::destroy(server);
+			}
+	);
+
+	auto result = socket::enableNonblock(server);
+	if (result < 0)
+	{
+		return ResultType::FAILED;
+	}
+	if (!socket::isNonblock(server))
+	{
+		return ResultType::FAILED;
+	}
+
+	result = socket::disableNonblock(server);
+	if (result < 0)
+	{
+		return ResultType::FAILED;
+	}
+	if (socket::isNonblock(server))
+	{
+		return ResultType::FAILED;
+	}
+	return ResultType::SUCCESS;
 }
 
 }}} // namespace flame_ide::os::tests

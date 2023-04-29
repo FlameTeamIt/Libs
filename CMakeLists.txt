@@ -30,7 +30,7 @@ flame_resolver_settings(
 	LOGGING                        # ON
 	CLEAN_AFTER_RESOLVE            # ON
 	THREADING                      # ON
-	TESTING                        # ON
+	#TESTING                        # ON
 	INSTALL                        # ON
 	LOCAL_INSTALL                  # ON
 	CMAKE_PACKAGING                # ON

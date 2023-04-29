@@ -39,6 +39,9 @@ public:
 	operator Ipv4::Address() const noexcept;
 	operator bool() const noexcept;
 
+	Ipv4::Port getPort() const noexcept;
+	Ipv4::Address getAddress() const noexcept;
+
 	bool set(const char *ip, Port port) noexcept;
 	bool set(const Address &ip) noexcept;
 	bool set(const Number (& ip)[COUNT_NUMBERS], Port port) noexcept;

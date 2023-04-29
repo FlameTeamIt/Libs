@@ -29,6 +29,15 @@ Socket createTcpClient(Ipv4 ipServer) noexcept;
 
 void destroy(Socket &socket) noexcept;
 
+//
+
+// TODO: можно попробовать закинуть include/FlameIDE/Os/Posix с соответствующим пространством имён
+Status enableNonblock(Socket &socket) noexcept;
+
+Status disableNonblock(Socket &socket) noexcept;
+
+bool isNonblock(const Socket &socket) noexcept;
+
 }}} // namespace flame_ide::os::socket
 
 #endif // SOCKETFUNCTIONS_HPP

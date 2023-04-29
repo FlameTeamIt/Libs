@@ -165,6 +165,16 @@ Ipv4::operator bool() const noexcept
 	return true;
 }
 
+Ipv4::Port Ipv4::getPort() const noexcept
+{
+	return port;
+}
+
+Ipv4::Address Ipv4::getAddress() const noexcept
+{
+	return operator Address();
+}
+
 bool Ipv4::set(const char *ip, Port port) noexcept
 {
 	if (!convertIp(this->ip, ip))

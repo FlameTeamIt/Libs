@@ -22,6 +22,8 @@ private:
 	int wait() noexcept;
 
 	int pingPong() noexcept;
+
+	int enablingNonBlock() noexcept;
 };
 
 }}} // namespace flame_ide::os::tests

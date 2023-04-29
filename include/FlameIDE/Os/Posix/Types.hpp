@@ -9,10 +9,8 @@
 #include <FlameIDE/Common/Traits/Numbers.hpp>
 
 #include <arpa/inet.h>
-#include <sys/socket.h>
-
-#include <errno.h>
 #include <dlfcn.h>
+#include <errno.h>
 #include <pthread.h>
 #include <semaphore.h>
 
@@ -118,7 +116,7 @@ using OsSemaphoreValue = unsigned int;
 struct OsLibraryHandle
 {
 	using Handle = decltype(dlopen(nullptr, 0));
-	using Symbol = decltype(dlsym((void *)(0x1), (const char *)(0x1)));
+	using Symbol = decltype(dlsym((void *)(0x08), (const char *)(0x10)));
 	static constexpr auto OPEN_FLAG = RTLD_LAZY;
 
 	Handle address = Handle{};
