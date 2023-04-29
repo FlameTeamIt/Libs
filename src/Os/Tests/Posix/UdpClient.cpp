@@ -80,7 +80,7 @@ int main(int /*argc*/, char */*argv*/[])
 	std::size_t counter = 0;
 	while (true)
 	{
-		std::cout << counter << std::endl;
+		std::cout << counter++ << std::endl;
 		{
 			auto result = client.send(templates::makeRange<const flame_ide::byte_t *>(
 					reinterpret_cast<const flame_ide::byte_t *>(messageTo)
@@ -125,8 +125,9 @@ int main(int /*argc*/, char */*argv*/[])
 
 os::Ipv4 getServerIpv4() noexcept
 {
-	os::Ipv4::Port port = 65001;
-	return os::Ipv4{ os::Ipv4::localhost(port) };
+	const os::Ipv4::Port port = 65001;
+	const os::Ipv4::Number ip[] = { 192, 168, 0, 100 };
+	return os::Ipv4{ ip, port };
 }
 
 SignalAction getSignalAction(int signalNum)
