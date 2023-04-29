@@ -223,7 +223,7 @@ struct RemoveAllTrait<T &&>: public NonCreational
 };
 
 template<typename T>
-using RemoveAllType = typename RemoveVolatileTrait<T>::Type;
+using RemoveAllType = typename RemoveAllTrait<T>::Type;
 
 template<typename T>
 struct WithParent: public T

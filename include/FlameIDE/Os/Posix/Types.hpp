@@ -7,6 +7,7 @@
 
 #include <FlameIDE/Common/Traits/CreationProhibitions.hpp>
 #include <FlameIDE/Common/Traits/Numbers.hpp>
+#include <FlameIDE/Common/Traits/Fuctional.hpp>
 
 #include <arpa/inet.h>
 #include <dlfcn.h>
@@ -54,7 +55,7 @@ private:
 	DefaultFd defaultFd;
 };
 
-using OsStatus = ::error_t;
+using OsStatus = RemoveAllType<decltype(errno)>;
 
 using OsSocketAddressIn = ::sockaddr_in;
 using OsSocketDescriptor = decltype(::socket({}, {}, {}));
