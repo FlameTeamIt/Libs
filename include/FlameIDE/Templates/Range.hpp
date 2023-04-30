@@ -174,7 +174,7 @@ makeConstReverseRange(const Container &container) noexcept
 }
 
 template<typename T>
-Range<Types::uichar_t*> makeByteRange(T &value) noexcept
+Range<Types::uichar_t *> makeUcharRange(T &value) noexcept
 {
 	auto begin = [](T &value)
 	{
@@ -186,12 +186,60 @@ Range<Types::uichar_t*> makeByteRange(T &value) noexcept
 }
 
 template<typename T>
-Range<const Types::uichar_t*> makeConstByteRange(const T &value) noexcept
+Range<const Types::uichar_t *> makeConstUcharRange(const T &value) noexcept
 {
 	auto begin = [](const T &value)
 	{
 		const void *pointer = &value;
 		return static_cast<const Types::uichar_t *>(pointer);
+	} (value);
+	auto end = begin + sizeof(value);
+	return makeRange(begin, end);
+}
+
+template<typename T>
+Range<flame_ide::byte_t *> makeByteRange(T &value) noexcept
+{
+	auto begin = [](T &value)
+	{
+		void *pointer = &value;
+		return static_cast<flame_ide::byte_t *>(pointer);
+	} (value);
+	auto end = begin + sizeof(value);
+	return makeRange(begin, end);
+}
+
+template<typename T>
+Range<const flame_ide::byte_t *> makeConstByteRange(const T &value) noexcept
+{
+	auto begin = [](const T &value)
+	{
+		const void *pointer = &value;
+		return static_cast<const flame_ide::byte_t *>(pointer);
+	} (value);
+	auto end = begin + sizeof(value);
+	return makeRange(begin, end);
+}
+
+template<typename T, Types::ssize_t SIZE>
+Range<flame_ide::byte_t *> makeByteRange(T (&value)[SIZE]) noexcept
+{
+	auto begin = [](T &value)
+	{
+		void *pointer = &value;
+		return static_cast<flame_ide::byte_t *>(pointer);
+	} (value);
+	auto end = begin + sizeof(value);
+	return makeRange(begin, end);
+}
+
+template<typename T, Types::ssize_t SIZE>
+Range<const flame_ide::byte_t *> makeConstByteRange(const T (&value)[SIZE]) noexcept
+{
+	auto begin = [](const T &value)
+	{
+		const void *pointer = &value;
+		return static_cast<const flame_ide::byte_t *>(pointer);
 	} (value);
 	auto end = begin + sizeof(value);
 	return makeRange(begin, end);

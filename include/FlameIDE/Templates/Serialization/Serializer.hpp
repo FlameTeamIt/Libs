@@ -142,7 +142,7 @@ template<typename T>
 const Types::uichar_t *Serializer<ORDER, IS_VOLATILE>::castToByteArray(const T &value)
 {
 	const void *pointer = &value;
-	return static_cast<const uint8_t*>(pointer);
+	return static_cast<const Types::uichar_t *>(pointer);
 }
 
 }}

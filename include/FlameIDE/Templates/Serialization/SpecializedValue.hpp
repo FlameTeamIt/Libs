@@ -359,14 +359,14 @@ template<typename T>
 typename ValueInfo<T>::Iterator
 SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>::begin()
 {
-	return makeByteRange(getValue()).begin() + getOffset();
+	return makeUcharRange(getValue()).begin() + getOffset();
 }
 
 template<typename T>
 typename ValueInfo<T>::ConstIterator
 SpecializedValue<ByteOrder::BIG_ENDIAN_ORDER, T>::begin() const
 {
-	return makeConstByteRange(getValue()).begin() + getOffset();
+	return makeConstUcharRange(getValue()).begin() + getOffset();
 }
 
 template<typename T>
@@ -422,7 +422,7 @@ template<typename T>
 typename ValueInfo<T>::Iterator
 SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>::begin()
 {
-	return  makeByteRange(getValue()).begin()
+	return  makeUcharRange(getValue()).begin()
 			+ sizeof(getValue()) - getSize() - getOffset();
 }
 
@@ -430,7 +430,7 @@ template<typename T>
 typename ValueInfo<T>::ConstIterator
 SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>::begin() const
 {
-	return makeConstByteRange(getValue()).begin()
+	return makeConstUcharRange(getValue()).begin()
 			+ sizeof(getValue()) - getSize() - getOffset();
 }
 

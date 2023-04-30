@@ -156,7 +156,7 @@ template<typename T>
 Types::uichar_t *Deserializer<ORDER, IS_VOLATILE>::castToByteArray(T &value)
 {
 	void *pointer = &value;
-	return static_cast<uint8_t*>(pointer);
+	return static_cast<Types::uichar_t *>(pointer);
 }
 
 }}
