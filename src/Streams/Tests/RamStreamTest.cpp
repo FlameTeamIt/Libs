@@ -34,7 +34,7 @@ int RamStreamTest::vStart()
 			)
 	);
 	auto result = stream.write(writtableRange);
-	IN_CASE_CHECK(result == writtableArray.size());
+	IN_CASE_CHECK(result == static_cast<Types::ssize_t>(writtableArray.size()));
 
 	auto readableRange = RamStream::OutputByteRange(
 			RamStream::ByteIterator(&readableArray.front())
@@ -42,7 +42,8 @@ int RamStreamTest::vStart()
 	);
 
 	result = stream.read(readableRange);
-	IN_CASE_CHECK(result == writtableArray.size() && result == readableArray.size());
+	IN_CASE_CHECK(result == static_cast<Types::ssize_t>(writtableArray.size())
+			&& result == static_cast<Types::ssize_t>(readableArray.size()));
 
 	IN_CASE_CHECK(std::equal(
 			readableArray.begin(), readableArray.end(), writtableArray.begin()

@@ -12,7 +12,6 @@ class Library: public flame_ide::NonCopy
 {
 public:
 	Library() noexcept;
-
 	Library(Library &&library) noexcept;
 
 	/// @brief Contructor
@@ -29,7 +28,7 @@ public:
 
 	/// @brief Find typed symbols
 	/// @tparam SymbolType Symbol type
-	/// @param name Symbol name
+	/// @param[in] name Symbol name
 	/// @return Symbol pointer, which can be nullptr if not found
 	template<typename SymbolType>
 	SymbolType find(const char *name) noexcept;

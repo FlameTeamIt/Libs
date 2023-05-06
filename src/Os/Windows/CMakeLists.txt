@@ -24,3 +24,5 @@ flame_compile_library(
 	NO_RTTI
 	NO_EXCEPTIONS
 )
+
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/Errors)

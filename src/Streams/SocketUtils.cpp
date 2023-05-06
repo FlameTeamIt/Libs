@@ -40,11 +40,11 @@ Ipv4::ExpectedAddress stringToIpv4(const char *address)
 	return result;
 }
 
-Ipv4::AddressString ipv4ToString(const Ipv4 &address)
-{
-	(void)address;
-	return Ipv4::AddressString{};
-}
+//Ipv4::AddressString ipv4ToString(const Ipv4 &address)
+//{
+//	(void)address;
+//	return Ipv4::AddressString{};
+//}
 
 } // namespace anonymous
 
@@ -134,7 +134,7 @@ Ipv6::Ipv6(const Ipv6 &address) noexcept
 	);
 }
 
-Ipv6::Ipv6(const char* address) noexcept
+Ipv6::Ipv6(const char* /*address*/) noexcept
 {}
 
 Ipv6 &Ipv6::operator=(const Ipv6 &address) noexcept

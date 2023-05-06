@@ -1,7 +1,6 @@
 #include <FlameIDE/../../src/Os/Tests/LibraryTest.hpp>
 
 #include <FlameIDE/Os/Library.hpp>
-
 #include <FlameIDE/Crypto/Pkcs11/Types/Callbacks.hpp>
 
 namespace flame_ide

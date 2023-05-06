@@ -80,7 +80,7 @@ os::FileDescriptor NamedPipeStream::getWriterFileDescriptor(bool continueOwning)
 	return writer.getFileDescriptor(continueOwning);
 }
 
-os::Status NamedPipeStream::open(const char *name, bool deletePipe) noexcept
+os::Status NamedPipeStream::open(const char *name, bool /*deletePipe*/) noexcept
 {
 	deinit();
 

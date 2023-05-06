@@ -37,7 +37,7 @@ using U8String = BasicString<Types::uichar_t>;
 using U16String = BasicString<Types::ushort_t>;
 using U32String = BasicString<Types::uint_t>;
 
-}}
+}} // namespace flame_ide::templates
 
 // Define types
 
@@ -179,7 +179,7 @@ STRING_TYPE operator+(const STRING_TYPE &string, typename STRING_TYPE::PointerTo
 TEMPLATE_TYPE
 STRING_TYPE operator+(typename STRING_TYPE::PointerToConst array, const STRING_TYPE &string);
 
-}}
+}} // namespace flame_ide::templates
 
 namespace flame_ide
 {namespace templates
@@ -865,7 +865,6 @@ STRING_TYPE operator+(typename STRING_TYPE::PointerToConst array
 	return resultString;
 }
 
-
-}}
+}} // namespace flame_ide::templates
 
 #endif // FLAMEIDE_TEMPLATES_STRING_HPP

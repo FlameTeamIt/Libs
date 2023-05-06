@@ -17,8 +17,8 @@ Thread::Thread() noexcept :
 {}
 
 Thread::Thread(Thread &&thread) noexcept :
-	context{ thread.context }
-	, status{ os::STATUS_SUCCESS }
+		context{ thread.context }
+		, status{ os::STATUS_SUCCESS }
 {
 	thread.context = os::THREAD_CONTEXT_INITIALIZER;
 }
@@ -89,7 +89,6 @@ Thread::task(os::ThreadTaskTrait::ArgumentType data) noexcept
 	ExitThread(0);
 }
 
-
-}}
+}} // namespace flame_ide::threads
 
 #endif // FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS

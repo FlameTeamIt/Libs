@@ -16,11 +16,7 @@ namespace flame_ide
 {
 
 LibraryHandle getHandle(const char *name, const char *directory) noexcept;
-
-LibraryHandle &handleRef(void *input)
-{
-	return *static_cast<LibraryHandle *>(input);
-}
+LibraryHandle &handleRef(void *input) noexcept;
 
 }}} // namespace anonymous
 
@@ -72,12 +68,12 @@ LibraryHandle::Symbol Library::internalFind(const char *name) noexcept
 	return library::findSymbol(handleRef(handle), name);
 }
 
-}}
-
+}} // namespace flame_ide::os
 
 namespace flame_ide
 {namespace os
-{namespace
+{
+namespace
 {
 
 LibraryHandle getHandle(const char *name, const char *directory) noexcept
@@ -137,4 +133,10 @@ LibraryHandle getHandle(const char *name, const char *directory) noexcept
 	}
 }
 
-}}} // namespace anonymous
+LibraryHandle &handleRef(void *input) noexcept
+{
+	return *static_cast<LibraryHandle *>(input);
+}
+
+} // namespace anonumous
+}} // namespace flame_ide::os
