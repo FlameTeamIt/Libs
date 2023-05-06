@@ -7,7 +7,7 @@
 namespace flame_ide
 {
 
-enum class byte_t: uichar_t
+enum class byte_t: Types::uichar_t
 {};
 
 template<typename IntegerType>

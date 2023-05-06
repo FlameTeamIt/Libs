@@ -1,7 +1,6 @@
 #ifndef FLAMEIDE_COMMON_REFERENCE_WRAPPER_HPP
 #define FLAMEIDE_COMMON_REFERENCE_WRAPPER_HPP
 
-#include "FlameIDE/Common/Traits/Numbers.hpp"
 #include <FlameIDE/Common/Traits/ContainerTraits.hpp>
 
 namespace flame_ide

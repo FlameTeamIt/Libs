@@ -9,7 +9,12 @@ namespace flame_ide
 ///
 struct NonDefault
 {
-	NonDefault() = delete;
+	NonDefault() noexcept = delete;
+	NonDefault(const NonDefault &) noexcept = default;
+	NonDefault(NonDefault &&) noexcept = default;
+
+	NonDefault& operator=(const NonDefault &) noexcept = default;
+	NonDefault& operator=(NonDefault &&) noexcept = default;
 };
 
 ///
@@ -19,6 +24,7 @@ struct NonMove
 {
 	NonMove() noexcept = default;
 	NonMove(NonMove &&) = delete;
+
 	NonMove &operator=(NonMove &&) = delete;
 };
 
@@ -29,6 +35,7 @@ struct NonCopy
 {
 	NonCopy() noexcept = default;
 	NonCopy(const NonCopy &) = delete;
+
 	NonCopy &operator=(const NonCopy &) = delete;
 };
 

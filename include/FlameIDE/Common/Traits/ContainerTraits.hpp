@@ -27,7 +27,6 @@ template<typename T>
 struct ContainerTraits: public DefaultTraits<T>, public SizeTraits
 {};
 
-
 ///
 /// @brief Default traits for containers such as Array, Vector, etc.
 /// @tparam Is volatile type.
@@ -50,6 +49,25 @@ struct SerializationTraits<true>
 
 	using InternalDataBlock = volatile Types::uichar_t *;
 	using ConstInternalDataBlock =  const volatile Types::uichar_t *;
+};
+
+///
+/// @brief Traits for static array
+/// @tparam T Array cell type
+/// @tparam SIZE Elements count
+///
+template<typename T, Types::size_t SIZE>
+struct ArrayTraits: public NonCreational
+{
+	using Type = T[SIZE];
+	using Reference = Type &;
+	using MoveReference = Type &&;
+	using ConstReference = const Type &;
+
+	using Pointer = Type *;
+	using ConstPointer = const Pointer;
+	using PointerToConst = const Type *;
+	using ConstPointerToConst = const PointerToConst;
 };
 
 }
