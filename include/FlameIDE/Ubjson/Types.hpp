@@ -7,7 +7,7 @@ namespace flame_ide
 {namespace ubjson
 {
 
-enum class Type : uichar_t
+enum class ValueType : uichar_t
 {
 	NULLVAL = 'Z'
 	, NOOP = 'N'
@@ -30,7 +30,7 @@ enum class Type : uichar_t
 	, ERROR = 0xFF
 };
 
-enum EnumeratedType : uichar_t
+enum EnumeratedValueType : uichar_t
 {
 	NULLVAL
 	, NOOP

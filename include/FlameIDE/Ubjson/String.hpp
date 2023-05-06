@@ -19,7 +19,7 @@ namespace flame_ide
 class String
 {
 public:
-	static constexpr size_t STATIC_STRING_SIZE = Settings::MAX_STATIC_SIZE;
+	static constexpr size_t STATIC_STRING_SIZE = Settings::MAX_STATIC_STRING_SIZE;
 	using StringVariant = templates::Variant<
 		templates::String, templates::Array<char_t, STATIC_STRING_SIZE>
 	>;
