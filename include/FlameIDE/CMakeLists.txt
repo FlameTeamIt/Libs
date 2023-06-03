@@ -12,7 +12,6 @@ set(HEADER_MODULES
 	${FLAME_INCLUDE_SUBMODLUES_PATH}/Others
 	${FLAME_INCLUDE_SUBMODLUES_PATH}/Streams
 	${FLAME_INCLUDE_SUBMODLUES_PATH}/Templates
-	${FLAME_INCLUDE_SUBMODLUES_PATH}/Threads
 	${FLAME_INCLUDE_SUBMODLUES_PATH}/Ubjson
 )
 foreach(module ${HEADER_MODULES})
@@ -20,4 +19,3 @@ foreach(module ${HEADER_MODULES})
 endforeach()
 
 flame_resolve_targets()
-

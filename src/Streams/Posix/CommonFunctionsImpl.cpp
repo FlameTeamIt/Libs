@@ -1,7 +1,7 @@
 #include <FlameIDE/../../src/Streams/CommonFuncitons.hpp>
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
-#include <FlameIDE/Threads/Thread.hpp>
+#include <FlameIDE/Os/Threads/Thread.hpp>
 
 #include <fcntl.h>
 #include <unistd.h>

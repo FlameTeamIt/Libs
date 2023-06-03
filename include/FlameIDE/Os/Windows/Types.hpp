@@ -12,6 +12,7 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <winnt.h>
+#include <errno.h>
 
 namespace flame_ide
 {
@@ -43,15 +44,15 @@ struct IsUnsignedTrait<::DWORD>: public TrueType
 template<>
 struct NumberLimitTrait<::LONG>
 {
-	static constexpr LONG MIN_VALUE = INT32_MIN;
-	static constexpr LONG MAX_VALUE = INT32_MAX;
+	static constexpr ::LONG MIN_VALUE = INT32_MIN;
+	static constexpr ::LONG MAX_VALUE = INT32_MAX;
 };
 
 template<>
 struct NumberLimitTrait<::DWORD>
 {
-	static constexpr LONG MIN_VALUE = 0;
-	static constexpr LONG MAX_VALUE = UINT32_MAX;
+	static constexpr ::DWORD MIN_VALUE = 0;
+	static constexpr ::DWORD MAX_VALUE = UINT32_MAX;
 };
 
 template<>
@@ -117,32 +118,32 @@ union OsFileDescriptor
 		return *this;
 	}
 
-	constexpr bool operator==(const OsFileDescriptor &fd) noexcept
+	constexpr bool operator==(const OsFileDescriptor &fd) const noexcept
 	{
 		return value == fd.value;
 	}
 
-	constexpr bool operator==(::HANDLE handle1) noexcept
+	constexpr bool operator==(::HANDLE handle1) const noexcept
 	{
 		return handle == handle1;
 	}
 
-	constexpr bool operator==(flame_ide::ssize_t value1) noexcept
+	constexpr bool operator==(flame_ide::ssize_t value1) const noexcept
 	{
 		return value == value1;
 	}
 
-	constexpr bool operator!=(const OsFileDescriptor &fd) noexcept
+	constexpr bool operator!=(const OsFileDescriptor &fd) const noexcept
 	{
 		return !operator==(fd);
 	}
 
-	constexpr bool operator!=(::HANDLE handle1) noexcept
+	constexpr bool operator!=(::HANDLE handle1) const noexcept
 	{
 		return !operator==(handle1);
 	}
 
-	constexpr bool operator!=(flame_ide::ssize_t value1) noexcept
+	constexpr bool operator!=(flame_ide::ssize_t value1) const noexcept
 	{
 		return !operator==(value1);
 	}
@@ -161,6 +162,8 @@ union OsFileDescriptor
 	flame_ide::ssize_t value;
 };
 
+using OsSecurityAttributes = ::SECURITY_ATTRIBUTES;
+
 using OsStatus = flame_ide::MakeSignedType<::DWORD>;
 
 using OsSocketAddressIn = ::SOCKADDR_IN;
@@ -173,8 +176,8 @@ struct OsSocket
 	OsSocket(const OsSocket &) noexcept = default;
 
 	constexpr OsSocket(
-			const OsSocketAddressIn address, const OsSocketDescriptor descriptor
-	) noexcept : address{address}, descriptor{descriptor}
+			const OsSocketDescriptor descriptor, const OsSocketAddressIn address
+	) noexcept : descriptor{descriptor}, address{address}
 	{}
 
 	OsSocket(const OsSocketReceive &) noexcept;
@@ -182,8 +185,8 @@ struct OsSocket
 	OsSocket &operator=(const OsSocket &) noexcept = default;
 	OsSocket &operator=(const OsSocketReceive &socketReceive) noexcept;
 
-	OsSocketAddressIn address = {};
 	OsSocketDescriptor descriptor = INVALID_SOCKET;
+	OsSocketAddressIn address = {};
 };
 struct OsSocketReceive
 {
@@ -198,26 +201,63 @@ struct OsSocketReceive
 	const OsSocketDescriptor *descriptor = nullptr;
 };
 
-using OsThreadContext = OsFileDescriptor;
-struct OsThreadTaskTrait : NonCreational
-{
-	using ReturnType = DWORD;
-	using ArgumentType = LPVOID;
-};
-
-using OsMutexContext = OsFileDescriptor;
-
-using OsSemaphoreValue = LONG;
-struct OsSemaphoreContext
+using OsThreadId = ::DWORD;
+struct OsThreadContext
 {
 	OsFileDescriptor object;
+	OsThreadId id;
+
+	constexpr bool operator==(const OsThreadContext &context) const noexcept
+	{
+		return (object.value == context.object.value) && (id == context.id);
+	}
+
+	constexpr bool operator!=(const OsThreadContext &context) const noexcept
+	{
+		return !operator==(context);
+	}
+};
+
+struct OsThreadTaskTrait: public NonCreational
+{
+	using Return = DWORD;
+	using Argument = LPVOID;
+	using Task = Return(*)(Argument);
+};
+
+struct OsMutexContext
+{
+	OsFileDescriptor object;
+};
+
+using OsSemaphoreValue = ::LONG;
+struct OsSemaphoreContext
+{
+	inline bool operator==(const OsSemaphoreContext &context) const
+	{
+		return (context.object.value == object.value)
+				&& (context.value == value);
+	}
+
+	inline bool operator!=(const OsSemaphoreContext &context) const
+	{
+		return !operator==(context);
+	}
+
+	OsFileDescriptor object;
 	OsSemaphoreValue value;
+};
+
+using OsSpinlockValue = ::LONG;
+struct OsSpinlockContext
+{
+	OsSpinlockValue value;
 };
 
 struct OsLibraryHandle
 {
 	using Handle = decltype(LoadLibraryA(nullptr));
-	using Symbol = void *; //decltype(GetProcAddress(Handle{}, nullptr));
+	using Symbol = decltype(GetProcAddress(Handle{}, nullptr));
 
 	Handle address = Handle{};
 };

@@ -21,7 +21,9 @@ constexpr OsSocket OS_SOCKET_INITIALIZER = {
 		OS_SOCKET_ADDRESS_INITIALIZER, OS_SOCKET_DESCRIPTOR_INITIALIZER
 };
 
-constexpr OsSocket OS_SOCKET_INVALID = OsSocket{{}, OS_INVALID_DESCRIPTOR};
+constexpr OsSocket OS_SOCKET_INVALID = OsSocket{
+		OS_SOCKET_ADDRESS_INITIALIZER, OS_INVALID_DESCRIPTOR
+};
 
 constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OsThreadContext{};
 
@@ -34,6 +36,8 @@ constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = OsSemaphoreConte
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1u;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID =
 		NumberLimitTrait<OsSemaphoreValue>::MAX_VALUE;
+
+#define OS_SPINLOCK_INITIALIZER OsSpinlockContext{}
 
 constexpr char OS_PLATFORM_PREFIX[] = "/tmp/";
 
