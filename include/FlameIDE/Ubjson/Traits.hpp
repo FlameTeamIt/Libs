@@ -27,17 +27,17 @@ class Value;
 template<EnumeratedValueType UBJSON_TYPE>
 struct ValueTraits
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::ERROR;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::ERROR;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::FalseType::VALUE;
-	using ValueType = decltype(nullptr);
+	using ValueType = void;
 };
 
 template<>
 struct ValueTraits<EnumeratedValueType::NULLVAL>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::NULLVAL;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::NULLVAL;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::FalseType::VALUE;
 	using ValueType = NullValue;
 };
@@ -45,8 +45,8 @@ struct ValueTraits<EnumeratedValueType::NULLVAL>
 template<>
 struct ValueTraits<EnumeratedValueType::NOOP>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::NOOP;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::NOOP;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::FalseType::VALUE;
 	using ValueType = Noop;
 };
@@ -54,8 +54,8 @@ struct ValueTraits<EnumeratedValueType::NOOP>
 template<>
 struct ValueTraits<EnumeratedValueType::TRUE>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::TRUE;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::TRUE;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = True;
 };
@@ -63,8 +63,8 @@ struct ValueTraits<EnumeratedValueType::TRUE>
 template<>
 struct ValueTraits<EnumeratedValueType::FALSE>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::FALSE;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::FALSE;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = False;
 };
@@ -72,8 +72,8 @@ struct ValueTraits<EnumeratedValueType::FALSE>
 template<>
 struct ValueTraits<EnumeratedValueType::INT8>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::INT8;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::INT8;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = ichar_t;
 };
@@ -81,8 +81,8 @@ struct ValueTraits<EnumeratedValueType::INT8>
 template<>
 struct ValueTraits<EnumeratedValueType::UINT8>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::UINT8;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::UINT8;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = Types::uichar_t;
 };
@@ -90,8 +90,8 @@ struct ValueTraits<EnumeratedValueType::UINT8>
 template<>
 struct ValueTraits<EnumeratedValueType::INT16>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::INT16;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::INT16;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = Types::short_t;
 };
@@ -99,8 +99,8 @@ struct ValueTraits<EnumeratedValueType::INT16>
 template<>
 struct ValueTraits<EnumeratedValueType::INT32>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::INT32;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::INT32;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = Types::int_t;
 };
@@ -108,8 +108,8 @@ struct ValueTraits<EnumeratedValueType::INT32>
 template<>
 struct ValueTraits<EnumeratedValueType::INT64>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::INT64;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::INT64;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = Types::long_t;
 };
@@ -117,8 +117,8 @@ struct ValueTraits<EnumeratedValueType::INT64>
 template<>
 struct ValueTraits<EnumeratedValueType::FLOAT32>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::FLOAT32;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::FLOAT32;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = Types::float_t;
 };
@@ -126,8 +126,8 @@ struct ValueTraits<EnumeratedValueType::FLOAT32>
 template<>
 struct ValueTraits<EnumeratedValueType::FLOAT64>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::FLOAT64;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::FLOAT64;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = Types::double_t;
 };
@@ -135,8 +135,8 @@ struct ValueTraits<EnumeratedValueType::FLOAT64>
 template<>
 struct ValueTraits<EnumeratedValueType::CHAR>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::CHAR;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::CHAR;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = Types::char_t;
 };
@@ -144,8 +144,8 @@ struct ValueTraits<EnumeratedValueType::CHAR>
 template<>
 struct ValueTraits<EnumeratedValueType::HUGE_NUM>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::HUGE_NUM;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::HUGE_NUM;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = TrueType::VALUE;
 	using ValueType = HugeNumber;
 };
@@ -153,8 +153,8 @@ struct ValueTraits<EnumeratedValueType::HUGE_NUM>
 template<>
 struct ValueTraits<EnumeratedValueType::STRING>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::STRING;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ERROR;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::STRING;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ERROR;
 	static constexpr bool DATA_PAYLOAD = flame_ide::TrueType::VALUE;
 	using ValueType = String;
 };
@@ -162,8 +162,8 @@ struct ValueTraits<EnumeratedValueType::STRING>
 template<>
 struct ValueTraits<EnumeratedValueType::ARRAY>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::ARRAY_OPEN;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::ARRAY_CLOSE;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::ARRAY_OPEN;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::ARRAY_CLOSE;
 	static constexpr bool DATA_PAYLOAD = TrueType::VALUE;
 	using ValueType = Array;
 };
@@ -171,8 +171,8 @@ struct ValueTraits<EnumeratedValueType::ARRAY>
 template<>
 struct ValueTraits<EnumeratedValueType::OBJECT>
 {
-	static constexpr ValueType VALUE_TYPE = ValueType::OBJECT_OPEN;
-	static constexpr ValueType VALUE_TYPE_CLOSE = ValueType::OBJECT_CLOSE;
+	static constexpr auto VALUE_TYPE = ubjson::ValueType::OBJECT_OPEN;
+	static constexpr auto VALUE_TYPE_CLOSE = ubjson::ValueType::OBJECT_CLOSE;
 	static constexpr bool DATA_PAYLOAD = TrueType::VALUE;
 	using ValueType = Object;
 };
