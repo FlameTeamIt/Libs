@@ -83,7 +83,7 @@ Socket createUdpServer(Ipv4::Port port) noexcept
 	if (!winsockInit())
 		return socket;
 
-	socket = Socket{ ipAddressServer(port), udpСreateSocket() };
+	socket = Socket{ udpСreateSocket(), ipAddressServer(port) };
 
 	const auto address = reinterpret_cast<const ::SOCKADDR *>(&socket.address);
 	const auto result = ::bind(socket.descriptor, address, sizeof(socket.address));
@@ -102,7 +102,7 @@ Socket createUdpClient(Ipv4 ipServer) noexcept
 	if (!winsockInit())
 		return socket;
 
-	socket = Socket{ ipAddressClient(ipServer), udpСreateSocket() };
+	socket = Socket{ udpСreateSocket(), ipAddressClient(ipServer) };
 	if (socket.descriptor == INVALID_SOCKET)
 	{
 		socket = Socket{};
@@ -119,7 +119,7 @@ Socket createTcpServer(Ipv4::Port port) noexcept
 	if (!winsockInit())
 		return socket;
 
-	socket = Socket{ ipAddressServer(port), tcpCreateSocket() };
+	socket = Socket{ tcpCreateSocket(), ipAddressServer(port) };
 
 	const auto address = reinterpret_cast<const ::SOCKADDR *>(&socket.address);
 	const auto result = ::bind(socket.descriptor, address, sizeof(socket.address));
@@ -137,7 +137,7 @@ Socket createTcpClient(Ipv4 ipServer) noexcept
 	if (!winsockInit())
 		return socket;
 
-	socket = Socket{ ipAddressClient(ipServer), tcpCreateSocket() };
+	socket = Socket{ tcpCreateSocket(), ipAddressClient(ipServer) };
 	if (socket.descriptor == INVALID_SOCKET)
 	{
 		socket = Socket{};

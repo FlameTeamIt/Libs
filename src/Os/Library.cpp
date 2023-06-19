@@ -67,9 +67,11 @@ Library::operator bool() const noexcept
 	return handleRef(handle).address != LIBRARY_HANDLE_INVALID.address;
 }
 
-LibraryHandle::Symbol Library::internalFind(const char *name) noexcept
+void *Library::internalFind(const char *name) noexcept
 {
-	return library::findSymbol(handleRef(handle), name);
+	return reinterpret_cast<void *>(
+			library::findSymbol(handleRef(handle), name)
+	);
 }
 
 }}
