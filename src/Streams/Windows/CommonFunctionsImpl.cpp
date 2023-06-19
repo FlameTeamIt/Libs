@@ -2,7 +2,7 @@
 
 #include <FlameIDE/Os/Constants.hpp>
 
-#include <FlameIDE/Threads/Thread.hpp>
+#include <FlameIDE/Os/Threads/Thread.hpp>
 
 #include <iostream>
 
@@ -32,7 +32,7 @@ Descriptors::ResultValue makeNamedPipeClient(const char *pipeName)
 
 	if (!pipe.handle || pipe == os::INVALID_DESCRIPTOR)
 	{
-		auto err = getLastError();
+		os::Status err = ::GetLastError();
 		return { pipe, err };
 	}
 
@@ -54,13 +54,13 @@ Descriptors::ResultValue makeNamedPipeServer(const char *pipeName)
 
 	if (!pipe.handle || pipe == os::INVALID_DESCRIPTOR)
 	{
-		auto err = getLastError();
+		os::Status err = ::GetLastError();
 		return { pipe, err };
 	}
 
 	if (!::ConnectNamedPipe(pipe, nullptr))
 	{
-		auto err = getLastError();
+		os::Status err = ::GetLastError();
 		::CloseHandle(pipe);
 		return { os::INVALID_DESCRIPTOR, err };
 	}

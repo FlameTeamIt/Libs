@@ -2,7 +2,7 @@
 
 #include <FlameIDE/Os/Constants.hpp>
 
-#include <FlameIDE/Threads/Thread.hpp>
+#include <FlameIDE/Os/Threads/Thread.hpp>
 
 #include <errno.h>
 
@@ -16,7 +16,7 @@ namespace // anonymous
 ///
 /// @brief The MakeNamedPipeThread class
 ///
-class MakeNamedPipeThread: public threads::Thread
+class MakeNamedPipeThread: public os::threads::ThreadBase
 {
 public:
 	MakeNamedPipeThread(const char *initPipeName, os::ActionType initAction) :
@@ -29,7 +29,7 @@ public:
 	}
 
 private:
-	virtual void vRun() override
+	virtual void vRun() noexcept override
 	{
 		descriptors = makeNamedPipe(pipeName, action);
 	}
@@ -42,7 +42,7 @@ private:
 ///
 /// @brief The DestroyNamedPipeThread class
 ///
-class DestroyNamedPipeThread: public threads::Thread
+class DestroyNamedPipeThread: public os::threads::ThreadBase
 {
 public:
 	DestroyNamedPipeThread(Descriptors::ResultValue initFd, os::ActionType initAction) :
@@ -55,7 +55,7 @@ public:
 	}
 
 private:
-	virtual void vRun() override
+	virtual void vRun() noexcept override
 	{
 		if (action == os::ActionType::READER)
 		{

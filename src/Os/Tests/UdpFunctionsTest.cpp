@@ -6,11 +6,11 @@
 #include <FlameIDE/Common/Byte.hpp>
 
 #include <FlameIDE/Os/Constants.hpp>
+#include <FlameIDE/Os/Threads/Thread.hpp>
 
 #include <FlameIDE/Templates/IntegerIterator.hpp>
 #include <FlameIDE/Templates/Range.hpp>
 #include <FlameIDE/Templates/RaiiCaller.hpp>
-#include <FlameIDE/Threads/Thread.hpp>
 
 #include <iostream>
 
@@ -27,7 +27,7 @@ namespace flame_ide
 static constexpr flame_ide::Types::size_t MESSAGE_SIZE = sizeof(MESSAGE);
 const Ipv4 ip = Ipv4::localhost(65001);
 
-struct UdpServerNoWaitThread: public threads::Thread
+struct UdpServerNoWaitThread: public os::threads::ThreadCrtp<UdpServerNoWaitThread>
 {
 public:
 	UdpServerNoWaitThread() : server{ socket::createUdpServer(ip.operator Ipv4::Address().port) }
@@ -42,8 +42,8 @@ public:
 	{
 		return result;
 	}
-private:
-	void vRun() override
+
+	void body() noexcept
 	{
 		byte_t messageBuffer[MESSAGE_SIZE];
 		auto range = templates::makeRange(messageBuffer);
@@ -63,7 +63,7 @@ private:
 	AbstractTest::ResultType result = AbstractTest::SUCCESS;
 };
 
-struct UdpServerWaitThread: public threads::Thread
+struct UdpServerWaitThread: public os::threads::ThreadCrtp<UdpServerWaitThread>
 {
 public:
 	UdpServerWaitThread()
@@ -80,8 +80,8 @@ public:
 	{
 		return result;
 	}
-private:
-	void vRun() override
+
+	void body() noexcept
 	{
 		byte_t messageBuffer[MESSAGE_SIZE];
 		auto range = templates::makeRange(messageBuffer);
@@ -111,7 +111,7 @@ private:
 };
 
 // server - receive "ping" and send "pong"
-struct UdpPong: public threads::Thread
+struct UdpPong: public os::threads::ThreadCrtp<UdpPong>
 {
 public:
 	UdpPong(Types::size_t count)
@@ -128,8 +128,8 @@ public:
 	{
 		return result;
 	}
-private:
-	void vRun() override
+
+	void body() noexcept
 	{
 		if (server.descriptor == SOCKET_INVALID.descriptor)
 		{
@@ -190,7 +190,7 @@ private:
 };
 
 // client - send "ping" and receive "pong"
-struct UdpPing: public threads::Thread
+struct UdpPing: public os::threads::ThreadCrtp<UdpPing>
 {
 public:
 	UdpPing(Types::size_t count)
@@ -207,8 +207,8 @@ public:
 	{
 		return result;
 	}
-private:
-	void vRun() override
+
+	void body() noexcept
 	{
 		if (client.descriptor == SOCKET_INVALID.descriptor)
 		{

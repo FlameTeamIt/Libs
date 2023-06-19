@@ -2,7 +2,7 @@
 
 #include <FlameIDE/Crypto/Pkcs11/Types/Enums.hpp>
 
-#include <FlameIDE/Threads/Mutex.hpp>
+#include <FlameIDE/Os/Threads/Mutex.hpp>
 #include <FlameIDE/Templates/Allocator/ObjectAllocator.hpp>
 
 namespace flame_ide
@@ -14,7 +14,7 @@ namespace // anonymous
 
 using ReturnType = enums::ReturnType;
 
-using Mutex = threads::Mutex;
+using Mutex = os::threads::Mutex;
 using MutexAllocator = templates::allocator::ObjectAllocator<Mutex>;
 using MutexPtr = DefaultTraits<Mutex>::Pointer;
 
@@ -42,19 +42,13 @@ ReturnType destroyMutexWrapper(MutexPtr &mutex) noexcept
 
 ReturnType lockMutexWrapper(Mutex &mutex) noexcept
 {
-	if (mutex.getState() == Mutex::State::UNLOCKED)
-	{
-		mutex.lock();
-	}
+	mutex.lock();
 	return ReturnType::OK;
 }
 
 ReturnType unlockMutexWrapper(Mutex &mutex) noexcept
 {
-	if (mutex.getState() == Mutex::State::LOCKED)
-	{
-		mutex.unlock();
-	}
+	mutex.unlock();
 	return ReturnType::OK;
 }
 

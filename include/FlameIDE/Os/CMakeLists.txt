@@ -20,6 +20,7 @@ flame_header_library(
 set(HEADER_MODULES
 	${CMAKE_CURRENT_LIST_DIR}/Posix
 	${CMAKE_CURRENT_LIST_DIR}/Windows
+	${CMAKE_CURRENT_LIST_DIR}/Threads
 )
 foreach(module ${HEADER_MODULES})
 	add_subdirectory(${module})
