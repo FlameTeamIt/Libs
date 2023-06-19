@@ -14,20 +14,32 @@ namespace flame_ide
 constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = OsFileDescriptor(flame_ide::ssize_t(-1));
 constexpr OsFileDescriptor OS_DESCRIPTOR_INITIALIZER = OsFileDescriptor(flame_ide::ssize_t{});
 
+constexpr OsSecurityAttributes OS_SECURITY_ATTRIBUTES = {
+		sizeof(windows::OsSecurityAttributes), nullptr, false
+};
+
 constexpr OsStatus OS_STATUS_SUCCESS = 0;
 constexpr OsStatus OS_STATUS_FAILED = -1;
+
+constexpr ::DWORD OS_INFINITE_WAIT = INFINITE;
+constexpr ::DWORD OS_NO_WAIT = 0;
 
 constexpr OsSocketAddressIn OS_SOCKET_ADDRESS_INITIALIZER = {};
 constexpr OsSocketDescriptor OS_SOCKET_DESCRIPTOR_INITIALIZER = {};
 constexpr OsSocket OS_SOCKET_INITIALIZER = {
-		OS_SOCKET_ADDRESS_INITIALIZER, OS_SOCKET_DESCRIPTOR_INITIALIZER
+		OS_SOCKET_DESCRIPTOR_INITIALIZER, OS_SOCKET_ADDRESS_INITIALIZER
 };
 
-constexpr OsSocket OS_SOCKET_INVALID = OsSocket{{}, INVALID_SOCKET};
+constexpr OsSocket OS_SOCKET_INVALID = OsSocket{ INVALID_SOCKET, {} };
 
-constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = OS_DESCRIPTOR_INITIALIZER;
+constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = {
+	OS_DESCRIPTOR_INITIALIZER, flame_ide::NumberLimitValueMin<OsThreadId>
+};
+constexpr OsThreadId OS_THREAD_ID_DETACHED = NumberLimitValueMax<OsThreadId>;
 
-constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = OS_DESCRIPTOR_INITIALIZER;
+constexpr OsMutexContext OS_MUTEX_CONTEXT_INITIALIZER = {
+		OS_INVALID_DESCRIPTOR
+};
 
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_DEFAULT = 1;
 constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID = NumberLimitTrait<
@@ -35,8 +47,12 @@ constexpr OsSemaphoreValue OS_SEMAPHORE_VALUE_INVALID = NumberLimitTrait<
 >::MIN_VALUE;
 
 constexpr OsSemaphoreContext OS_SEMAPHORE_CONTEXT_INITIALIZER = {
-	OS_DESCRIPTOR_INITIALIZER, OS_SEMAPHORE_VALUE_INVALID
+		OS_INVALID_DESCRIPTOR, OS_SEMAPHORE_VALUE_INVALID
 };
+
+constexpr OsSpinlockValue OS_SPINLOCK_VALUE_UNLOCKED = 1;
+constexpr OsSpinlockValue OS_SPINLOCK_VALUE_LOCKED = 2;
+constexpr OsSpinlockContext OS_SPINLOCK_INITIALIZER = { NumberLimitValueMax<OsSpinlockValue> };
 
 constexpr DWORD OS_INBOUND_BUFFER_SIZE = 1024;
 
@@ -53,7 +69,7 @@ constexpr char OS_LIBRARY_SUFFIX_SHARED[] = ".dll";
 
 constexpr char OS_DIRECTORY_SLASH = '\\';
 
-}}}
+}}} // flame_ide::os::windows
 
 #ifndef FLAMEIDE_OS_NAMESPACE
 #	define FLAMEIDE_OS_NAMESPACE ::flame_ide::os::windows

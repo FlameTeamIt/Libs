@@ -7,6 +7,7 @@
 
 #include <FlameIDE/Common/Traits/CreationProhibitions.hpp>
 #include <FlameIDE/Common/Traits/Numbers.hpp>
+#include <FlameIDE/Common/Utils.hpp>
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -101,9 +102,9 @@ struct OsThreadContext
 };
 struct OsThreadTaskTrait: public NonCreational
 {
-	using ReturnType = void *;
-	using ArgumentType = void *;
-	using TaskType = ReturnType(*)(ArgumentType);
+	using Return = void *;
+	using Argument = void *;
+	using Task = Return(*)(Argument);
 };
 
 struct OsMutexContext
@@ -112,13 +113,25 @@ struct OsMutexContext
 	pthread_mutexattr_t attributes;
 };
 
-using OsSemaphoreContext = ::sem_t;
-using OsSemaphoreValue = unsigned int;
+using OsSemaphoreObject = ::sem_t;
+struct OsSemaphoreContext
+{
+	OsSemaphoreObject object;
+
+	bool operator==(const OsSemaphoreContext &context) const noexcept
+	{
+		return isEqual(object, context.object);
+	}
+};
+
+using OsSemaphoreValue = int;
+
+using OsSpinlockContext = ::pthread_spinlock_t;
 
 struct OsLibraryHandle
 {
 	using Handle = decltype(dlopen(nullptr, 0));
-	using Symbol = decltype(dlsym((void *)(0x1), (const char *)(0x1)));
+	using Symbol = decltype(dlsym((void *)(0x0), (const char *)(0x10)));
 	static constexpr auto OPEN_FLAG = RTLD_LAZY;
 
 	Handle address = Handle{};

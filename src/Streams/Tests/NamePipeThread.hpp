@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_STREAMS_TESTS_NAMEDPIPETHEAD_HPP
 #define FLAMEIDE_STREAMS_TESTS_NAMEDPIPETHEAD_HPP
 
-#include <FlameIDE/Threads/Thread.hpp>
+#include <FlameIDE/Os/Threads/Thread.hpp>
 #include <FlameIDE/Templates/Variant.hpp>
 
 #include <FlameIDE/Streams/NamedPipeReader.hpp>
@@ -14,7 +14,7 @@ namespace flame_ide
 {namespace tests
 {
 
-class NamedPipeThreadCreation: public threads::Thread
+class NamedPipeThreadCreation: public os::threads::ThreadBase
 {
 public:
 	NamedPipeThreadCreation(const char *initName, os::ActionType initAction) noexcept :
@@ -27,7 +27,7 @@ public:
 	}
 
 private:
-	void vRun()
+	void vRun() noexcept override
 	{
 		pipe.reset();
 		if (action == os::ActionType::READER)

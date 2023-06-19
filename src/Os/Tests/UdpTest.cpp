@@ -2,10 +2,10 @@
 
 #include <FlameIDE/Os/UdpClient.hpp>
 #include <FlameIDE/Os/UdpServer.hpp>
+#include <FlameIDE/Os/Threads/Thread.hpp>
 
 #include <FlameIDE/Templates/IntegerIterator.hpp>
 #include <FlameIDE/Templates/Range.hpp>
-#include <FlameIDE/Threads/Thread.hpp>
 
 #define MESSAGE_PING "ping"
 #define MESSAGE_PONG "pong"
@@ -17,7 +17,7 @@ namespace flame_ide
 {
 
 // server - receive "ping" and send "pong"
-struct UdpSeverPong: public threads::Thread
+struct UdpSeverPong: public os::threads::ThreadCrtp<UdpSeverPong>
 {
 public:
 	UdpSeverPong(Types::size_t count, UdpServer &server)
@@ -25,15 +25,15 @@ public:
 		, server{ server }
 	{}
 
-	~UdpSeverPong() noexcept
+	~UdpSeverPong() noexcept override
 	{}
 
 	auto threadResult() const noexcept
 	{
 		return result;
 	}
-private:
-	virtual void vRun() override
+
+	void body() noexcept
 	{
 		if (!server)
 		{
@@ -95,7 +95,7 @@ private:
 };
 
 // client - send "ping" and receive "pong"
-struct UdpClientPing: public threads::Thread
+struct UdpClientPing: public os::threads::ThreadCrtp<UdpClientPing>
 {
 public:
 	UdpClientPing(Types::size_t count, UdpClient &client)
@@ -110,8 +110,8 @@ public:
 	{
 		return result;
 	}
-private:
-	virtual void vRun() override
+
+	void body() noexcept
 	{
 		if (!client)
 		{
@@ -170,7 +170,6 @@ private:
 	UdpClient &client;
 	AbstractTest::ResultType result = AbstractTest::SUCCESS;
 };
-
 
 }}}} // namespace flame_ide::os::tests::anonumous
 

@@ -36,6 +36,9 @@ using ThreadTaskTrait = FLAMEIDE_OS_NAMESPACE::OsThreadTaskTrait;
 using MutexContext = FLAMEIDE_OS_NAMESPACE::OsMutexContext;
 
 /// @brief
+using SpinContext = FLAMEIDE_OS_NAMESPACE::OsSpinlockContext;
+
+/// @brief
 using SemaphoreContext = FLAMEIDE_OS_NAMESPACE::OsSemaphoreContext;
 
 /// @brief

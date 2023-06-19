@@ -344,17 +344,19 @@ bool isEqual(Iterator1 start1, Iterator1 end1
 template<typename T>
 bool isEqual(const T &value1, const T &value2)
 {
-	volatile const auto *v1 = reinterpret_cast<volatile const Types::uichar_t *>(
-			&value1
-	);
-	volatile const auto *v2 = reinterpret_cast<volatile const Types::uichar_t *>(
-			&value2
-	);
+	volatile const flame_ide::byte_t *v1 =
+			reinterpret_cast<volatile const flame_ide::byte_t *>(
+					&value1
+			);
+	volatile const flame_ide::byte_t *v2 =
+			reinterpret_cast<volatile const flame_ide::byte_t *>(
+					&value2
+			);
 
 	bool result = true;
-	for (Types::size_t i = 0; i < sizeof(value1) && result; ++i)
+	for (Types::size_t i = 0; i < sizeof(T) && result; ++i, ++v1, ++v2)
 	{
-		result = (v1[i] == v2[i]);
+		result = (*v1 == *v2);
 	}
 	return result;
 }
