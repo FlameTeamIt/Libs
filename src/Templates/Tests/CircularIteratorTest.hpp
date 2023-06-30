@@ -15,13 +15,13 @@ class CircularIteratorTest: public AbstractTest
 public:
 	CircularIteratorTest() : AbstractTest("CircularIterator")
 	{}
+
 	~CircularIteratorTest() = default;
 
 private:
 	virtual int vStart();
 };
 
-
-}}}
+}}} // flame_ide::templates::test
 
 #endif // FLAMEIDE_TEMPLATES_TESTS_CIRCULARITERATORTEST_HPP

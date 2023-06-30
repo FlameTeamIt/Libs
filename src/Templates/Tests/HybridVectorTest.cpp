@@ -157,6 +157,11 @@ bool HybridVectorTest::fullTestAsVector()
 		}
 	));
 
+#if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_GCC
+#	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Warray-bounds"
+#endif
+
 	CHECK_RESULT_SUCCESS(doTestCase(
 		"reverse"
 		, [&]()
@@ -171,6 +176,10 @@ bool HybridVectorTest::fullTestAsVector()
 			CHECK_RESULT_SUCCESS_END(compareContainers(vectorRange, stdVectorRange));
 		}
 	));
+
+#if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_GCC
+#	pragma GCC diagnostic pop
+#endif
 
 	{
 		TestClass tmp = *vector.rbegin();

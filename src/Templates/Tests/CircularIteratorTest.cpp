@@ -3,6 +3,13 @@
 #include <FlameIDE/Templates/Array.hpp>
 #include <FlameIDE/Templates/IntegerIterator.hpp>
 
+#include <FlameIDE/Common/Macros/DetectCompiler.hpp>
+
+#if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_GCC
+#	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Warray-bounds"
+#endif
+
 namespace flame_ide
 {namespace templates
 {namespace test
@@ -20,8 +27,8 @@ int CircularIteratorTest::vStart()
 			, templates::makeRange(array.begin(), array.end()));
 
 	auto range = templates::makeRange(
-		templates::SizeTypeIterator(0)
-		, templates::SizeTypeIterator(5)
+			templates::SizeTypeIterator(0)
+			, templates::SizeTypeIterator(5)
 	);
 
 	for (auto i : range)

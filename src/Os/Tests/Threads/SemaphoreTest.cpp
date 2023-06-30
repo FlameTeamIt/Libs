@@ -12,6 +12,11 @@ namespace flame_ide
 namespace // anonymous
 {
 
+#if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_GCC
+#	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Wdangling-pointer"
+#endif
+
 auto initDestroy() noexcept
 {
 	using ResultType = ::AbstractTest::ResultType;
@@ -52,6 +57,10 @@ auto initDestroy() noexcept
 
 	return ResultType::SUCCESS;
 }
+
+#if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_GCC
+#	pragma GCC diagnostic pop
+#endif
 
 auto wait() noexcept
 {

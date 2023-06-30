@@ -254,12 +254,14 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 	template<typename PrimitiveType>
 	static void operatorShiftLeft(Array &array, PrimitiveType value)
 	{
+		flame_ide::unused(value);
 		auto range = makeRange(array.rbegin(), array.rend());
 	}
 
 	template<typename PrimitiveType>
 	static void operatorShiftLeft(PrimitiveType value, Array &array)
 	{
+		flame_ide::unused(value);
 		auto range = makeRange(array.rbegin(), array.rend());
 	}
 
@@ -268,12 +270,14 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 	template<typename PrimitiveType>
 	static void operatorShiftRight(Array &array, PrimitiveType value)
 	{
+		flame_ide::unused(value);
 		auto range = makeRange(array.rbegin(), array.rend());
 	}
 
 	template<typename PrimitiveType>
 	static void operatorShiftRight(PrimitiveType &value, Array &array)
 	{
+		flame_ide::unused(value);
 		auto range = makeRange(array.rbegin(), array.rend());
 	}
 
@@ -286,6 +290,7 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 		// 1. array.size() > sizeof(value) -- дополнение value до битности array.
 		// 2. array.size() <= sizeof(value) -- срезание value.
 		// Всё делать в BigEndian.
+		flame_ide::unused(array, value);
 	}
 
 	template<typename PrimitiveType>
@@ -295,6 +300,7 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 		// 1. sizeof(value) > array.size() -- дополнение array до битности value.
 		// 2. sizeof(value) <= array.size() -- срезание array.
 		// Всё делать в BigEndian.
+		flame_ide::unused(value, array);
 	}
 
 	// operator& - and
@@ -306,6 +312,7 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 		// 1. array.size() > sizeof(value) -- дополнение value до битности array.
 		// 2. array.size() <= sizeof(value) -- срезание value.
 		// Всё делать в BigEndian.
+		flame_ide::unused(array, value);
 	}
 
 	template<typename PrimitiveType>
@@ -315,6 +322,7 @@ struct PrimitiveTypeOperationsImpl: public NonCreational
 		// 1. sizeof(value) > array.size() -- дополнение array до битности value.
 		// 2. sizeof(value) <= array.size() -- срезание array.
 		// Всё делать в BigEndian.
+		flame_ide::unused(value, array);
 	}
 
 	// operator~

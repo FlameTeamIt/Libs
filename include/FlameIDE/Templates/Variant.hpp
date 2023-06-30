@@ -256,7 +256,7 @@ private:
 			, "Paramter pack is not unique.");
 
 	VariantStruct value;
-	Types::ssize_t currentIndex;
+	Types::ssize_t currentIndex = NumberLimitValueMin<Types::ssize_t>;
 };
 
 }}

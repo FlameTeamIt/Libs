@@ -106,9 +106,17 @@ public:
 
 	///
 	/// @brief Array
-	/// @param args
+	/// @param list
 	///
-	Array(InitializerList<T, ARRAY_CAPACITY> list) noexcept;
+	template<typename U, Types::size_t ARRAY_SIZE>
+	Array(const U (&list)[ARRAY_SIZE]) noexcept;
+
+	///
+	/// @brief Array
+	/// @param list
+	///
+	template<typename U, Types::size_t ARRAY_SIZE>
+	Array(U (&&list)[ARRAY_SIZE]) noexcept;
 
 	~Array();
 
@@ -464,11 +472,31 @@ ARRAY_TYPE::Array(ARRAY_TYPE &&array) noexcept
 }
 
 TEMPLATE_DEFINE
-ARRAY_TYPE::Array(InitializerList<T, ARRAY_CAPACITY> list) noexcept
+template<typename U, Types::size_t ARRAY_SIZE>
+ARRAY_TYPE::Array(const U (&list)[ARRAY_SIZE]) noexcept
 {
+	static_assert(
+			ARRAY_CAPACITY >= ARRAY_SIZE
+			, "Input array size more than this array capacity"
+	);
+
 	tail = head();
-	for (auto it : list)
-		pushBack(move(it));
+	for (auto i : list)
+		pushBack(i);
+}
+
+TEMPLATE_DEFINE
+template<typename U, Types::size_t ARRAY_SIZE>
+ARRAY_TYPE::Array(U (&&list)[ARRAY_SIZE]) noexcept
+{
+	static_assert(
+			ARRAY_CAPACITY >= ARRAY_SIZE
+			, "Input array size more than this array capacity"
+	);
+
+	tail = head();
+	for (auto i : list)
+		pushBack(move(i));
 }
 
 TEMPLATE_DEFINE
