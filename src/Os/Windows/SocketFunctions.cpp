@@ -27,7 +27,7 @@ private:
 
 //
 
-bool winsockInit() noexcept;
+static bool winsockInit() noexcept;
 
 //
 
@@ -140,17 +140,46 @@ Socket createTcpClient(Ipv4 ipServer) noexcept
 	socket = Socket{ tcpCreateSocket(), ipAddressClient(ipServer) };
 	if (socket.descriptor == INVALID_SOCKET)
 	{
-		socket = Socket{};
+		socket = os::SOCKET_INVALID;
 	}
 	return socket;
 }
 
 // Common
 
-void destroy(Socket &socket)
+Status destroy(Socket &socket) noexcept
 {
-	::closesocket(socket.descriptor);
-	socket = SOCKET_INVALID;
+	if (::closesocket(socket.descriptor) < 0)
+	{
+		return -static_cast<Status>(::GetLastError());
+	}
+	socket.descriptor = os::SOCKET_INVALID.descriptor;
+
+	return STATUS_SUCCESS;
+}
+
+Types::ssize_t receivingBytesNumber(const Socket &socket) noexcept
+{
+	u_long value = 0;
+	auto result = ::ioctlsocket(socket.descriptor, FIONREAD, &value);
+	if (result < 0)
+	{
+		return -static_cast<flame_ide::os::Status>(::GetLastError());
+	}
+	return static_cast<Types::ssize_t>(value);
+}
+
+Ipv4 getIpv4(const Socket &socket) noexcept
+{
+	auto port = ::ntohs(socket.address.sin_port);
+	union
+	{
+		Types::uint_t value;
+		Ipv4::Number address[Ipv4::COUNT_NUMBERS];
+	} in;
+	in.value = socket.address.sin_addr.s_addr;
+
+	return Ipv4{ in.address, port };
 }
 
 }}} // namespace flame_ide::os::socket
@@ -198,7 +227,7 @@ WinSockLibrary::~WinSockLibrary() noexcept
 
 //
 
-bool winsockInit() noexcept
+static bool winsockInit() noexcept
 {
 	auto &winsock = WinSockLibrary::signeton();
 	winsock.init();

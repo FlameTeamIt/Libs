@@ -4,6 +4,8 @@
 #include <FlameIDE/../../src/Os/Tests/Ipv4Test.hpp>
 #include <FlameIDE/../../src/Os/Tests/UdpFunctionsTest.hpp>
 #include <FlameIDE/../../src/Os/Tests/UdpTest.hpp>
+#include <FlameIDE/../../src/Os/Tests/TcpFunctionsTest.hpp>
+#include <FlameIDE/../../src/Os/Tests/TcpTest.hpp>
 
 #include <FlameIDE/../../src/Os/Tests/Threads/MutexFunctionsTest.hpp>
 #include <FlameIDE/../../src/Os/Tests/Threads/MutexTest.hpp>
@@ -25,6 +27,8 @@ TestAggregator::TestAggregator() : ::TestAggregator("Os")
 	pushBackTest(std::make_shared<Ipv4Test>());
 	pushBackTest(std::make_shared<UdpFunctionsTest>());
 	pushBackTest(std::make_shared<UdpTest>());
+	pushBackTest(std::make_shared<TcpFunctionsTest>());
+	pushBackTest(std::make_shared<TcpTest>());
 
 	pushBackTest(std::make_shared<threads::tests::MutexFunctionsTest>());
 	pushBackTest(std::make_shared<threads::tests::MutexTest>());

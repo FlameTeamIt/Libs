@@ -27,7 +27,11 @@ Socket createTcpClient(Ipv4 ipServer) noexcept;
 
 // Common
 
-void destroy(Socket &socket) noexcept;
+Status destroy(Socket &socket) noexcept;
+
+Types::ssize_t receivingBytesNumber(const Socket &socket) noexcept;
+
+Ipv4 getIpv4(const Socket &socket) noexcept;
 
 }}} // namespace flame_ide::os::socket
 

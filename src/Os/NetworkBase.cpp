@@ -20,7 +20,7 @@ NetworkBase::~NetworkBase() noexcept
 
 NetworkBase::operator bool() const noexcept
 {
-	return (SOCKET_INVALID.descriptor != socket.descriptor) || (status > 0);
+	return (SOCKET_INVALID.descriptor != socket.descriptor) || (status >= 0);
 }
 
 Status NetworkBase::getStatus() const noexcept
@@ -53,8 +53,8 @@ NetworkBase &NetworkBase::operator=(NetworkBase &&base) noexcept
 	status = base.status;
 	socket = base.socket;
 
-	base.status = STATUS_SUCCESS;
-	base.socket = Socket{};
+	base.status = os::STATUS_SUCCESS;
+	base.socket = os::SOCKET_INITIALIZER;
 
 	return *this;
 }
@@ -68,9 +68,9 @@ Types::int_t NetworkBase::checkStatus(Status status) noexcept
 {
 	if (status < 0)
 	{
-		return STATUS_FAILED;
+		return os::STATUS_FAILED;
 	}
-	return STATUS_SUCCESS;
+	return os::STATUS_SUCCESS;
 }
 
 }} // namespace flame_ide::os

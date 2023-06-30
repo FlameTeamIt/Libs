@@ -1,17 +1,8 @@
 #include <FlameIDE/../../src/Os/UdpSocketFunctions.hpp>
+#include <FlameIDE/../../src/Os/SocketFunctions.hpp>
 
 #include <fcntl.h>
 #include <sys/ioctl.h>
-
-namespace flame_ide
-{namespace os
-{namespace socket
-{namespace udp
-{
-
-static Types::ssize_t getReceivingBytes(SocketDescriptor descriptor) noexcept;
-
-}}}} // namespace flame_ide::os::socket::udp
 
 namespace flame_ide
 {namespace os
@@ -43,11 +34,16 @@ Types::ssize_t receiveServer(
 ) noexcept
 {
 	const Types::size_t size = range.end() - range.begin();
-	auto buffer = reinterpret_cast<char *>(range.begin());
+	auto buffer = reinterpret_cast<void *>(range.begin());
 	auto address = reinterpret_cast<::sockaddr *>(&socketFrom.address);
 	unsigned addressLength = sizeof(socketFrom.address);
 
-	auto result = ::recvfrom(socket.descriptor, buffer, size, flags, address, &addressLength);
+	auto result = ::recvfrom(
+			socket.descriptor
+			, buffer, size
+			, flags
+			, address, &addressLength
+	);
 	if (result < 0)
 	{
 		return -errno;
@@ -60,7 +56,7 @@ Types::ssize_t receiveServer(
 Types::ssize_t receiveClient(const Socket &socket, ByteRange range, int flags) noexcept
 {
 	const Types::size_t size = range.end() - range.begin();
-	auto buffer = reinterpret_cast<char *>(range.begin());
+	auto buffer = reinterpret_cast<void *>(range.begin());
 	auto tmpAddress = socket.address;
 	unsigned addressLength = sizeof(tmpAddress);
 
@@ -90,7 +86,7 @@ Types::ssize_t waitServer(const Socket &socket, SocketReceive &socketFrom) noexc
 	{
 		return result;
 	}
-	return getReceivingBytes(socket.descriptor);
+	return socket::receivingBytesNumber(socket);
 }
 
 Types::ssize_t waitClient(const Socket &socket) noexcept
@@ -105,26 +101,7 @@ Types::ssize_t waitClient(const Socket &socket) noexcept
 	{
 		return result;
 	}
-	return getReceivingBytes(socket.descriptor);
-}
-
-}}}} // namespace flame_ide::os::socket::udp
-
-namespace flame_ide
-{namespace os
-{namespace socket
-{namespace udp
-{
-
-static Types::ssize_t getReceivingBytes(SocketDescriptor descriptor) noexcept
-{
-	int value = 0;
-	auto result = ::ioctl(descriptor, FIONREAD, &value);
-	if (result < 0)
-	{
-		return -errno;
-	}
-	return static_cast<Types::ssize_t>(value);
+	return socket::receivingBytesNumber(socket);
 }
 
 }}}} // namespace flame_ide::os::socket::udp

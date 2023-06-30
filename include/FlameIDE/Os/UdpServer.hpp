@@ -24,7 +24,7 @@ public:
 	~UdpServer() noexcept = default;
 
 	UdpServer &operator=(UdpServer &&server) noexcept;
-	WithClient wait();
+	WithClient wait() noexcept;
 
 public:
 	using NetworkBase::operator bool;

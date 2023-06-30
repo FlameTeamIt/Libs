@@ -25,11 +25,11 @@ public:
 
 	Ipv4() noexcept = default;
 	Ipv4(const Ipv4 &) noexcept = default;
-	Ipv4(Ipv4 &) noexcept = default;
+	Ipv4(Ipv4 &&) noexcept = default;
 
 	Ipv4(const char *ip, Port port) noexcept;
 	Ipv4(const Address &ip) noexcept;
-	Ipv4(const Number (& ip)[COUNT_NUMBERS], Port port) noexcept;
+	Ipv4(const Number (&ip)[COUNT_NUMBERS], Port port) noexcept;
 
 	~Ipv4() noexcept = default;
 
@@ -41,7 +41,7 @@ public:
 
 	bool set(const char *ip, Port port) noexcept;
 	bool set(const Address &ip) noexcept;
-	bool set(const Number (& ip)[COUNT_NUMBERS], Port port) noexcept;
+	bool set(const Number (&ip)[COUNT_NUMBERS], Port port) noexcept;
 
 	static Ipv4 localhost(Port port) noexcept;
 

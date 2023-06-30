@@ -1,14 +1,8 @@
 #include <FlameIDE/../../src/Os/UdpSocketFunctions.hpp>
+#include <FlameIDE/../../src/Os/SocketFunctions.hpp>
 
-namespace flame_ide
-{namespace os
-{namespace socket
-{namespace udp
-{
-
-static Types::ssize_t getReceivingBytes(SocketDescriptor descriptor) noexcept;
-
-}}}} // namespace flame_ide::os::socket::udp
+#define GET_LAST_ERROR \
+		-static_cast<flame_ide::os::Status>(::GetLastError())
 
 namespace flame_ide
 {namespace os
@@ -26,7 +20,7 @@ send(const Socket &socket, templates::Range<const byte_t *> range) noexcept
 	auto result = ::sendto(socket.descriptor, buffer, size, 0, address, sizeof(socket.address));
 	if (result < 0)
 	{
-		return -WSAGetLastError();
+		return GET_LAST_ERROR;
 	}
 	return result;
 }
@@ -52,7 +46,7 @@ receiveServer(
 	auto result = ::recvfrom(socket.descriptor, buffer, size, flags, address, &addressLength);
 	if (result < 0)
 	{
-		return -WSAGetLastError();
+		return GET_LAST_ERROR;
 	}
 	socketFrom.descriptor = &socket.descriptor;
 	return result;
@@ -74,7 +68,7 @@ receiveClient(const Socket &socket, ByteRange range, int flags) noexcept
 	);
 	if (result < 0)
 	{
-		return -WSAGetLastError();
+		return GET_LAST_ERROR;
 	}
 	return result;
 }
@@ -92,7 +86,7 @@ Types::ssize_t waitServer(const Socket &socket, SocketReceive &socketFrom) noexc
 	{
 		return result;
 	}
-	return getReceivingBytes(socket.descriptor);
+	return socket::receivingBytesNumber(socket);
 }
 
 Types::ssize_t waitClient(const Socket &socket) noexcept
@@ -107,26 +101,7 @@ Types::ssize_t waitClient(const Socket &socket) noexcept
 	{
 		return result;
 	}
-	return getReceivingBytes(socket.descriptor);
-}
-
-}}}} // namespace flame_ide::os::socket::udp
-
-namespace flame_ide
-{namespace os
-{namespace socket
-{namespace udp
-{
-
-static Types::ssize_t getReceivingBytes(SocketDescriptor descriptor) noexcept
-{
-	u_long value = 0;
-	auto result = ::ioctlsocket(descriptor, FIONREAD, &value);
-	if (result < 0)
-	{
-		return -WSAGetLastError();
-	}
-	return static_cast<Types::ssize_t>(value);
+	return socket::receivingBytesNumber(socket);
 }
 
 }}}} // namespace flame_ide::os::socket::udp
