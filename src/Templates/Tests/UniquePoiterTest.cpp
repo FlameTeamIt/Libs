@@ -26,7 +26,7 @@ int UniquePointerTest::vStart()
 		, [&]()
 		{
 			decltype(pointer) movePointer = flame_ide::move(pointer);
-			IN_CASE_CHECK_END(*movePointer == *stdpointer);
+			IN_CASE_CHECK(*movePointer == *stdpointer);
 
 			pointer = flame_ide::move(movePointer);
 			IN_CASE_CHECK_END(*pointer == *stdpointer);
