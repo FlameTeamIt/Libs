@@ -36,9 +36,9 @@ KeyWrapSetOaepParams &KeyWrapSetOaepParams::operator=(const KeyWrapSetOaepParams
 
 KeyWrapSetOaepParams &KeyWrapSetOaepParams::operator=(const Parent &params) noexcept
 {
-	bBC = params.ulXLen;
+	bBC = params.bBC;
 	pX = params.pX;
-	ulXLen = params.bBC;
+	ulXLen = params.ulXLen;
 
 	return *this;
 }

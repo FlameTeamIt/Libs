@@ -20,7 +20,7 @@ Types::ssize_t receive(
 {
 	auto buffer = reinterpret_cast<char *>(range.begin());
 	auto size = range.end() - range.begin();
-	auto result = ::recv(descriptor, buffer, size, flags);
+	auto result = ::recv(descriptor, buffer, static_cast<Types::int_t>(size), flags);
 	return (result < 0)
 			? GET_LAST_ERROR
 			: result;
@@ -36,9 +36,9 @@ namespace flame_ide
 {namespace server
 {
 
-Status listen(const Socket &socket, Types::int_t backlog) noexcept
+Status listen(const Socket &socket, Types::size_t backlog) noexcept
 {
-	return (::listen(socket.descriptor, backlog) < 0)
+	return (::listen(socket.descriptor, static_cast<Types::int_t>(backlog)) < 0)
 			? GET_LAST_ERROR
 			: os::STATUS_SUCCESS;
 }
@@ -97,7 +97,7 @@ Types::ssize_t send(const Socket &socket, ConstByteRange range) noexcept
 {
 	auto buffer = reinterpret_cast<const char *>(range.begin());
 	auto size = range.end() - range.begin();
-	auto result = ::send(socket.descriptor, buffer, size, {});
+	auto result = ::send(socket.descriptor, buffer, static_cast<Types::int_t>(size), {});
 	return (result < 0)
 			? GET_LAST_ERROR
 			: result;

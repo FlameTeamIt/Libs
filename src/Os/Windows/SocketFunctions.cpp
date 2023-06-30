@@ -5,6 +5,8 @@
 
 #include <FlameIDE/Os/Constants.hpp>
 
+#include <Ws2tcpip.h>
+
 class WinSockLibrary: public flame_ide::NonAssignable
 {
 public:
@@ -40,12 +42,12 @@ namespace // anonymous
 
 ::SOCKET udpСreateSocket() noexcept
 {
-	return ::WSASocketA(AF_INET, SOCK_DGRAM, IPPROTO_UDP, nullptr, 0, WSA_FLAG_OVERLAPPED);
+	return ::WSASocketW(AF_INET, SOCK_DGRAM, IPPROTO_UDP, nullptr, 0, WSA_FLAG_OVERLAPPED);
 }
 
 ::SOCKET tcpCreateSocket() noexcept
 {
-	return ::WSASocketA(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
+	return ::WSASocketW(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
 }
 
 ::SOCKADDR_IN ipAddressServer(Ipv4::Port port) noexcept
@@ -62,7 +64,13 @@ namespace // anonymous
 	::SOCKADDR_IN sockaddr = SOCKET_INITIALIZER.address;
 	sockaddr.sin_family = AF_INET;
 	sockaddr.sin_port = ::htons(static_cast<Types::ushort_t>(serverAddress.port));
-	sockaddr.sin_addr.S_un.S_addr = ::inet_addr(serverAddress.ip);
+	auto result = ::inet_pton(
+			sockaddr.sin_family, serverAddress.ip, &sockaddr.sin_addr.S_un.S_addr
+	);
+	if (result != 1)
+	{
+		sockaddr = SOCKET_INITIALIZER.address;
+	}
 	return sockaddr;
 }
 

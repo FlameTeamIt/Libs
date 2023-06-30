@@ -31,7 +31,7 @@ namespace flame_ide
 /// \param backlog
 /// \return
 ///
-Status listen(const Socket &socket, Types::int_t backlog) noexcept;
+Status listen(const Socket &socket, Types::size_t backlog) noexcept;
 
 ///
 /// \brief accept

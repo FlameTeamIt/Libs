@@ -98,14 +98,14 @@ bool convertIp(char *ipDest, const Ipv4::Number (& ipSrc)[Ipv4::COUNT_NUMBERS])
 	{
 		Ipv4::Number value = ipSrc[i] / HUNDERD_DEVIDER;
 		if (value)
-			*(ipIt++) = value + ZERO;
+			*(ipIt++) = static_cast<char>(value + ZERO);
 
 		value = (ipSrc[i] % HUNDERD_DEVIDER) / TEN_DEVIDER;
 		if (value)
-			*(ipIt++) = value + ZERO;
+			*(ipIt++) = static_cast<char>(value + ZERO);
 
 		value = (ipSrc[i] % HUNDERD_DEVIDER) % TEN_DEVIDER;
-		*(ipIt++) = value + ZERO;
+		*(ipIt++) = static_cast<char>(value + ZERO);
 
 		if (points != COUNT_POINTS)
 		{
@@ -165,14 +165,14 @@ Ipv4::operator bool() const noexcept
 	return true;
 }
 
-bool Ipv4::set(const char *ip, Port port) noexcept
+bool Ipv4::set(const char *ipString, Port portInit) noexcept
 {
-	if (!convertIp(this->ip, ip))
+	if (!convertIp(this->ip, ipString))
 	{
 		reset();
 		return false;
 	}
-	this->port = port;
+	this->port = portInit;
 	return true;
 }
 
@@ -181,10 +181,10 @@ bool Ipv4::set(const Address &address) noexcept
 	return set(address.ip, address.port);
 }
 
-bool Ipv4::set(const Number (& ip)[COUNT_NUMBERS], Port port) noexcept
+bool Ipv4::set(const Number (& ipArray)[COUNT_NUMBERS], Port portInit) noexcept
 {
-	copy(this->ip, ip);
-	this->port = port;
+	copy(this->ip, ipArray);
+	this->port = portInit;
 	return true;
 }
 

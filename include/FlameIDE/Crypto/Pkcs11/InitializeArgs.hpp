@@ -99,11 +99,13 @@ public:
 
 	inline auto &getFlags() noexcept
 	{
-		return reinterpret_cast<Flags &>((flags));
+		Flags *flagPointer = reinterpret_cast<Flags *>(&flags);
+		return *flagPointer;
 	}
 	inline const auto &getFlags() const noexcept
 	{
-		return reinterpret_cast<const Flags &>((flags));
+		const Flags *flagPointer = reinterpret_cast<const Flags *>(&flags);
+		return *flagPointer;
 	}
 
 	inline auto &getReserved() noexcept

@@ -200,8 +200,8 @@ bool HybridVectorTest::fullTestAsVector()
 		"emplaceBack()"
 		, [&]()
 		{
-			vector.emplaceBack(6000, 600, 60, '6');
-			stdvector.emplace_back(6000, 600, 60, '6');
+			vector.emplaceBack(long{ 6000 }, int{ 600 }, short{ 60 }, '6');
+			stdvector.emplace_back(long{ 6000 }, int{ 600 }, short{ 60 }, '6');
 
 			CHECK_RESULT_SUCCESS(compareContainers(vector, stdvector));
 

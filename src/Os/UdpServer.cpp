@@ -47,7 +47,7 @@ UdpServer::WithClient::operator bool() const noexcept
 	return getStatus() >= 0;
 }
 
-Status UdpServer::WithClient::getStatus() const noexcept
+Types::ssize_t UdpServer::WithClient::getStatus() const noexcept
 {
 	return receiveBytesResult;
 }

@@ -284,16 +284,16 @@ public:
 					, reinterpret_cast<const byte_t *>(messageOut) + sizeof(messageOut)
 			);
 
-			auto tcpResult = socket::tcp::send(client, rangeOut);
-			if (tcpResult < 0)
+			auto tcpSizeResult = socket::tcp::send(client, rangeOut);
+			if (tcpSizeResult < 0)
 			{
 				std::cerr << "Ping (client): Invalid send 'ping'" << std::endl;
 				result = AbstractTest::FAILED;
 				return;
 			}
 
-			tcpResult = socket::tcp::waitBytes(client, sizeof(MESSAGE_PONG));
-			if (tcpResult != sizeof(MESSAGE_PONG))
+			tcpSizeResult = socket::tcp::waitBytes(client, sizeof(MESSAGE_PONG));
+			if (tcpSizeResult != sizeof(MESSAGE_PONG))
 			{
 				std::cerr << "Ping (client): Invalid sizeof receive 'pong'" << std::endl;
 				result = AbstractTest::FAILED;
@@ -305,8 +305,8 @@ public:
 					reinterpret_cast<byte_t *>(messageIn)
 					, reinterpret_cast<byte_t *>(messageIn) + sizeof(messageIn)
 			);
-			tcpResult = socket::tcp::receive(client, rangeIn);
-			if (tcpResult < 0)
+			tcpSizeResult = socket::tcp::receive(client, rangeIn);
+			if (tcpSizeResult < 0)
 			{
 				std::cerr << "Ping (client): Invalid receive 'pong'" << std::endl;
 				result = AbstractTest::FAILED;
@@ -422,8 +422,8 @@ int TcpFunctionsTest::withoutWait() noexcept
 	auto result = socket::tcp::client::connect(client);
 	IN_CASE_CHECK(result == AbstractTest::SUCCESS);
 
-	result = socket::tcp::send(client, range);
-	if (result != sizeof(MESSAGE))
+	auto sizeResult = socket::tcp::send(client, range);
+	if (sizeResult != sizeof(MESSAGE))
 	{
 		std::cerr << "client error = " << result << std::endl;
 	}
@@ -460,8 +460,8 @@ int TcpFunctionsTest::wait() noexcept
 	auto result = socket::tcp::client::connect(client);
 	IN_CASE_CHECK(result == AbstractTest::SUCCESS);
 
-	result = socket::tcp::send(client, range);
-	if (result != sizeof(MESSAGE))
+	auto sizeResult = socket::tcp::send(client, range);
+	if (sizeResult != sizeof(MESSAGE))
 	{
 		std::cerr << "client error = " << result << std::endl;
 	}

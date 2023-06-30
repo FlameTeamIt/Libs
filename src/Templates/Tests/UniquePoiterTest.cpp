@@ -4,8 +4,8 @@ using namespace flame_ide;
 using namespace flame_ide::templates::test;
 
 UniquePointerTest::UniquePointerTest() : AbstractTest("UniquePointer")
-		, pointer {{1000, 100, 10, '1'}}
-		, stdpointer {std::make_unique<TestClass>(1000, 100, 10, '1')}
+		, pointer{ { long{ 1000 }, int{ 100 }, short{ 10 }, '1'} }
+		, stdpointer{ std::make_unique<TestClass>( long{ 1000 }, int{ 100 }, short{ 10 }, '1') }
 {}
 
 UniquePointerTest::~UniquePointerTest()

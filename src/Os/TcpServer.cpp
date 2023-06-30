@@ -32,9 +32,9 @@ TcpServer::WithClient TcpServer::accept() const noexcept
 		return WithClient{ os::SOCKET_INVALID, getStatus() };
 	}
 
-	Status status = os::STATUS_SUCCESS;
-	auto client = socket::tcp::server::accept(socket, &status);
-	return WithClient{ client, status };
+	Status tmpStatus = os::STATUS_SUCCESS;
+	auto client = socket::tcp::server::accept(socket, &tmpStatus);
+	return WithClient{ client, tmpStatus };
 }
 
 }} // namespace flame_ide::os
@@ -90,7 +90,7 @@ Types::ssize_t TcpServer::WithClient::send(TcpServer::ConstRange range) noexcept
 	auto result = socket::tcp::send(socket, range);
 	if (result < 0)
 	{
-		status = result;
+		status = static_cast<Status>(result);
 		return os::STATUS_FAILED;
 	}
 	return result;
@@ -101,7 +101,7 @@ Types::ssize_t TcpServer::WithClient::receive(TcpServer::Range range) noexcept
 	auto result = socket::tcp::receive(socket, range);
 	if (result < 0)
 	{
-		status = result;
+		status = static_cast<Status>(result);
 		return os::STATUS_FAILED;
 	}
 	return result;

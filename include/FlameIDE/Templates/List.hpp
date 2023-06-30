@@ -785,8 +785,8 @@ void LIST_TYPE::insert(typename LIST_TYPE::Iterator it
 {
 	if (countIterations(itBegin, itEnd))
 	{
-		Node *pointerHead;
-		Node *pointerTail;
+		Node *pointerHead = nullptr;
+		Node *pointerTail = nullptr;
 		Range<InputIterator> inputRange(itBegin, itEnd);
 
 		bool first = true;

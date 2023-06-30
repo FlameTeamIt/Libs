@@ -73,8 +73,7 @@ pkcs11::enums::ReturnType
 Pkcs11Library::finalize() noexcept
 {
 	pkcs11::enums::ReturnType result = pkcs11::enums::ReturnType::OK;
-	auto functionList = getFunctionList();
-	functionList.ifResult(
+	getFunctionList().ifResult(
 			[&result](FunctionList functionList)
 			{
 				result = pkcs11::enums::toReturnType(functionList->C_Finalize(nullptr));
@@ -163,8 +162,7 @@ Pkcs11Library::getSlotIdCount(pkcs11::enums::Bool present) const noexcept
 {
 	pkcs11::value_types::Ulong slotIdCount = 0;
 	auto result = pkcs11::enums::ReturnType::OK;
-	auto functionList = getFunctionList();
-	functionList.ifResult(
+	getFunctionList().ifResult(
 			[&slotIdCount, &result, present](FunctionList functionList)
 			{
 				result = pkcs11::enums::toReturnType(

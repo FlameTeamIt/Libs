@@ -57,7 +57,7 @@ Types::ssize_t TcpClient::send(ConstRange range) noexcept
 	auto result = socket::tcp::send(socket, range);
 	if (result < 0)
 	{
-		setStatus(result);
+		setStatus(static_cast<Status>(result));
 		return os::STATUS_FAILED;
 	}
 	return result;
@@ -68,7 +68,7 @@ Types::ssize_t TcpClient::receive(Range range) noexcept
 	auto result = socket::tcp::receive(socket, range);
 	if (result < 0)
 	{
-		setStatus(result);
+		setStatus(static_cast<Status>(result));
 		return os::STATUS_FAILED;
 	}
 	return result;

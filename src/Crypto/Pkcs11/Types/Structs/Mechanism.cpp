@@ -20,25 +20,25 @@ Mechanism::Mechanism(const Parent &mechanism) noexcept
 	operator=(mechanism);
 }
 
-Mechanism::Mechanism(const decltype(Parent::mechanism) &mechanism
+Mechanism::Mechanism(const decltype(Parent::mechanism) &mechanismInit
 		, const decltype(Parent::pParameter) &parameter
 		, const decltype(Parent::ulParameterLen) &parameterLength) noexcept
 {
-	this->mechanism = mechanism;
+	this->mechanism = mechanismInit;
 	this->pParameter = parameter;
 	this->ulParameterLen = parameterLength;
 }
 
-Mechanism &Mechanism::operator=(const Mechanism &mechanism) noexcept
+Mechanism &Mechanism::operator=(const Mechanism &mechanismInit) noexcept
 {
-	return operator=(static_cast<const Parent &>(mechanism));
+	return operator=(static_cast<const Parent &>(mechanismInit));
 }
 
-Mechanism &Mechanism::operator=(const Parent &mechanism) noexcept
+Mechanism &Mechanism::operator=(const Parent &mechanismInit) noexcept
 {
-	this->mechanism = mechanism.mechanism;
-	this->pParameter = mechanism.pParameter;
-	this->ulParameterLen = mechanism.ulParameterLen;
+	this->mechanism = mechanismInit.mechanism;
+	this->pParameter = mechanismInit.pParameter;
+	this->ulParameterLen = mechanismInit.ulParameterLen;
 	return *this;
 }
 

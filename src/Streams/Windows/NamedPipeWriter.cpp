@@ -26,8 +26,8 @@ NamedPipeWriter::~NamedPipeWriter() noexcept
 {
 	if (delPipe)
 	{
-		auto fd = getFileDescriptor();
-		destroyNamedWriter(Descriptors::ResultValue{ fd, os::STATUS_SUCCESS });
+		auto file = getFileDescriptor();
+		destroyNamedWriter(Descriptors::ResultValue{ file, os::STATUS_SUCCESS });
 		setFileDescriptor(os::INVALID_DESCRIPTOR, false);
 	}
 }
@@ -58,12 +58,12 @@ os::Status NamedPipeWriter::open(const char *name, bool deletePipe) noexcept
 {
 	setFileDescriptor(os::INVALID_DESCRIPTOR, false);
 
-	os::FileDescriptor fd = makeNamedWriter(name).fd;
-	if (fd < 0)
+	os::FileDescriptor file = makeNamedWriter(name).fd;
+	if (file < 0)
 	{
 		return GetLastError();
 	}
-	this->setFileDescriptor(fd, true);
+	this->setFileDescriptor(file, true);
 	delPipe = deletePipe;
 
 	return os::STATUS_SUCCESS;

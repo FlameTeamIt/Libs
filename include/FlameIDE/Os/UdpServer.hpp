@@ -59,7 +59,7 @@ public:
 
 	operator bool() const noexcept;
 
-	Status getStatus() const noexcept;
+	Types::ssize_t getStatus() const noexcept;
 	Types::ssize_t receive(UdpServer::Range range) noexcept;
 	Types::ssize_t send(UdpServer::ConstRange range) noexcept;
 

@@ -59,9 +59,9 @@ NetworkBase &NetworkBase::operator=(NetworkBase &&base) noexcept
 	return *this;
 }
 
-void NetworkBase::setStatus(Status status) noexcept
+void NetworkBase::setStatus(Status statusInit) noexcept
 {
-	this->status = status;
+	this->status = statusInit;
 }
 
 Types::int_t NetworkBase::checkStatus(Status status) noexcept

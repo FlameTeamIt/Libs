@@ -17,7 +17,12 @@ send(const Socket &socket, templates::Range<const byte_t *> range) noexcept
 	const auto buffer = reinterpret_cast<const char *>(range.begin());
 	auto address = reinterpret_cast<const SOCKADDR *>(&socket.address);
 
-	auto result = ::sendto(socket.descriptor, buffer, size, 0, address, sizeof(socket.address));
+	auto result = ::sendto(
+			socket.descriptor
+			, buffer, static_cast<Types::int_t>(size)
+			, {}
+			, address, sizeof(socket.address)
+	);
 	if (result < 0)
 	{
 		return GET_LAST_ERROR;
@@ -43,7 +48,12 @@ receiveServer(
 	auto address = reinterpret_cast<SOCKADDR *>(&socketFrom.address);
 	int addressLength = sizeof(socketFrom.address);
 
-	auto result = ::recvfrom(socket.descriptor, buffer, size, flags, address, &addressLength);
+	auto result = ::recvfrom(
+			socket.descriptor
+			, buffer, static_cast<Types::int_t>(size)
+			, flags
+			, address, &addressLength
+	);
 	if (result < 0)
 	{
 		return GET_LAST_ERROR;
@@ -62,7 +72,7 @@ receiveClient(const Socket &socket, ByteRange range, int flags) noexcept
 
 	auto result = ::recvfrom(
 			socket.descriptor
-			, buffer, size
+			, buffer, static_cast<Types::int_t>(size)
 			, flags
 			, reinterpret_cast<SOCKADDR *>(&tmpAddress), &addressLength
 	);

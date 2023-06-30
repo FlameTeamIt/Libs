@@ -851,8 +851,8 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 		else
 		{
 			Range<Iterator> initRange(end(), end() + rangeSize);
-			for (Reference it : initRange)
-				emplaceNew<Type>(&it);
+			for (Reference i : initRange)
+				emplaceNew<Type>(&i);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
 					, rangeNew(

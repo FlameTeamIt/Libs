@@ -18,20 +18,26 @@ UdpClient::UdpClient(Ipv4 ip) noexcept : NetworkBase(socket::createUdpClient(ip)
 
 Types::ssize_t UdpClient::wait() noexcept
 {
-	setStatus(socket::udp::waitClient(socket));
-	return getStatus();
+	auto result = socket::udp::waitClient(socket);
+	if (result < 0)
+		setStatus(static_cast<Status>(result));
+	return result;
 }
 
 Types::ssize_t UdpClient::send(ConstRange range) noexcept
 {
-	setStatus(socket::udp::send(socket, range));
-	return getStatus();
+	auto result = socket::udp::send(socket, range);
+	if (result < 0)
+		setStatus(static_cast<Status>(result));
+	return result;
 }
 
 Types::ssize_t UdpClient::receive(Range range) noexcept
 {
-	setStatus(socket::udp::receiveClient(socket, range, {}));
-	return getStatus();
+	auto result = socket::udp::receiveClient(socket, range, {});
+	if (result < 0)
+		setStatus(static_cast<Status>(result));
+	return result;
 }
 
 }} // namespace flame_ide::os

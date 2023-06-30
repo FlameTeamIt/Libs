@@ -7,8 +7,8 @@ namespace flame_ide
 {
 
 SharedPointerTest::SharedPointerTest() : AbstractTest("SharedPointer")
-		, pointer {TestClass{1000, 100, 10, 1}}
-		, stdpointer {std::make_shared<TestClass>(1000, 100, 10, 1)}
+		, pointer{ TestClass{ long{ 1000 }, int{ 100 }, short{ 10 }, char{ 1 } } }
+		, stdpointer{ std::make_shared<TestClass>(long{ 1000 }, int{ 100 }, short{ 10 }, char{ 1 }) }
 {}
 
 SharedPointerTest::~SharedPointerTest()
