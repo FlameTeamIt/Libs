@@ -21,15 +21,21 @@ pkcs11::enums::ReturnType GlobalContext::initialize(
 		const pkcs11::structs::InitializeArgs &args
 ) noexcept
 {
+	flame_ide::unused(args);
+	return pkcs11::enums::ReturnType::OK;
 }
 
 // TODO
 pkcs11::enums::ReturnType GlobalContext::finalize() noexcept
-{}
+{
+	return pkcs11::enums::ReturnType::OK;
+}
 
 // TODO
 pkcs11::structs::Info GlobalContext::getInfo() noexcept
-{}
+{
+	return pkcs11::structs::Info{};
+}
 
 // TODO
 structs::FunctionListPtr GlobalContext::getFunctionList() noexcept

@@ -357,7 +357,7 @@ TEMPLATE_TYPE
 template<typename IntType>
 STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
 {
-
+	flame_ide::unused(integer);
 	return *this;
 }
 
@@ -365,6 +365,7 @@ STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator+=(const Me &string)
 {
+	flame_ide::unused(string);
 	return *this;
 }
 
@@ -373,6 +374,7 @@ TEMPLATE_TYPE
 template<typename InputIterator>
 STRING_TYPE &STRING_TYPE::operator+=(Range<InputIterator> range)
 {
+	flame_ide::unused(range);
 	return *this;
 }
 
@@ -396,6 +398,7 @@ STRING_TYPE &STRING_TYPE::operator-=(ReverseIterator it)
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator-=(Range<Iterator> range)
 {
+	flame_ide::unused(range);
 	return *this;
 }
 
@@ -403,6 +406,7 @@ STRING_TYPE &STRING_TYPE::operator-=(Range<Iterator> range)
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator-=(Range<ReverseIterator> range)
 {
+	flame_ide::unused(range);
 	return *this;
 }
 

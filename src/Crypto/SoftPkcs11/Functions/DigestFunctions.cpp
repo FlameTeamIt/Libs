@@ -12,7 +12,7 @@ namespace flame_ide
 pkcs11::value_types::ReturnType init(
 		pkcs11::value_types::SessionHandle session
 		, pkcs11::structs::MechanismPtr mechanism
-)
+) noexcept
 {
 	flame_ide::unused(session);
 	flame_ide::unused(mechanism);
@@ -24,7 +24,7 @@ pkcs11::value_types::ReturnType update(
 		pkcs11::value_types::SessionHandle session
 		, pkcs11::value_types::BytePtr dataPart
 		, pkcs11::value_types::Ulong dataPartLength
-)
+) noexcept
 {
 	flame_ide::unused(session);
 	flame_ide::unused(dataPart);
@@ -37,7 +37,7 @@ pkcs11::value_types::ReturnType final(
 		pkcs11::value_types::SessionHandle session
 		, pkcs11::value_types::BytePtr digestData
 		, pkcs11::value_types::UlongPtr digestDataLength
-)
+) noexcept
 {
 	flame_ide::unused(session);
 	flame_ide::unused(digestData);
@@ -52,7 +52,7 @@ pkcs11::value_types::ReturnType full(
 		, pkcs11::value_types::Ulong dataLength
 		, pkcs11::value_types::BytePtr digestData
 		, pkcs11::value_types::UlongPtr digestDataLength
-)
+) noexcept
 {
 	flame_ide::unused(session);
 	flame_ide::unused(data);
@@ -66,7 +66,7 @@ pkcs11::value_types::ReturnType full(
 pkcs11::value_types::ReturnType key(
 		pkcs11::value_types::SessionHandle session
 		, pkcs11::value_types::ObjectHandle key
-)
+) noexcept
 {
 	flame_ide::unused(session);
 	flame_ide::unused(key);

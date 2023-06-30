@@ -13,7 +13,7 @@ pkcs11::value_types::ReturnType init(
 		pkcs11::value_types::SessionHandle session
 		, pkcs11::structs::MechanismPtr mechanism
 		, pkcs11::value_types::ObjectHandle object
-)
+) noexcept
 {
 	flame_ide::unused(session);
 	flame_ide::unused(mechanism);
@@ -28,7 +28,7 @@ pkcs11::value_types::ReturnType update(
 		, pkcs11::value_types::Ulong encryptedDataPartLength
 		, pkcs11::value_types::BytePtr dataPart
 		, pkcs11::value_types::UlongPtr dataPartLength
-)
+) noexcept
 {
 	flame_ide::unused(session);
 	flame_ide::unused(encryptedDataPart);
@@ -43,7 +43,7 @@ pkcs11::value_types::ReturnType final(
 		pkcs11::value_types::SessionHandle session
 		, pkcs11::value_types::BytePtr lastPart
 		, pkcs11::value_types::UlongPtr lastPartLength
-)
+) noexcept
 {
 	flame_ide::unused(session);
 	flame_ide::unused(lastPart);
@@ -58,7 +58,7 @@ pkcs11::value_types::ReturnType full(
 		, pkcs11::value_types::Ulong encryptedDataLength
 		, pkcs11::value_types::BytePtr data
 		, pkcs11::value_types::UlongPtr dataLength
-)
+) noexcept
 {
 	flame_ide::unused(session);
 	flame_ide::unused(encryptedData);
