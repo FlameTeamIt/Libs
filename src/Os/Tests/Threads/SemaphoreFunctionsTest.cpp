@@ -15,6 +15,7 @@ namespace // anonymous
 {
 
 constexpr auto DEFAULT_INIT_VALUE = os::SemaphoreValue{ 1 };
+constexpr auto INIT_VALUE = os::SemaphoreValue{ 2 };
 
 auto initDestroy() noexcept
 {
@@ -76,13 +77,15 @@ auto value() noexcept
 {
 	using ResultType = ::AbstractTest::ResultType;
 
-	constexpr auto INIT_VALUE = os::SemaphoreValue{ 2 };
 
 	os::Status status = os::STATUS_SUCCESS;
 	os::SemaphoreContext context;
 
 	auto raiiCaller = templates::makeRaiiCaller(
-			[&context]() { semaphore::init(context, INIT_VALUE); }
+			[&context](SemaphoreValue initValue = INIT_VALUE)
+			{
+				semaphore::init(context, initValue);
+			}
 			, [&context]() { semaphore::destroy(context); }
 	);
 
