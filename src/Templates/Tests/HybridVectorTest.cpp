@@ -1,6 +1,7 @@
-#include <FlameIDE/Templates/Range.hpp>
-
 #include "HybridVectorTest.hpp"
+
+#include <FlameIDE/Common/Macros/DetectCompiler.hpp>
+#include <FlameIDE/Templates/Range.hpp>
 
 namespace flame_ide
 {namespace templates
