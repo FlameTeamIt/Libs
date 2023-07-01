@@ -21,8 +21,14 @@ set(DEPENDENCY_HEADER_TARGETS
 set(STATIC_ALIAS_NAME "${FLAME_NAMESPACE}::${NAME_ALIAS}::Static")
 set(SHARED_ALIAS_NAME "${FLAME_NAMESPACE}::${NAME_ALIAS}::Shared")
 
-set(DEPEND_OBJECTS "${FLAME_NAMESPACE}::Os::Threads::Test::Object")
-set(INDEPEND_OBJECTS "${FLAME_NAMESPACE}::Os::Threads::Test::Object::Independ")
+set(DEPEND_OBJECTS
+	"${FLAME_NAMESPACE}::Os::Threads::Test::Object"
+	"${FLAME_NAMESPACE}::Os::Network::Test::Object"
+)
+set(INDEPEND_OBJECTS 
+	"${FLAME_NAMESPACE}::Os::Threads::Test::Object::Independ"
+	"${FLAME_NAMESPACE}::Os::Network::Test::Object::Independ"
+)
 
 set(SHARED_LIBRARY_DIR_DEFINE "SHARED_LIBRARY_DIRECTORY=\"${FLAME_ROOT_BINARY_DIR}\"")
 
@@ -70,12 +76,10 @@ endif()
 
 set(DEPENDENCY_TARGETS_FOR_STATIC
 	"${FLAME_NAMESPACE}::Os::Static"
-#	"${FLAME_NAMESPACE}::Threads::Static"
 	"${DEPEND_OBJECTS}"
 )
 set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::Os::Shared"
-#	"${FLAME_NAMESPACE}::Threads::Shared"
 	"${INDEPEND_OBJECTS}"
 )
 
@@ -102,4 +106,10 @@ flame_compile_library(
 	${MAKE_SHARED}
 )
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Threads)
+set(SOURCE_MODULES
+	${CMAKE_CURRENT_LIST_DIR}/Threads
+	${CMAKE_CURRENT_LIST_DIR}/Network
+)
+foreach(module ${SOURCE_MODULES})
+	add_subdirectory(${module})
+endforeach()

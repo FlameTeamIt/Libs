@@ -1,22 +1,14 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(SOURCE_MODULES
-	${CMAKE_CURRENT_LIST_DIR}/Threads
-	${CMAKE_CURRENT_LIST_DIR}/Network
-)
-foreach(module ${SOURCE_MODULES})
-	add_subdirectory(${module})
-endforeach()
-
 if(NOT ("${FLAME_PLATFORM}" STREQUAL "Windows"))
 	return()
 endif()
 
-set(NAME "Os.${FLAME_PLATFORM}")
-set(NAME_ALIAS "Os::${FLAME_PLATFORM}")
+set(NAME "Os.Network.${FLAME_PLATFORM}")
+set(NAME_ALIAS "Os::Network::${FLAME_PLATFORM}")
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
 
-set(DEPENDENCY_HEADER_TARGETS ${FLAME_NAMESPACE}::Os::Headers)
+set(DEPENDENCY_HEADER_TARGETS ${FLAME_NAMESPACE}::Os::Network::Headers)
 
 get_sources(FILE_LIST)
 flame_compile_library(

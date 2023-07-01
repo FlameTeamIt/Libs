@@ -21,6 +21,7 @@ set(HEADER_MODULES
 	${CMAKE_CURRENT_LIST_DIR}/Posix
 	${CMAKE_CURRENT_LIST_DIR}/Windows
 	${CMAKE_CURRENT_LIST_DIR}/Threads
+	${CMAKE_CURRENT_LIST_DIR}/Network
 )
 foreach(module ${HEADER_MODULES})
 	add_subdirectory(${module})
