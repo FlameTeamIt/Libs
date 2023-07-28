@@ -62,12 +62,13 @@ public:
 
 	CircularIterator() noexcept = default;
 	CircularIterator(const Me &) noexcept = default;
-	CircularIterator(IteratorType iterator, Range containerActualRange)
+	CircularIterator(IteratorType iterator, Range containerActualRange) noexcept
 			: Parent(iterator)
 			, range(containerActualRange)
 	{}
-	~CircularIterator() = default;
-	Me& operator=(const Me &) = default;
+	~CircularIterator() noexcept = default;
+	Me& operator=(const Me &) noexcept = default;
+	Me& operator=(Me &&) noexcept = default;
 
 	FLAMEIDE_ITERATOR_OPERATOR_INC_POSTFIX
 

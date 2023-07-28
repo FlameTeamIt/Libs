@@ -33,5 +33,7 @@ int UniquePointerTest::vStart()
 		}
 	));
 
+	// TODO: need with empty and multiarg!
+
 	return 0;
 }

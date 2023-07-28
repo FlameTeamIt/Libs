@@ -423,7 +423,7 @@ template <
 	, SizeTraits::SizeType ARRAY_CAPACITY
 	, typename Traits = ContainerTraits<T>
 >
-using StaticVector = Array<T, ARRAY_CAPACITY, true, Traits>;
+using StaticVector = Array<T, ARRAY_CAPACITY, false, Traits>;
 
 }}
 

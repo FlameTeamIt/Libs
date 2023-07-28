@@ -269,9 +269,9 @@ TEMPLATE_DEFINE
 CIRCULAR_ARRAY_TYPE::CircularArray(const Me &array) noexcept
 		: buffer(), head(buffer.begin()), tail(buffer.begin() + array.size())
 {
-	for (auto &i : array)
+	for (const auto &i : array)
 	{
-		buffer.pushBack(*i);
+		buffer.pushBack(i);
 	}
 }
 
@@ -288,7 +288,7 @@ CIRCULAR_ARRAY_TYPE::CircularArray(Me &&array) noexcept
 TEMPLATE_DEFINE
 CIRCULAR_ARRAY_TYPE::~CircularArray()
 {
-	for (auto i : *this)
+	for (auto &i : *this)
 	{
 		i.~T();
 	}

@@ -19,8 +19,6 @@ public:
 	using MoveReference = typename Traits::MoveReference;
 	using Pointer = typename Traits::Pointer;
 	using PointerToConst = typename Traits::PointerToConst;
-	using SizeType = typename Traits::SizeType;
-	using SsizeType = typename Traits::SsizeType;
 
 	Optional() noexcept;
 	Optional(const Me &optional);

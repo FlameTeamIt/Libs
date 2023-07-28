@@ -11,11 +11,17 @@ namespace flame_ide
 {
 
 UdpClient::UdpClient(UdpClient &&udpClient) noexcept :
-		NetworkBase(move(static_cast<NetworkBase &>(udpClient)))
+		NetworkBase(move(static_cast<NetworkBase &&>(udpClient)))
 {}
 
 UdpClient::UdpClient(Ipv4 ip) noexcept : NetworkBase(socket::createUdpClient(ip))
 {}
+
+UdpClient &UdpClient::operator=(UdpClient &&client) noexcept
+{
+	operator=(move(static_cast<NetworkBase &&>(client)));
+	return *this;
+}
 
 Types::ssize_t UdpClient::wait() noexcept
 {

@@ -241,7 +241,9 @@ public:
 
 	using Me = UNIQUE_TYPE;
 
-	UniquePointer() = default;
+	template<typename ...Args>
+	UniquePointer(Args &&...args);
+
 	UniquePointer(const Me &) = delete;
 	UniquePointer(Me &&) noexcept;
 	UniquePointer(ConstReference object) noexcept;
@@ -270,9 +272,14 @@ public:
 
 	ConstReference reference() const noexcept;
 
+	static Me makeEmpty() noexcept;
+
+private:
+	UniquePointer(Empty) noexcept;
+
 private:
 	Allocator allocator;
-	Pointer object;
+	Pointer object = nullptr;
 };
 
 }}
@@ -454,6 +461,13 @@ typename SHARED_TYPE::ConstReference SHARED_TYPE::reference() const noexcept
 // UniquePointer
 
 UNIQUE_TEMPLATE_DEFINE
+template<typename ...Args>
+UNIQUE_TYPE::UniquePointer(Args &&...args)
+		: allocator{}
+		, object{ allocator.construct(forward<Args>(args)...) }
+{}
+
+UNIQUE_TEMPLATE_DEFINE
 UNIQUE_TYPE::UniquePointer(UNIQUE_TYPE &&pointer) noexcept
 		: allocator(pointer.allocator)
 		, object(pointer.object)
@@ -555,6 +569,18 @@ typename UNIQUE_TYPE::ConstReference UNIQUE_TYPE::reference() const noexcept
 {
 	return operator*();
 }
+
+UNIQUE_TEMPLATE_DEFINE
+typename UNIQUE_TYPE::Me UNIQUE_TYPE::makeEmpty() noexcept
+{
+	return Me{ Empty{} };
+}
+
+// private
+
+UNIQUE_TEMPLATE_DEFINE
+UNIQUE_TYPE::UniquePointer(Empty) noexcept
+{}
 
 }} // namespace flame_ide::templates
 

@@ -27,6 +27,8 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/IntegerIteratorTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ListTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ListTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ObjectTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ObjectTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SerializationTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SerializationTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SharedPointerTest.cpp
