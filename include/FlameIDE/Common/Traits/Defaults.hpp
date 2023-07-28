@@ -286,6 +286,11 @@ struct AddVolatileTrait: public NonCreational
 template<typename T>
 using AddVolatileType = typename AddVolatileTrait<T>::Type;
 
+///
+/// @brief The Empty class
+///
+class Empty {};
+
 }
 
 #endif // FLAMEIDE_COMMON_TRAITS_DEFAULTS_HPP
