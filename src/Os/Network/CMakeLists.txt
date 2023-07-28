@@ -22,3 +22,10 @@ flame_compile_library(
 	NO_RTTI
 	NO_EXCEPTIONS
 )
+
+set(SOURCE_MODULES
+	${CMAKE_CURRENT_LIST_DIR}/Handler
+)
+foreach(module ${SOURCE_MODULES})
+	add_subdirectory(${module})
+endforeach()

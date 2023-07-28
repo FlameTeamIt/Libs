@@ -1,21 +1,14 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(SOURCE_MODULES
-	${CMAKE_CURRENT_LIST_DIR}/Handler
-)
-foreach(module ${SOURCE_MODULES})
-	add_subdirectory(${module})
-endforeach()
-
-if(NOT ("${FLAME_PLATFORM}" STREQUAL "Posix"))
-	return()
-endif()
-
-set(NAME "Os.Network.${FLAME_PLATFORM}")
-set(NAME_ALIAS "Os::Network::${FLAME_PLATFORM}")
+set(NAME Os.Network.Handler)
+set(NAME_ALIAS Os::Network::Handler)
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
 
-set(DEPENDENCY_HEADER_TARGETS ${FLAME_NAMESPACE}::Os::Network::Headers)
+set(DEPENDENCY_HEADER_TARGETS
+	${FLAME_NAMESPACE}::Os::Network::Headers
+)
+
+include(HandlerConfig.cmake)
 
 get_sources(FILE_LIST)
 flame_compile_library(
@@ -27,6 +20,8 @@ flame_compile_library(
 		"${FLAME_NAMESPACE}::${NAME_ALIAS}::Object"
 	INDEPENDENT_OBJECT_ALIAS_NAME
 		"${FLAME_NAMESPACE}::${NAME_ALIAS}::Object::Independ"
+
+	DEFINES "${NETWORK_HANDLER_DEFINES}"
 
 	NO_RTTI
 	NO_EXCEPTIONS

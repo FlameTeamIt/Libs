@@ -1,18 +1,11 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(SOURCE_MODULES
-	${CMAKE_CURRENT_LIST_DIR}/Handler
-)
-foreach(module ${SOURCE_MODULES})
-	add_subdirectory(${module})
-endforeach()
-
-if(NOT ("${FLAME_PLATFORM}" STREQUAL "Posix"))
+if(NOT ("${FLAME_PLATFORM}" STREQUAL "Windows"))
 	return()
 endif()
 
-set(NAME "Os.Network.${FLAME_PLATFORM}")
-set(NAME_ALIAS "Os::Network::${FLAME_PLATFORM}")
+set(NAME "Os.Network.Handler.${FLAME_PLATFORM}")
+set(NAME_ALIAS "Os::Network::Handler::${FLAME_PLATFORM}")
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
 
 set(DEPENDENCY_HEADER_TARGETS ${FLAME_NAMESPACE}::Os::Network::Headers)

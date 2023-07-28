@@ -15,6 +15,8 @@ set(DEPENDENCY_TARGETS_FOR_STATIC
 	"${FLAME_NAMESPACE}::${NAME}::Threads::${FLAME_PLATFORM}::Object"
 	"${FLAME_NAMESPACE}::${NAME}::Network::Object"
 	"${FLAME_NAMESPACE}::${NAME}::Network::${FLAME_PLATFORM}::Object"
+	"${FLAME_NAMESPACE}::${NAME}::Network::Handler::Object"
+	"${FLAME_NAMESPACE}::${NAME}::Network::Handler::${FLAME_PLATFORM}::Object"
 	${CMAKE_DL_LIBS}
 	${DEPENDENCY_NETWORK_LIBRARY_STATIC}
 	${FLAME_DEPENDENCY_SHARED_LIBRARIES}
@@ -25,6 +27,8 @@ set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::${NAME}::Threads::${FLAME_PLATFORM}::Object::Independ"
 	"${FLAME_NAMESPACE}::${NAME}::Network::Object::Independ"
 	"${FLAME_NAMESPACE}::${NAME}::Network::${FLAME_PLATFORM}::Object::Independ"
+	"${FLAME_NAMESPACE}::${NAME}::Network::Handler::Object::Independ"
+	"${FLAME_NAMESPACE}::${NAME}::Network::Handler::${FLAME_PLATFORM}::Object::Independ"
 	${DEPENDENCY_NETWORK_LIBRARY_STATIC}
 	${FLAME_DEPENDENCY_SHARED_LIBRARIES}
 	${CMAKE_DL_LIBS}
