@@ -78,7 +78,7 @@ os::MutexContext &Mutex::native() noexcept
 	return context;
 }
 
-os::Status Mutex::getSatus() const noexcept
+os::Status Mutex::getStatus() const noexcept
 {
 	return status;
 }

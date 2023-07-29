@@ -29,8 +29,8 @@ public:
 	bool tryLock() noexcept;
 
 	os::MutexContext &native() noexcept;
-
-	os::Status getSatus() const noexcept;
+	
+	os::Status getStatus() const noexcept;
 
 private:
 	os::Status status;

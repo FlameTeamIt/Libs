@@ -152,7 +152,7 @@ Ipv4::operator Ipv4::Address() const noexcept
 		address.port = port;
 		return address;
 	}
-	return {};
+    return address;
 }
 
 Ipv4::operator bool() const noexcept
