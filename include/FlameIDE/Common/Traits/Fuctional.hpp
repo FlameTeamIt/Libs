@@ -172,8 +172,7 @@ struct IsRvalue<T &&>: public TrueType
 /// @brief The ChooseType struct
 ///
 template<bool CONDITION_RESULT, typename T1, typename T2>
-struct ChooseType: public NonCreational
-{};
+struct ChooseType;
 
 ///
 /// @brief The ChooseType<_Tp1, T1, T2> struct
