@@ -1,3 +1,5 @@
 set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/HandlerTypes.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Registration.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Worker.cpp
 )

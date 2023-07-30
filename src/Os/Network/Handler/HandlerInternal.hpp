@@ -24,6 +24,10 @@ namespace flame_ide
 
 namespace types = FLAMEIDE_HANDLERTYPES_NAMESPACE;
 
+using Workers = templates::StaticArray<
+	types::Worker, NETWORK_HANDLER_NUMBER_OF_WORKERS
+>;
+
 class Handler::Internal
 {
 public:
@@ -43,8 +47,9 @@ private:
 private:
 	udp::Udp udp;// = decltype(udp)::makeEmpty();
 	tcp::Tcp tcp;// = decltype(tcp)::makeEmpty();
-	//
+
 	types::Registration registration;
+	Workers workers;
 };
 
 }}} // namespace flame_ide::os::network

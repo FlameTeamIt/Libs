@@ -1,3 +1,5 @@
 set (HEADER_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/HandlerTypes.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Registration.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Worker.hpp
 )

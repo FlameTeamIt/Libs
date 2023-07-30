@@ -3,7 +3,6 @@
 #include <FlameIDE/Os/Constants.hpp>
 #include <FlameIDE/Os/Threads/Utils.hpp>
 
-
 namespace flame_ide
 {namespace os
 {namespace network
@@ -15,6 +14,13 @@ namespace // anonymous
 struct ServerCommunicationData
 {
 	UdpServer::WithClient client;
+	Server::Message *message;
+	Server::ActualOutput *output;
+};
+
+struct ClientCommunicationData
+{
+	UdpClient *client;
 	Server::Message *message;
 	Server::ActualOutput *output;
 };
@@ -91,7 +97,12 @@ namespace flame_ide
 {
 
 Handler::Internal::Internal() noexcept
-{}
+{
+	for (auto &i : workers)
+	{
+		i.set(udp, tcp);
+	}
+}
 
 Handler::Internal::~Internal() = default;
 
@@ -228,14 +239,15 @@ Handler::Internal::getServerHandleCallback() const noexcept
 		udp::Server::Message *inputMessage = nullptr;
 		{
 			auto &input = serverData.input;
-			threads::Locker locker{ input.spin };
+			threads::Locker inputLocker{ input.spin };
 
 			if (input.first == input.last)
 				return Handler::CommunicationHandle{};
 
 			{
 				auto *message = input.first->pointer();
-				threads::Locker{ message->spin };
+				threads::Locker messageLocker{ message->spin };
+				// TODO: а точно ли сообщение готово?
 
 				inputMessage = message;
 				inputMessage->state = udp::MessageState::PROCESSING;
