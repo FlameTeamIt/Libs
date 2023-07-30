@@ -64,23 +64,7 @@ namespace flame_ide
 {namespace network
 {
 
-Handler::Internal::Internal() noexcept /*:
-	registration{
-			types::DescriptorIterator{
-					udp->socketDescriptors.begin().operator->()
-					, flame_ide::templates::makeRange(
-							udp->socketDescriptors.begin().operator->()
-							, udp->socketDescriptors.end().operator->()
-					)
-			}
-			, types::DescriptorIterator{
-					tcp->socketDescriptors.begin().operator->()
-					, flame_ide::templates::makeRange(
-							tcp->socketDescriptors.begin().operator->()
-							, tcp->socketDescriptors.end().operator->()
-					)
-			}
-	}*/
+Handler::Internal::Internal() noexcept
 {}
 
 Handler::Internal::~Internal() = default;

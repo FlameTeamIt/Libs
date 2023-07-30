@@ -40,7 +40,7 @@ private:
 	udp::Udp udp;// = decltype(udp)::makeEmpty();
 	tcp::Tcp tcp;// = decltype(tcp)::makeEmpty();
 	//
-//	types::Registration registration;
+	types::Registration registration;
 };
 
 }}} // namespace flame_ide::os::network

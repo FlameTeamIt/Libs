@@ -1,6 +1,7 @@
 #ifndef HANDLERINTERNALTCP_HPP
 #define HANDLERINTERNALTCP_HPP
 
+#include <FlameIDE/Common/Constants.hpp>
 #include <FlameIDE/Common/Traits/Fuctional.hpp>
 
 #include <FlameIDE/Os/Network/TcpServer.hpp>
@@ -170,16 +171,20 @@ public:
 
 using Servers = ::flame_ide::ChooseType<
 	Constants::NUMBER_OF_SERVERS != 0
-	, ::flame_ide::templates::StaticArray<Server, Constants::NUMBER_OF_SERVERS>
+	, ::flame_ide::templates::StaticArray<templates::UniquePointer<Server>, Constants::NUMBER_OF_SERVERS>
 	, ::flame_ide::Empty
 >::Type;
 
+// WARNING: using UniquePointer because malloc doen't work with big sizes
 using Clients = ::flame_ide::ChooseType<
 	Constants::NUMBER_OF_CLIENTS != 0
-	, ::flame_ide::templates::StaticArray<Client, Constants::NUMBER_OF_CLIENTS>
+	, ::flame_ide::templates::StaticArray<
+		templates::UniquePointer<Client>, Constants::NUMBER_OF_CLIENTS
+	>
 	, ::flame_ide::Empty
 >::Type;
 
+// WARNING: using UniquePointer because malloc doen't work with big sizes
 using SocketDescriptors = ::flame_ide::ChooseType<
 	Constants::NUMBER_OF_SOCKETS != 0
 	, ::flame_ide::templates::StaticArray<
@@ -190,8 +195,8 @@ using SocketDescriptors = ::flame_ide::ChooseType<
 
 struct Tcp
 {
-	templates::UniquePointer<Servers> servers = decltype(servers)::makeEmpty();
-	templates::UniquePointer<Clients> clients = decltype(clients)::makeEmpty();
+	templates::UniquePointer<Servers> servers/* = decltype(servers)::makeEmpty()*/;
+	templates::UniquePointer<Clients> clients/* = decltype(clients)::makeEmpty()*/;
 	SocketDescriptors socketDescriptors;
 };
 

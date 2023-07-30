@@ -5,6 +5,9 @@
 #include <FlameIDE/Templates/RaiiCaller.hpp>
 
 #include <fcntl.h>
+#include <unistd.h>
+
+#include <limits.h>
 
 // low-level polling difinition
 namespace flame_ide
@@ -104,6 +107,19 @@ os::Status deregistrateSocket(os::SocketDescriptor descriptor)
 			return -errno;
 		}
 	}
+
+	result = ::fcntl(descriptor, F_SETOWN, 0);
+	if (result < 0)
+	{
+		return -errno;
+	}
+
+	result = ::fcntl(descriptor, F_SETSIG, 0);
+	if (result < 0)
+	{
+		return -errno;
+	}
+
 	return os::STATUS_SUCCESS;
 }
 
@@ -116,11 +132,7 @@ namespace flame_ide
 {namespace posix
 {
 
-Registration::Registration(
-		DescriptorIterator udpIterator, DescriptorIterator tcpIterator
-) noexcept:
-		udpQueue{ udpIterator, udpIterator, {} }
-		, tcpQueue{ tcpIterator, tcpIterator, {} }
+Registration::Registration() noexcept
 {
 	if (polling::initSignalAction(action) < 0)
 		return;
@@ -139,6 +151,11 @@ Registration::~Registration() noexcept
 	::sigaction(FLAME_SIGNAL_POLLING, &oldAction, nullptr);
 }
 
+void Registration::registerUdpQueue(DescriptorIterator iterator)
+{
+	Registration::registerQueue(udpQueue, iterator);
+}
+
 os::SocketDescriptor Registration::popUdp() noexcept
 {
 	return Registration::pop(udpQueue);
@@ -147,6 +164,11 @@ os::SocketDescriptor Registration::popUdp() noexcept
 void Registration::pushUdp(os::SocketDescriptor descriptor) noexcept
 {
 	Registration::push(udpQueue, descriptor);
+}
+
+void Registration::registerTcpQueue(DescriptorIterator iterator)
+{
+	Registration::registerQueue(tcpQueue, iterator);
 }
 
 os::SocketDescriptor Registration::popTcp() noexcept
@@ -175,6 +197,15 @@ bool Registration::resetGlobal(Registration &registration) noexcept
 
 	globalRegistration = nullptr;
 	return !globalRegistration;
+}
+
+void Registration::registerQueue(Queue &queue, DescriptorIterator iterator)
+{
+	auto locker = polling::makeLocker(queue.spin);
+	if (queue.first)
+		return;
+
+	queue.first = queue.last = iterator;
 }
 
 os::SocketDescriptor Registration::pop(Queue &queue) noexcept
@@ -228,13 +259,47 @@ Worker::~Worker() noexcept
 {}
 
 void Worker::start()
-{}
+{
+	stopWorker = false;
+	run();
+}
 
 void Worker::stop()
-{}
+{
+	stopWorker = true;
+}
 
 void Worker::body() noexcept
-{}
+{
+	while (!needStop())
+	{
+		processUdp();
+		processTcp();
+	}
+}
+
+void Worker::processUdp() noexcept
+{
+	auto descriptor = globalRegistration->popUdp();
+	if (descriptor == os::INVALID_DESCRIPTOR)
+		return;
+
+	// find class with need descriptor
+}
+
+void Worker::processTcp() noexcept
+{
+	auto descriptor = globalRegistration->popUdp();
+	if (descriptor == os::INVALID_DESCRIPTOR)
+		return;
+
+	// find object with need descriptor
+}
+
+bool Worker::needStop() noexcept
+{
+	return stopWorker || !globalRegistration;
+}
 
 }}}} // flame_ide::os::network::posix
 

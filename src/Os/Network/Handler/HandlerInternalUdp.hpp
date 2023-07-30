@@ -90,7 +90,7 @@ class Server
 public:
 	struct Message
 	{
-		::flame_ide::templates::Array<
+		::flame_ide::templates::StaticArray<
 			::flame_ide::byte_t, Constants::MESSAGE_SIZE
 		> bytes;
 		Types::ssize_t size;
@@ -146,12 +146,14 @@ public:
 	OutputMessages outputMessages;
 };
 
+// WARNING: using UniquePointer because malloc doen't work with big sizes
 using Servers = ::flame_ide::templates::StaticArray<
-	Server, Constants::NUMBER_OF_SERVERS
+	templates::UniquePointer<Server>, Constants::NUMBER_OF_SERVERS
 >;
 
+// WARNING: using UniquePointer because malloc doen't work with big sizes
 using Clients = ::flame_ide::templates::StaticArray<
-	Client, Constants::NUMBER_OF_CLIENTS
+	templates::UniquePointer<Client>, Constants::NUMBER_OF_CLIENTS
 >;
 
 using SocketDescriptors = ::flame_ide::templates::StaticArray<
@@ -161,8 +163,8 @@ using SocketDescriptors = ::flame_ide::templates::StaticArray<
 
 struct Udp
 {
-	templates::UniquePointer<Servers> servers = decltype(servers)::makeEmpty();
-	templates::UniquePointer<Clients> clients = decltype(clients)::makeEmpty();
+	templates::UniquePointer<Servers> servers/* = decltype(servers)::makeEmpty()*/;
+	templates::UniquePointer<Clients> clients/* = decltype(clients)::makeEmpty()*/;
 	SocketDescriptors socketDescriptors;
 };
 

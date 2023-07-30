@@ -4,6 +4,7 @@
 #include <FlameIDE/Os/Types.hpp>
 #include <FlameIDE/Os/Threads/Thread.hpp>
 #include <FlameIDE/Os/Threads/Spin.hpp>
+#include <FlameIDE/Os/Threads/Utils.hpp>
 
 #include <FlameIDE/Templates/Iterator/CircularIterator.hpp>
 
@@ -39,15 +40,15 @@ namespace flame_ide
 class Registration
 {
 public:
-	Registration(
-			DescriptorIterator udpIterator, DescriptorIterator tcpIterator
-	) noexcept;
+	Registration() noexcept;
 	~Registration() noexcept;
 
 public:
+	void registerUdpQueue(DescriptorIterator iterator);
 	os::SocketDescriptor popUdp() noexcept;
 	void pushUdp(os::SocketDescriptor descriptor) noexcept;
 
+	void registerTcpQueue(DescriptorIterator iterator);
 	os::SocketDescriptor popTcp() noexcept;
 	void pushTcp(os::SocketDescriptor descriptor) noexcept;
 
@@ -62,6 +63,7 @@ private:
 	static bool setGlobal(Registration &registration) noexcept;
 	static bool resetGlobal(Registration &registration) noexcept;
 
+	static void registerQueue(Queue &queue, DescriptorIterator iterator);
 	static os::SocketDescriptor pop(Queue &queue) noexcept;
 	static void push(Queue &queue, os::SocketDescriptor descriptor) noexcept;
 
@@ -94,6 +96,16 @@ public:
 
 private:
 	void body() noexcept;
+
+private:
+	void processUdp() noexcept;
+	void processTcp() noexcept;
+
+	bool needStop() noexcept;
+
+private:
+	mutable threads::Spin spinStopWorker;
+	bool stopWorker = true;
 };
 
 }}}} // flame_ide::os::network::posix
