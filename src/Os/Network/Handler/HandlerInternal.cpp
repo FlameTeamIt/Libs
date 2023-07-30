@@ -1,5 +1,27 @@
 #include <FlameIDE/../../src/Os/Network/Handler/HandlerInternal.hpp>
 
+#include <FlameIDE/Os/Constants.hpp>
+#include <FlameIDE/Os/Threads/Utils.hpp>
+
+
+namespace flame_ide
+{namespace os
+{namespace network
+{namespace udp
+{
+namespace // anonymous
+{
+
+struct ServerCommunicationData
+{
+	UdpServer::WithClient client;
+	Server::Message *message;
+	Server::ActualOutput *output;
+};
+
+} // namespace anonymous
+}}}} // namespace flame_ide::os::network::udp
+
 // private callbacks for UDP - difinition
 namespace flame_ide
 {namespace os
@@ -20,11 +42,15 @@ Types::ssize_t clientSend(void *data, templates::Range<const byte_t *>) noexcept
 
 // server
 
-Types::ssize_t serverBytesToRead(void *data) noexcept;
+Types::ssize_t serverBytesToRead(const udp::ServerCommunicationData *message) noexcept;
 
-Types::ssize_t serverReceive(void *data, templates::Range<byte_t *>) noexcept;
+Types::ssize_t serverReceive(
+		udp::ServerCommunicationData *message, templates::Range<byte_t *> range
+) noexcept;
 
-Types::ssize_t serverSend(void *data, templates::Range<const byte_t *>) noexcept;
+Types::ssize_t serverSend(
+		udp::ServerCommunicationData *data, templates::Range<const byte_t *>
+) noexcept;
 
 } // namespace anonymous
 }}}}} // namespace flame_ide::os::network::udp::callbacks
@@ -69,52 +95,38 @@ Handler::Internal::Internal() noexcept
 
 Handler::Internal::~Internal() = default;
 
-Handler::ServerHandle Handler::Internal::push(UdpServer &&/*server*/) noexcept
+Handler::ServerHandle Handler::Internal::push(UdpServer &&server) noexcept
 {
-//	udp::Server *data = nullptr;
-//	for (auto &i : udp.servers)
-//	{
-//		if (i.server)
-//			continue;
+	if (!udp.servers)
+		udp.servers = decltype(udp.servers){};
 
-//		data = &i;
-//		break;
-//	}
-//	if (!data)
-//		return {};
-//	data->server = flame_ide::move(server);
+	if (server.native().descriptor == os::SOCKET_INVALID.descriptor)
+		return Handler::ServerHandle{};
+
+	udp::Server *data = nullptr;
+	for (auto &i : *udp.servers)
+	{
+		if (i->server)
+			continue;
+
+		data = i.pointer();
+		break;
+	}
+	if (!data)
+		return Handler::ServerHandle{};
+	data->server = flame_ide::move(server);
 
 	ServerHandle handle;
-	{
-		static auto callbackGetCommunicationHandle = [](void */*data*/)
-				-> Handler::CommunicationHandle
-		{
-//			if (!data)
-//				return {};
-
-//			udp::Server &serverData = *static_cast<udp::Server *>(data);
-//			if (!serverData.inputMessages.size())
-//				return {};
-
-//			udp::Server::Message *message =
-//					serverData.inputMessages.begin().operator->();
-
-			Handler::CommunicationHandle handle;
-			handle.data[0] = nullptr;
-			handle.data[1] = nullptr; // ?
-			handle.callbackBytesToRead = udp::callbacks::serverBytesToRead;
-			handle.callbackReceive = udp::callbacks::serverReceive;
-			handle.callbackSend = udp::callbacks::serverSend;
-			return handle;
-		};
-		handle.callbackGetCommunicationHandle = callbackGetCommunicationHandle;
-	}
-//	handle.data = data;
+	handle.data = data;
+	handle.callbackGetCommunicationHandle = getServerHandleCallback();
 	return handle;
 }
 
 Handler::CommunicationHandle Handler::Internal::push(UdpClient &&/*client*/) noexcept
 {
+	if (!udp.clients)
+		udp.clients = decltype(udp.clients){};
+
 //	udp::Client *data = nullptr;
 //	for (auto &i : udp.clients)
 //	{
@@ -129,39 +141,45 @@ Handler::CommunicationHandle Handler::Internal::push(UdpClient &&/*client*/) noe
 //	data->client = flame_ide::move(client);
 
 	Handler::CommunicationHandle handle;
-	handle.data[0] = nullptr; // ?
-	handle.data[1] = nullptr; // ?
-	handle.callbackBytesToRead = udp::callbacks::clientBytesToRead;
-	handle.callbackReceive = udp::callbacks::clientReceive;
-	handle.callbackSend = udp::callbacks::clientSend;
+//	handle.data[0] = nullptr; // ?
+//	handle.data[1] = nullptr; // ?
+//	handle.callbackBytesToRead = udp::callbacks::clientBytesToRead;
+//	handle.callbackReceive = udp::callbacks::clientReceive;
+//	handle.callbackSend = udp::callbacks::clientSend;
 	return handle;
 }
 
-Handler::ServerHandle Handler::Internal::push(TcpServer &&/*server*/) noexcept
+Handler::ServerHandle Handler::Internal::push(TcpServer &&server) noexcept
 {
-//	tcp::Server *data = nullptr;
-//	for (auto &i : tcp.servers)
-//	{
-//		if (i.server)
-//			continue;
-//		data = &i;
-//		break;
-//	}
-//	if (!data)
-//		return {};
-//	data->server = flame_ide::move(server);
+	if (!tcp.servers)
+		tcp.servers = decltype(tcp.servers){};
+
+	tcp::Server *data = nullptr;
+	for (auto &i : *tcp.servers)
+	{
+		if (i->server)
+			continue;
+		data = i.pointer();
+		break;
+	}
+	if (!data)
+		return {};
+	data->server = flame_ide::move(server);
 
 	Handler::ServerHandle handle;
 	{
-		static auto callbackGetCommunicationHandle = [](void */*data*/)
+		static auto callbackGetCommunicationHandle = [](void *data)
 				-> Handler::CommunicationHandle
 		{
+			if (!data)
+				return {};
+
 			Handler::CommunicationHandle handle;
-			handle.data[0] = nullptr; // ?
-			handle.data[1] = nullptr; // ?
-			handle.callbackBytesToRead = tcp::callbacks::serverBytesToRead;
-			handle.callbackReceive = tcp::callbacks::serverReceive;
-			handle.callbackSend = tcp::callbacks::serverSend;
+//			handle.data[0] = nullptr; // ?
+//			handle.data[1] = nullptr; // ?
+//			handle.callbackBytesToRead = tcp::callbacks::serverBytesToRead;
+//			handle.callbackReceive = tcp::callbacks::serverReceive;
+//			handle.callbackSend = tcp::callbacks::serverSend;
 			return handle;
 		};
 		handle.callbackGetCommunicationHandle = callbackGetCommunicationHandle;
@@ -171,6 +189,9 @@ Handler::ServerHandle Handler::Internal::push(TcpServer &&/*server*/) noexcept
 
 Handler::CommunicationHandle Handler::Internal::push(TcpClient &&/*client*/) noexcept
 {
+	if (!tcp.clients)
+		tcp.clients = decltype(tcp.clients){};
+
 //	tcp::Client *data = nullptr;
 //	for (auto &i : tcp.clients)
 //	{
@@ -184,13 +205,67 @@ Handler::CommunicationHandle Handler::Internal::push(TcpClient &&/*client*/) noe
 //	data->client = flame_ide::move(client);
 
 	Handler::CommunicationHandle handle;
-	handle.data[0] = nullptr; // ?
-	handle.data[1] = nullptr; // ?
-	handle.callbackBytesToRead = tcp::callbacks::clientBytesToRead;
-	handle.callbackReceive = tcp::callbacks::clientReceive;
-	handle.callbackSend = tcp::callbacks::clientSend;
+//	handle.data[0] = nullptr; // ?
+//	handle.data[1] = nullptr; // ?
+//	handle.callbackBytesToRead = tcp::callbacks::clientBytesToRead;
+//	handle.callbackReceive = tcp::callbacks::clientReceive;
+//	handle.callbackSend = tcp::callbacks::clientSend;
 	return handle;
 }
+
+// private
+
+Handler::ServerHandle::CallbackGetCommunicationHandle
+Handler::Internal::getServerHandleCallback() const noexcept
+{
+	static auto callbackGetCommunicationHandle = [](void *data)
+			-> Handler::CommunicationHandle
+	{
+		if (!data)
+			return Handler::CommunicationHandle{};
+
+		udp::Server &serverData = *static_cast<udp::Server *>(data);
+		udp::Server::Message *inputMessage = nullptr;
+		{
+			auto &input = serverData.input;
+			threads::Locker locker{ input.spin };
+
+			if (input.first == input.last)
+				return Handler::CommunicationHandle{};
+
+			{
+				auto *message = input.first->pointer();
+				threads::Locker{ message->spin };
+
+				inputMessage = message;
+				inputMessage->state = udp::MessageState::PROCESSING;
+			}
+			++input.first;
+		}
+
+		Handler::CommunicationHandle handle;
+		handle.object = decltype(handle.object){
+				udp::ServerCommunicationData{
+						inputMessage->client, inputMessage, &serverData.output
+				}
+		};
+		handle.callbackBytesToRead =
+				reinterpret_cast<Handler::CommunicationHandle::CallbackBytesToRead>(
+						udp::callbacks::serverBytesToRead
+				);
+		handle.callbackReceive =
+				reinterpret_cast<Handler::CommunicationHandle::CallbackReceive>(
+						udp::callbacks::serverReceive
+				);
+		handle.callbackSend =
+				reinterpret_cast<Handler::CommunicationHandle::CallbackSend>(
+						udp::callbacks::serverSend
+				);
+		return handle;
+	};
+	return callbackGetCommunicationHandle;
+}
+
 
 }}} // namespace flame_ide::os::network
 
@@ -223,19 +298,84 @@ Types::ssize_t clientSend(void */*data*/, templates::Range<const byte_t *>) noex
 
 // server
 
-Types::ssize_t serverBytesToRead(void */*data*/) noexcept
+Types::ssize_t serverBytesToRead(const udp::ServerCommunicationData *data) noexcept
 {
-	return os::STATUS_FAILED;
+	if (!data || !data->message)
+		return os::STATUS_FAILED;
+
+	threads::Locker{ data->message->spin };
+
+	return data->message->size;
 }
 
-Types::ssize_t serverReceive(void */*data*/, templates::Range<byte_t *>) noexcept
+Types::ssize_t
+serverReceive(
+		udp::ServerCommunicationData *data, templates::Range<byte_t *> range
+) noexcept
 {
-	return os::STATUS_FAILED;
+	if (!data || !data->message)
+		return os::STATUS_FAILED;
+
+	Types::ssize_t numberToRead = 0;
+	auto &message = *data->message;
+	{
+		threads::Locker{ message.spin };
+
+		const Types::ssize_t rangeSize = range.end() - range.begin();
+		const Types::ssize_t messageSize = message.size;
+		const Types::ssize_t toRead = (rangeSize < messageSize)
+				? rangeSize
+				: messageSize;
+
+		auto begin = range.begin();
+		for (Types::ssize_t i = 0; i < toRead; ++i, ++begin)
+		{
+			*begin = message.bytes[i];
+		}
+		message.size = 0;
+		message.client = decltype(message.client){};
+		message.state = MessageState::EMPTY;
+
+		numberToRead = toRead;
+	}
+	return numberToRead;
 }
 
-Types::ssize_t serverSend(void */*data*/, templates::Range<const byte_t *>) noexcept
+Types::ssize_t
+serverSend(
+		udp::ServerCommunicationData *data, templates::Range<const byte_t *> range
+) noexcept
 {
-	return os::STATUS_FAILED;
+	if (!data || !data->output)
+		return os::STATUS_FAILED;
+
+	auto &output = *data->output;
+	Server::Message *message = nullptr;
+	{
+		threads::Locker locker{ output.spin };
+		message = output.last->pointer();
+		{
+			threads::Locker locker{ message->spin };
+			message->state = MessageState::PROCESSING;
+		}
+		++output.last;
+	}
+
+	const Types::ssize_t rangeSize = range.end() - range.begin();
+	{
+		threads::Locker locker{ message->spin };
+		message->size = rangeSize;
+		message->client = data->client;
+
+		auto begin = range.begin();
+		for (Types::ssize_t i = 0; i < rangeSize; ++i, ++begin)
+		{
+			message->bytes[i] = *begin;
+		}
+
+		message->state = MessageState::READY;
+	}
+	return rangeSize;
 }
 
 } // namespace anonymous

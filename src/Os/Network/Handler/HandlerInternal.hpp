@@ -37,6 +37,10 @@ public:
 	Handler::CommunicationHandle push(TcpClient &&client) noexcept;
 
 private:
+	Handler::ServerHandle::CallbackGetCommunicationHandle
+	getServerHandleCallback() const noexcept;
+
+private:
 	udp::Udp udp;// = decltype(udp)::makeEmpty();
 	tcp::Tcp tcp;// = decltype(tcp)::makeEmpty();
 	//

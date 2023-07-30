@@ -6,7 +6,7 @@
 
 #include <FlameIDE/Os/Types.hpp>
 #include <FlameIDE/Templates/Range.hpp>
-#include <FlameIDE/Templates/AlignObject.hpp>
+#include <FlameIDE/Templates/Object.hpp>
 
 namespace flame_ide
 {namespace os
@@ -157,16 +157,19 @@ private:
 	friend class Handler::ServerHandle;
 
 private:
-	using CallbackBytesToRead = Types::ssize_t (*)(void *data);
+	static constexpr Types::size_t OBJECT_SIZE = 64;
+
+	using Object = templates::Object<OBJECT_SIZE>;
+	using CallbackBytesToRead = Types::ssize_t (*)(const Object *);
 	using CallbackReceive = Types::ssize_t (*)(
-			void *data, flame_ide::templates::Range<byte_t *>
+			Object *, flame_ide::templates::Range<byte_t *>
 	);
 	using CallbackSend = Types::ssize_t (*)(
-			void *data, flame_ide::templates::Range<const byte_t *>
+			Object *, flame_ide::templates::Range<const byte_t *>
 	);
 
 private:
-	void *data[2] = { nullptr, nullptr };
+	Object object;
 	CallbackBytesToRead callbackBytesToRead = nullptr;
 	CallbackReceive callbackReceive = nullptr;
 	CallbackSend callbackSend = nullptr;

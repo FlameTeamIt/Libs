@@ -7,6 +7,8 @@
 #include <FlameIDE/Os/Network/UdpServer.hpp>
 #include <FlameIDE/Os/Network/UdpClient.hpp>
 
+#include <FlameIDE/Os/Threads/Spin.hpp>
+
 #include <FlameIDE/Templates/Array.hpp>
 #include <FlameIDE/Templates/CircularArray.hpp>
 #include <FlameIDE/Templates/Optional.hpp>
@@ -52,11 +54,9 @@ namespace flame_ide
 
 enum class MessageState
 {
-	UNKNOWN
-	, READING
-	, WRITING
-	, READY_TO_SEND
-	, READY_TO_RECEIVE
+	EMPTY
+	, PROCESSING
+	, READY
 };
 
 struct Constants: ::flame_ide::NonCreational
@@ -85,17 +85,39 @@ private:
 
 };
 
+template<typename MessageType, Types::size_t SIZE>
+struct ActualData
+{
+	using Messages = ::flame_ide::templates::StaticArray<
+		templates::UniquePointer<MessageType>, SIZE
+	>;
+	using MessagesCircularIterator =
+			templates::defaults::CircularForwardIterator<
+				typename Messages::Iterator
+			>;
+
+	Messages messages;
+	MessagesCircularIterator first = MessagesCircularIterator{
+			messages.begin()
+			, templates::makeRange(messages.begin(), messages.end())
+	};
+	MessagesCircularIterator last = first;
+	mutable threads::Spin spin;
+};
+
 class Server
 {
 public:
 	struct Message
 	{
+		mutable threads::Spin spin;
+
+		Types::ssize_t size = 0;
+		network::UdpServer::WithClient client;
 		::flame_ide::templates::StaticArray<
 			::flame_ide::byte_t, Constants::MESSAGE_SIZE
 		> bytes;
-		Types::ssize_t size;
-		network::UdpServer::WithClient client;
-		MessageState state = MessageState::UNKNOWN;
+		MessageState state = MessageState::EMPTY;
 	};
 
 public:
@@ -103,17 +125,13 @@ public:
 		::flame_ide::os::network::UdpServer
 	>;
 
-	using InputMessages = ::flame_ide::templates::StaticArray<
-		templates::UniquePointer<Message>, Constants::SERVER_INPUT_QUEUE_SIZE
-	>;
-	using OutputMessages = ::flame_ide::templates::StaticArray<
-		templates::UniquePointer<Message>, Constants::SERVER_OUTPUT_QUEUE_SIZE
-	>;
+	using ActualInput = ActualData<Message, Constants::SERVER_INPUT_QUEUE_SIZE>;
+	using ActualOutput = ActualData<Message, Constants::SERVER_OUTPUT_QUEUE_SIZE>;
 
 public:
 	Optional server;
-	InputMessages inputMessages;
-	OutputMessages outputMessages;
+	ActualInput input;
+	ActualOutput output;
 };
 
 class Client
@@ -125,7 +143,8 @@ public:
 			::flame_ide::byte_t, Constants::MESSAGE_SIZE
 		> bytes;
 		Types::ssize_t size = 0;
-		MessageState state = MessageState::UNKNOWN;
+		MessageState state = MessageState::EMPTY;
+		mutable threads::Spin spin;
 	};
 
 public:
@@ -133,17 +152,13 @@ public:
 		::flame_ide::os::network::UdpClient
 	>;
 
-	using InputMessages = ::flame_ide::templates::StaticArray<
-		templates::UniquePointer<Message>, Constants::CLIENT_INPUT_QUEUE_SIZE
-	>;
-	using OutputMessages = ::flame_ide::templates::StaticArray<
-		templates::UniquePointer<Message>, Constants::CLIENT_OUTPUT_QUEUE_SIZE
-	>;
+	using ActualInput = ActualData<Message, Constants::CLIENT_INPUT_QUEUE_SIZE>;
+	using ActualOutput = ActualData<Message, Constants::CLIENT_OUTPUT_QUEUE_SIZE>;
 
 public:
 	Optional client;
-	InputMessages inputMessages;
-	OutputMessages outputMessages;
+	ActualInput input;
+	ActualOutput output;
 };
 
 // WARNING: using UniquePointer because malloc doen't work with big sizes

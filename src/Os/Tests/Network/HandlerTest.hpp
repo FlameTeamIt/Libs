@@ -20,6 +20,7 @@ private:
 
 private:
 	int init();
+	int pushUdpServer();
 };
 
 }}}} // namespace flame_ide::os::network::tests
