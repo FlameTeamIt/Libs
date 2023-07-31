@@ -50,15 +50,15 @@ public:
 	~Registration() noexcept;
 
 public:
-	void registerUdpQueue(DescriptorIterator iterator);
+	void registerUdpQueue(DescriptorIterator iterator) noexcept;
 	os::SocketDescriptor popUdp() noexcept;
 	void pushUdp(os::SocketDescriptor descriptor) noexcept;
 
-	void registerTcpQueue(DescriptorIterator iterator);
+	void registerTcpQueue(DescriptorIterator iterator) noexcept;
 	os::SocketDescriptor popTcp() noexcept;
 	void pushTcp(os::SocketDescriptor descriptor) noexcept;
 
-	void registerAcceptedConnections(AcceptedConnectionInterator iterator);
+	void registerAcceptedConnections(AcceptedConnectionInterator iterator) noexcept;
 	tcp::AcceptedConnection popAcceptedConnections() noexcept;
 	void pushAcceptedConnections(tcp::AcceptedConnection connection) noexcept;
 
@@ -92,12 +92,11 @@ private:
 		queue.first = queue.last = iterator;
 	}
 
-	template<
-		typename Iterator
-		, typename T = typename templates::iterator_utils::GetType<Iterator>::Type
-	>
-	static T pop(Queue<Iterator> &queue) noexcept
+	template<typename Iterator>
+	static auto pop(Queue<Iterator> &queue) noexcept
+			-> typename templates::iterator_utils::GetType<Iterator>::Type
 	{
+		using ValueType = typename templates::iterator_utils::GetType<Iterator>::Type;
 		struct Descriptor
 		{
 			os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
@@ -107,26 +106,22 @@ private:
 			}
 		};
 		using Type = typename ChooseType<
-			ComparingTypes<os::SocketDescriptor, T>::VALUE
+			ComparingTypes<os::SocketDescriptor, ValueType>::VALUE
 			, Descriptor
 			, tcp::AcceptedConnection
 		>::Type;
 
-		T value = Type{};
+		ValueType value = Type{};
 		{
 			const threads::Locker locker{ queue.spin };
 			if (queue.first == queue.last)
 				return value;
 
 			value = *queue.first;
-		}
-
-		Registration::deregistrate(value);
-		{
-			const threads::Locker locker{ queue.spin };
-			*queue.first = os::SOCKET_INVALID.descriptor;
+			*queue.first = Type{};
 			++queue.first;
 		}
+		Registration::deregistrate(value);
 		return value;
 	}
 
@@ -159,8 +154,13 @@ private:
 
 		{
 			const threads::Locker locker{ queue.spin };
+
+			auto next = queue.last;
+			if ((++next) == queue.first)
+				return;
+
 			*queue.last = descriptor;
-			++queue.last;
+			queue.last = next;
 		}
 	}
 

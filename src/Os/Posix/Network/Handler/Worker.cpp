@@ -14,13 +14,13 @@ Worker::Worker() noexcept
 Worker::~Worker() noexcept
 {}
 
-void Worker::start()
+void Worker::start() noexcept
 {
 	stopWorker = false;
 	run();
 }
 
-void Worker::stop()
+void Worker::stop() noexcept
 {
 	stopWorker = true;
 }

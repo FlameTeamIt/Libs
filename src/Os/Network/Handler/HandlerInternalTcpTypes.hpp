@@ -32,9 +32,15 @@ using TemporaryBuffer = templates::Array<
 struct AcceptedConnection
 {
 	constexpr AcceptedConnection() = default;
+	constexpr bool operator==(AcceptedConnection connection) const noexcept
+	{
+		return server == connection.server && client == connection.client;
+	}
+
 	os::SocketAddressIn address = {};
 	os::SocketDescriptor server = os::SOCKET_INVALID.descriptor;
 	os::SocketDescriptor client = os::SOCKET_INVALID.descriptor;
+
 };
 
 }}}} // namespace flame_ide::os::network::tcp

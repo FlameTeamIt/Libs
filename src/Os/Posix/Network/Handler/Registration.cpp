@@ -76,7 +76,7 @@ Registration::~Registration() noexcept
 	::sigaction(FLAME_SIGNAL_POLLING, &oldAction, nullptr);
 }
 
-void Registration::registerUdpQueue(DescriptorIterator iterator)
+void Registration::registerUdpQueue(DescriptorIterator iterator) noexcept
 {
 	Registration::registerQueue(udpQueue, iterator);
 }
@@ -91,7 +91,7 @@ void Registration::pushUdp(os::SocketDescriptor descriptor) noexcept
 	push(udpQueue, descriptor);
 }
 
-void Registration::registerTcpQueue(DescriptorIterator iterator)
+void Registration::registerTcpQueue(DescriptorIterator iterator) noexcept
 {
 	Registration::registerQueue(tcpQueue, iterator);
 }
@@ -105,6 +105,25 @@ void Registration::pushTcp(os::SocketDescriptor descriptor) noexcept
 {
 	Registration::push(tcpQueue, descriptor);
 }
+
+void Registration::registerAcceptedConnections(
+		AcceptedConnectionInterator iterator
+) noexcept
+{
+	Registration::registerQueue(acceptedQueue, iterator);
+}
+
+tcp::AcceptedConnection Registration::popAcceptedConnections() noexcept
+{
+	return Registration::pop(acceptedQueue);
+}
+
+void Registration::pushAcceptedConnections(tcp::AcceptedConnection connection) noexcept
+{
+	Registration::push(acceptedQueue, connection);
+}
+
+// private
 
 bool Registration::setGlobal(Registration &registration) noexcept
 {

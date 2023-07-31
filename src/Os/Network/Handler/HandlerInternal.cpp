@@ -40,11 +40,14 @@ namespace // anonymous
 
 // client
 
-Types::ssize_t clientBytesToRead(void *data) noexcept;
+// TODO
+//Types::ssize_t clientBytesToRead(void *data) noexcept;
 
-Types::ssize_t clientReceive(void *data, templates::Range<byte_t *>) noexcept;
+// TODO
+//Types::ssize_t clientReceive(void *data, templates::Range<byte_t *>) noexcept;
 
-Types::ssize_t clientSend(void *data, templates::Range<const byte_t *>) noexcept;
+// TODO
+//Types::ssize_t clientSend(void *data, templates::Range<const byte_t *>) noexcept;
 
 // server
 
@@ -73,19 +76,25 @@ namespace // anonymous
 
 // client
 
-Types::ssize_t clientBytesToRead(void *data) noexcept;
+// TODO
+//Types::ssize_t clientBytesToRead(void *data) noexcept;
 
-Types::ssize_t clientReceive(void *data, templates::Range<byte_t *>) noexcept;
+// TODO
+//Types::ssize_t clientReceive(void *data, templates::Range<byte_t *>) noexcept;
 
-Types::ssize_t clientSend(void *data, templates::Range<const byte_t *>) noexcept;
+// TODO
+//Types::ssize_t clientSend(void *data, templates::Range<const byte_t *>) noexcept;
 
 // server
 
-Types::ssize_t serverBytesToRead(void *data) noexcept;
+// TODO
+//Types::ssize_t serverBytesToRead(void *data) noexcept;
 
-Types::ssize_t serverReceive(void *data, templates::Range<byte_t *>) noexcept;
+// TODO
+//Types::ssize_t serverReceive(void *data, templates::Range<byte_t *>) noexcept;
 
-Types::ssize_t serverSend(void *data, templates::Range<const byte_t *>) noexcept;
+// TODO
+//Types::ssize_t serverSend(void *data, templates::Range<const byte_t *>) noexcept;
 
 } // namespace anonymous
 }}}}} // namespace flame_ide::os::network::udp::callbacks
@@ -238,8 +247,6 @@ Handler::Internal::getUdpServerHandleCallback() const noexcept
 	using CallbackReceive = Handler::CommunicationHandle::CallbackReceive;
 	using CallbackSend = Handler::CommunicationHandle::CallbackSend;
 
-	using Object = Handler::CommunicationHandle::Object;
-
 	static auto callbackGetCommunicationHandle = [](udp::Server *data)
 			-> Handler::CommunicationHandle
 	{
@@ -300,20 +307,23 @@ namespace // anonymous
 
 // client
 
-Types::ssize_t clientBytesToRead(void */*data*/) noexcept
-{
-	return os::STATUS_FAILED;
-}
+// TODO
+//Types::ssize_t clientBytesToRead(void */*data*/) noexcept
+//{
+//	return os::STATUS_FAILED;
+//}
 
-Types::ssize_t clientReceive(void */*data*/, templates::Range<byte_t *>) noexcept
-{
-	return os::STATUS_FAILED;
-}
+// TODO
+//Types::ssize_t clientReceive(void */*data*/, templates::Range<byte_t *>) noexcept
+//{
+//	return os::STATUS_FAILED;
+//}
 
-Types::ssize_t clientSend(void */*data*/, templates::Range<const byte_t *>) noexcept
-{
-	return os::STATUS_FAILED;
-}
+// TODO
+//Types::ssize_t clientSend(void */*data*/, templates::Range<const byte_t *>) noexcept
+//{
+//	return os::STATUS_FAILED;
+//}
 
 // server
 
@@ -412,37 +422,43 @@ namespace // anonymous
 
 // client
 
-Types::ssize_t clientBytesToRead(void */*data*/) noexcept
-{
-	return os::STATUS_FAILED;
-}
+// TODO
+//Types::ssize_t clientBytesToRead(void */*data*/) noexcept
+//{
+//	return os::STATUS_FAILED;
+//}
 
-Types::ssize_t clientReceive(void */*data*/, templates::Range<byte_t *>) noexcept
-{
-	return os::STATUS_FAILED;
-}
+// TODO
+//Types::ssize_t clientReceive(void */*data*/, templates::Range<byte_t *>) noexcept
+//{
+//	return os::STATUS_FAILED;
+//}
 
-Types::ssize_t clientSend(void */*data*/, templates::Range<const byte_t *>) noexcept
-{
-	return os::STATUS_FAILED;
-}
+// TODO
+//Types::ssize_t clientSend(void */*data*/, templates::Range<const byte_t *>) noexcept
+//{
+//	return os::STATUS_FAILED;
+//}
 
 // server
 
-Types::ssize_t serverBytesToRead(void */*data*/) noexcept
-{
-	return os::STATUS_FAILED;
-}
+// TODO
+//Types::ssize_t serverBytesToRead(void */*data*/) noexcept
+//{
+//	return os::STATUS_FAILED;
+//}
 
-Types::ssize_t serverReceive(void */*data*/, templates::Range<byte_t *>) noexcept
-{
-	return os::STATUS_FAILED;
-}
+// TODO
+//Types::ssize_t serverReceive(void */*data*/, templates::Range<byte_t *>) noexcept
+//{
+//	return os::STATUS_FAILED;
+//}
 
-Types::ssize_t serverSend(void */*data*/, templates::Range<const byte_t *>) noexcept
-{
-	return os::STATUS_FAILED;
-}
+// TODO
+//Types::ssize_t serverSend(void */*data*/, templates::Range<const byte_t *>) noexcept
+//{
+//	return os::STATUS_FAILED;
+//}
 
 } // namespace anonymous
 }}}}} // namespace flame_ide::os::network::udp::callbacks
