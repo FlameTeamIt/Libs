@@ -129,7 +129,7 @@ Handler::ServerHandle Handler::Internal::push(UdpServer &&server) noexcept
 
 	ServerHandle handle;
 	handle.data = data;
-	handle.callbackGetCommunicationHandle = getServerHandleCallback();
+	handle.callbackGetCommunicationHandle = getUdpServerHandleCallback();
 	return handle;
 }
 
@@ -227,18 +227,28 @@ Handler::CommunicationHandle Handler::Internal::push(TcpClient &&/*client*/) noe
 // private
 
 Handler::ServerHandle::CallbackGetCommunicationHandle
-Handler::Internal::getServerHandleCallback() const noexcept
+Handler::Internal::getUdpServerHandleCallback() const noexcept
 {
-	static auto callbackGetCommunicationHandle = [](void *data)
+	using CallbackGetUdpCommunicationHandle =
+			Handler::CommunicationHandle (*)(udp::Server *);
+	using CallbackGetCommunicationHandle =
+			Handler::ServerHandle::CallbackGetCommunicationHandle;
+
+	using CallbackBytesToRead = Handler::CommunicationHandle::CallbackBytesToRead;
+	using CallbackReceive = Handler::CommunicationHandle::CallbackReceive;
+	using CallbackSend = Handler::CommunicationHandle::CallbackSend;
+
+	using Object = Handler::CommunicationHandle::Object;
+
+	static auto callbackGetCommunicationHandle = [](udp::Server *data)
 			-> Handler::CommunicationHandle
 	{
 		if (!data)
 			return Handler::CommunicationHandle{};
 
-		udp::Server &serverData = *static_cast<udp::Server *>(data);
 		udp::Server::Message *inputMessage = nullptr;
 		{
-			auto &input = serverData.input;
+			auto &input = data->input;
 			threads::Locker inputLocker{ input.spin };
 
 			if (input.first == input.last)
@@ -256,26 +266,23 @@ Handler::Internal::getServerHandleCallback() const noexcept
 		}
 
 		Handler::CommunicationHandle handle;
-		handle.object = decltype(handle.object){
-				udp::ServerCommunicationData{
-						inputMessage->client, inputMessage, &serverData.output
-				}
+		handle.object = udp::ServerCommunicationData{
+				inputMessage->client, inputMessage, &data->output
 		};
-		handle.callbackBytesToRead =
-				reinterpret_cast<Handler::CommunicationHandle::CallbackBytesToRead>(
-						udp::callbacks::serverBytesToRead
-				);
-		handle.callbackReceive =
-				reinterpret_cast<Handler::CommunicationHandle::CallbackReceive>(
-						udp::callbacks::serverReceive
-				);
-		handle.callbackSend =
-				reinterpret_cast<Handler::CommunicationHandle::CallbackSend>(
-						udp::callbacks::serverSend
-				);
+		handle.callbackBytesToRead = reinterpret_cast<CallbackBytesToRead>(
+				udp::callbacks::serverBytesToRead
+		);
+		handle.callbackReceive = reinterpret_cast<CallbackReceive>(
+				udp::callbacks::serverReceive
+		);
+		handle.callbackSend = reinterpret_cast<CallbackSend>(
+				udp::callbacks::serverSend
+		);
 		return handle;
 	};
-	return callbackGetCommunicationHandle;
+
+	CallbackGetUdpCommunicationHandle callback = callbackGetCommunicationHandle;
+	return reinterpret_cast<CallbackGetCommunicationHandle>(callback);
 }
 
 
