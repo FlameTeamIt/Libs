@@ -25,10 +25,10 @@ void Worker::stop() noexcept
 	stopWorker = true;
 }
 
-void Worker::set(udp::Udp &udp, tcp::Tcp &tcp) noexcept
+void Worker::set(udp::Udp &udpData, tcp::Tcp &tcpData) noexcept
 {
-	this->udp = makeReferenceWrapper(udp);
-	this->tcp = makeReferenceWrapper(tcp);
+	udp = makeReferenceWrapper(udpData);
+	tcp = makeReferenceWrapper(tcpData);
 }
 
 void Worker::body() noexcept
