@@ -13,35 +13,41 @@ namespace flame_ide
 namespace // anonymous
 {
 
-SocketDescriptor udpCreateSocket() noexcept
+SocketDescriptor udpCreateSocket(bool server) noexcept
 {
 	auto descriptor = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-	const int reuseAddress = 1;
-	auto status = ::setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR
-			, &reuseAddress, sizeof(reuseAddress));
-	if (status < 0)
+	if (server)
 	{
-		Socket tmpSocket{ {}, descriptor };
-		destroy(tmpSocket);
-		return SOCKET_INVALID.descriptor;
+		const int reuseAddress = 1;
+		auto status = ::setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR
+								   , &reuseAddress, sizeof(reuseAddress));
+		if (status < 0)
+		{
+			Socket tmpSocket{ {}, descriptor };
+			destroy(tmpSocket);
+			return SOCKET_INVALID.descriptor;
+		}
 	}
 
 	return descriptor;
 }
 
-SocketDescriptor tcpCreateSocket() noexcept
+SocketDescriptor tcpCreateSocket(bool server) noexcept
 {
 	auto descriptor = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	const int reuseAddress = 1;
-	auto status = ::setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR
-			, &reuseAddress, sizeof(reuseAddress));
-	if (status < 0)
+	if (server)
 	{
-		Socket tmpSocket{ {}, descriptor };
-		destroy(tmpSocket);
-		return SOCKET_INVALID.descriptor;
+		const int reuseAddress = 1;
+		auto status = ::setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR
+				, &reuseAddress, sizeof(reuseAddress));
+		if (status < 0)
+		{
+			Socket tmpSocket{ {}, descriptor };
+			destroy(tmpSocket);
+			return SOCKET_INVALID.descriptor;
+		}
 	}
 
 	return descriptor;
@@ -78,7 +84,7 @@ namespace flame_ide
 
 Socket createUdpServer(Ipv4::Port port) noexcept
 {
-	auto socket = Socket{ ipAddressServer(port), udpCreateSocket() };
+	auto socket = Socket{ ipAddressServer(port), udpCreateSocket(true) };
 	if (socket.descriptor == STATUS_FAILED)
 	{
 		socket = SOCKET_INVALID;
@@ -97,7 +103,7 @@ Socket createUdpServer(Ipv4::Port port) noexcept
 
 Socket createUdpClient(Ipv4 ipServer) noexcept
 {
-	auto socket = Socket{ ipAddressClient(ipServer), udpCreateSocket() };
+	auto socket = Socket{ ipAddressClient(ipServer), udpCreateSocket(false) };
 	if (socket.descriptor == STATUS_FAILED)
 	{
 		socket = Socket{};
@@ -110,7 +116,7 @@ Socket createUdpClient(Ipv4 ipServer) noexcept
 
 Socket createTcpServer(Ipv4::Port port) noexcept
 {
-	auto socket = Socket{ ipAddressServer(port), tcpCreateSocket() };
+	auto socket = Socket{ ipAddressServer(port), tcpCreateSocket(true) };
 	if (socket.descriptor == STATUS_FAILED)
 	{
 		socket = SOCKET_INVALID;
@@ -129,7 +135,7 @@ Socket createTcpServer(Ipv4::Port port) noexcept
 
 Socket createTcpClient(Ipv4 ipServer) noexcept
 {
-	auto socket = Socket{ ipAddressClient(ipServer), tcpCreateSocket() };
+	auto socket = Socket{ ipAddressClient(ipServer), tcpCreateSocket(false) };
 	if (socket.descriptor == STATUS_FAILED)
 	{
 		socket = Socket{};

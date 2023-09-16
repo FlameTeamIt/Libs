@@ -1,31 +1,29 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(NAME Os.Network)
-set(NAME_ALIAS Os::Network)
-set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
+if(NOT FLAME_TESTING)
+	return()
+endif()
 
-set(DEPENDENCY_HEADER_TARGETS
-	${FLAME_NAMESPACE}::Os::Network::Headers
-)
+set(NAME "Os.Async.Network.Test")
+set(NAME_ALIAS "Os::Async::Network::Test")
 
 get_sources(FILE_LIST)
+
+set(DEPENDENCY_HEADER_TARGETS
+	"${FLAME_NAMESPACE}::Os::Headers"
+)
+
 flame_compile_library(
 	NAME "${NAME}"
 	SOURCE_LIST "${FILE_LIST}"
 	INCLUDE_PATHS "${INCLUDE_PATHS}"
 	DEPENDENCY_HEADER_TARGETS "${DEPENDENCY_HEADER_TARGETS}"
+
 	OBJECT_ALIAS_NAME
 		"${FLAME_NAMESPACE}::${NAME_ALIAS}::Object"
 	INDEPENDENT_OBJECT_ALIAS_NAME
 		"${FLAME_NAMESPACE}::${NAME_ALIAS}::Object::Independ"
 
 	NO_RTTI
-	NO_EXCEPTIONS
+	EXCEPTIONS
 )
-
-#set(SOURCE_MODULES
-#	${CMAKE_CURRENT_LIST_DIR}/Handler
-#)
-#foreach(module ${SOURCE_MODULES})
-#	add_subdirectory(${module})
-#endforeach()

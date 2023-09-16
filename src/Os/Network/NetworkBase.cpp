@@ -13,7 +13,7 @@ namespace flame_ide
 
 NetworkBase::~NetworkBase() noexcept
 {
-	if (!operator bool())
+if (!operator bool())
 		return;
 
 	socket::destroy(socket);
