@@ -38,7 +38,7 @@ Status TcpClient::disconnect() noexcept
 
 Status TcpClient::reconnect() noexcept
 {
-	if (disconnect() < 0)
+	if (native().descriptor != os::SOCKET_INVALID.descriptor && disconnect() < 0)
 		return getStatus();
 
 	auto ip = socket::getIpv4(socket);
@@ -74,5 +74,21 @@ Types::ssize_t TcpClient::receive(Range range) noexcept
 	}
 	return result;
 }
+
+TcpClient::NativeTcpClientControl TcpClient::nativeClientControl() noexcept
+{
+	NativeTcpClientControl control;
+	static_cast<decltype(nativeControl()) &>(control).operator=(
+			nativeControl()
+	);
+	control.create = socket::createTcpClient;
+	control.connect = socket::tcp::client::connect;
+	control.send = socket::tcp::send;
+	control.receive = socket::tcp::receive;
+	control.waitBytes = socket::tcp::waitBytes;
+	control.alive = socket::tcp::alive;
+	return control;
+}
+
 
 }}} // namespace flame_ide::os::network

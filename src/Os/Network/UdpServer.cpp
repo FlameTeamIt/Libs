@@ -32,6 +32,19 @@ UdpServer::WithClient UdpServer::wait() noexcept
 	return sendler;
 }
 
+UdpServer::NativeUdpServerControl UdpServer::nativeServerControl() noexcept
+{
+	NativeUdpServerControl control;
+	static_cast<decltype(nativeControl()) &>(control).operator=(
+			nativeControl()
+	);
+	control.create = socket::createUdpServer;
+	control.send = socket::udp::send;
+	control.receive = socket::udp::receiveServer;
+	control.wait = socket::udp::waitServer;
+	return control;
+}
+
 }}} // namespace flame_ide::os::network
 
 namespace flame_ide

@@ -17,22 +17,23 @@ namespace flame_ide
 // UDP
 
 Socket createUdpServer(Ipv4::Port port) noexcept;
-
 Socket createUdpClient(Ipv4 ipServer) noexcept;
 
 // TCP
 
 Socket createTcpServer(Ipv4::Port port) noexcept;
-
 Socket createTcpClient(Ipv4 ipServer) noexcept;
 
 // Common
 
 Status destroy(Socket &socket) noexcept;
-
 Types::ssize_t receivingBytesNumber(const Socket &socket) noexcept;
-
 Ipv4 getIpv4(const Socket &socket) noexcept;
+
+int getType(const Socket &socket) noexcept;
+int getError(const Socket &socket) noexcept;
+bool isAcceptor(const Socket &socket) noexcept;
+bool isServer(const Socket &socket) noexcept;
 
 }}}} // namespace flame_ide::os::network::socket
 

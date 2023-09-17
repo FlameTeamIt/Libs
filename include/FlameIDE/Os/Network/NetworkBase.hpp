@@ -14,17 +14,43 @@ namespace flame_ide
 class NetworkBase: public NonCopy
 {
 public:
+	enum class SocketType: int
+	{
+		UNKNOWN = -1
+		, STREAM = SOCK_STREAM
+		, DATAGRAM = SOCK_DGRAM
+	};
+
 	using Range = templates::Range<byte_t *>;
 	using ConstRange = templates::Range<const byte_t *>;
 
+	struct NativeSocketControl
+	{
+		NativeSocketControl() noexcept = default;
+		NativeSocketControl(const NativeSocketControl &) noexcept = default;
+		NativeSocketControl(NativeSocketControl &&) noexcept = default;
+		~NativeSocketControl() noexcept = default;
+		NativeSocketControl &operator=(const NativeSocketControl &) noexcept = default;
+		NativeSocketControl &operator=(NativeSocketControl &&) noexcept = default;
+
+		Status (*destroy)(Socket &socket) noexcept = nullptr;
+		Types::ssize_t (*receivingBytesNumber)(const Socket &socket) noexcept = nullptr;
+		Ipv4 (*getIpv4)(const Socket &socket) noexcept = nullptr;
+		SocketType (*type)(const Socket &socket) noexcept = nullptr;
+		int (*error)(const Socket &socket) noexcept = nullptr;
+		bool (*isAcceptor)(const Socket &socket) noexcept = nullptr;
+		bool (*isServer)(const Socket &socket) noexcept = nullptr;
+	};
+
 public:
 	~NetworkBase() noexcept;
-
 	operator bool() const noexcept;
 
 	Status getStatus() const noexcept;
-
 	const Socket &native() const;
+
+public:
+	static NativeSocketControl nativeControl() noexcept;
 
 protected:
 	NetworkBase(Socket socket) noexcept;

@@ -34,6 +34,20 @@ const Socket &NetworkBase::native() const
 	return socket;
 }
 
+NetworkBase::NativeSocketControl NetworkBase::nativeControl() noexcept
+{
+	NativeSocketControl socketControl;
+	socketControl.destroy = socket::destroy;
+	socketControl.receivingBytesNumber = socket::receivingBytesNumber;
+	socketControl.getIpv4 = socket::getIpv4;
+
+	socketControl.type = reinterpret_cast<decltype(socketControl.type)>(socket::getType);
+	socketControl.error = socket::getError;
+	socketControl.isAcceptor = socket::isAcceptor;
+	socketControl.isServer = socket::isServer;
+	return socketControl;
+}
+
 // protected
 
 NetworkBase::NetworkBase(Socket socket) noexcept : socket{ socket }
