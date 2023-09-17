@@ -2,6 +2,7 @@
 #define FLAMEIDE_OS_ASYNC_NETWORK_REGISTRAR_HPP
 
 #include <FlameIDE/Os/Async/Network/AcceptedConnection.hpp>
+#include <FlameIDE/Os/Network/TcpServer.hpp>
 #include <FlameIDE/Templates/Variant.hpp>
 
 namespace flame_ide
@@ -11,7 +12,7 @@ namespace flame_ide
 
 class UdpServer;
 class UdpClient;
-class TcpServer;
+// class TcpServer; // included
 class TcpClient;
 
 }}} // namespace flame_ide::os::network
@@ -55,17 +56,22 @@ public:
 	os::Status add(const os::network::UdpServer &socket) noexcept;
 	os::Status add(const os::network::UdpClient &socket) noexcept;
 	os::Status add(const os::network::TcpServer &socket) noexcept;
+	os::Status add(const os::network::TcpServer::WithClient &socket) noexcept;
 	os::Status add(const os::network::TcpClient &socket) noexcept;
 
 	os::Status remove(const os::network::UdpServer &socket) noexcept;
 	os::Status remove(const os::network::UdpClient &socket) noexcept;
 	os::Status remove(const os::network::TcpServer &socket) noexcept;
+	os::Status remove(const os::network::TcpServer::WithClient &socket) noexcept;
 	os::Status remove(const os::network::TcpClient &socket) noexcept;
 
 	os::SocketDescriptor popUdpServer() noexcept;
 	os::SocketDescriptor popUdpClient() noexcept;
-	AcceptedConnection popTcpServer() noexcept;
+	AcceptedConnection popTcpServerAcception() noexcept;
+	os::SocketDescriptor popTcpServer() noexcept;
 	os::SocketDescriptor popTcpClient() noexcept;
+
+	void clear() noexcept;
 };
 
 }}}} // namespace flame_ide::os::async::network

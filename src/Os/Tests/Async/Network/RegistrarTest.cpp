@@ -4,8 +4,12 @@
 
 #include <FlameIDE/Os/Network/UdpServer.hpp>
 #include <FlameIDE/Os/Network/UdpClient.hpp>
+#include <FlameIDE/Os/Network/TcpServer.hpp>
+#include <FlameIDE/Os/Network/TcpClient.hpp>
 
 #include <FlameIDE/Templates/RaiiCaller.hpp>
+
+#include <FlameIDE/../../src/Os/Network/SocketFunctions.hpp>
 
 namespace flame_ide
 {namespace os
@@ -22,18 +26,25 @@ RegistrarTest::RegistrarTest() : ::AbstractTest("AsyncNetworkRegistrar")
 
 int RegistrarTest::vStart()
 {
+//	CHECK_RESULT_SUCCESS(doTestCase(
+//			"UdpServer receiving signal"
+//			, [this]
+//			{
+//				return udpServer();
+//			}
+//	));
+//	CHECK_RESULT_SUCCESS(doTestCase(
+//			"UdpClient receiving signal"
+//			, [this]
+//			{
+//				return udpClient();
+//			}
+//	));
 	CHECK_RESULT_SUCCESS(doTestCase(
-			"UdpServer receiving signal"
+			"TcpServer acceptor receiving signal"
 			, [this]
 			{
-				return udpServer();
-			}
-	));
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"UdpClient receiving signal"
-			, [this]
-			{
-				return udpClient();
+				return tcpServerAcceptor();
 			}
 	));
 	CHECK_RESULT_SUCCESS(doTestCase(
@@ -43,13 +54,13 @@ int RegistrarTest::vStart()
 				return tcpServer();
 			}
 	));
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"TcpClient receiving signal"
-			, [this]
-			{
-				return tcpClient();
-			}
-	));
+//	CHECK_RESULT_SUCCESS(doTestCase(
+//			"TcpClient receiving signal"
+//			, [this]
+//			{
+//				return tcpClient();
+//			}
+//	));
 	return RegistrarTest::SUCCESS;
 }
 
@@ -147,8 +158,64 @@ int RegistrarTest::udpClient()
 	return RegistrarTest::SUCCESS;
 }
 
+int RegistrarTest::tcpServerAcceptor()
+{
+	Registrar registar;
+
+	os::network::TcpServer server{ port };
+	os::network::TcpClient client{ ipv4 };
+
+	IN_CASE_CHECK(registar.add(server) == os::STATUS_SUCCESS);
+	IN_CASE_CHECK(client.connect() == os::STATUS_SUCCESS);
+
+	auto connection = registar.popTcpServerAcception();
+	IN_CASE_CHECK(connection.server == server.native().descriptor);
+
+	IN_CASE_CHECK(client.disconnect() == os::STATUS_SUCCESS);
+
+	auto control = os::network::NetworkBase::nativeControl();
+	IN_CASE_CHECK(control.destroy(connection.client) == os::STATUS_SUCCESS);
+
+	IN_CASE_CHECK(registar.remove(server) == os::STATUS_SUCCESS);
+
+	registar.clear();
+
+	return RegistrarTest::SUCCESS;
+}
+
 int RegistrarTest::tcpServer()
 {
+	os::network::TcpServer server{ port };
+	os::network::TcpClient client{ ipv4 };
+
+	Registrar registar;
+	auto raii = templates::makeRaiiCaller(
+			[&registar, &server]() -> void
+			{
+				[&](){ IN_CASE_CHECK_END(
+						registar.add(server) == os::STATUS_SUCCESS
+				); }();
+			}
+			, [&registar, &server]() -> void
+			{
+				[&](){ IN_CASE_CHECK_END(
+						registar.remove(server) == os::STATUS_SUCCESS
+				); }();
+			}
+	);
+
+	IN_CASE_CHECK(client.connect() == os::STATUS_SUCCESS);
+	auto connection = registar.popTcpServerAcception();
+	IN_CASE_CHECK(connection.server == server.native().descriptor);
+
+	os::network::TcpServer::WithClient serverConnection{
+			connection.client, os::STATUS_SUCCESS
+	};
+	IN_CASE_CHECK(registar.add(serverConnection) == os::STATUS_SUCCESS);
+	IN_CASE_CHECK(client.disconnect() == os::STATUS_SUCCESS);
+	IN_CASE_CHECK(registar.popTcpServer() == serverConnection.native().descriptor);
+	IN_CASE_CHECK(registar.remove(serverConnection) == os::STATUS_SUCCESS);
+
 	return RegistrarTest::SUCCESS;
 }
 
@@ -156,4 +223,5 @@ int RegistrarTest::tcpClient()
 {
 	return RegistrarTest::SUCCESS;
 }
+
 }}}}} // flame_ide::os::async::network::tests

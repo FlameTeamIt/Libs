@@ -71,6 +71,19 @@ SocketAddressIn ipAddressClient(Ipv4::Address serverAddress) noexcept
 	return sockaddr;
 }
 
+template<typename Option>
+Option getSocketOption(const os::Socket &socket, int option)
+{
+	Option optionValue = {};
+	socklen_t length = sizeof(option);
+	auto result = ::getsockopt(
+			socket.descriptor, SOL_SOCKET, option, &optionValue, &length
+	);
+	if (result < 0)
+		return false;
+	return optionValue;
+}
+
 } // namespace anonymous
 }}}} // namespace flame_ide::os::network::socket
 
@@ -179,6 +192,38 @@ Ipv4 getIpv4(const Socket &socket) noexcept
 	in.value = socket.address.sin_addr.s_addr;
 
 	return Ipv4{ in.address, port };
+}
+
+int getType(const Socket &socket) noexcept
+{
+	int type = getSocketOption<int>(socket, SO_TYPE);
+	if (type < 0)
+		return -1;
+	return type;
+}
+
+int getError(const Socket &socket) noexcept
+{
+	int error = getSocketOption<int>(socket, SO_ERROR);
+	if (error < 0)
+		return -1;
+	return error;
+}
+
+bool isAcceptor(const Socket &socket) noexcept
+{
+	auto isAcceptor = getSocketOption<int>(socket, SO_ACCEPTCONN);
+	if (isAcceptor < 0)
+		return false;
+	return isAcceptor;
+}
+
+bool isServer(const Socket &socket) noexcept
+{
+	auto isServer = getSocketOption<int>(socket, SO_REUSEADDR);
+	if (isServer < 0)
+		return false;
+	return isServer;
 }
 
 }}}} // namespace flame_ide::os::network::socket

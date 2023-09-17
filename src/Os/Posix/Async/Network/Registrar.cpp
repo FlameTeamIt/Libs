@@ -1,9 +1,11 @@
 #include <FlameIDE/../../src/Os/Posix/Async/Network/Registrar.hpp>
 
+#include <FlameIDE/Os/Network/NetworkBase.hpp>
+#include <FlameIDE/Os/Network/TcpServer.hpp>
 #include <FlameIDE/Os/Threads/Utils.hpp>
 
 #include <fcntl.h>
-#include <iostream>
+#include <poll.h>
 
 namespace flame_ide
 {namespace os
@@ -41,17 +43,18 @@ inline bool initPointerAndQueue(Pointer &pointer, Queue &queue, Value initValue)
 template<
 	typename Descriptors, typename Queue, typename Value = decltype(*Queue{}.first)
 >
-os::Status checkInitialization(Descriptors &descriptors, Queue &queue)
+inline os::Status checkInitialization(
+		Descriptors &descriptors, Queue &queue, Value &&value
+)
 {
-	constexpr auto initValue = os::SOCKET_INVALID.descriptor;
 	const os::threads::Locker locker{ queue.spin };
-	if (!descriptors && !initPointerAndQueue(descriptors, queue, initValue))
+	if (!descriptors && !initPointerAndQueue(descriptors, queue, value))
 		return os::STATUS_FAILED;
 	return os::STATUS_SUCCESS;
 }
 
 template<typename Queue, typename Value = decltype(*Queue{}.first)>
-auto popFromQueue(Queue &queue, Value initValue = {})
+inline auto popFromQueue(Queue &queue, Value initValue = {})
 {
 	os::threads::Locker locker{ queue.spin };
 
@@ -67,7 +70,7 @@ auto popFromQueue(Queue &queue, Value initValue = {})
 }
 
 template<typename Queue, typename Value = decltype(*Queue{}.first)>
-auto pushToQueue(Queue &queue, Types::size_t queueCapacity, Value value)
+inline auto pushToQueue(Queue &queue, Types::size_t queueCapacity, Value value)
 {
 	os::threads::Locker locker{ queue.spin };
 
@@ -114,19 +117,40 @@ Registrar &Registrar::get() noexcept
 
 os::Status Registrar::enableUdpServer(SocketDescriptor descriptor) noexcept
 {
-	if (anonymous::checkInitialization(udpServers, udpServersQueue) < 0)
+	if (0 > anonymous::checkInitialization(
+			udpServers, udpServersQueue, os::SOCKET_INVALID.descriptor
+	))
 		return os::STATUS_FAILED;
 	return Registrar::enableSignal(descriptor);
 }
 
 os::Status Registrar::enableUdpCleint(SocketDescriptor descriptor) noexcept
 {
-	if (anonymous::checkInitialization(udpClients, udpClientsQueue) < 0)
+	if (0 > anonymous::checkInitialization(
+			udpClients, udpClientsQueue, os::SOCKET_INVALID.descriptor
+	))
+		return os::STATUS_FAILED;
+	return Registrar::enableSignal(descriptor);
+}
+
+os::Status Registrar::enableTcpServerAcceptor(SocketDescriptor descriptor) noexcept
+{
+	if (0 > anonymous::checkInitialization(
+			tcpServerAcceptions, tcpServerAcceptionsQueue, AcceptedConnection{}
+	))
+		return os::STATUS_FAILED;
+	return Registrar::enableSignal(descriptor);
+}
+
+os::Status Registrar::enableTcpServer(SocketDescriptor descriptor) noexcept
+{
+	if (0 > anonymous::checkInitialization(
+			tcpServers, tcpServersQueue, os::SOCKET_INVALID.descriptor
+	))
 		return os::STATUS_FAILED;
 	return Registrar::enableSignal(descriptor);
 }
 // TODO
-//	os::Status Registrar::pushTcpServer(SocketDescriptor descriptor) noexcept {}
 //	os::Status Registrar::pushTcpClient(SocketDescriptor descriptor) noexcept {}
 
 os::Status Registrar::disableSocket(SocketDescriptor descriptor) noexcept
@@ -147,9 +171,23 @@ SocketDescriptor Registrar::popUdpCleint() noexcept
 			udpClientsQueue, os::SOCKET_INVALID.descriptor
 	);
 }
+
+Registrar::AcceptedConnection Registrar::popTcpServerAcception() noexcept
+{
+	return anonymous::popFromQueue(
+			tcpServerAcceptionsQueue, AcceptedConnection{}
+	);
+}
+
+SocketDescriptor Registrar::popTcpServer() noexcept
+{
+	return anonymous::popFromQueue(
+			tcpServersQueue, os::SOCKET_INVALID.descriptor
+	);
+}
+
 // TODO
-//	AcceptedConnection popTcpServer() noexcept;
-//	SocketDescriptor popTcpClient() noexcept;
+//	SocketDescriptor Registrar::popTcpClient() noexcept;
 
 // private - Constructor
 
@@ -187,93 +225,64 @@ Registrar::SigAction Registrar::makeSigAction() noexcept
 
 void Registrar::signalHandler(int signal, const siginfo_t *info, ucontext_t *) noexcept
 {
+	using os::network::NetworkBase;
+
 	if (signal != anonymous::SIGNAL_POLLING)
 		return;
 
-	enum class SocketType: int
-	{
-		Unknown = -1
-		, Stream = SOCK_STREAM
-		, Datagram = SOCK_DGRAM
-	};
 	const auto descriptor = info->si_fd;
-	auto socketType = SocketType::Unknown;
-	bool isAcceptor = false;
-	bool isServer = false;
+	switch (NetworkBase::nativeControl().type(Socket{ {}, descriptor }))
 	{
-		auto socketGetType = [](os::SocketDescriptor descriptor) -> SocketType
-		{
-			auto type = SocketType::Unknown;
-			socklen_t length = sizeof(type);
+		case NetworkBase::SocketType::STREAM:
+			handleTcp(descriptor);
+			return;
 
-			auto result = ::getsockopt(descriptor, SOL_SOCKET, SO_TYPE, &type, &length);
-			if (result < 0)
-				return SocketType::Unknown;
+		case NetworkBase::SocketType::DATAGRAM:
+			handleUdp(descriptor);
+			return;
 
-			return type;
-		};
-		socketType = socketGetType(descriptor);
-
-		auto socketIsServer = [](os::SocketDescriptor descriptor) -> bool
-		{
-			int isServer = false;
-			socklen_t length = sizeof(isServer);
-			auto result = ::getsockopt(
-					descriptor, SOL_SOCKET, SO_REUSEADDR, &isServer, &length
-			);
-			if (result < 0)
-				return false;
-			return isServer;
-		};
-		isServer = socketIsServer(descriptor);
-
-		auto socketIsAcceptor = [](os::SocketDescriptor descriptor) -> bool
-		{
-			int isAcceptor = 0;
-			socklen_t length = sizeof(isAcceptor);
-			auto result = ::getsockopt(
-					descriptor, SOL_SOCKET, SO_ACCEPTCONN, &isAcceptor, &length
-			);
-			if (result < 0)
-				return false;
-			return isAcceptor;
-		};
-		isAcceptor = socketIsAcceptor(descriptor);
-	}
-
-	switch (socketType)
-	{
-		case SocketType::Stream:
-		{
-			// TODO:
-			// to TCP
-			if (isAcceptor)
-			{
-				// это серверный сокет -- пришёл сигнал о подключении
-				// хотя это надо проверить
-
-				// accept();
-				// Registrar::get().pushTcpServer(descriptor);
-				return;
-			}
-			// Registrar::get().pushTcpClient(descriptor);
-			break;
-		}
-
-		case SocketType::Datagram:
-		{
-			if (isServer)
-			{
-				Registrar::get().pushUdpServer(descriptor);
-				return;
-			}
-			Registrar::get().pushUdpClient(descriptor);
-			break;
-		}
-
-		case SocketType::Unknown:
+		case NetworkBase::SocketType::UNKNOWN:
 			return;
 	}
+}
+
+void Registrar::handleTcp(SocketDescriptor descriptor) noexcept
+{
+	using os::network::TcpServer;
+
+	const auto serverControl = TcpServer::nativeServerControl;
+	const auto socket = Socket{ {}, descriptor };
+	if (!serverControl().isServer(socket))
+	{
+		// TODO
+		// Сигнал пришёл от клиентского сокета
+		// Registrar::get().pushTcpClient(descriptor);
+		return;
+	}
+	if (!serverControl().isAcceptor(socket))
+	{
+		// Сигнал пришёл от сокета, который получен через accept()
+		Registrar::get().pushTcpServer(descriptor);
+		return;
+	}
+
+	// Сигнал пришёл от сокета-акцептора
+	os::Status result = os::STATUS_SUCCESS;
+	const auto client = serverControl().accept(socket, &result);
+	if (result < 0)
+		return;
+	Registrar::get().pushTcpServerAcception(
+			AcceptedConnection{ socket.descriptor, client }
+	);
+	return;
+}
+
+void Registrar::handleUdp(SocketDescriptor descriptor) noexcept
+{
+	using os::network::NetworkBase;
+	(NetworkBase::nativeControl().isServer(Socket{ {}, descriptor }))
+			? Registrar::get().pushUdpServer(descriptor)
+			: Registrar::get().pushUdpClient(descriptor);
 }
 
 os::Status Registrar::enableSignal(SocketDescriptor descriptor) noexcept
@@ -331,8 +340,17 @@ bool Registrar::pushUdpClient(SocketDescriptor descriptor) noexcept
 {
 	return anonymous::pushToQueue(udpClientsQueue, udpClients->capacity(), descriptor);
 }
+
+bool Registrar::pushTcpServerAcception(AcceptedConnection connection) noexcept
+{
+	return anonymous::pushToQueue(tcpServerAcceptionsQueue, tcpServerAcceptions->capacity(), connection);
+}
+
+bool Registrar::pushTcpServer(SocketDescriptor descriptor) noexcept
+{
+	return anonymous::pushToQueue(tcpServersQueue, tcpServers->capacity(), descriptor);
+}
 // TODO
-//	bool Registrar::pushTcpServer(AcceptedConnection connection) noexcept {}
 //	bool Registrar::pushTcpClient(SocketDescriptor connection) noexcept {}
 
 }}}}} // namespace flame_ide::os::posix::async::network

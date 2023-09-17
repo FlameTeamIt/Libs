@@ -30,16 +30,18 @@ public:
 
 	os::Status enableUdpServer(SocketDescriptor descriptor) noexcept;
 	os::Status enableUdpCleint(SocketDescriptor descriptor) noexcept;
+	os::Status enableTcpServerAcceptor(SocketDescriptor descriptor) noexcept;
+	os::Status enableTcpServer(SocketDescriptor descriptor) noexcept;
 	// TODO
-//	os::Status enableTcpServer(SocketDescriptor descriptor) noexcept;
 //	os::Status enableTcpClient(SocketDescriptor descriptor) noexcept;
 
 	os::Status disableSocket(SocketDescriptor descriptor) noexcept;
 
 	SocketDescriptor popUdpServer() noexcept;
 	SocketDescriptor popUdpCleint() noexcept;
+	AcceptedConnection popTcpServerAcception() noexcept;
+	SocketDescriptor popTcpServer() noexcept;
 	// TODO
-//	AcceptedConnection popTcpServer() noexcept;
 //	SocketDescriptor popTcpClient() noexcept;
 
 private:
@@ -50,10 +52,9 @@ private:
 	using SigActionHandler = decltype(SigAction{}.sa_sigaction);
 
 	static SigAction makeSigAction() noexcept;
-
-	static void signalHandler(
-			int signalNumber, const siginfo_t *info, ucontext_t *
-	) noexcept;
+	static void signalHandler(int signal, const siginfo_t *info, ucontext_t *) noexcept;
+	static void handleTcp(SocketDescriptor descriptor) noexcept;
+	static void handleUdp(SocketDescriptor descriptor) noexcept;
 
 	static os::Status enableSignal(SocketDescriptor descriptor) noexcept;
 	static os::Status disableSignal(SocketDescriptor descriptor) noexcept;
@@ -61,8 +62,9 @@ private:
 private:
 	bool pushUdpServer(SocketDescriptor descriptor) noexcept;
 	bool pushUdpClient(SocketDescriptor descriptor) noexcept;
+	bool pushTcpServerAcception(AcceptedConnection connection) noexcept;
+	bool pushTcpServer(SocketDescriptor connection) noexcept;
 	// TODO
-//	bool pushTcpServer(AcceptedConnection connection) noexcept;
 //	bool pushTcpClient(SocketDescriptor connection) noexcept;
 
 private:
@@ -74,12 +76,14 @@ private:
 	using UdpServers = os::async::network::UdpServers;
 	using UdpClients = os::async::network::UdpClients;
 	using AcceptedConnections = os::async::network::AcceptedConnections;
+	using TcpServers = os::async::network::TcpServers;
 	using TcpClients = os::async::network::TcpClients;
 
 	UdpServers udpServers = UdpServers::makeEmpty();
 	UdpClients udpClients = UdpClients::makeEmpty();
+	AcceptedConnections tcpServerAcceptions = AcceptedConnections::makeEmpty();
+	TcpServers tcpServers = TcpServers::makeEmpty();
 	// TODO
-//	AcceptedConnections tcpServers = AcceptedConnections::makeEmpty();
 //	TcpServers tcpClients = TcpClients::makeEmpty();
 
 private:
@@ -88,8 +92,9 @@ private:
 
 	Queue<os::async::network::DescriptorIterator> udpServersQueue;
 	Queue<os::async::network::DescriptorIterator> udpClientsQueue;
+	Queue<os::async::network::AcceptedConnectionInterator> tcpServerAcceptionsQueue;
+	Queue<os::async::network::DescriptorIterator> tcpServersQueue;
 	// TODO
-//	Queue<os::async::network::AcceptedConnectionInterator> tcpServersQueue;
 //	Queue<os::async::network::DescriptorIterator> tcpClientsQueue;
 };
 

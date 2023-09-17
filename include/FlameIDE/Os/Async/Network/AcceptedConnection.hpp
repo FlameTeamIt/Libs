@@ -15,18 +15,18 @@ struct AcceptedConnection
 	constexpr AcceptedConnection() = default;
 	constexpr bool operator==(AcceptedConnection connection) const noexcept
 	{
-		return server == connection.server && client == connection.client;
+		return server == connection.server
+			&& client.descriptor == connection.client.descriptor;
 	}
 
 	inline operator bool() const noexcept
 	{
 		return server != os::SOCKET_INVALID.descriptor
-				&& client != os::SOCKET_INVALID.descriptor;
+				&& client.descriptor != os::SOCKET_INVALID.descriptor;
 	}
 
-	os::SocketAddressIn address = {};
 	os::SocketDescriptor server = os::SOCKET_INVALID.descriptor;
-	os::SocketDescriptor client = os::SOCKET_INVALID.descriptor;
+	os::Socket client = os::SOCKET_INVALID;
 };
 
 }}}} // namespace flame_ide::os::async::network

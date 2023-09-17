@@ -22,6 +22,7 @@ struct RegistrarTest: public ::AbstractTest
 private:
 	int udpServer();
 	int udpClient();
+	int tcpServerAcceptor();
 	int tcpServer();
 	int tcpClient();
 

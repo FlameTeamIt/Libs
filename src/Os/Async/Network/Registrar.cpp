@@ -3,6 +3,8 @@
 #include <FlameIDE/../../src/Os/Posix/Async/Network/Registrar.hpp>
 #include <FlameIDE/../../src/Os/Windows/Async/Network/Registrar.hpp>
 
+#include <FlameIDE/Os/Network/TcpClient.hpp>
+#include <FlameIDE/Os/Network/TcpServer.hpp>
 #include <FlameIDE/Os/Network/UdpClient.hpp>
 #include <FlameIDE/Os/Network/UdpServer.hpp>
 
@@ -30,11 +32,14 @@ os::Status Registrar::add(const os::network::UdpClient &socket) noexcept
 	return PlatformRegistrar::get().enableUdpCleint(socket.native().descriptor);
 }
 
-// TODO
 os::Status Registrar::add(const os::network::TcpServer &socket) noexcept
 {
-	flame_ide::unused(socket);
-	return false;
+	return PlatformRegistrar::get().enableTcpServerAcceptor(socket.native().descriptor);
+}
+
+os::Status Registrar::add(const os::network::TcpServer::WithClient &socket) noexcept
+{
+	return PlatformRegistrar::get().enableTcpServer(socket.native().descriptor);
 }
 
 // TODO
@@ -51,18 +56,19 @@ os::Status Registrar::remove(const os::network::UdpServer &socket) noexcept
 	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
 }
 
-// TODO
 os::Status Registrar::remove(const os::network::UdpClient &socket) noexcept
 {
-	flame_ide::unused(socket);
-	return false;
+	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
 }
 
-// TODO
 os::Status Registrar::remove(const os::network::TcpServer &socket) noexcept
 {
-	flame_ide::unused(socket);
-	return false;
+	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
+}
+
+os::Status Registrar::remove(const os::network::TcpServer::WithClient &socket) noexcept
+{
+	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
 }
 
 // TODO
@@ -79,22 +85,34 @@ os::SocketDescriptor Registrar::popUdpServer() noexcept
 	return PlatformRegistrar::get().popUdpServer();
 }
 
-// TODO
 os::SocketDescriptor Registrar::popUdpClient() noexcept
 {
 	return PlatformRegistrar::get().popUdpCleint();
 }
 
-// TODO
-AcceptedConnection Registrar::popTcpServer() noexcept
+AcceptedConnection Registrar::popTcpServerAcception() noexcept
 {
-	return {};
+	return PlatformRegistrar::get().popTcpServerAcception();
+}
+
+os::SocketDescriptor Registrar::popTcpServer() noexcept
+{
+	return PlatformRegistrar::get().popTcpServer();
 }
 
 // TODO
 os::SocketDescriptor Registrar::popTcpClient() noexcept
 {
 	return os::SOCKET_INVALID.descriptor;
+}
+
+void Registrar::clear() noexcept
+{
+	while (popUdpServer() != os::SOCKET_INVALID.descriptor);
+	while (popUdpClient() != os::SOCKET_INVALID.descriptor);
+	while (popTcpServerAcception());
+	while (popTcpServer() != os::SOCKET_INVALID.descriptor);
+	while (popTcpClient() != os::SOCKET_INVALID.descriptor);
 }
 
 }}}} // namespace flame_ide::os::async::network
