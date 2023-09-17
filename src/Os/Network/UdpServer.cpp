@@ -32,16 +32,18 @@ UdpServer::WithClient UdpServer::wait() noexcept
 	return sendler;
 }
 
-UdpServer::NativeUdpServerControl UdpServer::nativeServerControl() noexcept
+const UdpServer::NativeServerControl &UdpServer::nativeServerControl() noexcept
 {
-	NativeUdpServerControl control;
-	static_cast<decltype(nativeControl()) &>(control).operator=(
-			nativeControl()
-	);
-	control.create = socket::createUdpServer;
-	control.send = socket::udp::send;
-	control.receive = socket::udp::receiveServer;
-	control.wait = socket::udp::waitServer;
+	static const NativeServerControl control = []()
+	{
+		NativeServerControl control;
+		static_cast<NativeControl &>(control).operator=(nativeControl());
+		control.create = socket::createUdpServer;
+		control.send = socket::udp::send;
+		control.receive = socket::udp::receiveServer;
+		control.wait = socket::udp::waitServer;
+		return control;
+	} ();
 	return control;
 }
 

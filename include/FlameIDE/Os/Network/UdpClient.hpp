@@ -14,17 +14,17 @@ public:
 	using NetworkBase::ConstRange;
 	using NetworkBase::Range;
 
-	struct NativeUdpClientControl: public NetworkBase::NativeSocketControl
+	struct NativeClientControl: public NetworkBase::NativeControl
 	{
-		NativeUdpClientControl() noexcept = default;
-		NativeUdpClientControl(const NativeUdpClientControl &) noexcept = default;
-		NativeUdpClientControl(NativeUdpClientControl &&) noexcept = default;
-		~NativeUdpClientControl() noexcept = default;
+		NativeClientControl() noexcept = default;
+		NativeClientControl(const NativeClientControl &) noexcept = default;
+		NativeClientControl(NativeClientControl &&) noexcept = default;
+		~NativeClientControl() noexcept = default;
 
-		NativeUdpClientControl &
-		operator=(const NativeUdpClientControl &) noexcept = default;
-		NativeUdpClientControl &
-		operator=(NativeUdpClientControl &&) noexcept = default;
+		NativeClientControl &
+		operator=(const NativeClientControl &) noexcept = default;
+		NativeClientControl &
+		operator=(NativeClientControl &&) noexcept = default;
 
 		Socket (*create)(Ipv4 ipServer) noexcept = nullptr;
 		Types::ssize_t (*send)(
@@ -49,7 +49,7 @@ public:
 	Types::ssize_t receive(NetworkBase::Range range) noexcept;
 
 public:
-	static NativeUdpClientControl nativeClientControl() noexcept;
+	static const NativeClientControl &nativeClientControl() noexcept;
 
 public:
 	using NetworkBase::operator bool;

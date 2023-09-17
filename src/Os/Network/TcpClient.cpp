@@ -75,18 +75,20 @@ Types::ssize_t TcpClient::receive(Range range) noexcept
 	return result;
 }
 
-TcpClient::NativeTcpClientControl TcpClient::nativeClientControl() noexcept
+const TcpClient::NativeClientControl &TcpClient::nativeClientControl() noexcept
 {
-	NativeTcpClientControl control;
-	static_cast<decltype(nativeControl()) &>(control).operator=(
-			nativeControl()
-	);
-	control.create = socket::createTcpClient;
-	control.connect = socket::tcp::client::connect;
-	control.send = socket::tcp::send;
-	control.receive = socket::tcp::receive;
-	control.waitBytes = socket::tcp::waitBytes;
-	control.alive = socket::tcp::alive;
+	static const NativeClientControl control = []()
+	{
+		NativeClientControl control;
+		static_cast<NativeControl &>(control).operator=(nativeControl());
+		control.create = socket::createTcpClient;
+		control.connect = socket::tcp::client::connect;
+		control.send = socket::tcp::send;
+		control.receive = socket::tcp::receive;
+		control.waitBytes = socket::tcp::waitBytes;
+		control.alive = socket::tcp::alive;
+		return control;
+	} ();
 	return control;
 }
 

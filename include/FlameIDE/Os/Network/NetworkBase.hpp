@@ -24,14 +24,14 @@ public:
 	using Range = templates::Range<byte_t *>;
 	using ConstRange = templates::Range<const byte_t *>;
 
-	struct NativeSocketControl
+	struct NativeControl
 	{
-		NativeSocketControl() noexcept = default;
-		NativeSocketControl(const NativeSocketControl &) noexcept = default;
-		NativeSocketControl(NativeSocketControl &&) noexcept = default;
-		~NativeSocketControl() noexcept = default;
-		NativeSocketControl &operator=(const NativeSocketControl &) noexcept = default;
-		NativeSocketControl &operator=(NativeSocketControl &&) noexcept = default;
+		NativeControl() noexcept = default;
+		NativeControl(const NativeControl &) noexcept = default;
+		NativeControl(NativeControl &&) noexcept = default;
+		~NativeControl() noexcept = default;
+		NativeControl &operator=(const NativeControl &) noexcept = default;
+		NativeControl &operator=(NativeControl &&) noexcept = default;
 
 		Status (*destroy)(Socket &socket) noexcept = nullptr;
 		Types::ssize_t (*receivingBytesNumber)(const Socket &socket) noexcept = nullptr;
@@ -50,7 +50,7 @@ public:
 	const Socket &native() const;
 
 public:
-	static NativeSocketControl nativeControl() noexcept;
+	static const NativeControl &nativeControl() noexcept;
 
 protected:
 	NetworkBase(Socket socket) noexcept;
@@ -59,6 +59,11 @@ protected:
 	NetworkBase &operator=(NetworkBase &&base) noexcept;
 
 	void setStatus(Status status) noexcept;
+
+	SocketType getType() const;
+	os::Status getError() const;
+	bool isServer() const;
+	bool isAcceptor() const;
 
 protected:
 	static Types::int_t checkStatus(Status status) noexcept;

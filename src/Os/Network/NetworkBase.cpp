@@ -34,17 +34,17 @@ const Socket &NetworkBase::native() const
 	return socket;
 }
 
-NetworkBase::NativeSocketControl NetworkBase::nativeControl() noexcept
+const NetworkBase::NativeControl &NetworkBase::nativeControl() noexcept
 {
-	NativeSocketControl socketControl;
-	socketControl.destroy = socket::destroy;
-	socketControl.receivingBytesNumber = socket::receivingBytesNumber;
-	socketControl.getIpv4 = socket::getIpv4;
-
-	socketControl.type = reinterpret_cast<decltype(socketControl.type)>(socket::getType);
-	socketControl.error = socket::getError;
-	socketControl.isAcceptor = socket::isAcceptor;
-	socketControl.isServer = socket::isServer;
+	static const NativeControl socketControl{
+			socket::destroy
+			, socket::receivingBytesNumber
+			, socket::getIpv4
+			, reinterpret_cast<decltype(socketControl.type)>(socket::getType)
+			, socket::getError
+			, socket::isAcceptor
+			, socket::isServer
+	};
 	return socketControl;
 }
 
@@ -78,6 +78,39 @@ void NetworkBase::setStatus(Status statusInit) noexcept
 {
 	this->status = statusInit;
 }
+
+NetworkBase::SocketType NetworkBase::getType() const
+{
+	auto type = static_cast<NetworkBase::SocketType>(socket::getType(socket));
+	switch (type) {
+		case SocketType::STREAM:
+		case SocketType::DATAGRAM:
+			return type;
+
+		case SocketType::UNKNOWN:
+		default:
+			return SocketType::UNKNOWN;
+			break;
+	}
+}
+
+os::Status NetworkBase::getError() const
+{
+	os::Status status = socket::getError(socket);
+	return status;
+}
+
+bool NetworkBase::isServer() const
+{
+	return socket::isServer(socket);
+}
+
+bool NetworkBase::isAcceptor() const
+{
+	return socket::isAcceptor(socket);
+}
+
+// private
 
 Types::int_t NetworkBase::checkStatus(Status status) noexcept
 {

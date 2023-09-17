@@ -19,7 +19,7 @@ public:
 	using NetworkBase::ConstRange;
 	using NetworkBase::Range;
 
-	struct NativeTcpServerControl: public NetworkBase::NativeSocketControl
+	struct NativeTcpServerControl: public NetworkBase::NativeControl
 	{
 		NativeTcpServerControl() noexcept = default;
 		NativeTcpServerControl(const NativeTcpServerControl &) noexcept = default;
@@ -54,7 +54,7 @@ public:
 	WithClient accept() const noexcept;
 
 public:
-	static NativeTcpServerControl nativeServerControl() noexcept;
+	static const NativeTcpServerControl &nativeServerControl() noexcept;
 
 public:
 	using NetworkBase::operator bool;
@@ -93,8 +93,9 @@ public:
 	WithClient &operator=(WithClient &&client) noexcept;
 
 	Types::ssize_t numberBytesToRead() const noexcept;
-
 	Status getStatus() const noexcept;
+	const Socket &native() const noexcept;
+
 	Types::ssize_t send(TcpServer::ConstRange range) noexcept;
 	Types::ssize_t receive(TcpServer::Range range) noexcept;
 

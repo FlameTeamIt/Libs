@@ -38,19 +38,21 @@ TcpServer::WithClient TcpServer::accept() const noexcept
 	return WithClient{ client, tmpStatus };
 }
 
-TcpServer::NativeTcpServerControl TcpServer::nativeServerControl() noexcept
+const TcpServer::NativeTcpServerControl &TcpServer::nativeServerControl() noexcept
 {
-	NativeTcpServerControl control;
-	static_cast<decltype(nativeControl()) &>(control).operator=(
-			nativeControl()
-	);
-	control.create = socket::createTcpServer;
-	control.listen = socket::tcp::server::listen;
-	control.accept = socket::tcp::server::accept;
-	control.send = socket::tcp::send;
-	control.receive = socket::tcp::receive;
-	control.waitBytes = socket::tcp::waitBytes;
-	control.alive = socket::tcp::alive;
+	static const NativeTcpServerControl control = []()
+	{
+		NativeTcpServerControl control;
+		static_cast<NativeControl &>(control).operator=(nativeControl());
+		control.create = socket::createTcpServer;
+		control.listen = socket::tcp::server::listen;
+		control.accept = socket::tcp::server::accept;
+		control.send = socket::tcp::send;
+		control.receive = socket::tcp::receive;
+		control.waitBytes = socket::tcp::waitBytes;
+		control.alive = socket::tcp::alive;
+		return control;
+	} ();
 	return control;
 }
 
@@ -101,6 +103,11 @@ Types::ssize_t TcpServer::WithClient::numberBytesToRead() const noexcept
 Status TcpServer::WithClient::getStatus() const noexcept
 {
 	return status;
+}
+
+const Socket &TcpServer::WithClient::native() const noexcept
+{
+	return socket;
 }
 
 Types::ssize_t TcpServer::WithClient::send(TcpServer::ConstRange range) noexcept

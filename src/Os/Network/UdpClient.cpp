@@ -47,16 +47,18 @@ Types::ssize_t UdpClient::receive(Range range) noexcept
 	return result;
 }
 
-UdpClient::NativeUdpClientControl UdpClient::nativeClientControl() noexcept
+const UdpClient::NativeClientControl &UdpClient::nativeClientControl() noexcept
 {
-	NativeUdpClientControl control;
-	static_cast<decltype(nativeControl()) &>(control).operator=(
-			nativeControl()
-	);
-	control.create = socket::createUdpClient;
-	control.send = socket::udp::send;
-	control.receive = socket::udp::receiveClient;
-	control.wait = socket::udp::waitClient;
+	static const NativeClientControl control = []()
+	{
+		NativeClientControl control;
+		static_cast<NativeControl &>(control).operator=(nativeControl());
+		control.create = socket::createUdpClient;
+		control.send = socket::udp::send;
+		control.receive = socket::udp::receiveClient;
+		control.wait = socket::udp::waitClient;
+		return control;
+	} ();
 	return control;
 }
 
