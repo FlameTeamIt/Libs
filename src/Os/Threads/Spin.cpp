@@ -80,7 +80,7 @@ os::SpinContext &Spin::native() noexcept
 	return context;
 }
 
-os::Status Spin::getSatus() const noexcept
+os::Status Spin::getStatus() const noexcept
 {
 	return status;
 }

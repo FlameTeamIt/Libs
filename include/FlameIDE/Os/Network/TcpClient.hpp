@@ -14,6 +14,26 @@ public:
 	using NetworkBase::ConstRange;
 	using NetworkBase::Range;
 
+	struct NativeClientControl: public NetworkBase::NativeControl
+	{
+		NativeClientControl() noexcept = default;
+		NativeClientControl(const NativeClientControl &) noexcept = default;
+		NativeClientControl(NativeClientControl &&) noexcept = default;
+		~NativeClientControl() noexcept = default;
+
+		NativeClientControl &
+		operator=(const NativeClientControl &) noexcept = default;
+		NativeClientControl &
+		operator=(NativeClientControl &&) noexcept = default;
+
+		Socket (*create)(Ipv4 serverIp) noexcept = nullptr;
+		Status (*connect)(const Socket &socket) noexcept;
+		Types::ssize_t (*send)(const Socket &socket, ConstRange range) noexcept;
+		Types::ssize_t (*receive)(const Socket &socket, Range range) noexcept;
+		Types::ssize_t (*waitBytes)(const Socket &socket, Types::size_t number) noexcept;
+		bool (*alive)(const Socket &socket) noexcept;
+	};
+
 public:
 	TcpClient() noexcept = delete;
 	TcpClient(const TcpClient &) noexcept = delete;
@@ -34,6 +54,9 @@ public:
 
 	Types::ssize_t send(ConstRange range) noexcept;
 	Types::ssize_t receive(Range range) noexcept;
+
+public:
+	static const NativeClientControl &nativeClientControl() noexcept;
 
 public:
 	using NetworkBase::operator bool;

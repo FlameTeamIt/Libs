@@ -126,11 +126,18 @@ Types::ssize_t waitBytes(const Socket &socket, Types::size_t number) noexcept
 	{
 		result = socket::receivingBytesNumber(socket);
 		if (result < 0)
-		{
 			break;
-		}
 	}
 	return result;
+}
+
+bool alive(const Socket &socket) noexcept
+{
+	byte_t byte[1] = {};
+	const Types::ssize_t result = receive(
+			socket.descriptor, templates::makeRange(byte), MSG_PEEK | MSG_DONTWAIT
+	);
+	return (result != 0);
 }
 
 }}}}} // namespace flame_ide::os::network::socket::tcp

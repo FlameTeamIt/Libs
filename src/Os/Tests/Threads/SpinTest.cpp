@@ -24,14 +24,14 @@ auto initDestroy() noexcept
 	threads::Spin* pSpin = nullptr;
 	{
 		threads::Spin spin;
-		IN_CASE_CHECK(os::STATUS_SUCCESS == spin.getSatus());
+		IN_CASE_CHECK(os::STATUS_SUCCESS == spin.getStatus());
 		IN_CASE_CHECK(!flame_ide::isEqual(
 				spin.native(), os::SPINLOCK_CONTEXT_INITIALIZER
 		));
 
 		pSpin = &spin;
 	}
-	IN_CASE_CHECK_END(os::STATUS_SUCCESS == pSpin->getSatus());
+	IN_CASE_CHECK_END(os::STATUS_SUCCESS == pSpin->getStatus());
 }
 
 #if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_GCC
@@ -44,9 +44,9 @@ auto lock() noexcept
 
 	threads::Spin spin;
 	spin.lock();
-	IN_CASE_CHECK(os::STATUS_SUCCESS == spin.getSatus());
+	IN_CASE_CHECK(os::STATUS_SUCCESS == spin.getStatus());
 	IN_CASE_CHECK(false == spin.tryLock());
-	IN_CASE_CHECK_END(os::STATUS_SUCCESS == spin.getSatus());
+	IN_CASE_CHECK_END(os::STATUS_SUCCESS == spin.getStatus());
 }
 
 auto unlock() noexcept
@@ -57,10 +57,10 @@ auto unlock() noexcept
 	spin.lock();
 
 	spin.unlock();
-	IN_CASE_CHECK(os::STATUS_SUCCESS == spin.getSatus());
+	IN_CASE_CHECK(os::STATUS_SUCCESS == spin.getStatus());
 
 	IN_CASE_CHECK(true == spin.tryLock());
-	IN_CASE_CHECK_END(os::STATUS_SUCCESS == spin.getSatus());
+	IN_CASE_CHECK_END(os::STATUS_SUCCESS == spin.getStatus());
 }
 
 } // namespace anonymous

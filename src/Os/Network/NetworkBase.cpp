@@ -13,7 +13,7 @@ namespace flame_ide
 
 NetworkBase::~NetworkBase() noexcept
 {
-	if (!operator bool())
+if (!operator bool())
 		return;
 
 	socket::destroy(socket);
@@ -32,6 +32,20 @@ Status NetworkBase::getStatus() const noexcept
 const Socket &NetworkBase::native() const
 {
 	return socket;
+}
+
+const NetworkBase::NativeControl &NetworkBase::nativeControl() noexcept
+{
+	static const NativeControl socketControl{
+			socket::destroy
+			, socket::receivingBytesNumber
+			, socket::getIpv4
+			, reinterpret_cast<decltype(socketControl.type)>(socket::getType)
+			, socket::getError
+			, socket::isAcceptor
+			, socket::isServer
+	};
+	return socketControl;
 }
 
 // protected
@@ -64,6 +78,39 @@ void NetworkBase::setStatus(Status statusInit) noexcept
 {
 	this->status = statusInit;
 }
+
+NetworkBase::SocketType NetworkBase::getType() const
+{
+	auto type = static_cast<NetworkBase::SocketType>(socket::getType(socket));
+	switch (type) {
+		case SocketType::STREAM:
+		case SocketType::DATAGRAM:
+			return type;
+
+		case SocketType::UNKNOWN:
+		default:
+			return SocketType::UNKNOWN;
+			break;
+	}
+}
+
+os::Status NetworkBase::getError() const
+{
+	os::Status status = socket::getError(socket);
+	return status;
+}
+
+bool NetworkBase::isServer() const
+{
+	return socket::isServer(socket);
+}
+
+bool NetworkBase::isAcceptor() const
+{
+	return socket::isAcceptor(socket);
+}
+
+// private
 
 Types::int_t NetworkBase::checkStatus(Status status) noexcept
 {

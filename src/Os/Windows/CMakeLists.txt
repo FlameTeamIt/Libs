@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
 
 set(SOURCE_MODULES
-	${CMAKE_CURRENT_LIST_DIR}/Threads
+	${CMAKE_CURRENT_LIST_DIR}/Async
 	${CMAKE_CURRENT_LIST_DIR}/Network
+	${CMAKE_CURRENT_LIST_DIR}/Threads
 )
 foreach(module ${SOURCE_MODULES})
 	add_subdirectory(${module})

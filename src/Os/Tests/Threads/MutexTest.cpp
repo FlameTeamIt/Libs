@@ -25,10 +25,10 @@ auto initDestroy() noexcept
 	{
 		Mutex mutex;
 		pMutex = &mutex;
-
-		IN_CASE_CHECK(os::STATUS_SUCCESS == mutex.getSatus());
+		
+		IN_CASE_CHECK(os::STATUS_SUCCESS == mutex.getStatus());
 	}
-	IN_CASE_CHECK_END(os::STATUS_SUCCESS == pMutex->getSatus());
+	IN_CASE_CHECK_END(os::STATUS_SUCCESS == pMutex->getStatus());
 }
 
 #if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_GCC
@@ -41,9 +41,9 @@ auto lock() noexcept
 
 	Mutex mutex;
 	mutex.lock();
-	IN_CASE_CHECK(os::STATUS_SUCCESS == mutex.getSatus());
+	IN_CASE_CHECK(os::STATUS_SUCCESS == mutex.getStatus());
 	IN_CASE_CHECK(false == mutex.tryLock());
-	IN_CASE_CHECK_END(os::STATUS_SUCCESS == mutex.getSatus());
+	IN_CASE_CHECK_END(os::STATUS_SUCCESS == mutex.getStatus());
 }
 
 auto unlock() noexcept
@@ -54,10 +54,10 @@ auto unlock() noexcept
 	mutex.lock();
 
 	mutex.unlock();
-	IN_CASE_CHECK(os::STATUS_SUCCESS == mutex.getSatus());
+	IN_CASE_CHECK(os::STATUS_SUCCESS == mutex.getStatus());
 
 	IN_CASE_CHECK(true == mutex.tryLock());
-	IN_CASE_CHECK_END(os::STATUS_SUCCESS == mutex.getSatus());
+	IN_CASE_CHECK_END(os::STATUS_SUCCESS == mutex.getStatus());
 }
 
 } // namespace anonymous

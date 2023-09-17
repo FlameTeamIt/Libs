@@ -1,4 +1,4 @@
-#include "Utils.hpp"
+#include <FlameIDE/../../src/Common/Tests/Utils.hpp>
 
 namespace flame_ide
 {namespace common

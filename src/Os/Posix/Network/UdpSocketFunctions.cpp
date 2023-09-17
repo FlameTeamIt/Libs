@@ -27,7 +27,6 @@ send(const Socket &socket, ConstByteRange range) noexcept
 		return -errno;
 	}
 	return result;
-
 }
 
 Types::ssize_t receiveServer(
@@ -52,7 +51,6 @@ Types::ssize_t receiveServer(
 	socketFrom.descriptor = &socket.descriptor;
 	return result;
 }
-
 
 Types::ssize_t receiveClient(const Socket &socket, ByteRange range, int flags) noexcept
 {

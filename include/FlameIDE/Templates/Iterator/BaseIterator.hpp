@@ -46,6 +46,8 @@ public:
 	Me &operator=(const Me &) = default;
 	Me &operator=(Me &&) noexcept = default;
 
+	operator bool() const noexcept;
+
 	bool operator==(const Me &iterator);
 	bool operator!=(const Me &iterator);
 
@@ -82,6 +84,20 @@ BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits, MetaType>
 		const Me &it
 ) noexcept : wrappedIterator(it.wrappedIterator)
 {}
+
+
+template<
+	typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, IteratorAccess ITERATOR_ACCESS
+	, typename Traits
+	, typename MetaType
+>
+BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits, MetaType>
+::operator bool() const noexcept
+{
+	return static_cast<bool>(wrappedIterator);
+}
 
 template<
 	typename IteratorType

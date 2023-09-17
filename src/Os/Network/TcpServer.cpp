@@ -14,10 +14,10 @@ TcpServer::TcpServer(TcpServer &&tcpServer) noexcept :
 		NetworkBase(move(static_cast<NetworkBase &&>(tcpServer)))
 {}
 
-TcpServer::TcpServer(Ipv4::Port port, Types::size_t backlog) noexcept :
+TcpServer::TcpServer(Ipv4::Port port) noexcept :
 		NetworkBase(socket::createTcpServer(port))
 {
-	setStatus(socket::tcp::server::listen(socket, backlog));
+	setStatus(socket::tcp::server::listen(socket, os::SOCKET_TCP_MAX_CLIENTS));
 }
 
 TcpServer &TcpServer::operator=(TcpServer &&tcpServer) noexcept
@@ -36,6 +36,24 @@ TcpServer::WithClient TcpServer::accept() const noexcept
 	Status tmpStatus = os::STATUS_SUCCESS;
 	auto client = socket::tcp::server::accept(socket, &tmpStatus);
 	return WithClient{ client, tmpStatus };
+}
+
+const TcpServer::NativeTcpServerControl &TcpServer::nativeServerControl() noexcept
+{
+	static const NativeTcpServerControl control = []()
+	{
+		NativeTcpServerControl control;
+		static_cast<NativeControl &>(control).operator=(nativeControl());
+		control.create = socket::createTcpServer;
+		control.listen = socket::tcp::server::listen;
+		control.accept = socket::tcp::server::accept;
+		control.send = socket::tcp::send;
+		control.receive = socket::tcp::receive;
+		control.waitBytes = socket::tcp::waitBytes;
+		control.alive = socket::tcp::alive;
+		return control;
+	} ();
+	return control;
 }
 
 }}} // namespace flame_ide::os::network
@@ -85,6 +103,11 @@ Types::ssize_t TcpServer::WithClient::numberBytesToRead() const noexcept
 Status TcpServer::WithClient::getStatus() const noexcept
 {
 	return status;
+}
+
+const Socket &TcpServer::WithClient::native() const noexcept
+{
+	return socket;
 }
 
 Types::ssize_t TcpServer::WithClient::send(TcpServer::ConstRange range) noexcept

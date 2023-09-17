@@ -92,6 +92,13 @@ Types::ssize_t receive(const Socket &socket, ByteRange range) noexcept;
 ///
 Types::ssize_t waitBytes(const Socket &socket, Types::size_t number) noexcept;
 
+///
+/// \brief alive
+/// \param socket
+/// \return
+///
+bool alive(const Socket &socket) noexcept;
+
 }}}}} // namespace flame_ide::os::network::socket::tcp
 
 #endif // TCPSOCKETFUNCTIONS_HPP

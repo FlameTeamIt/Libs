@@ -24,10 +24,12 @@ set(SHARED_ALIAS_NAME "${FLAME_NAMESPACE}::${NAME_ALIAS}::Shared")
 set(DEPEND_OBJECTS
 	"${FLAME_NAMESPACE}::Os::Threads::Test::Object"
 	"${FLAME_NAMESPACE}::Os::Network::Test::Object"
+	"${FLAME_NAMESPACE}::Os::Async::Network::Test::Object"
 )
 set(INDEPEND_OBJECTS 
 	"${FLAME_NAMESPACE}::Os::Threads::Test::Object::Independ"
 	"${FLAME_NAMESPACE}::Os::Network::Test::Object::Independ"
+	"${FLAME_NAMESPACE}::Os::Async::Network::Test::Object::Independ"
 )
 
 set(SHARED_LIBRARY_DIR_DEFINE "SHARED_LIBRARY_DIRECTORY=\"${FLAME_ROOT_BINARY_DIR}\"")
@@ -109,6 +111,7 @@ flame_compile_library(
 set(SOURCE_MODULES
 	${CMAKE_CURRENT_LIST_DIR}/Threads
 	${CMAKE_CURRENT_LIST_DIR}/Network
+	${CMAKE_CURRENT_LIST_DIR}/Async
 )
 foreach(module ${SOURCE_MODULES})
 	add_subdirectory(${module})

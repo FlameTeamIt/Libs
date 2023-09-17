@@ -20,7 +20,7 @@ public:
 	/// @brief ReferenceWrapper
 	/// @param initValue
 	///
-	ReferenceWrapper(Pointer initValue) noexcept;
+	ReferenceWrapper(Pointer initValue = nullptr) noexcept;
 
 	///
 	/// @brief ReferenceWrapper

@@ -17,6 +17,30 @@ public:
 	using NetworkBase::Range;
 	using NetworkBase::ConstRange;
 
+	struct NativeServerControl: public NetworkBase::NativeControl
+	{
+		NativeServerControl() noexcept = default;
+		NativeServerControl(const NativeServerControl &) noexcept = default;
+		NativeServerControl(NativeServerControl &&) noexcept = default;
+		~NativeServerControl() noexcept = default;
+
+		NativeServerControl &
+		operator=(const NativeServerControl &) noexcept = default;
+		NativeServerControl &
+		operator=(NativeServerControl &&) noexcept = default;
+
+		Socket (*create)(Ipv4::Port port) noexcept = nullptr;
+		Types::ssize_t (*send)(
+				const Socket &socket, ConstRange range
+		) noexcept = nullptr;
+		Types::ssize_t (*receive)(
+				const Socket &socket, Range range, int flags, SocketReceive &socketFrom
+		) noexcept = nullptr;
+		Types::ssize_t (*wait)(
+				const Socket &socket, SocketReceive &socketFrom
+		) noexcept = nullptr;
+	};
+
 public:
 	UdpServer(UdpServer &&udpServer) noexcept;
 	UdpServer(Ipv4::Port port) noexcept;
@@ -24,6 +48,9 @@ public:
 
 	UdpServer &operator=(UdpServer &&server) noexcept;
 	WithClient wait() noexcept;
+
+public:
+	static const NativeServerControl &nativeServerControl() noexcept;
 
 public:
 	using NetworkBase::operator bool;

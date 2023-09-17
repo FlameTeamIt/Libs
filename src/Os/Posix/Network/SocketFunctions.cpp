@@ -13,35 +13,41 @@ namespace flame_ide
 namespace // anonymous
 {
 
-SocketDescriptor udpCreateSocket() noexcept
+SocketDescriptor udpCreateSocket(bool server) noexcept
 {
 	auto descriptor = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-	const int reuseAddress = 1;
-	auto status = ::setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR
-			, &reuseAddress, sizeof(reuseAddress));
-	if (status < 0)
+	if (server)
 	{
-		Socket tmpSocket{ {}, descriptor };
-		destroy(tmpSocket);
-		return SOCKET_INVALID.descriptor;
+		const int reuseAddress = 1;
+		auto status = ::setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR
+								   , &reuseAddress, sizeof(reuseAddress));
+		if (status < 0)
+		{
+			Socket tmpSocket{ {}, descriptor };
+			destroy(tmpSocket);
+			return SOCKET_INVALID.descriptor;
+		}
 	}
 
 	return descriptor;
 }
 
-SocketDescriptor tcpCreateSocket() noexcept
+SocketDescriptor tcpCreateSocket(bool server) noexcept
 {
 	auto descriptor = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	const int reuseAddress = 1;
-	auto status = ::setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR
-			, &reuseAddress, sizeof(reuseAddress));
-	if (status < 0)
+	if (server)
 	{
-		Socket tmpSocket{ {}, descriptor };
-		destroy(tmpSocket);
-		return SOCKET_INVALID.descriptor;
+		const int reuseAddress = 1;
+		auto status = ::setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR
+				, &reuseAddress, sizeof(reuseAddress));
+		if (status < 0)
+		{
+			Socket tmpSocket{ {}, descriptor };
+			destroy(tmpSocket);
+			return SOCKET_INVALID.descriptor;
+		}
 	}
 
 	return descriptor;
@@ -65,6 +71,19 @@ SocketAddressIn ipAddressClient(Ipv4::Address serverAddress) noexcept
 	return sockaddr;
 }
 
+template<typename Option>
+Option getSocketOption(const os::Socket &socket, int option)
+{
+	Option optionValue = {};
+	socklen_t length = sizeof(option);
+	auto result = ::getsockopt(
+			socket.descriptor, SOL_SOCKET, option, &optionValue, &length
+	);
+	if (result < 0)
+		return false;
+	return optionValue;
+}
+
 } // namespace anonymous
 }}}} // namespace flame_ide::os::network::socket
 
@@ -78,7 +97,7 @@ namespace flame_ide
 
 Socket createUdpServer(Ipv4::Port port) noexcept
 {
-	auto socket = Socket{ ipAddressServer(port), udpCreateSocket() };
+	auto socket = Socket{ ipAddressServer(port), udpCreateSocket(true) };
 	if (socket.descriptor == STATUS_FAILED)
 	{
 		socket = SOCKET_INVALID;
@@ -97,7 +116,7 @@ Socket createUdpServer(Ipv4::Port port) noexcept
 
 Socket createUdpClient(Ipv4 ipServer) noexcept
 {
-	auto socket = Socket{ ipAddressClient(ipServer), udpCreateSocket() };
+	auto socket = Socket{ ipAddressClient(ipServer), udpCreateSocket(false) };
 	if (socket.descriptor == STATUS_FAILED)
 	{
 		socket = Socket{};
@@ -110,7 +129,7 @@ Socket createUdpClient(Ipv4 ipServer) noexcept
 
 Socket createTcpServer(Ipv4::Port port) noexcept
 {
-	auto socket = Socket{ ipAddressServer(port), tcpCreateSocket() };
+	auto socket = Socket{ ipAddressServer(port), tcpCreateSocket(true) };
 	if (socket.descriptor == STATUS_FAILED)
 	{
 		socket = SOCKET_INVALID;
@@ -129,7 +148,7 @@ Socket createTcpServer(Ipv4::Port port) noexcept
 
 Socket createTcpClient(Ipv4 ipServer) noexcept
 {
-	auto socket = Socket{ ipAddressClient(ipServer), tcpCreateSocket() };
+	auto socket = Socket{ ipAddressClient(ipServer), tcpCreateSocket(false) };
 	if (socket.descriptor == STATUS_FAILED)
 	{
 		socket = Socket{};
@@ -173,6 +192,38 @@ Ipv4 getIpv4(const Socket &socket) noexcept
 	in.value = socket.address.sin_addr.s_addr;
 
 	return Ipv4{ in.address, port };
+}
+
+int getType(const Socket &socket) noexcept
+{
+	int type = getSocketOption<int>(socket, SO_TYPE);
+	if (type < 0)
+		return -1;
+	return type;
+}
+
+int getError(const Socket &socket) noexcept
+{
+	int error = getSocketOption<int>(socket, SO_ERROR);
+	if (error < 0)
+		return -1;
+	return error;
+}
+
+bool isAcceptor(const Socket &socket) noexcept
+{
+	auto isAcceptor = getSocketOption<int>(socket, SO_ACCEPTCONN);
+	if (isAcceptor < 0)
+		return false;
+	return isAcceptor;
+}
+
+bool isServer(const Socket &socket) noexcept
+{
+	auto isServer = getSocketOption<int>(socket, SO_REUSEADDR);
+	if (isServer < 0)
+		return false;
+	return isServer;
 }
 
 }}}} // namespace flame_ide::os::network::socket

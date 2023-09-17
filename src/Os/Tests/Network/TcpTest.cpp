@@ -235,7 +235,7 @@ int TcpTest::pingPong() noexcept
 	const auto port = Ipv4::Port{ 65001 };
 	const auto ip = Ipv4::localhost(port);
 
-	TcpServer server{ port, 1 };
+	TcpServer server{ port };
 	TcpClient client{ ip };
 
 	const Types::size_t count = 65536;
