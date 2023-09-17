@@ -32,8 +32,7 @@ public:
 	os::Status enableUdpCleint(SocketDescriptor descriptor) noexcept;
 	os::Status enableTcpServerAcceptor(SocketDescriptor descriptor) noexcept;
 	os::Status enableTcpServer(SocketDescriptor descriptor) noexcept;
-	// TODO
-//	os::Status enableTcpClient(SocketDescriptor descriptor) noexcept;
+	os::Status enableTcpClient(SocketDescriptor descriptor) noexcept;
 
 	os::Status disableSocket(SocketDescriptor descriptor) noexcept;
 
@@ -41,8 +40,7 @@ public:
 	SocketDescriptor popUdpCleint() noexcept;
 	AcceptedConnection popTcpServerAcception() noexcept;
 	SocketDescriptor popTcpServer() noexcept;
-	// TODO
-//	SocketDescriptor popTcpClient() noexcept;
+	SocketDescriptor popTcpClient() noexcept;
 
 private:
 	Registrar() noexcept;
@@ -64,8 +62,7 @@ private:
 	bool pushUdpClient(SocketDescriptor descriptor) noexcept;
 	bool pushTcpServerAcception(AcceptedConnection connection) noexcept;
 	bool pushTcpServer(SocketDescriptor connection) noexcept;
-	// TODO
-//	bool pushTcpClient(SocketDescriptor connection) noexcept;
+	bool pushTcpClient(SocketDescriptor connection) noexcept;
 
 private:
 	SigAction action;
@@ -83,8 +80,7 @@ private:
 	UdpClients udpClients = UdpClients::makeEmpty();
 	AcceptedConnections tcpServerAcceptions = AcceptedConnections::makeEmpty();
 	TcpServers tcpServers = TcpServers::makeEmpty();
-	// TODO
-//	TcpServers tcpClients = TcpClients::makeEmpty();
+	TcpClients tcpClients = TcpClients::makeEmpty();
 
 private:
 	template<typename IteratorType>
@@ -94,8 +90,7 @@ private:
 	Queue<os::async::network::DescriptorIterator> udpClientsQueue;
 	Queue<os::async::network::AcceptedConnectionInterator> tcpServerAcceptionsQueue;
 	Queue<os::async::network::DescriptorIterator> tcpServersQueue;
-	// TODO
-//	Queue<os::async::network::DescriptorIterator> tcpClientsQueue;
+	Queue<os::async::network::DescriptorIterator> tcpClientsQueue;
 };
 
 }}}}} // namespace flame_ide::os::posix::async::network

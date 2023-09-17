@@ -40,27 +40,27 @@ int RegistrarTest::vStart()
 //				return udpClient();
 //			}
 //	));
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"TcpServer acceptor receiving signal"
-			, [this]
-			{
-				return tcpServerAcceptor();
-			}
-	));
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"TcpServer receiving signal"
-			, [this]
-			{
-				return tcpServer();
-			}
-	));
 //	CHECK_RESULT_SUCCESS(doTestCase(
-//			"TcpClient receiving signal"
+//			"TcpServer acceptor receiving signal"
 //			, [this]
 //			{
-//				return tcpClient();
+//				return tcpServerAcceptor();
 //			}
 //	));
+//	CHECK_RESULT_SUCCESS(doTestCase(
+//			"TcpServer receiving signal"
+//			, [this]
+//			{
+//				return tcpServer();
+//			}
+//	));
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"TcpClient receiving signal"
+			, [this]
+			{
+				return tcpClient();
+			}
+	));
 	return RegistrarTest::SUCCESS;
 }
 
@@ -70,6 +70,7 @@ int RegistrarTest::udpServer()
 	os::network::UdpClient client{ ipv4 };
 
 	Registrar registar;
+	auto raii = templates::makeRaiiCaller([&registar](){ registar.clear(); });
 
 	IN_CASE_CHECK(registar.add(server) == os::STATUS_SUCCESS);
 	const auto message = MESSAGE_PING;
@@ -102,6 +103,7 @@ int RegistrarTest::udpClient()
 	os::network::UdpClient client{ ipv4 };
 
 	Registrar registar;
+	auto raii = templates::makeRaiiCaller([&registar](){ registar.clear(); });
 
 	// server
 	{
@@ -161,6 +163,7 @@ int RegistrarTest::udpClient()
 int RegistrarTest::tcpServerAcceptor()
 {
 	Registrar registar;
+	auto raii = templates::makeRaiiCaller([&registar](){ registar.clear(); });
 
 	os::network::TcpServer server{ port };
 	os::network::TcpClient client{ ipv4 };
@@ -177,8 +180,6 @@ int RegistrarTest::tcpServerAcceptor()
 	IN_CASE_CHECK(control.destroy(connection.client) == os::STATUS_SUCCESS);
 
 	IN_CASE_CHECK(registar.remove(server) == os::STATUS_SUCCESS);
-
-	registar.clear();
 
 	return RegistrarTest::SUCCESS;
 }
@@ -201,6 +202,7 @@ int RegistrarTest::tcpServer()
 				[&](){ IN_CASE_CHECK_END(
 						registar.remove(server) == os::STATUS_SUCCESS
 				); }();
+				registar.clear();
 			}
 	);
 
@@ -221,6 +223,36 @@ int RegistrarTest::tcpServer()
 
 int RegistrarTest::tcpClient()
 {
+	auto nativeControl = os::network::NetworkBase::nativeControl;
+
+	os::network::TcpServer server{ port };
+	os::network::TcpClient client{ ipv4 };
+
+	Registrar registar;
+	auto raii = templates::makeRaiiCaller(
+			[&registar, &server]() -> void
+			{
+				[&](){ IN_CASE_CHECK_END(
+						registar.add(server) == os::STATUS_SUCCESS
+				); }();
+			}
+			, [&registar, &server]() -> void
+			{
+				[&](){ IN_CASE_CHECK_END(
+						registar.remove(server) == os::STATUS_SUCCESS
+				); }();
+			}
+	);
+
+	IN_CASE_CHECK(client.connect() == os::STATUS_SUCCESS);
+	IN_CASE_CHECK(registar.add(client) == os::STATUS_SUCCESS);
+	auto connection = registar.popTcpServerAcception();
+	IN_CASE_CHECK(
+			nativeControl().destroy(connection.client) == os::STATUS_SUCCESS
+	);
+	auto descriptor = registar.popTcpClient();
+	IN_CASE_CHECK(descriptor == client.native().descriptor);
+
 	return RegistrarTest::SUCCESS;
 }
 

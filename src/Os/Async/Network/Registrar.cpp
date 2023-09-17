@@ -42,11 +42,9 @@ os::Status Registrar::add(const os::network::TcpServer::WithClient &socket) noex
 	return PlatformRegistrar::get().enableTcpServer(socket.native().descriptor);
 }
 
-// TODO
 os::Status Registrar::add(const os::network::TcpClient &socket) noexcept
 {
-	flame_ide::unused(socket);
-	return false;
+	return PlatformRegistrar::get().enableTcpClient(socket.native().descriptor);
 }
 
 // Registrar::remove
@@ -71,11 +69,9 @@ os::Status Registrar::remove(const os::network::TcpServer::WithClient &socket) n
 	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
 }
 
-// TODO
 os::Status Registrar::remove(const os::network::TcpClient &socket) noexcept
 {
-	flame_ide::unused(socket);
-	return false;
+	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
 }
 
 // Registrar::pop*
@@ -100,10 +96,9 @@ os::SocketDescriptor Registrar::popTcpServer() noexcept
 	return PlatformRegistrar::get().popTcpServer();
 }
 
-// TODO
 os::SocketDescriptor Registrar::popTcpClient() noexcept
 {
-	return os::SOCKET_INVALID.descriptor;
+	return PlatformRegistrar::get().popTcpClient();
 }
 
 void Registrar::clear() noexcept

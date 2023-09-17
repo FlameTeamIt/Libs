@@ -150,8 +150,15 @@ os::Status Registrar::enableTcpServer(SocketDescriptor descriptor) noexcept
 		return os::STATUS_FAILED;
 	return Registrar::enableSignal(descriptor);
 }
-// TODO
-//	os::Status Registrar::pushTcpClient(SocketDescriptor descriptor) noexcept {}
+
+os::Status Registrar::enableTcpClient(SocketDescriptor descriptor) noexcept
+{
+	if (0 > anonymous::checkInitialization(
+			tcpClients, tcpClientsQueue, os::SOCKET_INVALID.descriptor
+	))
+		return os::STATUS_FAILED;
+	return Registrar::enableSignal(descriptor);
+}
 
 os::Status Registrar::disableSocket(SocketDescriptor descriptor) noexcept
 {
@@ -186,8 +193,12 @@ SocketDescriptor Registrar::popTcpServer() noexcept
 	);
 }
 
-// TODO
-//	SocketDescriptor Registrar::popTcpClient() noexcept;
+SocketDescriptor Registrar::popTcpClient() noexcept
+{
+	return anonymous::popFromQueue(
+			tcpClientsQueue, os::SOCKET_INVALID.descriptor
+	);
+}
 
 // private - Constructor
 
@@ -254,9 +265,8 @@ void Registrar::handleTcp(SocketDescriptor descriptor) noexcept
 	const auto socket = Socket{ {}, descriptor };
 	if (!serverControl().isServer(socket))
 	{
-		// TODO
 		// Сигнал пришёл от клиентского сокета
-		// Registrar::get().pushTcpClient(descriptor);
+		Registrar::get().pushTcpClient(descriptor);
 		return;
 	}
 	if (!serverControl().isAcceptor(socket))
@@ -350,7 +360,10 @@ bool Registrar::pushTcpServer(SocketDescriptor descriptor) noexcept
 {
 	return anonymous::pushToQueue(tcpServersQueue, tcpServers->capacity(), descriptor);
 }
-// TODO
-//	bool Registrar::pushTcpClient(SocketDescriptor connection) noexcept {}
+
+bool Registrar::pushTcpClient(SocketDescriptor descriptor) noexcept
+{
+	return anonymous::pushToQueue(tcpClientsQueue, tcpClients->capacity(), descriptor);
+}
 
 }}}}} // namespace flame_ide::os::posix::async::network
