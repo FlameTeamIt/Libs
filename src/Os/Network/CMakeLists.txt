@@ -12,7 +12,7 @@ get_sources(FILE_LIST)
 flame_compile_library(
 	NAME "${NAME}"
 	SOURCE_LIST "${FILE_LIST}"
-	INCLUDE_PATHS "${INCLUDE_PATHS}"
+	INCLUDE_PATHS "${INCLUDE_PATHS}" "${GENERATION_INLCUDE_PATH}"
 	DEPENDENCY_HEADER_TARGETS "${DEPENDENCY_HEADER_TARGETS}"
 	OBJECT_ALIAS_NAME
 		"${FLAME_NAMESPACE}::${NAME_ALIAS}::Object"
@@ -22,10 +22,3 @@ flame_compile_library(
 	NO_RTTI
 	NO_EXCEPTIONS
 )
-
-#set(SOURCE_MODULES
-#	${CMAKE_CURRENT_LIST_DIR}/Handler
-#)
-#foreach(module ${SOURCE_MODULES})
-#	add_subdirectory(${module})
-#endforeach()

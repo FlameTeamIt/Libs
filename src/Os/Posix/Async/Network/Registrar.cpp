@@ -24,9 +24,8 @@ inline bool initPointerAndQueue(Pointer &pointer, Queue &queue, Value initValue)
 	if (!pointer)
 		return false;
 
-	if (initValue)
-		for (auto &i : *pointer)
-			i = initValue;
+	for (auto &i : *pointer)
+		i = initValue;
 
 	queue.first = decltype(queue.first) {
 			pointer->data()

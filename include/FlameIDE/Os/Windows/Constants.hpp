@@ -32,6 +32,8 @@ constexpr OsSocket OS_SOCKET_INITIALIZER = {
 
 constexpr OsSocket OS_SOCKET_INVALID = OsSocket{ INVALID_SOCKET, {} };
 
+constexpr Types::size_t OS_SOCKET_TCP_MAX_CLIENTS = SOMAXCONN;
+
 constexpr OsThreadContext OS_THREAD_CONTEXT_INITIALIZER = {
 	OS_DESCRIPTOR_INITIALIZER, flame_ide::NumberLimitValueMin<OsThreadId>
 };

@@ -30,14 +30,16 @@ using UdpClients = os::async::network::DescriptorsUniquePointer<
 	generated::network::Config::UDP_CLIENTS * FACTOR
 >;
 using TcpServers = os::async::network::DescriptorsUniquePointer<
-	generated::network::Config::TCP_SERVERS * os::SOCKET_TCP_MAX_CLIENTS * FACTOR
+	generated::network::Config::TCP_SERVERS
+			* generated::network::Config::TCP_SERVER_BACKLOG
+			* FACTOR
 >;
 using TcpClients = os::async::network::DescriptorsUniquePointer<
 	generated::network::Config::TCP_CLIENTS * FACTOR
 >;
 
 using AcceptedConnectionsArray = templates::StaticArray<
-	AcceptedConnection, os::SOCKET_TCP_MAX_CLIENTS * FACTOR
+	AcceptedConnection, generated::network::Config::TCP_SERVER_BACKLOG * FACTOR
 >;
 using AcceptedConnections = templates::UniquePointer<AcceptedConnectionsArray>;
 

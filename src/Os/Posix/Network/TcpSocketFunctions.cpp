@@ -131,6 +131,7 @@ Types::ssize_t waitBytes(const Socket &socket, Types::size_t number) noexcept
 	return result;
 }
 
+// TODO - enable & disable NONBLOCK - MSG_DONTWAIT only on Linux
 bool alive(const Socket &socket) noexcept
 {
 	byte_t byte[1] = {};

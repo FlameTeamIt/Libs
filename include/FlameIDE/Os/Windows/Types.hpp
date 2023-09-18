@@ -262,6 +262,10 @@ struct OsLibraryHandle
 	Handle address = Handle{};
 };
 
+using OsWindow = ::HWND;
+using OsResult = ::LRESULT;
+using OsParam = ::LPARAM;
+
 }}} // namespace flame_ide::os::windows
 
 #define FLAMEIDE_OS_NAMESPACE ::flame_ide::os::windows
