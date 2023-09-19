@@ -35,6 +35,9 @@ int getError(const Socket &socket) noexcept;
 bool isAcceptor(const Socket &socket) noexcept;
 bool isServer(const Socket &socket) noexcept;
 
+int enableNonblock(const Socket &socket);
+int disableNonblock(const Socket &socket);
+
 }}}} // namespace flame_ide::os::network::socket
 
 #endif // SOCKETFUNCTIONS_HPP

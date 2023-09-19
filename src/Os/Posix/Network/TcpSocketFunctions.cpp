@@ -131,13 +131,26 @@ Types::ssize_t waitBytes(const Socket &socket, Types::size_t number) noexcept
 	return result;
 }
 
-// TODO - enable & disable NONBLOCK - MSG_DONTWAIT only on Linux
 bool alive(const Socket &socket) noexcept
 {
+	// enable Nonbock
+	{
+		auto result = enableNonblock(socket);
+		if (result < 0)
+			return false;
+	}
+
 	byte_t byte[1] = {};
 	const Types::ssize_t result = receive(
-			socket.descriptor, templates::makeRange(byte), MSG_PEEK | MSG_DONTWAIT
+			socket.descriptor, templates::makeRange(byte), MSG_PEEK
 	);
+
+	// disable Nonbock
+	{
+		auto result = disableNonblock(socket);
+		if (result < 0)
+			return false;
+	}
 	return (result != 0);
 }
 

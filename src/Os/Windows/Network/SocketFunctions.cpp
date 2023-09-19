@@ -89,6 +89,24 @@ Option getSocketOption(const os::Socket &socket, int option)
 	return optionValue;
 }
 
+int enableNonblock(const Socket &socket)
+{
+	::u_long blocking = 1;
+	auto result = ioctlsocket(socket.descriptor, FIONBIO, &blocking);
+	if (result != 0)
+		return -WSAGetLastError();
+	return os::STATUS_SUCCESS;
+}
+
+int disableNonblock(const Socket &socket)
+{
+	::u_long blocking = 0;
+	auto result = ioctlsocket(socket.descriptor, FIONBIO, &blocking);
+	if (result != 0)
+		return -WSAGetLastError();
+	return os::STATUS_SUCCESS;
+}
+
 } // namespace anonymous
 }}}} // namespace flame_ide::os::network::socket
 

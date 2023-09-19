@@ -2,6 +2,7 @@
 
 #include <FlameIDE/Os/Constants.hpp>
 
+#include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 
@@ -42,16 +43,15 @@ SocketAddressIn ipAddressClient(Ipv4::Address serverAddress) noexcept
 }
 
 template<typename Option>
-Option getSocketOption(const os::Socket &socket, int option)
+int getSocketOption(const os::Socket &socket, int option, Option &optionValue)
 {
-	Option optionValue = {};
-	int length = sizeof(option);
+	socklen_t length = sizeof(option);
 	auto result = ::getsockopt(
 			socket.descriptor, SOL_SOCKET, option, &optionValue, &length
 	);
 	if (result < 0)
-		return false;
-	return optionValue;
+		return -errno;
+	return os::STATUS_SUCCESS;
 }
 
 } // namespace anonymous
@@ -184,34 +184,56 @@ Ipv4 getIpv4(const Socket &socket) noexcept
 
 int getType(const Socket &socket) noexcept
 {
-	int type = getSocketOption<int>(socket, SO_TYPE);
-	if (type < 0)
+	int type = 0;
+	auto result = getSocketOption(socket, SO_TYPE, type);
+	if (result < 0)
 		return -1;
 	return type;
 }
 
 int getError(const Socket &socket) noexcept
 {
-	int error = getSocketOption<int>(socket, SO_ERROR);
-	if (error < 0)
+	int error = 0;
+	auto result = getSocketOption<int>(socket, SO_ERROR, error);
+	if (result < 0)
 		return -1;
 	return error;
 }
 
 bool isAcceptor(const Socket &socket) noexcept
 {
-	auto isAcceptor = getSocketOption<int>(socket, SO_ACCEPTCONN);
-	if (isAcceptor < 0)
+	int isAcceptor = 0;
+	auto result = getSocketOption<int>(socket, SO_ACCEPTCONN, isAcceptor);
+	if (result < 0)
 		return false;
 	return isAcceptor;
 }
 
 bool isServer(const Socket &socket) noexcept
 {
-	auto isServer = getSocketOption<int>(socket, SO_REUSEADDR);
-	if (isServer < 0)
+	int isServer = 0;
+	auto result = getSocketOption<int>(socket, SO_REUSEADDR, isServer);
+	if (result < 0)
 		return false;
 	return isServer;
+}
+
+int enableNonblock(const Socket &socket)
+{
+	int flags = ::fcntl(socket.descriptor, F_GETFL);
+	auto result = ::fcntl(socket.descriptor, F_SETFL, flags | O_NONBLOCK);
+	if (result < 0)
+		return -errno;
+	return os::STATUS_SUCCESS;
+}
+
+int disableNonblock(const Socket &socket)
+{
+	int flags = ::fcntl(socket.descriptor, F_GETFL);
+	auto result = ::fcntl(socket.descriptor, F_SETFL, flags & (~O_NONBLOCK));
+	if (result < 0)
+		return -errno;
+	return os::STATUS_SUCCESS;
 }
 
 }}}} // namespace flame_ide::os::network::socket
