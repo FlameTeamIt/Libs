@@ -17,72 +17,6 @@ namespace anonymous{namespace{
 
 static constexpr decltype(SIGPOLL) SIGNAL_POLLING = SIGPOLL;
 
-template<typename Pointer, typename Queue, typename Value>
-inline bool initPointerAndQueue(Pointer &pointer, Queue &queue, Value initValue)
-{
-	pointer = Pointer{};
-	if (!pointer)
-		return false;
-
-	for (auto &i : *pointer)
-		i = initValue;
-
-	queue.first = decltype(queue.first) {
-			pointer->data()
-			, templates::makeRange(
-					pointer->data()
-					, pointer->data() + pointer->capacity()
-			)
-	};
-	queue.last = queue.first;
-
-	return true;
-}
-
-template<
-	typename Descriptors, typename Queue, typename Value = decltype(*Queue{}.first)
->
-inline os::Status checkInitialization(
-		Descriptors &descriptors, Queue &queue, Value &&value
-)
-{
-	const os::threads::Locker locker{ queue.spin };
-	if (!descriptors && !initPointerAndQueue(descriptors, queue, value))
-		return os::STATUS_FAILED;
-	return os::STATUS_SUCCESS;
-}
-
-template<typename Queue, typename Value = decltype(*Queue{}.first)>
-inline auto popFromQueue(Queue &queue, Value initValue = {})
-{
-	os::threads::Locker locker{ queue.spin };
-
-	if (!queue.count)
-		return initValue;
-	--queue.count;
-
-	auto &first = queue.first;
-	const Value value = *first;
-	*first = initValue;
-	++first;
-	return value;
-}
-
-template<typename Queue, typename Value = decltype(*Queue{}.first)>
-inline auto pushToQueue(Queue &queue, Types::size_t queueCapacity, Value value)
-{
-	os::threads::Locker locker{ queue.spin };
-
-	if (queue.count >= queueCapacity)
-		return false;
-	++queue.count;
-
-	auto &last = queue.last;
-	*last = value;
-	++last;
-	return true;
-}
-
 }} // namespace anonymous
 }}}}} // namespace flame_ide::os::posix::async::network
 
@@ -116,45 +50,35 @@ Registrar &Registrar::get() noexcept
 
 os::Status Registrar::enableUdpServer(SocketDescriptor descriptor) noexcept
 {
-	if (0 > anonymous::checkInitialization(
-			udpServers, udpServersQueue, os::SOCKET_INVALID.descriptor
-	))
+	if (!udpServers && !udpServers.init(os::SOCKET_INVALID.descriptor))
 		return os::STATUS_FAILED;
 	return Registrar::enableSignal(descriptor);
 }
 
 os::Status Registrar::enableUdpCleint(SocketDescriptor descriptor) noexcept
 {
-	if (0 > anonymous::checkInitialization(
-			udpClients, udpClientsQueue, os::SOCKET_INVALID.descriptor
-	))
+	if (udpClients && !udpClients.init(os::SOCKET_INVALID.descriptor))
 		return os::STATUS_FAILED;
 	return Registrar::enableSignal(descriptor);
 }
 
 os::Status Registrar::enableTcpServerAcceptor(SocketDescriptor descriptor) noexcept
 {
-	if (0 > anonymous::checkInitialization(
-			tcpServerAcceptions, tcpServerAcceptionsQueue, AcceptedConnection{}
-	))
+	if (tcpServerAcceptions && !tcpServerAcceptions.init())
 		return os::STATUS_FAILED;
 	return Registrar::enableSignal(descriptor);
 }
 
 os::Status Registrar::enableTcpServer(SocketDescriptor descriptor) noexcept
 {
-	if (0 > anonymous::checkInitialization(
-			tcpServers, tcpServersQueue, os::SOCKET_INVALID.descriptor
-	))
+	if (tcpServers && !tcpServers.init(os::SOCKET_INVALID.descriptor))
 		return os::STATUS_FAILED;
 	return Registrar::enableSignal(descriptor);
 }
 
 os::Status Registrar::enableTcpClient(SocketDescriptor descriptor) noexcept
 {
-	if (0 > anonymous::checkInitialization(
-			tcpClients, tcpClientsQueue, os::SOCKET_INVALID.descriptor
-	))
+	if (tcpClients && !tcpClients.init(os::SOCKET_INVALID.descriptor))
 		return os::STATUS_FAILED;
 	return Registrar::enableSignal(descriptor);
 }
@@ -166,37 +90,62 @@ os::Status Registrar::disableSocket(SocketDescriptor descriptor) noexcept
 
 SocketDescriptor Registrar::popUdpServer() noexcept
 {
-	return anonymous::popFromQueue(
-			udpServersQueue, os::SOCKET_INVALID.descriptor
-	);
+	SocketDescriptor result = os::SOCKET_INVALID.descriptor;
+	udpServers.pop(result).ifResult(
+			[&result](SocketDescriptor &&descriptor)
+			{
+				result = descriptor;
+			}
+	).done();
+	return result;
 }
 
 SocketDescriptor Registrar::popUdpCleint() noexcept
 {
-	return anonymous::popFromQueue(
-			udpClientsQueue, os::SOCKET_INVALID.descriptor
-	);
+	SocketDescriptor result = os::SOCKET_INVALID.descriptor;
+	udpClients.pop(result).ifResult(
+			[&result](SocketDescriptor &&descriptor)
+			{
+				result = descriptor;
+			}
+	).done();
+	return result;
 }
 
 Registrar::AcceptedConnection Registrar::popTcpServerAcception() noexcept
 {
-	return anonymous::popFromQueue(
-			tcpServerAcceptionsQueue, AcceptedConnection{}
-	);
+	AcceptedConnection result;
+	tcpServerAcceptions.pop(result).ifResult(
+			[&result](AcceptedConnection &&connection)
+			{
+				result = connection;
+			}
+	).done();
+	return result;
 }
 
 SocketDescriptor Registrar::popTcpServer() noexcept
 {
-	return anonymous::popFromQueue(
-			tcpServersQueue, os::SOCKET_INVALID.descriptor
-	);
+	SocketDescriptor result = os::SOCKET_INVALID.descriptor;
+	tcpServers.pop(result).ifResult(
+			[&result](SocketDescriptor &&descriptor)
+			{
+				result = descriptor;
+			}
+	).done();
+	return result;
 }
 
 SocketDescriptor Registrar::popTcpClient() noexcept
 {
-	return anonymous::popFromQueue(
-			tcpClientsQueue, os::SOCKET_INVALID.descriptor
-	);
+	SocketDescriptor result = os::SOCKET_INVALID.descriptor;
+	tcpClients.pop(result).ifResult(
+			[&result](SocketDescriptor &&descriptor)
+			{
+				result = descriptor;
+			}
+	).done();
+	return result;
 }
 
 // private - Constructor
@@ -342,27 +291,27 @@ os::Status Registrar::disableSignal(SocketDescriptor descriptor) noexcept
 
 bool Registrar::pushUdpServer(SocketDescriptor descriptor) noexcept
 {
-	return anonymous::pushToQueue(udpServersQueue, udpServers->capacity(), descriptor);
+	return udpServers.push(descriptor);
 }
 
 bool Registrar::pushUdpClient(SocketDescriptor descriptor) noexcept
 {
-	return anonymous::pushToQueue(udpClientsQueue, udpClients->capacity(), descriptor);
+	return udpClients.push(descriptor);
 }
 
 bool Registrar::pushTcpServerAcception(AcceptedConnection connection) noexcept
 {
-	return anonymous::pushToQueue(tcpServerAcceptionsQueue, tcpServerAcceptions->capacity(), connection);
+	return tcpServerAcceptions.push(connection);
 }
 
 bool Registrar::pushTcpServer(SocketDescriptor descriptor) noexcept
 {
-	return anonymous::pushToQueue(tcpServersQueue, tcpServers->capacity(), descriptor);
+	return tcpServers.push(descriptor);
 }
 
 bool Registrar::pushTcpClient(SocketDescriptor descriptor) noexcept
 {
-	return anonymous::pushToQueue(tcpClientsQueue, tcpClients->capacity(), descriptor);
+	return tcpClients.push(descriptor);
 }
 
 }}}}} // namespace flame_ide::os::posix::async::network

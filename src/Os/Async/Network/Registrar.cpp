@@ -1,7 +1,6 @@
 #include <FlameIDE/Os/Async/Network/Registrar.hpp>
 
-#include <FlameIDE/../../src/Os/Posix/Async/Network/Registrar.hpp>
-#include <FlameIDE/../../src/Os/Windows/Async/Network/Registrar.hpp>
+#include <FlameIDE/../../src/Os/Async/Network/EventCatcherBase.hpp>
 
 #include <FlameIDE/Os/Network/TcpClient.hpp>
 #include <FlameIDE/Os/Network/TcpServer.hpp>
@@ -14,8 +13,6 @@ namespace flame_ide
 {namespace network
 {
 
-using PlatformRegistrar = FLAMEIDE_REGISTAR_NAMESPACE::Registrar;
-
 Registrar::Registrar() noexcept = default;
 
 Registrar::~Registrar() noexcept = default;
@@ -24,81 +21,131 @@ Registrar::~Registrar() noexcept = default;
 
 os::Status Registrar::add(const os::network::UdpServer &socket) noexcept
 {
-	return PlatformRegistrar::get().enableUdpServer(socket.native().descriptor);
+	auto &queue = EventCatcherBase::get().queues().udpServers();
+	if (!queue)
+		queue.init(os::SOCKET_INVALID.descriptor);
+	return EventCatcherBase::get().enable(socket.native().descriptor);
 }
 
 os::Status Registrar::add(const os::network::UdpClient &socket) noexcept
 {
-	return PlatformRegistrar::get().enableUdpCleint(socket.native().descriptor);
+	auto &queue = EventCatcherBase::get().queues().udpClients();
+	if (!queue)
+		queue.init(os::SOCKET_INVALID.descriptor);
+	return EventCatcherBase::get().enable(socket.native().descriptor);
 }
 
 os::Status Registrar::add(const os::network::TcpServer &socket) noexcept
 {
-	return PlatformRegistrar::get().enableTcpServerAcceptor(socket.native().descriptor);
+	auto &queue = EventCatcherBase::get().queues().tcpAcceptedConnections();
+	if (!queue)
+		queue.init();
+	return EventCatcherBase::get().enable(socket.native().descriptor);
 }
 
 os::Status Registrar::add(const os::network::TcpServer::WithClient &socket) noexcept
 {
-	return PlatformRegistrar::get().enableTcpServer(socket.native().descriptor);
+	auto &queue = EventCatcherBase::get().queues().tcpServers();
+	if (!queue)
+		queue.init(os::SOCKET_INVALID.descriptor);
+	return EventCatcherBase::get().enable(socket.native().descriptor);
 }
 
 os::Status Registrar::add(const os::network::TcpClient &socket) noexcept
 {
-	return PlatformRegistrar::get().enableTcpClient(socket.native().descriptor);
+	auto &queue = EventCatcherBase::get().queues().tcpClients();
+	if (!queue)
+		queue.init(os::SOCKET_INVALID.descriptor);
+	return EventCatcherBase::get().enable(socket.native().descriptor);
 }
 
 // Registrar::remove
 
 os::Status Registrar::remove(const os::network::UdpServer &socket) noexcept
 {
-	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
+	return EventCatcherBase::get().disable(socket.native().descriptor);
 }
 
 os::Status Registrar::remove(const os::network::UdpClient &socket) noexcept
 {
-	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
+	return EventCatcherBase::get().disable(socket.native().descriptor);
 }
 
 os::Status Registrar::remove(const os::network::TcpServer &socket) noexcept
 {
-	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
+	return EventCatcherBase::get().disable(socket.native().descriptor);
 }
 
 os::Status Registrar::remove(const os::network::TcpServer::WithClient &socket) noexcept
 {
-	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
+	return EventCatcherBase::get().disable(socket.native().descriptor);
 }
 
 os::Status Registrar::remove(const os::network::TcpClient &socket) noexcept
 {
-	return PlatformRegistrar::get().disableSocket(socket.native().descriptor);
+	return EventCatcherBase::get().disable(socket.native().descriptor);
 }
 
 // Registrar::pop*
 
 os::SocketDescriptor Registrar::popUdpServer() noexcept
 {
-	return PlatformRegistrar::get().popUdpServer();
+	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
+	EventCatcherBase::get().queues().udpServers().pop(os::SOCKET_INVALID.descriptor)
+			.ifResult([&descriptor](auto &&actualDescriptor)
+					{
+						descriptor = actualDescriptor;
+					}
+			).done();
+	return descriptor;
 }
 
 os::SocketDescriptor Registrar::popUdpClient() noexcept
 {
-	return PlatformRegistrar::get().popUdpCleint();
+	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
+	EventCatcherBase::get().queues().udpClients().pop(os::SOCKET_INVALID.descriptor)
+			.ifResult([&descriptor](auto &&actualDescriptor)
+					{
+						descriptor = actualDescriptor;
+					}
+			).done();
+	return descriptor;
 }
 
 AcceptedConnection Registrar::popTcpServerAcception() noexcept
 {
-	return PlatformRegistrar::get().popTcpServerAcception();
+	AcceptedConnection connection;
+	EventCatcherBase::get().queues().tcpAcceptedConnections().pop().ifResult(
+			[&connection](auto &&actualDescriptor)
+			{
+				connection = actualDescriptor;
+			}
+	).done();
+	return connection;
 }
 
 os::SocketDescriptor Registrar::popTcpServer() noexcept
 {
-	return PlatformRegistrar::get().popTcpServer();
+	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
+	EventCatcherBase::get().queues().tcpServers().pop(os::SOCKET_INVALID.descriptor)
+			.ifResult([&descriptor](auto &&actualDescriptor)
+					{
+						descriptor = actualDescriptor;
+					}
+			).done();
+	return descriptor;
 }
 
 os::SocketDescriptor Registrar::popTcpClient() noexcept
 {
-	return PlatformRegistrar::get().popTcpClient();
+	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
+	EventCatcherBase::get().queues().tcpClients().pop(os::SOCKET_INVALID.descriptor)
+			.ifResult([&descriptor](auto &&actualDescriptor)
+					{
+						descriptor = actualDescriptor;
+					}
+			).done();
+	return descriptor;
 }
 
 void Registrar::clear() noexcept

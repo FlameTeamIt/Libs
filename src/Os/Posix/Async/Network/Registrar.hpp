@@ -6,6 +6,7 @@
 #if FLAMEIDE_OS_POSIX != FLAMEIDE_OS_NULL
 
 #include <FlameIDE/../../src/Os/Async/Network/Types.hpp>
+#include <FlameIDE/../../src/Os/Async/Network/QueuedArray.hpp>
 
 #include <signal.h>
 
@@ -45,7 +46,7 @@ public:
 private:
 	Registrar() noexcept;
 
-private:
+private: // TODO: Move to platform specific
 	using SigAction = struct ::sigaction;
 	using SigActionHandler = decltype(SigAction{}.sa_sigaction);
 
@@ -70,27 +71,20 @@ private:
 	os::Status status = os::STATUS_SUCCESS;
 
 private:
-	using UdpServers = os::async::network::UdpServers;
-	using UdpClients = os::async::network::UdpClients;
-	using AcceptedConnections = os::async::network::AcceptedConnections;
-	using TcpServers = os::async::network::TcpServers;
-	using TcpClients = os::async::network::TcpClients;
+	template<typename Array>
+	using Queue = os::async::network::ConcreteQueueArrayByArray<Array>;
 
-	UdpServers udpServers = UdpServers::makeEmpty();
-	UdpClients udpClients = UdpClients::makeEmpty();
-	AcceptedConnections tcpServerAcceptions = AcceptedConnections::makeEmpty();
-	TcpServers tcpServers = TcpServers::makeEmpty();
-	TcpClients tcpClients = TcpClients::makeEmpty();
+	using UdpServers = Queue<os::async::network::UdpServers>;
+	using UdpClients = Queue<os::async::network::UdpClients>;
+	using AcceptedConnections = Queue<os::async::network::AcceptedConnections>;
+	using TcpServers = Queue<os::async::network::TcpServers>;
+	using TcpClients = Queue<os::async::network::TcpClients>;
 
-private:
-	template<typename IteratorType>
-	using Queue = os::async::network::Queue<IteratorType>;
-
-	Queue<os::async::network::DescriptorIterator> udpServersQueue;
-	Queue<os::async::network::DescriptorIterator> udpClientsQueue;
-	Queue<os::async::network::AcceptedConnectionInterator> tcpServerAcceptionsQueue;
-	Queue<os::async::network::DescriptorIterator> tcpServersQueue;
-	Queue<os::async::network::DescriptorIterator> tcpClientsQueue;
+	UdpServers udpServers;
+	UdpClients udpClients;
+	AcceptedConnections tcpServerAcceptions;
+	TcpServers tcpServers;
+	TcpClients tcpClients;
 };
 
 }}}}} // namespace flame_ide::os::posix::async::network

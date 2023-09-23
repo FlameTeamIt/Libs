@@ -26,34 +26,34 @@ RegistrarTest::RegistrarTest() : ::AbstractTest("AsyncNetworkRegistrar")
 
 int RegistrarTest::vStart()
 {
-//	CHECK_RESULT_SUCCESS(doTestCase(
-//			"UdpServer receiving signal"
-//			, [this]
-//			{
-//				return udpServer();
-//			}
-//	));
-//	CHECK_RESULT_SUCCESS(doTestCase(
-//			"UdpClient receiving signal"
-//			, [this]
-//			{
-//				return udpClient();
-//			}
-//	));
-//	CHECK_RESULT_SUCCESS(doTestCase(
-//			"TcpServer acceptor receiving signal"
-//			, [this]
-//			{
-//				return tcpServerAcceptor();
-//			}
-//	));
-//	CHECK_RESULT_SUCCESS(doTestCase(
-//			"TcpServer receiving signal"
-//			, [this]
-//			{
-//				return tcpServer();
-//			}
-//	));
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"UdpServer receiving signal"
+			, [this]
+			{
+				return udpServer();
+			}
+	));
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"UdpClient receiving signal"
+			, [this]
+			{
+				return udpClient();
+			}
+	));
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"TcpServer acceptor receiving signal"
+			, [this]
+			{
+				return tcpServerAcceptor();
+			}
+	));
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"TcpServer receiving signal"
+			, [this]
+			{
+				return tcpServer();
+			}
+	));
 	CHECK_RESULT_SUCCESS(doTestCase(
 			"TcpClient receiving signal"
 			, [this]
