@@ -41,10 +41,10 @@ int RegistrarTest::vStart()
 			}
 	));
 	CHECK_RESULT_SUCCESS(doTestCase(
-			"TcpServer acceptor receiving signal"
+			"TcpServer listener receiving signal"
 			, [this]
 			{
-				return tcpServerAcceptor();
+				return tcpServerLitener();
 			}
 	));
 	CHECK_RESULT_SUCCESS(doTestCase(
@@ -160,7 +160,7 @@ int RegistrarTest::udpClient()
 	return RegistrarTest::SUCCESS;
 }
 
-int RegistrarTest::tcpServerAcceptor()
+int RegistrarTest::tcpServerLitener()
 {
 	Registrar registar;
 	auto raii = templates::makeRaiiCaller([&registar](){ registar.clear(); });

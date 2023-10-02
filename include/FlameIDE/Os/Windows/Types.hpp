@@ -262,7 +262,18 @@ struct OsLibraryHandle
 	Handle address = Handle{};
 };
 
-using OsWindow = ::HWND;
+using OsMessage = ::MSG;
+using OsWindowHandle = ::HWND;
+using OsWindowClass = ::WNDCLASSA;
+using OsWindowCallback = ::WNDPROC;
+using OsBrush = ::HBRUSH;
+using OsAtom = ::ATOM;
+struct OsWindow
+{
+	OsWindowHandle handle = {};
+	OsAtom atom = {};
+};
+
 using OsResult = ::LRESULT;
 using OsParam = ::LPARAM;
 

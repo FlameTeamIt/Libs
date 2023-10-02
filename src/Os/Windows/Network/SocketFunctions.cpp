@@ -23,7 +23,7 @@ private:
 
 private:
 	::WSADATA wsaData;
-	flame_ide::os::Status wsaStatus = 0;
+	flame_ide::os::Status wsaStatus = flame_ide::os::STATUS_SUCCESS;
 	bool inited = false;
 };
 
@@ -87,24 +87,6 @@ Option getSocketOption(const os::Socket &socket, int option)
 	if (result < 0)
 		return -errno;
 	return optionValue;
-}
-
-int enableNonblock(const Socket &socket)
-{
-	::u_long blocking = 1;
-	auto result = ioctlsocket(socket.descriptor, FIONBIO, &blocking);
-	if (result != 0)
-		return -WSAGetLastError();
-	return os::STATUS_SUCCESS;
-}
-
-int disableNonblock(const Socket &socket)
-{
-	::u_long blocking = 0;
-	auto result = ioctlsocket(socket.descriptor, FIONBIO, &blocking);
-	if (result != 0)
-		return -WSAGetLastError();
-	return os::STATUS_SUCCESS;
 }
 
 } // namespace anonymous
@@ -272,6 +254,24 @@ bool isServer(const Socket &socket) noexcept
 	if (isServer < 0)
 		return false;
 	return isServer;
+}
+
+int enableNonblock(const Socket &socket)
+{
+	::u_long blocking = 1;
+	auto result = ::ioctlsocket(socket.descriptor, FIONBIO, &blocking);
+	if (result != 0)
+		return -::WSAGetLastError();
+	return os::STATUS_SUCCESS;
+}
+
+int disableNonblock(const Socket &socket)
+{
+	::u_long blocking = 0;
+	auto result = ioctlsocket(socket.descriptor, FIONBIO, &blocking);
+	if (result != 0)
+		return -::WSAGetLastError();
+	return os::STATUS_SUCCESS;
 }
 
 }}}} // namespace flame_ide::os::network::socket

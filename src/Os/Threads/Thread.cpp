@@ -83,6 +83,11 @@ void ThreadBase::detach() noexcept
 	context = os::THREAD_CONTEXT_INITIALIZER;
 }
 
+bool ThreadBase::isWorking() const noexcept
+{
+	return context != os::THREAD_CONTEXT_INITIALIZER;
+}
+
 os::Status ThreadBase::getStatus() const noexcept
 {
 	return status;
