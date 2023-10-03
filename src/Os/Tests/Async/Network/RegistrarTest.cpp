@@ -70,29 +70,39 @@ int RegistrarTest::udpServer()
 	os::network::UdpClient client{ ipv4 };
 
 	Registrar registar;
-	auto raii = templates::makeRaiiCaller([&registar](){ registar.clear(); });
+	{
+		IN_CASE_CHECK(registar.add(server) == os::STATUS_SUCCESS);
+		const auto message = MESSAGE_PING;
+		{
+			const auto result = client.send(templates::makeRange(
+					reinterpret_cast<const byte_t *>(message)
+					, reinterpret_cast<const byte_t *>(message) + sizeof(MESSAGE_PING)
+			));
+			IN_CASE_CHECK(result == sizeof(MESSAGE_PING));
+		}
 
-	IN_CASE_CHECK(registar.add(server) == os::STATUS_SUCCESS);
-	const auto message = MESSAGE_PING;
-	{
-		const auto result = client.send(templates::makeRange(
-				reinterpret_cast<const byte_t *>(message)
-				, reinterpret_cast<const byte_t *>(message) + sizeof(MESSAGE_PING)
-		));
-		IN_CASE_CHECK(result == sizeof(MESSAGE_PING));
+		// Wait
+		os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
+		for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+		{
+			resultDescriptor = registar.popUdpServer();
+		}
+		IN_CASE_CHECK(resultDescriptor != os::SOCKET_INVALID.descriptor);
+		IN_CASE_CHECK(resultDescriptor == server.native().descriptor);
+
+		auto fromServer = server.wait();
+		IN_CASE_CHECK(fromServer.getStatus() == sizeof(MESSAGE_PING));
+		{
+			char messageIn[sizeof(MESSAGE_PING)];
+			const auto result = fromServer.receive(templates::makeRange(
+					reinterpret_cast<byte_t *>(messageIn)
+					, reinterpret_cast<byte_t *>(messageIn) + sizeof(messageIn)
+			));
+			IN_CASE_CHECK(result == sizeof(messageIn))
+		}
+		IN_CASE_CHECK(registar.remove(server) == os::STATUS_SUCCESS);
 	}
-	auto fromServer = server.wait();
-	IN_CASE_CHECK(fromServer.getStatus() == sizeof(MESSAGE_PING));
-	{
-		char messageIn[sizeof(MESSAGE_PING)];
-		const auto result = fromServer.receive(templates::makeRange(
-				reinterpret_cast<byte_t *>(messageIn)
-				, reinterpret_cast<byte_t *>(messageIn) + sizeof(messageIn)
-		));
-		IN_CASE_CHECK(result == sizeof(messageIn))
-	}
-	IN_CASE_CHECK(registar.popUdpServer() == server.native().descriptor);
-	IN_CASE_CHECK(registar.remove(server) == os::STATUS_SUCCESS);
+	auto raii = templates::makeRaiiCaller([&registar](){ registar.clear(); });
 
 	return RegistrarTest::SUCCESS;
 }
@@ -118,7 +128,13 @@ int RegistrarTest::udpClient()
 				, reinterpret_cast<const byte_t *>(message) + sizeof(MESSAGE_PING)
 		));
 		IN_CASE_CHECK(result == sizeof(MESSAGE_PING));
-		registar.popUdpServer();
+
+		// Wait
+		os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
+		for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+		{
+			resultDescriptor = registar.popUdpServer();
+		}
 	}
 
 	// client
@@ -133,15 +149,14 @@ int RegistrarTest::udpClient()
 					, reinterpret_cast<byte_t *>(messageIn) + sizeof(messageIn)
 			));
 
-			const auto messageOut = MESSAGE_PONG;
 			IN_CASE_CHECK(
-					sizeof(messageOut) == fromServer.send(templates::makeRange(
-							reinterpret_cast<const byte_t *>(messageOut)
-							, reinterpret_cast<const byte_t *>(messageOut)
-									+ sizeof(messageOut)
+					sizeof(MESSAGE_PONG) == fromServer.send(templates::makeRange(
+							reinterpret_cast<const byte_t *>(MESSAGE_PONG)
+							, reinterpret_cast<const byte_t *>(MESSAGE_PONG)
+									+ sizeof(MESSAGE_PONG)
 					))
 			);
-			IN_CASE_CHECK(client.wait() == sizeof(messageOut));
+			IN_CASE_CHECK(client.wait() == sizeof(MESSAGE_PONG));
 		}
 
 		{
@@ -153,7 +168,14 @@ int RegistrarTest::udpClient()
 									+ sizeof(messageIn)
 					))
 			);
-			IN_CASE_CHECK(registar.popUdpClient() == client.native().descriptor);
+
+			// Wait
+			os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
+			for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+			{
+				resultDescriptor = registar.popUdpClient();
+			}
+			IN_CASE_CHECK(resultDescriptor == client.native().descriptor);
 		}
 		IN_CASE_CHECK(registar.remove(client) == os::STATUS_SUCCESS);
 	}
@@ -171,13 +193,18 @@ int RegistrarTest::tcpServerLitener()
 	IN_CASE_CHECK(registar.add(server) == os::STATUS_SUCCESS);
 	IN_CASE_CHECK(client.connect() == os::STATUS_SUCCESS);
 
-	auto connection = registar.popTcpServerAcception();
-	IN_CASE_CHECK(connection.server == server.native().descriptor);
+	// Wait
+	decltype(registar.popTcpServerAcception()) resultConnection = {};
+	for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultConnection.server; --i)
+	{
+		resultConnection = registar.popTcpServerAcception();
+	}
+	IN_CASE_CHECK(resultConnection.server == server.native().descriptor);
 
 	IN_CASE_CHECK(client.disconnect() == os::STATUS_SUCCESS);
 
 	auto control = os::network::NetworkBase::nativeControl();
-	IN_CASE_CHECK(control.destroy(connection.client) == os::STATUS_SUCCESS);
+	IN_CASE_CHECK(control.destroy(resultConnection.client) == os::STATUS_SUCCESS);
 
 	IN_CASE_CHECK(registar.remove(server) == os::STATUS_SUCCESS);
 
@@ -207,15 +234,30 @@ int RegistrarTest::tcpServer()
 	);
 
 	IN_CASE_CHECK(client.connect() == os::STATUS_SUCCESS);
-	auto connection = registar.popTcpServerAcception();
-	IN_CASE_CHECK(connection.server == server.native().descriptor);
+
+	// Wait
+	decltype(registar.popTcpServerAcception()) resultConnection = {};
+	for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultConnection.server; --i)
+	{
+		resultConnection = registar.popTcpServerAcception();
+	}
+	IN_CASE_CHECK(resultConnection.server == server.native().descriptor);
 
 	os::network::TcpServer::WithClient serverConnection{
-			connection.client, os::STATUS_SUCCESS
+			resultConnection.client, os::STATUS_SUCCESS
 	};
 	IN_CASE_CHECK(registar.add(serverConnection) == os::STATUS_SUCCESS);
 	IN_CASE_CHECK(client.disconnect() == os::STATUS_SUCCESS);
-	IN_CASE_CHECK(registar.popTcpServer() == serverConnection.native().descriptor);
+
+	// Wait
+	os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
+	for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+	{
+		resultDescriptor = registar.popTcpServer();
+	}
+	IN_CASE_CHECK(resultDescriptor != os::SOCKET_INVALID.descriptor);
+	IN_CASE_CHECK(resultDescriptor == serverConnection.native().descriptor);
+
 	IN_CASE_CHECK(registar.remove(serverConnection) == os::STATUS_SUCCESS);
 
 	return RegistrarTest::SUCCESS;
@@ -246,12 +288,25 @@ int RegistrarTest::tcpClient()
 
 	IN_CASE_CHECK(client.connect() == os::STATUS_SUCCESS);
 	IN_CASE_CHECK(registar.add(client) == os::STATUS_SUCCESS);
-	auto connection = registar.popTcpServerAcception();
+
+	// Wait
+	decltype(registar.popTcpServerAcception()) resultConnection = {};
+	for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultConnection.server; --i)
+	{
+		resultConnection = registar.popTcpServerAcception();
+	}
 	IN_CASE_CHECK(
-			nativeControl().destroy(connection.client) == os::STATUS_SUCCESS
+			nativeControl().destroy(resultConnection.client) == os::STATUS_SUCCESS
 	);
-	auto descriptor = registar.popTcpClient();
-	IN_CASE_CHECK(descriptor == client.native().descriptor);
+
+	// Wait
+	os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
+	for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+	{
+		resultDescriptor = registar.popTcpClient();
+	}
+	IN_CASE_CHECK(resultDescriptor != os::SOCKET_INVALID.descriptor);
+	IN_CASE_CHECK(resultDescriptor == client.native().descriptor);
 
 	return RegistrarTest::SUCCESS;
 }

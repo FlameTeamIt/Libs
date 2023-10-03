@@ -3,6 +3,8 @@
 #include <FlameIDE/Os/Network/NetworkBase.hpp>
 #include <FlameIDE/Os/Network/TcpServer.hpp>
 
+#include <FlameIDE/Os/Threads/Utils.hpp>
+
 namespace flame_ide
 {namespace os
 {namespace windows
@@ -16,6 +18,7 @@ enum class Event
 {
 	UNKNOWN = -1
 	, ACCEPT = FD_ACCEPT
+	, CONNECT = FD_CONNECT
 	, READ = FD_READ
 	, WRITE = FD_WRITE
 	, CLOSE = FD_CLOSE
@@ -49,27 +52,19 @@ namespace flame_ide
 
 // public
 
-EventCatcher::EventCatcher() noexcept :
-		os::async::network::EventCatcherBase()
-		, window{ EventCatcher::makeWindow(anonymous::WINDOW_CLASS_NAME) }
-		, thread{ window }
+EventCatcher::EventCatcher() noexcept : os::async::network::EventCatcherBase()
 {
-	if (!window.handle)
-		return;
-
 	thread.run();
+	thread.wait();
 }
 
 EventCatcher::~EventCatcher() noexcept
 {
-	constexpr auto finish = static_cast<MessageValue>(Message::FINISH);
+	if (!thread.getWindow().handle)
+		return;
 
-	if (window.handle)
-		::SendMessageA(window.handle, finish, {}, {});
-	if (thread.isWorking())
-		thread.join();
-
-	destroyWindow(window, anonymous::WINDOW_CLASS_NAME);
+	thread.stop();
+	thread.join();
 }
 
 // private - virutal functions
@@ -89,10 +84,14 @@ os::Status EventCatcher::enable(SocketDescriptor descriptor) noexcept
 
 		case os::network::NetworkBase::SocketType::STREAM:
 		{
-			if (control.isAcceptor(socket))
+			if (control.isListener(socket))
 				event = anonymous::Event::ACCEPT;
 			else
-				event = anonymous::Event::READ | anonymous::Event::WRITE;
+				if (control.isServer)
+					event = anonymous::Event::READ | anonymous::Event::WRITE;
+				else
+					event = anonymous::Event::READ | anonymous::Event::WRITE
+							| anonymous::Event::CONNECT;
 			break;
 		}
 
@@ -101,10 +100,14 @@ os::Status EventCatcher::enable(SocketDescriptor descriptor) noexcept
 			break;
 	}
 
-	constexpr auto messageSocket = static_cast<MessageValue>(Message::SOCKET);
+	const auto handle = thread.getWindow().handle;
+	if (!handle)
+		return os::STATUS_FAILED;
+
+	constexpr auto MESSAGE_SOCKET = static_cast<MessageValue>(Message::SOCKET);
 	os::Status result = os::STATUS_SUCCESS;
 	result = ::WSAAsyncSelect(
-			descriptor, window.handle, messageSocket, anonymous::value(event)
+			descriptor, handle, MESSAGE_SOCKET, anonymous::value(event)
 	);
 	if (result == SOCKET_ERROR)
 		result = -::GetLastError();
@@ -113,14 +116,106 @@ os::Status EventCatcher::enable(SocketDescriptor descriptor) noexcept
 
 os::Status EventCatcher::disable(SocketDescriptor descriptor) noexcept
 {
-	if (0 == ::WSAAsyncSelect(descriptor, nullptr, {}, {}))
+	const auto handle = thread.getWindow().handle;
+	if (!handle)
+		return os::STATUS_FAILED;
+
+	if (SOCKET_ERROR == ::WSAAsyncSelect(descriptor, handle, 0, 0))
 		return -::GetLastError();
 	return os::STATUS_SUCCESS;
 }
 
-// private - WSAAsync
+}}}}} // namespace flame_ide::os::windows::async::network
 
-os::windows::OsWindow EventCatcher::makeWindow(const char *className) noexcept
+// MessageDispatchThread
+namespace flame_ide
+{namespace os
+{namespace windows
+{namespace async
+{namespace network
+{
+
+// public - thread
+
+EventCatcher::MessageDispatchThread::MessageDispatchThread() noexcept
+{}
+
+void EventCatcher::MessageDispatchThread::body() noexcept
+{
+	constexpr auto MESSAGE_VALUE_MIN = static_cast<MessageValue>(Message::SOCKET);
+	constexpr auto MESSAGE_VALUE_MAX = static_cast<MessageValue>(Message::FINISH);
+
+	constexpr auto MESSAGE_FINISH = static_cast<MessageValue>(Message::FINISH);
+
+	init();
+
+	auto status = os::STATUS_SUCCESS;
+	os::windows::OsMessage message = {};
+	while ((status = ::GetMessageA(&message, window.handle, MESSAGE_VALUE_MIN, MESSAGE_VALUE_MAX)))
+	{
+		if (status < 0)
+			break;
+
+		::TranslateMessage(&message);
+		if (MESSAGE_FINISH == message.message)
+		{
+			::PostQuitMessage(0);
+			break;
+		}
+		::DispatchMessageA(&message);
+	}
+
+	destroy();
+}
+
+// public - api
+
+const os::windows::OsWindow &
+EventCatcher::MessageDispatchThread::getWindow() const noexcept
+{
+	os::threads::Locker lock{ spin };
+	return window;
+}
+
+void EventCatcher::MessageDispatchThread::wait() const noexcept
+{
+	while (!isWindowInited());
+}
+
+void EventCatcher::MessageDispatchThread::stop() noexcept
+{
+	constexpr auto FINISH_MESSAGE = static_cast<MessageValue>(Message::FINISH);
+	if (getWindow().handle)
+		::PostMessageA(window.handle, FINISH_MESSAGE, {}, {});
+}
+
+// private - help
+
+void EventCatcher::MessageDispatchThread::init() noexcept
+{
+	os::threads::Locker lock{ spin };
+	window = EventCatcher::MessageDispatchThread::makeWindow(anonymous::WINDOW_CLASS_NAME);
+	started = true;
+	if (!window.handle)
+		return;
+}
+
+void EventCatcher::MessageDispatchThread::destroy() noexcept
+{
+	os::threads::Locker lock{ spin };
+	EventCatcher::MessageDispatchThread::destroyWindow(window, anonymous::WINDOW_CLASS_NAME);
+}
+
+bool EventCatcher::MessageDispatchThread::isWindowInited() const noexcept
+{
+	os::threads::Locker lock{ spin };
+	return started;
+}
+
+// private - WSA + static
+
+os::windows::OsWindow
+EventCatcher::MessageDispatchThread::makeWindow(const char *className) noexcept
 {
 	if (!className)
 		return {};
@@ -128,7 +223,7 @@ os::windows::OsWindow EventCatcher::makeWindow(const char *className) noexcept
 	os::windows::OsWindowClass windowsClass = {};
 	windowsClass.style = CS_HREDRAW | CS_VREDRAW;
 	windowsClass.lpfnWndProc = reinterpret_cast<os::windows::OsWindowCallback>(
-			EventCatcher::action
+			MessageDispatchThread::action
 	);
 	windowsClass.cbClsExtra = 0;
 	windowsClass.cbWndExtra = 0;
@@ -163,14 +258,16 @@ os::windows::OsWindow EventCatcher::makeWindow(const char *className) noexcept
 	return window;
 }
 
-void EventCatcher::destroyWindow(os::windows::OsWindow &window, const char *className)
+void EventCatcher::MessageDispatchThread::destroyWindow(
+		os::windows::OsWindow &window, const char *className
+)
 {
 	::DestroyWindow(window.handle);
 	::UnregisterClassA(className, nullptr);
 }
 
-// TODO
-os::windows::OsResult EventCatcher::action(
+os::windows::OsResult
+EventCatcher::MessageDispatchThread::action(
 		os::windows::OsWindowHandle window, Message message, os::SocketDescriptor descriptor
 		, os::windows::OsParam param
 )
@@ -178,16 +275,15 @@ os::windows::OsResult EventCatcher::action(
 	if ((message != Message::SOCKET) || (WSAGETSELECTERROR(param)))
 		return ::DefWindowProcA(window, static_cast<MessageValue>(message), descriptor, param);
 
-	const auto &control = os::network::NetworkBase::nativeControl();
-	const auto type = control.type(Socket{ descriptor, {} });
+	const auto type = os::network::NetworkBase::nativeControl().type(Socket{ descriptor });
 	switch(type)
 	{
 		case os::network::NetworkBase::SocketType::DATAGRAM:
-			handleUdp(descriptor, param);
+			MessageDispatchThread::handleUdp(descriptor, param);
 			break;
 
 		case os::network::NetworkBase::SocketType::STREAM:
-			handleTcp(descriptor, param);
+			MessageDispatchThread::handleTcp(descriptor, param);
 			break;
 
 		case os::network::NetworkBase::SocketType::UNKNOWN:
@@ -198,11 +294,10 @@ os::windows::OsResult EventCatcher::action(
 	return ::DefWindowProcA(window, static_cast<MessageValue>(message), descriptor, param);
 }
 
-// TODO
-void EventCatcher::handleUdp(os::SocketDescriptor descriptor, os::windows::OsParam param)
+void EventCatcher::MessageDispatchThread::handleUdp(
+		os::SocketDescriptor descriptor, os::windows::OsParam param
+)
 {
-	flame_ide::unused(descriptor);
-
 	const auto event = anonymous::event(param);
 	auto &queues = EventCatcher::get().queues();
 	switch (event)
@@ -210,7 +305,7 @@ void EventCatcher::handleUdp(os::SocketDescriptor descriptor, os::windows::OsPar
 		case anonymous::Event::READ:
 		case anonymous::Event::WRITE:
 		{
-			if (os::network::NetworkBase::nativeControl().isServer(Socket{ descriptor, {} }))
+			if (os::network::NetworkBase::nativeControl().isServer(Socket{ descriptor }))
 				queues.udpServers().push(descriptor);
 			else
 				queues.udpClients().push(descriptor);
@@ -221,8 +316,9 @@ void EventCatcher::handleUdp(os::SocketDescriptor descriptor, os::windows::OsPar
 	}
 }
 
-// TODO
-void EventCatcher::handleTcp(os::SocketDescriptor descriptor, os::windows::OsParam param)
+void EventCatcher::MessageDispatchThread::handleTcp(
+		os::SocketDescriptor descriptor, os::windows::OsParam param
+)
 {
 	flame_ide::unused(descriptor);
 
@@ -233,8 +329,9 @@ void EventCatcher::handleTcp(os::SocketDescriptor descriptor, os::windows::OsPar
 		case anonymous::Event::ACCEPT:
 		{
 			auto status = os::STATUS_SUCCESS;
-			auto client = os::network::TcpServer::nativeServerControl()
-					.accept(Socket{ descriptor, {} }, &status);
+			auto client = os::network::TcpServer::nativeServerControl().accept(
+					Socket{ descriptor }, &status
+			);
 			if (os::STATUS_SUCCESS == status)
 				queues.tcpAcceptedConnections().push({ descriptor, client });
 			return;
@@ -242,7 +339,7 @@ void EventCatcher::handleTcp(os::SocketDescriptor descriptor, os::windows::OsPar
 		case anonymous::Event::READ:
 		case anonymous::Event::WRITE:
 		{
-			if (os::network::NetworkBase::nativeControl().isServer(Socket{ descriptor, {} }))
+			if (os::network::NetworkBase::nativeControl().isServer(Socket{ descriptor }))
 				queues.tcpServers().push(descriptor);
 			else
 				queues.tcpClients().push(descriptor);
@@ -250,44 +347,6 @@ void EventCatcher::handleTcp(os::SocketDescriptor descriptor, os::windows::OsPar
 		}
 		default:
 			return;
-	}
-}
-
-}}}}} // namespace flame_ide::os::windows::async::network
-
-// MessageDispatchThread
-namespace flame_ide
-{namespace os
-{namespace windows
-{namespace async
-{namespace network
-{
-
-EventCatcher::MessageDispatchThread::MessageDispatchThread(
-		os::windows::OsWindow &initWindow
-) noexcept
-		: window{ initWindow }
-{}
-
-void EventCatcher::MessageDispatchThread::body() noexcept
-{
-	constexpr auto messageValueMin = static_cast<MessageValue>(Message::SOCKET);
-	constexpr auto messageValueMax = static_cast<MessageValue>(Message::FINISH) + 1;
-
-	constexpr auto messageFinish = static_cast<MessageValue>(Message::FINISH);
-
-	// если нужно уничтожить -- send post quit message на window handle
-	auto status = os::STATUS_SUCCESS;
-	os::windows::OsMessage message = {};
-	while ((status = ::GetMessageA(&message, window.handle, messageValueMin, messageValueMax)))
-	{
-		if (status < 0)
-			break;
-
-		if (messageFinish == message.message)
-			break;
-
-		::DispatchMessageA(&message);
 	}
 }
 

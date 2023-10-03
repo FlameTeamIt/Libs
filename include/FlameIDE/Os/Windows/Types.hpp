@@ -176,8 +176,15 @@ struct OsSocket
 	OsSocket(const OsSocket &) noexcept = default;
 
 	constexpr OsSocket(
+			const OsSocketAddressIn address, const OsSocketDescriptor descriptor
+	) noexcept : address{ address }, descriptor{ descriptor }
+	{}
+	constexpr OsSocket(
 			const OsSocketDescriptor descriptor, const OsSocketAddressIn address
-	) noexcept : descriptor{descriptor}, address{address}
+	) noexcept : OsSocket(address, descriptor)
+	{}
+	explicit constexpr
+	OsSocket(const OsSocketDescriptor descriptor) noexcept : OsSocket(descriptor, {})
 	{}
 
 	OsSocket(const OsSocketReceive &) noexcept;
@@ -185,8 +192,8 @@ struct OsSocket
 	OsSocket &operator=(const OsSocket &) noexcept = default;
 	OsSocket &operator=(const OsSocketReceive &socketReceive) noexcept;
 
-	OsSocketDescriptor descriptor = INVALID_SOCKET;
 	OsSocketAddressIn address = {};
+	OsSocketDescriptor descriptor = INVALID_SOCKET;
 };
 struct OsSocketReceive
 {

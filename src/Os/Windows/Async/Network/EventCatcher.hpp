@@ -3,6 +3,7 @@
 
 #include <FlameIDE/../../src/Os/Async/Network/EventCatcherBase.hpp>
 
+#include <FlameIDE/Os/Threads/Spin.hpp>
 #include <FlameIDE/Os/Threads/Thread.hpp>
 
 namespace flame_ide
@@ -31,30 +32,42 @@ private:
 	};
 
 private:
-	static os::windows::OsWindow makeWindow(const char *className) noexcept;
-	static void destroyWindow(os::windows::OsWindow &window, const char *className);
-
-	static os::windows::OsResult action(
-			os::windows::OsWindowHandle window, Message message, os::SocketDescriptor socket
-			, os::windows::OsParam param
-	);
-	static void handleUdp(os::SocketDescriptor socket, os::windows::OsParam param);
-	static void handleTcp(os::SocketDescriptor socket, os::windows::OsParam param);
-
-private:
 	class MessageDispatchThread: public os::threads::ThreadCrtp<MessageDispatchThread>
 	{
 	public:
-		MessageDispatchThread(os::windows::OsWindow &window) noexcept;
+		MessageDispatchThread() noexcept;
 
 		void body() noexcept;
 
+	public:
+		const os::windows::OsWindow &getWindow() const noexcept;
+		void wait() const noexcept;
+		void stop() noexcept;
+
 	private:
-		os::windows::OsWindow &window;
+		void init() noexcept;
+		void destroy() noexcept;
+
+		bool isWindowInited() const noexcept;
+
+	private:
+		static os::windows::OsWindow makeWindow(const char *className) noexcept;
+		static void destroyWindow(os::windows::OsWindow &window, const char *className);
+
+		static os::windows::OsResult action(
+				os::windows::OsWindowHandle window, Message message, os::SocketDescriptor socket
+				, os::windows::OsParam param
+		);
+		static void handleUdp(os::SocketDescriptor socket, os::windows::OsParam param);
+		static void handleTcp(os::SocketDescriptor socket, os::windows::OsParam param);
+
+	private:
+		mutable os::threads::Spin spin;
+		os::windows::OsWindow window;
+		bool started = false;
 	};
 
 private:
-	os::windows::OsWindow window;
 	MessageDispatchThread thread;
 };
 

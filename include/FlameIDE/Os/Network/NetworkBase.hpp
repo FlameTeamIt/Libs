@@ -38,7 +38,7 @@ public:
 		Ipv4 (*getIpv4)(const Socket &socket) noexcept = nullptr;
 		SocketType (*type)(const Socket &socket) noexcept = nullptr;
 		int (*error)(const Socket &socket) noexcept = nullptr;
-		bool (*isAcceptor)(const Socket &socket) noexcept = nullptr;
+		bool (*isListener)(const Socket &socket) noexcept = nullptr;
 		bool (*isServer)(const Socket &socket) noexcept = nullptr;
 	};
 

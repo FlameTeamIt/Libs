@@ -70,7 +70,14 @@ struct OsSocket
 
 	constexpr OsSocket(
 			const OsSocketAddressIn address, const OsSocketDescriptor descriptor
-	) noexcept : address{address}, descriptor{descriptor}
+	) noexcept : address{ address }, descriptor{ descriptor }
+	{}
+	constexpr OsSocket(
+			const OsSocketDescriptor descriptor, const OsSocketAddressIn address
+	) noexcept : OsSocket(address, descriptor)
+	{}
+	explicit constexpr
+	OsSocket(const OsSocketDescriptor descriptor) noexcept : OsSocket(descriptor, {})
 	{}
 
 	OsSocket(const OsSocketReceive &) noexcept;

@@ -27,6 +27,7 @@ private:
 	int tcpClient();
 
 private:
+	const Types::size_t numberOfTries = NumberLimitValueMax<Types::uint_t>;
 	const os::network::Ipv4::Port port = 65530;
 	os::network::Ipv4 ipv4 = os::network::Ipv4::localhost(port);
 };

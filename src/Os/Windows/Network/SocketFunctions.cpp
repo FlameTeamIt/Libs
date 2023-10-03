@@ -240,7 +240,7 @@ int getError(const Socket &socket) noexcept
 	return error;
 }
 
-bool isAcceptor(const Socket &socket) noexcept
+bool isListener(const Socket &socket) noexcept
 {
 	auto isAcceptor = getSocketOption<::BOOL>(socket, SO_ACCEPTCONN);
 	if (isAcceptor < 0)
