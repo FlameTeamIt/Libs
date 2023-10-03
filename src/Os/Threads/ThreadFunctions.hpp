@@ -20,6 +20,8 @@ os::Status detach(os::ThreadContext &thread) noexcept;
 
 os::Status join(os::ThreadContext &thread, os::ThreadTaskTrait::Return &ret) noexcept;
 
+os::Status isWorking(const os::ThreadContext &thread) noexcept;
+
 }}}} // namespace flame_ide::os::threads::thread
 
 #endif // THREADFUNCTIONS_HPP
