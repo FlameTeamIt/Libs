@@ -126,4 +126,14 @@ Types::ssize_t waitBytes(const Socket &socket, Types::size_t number) noexcept
 	return result;
 }
 
+// TODO - enable & disable NONBLOCK
+bool alive(const Socket &socket) noexcept
+{
+	byte_t byte[1] = {};
+	const Types::ssize_t result = receive(
+			socket.descriptor, templates::makeRange(byte), MSG_PEEK
+	);
+	return (result != 0);
+}
+
 }}}}} // namespace flame_ide::os::network::socket::tcp

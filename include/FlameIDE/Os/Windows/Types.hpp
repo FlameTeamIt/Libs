@@ -176,8 +176,15 @@ struct OsSocket
 	OsSocket(const OsSocket &) noexcept = default;
 
 	constexpr OsSocket(
+			const OsSocketAddressIn address, const OsSocketDescriptor descriptor
+	) noexcept : address{ address }, descriptor{ descriptor }
+	{}
+	constexpr OsSocket(
 			const OsSocketDescriptor descriptor, const OsSocketAddressIn address
-	) noexcept : descriptor{descriptor}, address{address}
+	) noexcept : OsSocket(address, descriptor)
+	{}
+	explicit constexpr
+	OsSocket(const OsSocketDescriptor descriptor) noexcept : OsSocket(descriptor, {})
 	{}
 
 	OsSocket(const OsSocketReceive &) noexcept;
@@ -185,8 +192,8 @@ struct OsSocket
 	OsSocket &operator=(const OsSocket &) noexcept = default;
 	OsSocket &operator=(const OsSocketReceive &socketReceive) noexcept;
 
-	OsSocketDescriptor descriptor = INVALID_SOCKET;
 	OsSocketAddressIn address = {};
+	OsSocketDescriptor descriptor = INVALID_SOCKET;
 };
 struct OsSocketReceive
 {
@@ -261,6 +268,21 @@ struct OsLibraryHandle
 
 	Handle address = Handle{};
 };
+
+using OsMessage = ::MSG;
+using OsWindowHandle = ::HWND;
+using OsWindowClass = ::WNDCLASSA;
+using OsWindowCallback = ::WNDPROC;
+using OsBrush = ::HBRUSH;
+using OsAtom = ::ATOM;
+struct OsWindow
+{
+	OsWindowHandle handle = {};
+	OsAtom atom = {};
+};
+
+using OsResult = ::LRESULT;
+using OsParam = ::LPARAM;
 
 }}} // namespace flame_ide::os::windows
 

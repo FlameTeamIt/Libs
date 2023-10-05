@@ -4,9 +4,9 @@
 #include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Os/Constants.hpp>
 #include <FlameIDE/Os/Threads/Semaphore.hpp>
+#include <FlameIDE/Os/Threads/Spin.hpp>
 
 #include <FlameIDE/Templates/RaiiCaller.hpp>
-
 
 flame_ide::os::ThreadTaskTrait::Return
 taskJoin(flame_ide::os::ThreadTaskTrait::Argument)
@@ -18,6 +18,18 @@ flame_ide::os::ThreadTaskTrait::Return
 taskDetach(flame_ide::os::threads::Semaphore *semaphore)
 {
 	semaphore->wait();
+	return {};
+}
+
+flame_ide::os::ThreadTaskTrait::Return
+taskWorking(flame_ide::os::threads::Spin *spin)
+{
+	while (true)
+	{
+		if (!spin->tryLock())
+			break;
+		spin->unlock();
+	}
 	return {};
 }
 
@@ -87,6 +99,36 @@ auto createDetach() noexcept
 	return ResultType::SUCCESS;
 }
 
+auto isWorking() noexcept
+{
+	using ResultType = ::AbstractTest::ResultType;
+
+	os::ThreadContext context = os::THREAD_CONTEXT_INITIALIZER;
+	auto raii = templates::makeRaiiCaller(
+			[&context]() { thread::init(context); }
+			, [&context]() { thread::destroy(context); }
+	);
+
+	Spin spin;
+	os::Status status = thread::create(
+			context, (os::ThreadTaskTrait::Task)(taskWorking), &spin
+	);
+	IN_CASE_CHECK(os::STATUS_SUCCESS == status);
+
+	auto working = thread::isWorking(context);
+	std::cout << "working = " << working << std::endl;
+
+	spin.lock();
+	os::ThreadTaskTrait::Return returnValue = {};
+	thread::join(context, returnValue);
+
+	// FIXME: должна быть ошибка/false
+	working = thread::isWorking(context);
+	std::cout << "working = " << working << std::endl;
+
+	return ResultType::SUCCESS;
+}
+
 } // namespace anonymous
 }}}} // flame_ide::os::threads::tests
 
@@ -109,8 +151,12 @@ int ThreadFunctionsTest::vStart()
 			"create/join", [] { return createJoin(); }
 	));
 
-	CHECK_RESULT_SUCCESS_END(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 			"create/detach", [] { return createDetach(); }
+	));
+
+	CHECK_RESULT_SUCCESS_END(doTestCase(
+			"isWorking", [] { return isWorking(); }
 	));
 }
 

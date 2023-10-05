@@ -5,6 +5,8 @@
 #include <FlameIDE/../../src/Os/Network/SocketFunctions.hpp>
 #include <FlameIDE/../../src/Os/Network/TcpSocketFunctions.hpp>
 
+#include <Generated/Network/Config.hpp>
+
 namespace flame_ide
 {namespace os
 {namespace network
@@ -17,7 +19,9 @@ TcpServer::TcpServer(TcpServer &&tcpServer) noexcept :
 TcpServer::TcpServer(Ipv4::Port port) noexcept :
 		NetworkBase(socket::createTcpServer(port))
 {
-	setStatus(socket::tcp::server::listen(socket, os::SOCKET_TCP_MAX_CLIENTS));
+	setStatus(socket::tcp::server::listen(
+			socket, generated::network::Config::TCP_SERVER_BACKLOG
+	));
 }
 
 TcpServer &TcpServer::operator=(TcpServer &&tcpServer) noexcept

@@ -95,4 +95,22 @@ os::Status join(os::ThreadContext &context
 	return status;
 }
 
+os::Status isWorking(const os::ThreadContext &thread) noexcept
+{
+	auto result = ::WaitForSingleObject(thread.object.handle, windows::OS_NO_WAIT);
+	switch (result)
+	{
+		case WAIT_OBJECT_0:
+			return false;
+
+		case WAIT_ABANDONED:
+		case WAIT_TIMEOUT:
+			return true;
+
+		case WAIT_FAILED:
+		default:
+			return GET_LAST_ERROR;
+	}
+}
+
 }}}} // namespace flame_ide::os::threads::thread

@@ -42,7 +42,7 @@ const NetworkBase::NativeControl &NetworkBase::nativeControl() noexcept
 			, socket::getIpv4
 			, reinterpret_cast<decltype(socketControl.type)>(socket::getType)
 			, socket::getError
-			, socket::isAcceptor
+			, socket::isListener
 			, socket::isServer
 	};
 	return socketControl;
@@ -52,10 +52,10 @@ const NetworkBase::NativeControl &NetworkBase::nativeControl() noexcept
 
 NetworkBase::NetworkBase(Socket socket) noexcept : socket{ socket }
 {
-	if (!operator bool())
-	{
-		setStatus(STATUS_FAILED);
-	}
+	if (operator bool())
+		return;
+
+	setStatus(STATUS_FAILED);
 }
 
 NetworkBase::NetworkBase(NetworkBase &&base) noexcept : NetworkBase(base.socket)
@@ -105,9 +105,9 @@ bool NetworkBase::isServer() const
 	return socket::isServer(socket);
 }
 
-bool NetworkBase::isAcceptor() const
+bool NetworkBase::isListener() const
 {
-	return socket::isAcceptor(socket);
+	return socket::isListener(socket);
 }
 
 // private

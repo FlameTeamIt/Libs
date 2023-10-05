@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
 
+if(NOT ("${FLAME_PLATFORM}" STREQUAL "Posix"))
+	return()
+endif()
+
 set(NAME "Os.Async.Network.${FLAME_PLATFORM}")
 set(NAME_ALIAS "Os::Async::Network::${FLAME_PLATFORM}")
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})

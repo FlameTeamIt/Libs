@@ -4,6 +4,8 @@
 #include <FlameIDE/Os/Threads/Mutex.hpp>
 #include <FlameIDE/Os/Threads/Spin.hpp>
 
+#include <FlameIDE/Common/Utils.hpp>
+
 namespace flame_ide
 {namespace os
 {namespace threads

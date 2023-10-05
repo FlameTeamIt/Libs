@@ -67,4 +67,11 @@ os::Status join(os::ThreadContext &context, os::ThreadTaskTrait::Return &ret) no
 	return status;
 }
 
+// FIXME: Придумать решение; это не работает
+os::Status isWorking(const os::ThreadContext &thread) noexcept
+{
+	auto status = ::pthread_kill(thread.object, os::posix::Signal::EMPTY);
+	return status == 0;
+}
+
 }}}} // namespace flame_ide::os::threads::thread

@@ -23,7 +23,7 @@ private:
 
 private:
 	::WSADATA wsaData;
-	flame_ide::os::Status wsaStatus = 0;
+	flame_ide::os::Status wsaStatus = flame_ide::os::STATUS_SUCCESS;
 	bool inited = false;
 };
 
@@ -75,6 +75,20 @@ namespace // anonymous
 	return sockaddr;
 }
 
+template<typename Option>
+Option getSocketOption(const os::Socket &socket, int option)
+{
+	Option optionValue = {};
+	socklen_t length = sizeof(option);
+	auto result = ::getsockopt(
+			socket.descriptor, SOL_SOCKET, option
+			, reinterpret_cast<char *>(&optionValue), &length
+	);
+	if (result < 0)
+		return -errno;
+	return optionValue;
+}
+
 } // namespace anonymous
 }}}} // namespace flame_ide::os::network::socket
 
@@ -94,6 +108,17 @@ Socket createUdpServer(Ipv4::Port port) noexcept
 		return socket;
 
 	socket = Socket{ udpСreateSocket(), ipAddressServer(port) };
+	if (socket.descriptor == os::SOCKET_INVALID.descriptor)
+		return os::SOCKET_INVALID;
+
+	const ::BOOL reuseAddress = 1;
+	auto status = ::setsockopt(socket.descriptor, SOL_SOCKET, SO_REUSEADDR
+			, reinterpret_cast<const char *>(&reuseAddress), sizeof(reuseAddress));
+	if (status < 0)
+	{
+		destroy(socket);
+		return os::SOCKET_INVALID;
+	}
 
 	const auto address = reinterpret_cast<const ::SOCKADDR *>(&socket.address);
 	const auto result = ::bind(socket.descriptor, address, sizeof(socket.address));
@@ -113,10 +138,8 @@ Socket createUdpClient(Ipv4 ipServer) noexcept
 		return socket;
 
 	socket = Socket{ udpСreateSocket(), ipAddressClient(ipServer) };
-	if (socket.descriptor == INVALID_SOCKET)
-	{
-		socket = Socket{};
-	}
+	if (socket.descriptor == os::SOCKET_INVALID.descriptor)
+		return os::SOCKET_INVALID;
 	return socket;
 }
 
@@ -130,6 +153,17 @@ Socket createTcpServer(Ipv4::Port port) noexcept
 		return socket;
 
 	socket = Socket{ tcpCreateSocket(), ipAddressServer(port) };
+	if (socket.descriptor == os::SOCKET_INVALID.descriptor)
+		return os::SOCKET_INVALID;
+
+	const ::BOOL reuseAddress = 1;
+	auto status = ::setsockopt(socket.descriptor, SOL_SOCKET, SO_REUSEADDR
+			, reinterpret_cast<const char *>(&reuseAddress), sizeof(reuseAddress));
+	if (status < 0)
+	{
+		destroy(socket);
+		return os::SOCKET_INVALID;
+	}
 
 	const auto address = reinterpret_cast<const ::SOCKADDR *>(&socket.address);
 	const auto result = ::bind(socket.descriptor, address, sizeof(socket.address));
@@ -148,10 +182,8 @@ Socket createTcpClient(Ipv4 ipServer) noexcept
 		return socket;
 
 	socket = Socket{ tcpCreateSocket(), ipAddressClient(ipServer) };
-	if (socket.descriptor == INVALID_SOCKET)
-	{
-		socket = os::SOCKET_INVALID;
-	}
+	if (socket.descriptor == os::SOCKET_INVALID.descriptor)
+		return os::SOCKET_INVALID;
 	return socket;
 }
 
@@ -190,6 +222,56 @@ Ipv4 getIpv4(const Socket &socket) noexcept
 	in.value = socket.address.sin_addr.s_addr;
 
 	return Ipv4{ in.address, port };
+}
+
+int getType(const Socket &socket) noexcept
+{
+	int type = getSocketOption<int>(socket, SO_TYPE);
+	if (type < 0)
+		return -1;
+	return type;
+}
+
+int getError(const Socket &socket) noexcept
+{
+	int error = getSocketOption<int>(socket, SO_ERROR);
+	if (error < 0)
+		return -1;
+	return error;
+}
+
+bool isListener(const Socket &socket) noexcept
+{
+	auto isAcceptor = getSocketOption<::BOOL>(socket, SO_ACCEPTCONN);
+	if (isAcceptor < 0)
+		return false;
+	return isAcceptor;
+}
+
+bool isServer(const Socket &socket) noexcept
+{
+	auto isServer = getSocketOption<::BOOL>(socket, SO_REUSEADDR);
+	if (isServer < 0)
+		return false;
+	return isServer;
+}
+
+int enableNonblock(const Socket &socket)
+{
+	::u_long blocking = 1;
+	auto result = ::ioctlsocket(socket.descriptor, FIONBIO, &blocking);
+	if (result != 0)
+		return -::WSAGetLastError();
+	return os::STATUS_SUCCESS;
+}
+
+int disableNonblock(const Socket &socket)
+{
+	::u_long blocking = 0;
+	auto result = ioctlsocket(socket.descriptor, FIONBIO, &blocking);
+	if (result != 0)
+		return -::WSAGetLastError();
+	return os::STATUS_SUCCESS;
 }
 
 }}}} // namespace flame_ide::os::network::socket

@@ -35,6 +35,12 @@ public:
 	void detach() noexcept;
 
 	///
+	/// @brief isWorking
+	/// @return
+	///
+	bool isWorking() const noexcept;
+
+	///
 	/// @brief getStatus
 	/// @return
 	///

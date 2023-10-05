@@ -32,8 +32,11 @@ Ipv4 getIpv4(const Socket &socket) noexcept;
 
 int getType(const Socket &socket) noexcept;
 int getError(const Socket &socket) noexcept;
-bool isAcceptor(const Socket &socket) noexcept;
+bool isListener(const Socket &socket) noexcept;
 bool isServer(const Socket &socket) noexcept;
+
+int enableNonblock(const Socket &socket);
+int disableNonblock(const Socket &socket);
 
 }}}} // namespace flame_ide::os::network::socket
 
