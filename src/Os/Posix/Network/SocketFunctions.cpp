@@ -200,7 +200,7 @@ int getError(const Socket &socket) noexcept
 	return error;
 }
 
-bool isAcceptor(const Socket &socket) noexcept
+bool isListener(const Socket &socket) noexcept
 {
 	int isAcceptor = 0;
 	auto result = getSocketOption<int>(socket, SO_ACCEPTCONN, isAcceptor);

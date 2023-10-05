@@ -123,7 +123,7 @@ void EventCatcher::handleTcp(SocketDescriptor descriptor) noexcept
 		EventCatcher::get().queues().tcpClients().push(descriptor);
 		return;
 	}
-	if (!serverControl().isAcceptor(socket))
+	if (!serverControl().isListener(socket))
 	{
 		// Signal has been received from accepted server's socket
 		EventCatcher::get().queues().tcpServers().push(descriptor);

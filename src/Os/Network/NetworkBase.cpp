@@ -105,7 +105,7 @@ bool NetworkBase::isServer() const
 	return socket::isServer(socket);
 }
 
-bool NetworkBase::isAcceptor() const
+bool NetworkBase::isListener() const
 {
 	return socket::isListener(socket);
 }

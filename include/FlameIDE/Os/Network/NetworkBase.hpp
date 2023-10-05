@@ -63,7 +63,7 @@ protected:
 	SocketType getType() const;
 	os::Status getError() const;
 	bool isServer() const;
-	bool isAcceptor() const;
+	bool isListener() const;
 
 protected:
 	static Types::int_t checkStatus(Status status) noexcept;
