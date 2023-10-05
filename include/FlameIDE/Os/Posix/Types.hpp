@@ -16,6 +16,7 @@
 #include <dlfcn.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <signal.h>
 
 namespace flame_ide
 {namespace os
@@ -142,6 +143,48 @@ struct OsLibraryHandle
 	static constexpr auto OPEN_FLAG = RTLD_LAZY;
 
 	Handle address = Handle{};
+};
+
+enum Signal : decltype(SIGRTMIN)
+{
+	EMPTY = 0
+	, INT = SIGINT
+	, ILL = SIGILL
+	, ABRT = SIGABRT
+	, FPE = SIGFPE
+	, SEGV = SIGSEGV
+	, TERM = SIGTERM
+	, HUP = SIGHUP
+	, QUIT = SIGQUIT
+	, TRAP = SIGTRAP
+	, KILL = SIGKILL
+	, PIPE = SIGPIPE
+	, ALRM = SIGALRM
+
+	, IO = SIGIO
+	, IOT = SIGIOT
+	, CLD = SIGCHLD
+
+	, STKFLT = SIGSTKFLT
+	, PWR = SIGPWR
+
+	, BUS = SIGBUS
+	, SYS = SIGSYS
+
+	, URG = SIGURG
+	, STOP = SIGSTOP
+	, TSTP = SIGTSTP
+	, CONT = SIGCONT
+	, CHLD = SIGCHLD
+	, TTIN = SIGTTIN
+	, TTOU = SIGTTOU
+	, POLL = SIGPOLL
+	, XFSZ = SIGXFSZ
+	, XCPU = SIGXCPU
+	, VTALRM = SIGVTALRM
+	, PROF = SIGPROF
+	, USR1 = SIGUSR1
+	, USR2 = SIGUSR2
 };
 
 }}} // namespace flame_ide::os::posix
