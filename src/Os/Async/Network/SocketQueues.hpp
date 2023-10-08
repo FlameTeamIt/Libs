@@ -19,11 +19,11 @@ public:
 	template<typename Array>
 	using Queue = ConcreteQueueArrayByArray<Array>;
 
-	using UdpServers = Queue<UdpServers>;
-	using UdpClients = Queue<UdpClients>;
-	using TcpAcceptedConnections = Queue<AcceptedConnections>;
-	using TcpServers = Queue<TcpServers>;
-	using TcpClients = Queue<TcpClients>;
+	using UdpServers = Queue<flame_ide::os::async::network::UdpServers>;
+	using UdpClients = Queue<flame_ide::os::async::network::UdpClients>;
+	using TcpAcceptedConnections = Queue<flame_ide::os::async::network::AcceptedConnections>;
+	using TcpServers = Queue<flame_ide::os::async::network::TcpServers>;
+	using TcpClients = Queue<flame_ide::os::async::network::TcpClients>;
 
 	UdpServers &udpServers() noexcept;
 	UdpClients &udpClients() noexcept;
