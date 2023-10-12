@@ -60,6 +60,8 @@ template<typename T>
 struct ComparingTypes<T, T>: public TrueType
 {};
 
+template<typename T, typename U>
+constexpr bool CompareTypesResult = ComparingTypes<T, U>::VALUE;
 
 ///
 /// @brief Comparing different types.

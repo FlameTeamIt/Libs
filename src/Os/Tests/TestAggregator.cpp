@@ -17,6 +17,7 @@
 #include <FlameIDE/../../src/Os/Tests/Threads/UtilsTest.hpp>
 #include <FlameIDE/../../src/Os/Tests/Threads/ThreadFunctionsTest.hpp>
 #include <FlameIDE/../../src/Os/Tests/Threads/ThreadTest.hpp>
+#include <FlameIDE/../../src/Os/Tests/Threads/ConditionVariableTest.hpp>
 
 #include <FlameIDE/../../src/Os/Tests/Async/Network/RegistrarTest.hpp>
 
@@ -44,6 +45,7 @@ TestAggregator::TestAggregator() : ::TestAggregator("Os")
 	pushBackTest(std::make_shared<threads::tests::UtilsTest>());
 	pushBackTest(std::make_shared<threads::tests::ThreadFunctionsTest>());
 	pushBackTest(std::make_shared<threads::tests::ThreadTest>());
+	pushBackTest(std::make_shared<threads::tests::ConditionVariableTest>());
 
 	pushBackTest(std::make_shared<async::network::tests::RegistrarTest>());
 }

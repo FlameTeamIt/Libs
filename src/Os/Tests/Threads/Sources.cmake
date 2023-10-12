@@ -1,4 +1,6 @@
 set (SOURCE_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/ConditionVariableTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ConditionVariableTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MutexFunctionsTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MutexFunctionsTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MutexTest.cpp

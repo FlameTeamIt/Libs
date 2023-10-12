@@ -1,4 +1,5 @@
 set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/ConditionVariable.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Mutex.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Semaphore.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Spin.hpp
