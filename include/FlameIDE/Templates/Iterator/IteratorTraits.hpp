@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_TEMPLATES_ITERATOR_ITERATORTRAITS_HPP
 #define FLAMEIDE_TEMPLATES_ITERATOR_ITERATORTRAITS_HPP
 
-#include <FlameIDE/Common/Traits/Fuctional.hpp>
+#include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Common/Traits/ContainerTraits.hpp>
 
 namespace flame_ide

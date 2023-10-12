@@ -2,7 +2,7 @@
 #define FLAMEIDE_OS_LIBRARY_HPP
 
 #include <FlameIDE/Common/Traits/CreationProhibitions.hpp>
-#include <FlameIDE/Common/Traits/Fuctional.hpp>
+#include <FlameIDE/Common/Traits/Functional.hpp>
 
 namespace flame_ide
 {namespace os
