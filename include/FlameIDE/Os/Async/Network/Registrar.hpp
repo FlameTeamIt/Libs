@@ -2,6 +2,7 @@
 #define FLAMEIDE_OS_ASYNC_NETWORK_REGISTRAR_HPP
 
 #include <FlameIDE/Os/Async/Network/AcceptedConnection.hpp>
+#include <FlameIDE/Os/Async/Network/NotificatorBase.hpp>
 #include <FlameIDE/Os/Network/TcpServer.hpp>
 #include <FlameIDE/Templates/Variant.hpp>
 
@@ -70,6 +71,9 @@ public:
 	AcceptedConnection popTcpServerAcception() noexcept;
 	os::SocketDescriptor popTcpServer() noexcept;
 	os::SocketDescriptor popTcpClient() noexcept;
+
+	void setNotificator(const NotificatorBase &notificator) noexcept;
+	void unsetNotificator() noexcept;
 
 	void clear() noexcept;
 };

@@ -26,6 +26,8 @@ private:
 	int tcpServer();
 	int tcpClient();
 
+	int udpNotify();
+
 private:
 	const Types::size_t numberOfTries = NumberLimitValueMax<Types::uint_t>;
 	const os::network::Ipv4::Port port = 65530;
