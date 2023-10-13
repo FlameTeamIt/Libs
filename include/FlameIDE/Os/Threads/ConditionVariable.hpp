@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_OS_THREADS_CONDITIONVARIABLE_HPP
 #define FLAMEIDE_OS_THREADS_CONDITIONVARIABLE_HPP
 
-#include <FlameIDE/Common/Traits/Fuctional.hpp>
+#include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Os/Threads/Utils.hpp>
 
 namespace flame_ide

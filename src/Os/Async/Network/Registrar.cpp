@@ -148,6 +148,20 @@ os::SocketDescriptor Registrar::popTcpClient() noexcept
 	return descriptor;
 }
 
+// notificator
+
+void Registrar::setNotificator(const NotificatorBase &notificator) noexcept
+{
+	EventCatcherBase::get().setNotificator(notificator);
+}
+
+void Registrar::unsetNotificator() noexcept
+{
+	EventCatcherBase::get().unsetNotificator();
+}
+
+// other
+
 void Registrar::clear() noexcept
 {
 	while (popUdpServer() != os::SOCKET_INVALID.descriptor);

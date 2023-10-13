@@ -7,9 +7,73 @@
 #include <FlameIDE/Os/Network/TcpServer.hpp>
 #include <FlameIDE/Os/Network/TcpClient.hpp>
 
+#include <FlameIDE/Os/Threads/ConditionVariable.hpp>
+#include <FlameIDE/Os/Threads/Mutex.hpp>
+#include <FlameIDE/Os/Threads/Thread.hpp>
+
 #include <FlameIDE/Templates/RaiiCaller.hpp>
 
 #include <FlameIDE/../../src/Os/Network/SocketFunctions.hpp>
+
+namespace flame_ide
+{namespace os
+{namespace async
+{namespace network
+{namespace tests
+{
+namespace anonymous
+{namespace
+{
+
+class NotificatorTest: public NotificatorBase
+{
+public:
+	threads::ConditionVariable &condition() noexcept
+	{
+		return condvar;
+	}
+
+private:
+	virtual void operator()() const noexcept override
+	{
+		condvar.notify();
+	}
+
+private:
+	mutable threads::Mutex mutex;
+	mutable threads::ConditionVariable condvar{ mutex };
+};
+
+class NotificationTestThread: public threads::ThreadCrtp<NotificationTestThread>
+{
+public:
+	NotificationTestThread(threads::ConditionVariable &initCondvar) :
+			condvar{ &initCondvar }
+	{}
+
+	void body() noexcept
+	{
+		condvar->wait();
+		{
+			threads::Locker locker{ mutex };
+			notified = true;
+		}
+	}
+
+	bool isNotified() const
+	{
+		threads::Locker locker{ mutex };
+		return notified;
+	}
+
+private:
+	threads::ConditionVariable *condvar = nullptr;
+	mutable threads::Mutex mutex;
+	bool notified = false;
+};
+
+}} // namespace anonymous
+}}}}} // flame_ide::os::async::network::tests
 
 namespace flame_ide
 {namespace os
@@ -59,6 +123,13 @@ int RegistrarTest::vStart()
 			, [this]
 			{
 				return tcpClient();
+			}
+	));
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"UdpServer notify"
+			, [this]
+			{
+				return udpNotify();
 			}
 	));
 	return RegistrarTest::SUCCESS;
@@ -307,6 +378,66 @@ int RegistrarTest::tcpClient()
 	}
 	IN_CASE_CHECK(resultDescriptor != os::SOCKET_INVALID.descriptor);
 	IN_CASE_CHECK(resultDescriptor == client.native().descriptor);
+
+	return RegistrarTest::SUCCESS;
+}
+
+int RegistrarTest::udpNotify()
+{
+	os::network::UdpServer server{ port };
+	os::network::UdpClient client{ ipv4 };
+
+	anonymous::NotificatorTest notificator;
+
+	anonymous::NotificationTestThread thread{ notificator.condition() };
+	thread.run();
+
+	Registrar registar;
+	registar.setNotificator(notificator);
+
+	{
+		IN_CASE_CHECK(registar.add(server) == os::STATUS_SUCCESS);
+		const auto message = MESSAGE_PING;
+		{
+			const auto result = client.send(templates::makeRange(
+					reinterpret_cast<const byte_t *>(message)
+					, reinterpret_cast<const byte_t *>(message) + sizeof(MESSAGE_PING)
+			));
+			IN_CASE_CHECK(result == sizeof(MESSAGE_PING));
+		}
+
+		// Wait
+		os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
+		for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+		{
+			resultDescriptor = registar.popUdpServer();
+		}
+		IN_CASE_CHECK(resultDescriptor != os::SOCKET_INVALID.descriptor);
+		IN_CASE_CHECK(resultDescriptor == server.native().descriptor);
+
+		auto fromServer = server.wait();
+		IN_CASE_CHECK(fromServer.getStatus() == sizeof(MESSAGE_PING));
+		{
+			char messageIn[sizeof(MESSAGE_PING)];
+			const auto result = fromServer.receive(templates::makeRange(
+					reinterpret_cast<byte_t *>(messageIn)
+					, reinterpret_cast<byte_t *>(messageIn) + sizeof(messageIn)
+			));
+			IN_CASE_CHECK(result == sizeof(messageIn))
+		}
+		IN_CASE_CHECK(registar.remove(server) == os::STATUS_SUCCESS);
+	}
+
+	auto raii = templates::makeRaiiCaller(
+			[&registar]()
+			{
+				registar.clear();
+				registar.unsetNotificator();
+			}
+	);
+
+	thread.join();
+	IN_CASE_CHECK(thread.isNotified() == true);
 
 	return RegistrarTest::SUCCESS;
 }

@@ -13,7 +13,7 @@ namespace flame_ide
 {
 namespace anonymous{namespace{
 
-static constexpr decltype(SIGPOLL) SIGNAL_POLLING = SIGPOLL;
+static constexpr decltype(SIGPOLL) SIGNAL_POLLING = os::posix::Signal::POLL;
 
 }} // namespace anonymous
 }}}}} // namespace flame_ide::os::posix::async::network
@@ -100,15 +100,18 @@ void EventCatcher::signalHandler(int signal, const siginfo_t *info, ucontext_t *
 	{
 		case NetworkBase::SocketType::STREAM:
 			handleTcp(descriptor);
-			return;
+			break;
 
 		case NetworkBase::SocketType::DATAGRAM:
 			handleUdp(descriptor);
-			return;
+			break;
 
 		case NetworkBase::SocketType::UNKNOWN:
+		default:
 			return;
 	}
+
+	EventCatcher::get().notify();
 }
 
 void EventCatcher::handleTcp(SocketDescriptor descriptor) noexcept
