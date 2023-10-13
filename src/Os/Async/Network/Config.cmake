@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 function(lib_generate_network_config)
 	flame_generate_config(
 		FILE "${CMAKE_CURRENT_LIST_DIR}/Config.hpp.in"
-		OUTPUT "${GENERATION_INLCUDE_PATH}/Generated/Network/Config.hpp"
+		OUTPUT "${GENERATED_INCLUDE_PATH}/Generated/Network/Config.hpp"
 		PARAMETERS
 			# UDP
 			"LIB_UDP_SERVERS" "8"
