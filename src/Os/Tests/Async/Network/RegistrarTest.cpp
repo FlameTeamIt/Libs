@@ -268,8 +268,9 @@ int RegistrarTest::tcpServerLitener()
 	decltype(registar.popTcpServerAcception()) resultConnection = {};
 	for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultConnection.server; --i)
 	{
-		resultConnection = registar.popTcpServerAcception();
+		resultConnection = registar.popTcpServerAcception(); // FIXME: под MinGW периодически
 	}
+	IN_CASE_CHECK(resultConnection.server != os::SOCKET_INVALID.descriptor);
 	IN_CASE_CHECK(resultConnection.server == server.native().descriptor);
 
 	IN_CASE_CHECK(client.disconnect() == os::STATUS_SUCCESS);
