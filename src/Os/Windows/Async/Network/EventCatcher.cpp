@@ -290,6 +290,7 @@ EventCatcher::MessageDispatchThread::action(
 		default:
 			break;
 	}
+    EventCatcher::get().notify();
 
 	return ::DefWindowProcA(window, static_cast<MessageValue>(message), descriptor, param);
 }
