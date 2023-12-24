@@ -23,7 +23,6 @@ using long_t = ::int64_t;
 using float_t = float;
 using double_t = double;
 using ldouble_t = long double;
-
 using ptrint_t = ::intptr_t;
 using ptruint_t = ::uintptr_t;
 
