@@ -19,6 +19,8 @@ public:
 	struct NativeCallbacks;
 
 public:
+	UdpServer() noexcept : NetworkBase() {}
+
 	UdpServer(UdpServer &&udpServer) noexcept;
 	UdpServer(Ipv4::Port port) noexcept;
 	~UdpServer() noexcept = default;
