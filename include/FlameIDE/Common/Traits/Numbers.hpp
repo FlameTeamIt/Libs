@@ -13,27 +13,27 @@ namespace flame_ide
 ///
 struct Types: public NonCreational
 {
-	using char_t = flame_ide::char_t;
+	using char_t = flame_ide::primitive_types::char_t;
 
-	using ichar_t = flame_ide::ichar_t;
-	using short_t = flame_ide::short_t;
-	using int_t = flame_ide::int_t;
-	using long_t = flame_ide::long_t;
+	using ichar_t = flame_ide::primitive_types::ichar_t;
+	using short_t = flame_ide::primitive_types::short_t;
+	using int_t = flame_ide::primitive_types::int_t;
+	using long_t = flame_ide::primitive_types::long_t;
 
-	using byte_t = flame_ide::uichar_t;
+	using byte_t = flame_ide::primitive_types::uichar_t;
 
-	using uichar_t = flame_ide::uichar_t;
-	using ushort_t = flame_ide::ushort_t;
-	using uint_t = flame_ide::uint_t;
-	using ulong_t = flame_ide::ulong_t;
+	using uichar_t = flame_ide::primitive_types::uichar_t;
+	using ushort_t = flame_ide::primitive_types::ushort_t;
+	using uint_t = flame_ide::primitive_types::uint_t;
+	using ulong_t = flame_ide::primitive_types::ulong_t;
 
-	using float_t = flame_ide::float_t;
-	using double_t = flame_ide::double_t;
-	using ldouble_t = flame_ide::ldouble_t;
+	using float_t = flame_ide::primitive_types::float_t;
+	using double_t = flame_ide::primitive_types::double_t;
+	using ldouble_t = flame_ide::primitive_types::ldouble_t;
 
-	using size_t = flame_ide::size_t;
-	using ssize_t = flame_ide::ssize_t;
-	using diff_t = flame_ide::diff_t;
+	using size_t = flame_ide::primitive_types::size_t;
+	using ssize_t = flame_ide::primitive_types::ssize_t;
+	using diff_t = flame_ide::primitive_types::diff_t;
 };
 
 ///

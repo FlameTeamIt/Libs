@@ -1,7 +1,9 @@
 set (SOURCE_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/ExpectedTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ExpectedTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Utils.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Utils.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UtilsTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UtilsTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )

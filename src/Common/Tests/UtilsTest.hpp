@@ -1,5 +1,5 @@
-#ifndef FLAMEIDE_COMMON_TESTS_UTILS_HPP
-#define FLAMEIDE_COMMON_TESTS_UTILS_HPP
+#ifndef FLAMEIDE_COMMON_TESTS_UTILSTEST_HPP
+#define FLAMEIDE_COMMON_TESTS_UTILSTEST_HPP
 
 #include <FlameIDE/Common/Utils.hpp>
 
@@ -10,11 +10,11 @@ namespace flame_ide
 {namespace tests
 {
 
-class Utils: public AbstractTest
+class UtilsTest: public AbstractTest
 {
 public:
-	Utils();
-	virtual ~Utils();
+	UtilsTest();
+	virtual ~UtilsTest();
 
 private:
 	virtual int vStart();
@@ -25,4 +25,4 @@ private:
 
 }}}
 
-#endif // FLAMEIDE_COMMON_TESTS_UTILS_HPP
+#endif // FLAMEIDE_COMMON_TESTS_UTILSTEST_HPP

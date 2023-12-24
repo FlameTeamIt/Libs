@@ -1,21 +1,21 @@
-#include <FlameIDE/../../src/Common/Tests/Utils.hpp>
+#include <FlameIDE/../../src/Common/Tests/UtilsTest.hpp>
 
 namespace flame_ide
 {namespace common
 {namespace tests
 {
 
-Utils::Utils() : AbstractTest("Utils")
+UtilsTest::UtilsTest() : AbstractTest("Utils")
 {}
 
-Utils::~Utils() = default;
+UtilsTest::~UtilsTest() = default;
 
-int Utils::vStart()
+int UtilsTest::vStart()
 {
 	IN_CASE_CHECK_END((length() == ResultType::SUCCESS));
 }
 
-int Utils::length() noexcept
+int UtilsTest::length() noexcept
 {
 	constexpr Types::size_t expectStringLength = sizeof("Hello, world!") - 1;
 	const char *testString = "Hello, world!";
