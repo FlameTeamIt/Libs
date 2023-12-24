@@ -18,6 +18,8 @@ public:
 	struct NativeCallbacks;
 
 public:
+	UdpClient() noexcept : NetworkBase() {}
+
 	UdpClient(UdpClient &&udpClient) noexcept;
 	UdpClient(Ipv4 ip) noexcept;
 

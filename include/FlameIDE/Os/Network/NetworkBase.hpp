@@ -3,6 +3,7 @@
 
 #include <FlameIDE/Os/Network/Ipv4.hpp>
 #include <FlameIDE/Os/Types.hpp>
+#include <FlameIDE/Os/Constants.hpp>
 
 #include <FlameIDE/Templates/Range.hpp>
 
@@ -38,6 +39,7 @@ public:
 	static const NativeCallbacks &callbacks() noexcept;
 
 protected:
+	NetworkBase() noexcept = default;
 	NetworkBase(Socket socket) noexcept;
 	NetworkBase(NetworkBase &&base) noexcept;
 
@@ -54,10 +56,10 @@ protected:
 	static Types::int_t checkStatus(Status status) noexcept;
 
 protected:
-	Socket socket;
+	Socket socket = SOCKET_INVALID;
 
 private:
-	Status status = 0;
+	Status status = STATUS_SUCCESS;
 };
 
 }}} // namespace flame_ide::os::network

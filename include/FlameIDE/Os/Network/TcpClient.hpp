@@ -18,7 +18,8 @@ public:
 	struct NativeCallbacks;
 
 public:
-	TcpClient() noexcept = delete;
+	TcpClient() noexcept : NetworkBase() {}
+
 	TcpClient(const TcpClient &) noexcept = delete;
 
 	TcpClient(TcpClient &&client) noexcept;
