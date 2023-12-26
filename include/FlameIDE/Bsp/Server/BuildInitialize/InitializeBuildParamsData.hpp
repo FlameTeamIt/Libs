@@ -1,0 +1,14 @@
+#ifndef FLAMEIDE_BSP_SERVER_BUILDINITIALIZE_INITIALIZEBUILDPARAMSDATA_HPP
+#define FLAMEIDE_BSP_SERVER_BUILDINITIALIZE_INITIALIZEBUILDPARAMSDATA_HPP
+
+namespace flame_ide
+{namespace bsp
+{namespace server
+{
+
+class InitializeBuildParamsData
+{};
+
+}}} // flame_ide::bsp::server
+
+#endif // FLAMEIDE_BSP_SERVER_BUILDINITIALIZE_INITIALIZEBUILDPARAMSDATA_HPP

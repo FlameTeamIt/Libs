@@ -1,0 +1,14 @@
+#ifndef FLAMEIDE_BSP_CLIENT_ONBUILDTASKPROGRESS_TASKPROGRESSPARAMS_HPP
+#define FLAMEIDE_BSP_CLIENT_ONBUILDTASKPROGRESS_TASKPROGRESSPARAMS_HPP
+
+namespace flame_ide
+{namespace bsp
+{namespace client
+{
+
+class TaskProgressParams
+{};
+
+}}} // flame_ide::bsp::client
+
+#endif // FLAMEIDE_BSP_CLIENT_ONBUILDTASKPROGRESS_TASKPROGRESSPARAMS_HPP

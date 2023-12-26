@@ -1,0 +1,14 @@
+#ifndef FLAMEIDE_BSP_SERVER_DEBUGSESSIONSTART_DEBUGSESSIONADDRESS_HPP
+#define FLAMEIDE_BSP_SERVER_DEBUGSESSIONSTART_DEBUGSESSIONADDRESS_HPP
+
+namespace flame_ide
+{namespace bsp
+{namespace server
+{
+
+class DebugSessionAddress
+{};
+
+}}} // flame_ide::bsp::server
+
+#endif // FLAMEIDE_BSP_SERVER_DEBUGSESSIONSTART_DEBUGSESSIONADDRESS_HPP

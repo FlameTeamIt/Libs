@@ -1,0 +1,20 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildInitialize.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildShutdown.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildTargetCleanCache.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildTargetCompile.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildTargetDependencyModules.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildTargetDependencySources.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildTargetInverseSources.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildTargetOutputPaths.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildTargetResources.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildTargetRun.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildTargetSources.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuildTargetTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/DebugSessionStart.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/OnBuildExit.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/OnBuildInitialized.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/OnRunReadStdin.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WorkspaceBuildTargets.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WorkspaceReload.hpp
+)

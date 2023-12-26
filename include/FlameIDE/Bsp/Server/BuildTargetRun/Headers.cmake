@@ -1,0 +1,6 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/RunParams.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/RunParamsData.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/RunParamsDataKind.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/RunResult.hpp
+)

@@ -1,0 +1,8 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/CompileTask.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TaskStartData.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TaskStartDataKind.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TaskStartParams.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TestStart.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TestTask.hpp
+)

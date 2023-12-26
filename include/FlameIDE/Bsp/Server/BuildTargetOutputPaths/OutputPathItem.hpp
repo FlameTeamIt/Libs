@@ -1,0 +1,14 @@
+#ifndef FLAMEIDE_BSP_SERVER_BUILDTARGETOUTPUTPATHS_OUTPUTPATHITEM_HPP
+#define FLAMEIDE_BSP_SERVER_BUILDTARGETOUTPUTPATHS_OUTPUTPATHITEM_HPP
+
+namespace flame_ide
+{namespace bsp
+{namespace server
+{
+
+class OutputPathItem
+{};
+
+}}} // flame_ide::bsp::server
+
+#endif // FLAMEIDE_BSP_SERVER_BUILDTARGETOUTPUTPATHS_OUTPUTPATHITEM_HPP

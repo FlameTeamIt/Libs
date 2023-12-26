@@ -1,0 +1,7 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/SourceItem.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SourceItemKind.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SourcesItem.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SourcesParams.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SourcesResult.hpp
+)

@@ -1,0 +1,14 @@
+#ifndef FLAMEIDE_BSP_SERVER_BUILDTARGETCLEANCACHE_CLEANCACHEPARAMS_HPP
+#define FLAMEIDE_BSP_SERVER_BUILDTARGETCLEANCACHE_CLEANCACHEPARAMS_HPP
+
+namespace flame_ide
+{namespace bsp
+{namespace server
+{
+
+class CleanCacheParams
+{};
+
+}}} // flame_ide::bsp::server
+
+#endif // FLAMEIDE_BSP_SERVER_BUILDTARGETCLEANCACHE_CLEANCACHEPARAMS_HPP

@@ -1,0 +1,14 @@
+#ifndef FLAMEIDE_BSP_SERVER_BUILDINITIALIZE_BUILDSERVERCAPABILITIES_HPP
+#define FLAMEIDE_BSP_SERVER_BUILDINITIALIZE_BUILDSERVERCAPABILITIES_HPP
+
+namespace flame_ide
+{namespace bsp
+{namespace server
+{
+
+class BuildServerCapabilities
+{};
+
+}}} // flame_ide::bsp::server
+
+#endif // FLAMEIDE_BSP_SERVER_BUILDINITIALIZE_BUILDSERVERCAPABILITIES_HPP

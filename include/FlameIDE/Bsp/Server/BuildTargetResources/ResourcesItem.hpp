@@ -1,0 +1,14 @@
+#ifndef FLAMEIDE_BSP_SERVER_BUILDTARGETRESOURCES_RESOURCESITEM_HPP
+#define FLAMEIDE_BSP_SERVER_BUILDTARGETRESOURCES_RESOURCESITEM_HPP
+
+namespace flame_ide
+{namespace bsp
+{namespace server
+{
+
+class ResourcesItem
+{};
+
+}}} // flame_ide::bsp::server
+
+#endif // FLAMEIDE_BSP_SERVER_BUILDTARGETRESOURCES_RESOURCESITEM_HPP

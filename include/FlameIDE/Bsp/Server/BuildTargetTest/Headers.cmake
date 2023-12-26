@@ -1,0 +1,8 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/TestParams.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TestParamsData.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TestParamsDataKind.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TestResult.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TestResultData.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TestResultDataKind.hpp
+)

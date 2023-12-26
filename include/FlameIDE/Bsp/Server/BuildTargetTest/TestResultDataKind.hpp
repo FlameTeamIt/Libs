@@ -1,0 +1,14 @@
+#ifndef FLAMEIDE_BSP_SERVER_BUILDTARGETTEST_TESTRESULTDATAKIND_HPP
+#define FLAMEIDE_BSP_SERVER_BUILDTARGETTEST_TESTRESULTDATAKIND_HPP
+
+namespace flame_ide
+{namespace bsp
+{namespace server
+{
+
+class TestResultDataKind
+{};
+
+}}} // flame_ide::bsp::server
+
+#endif // FLAMEIDE_BSP_SERVER_BUILDTARGETTEST_TESTRESULTDATAKIND_HPP

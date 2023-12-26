@@ -1,0 +1,14 @@
+#ifndef FLAMEIDE_BSP_SERVER_BUILDTARGETCOMPILE_COMPILERESULTDATAKIND_HPP
+#define FLAMEIDE_BSP_SERVER_BUILDTARGETCOMPILE_COMPILERESULTDATAKIND_HPP
+
+namespace flame_ide
+{namespace bsp
+{namespace server
+{
+
+class CompileResultDataKind
+{};
+
+}}} // flame_ide::bsp::server
+
+#endif // FLAMEIDE_BSP_SERVER_BUILDTARGETCOMPILE_COMPILERESULTDATAKIND_HPP
