@@ -5,6 +5,8 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/ArrayTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/AsIntegralTypeTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/AsIntegralTypeTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BinaryTreesTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BinaryTreesTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BitsTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BitsTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BuilderTest.cpp
