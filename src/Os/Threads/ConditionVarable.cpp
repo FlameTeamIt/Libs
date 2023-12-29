@@ -15,6 +15,11 @@ void ConditionVariable::wait()
 	locker.lock();
 }
 
+bool ConditionVariable::tryWait()
+{
+	return locker.tryLock();
+}
+
 void ConditionVariable::notify()
 {
 	locker.unlock();

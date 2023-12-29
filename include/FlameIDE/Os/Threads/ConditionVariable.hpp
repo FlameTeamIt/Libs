@@ -39,6 +39,11 @@ public:
 	void wait(Functor &&functor);
 
 	///
+	/// @brief Trying wait for signal
+	///
+	bool tryWait();
+
+	///
 	/// @brief Send notification for unblock
 	///
 	void notify();
