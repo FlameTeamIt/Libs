@@ -58,7 +58,7 @@ private:
 	DefaultFd defaultFd;
 };
 
-using OsStatus = ::error_t;
+using OsStatus = int;
 
 using OsSocketAddressIn = ::sockaddr_in;
 using OsSocketDescriptor = decltype(::socket({}, {}, {}));
