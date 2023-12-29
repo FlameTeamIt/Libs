@@ -31,10 +31,14 @@ struct Config: public flame_ide::NonCreational
 
 	static constexpr flame_ide::Types::size_t HANDLER_NUMBER_OF_WORKERS = @LIB_HANDLER_NUMBER_OF_WORKERS@;
 
+#	define SOMAXCONN1_STR(VALUE) #VALUE
+#	define SOMAXCONN_STR(VALUE) SOMAXCONN1_STR(VALUE)
 	static_assert(
 			TCP_SERVER_BACKLOG < flame_ide::os::SOCKET_TCP_MAX_CLIENTS
-			, "Generated server backlog more than SOMAXCONN"
+			, "Generated server backlog more than SOMAXCONN = " SOMAXCONN_STR(SOMAXCONN)
 	);
+#	undef SOMAXCONN_STR
+#	undef SOMAXCONN1_STR
 };
 
 }} // namespace generated::network
