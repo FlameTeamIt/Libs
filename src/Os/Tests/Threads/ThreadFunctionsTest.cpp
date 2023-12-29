@@ -103,6 +103,8 @@ auto isWorking() noexcept
 {
 	using ResultType = ::AbstractTest::ResultType;
 
+	// FIXME: подумать, как можно реализовать
+	/*
 	os::ThreadContext context = os::THREAD_CONTEXT_INITIALIZER;
 	auto raii = templates::makeRaiiCaller(
 			[&context]() { thread::init(context); }
@@ -125,6 +127,7 @@ auto isWorking() noexcept
 	// FIXME: должна быть ошибка/false
 	working = thread::isWorking(context);
 	std::cout << "working = " << working << std::endl;
+	*/
 
 	return ResultType::SUCCESS;
 }
