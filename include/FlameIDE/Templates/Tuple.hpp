@@ -6,9 +6,7 @@
 
 namespace flame_ide
 {namespace templates
-{
-
-namespace tuple_utils
+{namespace tuple_utils
 {
 
 template<SizeTraits::SizeType INDEX, typename ...Args>
@@ -17,18 +15,20 @@ struct Getter;
 template<SizeTraits::SizeType INDEX, typename ...Args>
 class ConstGetter;
 
-}
-
-template<typename ...Args>
-class Tuple;
-
-}}
+}}} // namespace flame_ide::templates::tuple_utils
 
 namespace flame_ide
 {namespace templates
 {
 
-namespace tuple_utils
+template<typename ...Args>
+class Tuple;
+
+}} // namespace flame_ide::templates
+
+namespace flame_ide
+{namespace templates
+{namespace tuple_utils
 {
 
 // Getter
@@ -36,7 +36,13 @@ namespace tuple_utils
 template<SizeTraits::SizeType INDEX, typename ...Args>
 struct Getter
 {
-	static typename GetTypeByIndex<INDEX, Args...>::Type &get();
+	using Tuple = typename DefaultTraits<
+		flame_ide::templates::Tuple<Args...>
+	>::Type;
+	using TupleReference = typename DefaultTraits<Tuple>::Reference;
+	using Type = typename GetTypeByIndex<INDEX, Args...>::Type;
+
+	static Type &get(TupleReference tuple) noexcept;
 };
 
 template<SizeTraits::SizeType INDEX, typename Arg, typename ...Args>
@@ -84,9 +90,20 @@ class ConstGetter
 	using TupleConstReference = typename DefaultTraits<Tuple>::ConstReference;
 	using Type = typename GetTypeByIndex<INDEX, Args...>::Type;
 
+	static const Type &get(TupleConstReference tuple);
+};
+
+
+template<SizeTraits::SizeType INDEX, typename Arg, typename ...Args>
+class ConstGetter<INDEX, Arg, Args ...>
+{
+	using Tuple = flame_ide::templates::Tuple<Args ...>;
+	using TupleConstReference = typename DefaultTraits<Tuple>::ConstReference;
+	using Type = typename GetTypeByIndex<INDEX, Args ...>::Type;
+
 	static const Type &get(TupleConstReference tuple)
 	{
-		return Getter<INDEX - 1, Args...>::get(tuple);
+		return Getter<INDEX - 1, Args ...>::get(tuple);
 	}
 };
 
@@ -102,14 +119,27 @@ struct ConstGetter<SizeTraits::SizeType(0), Arg, Args...>
 	}
 };
 
-}
+template<SizeTraits::SizeType INDEX>
+struct ConstGetter<INDEX>
+{
+	static void get()
+	{
+		static_assert(INDEX, "Invalid INDEX argument.");
+	}
+};
+
+}}} // namespace flame_ide::templates::tuple_utilss
+
+namespace flame_ide
+{namespace templates
+{
 
 template<typename ...Args>
 class Tuple
 {};
 
 template<typename Arg, typename ...Args>
-class Tuple<Arg, Args...>: public Tuple<Args...>
+class Tuple<Arg, Args ...>: public Tuple<Args ...>
 {
 public:
 	using Me = Tuple<Arg, Args ...>;
@@ -140,7 +170,7 @@ public:
 	}
 
 	template<SizeTraits::SizeType INDEX>
-	auto &get() const noexcept
+	const auto &get() const noexcept
 	{
 		return tuple_utils::ConstGetter<INDEX, Arg, Args...>::get(*this);
 	}
@@ -155,22 +185,22 @@ class Tuple<>
 	using Me = Tuple<>;
 };
 
-}}
+}} // namespace flame_ide::templates
 
 namespace flame_ide
 {namespace templates
 {
 
 template<typename ArgHead, typename ...Args>
-Tuple<ArgHead, Args...>::Tuple(const ArgHead &argHead, const Args &...args) noexcept
+Tuple<ArgHead, Args ...>::Tuple(const ArgHead &argHead, const Args &...args) noexcept
 		: Parent(args...), object(argHead)
 {}
 
 template<typename ArgHead, typename ...Args>
-Tuple<ArgHead, Args...>::Tuple(ArgHead &&argHead, Args &&...args) noexcept
-	: Parent(move(args)...), object(move(argHead))
+Tuple<ArgHead, Args ...>::Tuple(ArgHead &&argHead, Args &&...args) noexcept
+		: Parent(move(args)...), object(move(argHead))
 {}
 
-}}
+}} // namespace flame_ide::templates
 
 #endif // FLAMEIDE_TEMPLATES_TUPLE_HPP
