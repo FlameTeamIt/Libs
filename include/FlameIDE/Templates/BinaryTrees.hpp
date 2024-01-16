@@ -359,6 +359,24 @@ public:
 	void traversePostfix(Function &&function) const noexcept;
 
 private:
+	template<typename Function>
+	void traverseInfix(TreeNode* node, Function &&function) noexcept;
+	template<typename Function>
+	void traverseInfix(const TreeNode* node, Function &&function) const noexcept;
+
+	template<typename Function>
+	void traversePrefix(TreeNode* node, Function &&function) noexcept;
+	template<typename Function>
+	void traversePrefix(const TreeNode* node, Function &&function) const noexcept;
+
+	template<typename Function>
+	void traversePostfix(TreeNode* node, Function &&function) noexcept;
+	template<typename Function>
+	void traversePostfix(const TreeNode* node, Function &&function) const noexcept;
+
+	void recursiveClear(TreeNode *node) noexcept;
+
+private:
 	tree_utils::Data<TreeNode> data;
 
 	Allocator allocator;
@@ -550,7 +568,9 @@ template<
 	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
 >
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::~BinaryTree() noexcept
-{}
+{
+	recursiveClear(data.root);
+}
 
 template<
 	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
@@ -791,6 +811,184 @@ typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstReverseIte
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::crfind() const noexcept
 {
 	return {};
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
+		Function &&function
+) noexcept
+{
+	traverseInfix(data.root, flame_ide::move(function));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
+		Function &&function
+) const noexcept
+{
+	traverseInfix(data.root, flame_ide::move(function));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
+		Function &&function
+) noexcept
+{
+	traversePrefix(data.root, flame_ide::move(function));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
+		Function &&function
+) const noexcept
+{
+	traversePrefix(data.root, flame_ide::move(function));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
+		Function &&function
+) noexcept
+{
+	traversePostfix(data.root, flame_ide::move(function));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
+		Function &&function
+) const noexcept
+{
+	traversePostfix(data.root, flame_ide::move(function));
+}
+
+// private
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
+		TreeNode* node, Function &&function
+) noexcept
+{
+	if (!node)
+		return;
+
+	traverseInfix(node->left, flame_ide::move(function));
+	function(node->object);
+	traverseInfix(node->right, flame_ide::move(function));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
+		const TreeNode* node, Function &&function
+) const noexcept
+{
+	if (!node)
+		return;
+
+	traverseInfix(node->left, flame_ide::move(function));
+	function(node->object);
+	traverseInfix(node->right, flame_ide::move(function));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
+		TreeNode* node, Function &&function
+) noexcept
+{
+	if (!node)
+		return;
+
+	function(node->object);
+	traversePrefix(node->left, flame_ide::move(function));
+	traversePrefix(node->right, flame_ide::move(function));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
+		const TreeNode* node, Function &&function
+) const noexcept
+{
+	if (!node)
+		return;
+
+	function(node->object);
+	traversePrefix(node->left, flame_ide::move(function));
+	traversePrefix(node->right, flame_ide::move(function));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
+		TreeNode* node, Function &&function
+) noexcept
+{
+	if (!node)
+		return;
+
+	traversePostfix(node->left, flame_ide::move(function));
+	traversePostfix(node->right, flame_ide::move(function));
+	function(node->object);
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename Function>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
+		const TreeNode* node, Function &&function
+) const noexcept
+{
+	if (!node)
+		return;
+
+	traversePostfix(node->left, flame_ide::move(function));
+	traversePostfix(node->right, flame_ide::move(function));
+	function(node->object);
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::recursiveClear(TreeNode *node) noexcept
+{
+	if (!node)
+		return;
+
+	recursiveClear(node->left);
+	recursiveClear(node->right);
+
+	allocator.destroy(node);
 }
 
 }} // namespace flame_ide::templates

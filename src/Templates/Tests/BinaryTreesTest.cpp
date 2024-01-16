@@ -41,10 +41,10 @@ int BinaryTreesTest::defaultInitialization()
 
 int BinaryTreesTest::pushCopyInitialization()
 {
-	const Set::Type setValues[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+	const Set::Type setValues[] = { 1, 3, 5, 7, 2, 4, 6, 8 };
 	const Map::Type mapValues[] = {
-			{ 1, 10 }, { 2, 20 }, { 3, 30 }, { 4, 40 }
-			, { 5, 50 }, { 6, 60 }, { 7, 70 }, { 8, 80 }
+			{ 1, 10 }, { 3, 30 }, { 5, 50 }, { 7, 70 }
+			, { 2, 20 }, { 4, 40 }, { 6, 60 }, { 8, 80 }
 	};
 
 	[[maybe_unused]] Set set{ setValues };
