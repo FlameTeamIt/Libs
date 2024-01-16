@@ -6,6 +6,7 @@
 
 #include <FlameIDE/Templates/Allocator.hpp>
 #include <FlameIDE/Templates/Comparators.hpp>
+#include <FlameIDE/Templates/Pair.hpp>
 
 #include <FlameIDE/Templates/Iterator/ConstIterator.hpp>
 #include <FlameIDE/Templates/Iterator/ConstReverseIterator.hpp>
@@ -187,6 +188,30 @@ struct Data
 	TreeNode *last = nullptr;
 };
 
+// Pair util
+
+template<typename Pair, typename Traits = DefaultTraits<Pair>>
+struct PairLess
+{
+	using ConstReference = typename Traits::ConstReference;
+
+	bool operator()(ConstReference dataLeft, ConstReference dataRight) const noexcept
+	{
+		return dataLeft.first() < dataRight.first();
+	}
+};
+
+template<typename Pair, typename Traits = DefaultTraits<Pair>>
+struct PairMore
+{
+	using ConstReference = typename Traits::ConstReference;
+
+	bool operator()(ConstReference dataLeft, ConstReference dataRight) const noexcept
+	{
+		return dataLeft.first() > dataRight.first();
+	}
+};
+
 }}} // namespace flame_ide::templates::tree_utils
 
 namespace flame_ide
@@ -232,9 +257,16 @@ public:
 
 public:
 	BinaryTree() noexcept = default;
-	BinaryTree(const Me &tree) noexcept = default;
-	BinaryTree(Me &&tree) noexcept = default;
-	~BinaryTree() noexcept = default;
+	BinaryTree(const Me &tree) noexcept;
+	BinaryTree(Me &&tree) noexcept;
+
+	template<typename ValueType, SizeTraits::SizeType SIZE>
+	BinaryTree(const ValueType (&a)[SIZE]) noexcept;
+
+	template<typename ValueType, SizeTraits::SizeType SIZE>
+	BinaryTree(ValueType (&&a)[SIZE]) noexcept;
+
+	~BinaryTree() noexcept;
 
 	Me &operator=(const Me &tree) noexcept;
 	Me &operator=(Me &&tree) noexcept;
@@ -249,6 +281,8 @@ public:
 	void erase(ConstIterator it) noexcept;
 	void erase(ReverseIterator it) noexcept;
 	void erase(ConstReverseIterator it) noexcept;
+
+	void clear() noexcept;
 
 	Iterator begin() noexcept;
 	Iterator end() noexcept;
@@ -328,8 +362,28 @@ private:
 	tree_utils::Data<TreeNode> data;
 
 	Allocator allocator;
+	Comparator comparator;
 	SizeType size = 0;
 };
+
+template<
+	typename T
+	, typename Traits = ContainerTraits<T>
+	, typename Comparator = Less<T>
+	, typename TreeNode = tree_utils::Node<T, DefaultTraits<T>>
+	, typename Allocator = allocator::ObjectAllocator<TreeNode>
+>
+using Set = BinaryTree<T, Traits, Comparator, TreeNode, Allocator>;
+
+template<
+	typename T
+	, typename U
+	, typename Traits = ContainerTraits<Pair<const T, U>>
+	, typename Comparator = tree_utils::PairLess<Pair<const T, U>>
+	, typename TreeNode = tree_utils::Node<Pair<const T, U>, DefaultTraits<Pair<const T, U>>>
+	, typename Allocator = allocator::ObjectAllocator<TreeNode>
+>
+using Map = BinaryTree<Pair<const T, U>, Traits, Comparator, TreeNode, Allocator>;
 
 }} // namespace flame_ide::templates
 
@@ -455,6 +509,52 @@ namespace flame_ide
 template<
 	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
 >
+BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(const Me &tree) noexcept
+{
+	operator=(tree);
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(Me &&tree) noexcept
+{
+	operator=(flame_ide::move(tree));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename ValueType, Types::size_t SIZE>
+BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(
+		const ValueType (&a)[SIZE]
+) noexcept
+{
+	for (const auto &i : a)
+		push(i);
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+template<typename ValueType, Types::size_t SIZE>
+BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(
+		ValueType (&&a)[SIZE]
+) noexcept
+{
+	for (auto &&i : a)
+		push(flame_ide::move(i));
+}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::~BinaryTree() noexcept
+{}
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator> &
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::operator=(const Me &tree) noexcept
 {
@@ -482,7 +582,9 @@ template<
 	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
 >
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::push(MoveReference value) noexcept
-{}
+{
+	flame_ide::unused(value);
+}
 
 template<
 	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
@@ -522,6 +624,12 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::erase(ConstReverseI
 {
 	flame_ide::unused(it);
 }
+
+template<
+	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::clear() noexcept
+{}
 
 template<
 	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator

@@ -19,6 +19,9 @@ private:
 
 private:
 	int defaultInitialization();
+
+	int pushCopyInitialization();
+	int pushEmplaceInitialization();
 };
 
 
