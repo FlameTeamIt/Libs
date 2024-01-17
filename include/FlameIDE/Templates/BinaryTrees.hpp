@@ -48,6 +48,8 @@ struct Node
 	Me *previous = nullptr;
 	Type object;
 };
+template<typename T, typename Traits>
+inline void update(Node<T, Traits> *node) noexcept { flame_ide::unused(node); }
 
 template<typename T, typename Options, typename Traits = DefaultTraits<T>>
 struct CustomNode: public Node<T, Traits>
@@ -78,18 +80,14 @@ struct CustomNode: public Node<T, Traits>
 	Options options;
 };
 
-enum class BalanceFactor: Types::ichar_t
-{
-	RIGHT = -1
-	, DEFAULT = 0
-	, LEFT = 1
-};
 struct AdelsonVelskyLandisOptions
 {
-	BalanceFactor factor = BalanceFactor::DEFAULT;
+	Types::ushort_t height = 0;
 };
-template<typename T, typename Traits>
+template<typename T, typename Traits = DefaultTraits<T>>
 using AdelsonVelskyLandisNode = CustomNode<T, AdelsonVelskyLandisOptions, Traits>;
+template<typename T, typename Traits>
+void update(AdelsonVelskyLandisNode<T, Traits> *node) noexcept;
 
 enum class Colour: Types::uichar_t
 {
@@ -100,8 +98,10 @@ struct RedBlackOptions
 {
 	Colour colour = Colour::BLACK;
 };
-template<typename T, typename Traits>
+template<typename T, typename Traits = DefaultTraits<T>>
 using RedBlackNode = CustomNode<T, RedBlackOptions, Traits>;
+template<typename T, typename Traits>
+void update(RedBlackNode<T, Traits> *node) noexcept;
 
 // Iterators
 
@@ -188,18 +188,7 @@ struct Data
 	TreeNode *last = nullptr;
 };
 
-// Pair util
-
-template<typename Pair, typename Traits = DefaultTraits<Pair>>
-struct PairLess
-{
-	using ConstReference = typename Traits::ConstReference;
-
-	bool operator()(ConstReference dataLeft, ConstReference dataRight) const noexcept
-	{
-		return dataLeft.first() < dataRight.first();
-	}
-};
+// Pair comparators
 
 template<typename Pair, typename Traits = DefaultTraits<Pair>>
 struct PairMore
@@ -212,6 +201,17 @@ struct PairMore
 	}
 };
 
+template<typename Pair, typename Traits = DefaultTraits<Pair>>
+struct PairLess
+{
+	using ConstReference = typename Traits::ConstReference;
+
+	bool operator()(ConstReference dataLeft, ConstReference dataRight) const noexcept
+	{
+		return dataLeft.first() < dataRight.first();
+	}
+};
+
 }}} // namespace flame_ide::templates::tree_utils
 
 namespace flame_ide
@@ -221,12 +221,14 @@ namespace flame_ide
 template<
 	typename T
 	, typename Traits = ContainerTraits<T>
-	, typename Comparator = Less<T>
-	, typename TreeNode = tree_utils::Node<T, DefaultTraits<T>>
-	, typename Allocator = allocator::ObjectAllocator<TreeNode>
+	, template<class> class Comparator = Less
+	, template<class> class TreeNode = tree_utils::Node
+	, template<class> class Allocator = allocator::ObjectAllocator
 >
 class BinaryTree
 {
+	using Node = TreeNode<T>;
+
 public:
 	using Type = typename Traits::Type;
 
@@ -241,11 +243,11 @@ public:
 	using Me = BinaryTree<T, Traits, Comparator, TreeNode, Allocator>;
 
 	using Iterator = templates::Iterator<
-		tree_utils::WrappedIterator<T, TreeNode, IteratorAccess::NON_CONSTANT>
+		tree_utils::WrappedIterator<T, Node, IteratorAccess::NON_CONSTANT>
 		, IteratorCategory::BIDIRECTIONAL, Traits, Me
 	>;
 	using ConstIterator = templates::ConstIterator<
-		tree_utils::WrappedIterator<T, TreeNode, IteratorAccess::CONSTANT>
+		tree_utils::WrappedIterator<T, Node, IteratorAccess::CONSTANT>
 		, IteratorCategory::BIDIRECTIONAL, Traits, Me
 	>;
 	using ReverseIterator = templates::ReverseIterator<
@@ -359,49 +361,35 @@ public:
 	void traversePostfix(Function &&function) const noexcept;
 
 private:
-	template<typename Function>
-	void traverseInfix(TreeNode* node, Function &&function) noexcept;
-	template<typename Function>
-	void traverseInfix(const TreeNode* node, Function &&function) const noexcept;
+	void rotateLeft(Node *node) noexcept;
+
+	void rotateRight(Node *node) noexcept;
 
 	template<typename Function>
-	void traversePrefix(TreeNode* node, Function &&function) noexcept;
+	void traverseInfix(Node* node, Function &&function) noexcept;
 	template<typename Function>
-	void traversePrefix(const TreeNode* node, Function &&function) const noexcept;
+	void traverseInfix(const Node* node, Function &&function) const noexcept;
 
 	template<typename Function>
-	void traversePostfix(TreeNode* node, Function &&function) noexcept;
+	void traversePrefix(Node* node, Function &&function) noexcept;
 	template<typename Function>
-	void traversePostfix(const TreeNode* node, Function &&function) const noexcept;
+	void traversePrefix(const Node* node, Function &&function) const noexcept;
 
-	void recursiveClear(TreeNode *node) noexcept;
+	template<typename Function>
+	void traversePostfix(Node* node, Function &&function) noexcept;
+	template<typename Function>
+	void traversePostfix(const Node* node, Function &&function) const noexcept;
+
+	void recursiveClear(Node *node) noexcept;
 
 private:
-	tree_utils::Data<TreeNode> data;
+	tree_utils::Data<Node> data;
 
-	Allocator allocator;
-	Comparator comparator;
+	Allocator<Node> allocator;
 	SizeType size = 0;
+
+	Comparator<Type> comparator;
 };
-
-template<
-	typename T
-	, typename Traits = ContainerTraits<T>
-	, typename Comparator = Less<T>
-	, typename TreeNode = tree_utils::Node<T, DefaultTraits<T>>
-	, typename Allocator = allocator::ObjectAllocator<TreeNode>
->
-using Set = BinaryTree<T, Traits, Comparator, TreeNode, Allocator>;
-
-template<
-	typename T
-	, typename U
-	, typename Traits = ContainerTraits<Pair<const T, U>>
-	, typename Comparator = tree_utils::PairLess<Pair<const T, U>>
-	, typename TreeNode = tree_utils::Node<Pair<const T, U>, DefaultTraits<Pair<const T, U>>>
-	, typename Allocator = allocator::ObjectAllocator<TreeNode>
->
-using Map = BinaryTree<Pair<const T, U>, Traits, Comparator, TreeNode, Allocator>;
 
 }} // namespace flame_ide::templates
 
@@ -525,7 +513,8 @@ namespace flame_ide
 {
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(const Me &tree) noexcept
 {
@@ -533,7 +522,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(const Me &tre
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(Me &&tree) noexcept
 {
@@ -541,7 +531,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(Me &&tree) no
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename ValueType, Types::size_t SIZE>
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(
@@ -553,7 +544,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename ValueType, Types::size_t SIZE>
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(
@@ -565,7 +557,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::BinaryTree(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::~BinaryTree() noexcept
 {
@@ -573,7 +566,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::~BinaryTree() noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator> &
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::operator=(const Me &tree) noexcept
@@ -583,7 +577,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::operator=(const Me &tree
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator> &
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::operator=(Me &&tree) noexcept
@@ -593,13 +588,15 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::operator=(Me &&tree) noe
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::push(ConstReference value) noexcept
 {}
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::push(MoveReference value) noexcept
 {
@@ -607,14 +604,16 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::push(MoveReference 
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename ...Args>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::emplace(Args &&...args) noexcept
 {}
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::erase(Iterator it) noexcept
 {
@@ -622,7 +621,8 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::erase(Iterator it) 
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::erase(ConstIterator it) noexcept
 {
@@ -630,7 +630,8 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::erase(ConstIterator
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::erase(ReverseIterator it) noexcept
 {
@@ -638,7 +639,8 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::erase(ReverseIterat
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::erase(ConstReverseIterator it) noexcept
 {
@@ -646,13 +648,15 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::erase(ConstReverseI
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::clear() noexcept
 {}
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::Iterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::begin() noexcept
@@ -661,7 +665,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::begin() noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::Iterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::end() noexcept
@@ -670,7 +675,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::end() noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::begin() const noexcept
@@ -679,7 +685,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::begin() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::end() const noexcept
@@ -688,7 +695,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::end() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::cbegin() const noexcept
@@ -697,7 +705,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::cbegin() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::cend() const noexcept
@@ -706,7 +715,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::cend() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ReverseIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rbegin() noexcept
@@ -715,7 +725,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rbegin() noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ReverseIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rend() noexcept
@@ -724,7 +735,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rend() noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstReverseIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rbegin() const noexcept
@@ -733,7 +745,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rbegin() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstReverseIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rend() const noexcept
@@ -742,7 +755,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rend() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstReverseIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::crbegin() const noexcept
@@ -751,7 +765,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::crbegin() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstReverseIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::crend() const noexcept
@@ -760,7 +775,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::crend() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::Iterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::find() noexcept
@@ -769,7 +785,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::find() noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::find() const noexcept
@@ -778,7 +795,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::find() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::cfind() const noexcept
@@ -787,7 +805,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::cfind() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ReverseIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rfind() noexcept
@@ -796,7 +815,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rfind() noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstReverseIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rfind() const noexcept
@@ -805,7 +825,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rfind() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 typename BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::ConstReverseIterator
 BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::crfind() const noexcept
@@ -814,7 +835,8 @@ BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::crfind() const noexcept
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
@@ -825,7 +847,8 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
@@ -836,7 +859,8 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
@@ -847,7 +871,8 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
@@ -858,7 +883,8 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
@@ -869,7 +895,8 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
@@ -882,11 +909,44 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
 // private
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
+>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rotateLeft(Node *node) noexcept
+{
+	if (!node || !node->right)
+		return;
+
+	Node *nodeRight = node->right;
+	node->right = nodeRight->left;
+	nodeRight = node;
+
+	// TODO: update for AVL
+}
+
+template<
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
+>
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::rotateRight(Node *node) noexcept
+{
+	if (!node || !node->left)
+		return;
+
+	Node *nodeLeft = node->left;
+	node->left = nodeLeft->right;
+	nodeLeft = node;
+
+	// TODO: update for AVL
+}
+
+template<
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
-		TreeNode* node, Function &&function
+		Node *node, Function &&function
 ) noexcept
 {
 	if (!node)
@@ -898,11 +958,12 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
-		const TreeNode* node, Function &&function
+		const Node *node, Function &&function
 ) const noexcept
 {
 	if (!node)
@@ -914,11 +975,12 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traverseInfix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
-		TreeNode* node, Function &&function
+		Node *node, Function &&function
 ) noexcept
 {
 	if (!node)
@@ -930,11 +992,12 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
-		const TreeNode* node, Function &&function
+		const Node *node, Function &&function
 ) const noexcept
 {
 	if (!node)
@@ -946,11 +1009,12 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePrefix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
-		TreeNode* node, Function &&function
+		Node *node, Function &&function
 ) noexcept
 {
 	if (!node)
@@ -962,11 +1026,12 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename Function>
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
-		const TreeNode* node, Function &&function
+		const Node *node, Function &&function
 ) const noexcept
 {
 	if (!node)
@@ -978,9 +1043,10 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::traversePostfix(
 }
 
 template<
-	typename T, typename Traits, typename Comparator, typename TreeNode, typename Allocator
+	typename T, typename Traits, template<class> class Comparator
+	, template<class> class TreeNode, template<class> class Allocator
 >
-void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::recursiveClear(TreeNode *node) noexcept
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::recursiveClear(Node *node) noexcept
 {
 	if (!node)
 		return;
@@ -990,6 +1056,60 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::recursiveClear(Tree
 
 	allocator.destroy(node);
 }
+
+}} // namespace flame_ide::templates
+
+namespace flame_ide
+{namespace templates
+{namespace tree_utils
+{namespace defaults
+{
+
+// Node
+
+template<typename T>
+using Node = flame_ide::templates::tree_utils::Node<T>;
+template<typename T>
+using AdelsonVelskyLandisNode =
+		flame_ide::templates::tree_utils::AdelsonVelskyLandisNode<T>;
+template<typename T>
+using RedBlackNode =
+		flame_ide::templates::tree_utils::RedBlackNode<T>;
+
+// Pair comparators
+
+template<typename T>
+using PairLess = flame_ide::templates::tree_utils::PairLess<T>;
+
+template<typename T>
+using PairMore = flame_ide::templates::tree_utils::PairMore<T>;
+
+}}}} // namespace flame_ide::templates::tree_utils::defaults
+
+namespace flame_ide
+{namespace templates
+{
+
+template<
+	typename T
+	, typename Traits = ContainerTraits<T>
+	, template<class> class Comparator = defaults::Less
+	, template<class> class TreeNode = tree_utils::defaults::Node
+	, template<class> class Allocator = allocator::defaults::ObjectAllocator
+>
+using Set = BinaryTree<T, Traits, Comparator, TreeNode, Allocator>;
+
+template<
+	typename Key, typename Value
+	, typename Traits = ContainerTraits<Pair<typename DefaultTraits<Key>::ConstType, Value>>
+	, template<class> class Comparator = tree_utils::defaults::PairLess
+	, template<class> class TreeNode = tree_utils::defaults::Node
+	, template<class> class Allocator = allocator::defaults::ObjectAllocator
+>
+using Map = BinaryTree<
+	Pair<typename DefaultTraits<Key>::ConstType, Value>
+	, Traits, Comparator, TreeNode, Allocator
+>;
 
 }} // namespace flame_ide::templates
 
