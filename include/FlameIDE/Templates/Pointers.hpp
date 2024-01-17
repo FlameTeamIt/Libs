@@ -44,7 +44,7 @@ struct Members;
 template<
 	typename T
 	, typename Traits = ContainerTraits<T>
-	, template<typename> class Allocator = allocator::DefaultObjectAllocator
+	, template<typename> class Allocator = allocator::defaults::ObjectAllocator
 	, typename Counter = pointer_utils::Counter<SizeTraits::SizeType>
 >
 class SharedPointer;
