@@ -196,6 +196,20 @@ void copy(T &src, const U &dest, Types::size_t size);
 template<typename T>
 Types::size_t length(const T *array);
 
+template<
+	typename T1, typename T2
+	, typename = typename EnableType<IsIntegralValue<T1>, T1>::Type
+	, typename = typename EnableType<IsIntegralValue<T2>, T2>::Type
+>
+constexpr decltype(T1{} + T2{}) max(T1 value1, T2 value2) noexcept;
+
+template<
+	typename T1, typename T2
+	, typename = typename EnableType<IsIntegralValue<T1>, T1>::Type
+	, typename = typename EnableType<IsIntegralValue<T2>, T2>::Type
+>
+constexpr decltype(T1{} + T2{}) min(T1 value1, T2 value2) noexcept;
+
 template<typename T>
 void unused(const T &);
 
@@ -454,6 +468,22 @@ Types::size_t length(const T *array)
 	for (auto it = array; *it != nullValue; ++it, ++length)
 	{}
 	return length;
+}
+
+template<typename T1, typename T2, typename, typename>
+constexpr decltype(T1{} + T2{}) max(T1 value1, T2 value2) noexcept
+{
+	if (value1 > value2)
+		return value1;
+	return value2;
+}
+
+template<typename T1, typename T2, typename, typename>
+constexpr decltype(T1{} + T2{}) min(T1 value1, T2 value2) noexcept
+{
+	if (value2 > value1)
+		return value1;
+	return value2;
 }
 
 template<typename T>
