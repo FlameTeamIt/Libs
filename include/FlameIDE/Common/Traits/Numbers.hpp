@@ -34,6 +34,8 @@ struct Types: public NonCreational
 	using size_t = flame_ide::primitive_types::size_t;
 	using ssize_t = flame_ide::primitive_types::ssize_t;
 	using diff_t = flame_ide::primitive_types::diff_t;
+	using ptrint_t = flame_ide::primitive_types::ptrint_t;
+	using ptruint_t = flame_ide::primitive_types::ptruint_t;
 };
 
 ///
@@ -212,12 +214,12 @@ template<typename T>
 constexpr auto IsUnsignedValue = IsUnsignedTrait<T>::VALUE;
 
 ///
-/// @brief The IsIntegralType struct
+/// @brief The IsIntegralTrait struct
 ///
-template<typename Type>
+template<typename T>
 struct IsIntegralTrait: public IntegralConstant<
-			bool, IsPrimitiveTrait<Type>::VALUE && !IsFloatTrait<Type>::VALUE
-		>
+	bool, IsPrimitiveValue<T> && !IsFloatValue<T>
+>
 {};
 
 template<typename T>
