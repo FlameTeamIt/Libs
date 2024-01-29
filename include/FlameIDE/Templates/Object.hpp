@@ -56,7 +56,10 @@ public:
 	template<typename T>
 	const T &get() const noexcept;
 
-	constexpr Types::ssize_t size() const noexcept
+	template<typename T>
+	AddMoveReferenceType<T> move() noexcept;
+
+	constexpr Types::size_t size() const noexcept
 	{
 		return SIZE_IN_BYTES;
 	}
@@ -68,21 +71,21 @@ private:
 	constexpr void staticCheck() const noexcept
 	{
 		static_assert(
-				sizeof(data) >= sizeof(T)
+				(sizeof(T) <= sizeof(data)) && (alignof(T) <= sizeof(data) - sizeof(T))
 				, "Object is too big. Needs to change size of object"
 		);
 	}
+
+	void destroy() noexcept;
 
 	template<typename T>
 	static CallbackDestroy getCallbackDestroy() noexcept;
 
 private:
+	Types::uichar_t data[SIZE_IN_BYTES + sizeof(size_t)];
+	VoidTraits::Pointer pointer = nullptr;
 	CallbackDestroy callbackDestroy = nullptr;
-	Types::size_t data[
-			(SIZE_IN_BYTES % sizeof(Types::size_t))
-					? (SIZE_IN_BYTES / sizeof(Types::size_t)) + 1
-					: (SIZE_IN_BYTES / sizeof(Types::size_t))
-	];
+	Types::ssize_t align = -1;
 };
 
 }} // flame_ide::templates
@@ -122,20 +125,35 @@ Object<SIZE_IN_BYTES>::~Object() noexcept
 {
 	if (!callbackDestroy)
 		return;
-
-	callbackDestroy(&data);
+	callbackDestroy(pointer);
 }
 
 template<Types::size_t SIZE_IN_BYTES>
 Object<SIZE_IN_BYTES> &Object<SIZE_IN_BYTES>::operator=(Me &&object) noexcept
 {
-	if (callbackDestroy)
-		callbackDestroy(&data);
+	destroy();
 
-	flame_ide::copy(data, object.data);
+	auto *dataPointer = data;
+	const auto remainder = reinterpret_cast<Types::ptrint_t>(dataPointer) % object.align;
+	const Types::ssize_t shift = (remainder) ? 0 : object.align - remainder;
+	pointer = static_cast<decltype(pointer)>(data + shift);
+
+	flame_ide::copy(pointer, object.pointer
+			, flame_ide::min(
+					SIZE_IN_BYTES - (
+							reinterpret_cast<decltype(dataPointer)>(pointer)
+									- dataPointer
+					)
+					, SIZE_IN_BYTES - (
+							reinterpret_cast<decltype(dataPointer)>(object.pointer)
+									- &object.data[0]
+					)
+			)
+	);
 	callbackDestroy = object.callbackDestroy;
 
 	object.callbackDestroy = nullptr;
+	object.pointer = nullptr;
 
 	return *this;
 }
@@ -145,12 +163,13 @@ template<typename T>
 Object<SIZE_IN_BYTES> &Object<SIZE_IN_BYTES>::operator=(T &&value) noexcept
 {
 	staticCheck<T>();
+	destroy();
 
-	if (callbackDestroy)
-		callbackDestroy(&data);
-
-	flame_ide::placementNew<T>(reinterpret_cast<T *>(&data), flame_ide::move(value));
+	pointer = flame_ide::placementNew<T>(
+			reinterpret_cast<T *>(&data), flame_ide::move(value)
+	);
 	callbackDestroy = getCallbackDestroy<T>();
+	align = alignof(T);
 
 	return *this;
 }
@@ -162,7 +181,7 @@ Object<SIZE_IN_BYTES> &Object<SIZE_IN_BYTES>::operator=(const T &value) noexcept
 	staticCheck<T>();
 
 	if (callbackDestroy)
-		callbackDestroy(&data);
+		callbackDestroy(pointer);
 
 	flame_ide::placementNew<T>(reinterpret_cast<T *>(&data), value);
 	callbackDestroy = getCallbackDestroy<T>();
@@ -181,7 +200,7 @@ template<typename T>
 T &Object<SIZE_IN_BYTES>::get() noexcept
 {
 	staticCheck<T>();
-	return *reinterpret_cast<T *>(&data);
+	return *reinterpret_cast<T *>(pointer);
 }
 
 template<Types::size_t SIZE_IN_BYTES>
@@ -189,7 +208,27 @@ template<typename T>
 const T &Object<SIZE_IN_BYTES>::get() const noexcept
 {
 	staticCheck<T>();
-	return *reinterpret_cast<const T *>(&data);
+	return *reinterpret_cast<const T *>(pointer);
+}
+
+template<Types::size_t SIZE_IN_BYTES>
+template<typename T>
+flame_ide::AddMoveReferenceType<T> Object<SIZE_IN_BYTES>::move() noexcept
+{
+	callbackDestroy = nullptr;
+	return flame_ide::move(get());
+}
+
+template<Types::size_t SIZE_IN_BYTES>
+void Object<SIZE_IN_BYTES>::destroy() noexcept
+{
+	if (callbackDestroy)
+	{
+		callbackDestroy(pointer);
+		callbackDestroy = nullptr;
+	}
+	pointer = nullptr;
+	align = -1;
 }
 
 template<Types::size_t SIZE_IN_BYTES>
