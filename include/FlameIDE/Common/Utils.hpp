@@ -435,6 +435,13 @@ typename Container::SizeType size(const Container &container)
 	return container.size();
 }
 
+template<typename Type>
+decltype(__implementation_decval__<Type>) declareValue() noexcept
+{
+	static_assert(FalseType::VALUE, "It can't ba called");
+	return __implementation_decval__<Type>(0);
+}
+
 template<typename Iterator> inline
 auto getPointer(Iterator iterator) noexcept -> decltype(&(*iterator))
 {
