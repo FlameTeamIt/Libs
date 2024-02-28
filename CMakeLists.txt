@@ -35,6 +35,7 @@ flame_resolver_settings(
 	LOCAL_INSTALL                  # ON
 	CMAKE_PACKAGING                # ON
 	INPLACE_OBJECTS                # ON
+	SHOW_HEADERS                   # ON
 
 	# Code generation options
 	ONLY_POSITION_INDEPENDENT_OBJECTS # ON
