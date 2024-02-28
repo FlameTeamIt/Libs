@@ -120,7 +120,7 @@ template<typename T, SizeTraits::SsizeType ALIGN>
 typename AlignedObject<T, ALIGN>::Pointer
 AlignedObject<T, ALIGN>::getAddress() noexcept
 {
-	auto address = reinterpret_cast<SizeTraits::SizeType>(array);
+	auto address = reinterpret_cast<Types::ptrint_t>(array);
 	return reinterpret_cast<typename DefaultTraits<T>::Pointer>(address);
 }
 
@@ -128,7 +128,7 @@ template<typename T, SizeTraits::SsizeType ALIGN>
 typename AlignedObject<T, ALIGN>::PointerToConst
 AlignedObject<T, ALIGN>::getAddress() const noexcept
 {
-	auto address = reinterpret_cast<SizeTraits::SizeType>(array);
+	auto address = reinterpret_cast<Types::ptrint_t>(array);
 	return reinterpret_cast<PointerToConst>(address);
 }
 

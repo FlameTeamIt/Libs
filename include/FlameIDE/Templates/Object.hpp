@@ -8,7 +8,7 @@ namespace flame_ide
 {namespace templates
 {
 
-template<Types::size_t SIZE_IN_BYTES>
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
 class Object;
 
 template<typename T>
@@ -20,11 +20,11 @@ namespace flame_ide
 {namespace templates
 {
 
-template<Types::size_t SIZE_IN_BYTES>
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType = VoidTraits::Pointer>
 class Object
 {
 public:
-	using Me = Object<SIZE_IN_BYTES>;
+	using Me = Object<SIZE_IN_BYTES, AlignedAsType>;
 
 public:
 	Object() noexcept;
@@ -39,14 +39,14 @@ public:
 
 	~Object() noexcept;
 
-	Object &operator=(const Me &) noexcept = delete;
-	Object &operator=(Me &&object) noexcept;
+	Me &operator=(const Me &) noexcept = delete;
+	Me &operator=(Me &&object) noexcept;
 
 	template<typename T>
-	Object &operator=(T &&value) noexcept;
+	Me &operator=(T &&value) noexcept;
 
 	template<typename T>
-	Object &operator=(const T &value) noexcept;
+	Me &operator=(const T &value) noexcept;
 
 	operator bool() const noexcept;
 
@@ -70,9 +70,21 @@ private:
 	template<typename T>
 	constexpr void staticCheck() const noexcept
 	{
+		constexpr Types::size_t OBJECT_SIZE = sizeof(T);
+		constexpr Types::size_t MY_SIZE = SIZE_IN_BYTES;
 		static_assert(
-				(sizeof(T) <= sizeof(data)) && (alignof(T) <= sizeof(data) - sizeof(T))
-				, "Object is too big. Needs to change size of object"
+				OBJECT_SIZE <= MY_SIZE
+				, "Input object is too big. Needs to change size of Object's SIZE"
+		);
+
+		constexpr Types::size_t OBJECT_ALIGNMENT = alignof(T);
+		constexpr Types::size_t MY_ALIGNMENT = alignof(AlignedAsType);
+		static_assert(
+				(MY_ALIGNMENT < OBJECT_ALIGNMENT)
+						? OBJECT_SIZE + OBJECT_ALIGNMENT < MY_SIZE
+						: true
+				, "Check Object's SIZE parameter and sum of object size and it's"
+				" alignment"
 		);
 	}
 
@@ -82,10 +94,8 @@ private:
 	static CallbackDestroy getCallbackDestroy() noexcept;
 
 private:
-	Types::uichar_t data[SIZE_IN_BYTES + sizeof(size_t)];
-	VoidTraits::Pointer pointer = nullptr;
+	alignas(AlignedAsType) Types::uichar_t data[SIZE_IN_BYTES];
 	CallbackDestroy callbackDestroy = nullptr;
-	Types::ssize_t align = -1;
 };
 
 }} // flame_ide::templates
@@ -94,151 +104,129 @@ namespace flame_ide
 {namespace templates
 {
 
-template<Types::size_t SIZE_IN_BYTES>
-Object<SIZE_IN_BYTES>::Object() noexcept
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
+Object<SIZE_IN_BYTES, AlignedAsType>::Object() noexcept
 {}
 
-template<Types::size_t SIZE_IN_BYTES>
-Object<SIZE_IN_BYTES>::Object(Me &&object) noexcept
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
+Object<SIZE_IN_BYTES, AlignedAsType>::Object(Me &&object) noexcept
 {
 	operator=(flame_ide::move(object));
 }
 
-template<Types::size_t SIZE_IN_BYTES>
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
 template<typename T>
-Object<SIZE_IN_BYTES>::Object(T &&value) noexcept
+Object<SIZE_IN_BYTES, AlignedAsType>::Object(T &&value) noexcept
 {
 	staticCheck<T>();
 	operator=(flame_ide::move(value));
 }
 
-template<Types::size_t SIZE_IN_BYTES>
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
 template<typename T>
-Object<SIZE_IN_BYTES>::Object(const T &value) noexcept
+Object<SIZE_IN_BYTES, AlignedAsType>::Object(const T &value) noexcept
 {
 	staticCheck<T>();
 	operator=(value);
 }
 
-template<Types::size_t SIZE_IN_BYTES>
-Object<SIZE_IN_BYTES>::~Object() noexcept
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
+Object<SIZE_IN_BYTES, AlignedAsType>::~Object() noexcept
 {
 	if (!callbackDestroy)
 		return;
-	callbackDestroy(pointer);
+	callbackDestroy(data);
 }
 
-template<Types::size_t SIZE_IN_BYTES>
-Object<SIZE_IN_BYTES> &Object<SIZE_IN_BYTES>::operator=(Me &&object) noexcept
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
+Object<SIZE_IN_BYTES, AlignedAsType> &
+Object<SIZE_IN_BYTES, AlignedAsType>::operator=(Me &&object) noexcept
 {
 	destroy();
 
-	auto *dataPointer = data;
-	const auto remainder = reinterpret_cast<Types::ptrint_t>(dataPointer) % object.align;
-	const Types::ssize_t shift = (remainder) ? 0 : object.align - remainder;
-	pointer = static_cast<decltype(pointer)>(data + shift);
-
-	flame_ide::copy(pointer, object.pointer
-			, flame_ide::min(
-					SIZE_IN_BYTES - (
-							reinterpret_cast<decltype(dataPointer)>(pointer)
-									- dataPointer
-					)
-					, SIZE_IN_BYTES - (
-							reinterpret_cast<decltype(dataPointer)>(object.pointer)
-									- &object.data[0]
-					)
-			)
-	);
+	flame_ide::copy(data, object.data);
 	callbackDestroy = object.callbackDestroy;
-
 	object.callbackDestroy = nullptr;
-	object.pointer = nullptr;
 
 	return *this;
 }
 
-template<Types::size_t SIZE_IN_BYTES>
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
 template<typename T>
-Object<SIZE_IN_BYTES> &Object<SIZE_IN_BYTES>::operator=(T &&value) noexcept
+Object<SIZE_IN_BYTES, AlignedAsType> &
+Object<SIZE_IN_BYTES, AlignedAsType>::operator=(T &&value) noexcept
 {
 	staticCheck<T>();
 	destroy();
 
-	pointer = flame_ide::placementNew<T>(
-			reinterpret_cast<T *>(&data), flame_ide::move(value)
-	);
+	flame_ide::placementNew(flame_ide::alignedPointer<T>(data), flame_ide::move(value));
 	callbackDestroy = getCallbackDestroy<T>();
-	align = alignof(T);
 
 	return *this;
 }
 
-template<Types::size_t SIZE_IN_BYTES>
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
 template<typename T>
-Object<SIZE_IN_BYTES> &Object<SIZE_IN_BYTES>::operator=(const T &value) noexcept
+Object<SIZE_IN_BYTES, AlignedAsType> &
+Object<SIZE_IN_BYTES, AlignedAsType>::operator=(const T &value) noexcept
 {
 	staticCheck<T>();
+	destroy();
 
-	if (callbackDestroy)
-		callbackDestroy(pointer);
-
-	flame_ide::placementNew<T>(reinterpret_cast<T *>(&data), value);
+	flame_ide::placementNew(flame_ide::alignedPointer<T>(data), value);
 	callbackDestroy = getCallbackDestroy<T>();
 
 	return *this;
 }
 
-template<Types::size_t SIZE_IN_BYTES>
-Object<SIZE_IN_BYTES>::operator bool() const noexcept
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
+Object<SIZE_IN_BYTES, AlignedAsType>::operator bool() const noexcept
 {
 	return callbackDestroy;
 }
 
-template<Types::size_t SIZE_IN_BYTES>
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
 template<typename T>
-T &Object<SIZE_IN_BYTES>::get() noexcept
+T &Object<SIZE_IN_BYTES, AlignedAsType>::get() noexcept
 {
 	staticCheck<T>();
-	return *reinterpret_cast<T *>(pointer);
+	return *flame_ide::alignedPointer<T>(data);
 }
 
-template<Types::size_t SIZE_IN_BYTES>
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
 template<typename T>
-const T &Object<SIZE_IN_BYTES>::get() const noexcept
+const T &Object<SIZE_IN_BYTES, AlignedAsType>::get() const noexcept
 {
 	staticCheck<T>();
-	return *reinterpret_cast<const T *>(pointer);
+	return *flame_ide::alignedPointer<T>(data);
 }
 
-template<Types::size_t SIZE_IN_BYTES>
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
 template<typename T>
-flame_ide::AddMoveReferenceType<T> Object<SIZE_IN_BYTES>::move() noexcept
+flame_ide::AddMoveReferenceType<T> Object<SIZE_IN_BYTES, AlignedAsType>::move() noexcept
 {
 	callbackDestroy = nullptr;
 	return flame_ide::move(get());
 }
 
-template<Types::size_t SIZE_IN_BYTES>
-void Object<SIZE_IN_BYTES>::destroy() noexcept
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
+void Object<SIZE_IN_BYTES, AlignedAsType>::destroy() noexcept
 {
 	if (callbackDestroy)
 	{
-		callbackDestroy(pointer);
+		callbackDestroy(data);
 		callbackDestroy = nullptr;
 	}
-	pointer = nullptr;
-	align = -1;
 }
 
-template<Types::size_t SIZE_IN_BYTES>
+template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
 template<typename T>
-typename Object<SIZE_IN_BYTES>::CallbackDestroy
-Object<SIZE_IN_BYTES>::getCallbackDestroy() noexcept
+typename Object<SIZE_IN_BYTES, AlignedAsType>::CallbackDestroy
+Object<SIZE_IN_BYTES, AlignedAsType>::getCallbackDestroy() noexcept
 {
 	static auto destroy = [](void *value) -> void
 	{
-		reinterpret_cast<T *>(value)->~T();
+		alignedPointer<T>(value)->~T();
 	};
 	return destroy;
 }
