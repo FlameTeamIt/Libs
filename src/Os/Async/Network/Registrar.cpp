@@ -148,6 +148,33 @@ os::SocketDescriptor Registrar::popTcpClient() noexcept
 	return descriptor;
 }
 
+// Registrar::push*
+
+bool Registrar::pushUdpServer(os::SocketDescriptor socket) noexcept
+{
+	return EventCatcherBase::get().queues().udpServers().push(socket);
+}
+
+bool Registrar::pushUdpClient(os::SocketDescriptor socket) noexcept
+{
+	return EventCatcherBase::get().queues().udpClients().push(socket);
+}
+
+bool Registrar::pushTcpServerAcception(AcceptedConnection connection) noexcept
+{
+	return EventCatcherBase::get().queues().tcpAcceptedConnections().push(connection);
+}
+
+bool Registrar::pushTcpServer(os::SocketDescriptor socket) noexcept
+{
+	return EventCatcherBase::get().queues().tcpServers().push(socket);
+}
+
+bool Registrar::pushTcpClient(os::SocketDescriptor socket) noexcept
+{
+	return EventCatcherBase::get().queues().tcpClients().push(socket);
+}
+
 // notificator
 
 void Registrar::setNotificator(const NotificatorBase &notificator) noexcept

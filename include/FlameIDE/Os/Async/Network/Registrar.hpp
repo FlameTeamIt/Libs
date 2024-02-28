@@ -72,6 +72,12 @@ public:
 	os::SocketDescriptor popTcpServer() noexcept;
 	os::SocketDescriptor popTcpClient() noexcept;
 
+	bool pushUdpServer(os::SocketDescriptor socket) noexcept;
+	bool pushUdpClient(os::SocketDescriptor socket) noexcept;
+	bool pushTcpServerAcception(AcceptedConnection connection) noexcept;
+	bool pushTcpServer(os::SocketDescriptor socket) noexcept;
+	bool pushTcpClient(os::SocketDescriptor socket) noexcept;
+
 	void setNotificator(const NotificatorBase &notificator) noexcept;
 	void unsetNotificator() noexcept;
 

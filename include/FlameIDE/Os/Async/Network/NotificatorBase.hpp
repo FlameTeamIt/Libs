@@ -1,17 +1,15 @@
 #ifndef FLAMEIDE_OS_ASYNC_NETWORK_NOTIFICATORBASE_HPP
 #define FLAMEIDE_OS_ASYNC_NETWORK_NOTIFICATORBASE_HPP
 
+#include <FlameIDE/Common/FunctorBase.hpp>
+
 namespace flame_ide
 {namespace os
 {namespace async
 {namespace network
 {
 
-struct NotificatorBase
-{
-	virtual ~NotificatorBase() noexcept = default;
-	virtual void operator()() const noexcept = 0;
-};
+using NotificatorBase = flame_ide::FunctorConstBase<void>;
 
 }}}} // namespace flame_ide::os::async::network
 
