@@ -39,14 +39,14 @@ typename RemoveReferenceTrait<T>::Type&& move(T &&reference) noexcept;
 /// @tparam First param.
 ///
 template<class T> constexpr inline
-T&& forward(T &&reference) noexcept;
+T &&forward(T &&reference) noexcept;
 
 ///
 /// @brief std::forward alternative.
 /// @tparam First param.
 ///
 template<class T> constexpr inline
-T&& forward(T &reference) noexcept;
+T &&forward(T &reference) noexcept;
 
 ///
 /// @brief Adapter for palcement new operator.
@@ -171,6 +171,46 @@ T __implementation_decval__(long) noexcept;
 template<typename Type>
 decltype(__implementation_decval__<Type>) declareValue() noexcept;
 
+
+///
+/// @brief alignedPointer
+/// @tparam T
+/// @tparam U
+/// @param pointer
+/// @return
+///
+template<typename T, typename U>
+typename DefaultTraits<T>::Pointer alignedPointer(U *pointer) noexcept;
+
+///
+/// @brief alignedPointer
+/// @tparam T
+/// @tparam U
+/// @param pointer
+/// @return
+///
+template<typename T, typename U>
+typename DefaultTraits<T>::PointerToConst alignedPointer(const U *pointer) noexcept;
+
+///
+/// @brief alignedPointer
+/// @tparam T
+/// @param pointer
+/// @return
+///
+template<typename T>
+typename DefaultTraits<T>::Pointer alignedPointer(VoidTraits::Pointer pointer) noexcept;
+
+///
+/// @brief alignedPointer
+/// @tparam T
+/// @param pointer
+/// @return
+///
+template<typename T>
+typename DefaultTraits<T>::PointerToConst
+alignedPointer(VoidTraits::PointerToConst pointer) noexcept;
+
 ///
 /// @brief The IsStaticCastable struct
 /// @tparam First param.
@@ -210,11 +250,16 @@ template<
 >
 constexpr decltype(T1{} + T2{}) min(T1 value1, T2 value2) noexcept;
 
+template<typename ...Args>
+void unused(Args &&...);
+
 template<typename T>
 void unused(const T &);
 
 template<typename T>
 void unused(T &&);
+
+void unused();
 
 } // namespace flame_ide
 
@@ -435,11 +480,51 @@ typename Container::SizeType size(const Container &container)
 	return container.size();
 }
 
+<<<<<<< Updated upstream
 template<typename Type>
 decltype(__implementation_decval__<Type>) declareValue() noexcept
 {
 	static_assert(FalseType::VALUE, "It can't ba called");
 	return __implementation_decval__<Type>(0);
+=======
+template<typename T, typename U>
+typename DefaultTraits<T>::Pointer alignedPointer(U *pointer)  noexcept
+{
+	return alignedPointer<T>(static_cast<VoidTraits::Pointer>(pointer));
+}
+
+template<typename T, typename U>
+typename DefaultTraits<T>::PointerToConst alignedPointer(const U *pointer)  noexcept
+{
+	return alignedPointer<T>(static_cast<VoidTraits::PointerToConst>(pointer));
+}
+
+template<typename T>
+typename DefaultTraits<T>::Pointer alignedPointer(VoidTraits::Pointer pointer)  noexcept
+{
+	if (!pointer)
+		return nullptr;
+
+	const Types::ptrint_t value = reinterpret_cast<Types::ptrint_t>(pointer);
+	const Types::ptrint_t shift = (value % alignof(T))
+			? alignof(T) - (value % alignof(T))
+			: 0;
+	return reinterpret_cast<typename DefaultTraits<T>::Pointer>(value + shift);
+}
+
+template<typename T>
+typename DefaultTraits<T>::PointerToConst
+alignedPointer(VoidTraits::PointerToConst pointer)  noexcept
+{
+	if (!pointer)
+		return nullptr;
+
+	const Types::ptrint_t value = reinterpret_cast<Types::ptrint_t>(pointer);
+	const Types::ptrint_t shift = (value % alignof(T))
+			? alignof(T) - (value % alignof(T))
+			: 0;
+	return reinterpret_cast<typename DefaultTraits<T>::Pointer>(value + shift);
+>>>>>>> Stashed changes
 }
 
 template<typename Iterator> inline
@@ -493,12 +578,19 @@ constexpr decltype(T1{} + T2{}) min(T1 value1, T2 value2) noexcept
 	return value2;
 }
 
+template<typename ...Args>
+void unused(Args &&...)
+{}
+
 template<typename T>
 void unused(const T &)
 {}
 
 template<typename T>
 void unused(T &&)
+{}
+
+inline void unused()
 {}
 
 } // namespace flame_ide
