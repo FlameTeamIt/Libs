@@ -47,19 +47,19 @@ Types::ssize_t UdpClient::receive(Range range) noexcept
 	return result;
 }
 
-const UdpClient::NativeClientControl &UdpClient::nativeClientControl() noexcept
+const UdpClient::NativeCallbacks &UdpClient::callbacks() noexcept
 {
-	static const NativeClientControl control = []()
+	static const NativeCallbacks nativeCallbacks = []()
 	{
-		NativeClientControl control;
-		static_cast<NativeControl &>(control).operator=(nativeControl());
-		control.create = socket::createUdpClient;
-		control.send = socket::udp::send;
-		control.receive = socket::udp::receiveClient;
-		control.wait = socket::udp::waitClient;
-		return control;
+		NativeCallbacks callbacks;
+		callbacks = NetworkBase::callbacks();
+		callbacks.create = socket::createUdpClient;
+		callbacks.send = socket::udp::send;
+		callbacks.receive = socket::udp::receiveClient;
+		callbacks.wait = socket::udp::waitClient;
+		return callbacks;
 	} ();
-	return control;
+	return nativeCallbacks;
 }
 
 }}} // namespace flame_ide::os::network

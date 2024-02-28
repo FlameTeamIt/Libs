@@ -96,7 +96,7 @@ void EventCatcher::signalHandler(int signal, const siginfo_t *info, ucontext_t *
 		return;
 
 	const auto descriptor = info->si_fd;
-	switch (NetworkBase::nativeControl().type(Socket{ {}, descriptor }))
+	switch (NetworkBase::callbacks().type(Socket{ {}, descriptor }))
 	{
 		case NetworkBase::SocketType::STREAM:
 			handleTcp(descriptor);
@@ -118,7 +118,7 @@ void EventCatcher::handleTcp(SocketDescriptor descriptor) noexcept
 {
 	using os::network::TcpServer;
 
-	const auto serverControl = TcpServer::nativeServerControl;
+	const auto &serverControl = TcpServer::callbacks;
 	const auto socket = Socket{ {}, descriptor };
 	if (!serverControl().isServer(socket))
 	{
@@ -146,7 +146,7 @@ void EventCatcher::handleTcp(SocketDescriptor descriptor) noexcept
 void EventCatcher::handleUdp(SocketDescriptor descriptor) noexcept
 {
 	using os::network::NetworkBase;
-	(NetworkBase::nativeControl().isServer(Socket{ {}, descriptor }))
+	(NetworkBase::callbacks().isServer(Socket{ {}, descriptor }))
 			? EventCatcher::get().queues().udpServers().push(descriptor)
 			: EventCatcher::get().queues().udpClients().push(descriptor);
 }

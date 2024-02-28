@@ -275,7 +275,7 @@ int RegistrarTest::tcpServerLitener()
 
 	IN_CASE_CHECK(client.disconnect() == os::STATUS_SUCCESS);
 
-	auto control = os::network::NetworkBase::nativeControl();
+	auto control = os::network::NetworkBase::callbacks();
 	IN_CASE_CHECK(control.destroy(resultConnection.client) == os::STATUS_SUCCESS);
 
 	IN_CASE_CHECK(registar.remove(server) == os::STATUS_SUCCESS);
@@ -337,7 +337,7 @@ int RegistrarTest::tcpServer()
 
 int RegistrarTest::tcpClient()
 {
-	auto nativeControl = os::network::NetworkBase::nativeControl;
+	auto nativeControl = os::network::NetworkBase::callbacks;
 
 	os::network::TcpServer server{ port };
 	os::network::TcpClient client{ ipv4 };

@@ -34,17 +34,20 @@ const Socket &NetworkBase::native() const
 	return socket;
 }
 
-const NetworkBase::NativeControl &NetworkBase::nativeControl() noexcept
+const NetworkBase::NativeCallbacks &NetworkBase::callbacks() noexcept
 {
-	static const NativeControl socketControl{
-			socket::destroy
-			, socket::receivingBytesNumber
-			, socket::getIpv4
-			, reinterpret_cast<decltype(socketControl.type)>(socket::getType)
-			, socket::getError
-			, socket::isListener
-			, socket::isServer
-	};
+	static const NativeCallbacks socketControl = []()
+	{
+		NativeCallbacks callbacks;
+		callbacks.destroy = socket::destroy;
+		callbacks.receivingBytesNumber = socket::receivingBytesNumber;
+		callbacks.getIpv4 = socket::getIpv4;
+		callbacks.type = reinterpret_cast<decltype(socketControl.type)>(socket::getType);
+		callbacks.error = socket::getError;
+		callbacks.isListener = socket::isListener;
+		callbacks.isServer = socket::isServer;
+		return socketControl;
+	} ();
 	return socketControl;
 }
 

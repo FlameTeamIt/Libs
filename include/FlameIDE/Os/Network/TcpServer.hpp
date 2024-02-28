@@ -13,32 +13,12 @@ namespace flame_ide
 class TcpServer final: public NetworkBase
 {
 public:
-	class WithClient;
-
-public:
 	using NetworkBase::ConstRange;
 	using NetworkBase::Range;
 
-	struct NativeTcpServerControl: public NetworkBase::NativeControl
-	{
-		NativeTcpServerControl() noexcept = default;
-		NativeTcpServerControl(const NativeTcpServerControl &) noexcept = default;
-		NativeTcpServerControl(NativeTcpServerControl &&) noexcept = default;
-		~NativeTcpServerControl() noexcept = default;
-
-		NativeTcpServerControl &
-		operator=(const NativeTcpServerControl &) noexcept = default;
-		NativeTcpServerControl &
-		operator=(NativeTcpServerControl &&) noexcept = default;
-
-		Socket (*create)(Ipv4::Port port) noexcept = nullptr;
-		Status (*listen)(const Socket &socket, Types::size_t backlog) noexcept;
-		Socket (*accept)(const Socket &socket, Status *result) noexcept;
-		Types::ssize_t (*send)(const Socket &socket, ConstRange range) noexcept;
-		Types::ssize_t (*receive)(const Socket &socket, Range range) noexcept;
-		Types::ssize_t (*waitBytes)(const Socket &socket, Types::size_t number) noexcept;
-		bool (*alive)(const Socket &socket) noexcept;
-	};
+public:
+	class WithClient;
+	struct NativeCallbacks;
 
 public:
 	TcpServer() noexcept = delete;
@@ -54,7 +34,7 @@ public:
 	WithClient accept() const noexcept;
 
 public:
-	static const NativeTcpServerControl &nativeServerControl() noexcept;
+	static const NativeCallbacks &callbacks() noexcept;
 
 public:
 	using NetworkBase::operator bool;
@@ -72,7 +52,6 @@ private:
 }}} // namespace flame_ide::os::network
 
 // TcpServer::WithClient
-
 namespace flame_ide
 {namespace os
 {namespace network
@@ -103,6 +82,37 @@ private:
 	Socket socket;
 	Status status;
 };
+
+}}} // namespace flame_ide::os::network
+
+// TcpServer::NativeCallbacks
+namespace flame_ide
+{namespace os
+{namespace network
+{
+
+struct TcpServer::NativeCallbacks: public NetworkBase::NativeCallbacks
+{
+	NativeCallbacks() noexcept = default;
+	NativeCallbacks(const NativeCallbacks &) noexcept = default;
+	NativeCallbacks(NativeCallbacks &&) noexcept = default;
+	~NativeCallbacks() noexcept = default;
+
+	using NetworkBase::NativeCallbacks::operator=;
+	NativeCallbacks &
+	operator=(const NativeCallbacks &) noexcept = default;
+	NativeCallbacks &
+	operator=(NativeCallbacks &&) noexcept = default;
+
+	Socket (*create)(Ipv4::Port port) noexcept = nullptr;
+	Status (*listen)(const Socket &socket, Types::size_t backlog) noexcept;
+	Socket (*accept)(const Socket &socket, Status *result) noexcept;
+	Types::ssize_t (*send)(const Socket &socket, ConstRange range) noexcept;
+	Types::ssize_t (*receive)(const Socket &socket, Range range) noexcept;
+	Types::ssize_t (*waitBytes)(const Socket &socket, Types::size_t number) noexcept;
+	bool (*alive)(const Socket &socket) noexcept;
+};
+
 
 }}} // namespace flame_ide::os::network
 

@@ -42,22 +42,22 @@ TcpServer::WithClient TcpServer::accept() const noexcept
 	return WithClient{ client, tmpStatus };
 }
 
-const TcpServer::NativeTcpServerControl &TcpServer::nativeServerControl() noexcept
+const TcpServer::NativeCallbacks &TcpServer::callbacks() noexcept
 {
-	static const NativeTcpServerControl control = []()
+	static const NativeCallbacks nativeCallbacks = []()
 	{
-		NativeTcpServerControl control;
-		static_cast<NativeControl &>(control).operator=(nativeControl());
-		control.create = socket::createTcpServer;
-		control.listen = socket::tcp::server::listen;
-		control.accept = socket::tcp::server::accept;
-		control.send = socket::tcp::send;
-		control.receive = socket::tcp::receive;
-		control.waitBytes = socket::tcp::waitBytes;
-		control.alive = socket::tcp::alive;
-		return control;
+		NativeCallbacks callbacks;
+		callbacks = NetworkBase::callbacks();
+		callbacks.create = socket::createTcpServer;
+		callbacks.listen = socket::tcp::server::listen;
+		callbacks.accept = socket::tcp::server::accept;
+		callbacks.send = socket::tcp::send;
+		callbacks.receive = socket::tcp::receive;
+		callbacks.waitBytes = socket::tcp::waitBytes;
+		callbacks.alive = socket::tcp::alive;
+		return callbacks;
 	} ();
-	return control;
+	return nativeCallbacks;
 }
 
 }}} // namespace flame_ide::os::network

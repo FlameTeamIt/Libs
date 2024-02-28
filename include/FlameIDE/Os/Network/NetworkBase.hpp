@@ -14,6 +14,10 @@ namespace flame_ide
 class NetworkBase: public NonCopy
 {
 public:
+	using Range = templates::Range<byte_t *>;
+	using ConstRange = templates::Range<const byte_t *>;
+
+public:
 	enum class SocketType: int
 	{
 		UNKNOWN = -1
@@ -21,26 +25,7 @@ public:
 		, DATAGRAM = SOCK_DGRAM
 	};
 
-	using Range = templates::Range<byte_t *>;
-	using ConstRange = templates::Range<const byte_t *>;
-
-	struct NativeControl
-	{
-		NativeControl() noexcept = default;
-		NativeControl(const NativeControl &) noexcept = default;
-		NativeControl(NativeControl &&) noexcept = default;
-		~NativeControl() noexcept = default;
-		NativeControl &operator=(const NativeControl &) noexcept = default;
-		NativeControl &operator=(NativeControl &&) noexcept = default;
-
-		Status (*destroy)(Socket &socket) noexcept = nullptr;
-		Types::ssize_t (*receivingBytesNumber)(const Socket &socket) noexcept = nullptr;
-		Ipv4 (*getIpv4)(const Socket &socket) noexcept = nullptr;
-		SocketType (*type)(const Socket &socket) noexcept = nullptr;
-		int (*error)(const Socket &socket) noexcept = nullptr;
-		bool (*isListener)(const Socket &socket) noexcept = nullptr;
-		bool (*isServer)(const Socket &socket) noexcept = nullptr;
-	};
+	struct NativeCallbacks;
 
 public:
 	~NetworkBase() noexcept;
@@ -50,7 +35,7 @@ public:
 	const Socket &native() const;
 
 public:
-	static const NativeControl &nativeControl() noexcept;
+	static const NativeCallbacks &callbacks() noexcept;
 
 protected:
 	NetworkBase(Socket socket) noexcept;
@@ -73,6 +58,31 @@ protected:
 
 private:
 	Status status = 0;
+};
+
+}}} // namespace flame_ide::os::network
+
+namespace flame_ide
+{namespace os
+{namespace network
+{
+
+struct NetworkBase::NativeCallbacks
+{
+	NativeCallbacks() noexcept = default;
+	NativeCallbacks(const NativeCallbacks &) noexcept = default;
+	NativeCallbacks(NativeCallbacks &&) noexcept = default;
+	~NativeCallbacks() noexcept = default;
+	NativeCallbacks &operator=(const NativeCallbacks &) noexcept = default;
+	NativeCallbacks &operator=(NativeCallbacks &&) noexcept = default;
+
+	Status (*destroy)(Socket &socket) noexcept = {};
+	Types::ssize_t (*receivingBytesNumber)(const Socket &socket) noexcept = {};
+	Ipv4 (*getIpv4)(const Socket &socket) noexcept = {};
+	NetworkBase::SocketType (*type)(const Socket &socket) noexcept = {};
+	int (*error)(const Socket &socket) noexcept = {};
+	bool (*isListener)(const Socket &socket) noexcept = {};
+	bool (*isServer)(const Socket &socket) noexcept = {};
 };
 
 }}} // namespace flame_ide::os::network
