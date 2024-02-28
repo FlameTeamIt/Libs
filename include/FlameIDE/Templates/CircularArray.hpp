@@ -41,7 +41,7 @@ public:
 	using SsizeType = typename Traits::SsizeType;
 
 	using BufferType = StaticVector<T, ARRAY_CAPACITY + 1, Traits>;
-	static constexpr SizeType CAPACITY = BufferType::CAPACITY - 1;
+	static constexpr SizeType CAPACITY = ARRAY_CAPACITY;
 
 	using Iterator = CircularIterator<
 		typename BufferType::Iterator
