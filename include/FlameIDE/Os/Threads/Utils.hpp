@@ -51,10 +51,15 @@ namespace flame_ide
 
 class UniqueLocker
 {
-public:
+private:
 	class Lock {};
 	class TryLock {};
 	class Unlock {};
+
+public:
+	static constexpr Lock LOCK{};
+	static constexpr TryLock TRY_LOCK{};
+	static constexpr Unlock UNLOCK{};
 
 public:
 	UniqueLocker() noexcept = delete;

@@ -2,6 +2,8 @@
 #define FLAMEIDE_OS_THREADS_CONDITIONVARIABLE_HPP
 
 #include <FlameIDE/Common/Traits/Functional.hpp>
+#include <FlameIDE/Os/Threads/Counter.hpp>
+#include <FlameIDE/Os/Threads/Spin.hpp>
 #include <FlameIDE/Os/Threads/Utils.hpp>
 
 namespace flame_ide
@@ -27,7 +29,7 @@ public:
 	///
 	/// @brief Wait for signal
 	///
-	void wait();
+	void wait() noexcept;
 
 	///
 	/// @brief Wait for signal
@@ -36,19 +38,31 @@ public:
 	/// @param functor Functional object. operator() needs returning boolean
 	///
 	template<typename Functor>
-	void wait(Functor &&functor);
+	void wait(Functor &&functor) noexcept;
 
 	///
 	/// @brief Trying wait for signal
 	///
-	bool tryWait();
+	bool tryWait() noexcept;
+
+	///
+	/// @brief Disable waiting (decrement counter)
+	///
+	void unwait() noexcept;
+
+	///
+	/// @brief isWait
+	/// @return
+	///
+	bool isWait() const noexcept;
 
 	///
 	/// @brief Send notification for unblock
 	///
-	void notify();
+	void notify() noexcept;
 
 private:
+	Counter<Spin, flame_ide::Types::uichar_t> counter;
 	UniqueLocker locker;
 };
 
@@ -61,15 +75,15 @@ namespace flame_ide
 
 template<typename LockObject>
 ConditionVariable::ConditionVariable(LockObject &lock) noexcept :
-		locker{ lock, UniqueLocker::Lock{} }
+		locker{ lock, UniqueLocker::LOCK }
 {}
 
 template<typename Functor>
-void ConditionVariable::wait(Functor &&functor)
+void ConditionVariable::wait(Functor &&functor) noexcept
 {
 	static_assert(
 			CompareTypesResult<bool, decltype(functor())>
-			, "Functional return type must be boolean"
+			, "Return type of input fuctior must be boolean"
 	);
 
 	do

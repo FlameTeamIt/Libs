@@ -14,7 +14,8 @@ namespace flame_ide
 {
 
 template<typename Lock>
-class ConditionVariableWaitThreadTest : public ThreadCrtp<ConditionVariableWaitThreadTest<Lock>>
+class ConditionVariableWaitThreadTest:
+		public ThreadCrtp<ConditionVariableWaitThreadTest<Lock>>
 {
 public:
 	ConditionVariableWaitThreadTest(Lock &lock) : condvar{ lock }
@@ -22,7 +23,17 @@ public:
 
 	void body() noexcept
 	{
+		{
+			Locker{ spin };
+			waiting = true;
+		}
 		condvar.wait();
+	}
+
+	bool ready() noexcept
+	{
+		Locker{ spin };
+		return waiting;
 	}
 
 public:
@@ -33,6 +44,9 @@ public:
 
 private:
 	ConditionVariable condvar;
+
+	Spin spin;
+	bool waiting = false;
 };
 
 template<typename Lock>
@@ -45,12 +59,22 @@ public:
 
 	void body() noexcept
 	{
+		{
+			Locker{ spin };
+			waiting = true;
+		}
 		condvar.wait([this](){ return value; });
 	}
 
 	void setValue(bool updatingValue)
 	{
 		value = updatingValue;
+	}
+
+	bool ready() noexcept
+	{
+		Locker{ spin };
+		return waiting;
 	}
 
 public:
@@ -62,6 +86,9 @@ public:
 private:
 	ConditionVariable condvar;
 	bool value = false;
+
+	Spin spin;
+	bool waiting = false;
 };
 
 template<typename Lock>
@@ -72,6 +99,9 @@ template<typename Lock>
 	ConditionVariable &condvar = thread.getConditionVariable();
 
 	thread.run();
+	while(!thread.ready()) {}
+	volatile Types::ushort_t i = 0;
+	for (; i < NumberLimitTrait<decltype(i)>::MAX_VALUE; ++i);
 	condvar.notify();
 	thread.join();
 
@@ -87,6 +117,9 @@ template<typename Lock>
 
 	thread.run();
 	thread.setValue(true);
+	while(!thread.ready()) {}
+	volatile Types::ushort_t i = 0;
+	for (; i < NumberLimitTrait<decltype(i)>::MAX_VALUE; ++i);
 	condvar.notify();
 	thread.join();
 

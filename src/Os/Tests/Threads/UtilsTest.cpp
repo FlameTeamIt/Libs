@@ -26,13 +26,13 @@ int check(LockPrimrtive &primitive)
 	}
 	IN_CASE_CHECK(primitive.getStatus() == os::STATUS_SUCCESS);
 	{
-		UniqueLocker uniqueLocker{ primitive, UniqueLocker::Lock{} };
+		UniqueLocker uniqueLocker{ primitive, UniqueLocker::LOCK };
 		IN_CASE_CHECK(uniqueLocker.getStatus() == os::STATUS_SUCCESS);
 		IN_CASE_CHECK(uniqueLocker.tryLock() == false);
 	}
 	IN_CASE_CHECK(primitive.getStatus() == os::STATUS_SUCCESS);
 	{
-		UniqueLocker uniqueLocker{ primitive, UniqueLocker::TryLock{} };
+		UniqueLocker uniqueLocker{ primitive, UniqueLocker::TRY_LOCK };
 		IN_CASE_CHECK(uniqueLocker.getStatus() == os::STATUS_SUCCESS);
 		IN_CASE_CHECK(uniqueLocker.tryLock() == false);
 	}
