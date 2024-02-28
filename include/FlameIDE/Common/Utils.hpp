@@ -480,13 +480,13 @@ typename Container::SizeType size(const Container &container)
 	return container.size();
 }
 
-<<<<<<< Updated upstream
 template<typename Type>
 decltype(__implementation_decval__<Type>) declareValue() noexcept
 {
 	static_assert(FalseType::VALUE, "It can't ba called");
 	return __implementation_decval__<Type>(0);
-=======
+}
+
 template<typename T, typename U>
 typename DefaultTraits<T>::Pointer alignedPointer(U *pointer)  noexcept
 {
@@ -524,7 +524,6 @@ alignedPointer(VoidTraits::PointerToConst pointer)  noexcept
 			? alignof(T) - (value % alignof(T))
 			: 0;
 	return reinterpret_cast<typename DefaultTraits<T>::Pointer>(value + shift);
->>>>>>> Stashed changes
 }
 
 template<typename Iterator> inline
