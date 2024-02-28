@@ -316,6 +316,10 @@ template<typename IntType>
 struct NumberLimitTrait
 {};
 
+template<typename IntType>
+struct NumberLimitTrait<volatile IntType>: public NumberLimitTrait<IntType>
+{};
+
 template<>
 struct NumberLimitTrait<Types::ichar_t>
 {
