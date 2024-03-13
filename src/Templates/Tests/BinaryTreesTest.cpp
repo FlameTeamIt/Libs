@@ -50,6 +50,8 @@ int BinaryTreesTest::pushCopyInitialization()
 	[[maybe_unused]] Set set{ setValues };
 	[[maybe_unused]] Map map{ mapValues };
 
+	set.traverseInfix([](const auto &value) { std::cout << value << std::endl; });
+
 	return ResultType::SUCCESS;
 }
 

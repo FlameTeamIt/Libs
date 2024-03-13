@@ -92,4 +92,26 @@ struct LessEqual
 
 }} // namespace flame_ide::templates
 
+namespace flame_ide
+{namespace templates
+{namespace defaults
+{
+
+template<typename T>
+using Equal = flame_ide::templates::Equal<T>;
+
+template<typename T>
+using More = flame_ide::templates::More<T>;
+
+template<typename T>
+using MoreEqual = flame_ide::templates::MoreEqual<T>;
+
+template<typename T>
+using Less = flame_ide::templates::Less<T>;
+
+template<typename T>
+using LessEqual = flame_ide::templates::LessEqual<T>;
+
+}}} // namespace flame_ide::templates::defaults
+
 #endif // FLAMEIDE_TEMPLATES_COMPARATORS_HPP

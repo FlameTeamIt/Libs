@@ -15,6 +15,7 @@
 
 // Difinition
 
+// Utils
 namespace flame_ide
 {namespace templates
 {namespace tree_utils
@@ -103,7 +104,7 @@ using RedBlackNode = CustomNode<T, RedBlackOptions, Traits>;
 template<typename T, typename Traits>
 void update(RedBlackNode<T, Traits> *node) noexcept;
 
-// Iterators
+// WrappedIterator
 
 template<
 	typename T
@@ -395,7 +396,7 @@ private:
 
 // Implementation
 
-// Nodes
+// Utils
 namespace flame_ide
 {namespace templates
 {namespace tree_utils
@@ -414,6 +415,14 @@ template<typename T, typename Options, typename Traits>
 template<typename ...Args>
 CustomNode<T, Options, Traits>::CustomNode(Args &&...args) noexcept : Parent(flame_ide::forward<Args>(args)...)
 {}
+
+// AdelsonVelskyLandisNode
+
+// RedBlackNode
+
+// WrappedIterator
+
+// Pair comparators
 
 }}} // namespace flame_ide::templates::tree_utils
 
@@ -592,7 +601,47 @@ template<
 	, template<class> class TreeNode, template<class> class Allocator
 >
 void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::push(ConstReference value) noexcept
-{}
+{
+	auto *node = allocator.construct(value);
+	if (!size)
+	{
+		data.root = data.first = data.last = node;
+		++size;
+
+		return;
+	}
+
+	Node *it = data.root;
+	// SizeType left = 0;
+	// SizeType right = 0;
+	bool stop = false;
+	while (!stop)
+	{
+		if (comparator(it->object, node->object)) // to right
+		{
+			if (it->right)
+			{
+				it = it->right;
+				continue;
+			}
+			it->right = node;
+		}
+		else
+		{
+			if (it->left)
+			{
+				it = it->left;
+				continue;
+			}
+			it->left = node;
+		}
+
+		node->previous = it;
+		++size;
+
+		stop = true;
+	}
+}
 
 template<
 	typename T, typename Traits, template<class> class Comparator
@@ -608,7 +657,7 @@ template<
 	, template<class> class TreeNode, template<class> class Allocator
 >
 template<typename ...Args>
-void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::emplace(Args &&...args) noexcept
+void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::emplace(Args &&.../*args*/) noexcept
 {}
 
 template<
@@ -1059,6 +1108,7 @@ void BinaryTree<T, Traits, Comparator, TreeNode, Allocator>::recursiveClear(Node
 
 }} // namespace flame_ide::templates
 
+// Utils default aliases
 namespace flame_ide
 {namespace templates
 {namespace tree_utils
@@ -1086,9 +1136,12 @@ using PairMore = flame_ide::templates::tree_utils::PairMore<T>;
 
 }}}} // namespace flame_ide::templates::tree_utils::defaults
 
+// Tree aliases
 namespace flame_ide
 {namespace templates
 {
+
+// Common
 
 template<
 	typename T
@@ -1110,6 +1163,31 @@ using Map = BinaryTree<
 	Pair<typename DefaultTraits<Key>::ConstType, Value>
 	, Traits, Comparator, TreeNode, Allocator
 >;
+
+// Adelson-Velsky and Landis
+
+template<
+	typename T
+	, typename Traits = ContainerTraits<T>
+	, template<class> class Comparator = defaults::Less
+	, template<class> class TreeNode = tree_utils::defaults::AdelsonVelskyLandisNode
+	, template<class> class Allocator = allocator::defaults::ObjectAllocator
+>
+using AvlSet = BinaryTree<T, Traits, Comparator, TreeNode, Allocator>;
+
+template<
+	typename Key, typename Value
+	, typename Traits = ContainerTraits<Pair<typename DefaultTraits<Key>::ConstType, Value>>
+	, template<class> class Comparator = tree_utils::defaults::PairLess
+	, template<class> class TreeNode = tree_utils::defaults::AdelsonVelskyLandisNode
+	, template<class> class Allocator = allocator::defaults::ObjectAllocator
+>
+using AvlMap = BinaryTree<
+	Pair<typename DefaultTraits<Key>::ConstType, Value>
+	, Traits, Comparator, TreeNode, Allocator
+>;
+
+// Red-black
 
 }} // namespace flame_ide::templates
 

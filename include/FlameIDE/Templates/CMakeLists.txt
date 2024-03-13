@@ -6,6 +6,7 @@ set(DEPENDENCY_LIST
 	${FLAME_NAMESPACE}::Templates::Allocator::Headers
 	${FLAME_NAMESPACE}::Templates::Iterator::Headers
 	${FLAME_NAMESPACE}::Templates::Serialization::Headers
+	${FLAME_NAMESPACE}::Templates::Tree::Headers
 )
 
 get_sources(FILE_LIST)
@@ -22,6 +23,7 @@ set(HEADER_MODULES
 	${CMAKE_CURRENT_LIST_DIR}/Allocator
 	${CMAKE_CURRENT_LIST_DIR}/Iterator
 	${CMAKE_CURRENT_LIST_DIR}/Serialization
+	${CMAKE_CURRENT_LIST_DIR}/Tree
 )
 foreach(module ${HEADER_MODULES})
 	add_subdirectory(${module})
