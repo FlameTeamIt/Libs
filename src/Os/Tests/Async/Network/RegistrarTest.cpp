@@ -188,7 +188,7 @@ int RegistrarTest::udpClient()
 
 	// server
 	{
-		auto raii = templates::makeRaiiCaller(
+		auto raiiServer = templates::makeRaiiCaller(
 				[&server, &registar]() { registar.add(server); }
 				, [&server, &registar]() { registar.remove(server); }
 		);
@@ -337,7 +337,7 @@ int RegistrarTest::tcpServer()
 
 int RegistrarTest::tcpClient()
 {
-	auto nativeControl = os::network::NetworkBase::callbacks;
+	const auto &callbacks = os::network::NetworkBase::callbacks();
 
 	os::network::TcpServer server{ port };
 	os::network::TcpClient client{ ipv4 };
@@ -368,7 +368,7 @@ int RegistrarTest::tcpClient()
 		resultConnection = registar.popTcpServerAcception();
 	}
 	IN_CASE_CHECK(
-			nativeControl().destroy(resultConnection.client) == os::STATUS_SUCCESS
+			callbacks.destroy(resultConnection.client) == os::STATUS_SUCCESS
 	);
 
 	// Wait

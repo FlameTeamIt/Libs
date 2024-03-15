@@ -74,7 +74,7 @@ os::Status EventCatcher::enable(SocketDescriptor descriptor) noexcept
 	auto socket = Socket{ descriptor, {} };
 	auto event = anonymous::Event::UNKNOWN;
 
-	const auto &control = os::network::NetworkBase::nativeControl();
+	const auto &control = os::network::NetworkBase::callbacks();
 	const auto type = control.type(Socket{ descriptor, {} });
 	switch(type)
 	{
@@ -110,7 +110,7 @@ os::Status EventCatcher::enable(SocketDescriptor descriptor) noexcept
 			descriptor, handle, MESSAGE_SOCKET, anonymous::value(event)
 	);
 	if (result == SOCKET_ERROR)
-		result = -::GetLastError();
+		result = -static_cast<os::Status>(::GetLastError());
 	return result;
 }
 
@@ -121,7 +121,7 @@ os::Status EventCatcher::disable(SocketDescriptor descriptor) noexcept
 		return os::STATUS_FAILED;
 
 	if (SOCKET_ERROR == ::WSAAsyncSelect(descriptor, handle, 0, 0))
-		return -::GetLastError();
+		return -static_cast<os::Status>(::GetLastError());
 	return os::STATUS_SUCCESS;
 }
 
@@ -149,11 +149,12 @@ void EventCatcher::MessageDispatchThread::body() noexcept
 
 	init();
 
-	auto status = os::STATUS_SUCCESS;
+	auto localStatus = os::STATUS_SUCCESS;
 	os::windows::OsMessage message = {};
-	while ((status = ::GetMessageA(&message, window.handle, MESSAGE_VALUE_MIN, MESSAGE_VALUE_MAX)))
+	while (localStatus)
 	{
-		if (status < 0)
+		localStatus = ::GetMessageA(&message, window.handle, MESSAGE_VALUE_MIN, MESSAGE_VALUE_MAX);
+		if (localStatus < 0)
 			break;
 
 		::TranslateMessage(&message);
@@ -275,7 +276,7 @@ EventCatcher::MessageDispatchThread::action(
 	if ((message != Message::SOCKET) || (WSAGETSELECTERROR(param)))
 		return ::DefWindowProcA(window, static_cast<MessageValue>(message), descriptor, param);
 
-	const auto type = os::network::NetworkBase::nativeControl().type(Socket{ descriptor });
+	const auto type = os::network::NetworkBase::callbacks().type(Socket{ descriptor });
 	switch(type)
 	{
 		case os::network::NetworkBase::SocketType::DATAGRAM:
@@ -306,7 +307,7 @@ void EventCatcher::MessageDispatchThread::handleUdp(
 		case anonymous::Event::READ:
 		case anonymous::Event::WRITE:
 		{
-			if (os::network::NetworkBase::nativeControl().isServer(Socket{ descriptor }))
+			if (os::network::NetworkBase::callbacks().isServer(Socket{ descriptor }))
 				queues.udpServers().push(descriptor);
 			else
 				queues.udpClients().push(descriptor);
@@ -330,7 +331,7 @@ void EventCatcher::MessageDispatchThread::handleTcp(
 		case anonymous::Event::ACCEPT:
 		{
 			auto status = os::STATUS_SUCCESS;
-			auto client = os::network::TcpServer::nativeServerControl().accept(
+			auto client = os::network::TcpServer::callbacks().accept(
 					Socket{ descriptor }, &status
 			);
 			if (os::STATUS_SUCCESS == status)
@@ -340,7 +341,7 @@ void EventCatcher::MessageDispatchThread::handleTcp(
 		case anonymous::Event::READ:
 		case anonymous::Event::WRITE:
 		{
-			if (os::network::NetworkBase::nativeControl().isServer(Socket{ descriptor }))
+			if (os::network::NetworkBase::callbacks().isServer(Socket{ descriptor }))
 				queues.tcpServers().push(descriptor);
 			else
 				queues.tcpClients().push(descriptor);
