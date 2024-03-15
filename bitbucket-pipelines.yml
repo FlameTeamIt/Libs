@@ -1,0 +1,19 @@
+image:
+  name: gcc:12.3
+
+clone:
+  depth: 1
+
+pipelines:
+  default:
+    - step:
+        name: Configure project
+        script:
+          - cmake -S . -B build -G "Unix Makefiles" -D FLAME_CONAN_SUPPORT=OFF
+    - step:
+        name: Build project
+        script:
+          - cmake --build build --config Debug
+          - cmake --build build --config RelWithDebInfo
+        # artifacts:
+        #   - build/**
