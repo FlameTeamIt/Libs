@@ -1,5 +1,5 @@
 image:
-  name: gcc:12.3
+  name: debian:bookworm-slim
 
 clone:
   depth: 1
@@ -7,13 +7,13 @@ clone:
 pipelines:
   default:
     - step:
-        name: Configure project
+        name: Install toolchain
         script:
-          - cmake -S . -B build -G "Unix Makefiles" -D FLAME_CONAN_SUPPORT=OFF
-    - step:
-        name: Build project
-        script:
-          - cmake --build build --config Debug
-          - cmake --build build --config RelWithDebInfo
+          - apt update
+          - apt install -y g++ cmake ninja-build git
+          - mkdir build
+          - cd build
+          - cmake -S .. -B . -GNinja -DFLAME_CONAN_SUPPORT=OFF -DCMAKE_BUILD_TYPE=Release
+          - cmake --build .
         # artifacts:
         #   - build/**
