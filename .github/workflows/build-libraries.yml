@@ -1,0 +1,56 @@
+name: 'Build libraries'
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - '.github/workflows/**'
+      - 'cmake/**'
+      - 'include/**'
+      - 'src/**'
+      - 'tests/**'
+      - '**/CMakeLists.txt'
+      - '**/*.pro'
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - '.github/workflows/**'
+      - 'cmake/**'
+      - 'include/**'
+      - 'src/**'
+      - 'tests/**'
+      - '**/CMakeLists.txt'
+      - '**/*.pro'
+
+jobs:
+  build-libraries:
+    name: 'Build libraries'
+
+    strategy:
+      matrix:
+        system:
+          - windows-latest
+          - ubuntu-latest
+        config:
+          - Release
+
+    runs-on: ${{ matrix.system }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v4
+
+      - name: Configure project
+        run: |
+          cmake -S . -B build -G "Ninja" -DFLAME_CONAN_SUPPORT=OFF -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+
+      - name: Build project
+        run: |
+          cmake --build build --config ${{ matrix.config }}
