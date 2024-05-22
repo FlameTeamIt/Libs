@@ -1,4 +1,4 @@
-#include <FlameIDE/Common/Macroses/DetectOs.hpp>
+#include <FlameIDE/Common/Macros/DetectOs.hpp>
 
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 
@@ -80,7 +80,7 @@ os::FileDescriptor NamedPipeStream::getWriterFileDescriptor(bool continueOwning)
 	return writer.getFileDescriptor(continueOwning);
 }
 
-os::Status NamedPipeStream::open(const char *name, bool deletePipe) noexcept
+os::Status NamedPipeStream::open(const char *name, bool /*deletePipe*/) noexcept
 {
 	deinit();
 

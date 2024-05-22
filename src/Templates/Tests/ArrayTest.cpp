@@ -107,8 +107,8 @@ int ArrayTest::vStart()
 			"emplaceBack()"
 			, [&]()
 			{
-				array.emplaceBack(-6000, -600, -60, '6');
-				stdvector.emplace_back(-6000, -600, -60, '6');
+				array.emplaceBack(long{ -6000 }, int{ -600 }, short{ -60 }, '6');
+				stdvector.emplace_back(long{ -6000 }, int{ -600 }, short{ -60 }, '6');
 				return compareContainers(array, stdvector);
 			}
 	));
@@ -194,9 +194,9 @@ int ArrayTest::vStart()
 			"operator+=() move"
 			, [&]()
 			{
-				TestClass testObject {-7000, -700, -70, '7'};
+				TestClass testObject{ long{ -7000 }, int{ -700 }, short{ -70 }, '7' };
 				array += flame_ide::move(testObject);
-				stdvector.emplace_back(-7000, -700, -70, '7');
+				stdvector.emplace_back(long{ -7000 }, int{ -700 }, short{ -70 }, '7');
 				return compareContainers(array, stdvector);
 			}
 	));

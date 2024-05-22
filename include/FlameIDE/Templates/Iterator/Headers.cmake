@@ -1,5 +1,6 @@
 set (HEADER_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/BaseIterator.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/CallbackIterator.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CircularIterator.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ConstCircularIterator.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ConstIterator.hpp

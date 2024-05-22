@@ -41,7 +41,7 @@ public:
 	using SsizeType = typename Traits::SsizeType;
 
 	using BufferType = StaticVector<T, ARRAY_CAPACITY + 1, Traits>;
-	static constexpr SizeType CAPACITY = BufferType::CAPACITY - 1;
+	static constexpr SizeType CAPACITY = ARRAY_CAPACITY;
 
 	using Iterator = CircularIterator<
 		typename BufferType::Iterator
@@ -269,9 +269,9 @@ TEMPLATE_DEFINE
 CIRCULAR_ARRAY_TYPE::CircularArray(const Me &array) noexcept
 		: buffer(), head(buffer.begin()), tail(buffer.begin() + array.size())
 {
-	for (auto &i : array)
+	for (const auto &i : array)
 	{
-		buffer.pushBack(*i);
+		buffer.pushBack(i);
 	}
 }
 
@@ -288,7 +288,7 @@ CIRCULAR_ARRAY_TYPE::CircularArray(Me &&array) noexcept
 TEMPLATE_DEFINE
 CIRCULAR_ARRAY_TYPE::~CircularArray()
 {
-	for (auto i : *this)
+	for (auto &i : *this)
 	{
 		i.~T();
 	}
@@ -379,7 +379,7 @@ TEMPLATE_DEFINE template<typename InputIterator>
 void CIRCULAR_ARRAY_TYPE::pushBack(const Range<InputIterator> &range) noexcept
 {
 	static_assert(
-			isSameTypes<typename RemoveAll<decltype(*range.begin())>::Type, Type>()
+			isSameTypes<typename RemoveAllTrait<decltype(*range.begin())>::Type, Type>()
 			, "Invalid 'InputIterator' type"
 	);
 	auto rangeSize = countIterations(range);
@@ -397,7 +397,7 @@ TEMPLATE_DEFINE template<typename InputIterator>
 void CIRCULAR_ARRAY_TYPE::pushBack(Range<InputIterator> &&range) noexcept
 {
 	static_assert(
-			isSameTypes<typename RemoveAll<decltype(*range.begin())>::Type, Type>()
+			isSameTypes<typename RemoveAllTrait<decltype(*range.begin())>::Type, Type>()
 			, "Invalid 'InputIterator' type"
 	);
 	auto rangeSize = countIterations(range);

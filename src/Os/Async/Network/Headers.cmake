@@ -1,0 +1,6 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/EventCatcherBase.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/QueuedArray.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SocketQueues.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Types.hpp
+)

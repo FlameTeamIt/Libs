@@ -81,7 +81,7 @@ void MallocAllocator<Traits>::vDeallocate(
 template<typename Traits>
 typename MallocAllocator<Traits>::SizeType MallocAllocator<Traits>::vMaxAllocateSize() const noexcept
 {
-	return NumberLimit<SizeType>::MAX_VALUE;
+	return NumberLimitTrait<SizeType>::MAX_VALUE;
 }
 
 }}}

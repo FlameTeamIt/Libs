@@ -1,0 +1,46 @@
+#ifndef FLAMEIDE_GENERATED_NETWORK_CONFIG_HPP
+#define FLAMEIDE_GENERATED_NETWORK_CONFIG_HPP
+
+#include <FlameIDE/Common/Traits/Numbers.hpp>
+#include <FlameIDE/Os/Constants.hpp>
+
+namespace generated
+{namespace network
+{
+
+struct Config: public flame_ide::NonCreational
+{
+	static constexpr flame_ide::Types::size_t UDP_SERVERS = @LIB_UDP_SERVERS@;
+	static constexpr flame_ide::Types::size_t UDP_SERVER_INPUT_QUEUE_SIZE = @LIB_UDP_SERVER_INPUT_QUEUE_SIZE@;
+	static constexpr flame_ide::Types::size_t UDP_SERVER_OUTPUT_QUEUE_SIZE = @LIB_UDP_SERVER_OUTPUT_QUEUE_SIZE@;
+
+	static constexpr flame_ide::Types::size_t UDP_CLIENTS = @LIB_UDP_CLIENTS@;
+	static constexpr flame_ide::Types::size_t UDP_CLIENT_INPUT_QUEUE_SIZE = @LIB_UDP_CLIENT_INPUT_QUEUE_SIZE@;
+	static constexpr flame_ide::Types::size_t UDP_CLIENT_OUTPUT_QUEUE_SIZE = @LIB_UDP_CLIENT_OUTPUT_QUEUE_SIZE@;
+
+	static constexpr flame_ide::Types::size_t UDP_MESSAGE_SIZE = @LIB_UDP_MESSAGE_SIZE@;
+
+	static constexpr flame_ide::Types::size_t TCP_SERVERS = @LIB_TCP_SERVERS@;
+	static constexpr flame_ide::Types::size_t TCP_SERVER_BACKLOG = @LIB_TCP_SERVER_BACKLOG@;
+	static constexpr flame_ide::Types::size_t TCP_SERVER_INPUT_BUFFER_SIZE = @LIB_TCP_SERVER_INPUT_BUFFER_SIZE@;
+	static constexpr flame_ide::Types::size_t TCP_SERVER_OUTPUT_BUFFER_SIZE = @LIB_TCP_SERVER_OUTPUT_BUFFER_SIZE@;
+
+	static constexpr flame_ide::Types::size_t TCP_CLIENTS = @LIB_TCP_CLIENTS@;
+	static constexpr flame_ide::Types::size_t TCP_CLIENT_INPUT_BUFFER_SIZE = @LIB_TCP_CLIENT_INPUT_BUFFER_SIZE@;
+	static constexpr flame_ide::Types::size_t TCP_CLIENT_OUTPUT_BUFFER_SIZE = @LIB_TCP_CLIENT_OUTPUT_BUFFER_SIZE@;
+
+	static constexpr flame_ide::Types::size_t HANDLER_NUMBER_OF_WORKERS = @LIB_HANDLER_NUMBER_OF_WORKERS@;
+
+#	define SOMAXCONN1_STR(VALUE) #VALUE
+#	define SOMAXCONN_STR(VALUE) SOMAXCONN1_STR(VALUE)
+	static_assert(
+			TCP_SERVER_BACKLOG < flame_ide::os::SOCKET_TCP_MAX_CLIENTS
+			, "Generated server backlog more than SOMAXCONN = " SOMAXCONN_STR(SOMAXCONN)
+	);
+#	undef SOMAXCONN_STR
+#	undef SOMAXCONN1_STR
+};
+
+}} // namespace generated::network
+
+#endif // FLAMEIDE_GENERATED_NETWORK_CONFIG_HPP

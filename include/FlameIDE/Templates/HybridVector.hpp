@@ -729,7 +729,7 @@ ITERATOR_TEMPLATE
 template<typename IntType>
 ITERATOR_TYPE ITERATOR_TYPE::operator+(IntType value)
 {
-	static_assert(IsIntegralType<IntType>::VALUE, "Need itegral contant.");
+	static_assert(IsIntegralTrait<IntType>::VALUE, "Need itegral contant.");
 
 	Me me = *this;
 	me += value;
@@ -740,7 +740,7 @@ ITERATOR_TEMPLATE
 template<typename IntType>
 ITERATOR_TYPE ITERATOR_TYPE::operator-(IntType value)
 {
-	static_assert(IsIntegralType<IntType>::VALUE, "Need itegral contant.");
+	static_assert(IsIntegralTrait<IntType>::VALUE, "Need itegral contant.");
 
 	Me me = *this;
 	me -= value;
@@ -778,7 +778,7 @@ ITERATOR_TEMPLATE
 template<typename IntType>
 ITERATOR_TYPE &ITERATOR_TYPE::operator+=(IntType value)
 {
-	static_assert(IsIntegralType<IntType>::VALUE, "Need itegral contant.");
+	static_assert(IsIntegralTrait<IntType>::VALUE, "Need itegral contant.");
 
 	if (isArrayIterator())
 	{
@@ -797,7 +797,7 @@ ITERATOR_TEMPLATE
 template<typename IntType>
 ITERATOR_TYPE &ITERATOR_TYPE::operator-=(IntType value)
 {
-	static_assert(IsIntegralType<IntType>::VALUE, "Need itegral contant.");
+	static_assert(IsIntegralTrait<IntType>::VALUE, "Need itegral contant.");
 
 	if (isArrayIterator())
 	{

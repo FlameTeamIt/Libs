@@ -111,8 +111,8 @@ int ListTest::vStart()
 		"emplaceBack()"
 		, [&]()
 		{
-			list.emplaceBack(-6000, -600, -60, '6');
-			stdlist.emplace_back(-6000, -600, -60, '6');
+			list.emplaceBack(long{ -6000 }, int{ -600 }, short{ -60 }, '6');
+			stdlist.emplace_back(long{ -6000 }, int{ -600 }, short{ -60 }, '6');
 			CHECK_RESULT_SUCCESS(compareContainers(list, stdlist));
 
 			list.popBack();
@@ -145,8 +145,8 @@ int ListTest::vStart()
 		"emplaceFront()"
 		, [&]()
 		{
-			list.emplaceFront(-6000, -600, -60, '6');
-			stdlist.emplace_front(-6000, -600, -60, '6');
+			list.emplaceFront(long{ -6000 }, int{ -600 }, short{ -60 }, '6');
+			stdlist.emplace_front(long{ -6000 }, int{ -600 }, short{ -60 }, '6');
 			CHECK_RESULT_SUCCESS(compareContainers(list, stdlist));
 
 			list.popFront();
@@ -155,9 +155,9 @@ int ListTest::vStart()
 		}
 	));
 
-	TestClass testMiddleObject = {-2500, -250, -25, 'M'};
-	testFirstObject = {-1000, -100, -10, 'F'};
-	testLastObject = {-5000, -500, -50, 'L'};
+	TestClass testMiddleObject = { long{ -2500 }, int{ -250 }, short{ -25 }, 'M'};
+	testFirstObject = { long{ -1000 }, int{ -100 }, short{ -10 }, 'F'};
+	testLastObject = { long{ -5000 }, int{ -500 }, short{ -50 }, 'L'};
 
 	CHECK_RESULT_SUCCESS(doTestCase(
 		"insert()"

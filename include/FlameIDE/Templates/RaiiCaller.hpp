@@ -2,6 +2,7 @@
 #define FLAMEIDE_TEMPLATES_RAIICALLER_HPP
 
 #include <FlameIDE/Common/Traits.hpp>
+#include <FlameIDE/Common/Utils.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -29,6 +30,20 @@ struct RaiiCaller
 private:
 	DestructorCall dtorCall;
 };
+
+template<typename ConstructorCall, typename DestructorCall>
+RaiiCaller<DestructorCall>
+makeRaiiCaller(ConstructorCall &&initCtorCall, DestructorCall &&initDtorCall)
+{
+	return RaiiCaller<DestructorCall>(move(initCtorCall), move(initDtorCall));
+}
+
+template<typename DestructorCall>
+RaiiCaller<DestructorCall>
+makeRaiiCaller(DestructorCall &&initDtorCall)
+{
+	return RaiiCaller<DestructorCall>(move(initDtorCall));
+}
 
 }}
 

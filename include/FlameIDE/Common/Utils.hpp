@@ -32,21 +32,21 @@ bool isConst() noexcept;
 /// @tparam First param.
 ///
 template<typename T> constexpr inline
-typename RemoveReference<T>::Type&& move(T &&reference) noexcept;
+typename RemoveReferenceTrait<T>::Type&& move(T &&reference) noexcept;
 
 ///
 /// @brief std::forward alternative.
 /// @tparam First param.
 ///
 template<class T> constexpr inline
-T&& forward(T &&reference) noexcept;
+T &&forward(T &&reference) noexcept;
 
 ///
 /// @brief std::forward alternative.
 /// @tparam First param.
 ///
 template<class T> constexpr inline
-T&& forward(T &reference) noexcept;
+T &&forward(T &reference) noexcept;
 
 ///
 /// @brief Adapter for palcement new operator.
@@ -83,6 +83,9 @@ placementNew(T *pointer
 template<typename Iterator1 , typename Iterator2>
 bool isEqual(Iterator1 start1, Iterator1 end1,
 		Iterator2 start2, Iterator2 end2);
+
+template<typename T, typename U>
+bool isEqual(const T &value1, const U &value2);
 
 ///
 /// @brief begin
@@ -168,6 +171,46 @@ T __implementation_decval__(long) noexcept;
 template<typename Type>
 decltype(__implementation_decval__<Type>) declareValue() noexcept;
 
+
+///
+/// @brief alignedPointer
+/// @tparam T
+/// @tparam U
+/// @param pointer
+/// @return
+///
+template<typename T, typename U>
+typename DefaultTraits<T>::Pointer alignedPointer(U *pointer) noexcept;
+
+///
+/// @brief alignedPointer
+/// @tparam T
+/// @tparam U
+/// @param pointer
+/// @return
+///
+template<typename T, typename U>
+typename DefaultTraits<T>::PointerToConst alignedPointer(const U *pointer) noexcept;
+
+///
+/// @brief alignedPointer
+/// @tparam T
+/// @param pointer
+/// @return
+///
+template<typename T>
+typename DefaultTraits<T>::Pointer alignedPointer(VoidTraits::Pointer pointer) noexcept;
+
+///
+/// @brief alignedPointer
+/// @tparam T
+/// @param pointer
+/// @return
+///
+template<typename T>
+typename DefaultTraits<T>::PointerToConst
+alignedPointer(VoidTraits::PointerToConst pointer) noexcept;
+
 ///
 /// @brief The IsStaticCastable struct
 /// @tparam First param.
@@ -182,12 +225,43 @@ struct IsStaticCastable<F, T, decltype(static_cast<T>(declareValue<F>()))>: publ
 {};
 
 template<typename Iterator> inline
-auto getPointer(Iterator iterator) noexcept
-{
-	return &(*iterator);
-}
+auto getPointer(Iterator iterator) noexcept -> decltype(&(*iterator));
 
-}
+template<typename T, Types::size_t SIZE>
+void copy(T (& dest)[SIZE], const T (& src)[SIZE]);
+
+template<typename T, typename U>
+void copy(T &src, const U &dest, Types::size_t size);
+
+template<typename T>
+Types::size_t length(const T *array);
+
+// template<
+// 	typename T1, typename T2
+// 	, typename = typename EnableType<IsIntegralValue<T1>, T1>::Type
+// 	, typename = typename EnableType<IsIntegralValue<T2>, T2>::Type
+// >
+// constexpr auto max(T1 value1, T2 value2) noexcept -> decltype(operator+(declareValue<T1>() + declareValue<T2>()));
+
+// template<
+// 	typename T1, typename T2
+// 	, typename = typename EnableType<IsIntegralValue<T1>, T1>::Type
+// 	, typename = typename EnableType<IsIntegralValue<T2>, T2>::Type
+// >
+// constexpr auto min(T1 value1, T2 value2) noexcept -> decltype(operator+(declareValue<T1>() + declareValue<T2>()));
+
+template<typename ...Args>
+void unused(Args &&...);
+
+template<typename T>
+void unused(const T &);
+
+template<typename T>
+void unused(T &&);
+
+void unused();
+
+} // namespace flame_ide
 
 template<typename T>
 inline void *operator new(flame_ide::SizeTraits::SizeType
@@ -217,36 +291,36 @@ namespace flame_ide
 template<typename T> inline constexpr
 bool isPrimitiveType() noexcept
 {
-	using Type = typename RemoveAll<T>::Type;
-	return IsPrimitiveType<Type>::VALUE;
+	using Type = typename RemoveAllTrait<T>::Type;
+	return IsPrimitiveTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isFloatType() noexcept
 {
-	using Type = typename RemoveAll<T>::Type;
-	return IsFloatType<Type>::VALUE;
+	using Type = typename RemoveAllTrait<T>::Type;
+	return IsFloatTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isIntegralType() noexcept
 {
-	using Type = typename RemoveAll<T>::Type;
-	return IsIntegralType<Type>::VALUE;
+	using Type = typename RemoveAllTrait<T>::Type;
+	return IsIntegralTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isSigned() noexcept
 {
-	using Type = typename RemoveAll<T>::Type;
-	return IsSigned<Type>::VALUE;
+	using Type = typename RemoveAllTrait<T>::Type;
+	return IsSignedTrait<Type>::VALUE;
 }
 
 template<typename T> inline constexpr
 bool isUnsigned() noexcept
 {
-	using Type = typename RemoveAll<T>::Type;
-	return IsUnsigned<Type>::VALUE;
+	using Type = typename RemoveAllTrait<T>::Type;
+	return IsUnsignedTrait<Type>::VALUE;
 }
 
 template<typename T, typename U> inline constexpr
@@ -262,9 +336,9 @@ bool isConst() noexcept
 }
 
 template<typename T> constexpr inline
-typename RemoveReference<T>::Type &&move(T &&reference) noexcept
+typename RemoveReferenceTrait<T>::Type &&move(T &&reference) noexcept
 {
-	return static_cast<typename RemoveReference<T>::Type &&>(reference);
+	return static_cast<typename RemoveReferenceTrait<T>::Type &&>(reference);
 }
 
 template<class T> constexpr inline
@@ -308,14 +382,14 @@ bool isEqual(Iterator1 start1, Iterator1 end1
 {
 	static_assert(
 			!isSameTypes<
-				typename RemoveAll<decltype(*start1)>::Type
-				, typename RemoveAll<decltype(*start2)>::Type
+				typename RemoveAllTrait<decltype(*start1)>::Type
+				, typename RemoveAllTrait<decltype(*start2)>::Type
 			>()
 			, "Types is not equal."
 	);
 
-	typename RemoveAll<Iterator1>::Type it1 = start1;
-	typename RemoveAll<Iterator2>::Type it2 = start2;
+	typename RemoveAllTrait<Iterator1>::Type it1 = start1;
+	typename RemoveAllTrait<Iterator2>::Type it2 = start2;
 	for (; (it1 != end1) && (it2 != end2); ++it1, ++it2)
 	{
 		if ((it1 == end1) || (it2 == end2) || (*it1 != *it2))
@@ -324,6 +398,26 @@ bool isEqual(Iterator1 start1, Iterator1 end1
 		}
 	}
 	return true;
+}
+
+template<typename T>
+bool isEqual(const T &value1, const T &value2)
+{
+	volatile const flame_ide::byte_t *v1 =
+			reinterpret_cast<volatile const flame_ide::byte_t *>(
+					&value1
+			);
+	volatile const flame_ide::byte_t *v2 =
+			reinterpret_cast<volatile const flame_ide::byte_t *>(
+					&value2
+			);
+
+	bool result = true;
+	for (Types::size_t i = 0; i < sizeof(T) && result; ++i, ++v1, ++v2)
+	{
+		result = (*v1 == *v2);
+	}
+	return result;
 }
 
 template<typename Container> inline
@@ -386,6 +480,118 @@ typename Container::SizeType size(const Container &container)
 	return container.size();
 }
 
+template<typename Type>
+decltype(__implementation_decval__<Type>) declareValue() noexcept
+{
+	static_assert(FalseType::VALUE, "It can't ba called");
+	return __implementation_decval__<Type>(0);
 }
+
+template<typename T, typename U>
+typename DefaultTraits<T>::Pointer alignedPointer(U *pointer)  noexcept
+{
+	return alignedPointer<T>(static_cast<VoidTraits::Pointer>(pointer));
+}
+
+template<typename T, typename U>
+typename DefaultTraits<T>::PointerToConst alignedPointer(const U *pointer)  noexcept
+{
+	return alignedPointer<T>(static_cast<VoidTraits::PointerToConst>(pointer));
+}
+
+template<typename T>
+typename DefaultTraits<T>::Pointer alignedPointer(VoidTraits::Pointer pointer)  noexcept
+{
+	if (!pointer)
+		return nullptr;
+
+	const Types::ptrint_t value = reinterpret_cast<Types::ptrint_t>(pointer);
+	const Types::ptrint_t shift = (value % alignof(T))
+			? alignof(T) - (value % alignof(T))
+			: 0;
+	return reinterpret_cast<typename DefaultTraits<T>::Pointer>(value + shift);
+}
+
+template<typename T>
+typename DefaultTraits<T>::PointerToConst
+alignedPointer(VoidTraits::PointerToConst pointer)  noexcept
+{
+	if (!pointer)
+		return nullptr;
+
+	const Types::ptrint_t value = reinterpret_cast<Types::ptrint_t>(pointer);
+	const Types::ptrint_t shift = (value % alignof(T))
+			? alignof(T) - (value % alignof(T))
+			: 0;
+	return reinterpret_cast<typename DefaultTraits<T>::Pointer>(value + shift);
+}
+
+template<typename Iterator> inline
+auto getPointer(Iterator iterator) noexcept -> decltype(&(*iterator))
+{
+	return &(*iterator);
+}
+
+template<typename T, Types::size_t SIZE>
+void copy(T (& dest)[SIZE], const T (& src)[SIZE])
+{
+	DoSomeByIndex<T, Types::size_t{ 0 }, SIZE>::copy(dest, src);
+}
+
+template<typename T, typename U>
+void copy(T &dst, const U &src, Types::size_t size)
+{
+	volatile auto *out = reinterpret_cast<volatile Types::uichar_t *>(&dst);
+	volatile const auto *in = reinterpret_cast<volatile const Types::uichar_t *>(&src);
+
+	for (Types::size_t i = 0; i < size; ++i)
+	{
+		out[i] = in[i];
+	}
+}
+
+template<typename T>
+Types::size_t length(const T *array)
+{
+	const auto nullValue = T{};
+
+	Types::size_t length = 0;
+	for (auto it = array; *it != nullValue; ++it, ++length)
+	{}
+	return length;
+}
+
+template<typename T>
+T maximum(T value1, T value2) noexcept
+{
+	if (value1 > value2)
+		return value1;
+	return value2;
+}
+
+template<typename T>
+T minimum(T value1, T value2) noexcept
+{
+	if (value2 > value1)
+		return value1;
+	return value2;
+}
+
+template<typename ...Args>
+void unused(Args &&...)
+{}
+
+template<typename T>
+void unused(const T &)
+{}
+
+template<typename T>
+void unused(T &&)
+{}
+
+inline void unused()
+{}
+
+} // namespace flame_ide
 
 #endif // FLAMEIDE_COMMON_UTILS_HPP

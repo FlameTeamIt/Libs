@@ -38,30 +38,21 @@ public:
 	static constexpr IteratorAccess ACCESS = ITERATOR_ACCESS;
 
 	BaseIterator() = default;
-	BaseIterator(const Me &it) noexcept : wrappedIterator(it.wrappedIterator)
-	{}
-	~BaseIterator() = default;
+	BaseIterator(const Me &it) noexcept;
+	BaseIterator(Me &&it) noexcept = default;
+
+	~BaseIterator() noexcept = default;
+
 	Me &operator=(const Me &) = default;
+	Me &operator=(Me &&) noexcept = default;
 
-	bool operator==(const Me &iterator)
-	{
-		return wrappedIterator == iterator.wrappedIterator;
-	}
+	operator bool() const noexcept;
 
-	bool operator!=(const Me &iterator)
-	{
-		return wrappedIterator != iterator.wrappedIterator;
-	}
+	bool operator==(const Me &iterator);
+	bool operator!=(const Me &iterator);
 
-	IteratorType &internalData()
-	{
-		return wrappedIterator;
-	}
-
-	const IteratorType &internalData() const
-	{
-		return wrappedIterator;
-	}
+	IteratorType &internalData();
+	const IteratorType &internalData() const;
 
 protected:
 	using WrappedIterator = IteratorType;
@@ -75,7 +66,96 @@ protected:
 	mutable WrappedIterator wrappedIterator;
 };
 
-}}}
+}}} // namespace flame_ide::templates::iterator_utils
+
+namespace flame_ide
+{namespace templates
+{namespace iterator_utils
+{
+
+template<
+	typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, IteratorAccess ITERATOR_ACCESS
+	, typename Traits
+	, typename MetaType
+>
+BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits, MetaType>::BaseIterator(
+		const Me &it
+) noexcept : wrappedIterator(it.wrappedIterator)
+{}
+
+
+template<
+	typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, IteratorAccess ITERATOR_ACCESS
+	, typename Traits
+	, typename MetaType
+>
+BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits, MetaType>
+::operator bool() const noexcept
+{
+	return static_cast<bool>(wrappedIterator);
+}
+
+template<
+	typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, IteratorAccess ITERATOR_ACCESS
+	, typename Traits
+	, typename MetaType
+>
+bool
+BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits, MetaType>
+::operator==(const Me &iterator)
+{
+	return wrappedIterator == iterator.wrappedIterator;
+}
+
+template<
+	typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, IteratorAccess ITERATOR_ACCESS
+	, typename Traits
+	, typename MetaType
+>
+bool
+BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits, MetaType>::operator!=(
+		const Me &iterator
+)
+{
+	return wrappedIterator != iterator.wrappedIterator;
+}
+
+template<
+	typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, IteratorAccess ITERATOR_ACCESS
+	, typename Traits
+	, typename MetaType
+>
+IteratorType &
+BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits, MetaType>::internalData()
+{
+	return wrappedIterator;
+}
+
+template<
+	typename IteratorType
+	, IteratorCategory ITERATOR_CATEGORY
+	, IteratorAccess ITERATOR_ACCESS
+	, typename Traits
+	, typename MetaType
+>
+const IteratorType &
+BaseIterator<IteratorType, ITERATOR_CATEGORY, ITERATOR_ACCESS, Traits, MetaType>
+::internalData() const
+{
+	return wrappedIterator;
+}
+
+}}} // namespace flame_ide::templates::iterator_utils
 
 #endif // FLAMEIDE_TEMPLATES_ITERATOR_BASEITERATOR_HPP
 

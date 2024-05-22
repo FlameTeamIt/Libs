@@ -17,7 +17,10 @@
 #include <FlameIDE/../../src/Templates/Tests/CircularIteratorTest.hpp>
 #include <FlameIDE/../../src/Templates/Tests/CircularArrayTest.hpp>
 #include <FlameIDE/../../src/Templates/Tests/AsIntegralTypeTest.hpp>
+#include <FlameIDE/../../src/Templates/Tests/FutureTest.hpp>
 #include <FlameIDE/../../src/Templates/Tests/ExpectedTest.hpp>
+#include <FlameIDE/../../src/Templates/Tests/StringConvertionsTest.hpp>
+#include <FlameIDE/../../src/Templates/Tests/ObjectTest.hpp>
 
 #include <FlameIDE/../../src/Templates/Tests/TestAggregator.hpp>
 
@@ -50,7 +53,10 @@ TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 	pushBackTest(std::make_shared<test::CircularIteratorTest>());
 	pushBackTest(std::make_shared<test::CircularArrayTest>());
 	pushBackTest(std::make_shared<test::AsIntegralTypeTest>());
+	pushBackTest(std::make_shared<test::FutureTest>());
 	pushBackTest(std::make_shared<test::ExpectedTest>());
+	pushBackTest(std::make_shared<test::StringConvertionsTest>());
+	pushBackTest(std::make_shared<test::ObjectTest>());
 }
 
 }}}

@@ -1,0 +1,19 @@
+image:
+  name: debian:bookworm-slim
+
+clone:
+  depth: 1
+
+pipelines:
+  default:
+    - step:
+        name: Install toolchain
+        script:
+          - apt update
+          - apt install -y g++ cmake ninja-build git
+          - mkdir build
+          - cd build
+          - cmake -S .. -B . -GNinja -DFLAME_CONAN_SUPPORT=OFF -DCMAKE_BUILD_TYPE=Release
+          - cmake --build .
+        # artifacts:
+        #   - build/**

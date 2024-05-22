@@ -248,12 +248,13 @@ public:
 
 	virtual ~TestAggregator() = default;
 
-	void start()
+	AbstractTest::ResultType start()
 	{
 		printStart();
 		vStart();
 		printStatistic();
 		printEnd();
+		return getStatus();
 	}
 
 	void pushBackTest(const std::shared_ptr<AbstractTest> &test)
@@ -270,6 +271,11 @@ public:
 	{
 		printGlobalMessage(aggregatorName + " STATISTIC");
 		vPrintStatistic();
+	}
+
+	AbstractTest::ResultType getStatus() const
+	{
+		return status;
 	}
 
 protected:
@@ -358,6 +364,7 @@ protected:
 		}
 		if (countFailed)
 		{
+			status = AbstractTest::ResultType::FAILED;
 			std::cout << TEXT_STYLE_BOLD
 					<< TEXT_STYLE_VIOLET
 					<< "Count "
@@ -423,6 +430,7 @@ protected:
 	std::string aggregatorName;
 	std::vector<int> vectorReturnCodes;
 	std::vector<std::shared_ptr<AbstractTest>> vectorTests;
+	mutable AbstractTest::ResultType status = AbstractTest::ResultType::SUCCESS;
 };
 
 #endif // TEST_BASETEST_H

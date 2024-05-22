@@ -11,7 +11,7 @@ namespace flame_ide
 namespace base_value_utils
 {
 
-template<EnumeratedType UBJSON_TYPE>
+template<EnumeratedValueType UBJSON_TYPE>
 struct TraitValues
 {
 	using Me = TraitValues<UBJSON_TYPE>;
@@ -19,12 +19,12 @@ struct TraitValues
 
 	using ValueType = typename Traits::ValueType;
 
-	EnumeratedType getType() const
+	EnumeratedValueType getType() const
 	{
 		return Traits::VALUE_TYPE;
 	}
 
-	Type getTypeClose() const
+	ValueType getTypeClose() const
 	{
 		return Traits::VALUE_TYPE_CLOSE;
 	}
@@ -37,7 +37,7 @@ struct TraitValues
 
 }
 
-template<EnumeratedType UBJSON_TYPE, bool IS_ALLOCATED = FalseType::VALUE>
+template<EnumeratedValueType UBJSON_TYPE, bool IS_ALLOCATED = FalseType::VALUE>
 class BaseValue: public base_value_utils::TraitValues<UBJSON_TYPE>
 {
 public:
@@ -89,7 +89,7 @@ private:
 	ValueType value;
 };
 
-template<EnumeratedType UBJSON_TYPE>
+template<EnumeratedValueType UBJSON_TYPE>
 class BaseValue<UBJSON_TYPE, TrueType::VALUE>: public base_value_utils::TraitValues<UBJSON_TYPE>
 {
 public:
@@ -102,12 +102,12 @@ public:
 	BaseValue(Me &&) = default;
 
 	BaseValue(const ValueType &initValue) :
-			value(templates::makeShared<ValueType>(initValue))
+			value(templates::SharedPointer<ValueType>(initValue))
 	{}
 
 	BaseValue(ValueType &&initValue) :
 			value(
-					templates::makeShared<ValueType>(flame_ide::move(initValue))
+					templates::SharedPointer<ValueType>(flame_ide::move(initValue))
 			)
 	{}
 
@@ -120,7 +120,7 @@ public:
 	{
 		if (!value)
 		{
-			value = templates::makeShared<ValueType>(assigninigValue);
+			value = templates::SharedPointer<ValueType>(assigninigValue);
 		}
 		else
 		{
@@ -132,7 +132,7 @@ public:
 	{
 		if (!value)
 		{
-			value = templates::makeShared<ValueType>(flame_ide::move(assigninigValue));
+			value = templates::SharedPointer<ValueType>(flame_ide::move(assigninigValue));
 		}
 		else
 		{

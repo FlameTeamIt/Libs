@@ -32,13 +32,22 @@ struct FalseType: public IntegralConstant<bool, false>
 
 
 ///
+/// @brief The ResultType struct
+///
+template<typename T>
+struct ResultType: public NonCreational
+{
+	using Type = T;
+};
+
+///
 /// @brief Default type traits
 /// @tparam Raw type.
 ///
 template<typename T>
-struct DefaultTraits
+struct DefaultTraits: public ResultType<T>
 {
-	using Type = T;
+	using typename ResultType<T>::Type;
 	using ConstType = Type const;
 
 	using Reference = Type &;
@@ -53,7 +62,7 @@ struct DefaultTraits
 };
 
 template<typename T>
-struct DefaultTraits<const T>
+struct DefaultTraits<const T>: public NonCreational
 {
 	using Type = const T;
 	using Reference = const Type &;
@@ -62,99 +71,110 @@ struct DefaultTraits<const T>
 
 	using Pointer = const Type *;
 	using PointerToConst = const Type *;
-	using COnstPointer = const Type *const;
+	using ConstPointer = const Type *const;
 
 	using VoidPointer = const void *;
 };
+template<typename T>
+using ConstTraits = DefaultTraits<const T>;
 
 template<>
-struct DefaultTraits<void>
+struct DefaultTraits<void>: NonCreational
 {
 	using Pointer = void *;
-	using VoidToConst = void const *;
+	using PointerToConst = void const *;
 	using ConstPointer = void *const;
 	using ConstPointerToConst = void const *const;
 };
+using VoidTraits = DefaultTraits<void>;
 
 ///
 /// @brief Removing pointer from type.
 /// @tparam Raw type.
 ///
 template<typename T>
-struct RemovePointer
+struct RemovePointerTrait: public NonCreational
 {
 	using Type = T;
 };
 
 template<typename T>
-struct RemovePointer<T *>
+struct RemovePointerTrait<T *>: public NonCreational
 {
 	using Type = T;
 };
 
+template<typename T>
+using RemovePointerType = typename RemovePointerTrait<T>::Type;
 
 ///
 /// @brief Removing reference from type.
 /// @tparam Raw type.
 ///
 template<typename T>
-struct RemoveReference: public NonCreational
+struct RemoveReferenceTrait: public NonCreational
 {
 	using Type = T;
 };
 
 template<typename T>
-struct RemoveReference<T &>: public NonCreational
+struct RemoveReferenceTrait<T &>: public NonCreational
 {
 	using Type = T;
 };
 
 template<typename T>
-struct RemoveReference<T &&>: public NonCreational
+struct RemoveReferenceTrait<T &&>: public NonCreational
 {
 	using Type = T;
 };
 
+template<typename T>
+using RemoveReferenceType = typename RemoveReferenceTrait<T>::Type;
 
 ///
 /// @brief View RemoveConst
 ///
 template<typename T>
-struct RemoveConst: public NonCreational
+struct RemoveConstTrait: public NonCreational
 {
 	using Type = T;
 };
 
 template<typename T>
-struct RemoveConst<const T>: public NonCreational
+struct RemoveConstTrait<const T>: public NonCreational
 {
 	using Type = T;
 };
 
+template<typename T>
+using RemoveConstType = typename RemoveConstTrait<T>::Type;
 
 ///
 /// @brief Removing volatile from type.
 /// @tparam Raw type.
 ///
 template<typename T>
-struct RemoveVolatile: public NonCreational
+struct RemoveVolatileTrait: public NonCreational
 {
 	using Type = T;
 };
 
 template<typename T>
-struct RemoveVolatile<volatile T>: public NonCreational
+struct RemoveVolatileTrait<volatile T>: public NonCreational
 {
 	using Type = T;
 };
 
+template<typename T>
+using RemoveVolatileType = typename RemoveVolatileTrait<T>::Type;
 
 ///
 /// @brief Removing all modificators for getting
 /// @tparam Raw type.
 ///
 template<typename T>
-struct RemoveAll: public NonCreational
+struct RemoveAllTrait: public NonCreational
 {
 	using Type = T;
 };
@@ -163,24 +183,24 @@ struct RemoveAll: public NonCreational
 /// @brief View RemoveAll.
 ///
 template<typename T>
-struct RemoveAll<volatile T>: public NonCreational
+struct RemoveAllTrait<volatile T>: public NonCreational
 {
-	using Type = typename RemoveAll<typename RemoveVolatile<T>::Type>::Type;
+	using Type = typename RemoveAllTrait<typename RemoveVolatileTrait<T>::Type>::Type;
 };
 
 ///
 /// @brief View RemoveAll.
 ///
 template<typename T>
-struct RemoveAll<T *>: public NonCreational
+struct RemoveAllTrait<T *>: public NonCreational
 {
-	using Type = typename RemoveAll<typename RemovePointer<T>::Type>::Type;
+	using Type = typename RemoveAllTrait<typename RemovePointerTrait<T>::Type>::Type;
 };
 
 template<typename T>
-struct RemoveAll<T const>: public NonCreational
+struct RemoveAllTrait<T const>: public NonCreational
 {
-	using Type = typename RemoveAll<typename RemoveConst<T>::Type>::Type;
+	using Type = typename RemoveAllTrait<typename RemoveConstTrait<T>::Type>::Type;
 };
 
 
@@ -188,19 +208,88 @@ struct RemoveAll<T const>: public NonCreational
 /// @brief View RemoveAll.
 ///
 template<typename T>
-struct RemoveAll<T &>: public NonCreational
+struct RemoveAllTrait<T &>: public NonCreational
 {
-	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
+	using Type = typename RemoveAllTrait<typename RemoveReferenceTrait<T>::Type>::Type;
 };
 
 ///
 /// @brief View RemoveAll.
 ///
 template<typename T>
-struct RemoveAll<T &&>: public NonCreational
+struct RemoveAllTrait<T &&>: public NonCreational
 {
-	using Type = typename RemoveAll<typename RemoveReference<T>::Type>::Type;
+	using Type = typename RemoveAllTrait<typename RemoveReferenceTrait<T>::Type>::Type;
 };
+
+template<typename T>
+using RemoveAllType = typename RemoveAllTrait<T>::Type;
+
+template<typename T>
+struct WithParent: public T
+{
+	using Parent = T;
+};
+
+///
+/// @brief The AddReferenceTrait class
+///
+template<typename T>
+struct AddReferenceTrait: public NonCreational
+{
+	using Type = typename DefaultTraits<T>::Reference;
+};
+template<typename T>
+using AddReferenceType = typename AddReferenceTrait<T>::Type;
+
+///
+/// @brief The AddMoveReferenceTrait class
+///
+template<typename T>
+struct AddMoveReferenceTrait: public NonCreational
+{
+	using Type = typename DefaultTraits<T>::MoveReference;
+};
+template<typename T>
+using AddMoveReferenceType = typename AddMoveReferenceTrait<T>::Type;
+
+///
+/// @brief The AddConstTrait class
+///
+template<typename T>
+struct AddConstTrait: public NonCreational
+{
+	using Type = const typename DefaultTraits<T>::Type;
+};
+template<typename T>
+using AddConstType = typename AddConstTrait<T>::Type;
+
+///
+/// @brief The AddPointerTrait class
+///
+template<typename T>
+struct AddPointerTrait: public NonCreational
+{
+	using Type = typename DefaultTraits<T>::Pointer;
+};
+template<typename T>
+using AddPointerType = typename AddPointerTrait<T>::Type;
+
+///
+/// @brief The AddVolatileTrait class
+///
+template<typename T>
+struct AddVolatileTrait: public NonCreational
+{
+	using Type = volatile typename DefaultTraits<T>::Pointer;
+};
+template<typename T>
+using AddVolatileType = typename AddVolatileTrait<T>::Type;
+
+///
+/// @brief The Empty class
+///
+class Empty {};
 
 }
 

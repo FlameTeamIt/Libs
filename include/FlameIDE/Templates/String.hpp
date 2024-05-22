@@ -27,20 +27,6 @@ namespace flame_ide
 {namespace templates
 {
 
-namespace string_utils
-{
-
-template<
-	Types::ulong_t MIN, Types::ulong_t MAX
-	, SizeTraits::SizeType BUFFER_SIZE
->
-struct NumberChecker;
-
-template<typename T, bool SIGNED = isSigned<T>()>
-struct BufferSize;
-
-}
-
 template<typename T
 	, typename Traits = ContainerTraits<T>
 	, typename Allocator = allocator::ArrayAllocator<T>>
@@ -51,80 +37,13 @@ using U8String = BasicString<Types::uichar_t>;
 using U16String = BasicString<Types::ushort_t>;
 using U32String = BasicString<Types::uint_t>;
 
-}}
+}} // namespace flame_ide::templates
 
 // Define types
 
 namespace flame_ide
 {namespace templates
 {
-
-namespace string_utils
-{
-
-template<
-	Types::ulong_t MIN, Types::ulong_t MAX
-	, SizeTraits::SizeType BUFFER_SIZE
->
-struct NumberChecker
-{
-	template<typename IntType>
-	static inline SizeTraits::SizeType get(IntType value);
-};
-
-template<SizeTraits::SizeType BUFFER_SIZE>
-struct NumberChecker<
-	Types::ulong_t(999999999999999999ULL), Types::ulong_t(9999999999999999999ULL)
-	, BUFFER_SIZE
->
-{
-	template<typename IntType>
-	static inline SizeTraits::SizeType get(IntType value);
-};
-
-template<typename T, bool SIGNED>
-struct BufferSize
-{
-	static inline SizeTraits::SizeType get(T integer);
-};
-
-template<typename T>
-struct BufferSize<T, false>
-{
-	static inline SizeTraits::SizeType get(T integer);
-};
-
-template<typename IntValue>
-String toString(IntValue value);
-
-template<typename NumberType, bool IS_FLOAT = isFloatType<NumberType>()>
-struct NumberConverter
-{
-	static String convert(NumberType value);
-};
-
-template<typename NumberType>
-struct NumberConverter<NumberType, true>
-{
-	static String convert(NumberType value);
-};
-
-template<typename IntType, typename CharType>
-class IntegerToCharStream
-{
-	static constexpr CharType NULL_SYMBOL = CharType();
-
-	IntegerToCharStream(IntType value);
-
-	CharType get();
-	bool next() const;
-
-private:
-	IntType value;
-};
-
-}
-
 
 TEMPLATE_TYPE
 class BasicString : protected Allocator
@@ -167,6 +86,8 @@ public:
 
 	Me &operator+=(const T &object);
 	Me &operator+=(T &&object);
+
+	Me &operator+=(PointerToConst string);
 
 	// TODO: Not implement
 	template<typename IntType>
@@ -258,76 +179,11 @@ STRING_TYPE operator+(const STRING_TYPE &string, typename STRING_TYPE::PointerTo
 TEMPLATE_TYPE
 STRING_TYPE operator+(typename STRING_TYPE::PointerToConst array, const STRING_TYPE &string);
 
-
-}}
+}} // namespace flame_ide::templates
 
 namespace flame_ide
 {namespace templates
 {
-
-namespace string_utils
-{
-
-template<Types::ulong_t MIN, Types::ulong_t MAX, SizeTraits::SizeType BUFFER_SIZE>
-template<typename IntType>
-inline SizeTraits::SizeType
-NumberChecker<MIN, MAX, BUFFER_SIZE>::get(IntType value)
-{
-	if (MIN <= value && value <= MAX)
-		return BUFFER_SIZE;
-	else
-		return NumberChecker<
-			MAX, MAX * Types::ulong_t(10) + Types::ulong_t(9)
-			, BUFFER_SIZE + SizeTraits::SizeType(1)
-		>::get(value);
-}
-
-template<SizeTraits::SizeType BUFFER_SIZE> template<typename IntType>
-inline SizeTraits::SizeType NumberChecker<
-	Types::ulong_t(999999999999999999ULL), Types::ulong_t(9999999999999999999ULL)
-	, BUFFER_SIZE
->::get(IntType value)
-{
-	constexpr Types::ulong_t MIN = Types::ulong_t(999999999999999999ULL);
-	constexpr Types::ulong_t MAX = Types::ulong_t(9999999999999999999ULL);
-
-	if (MIN <= value && value <= MAX)
-	{
-		return BUFFER_SIZE;
-	}
-	else
-	{
-		return BUFFER_SIZE + 1;
-	}
-}
-
-template<typename IntType, bool SIGNED>
-SizeTraits::SizeType BufferSize<IntType, SIGNED>::get(IntType integer)
-{
-	SizeTraits::SizeType signedValue = 0;
-	if (integer < 0)
-	{
-		++signedValue;
-		integer *= -1;
-	}
-	typename MakeUnsigned<IntType>::Type value = integer;
-
-	return signedValue + NumberChecker<0ULL, 9ULL, 1>::get(value);
-}
-
-template<typename IntType>
-SizeTraits::SizeType BufferSize<IntType, false>::get(IntType integer)
-{
-	return NumberChecker<0ULL, 9ULL, 1>::get(integer);
-}
-
-template<typename IntType>
-SizeTraits::SizeType bufferSize(IntType integer)
-{
-	return BufferSize<IntType>::get(integer);
-}
-
-}
 
 TEMPLATE_TYPE
 STRING_TYPE::BasicString() noexcept
@@ -489,12 +345,19 @@ STRING_TYPE &STRING_TYPE::operator+=(T &&object)
 	return *this;
 }
 
+TEMPLATE_TYPE
+STRING_TYPE &STRING_TYPE::operator+=(PointerToConst string)
+{
+	pushBack(string);
+	return *this;
+}
+
 // TODO: implement
 TEMPLATE_TYPE
 template<typename IntType>
 STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
 {
-
+	flame_ide::unused(integer);
 	return *this;
 }
 
@@ -502,6 +365,7 @@ STRING_TYPE &STRING_TYPE::operator+=(IntType integer)
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator+=(const Me &string)
 {
+	flame_ide::unused(string);
 	return *this;
 }
 
@@ -510,6 +374,7 @@ TEMPLATE_TYPE
 template<typename InputIterator>
 STRING_TYPE &STRING_TYPE::operator+=(Range<InputIterator> range)
 {
+	flame_ide::unused(range);
 	return *this;
 }
 
@@ -533,6 +398,7 @@ STRING_TYPE &STRING_TYPE::operator-=(ReverseIterator it)
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator-=(Range<Iterator> range)
 {
+	flame_ide::unused(range);
 	return *this;
 }
 
@@ -540,6 +406,7 @@ STRING_TYPE &STRING_TYPE::operator-=(Range<Iterator> range)
 TEMPLATE_TYPE
 STRING_TYPE &STRING_TYPE::operator-=(Range<ReverseIterator> range)
 {
+	flame_ide::unused(range);
 	return *this;
 }
 
@@ -844,8 +711,8 @@ void STRING_TYPE::insert(typename STRING_TYPE::Iterator it
 		else
 		{
 			Range<Iterator> initRange(end(), end() + rangeSize);
-			for (Reference it : initRange)
-				emplaceNew<Type>(&it);
+			for (Reference i : initRange)
+				emplaceNew<Type>(&i);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
 					, rangeNew(rangeOld.begin() - rangeSize
@@ -932,67 +799,12 @@ TEMPLATE_TYPE
 typename STRING_TYPE::SizeType STRING_TYPE::rawStringLength(
 		typename STRING_TYPE::PointerToConst rawString)
 {
-	SizeType length;
-	for (length = 0; rawString[length] != NULL_SYMBOL; ++length);
+	SizeType length = 0;
+	if (rawString)
+	{
+		for (; rawString[length] != NULL_SYMBOL; ++length);
+	}
 	return length;
-}
-
-namespace string_utils
-{
-
-template<typename NumberType, bool IS_FLOAT>
-String NumberConverter<NumberType, IS_FLOAT>::convert(NumberType value)
-{
-	String string;
-	SizeTraits::SizeType buffer = string_utils::BufferSize<NumberType>::get(value);
-	string.reserve(buffer);
-
-	if (isSigned<NumberType>())
-	{
-		if (value < 0)
-		{
-			string.pushBack('-');
-			value *= -1;
-			--buffer;
-		}
-	}
-
-	SizeTraits::SizeType dec = 1;
-	for (decltype(buffer) i = 1; i < buffer; ++i)
-	{
-		dec *= static_cast<SizeTraits::SizeType>(10);
-	}
-
-	for (decltype(buffer) i = 0; i < buffer; ++i)
-	{
-		auto result = value / dec;
-		string.pushBack(String::Type('0' + result));
-		value %= dec;
-		dec /= static_cast<SizeTraits::SizeType>(10);
-	}
-
-	return string;
-}
-
-// TODO: Implement
-template<typename NumberType>
-String NumberConverter<NumberType, true>::convert(NumberType)
-{
-	static_assert(!isFloatType<NumberType>(), "Not implemented.");
-
-	String string;
-	return string;
-}
-
-}
-
-template<typename IntValue>
-String toString(IntValue value)
-{
-	return string_utils::NumberConverter<
-		IntValue
-		, isFloatType<IntValue>()
-	>::convert(value);
 }
 
 template<typename T
@@ -1001,8 +813,8 @@ template<typename T
 	, typename IntType
 	, typename EnableType =
 			typename EnableType<
-				IsIntegralType<IntType>::VALUE
-						|| IsFloatType<IntType>::VALUE
+				IsIntegralTrait<IntType>::VALUE
+						|| IsFloatTrait<IntType>::VALUE
 				, IntType
 			>::Type
 >
@@ -1019,8 +831,8 @@ template<typename T
 	, typename IntType
 	, typename EnableType =
 			typename EnableType<
-				IsIntegralType<IntType>::VALUE
-						|| IsFloatType<IntType>::VALUE
+				IsIntegralTrait<IntType>::VALUE
+						|| IsFloatTrait<IntType>::VALUE
 				, IntType
 			>::Type
 >
@@ -1057,7 +869,6 @@ STRING_TYPE operator+(typename STRING_TYPE::PointerToConst array
 	return resultString;
 }
 
-
-}}
+}} // namespace flame_ide::templates
 
 #endif // FLAMEIDE_TEMPLATES_STRING_HPP

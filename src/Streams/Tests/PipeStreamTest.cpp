@@ -33,7 +33,7 @@ int PipeStreamTest::vStart()
 			)
 	);
 	auto result = stream.getWriter().write(writtableRange);
-	IN_CASE_CHECK(result == writtableArray.size());
+	IN_CASE_CHECK(result == static_cast<Types::ssize_t>(writtableArray.size()));
 
 	auto readableRange = PipeStream::OutputByteRange(
 			PipeStream::ByteIterator(&readableArray.front())
@@ -41,7 +41,8 @@ int PipeStreamTest::vStart()
 	);
 
 	result = stream.getReader().read(readableRange);
-	IN_CASE_CHECK(result == writtableArray.size() && result == readableArray.size());
+	IN_CASE_CHECK(result == static_cast<Types::ssize_t>(writtableArray.size())
+			&& result == static_cast<Types::ssize_t>(readableArray.size()));
 
 	IN_CASE_CHECK(std::equal(
 			readableArray.begin(), readableArray.end(), writtableArray.begin()

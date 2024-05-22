@@ -2,16 +2,15 @@ cmake_minimum_required(VERSION 3.14)
 
 set(NAME Streams)
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
-get_sources(FILE_LIST)
 
 set(DEPENDENCY_HEADER_TARGETS "${FLAME_NAMESPACE}::${NAME}::Headers")
 set(DEPENDENCY_TARGETS_FOR_STATIC
 	"${FLAME_NAMESPACE}::${NAME}::${FLAME_PLATFORM}::Object"
-	"${FLAME_NAMESPACE}::Threads::Static"
+	"${FLAME_NAMESPACE}::Os::Static"
 )
 set(DEPENDENCY_TARGETS_FOR_SHARED
 	"${FLAME_NAMESPACE}::${NAME}::${FLAME_PLATFORM}::Object::Independ"
-	"${FLAME_NAMESPACE}::Threads::Shared"
+	"${FLAME_NAMESPACE}::Os::Shared"
 )
 
 if(FLAME_MAKE_STATIC)
@@ -21,6 +20,7 @@ if(FLAME_MAKE_SHARED)
 	set(MAKE_SHARED MAKE_SHARED)
 endif()
 
+get_sources(FILE_LIST)
 flame_compile_library(
 	NAME "${NAME}"
 	SOURCE_LIST "${FILE_LIST}"
@@ -33,6 +33,18 @@ flame_compile_library(
 		"${FLAME_NAMESPACE}::${NAME}::Object::Independ"
 	STATIC_ALIAS_NAME "${FLAME_NAMESPACE}::${NAME}::Static"
 	SHARED_ALIAS_NAME "${FLAME_NAMESPACE}::${NAME}::Shared"
+
+	NO_RTTI
+	NO_EXCEPTIONS
+
 	${MAKE_SHARED}
 	${MAKE_STATIC}
 )
+
+set(SOURCE_MODULES
+	${CMAKE_CURRENT_LIST_DIR}/Posix
+	${CMAKE_CURRENT_LIST_DIR}/Windows
+)
+foreach(module ${SOURCE_MODULES})
+	add_subdirectory(${module})
+endforeach()

@@ -1,0 +1,6 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/Callbacks.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Enums.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Structs.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ValueTypes.hpp
+)

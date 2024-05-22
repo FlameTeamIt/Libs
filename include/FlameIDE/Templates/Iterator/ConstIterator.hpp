@@ -17,7 +17,37 @@ template<typename IteratorType
 	, typename MetaType = void>
 class ConstIterator;
 
-}}
+namespace defaults
+{
+
+template<typename IteratorType>
+using ConstOutputIterator = ConstIterator<
+	IteratorType, IteratorCategory::OUTPUT
+>;
+
+template<typename IteratorType>
+using ConstInputIterator = ConstIterator<
+	IteratorType, IteratorCategory::INPUT
+>;
+
+template<typename IteratorType>
+using ConstForwardIterator = ConstIterator<
+	IteratorType, IteratorCategory::FORWARD
+>;
+
+template<typename IteratorType>
+using ConstBidirectionalIterator = ConstIterator<
+	IteratorType, IteratorCategory::BIDIRECTIONAL
+>;
+
+template<typename IteratorType>
+using ConstRandomAccessIterator = ConstIterator<
+	IteratorType, IteratorCategory::RANDOM_ACCESS
+>;
+
+} // namespace defaults
+
+}} // namespace flame_ide::templates
 
 namespace flame_ide
 {namespace templates
@@ -25,8 +55,9 @@ namespace flame_ide
 
 template<typename IteratorType, typename Traits, typename MetaType>
 class ConstIterator<IteratorType, IteratorCategory::OUTPUT, Traits, MetaType>:
-		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::OUTPUT, IteratorAccess::CONSTANT, Traits, MetaType>
+		public iterator_utils::BaseIterator<
+			IteratorType, IteratorCategory::OUTPUT, IteratorAccess::CONSTANT, Traits, MetaType
+		>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
@@ -57,8 +88,9 @@ protected:
 
 template<typename IteratorType, typename Traits, typename MetaType>
 class ConstIterator<IteratorType, IteratorCategory::INPUT, Traits, MetaType>:
-		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::INPUT, IteratorAccess::CONSTANT, Traits, MetaType>
+		public iterator_utils::BaseIterator<
+			IteratorType, IteratorCategory::INPUT, IteratorAccess::CONSTANT, Traits, MetaType
+		>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
@@ -90,8 +122,9 @@ protected:
 
 template<typename IteratorType, typename Traits, typename MetaType>
 class ConstIterator<IteratorType, IteratorCategory::FORWARD, Traits, MetaType>:
-		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::FORWARD, IteratorAccess::CONSTANT, Traits, MetaType>
+		public iterator_utils::BaseIterator<
+			IteratorType, IteratorCategory::FORWARD, IteratorAccess::CONSTANT, Traits, MetaType
+		>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
@@ -123,9 +156,10 @@ protected:
 
 template<typename IteratorType, typename Traits, typename MetaType>
 class ConstIterator<IteratorType, IteratorCategory::BIDIRECTIONAL, Traits, MetaType>:
-		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits
-			, MetaType>
+		public iterator_utils::BaseIterator<
+			IteratorType, IteratorCategory::BIDIRECTIONAL, IteratorAccess::CONSTANT, Traits
+			, MetaType
+		>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
@@ -159,9 +193,10 @@ protected:
 
 template<typename IteratorType, typename Traits, typename MetaType>
 class ConstIterator<IteratorType, IteratorCategory::RANDOM_ACCESS, Traits, MetaType>:
-		public iterator_utils::BaseIterator<IteratorType
-			, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits
-			, MetaType>
+		public iterator_utils::BaseIterator<
+			IteratorType, IteratorCategory::RANDOM_ACCESS, IteratorAccess::CONSTANT, Traits
+			, MetaType
+		>
 {
 public:
 	using Parent = iterator_utils::BaseIterator<
@@ -209,7 +244,7 @@ protected:
 	using Parent::wrappedIterator;
 };
 
-}}
+}} // namespace flame_ide::templates
 
 #include <FlameIDE/Templates/Iterator/UndefOperators.hpp>
 

@@ -1,6 +1,7 @@
-#include <FlameIDE/Templates/Range.hpp>
-
 #include "HybridVectorTest.hpp"
+
+#include <FlameIDE/Common/Macros/DetectCompiler.hpp>
+#include <FlameIDE/Templates/Range.hpp>
 
 namespace flame_ide
 {namespace templates
@@ -157,6 +158,11 @@ bool HybridVectorTest::fullTestAsVector()
 		}
 	));
 
+#if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_GCC
+#	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Warray-bounds"
+#endif
+
 	CHECK_RESULT_SUCCESS(doTestCase(
 		"reverse"
 		, [&]()
@@ -171,6 +177,10 @@ bool HybridVectorTest::fullTestAsVector()
 			CHECK_RESULT_SUCCESS_END(compareContainers(vectorRange, stdVectorRange));
 		}
 	));
+
+#if FLAMEIDE_COMPILER == FLAMEIDE_COMPILER_GCC
+#	pragma GCC diagnostic pop
+#endif
 
 	{
 		TestClass tmp = *vector.rbegin();
@@ -200,8 +210,8 @@ bool HybridVectorTest::fullTestAsVector()
 		"emplaceBack()"
 		, [&]()
 		{
-			vector.emplaceBack(6000, 600, 60, '6');
-			stdvector.emplace_back(6000, 600, 60, '6');
+			vector.emplaceBack(long{ 6000 }, int{ 600 }, short{ 60 }, '6');
+			stdvector.emplace_back(long{ 6000 }, int{ 600 }, short{ 60 }, '6');
 
 			CHECK_RESULT_SUCCESS(compareContainers(vector, stdvector));
 

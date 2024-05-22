@@ -2,7 +2,9 @@
 #define FLAMEIDE_STREAMS_SOCKET_HPP
 
 #include <FlameIDE/Streams/StreamUtils.hpp>
-#include <FlameIDE/Common/OsTypes.hpp>
+#include <FlameIDE/Streams/SocketUtils.hpp>
+
+#include <FlameIDE/Os/Types.hpp>
 
 namespace flame_ide
 {namespace streams
@@ -55,7 +57,7 @@ public:
 	os::Socket getSocket(bool continueOwning = false) noexcept;
 
 protected:
-	os::Socket sock; ///< socket
+	os::Socket nativeSocket;
 	bool own; ///< attribute
 };
 

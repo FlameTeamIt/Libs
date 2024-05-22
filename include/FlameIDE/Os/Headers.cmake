@@ -1,0 +1,5 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/Constants.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Library.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Types.hpp
+)

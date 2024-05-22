@@ -1,4 +1,4 @@
-#include <FlameIDE/Common/Macroses/DetectOs.hpp>
+#include <FlameIDE/Common/Macros/DetectOs.hpp>
 
 #if FLAMEIDE_OS_CURRENT == FLAMEIDE_OS_WINDOWS
 
@@ -22,8 +22,8 @@ NamedPipeReader::NamedPipeReader(const char *name) noexcept :
 
 NamedPipeReader::~NamedPipeReader() noexcept
 {
-	auto fd = getFileDescriptor();
-	destroyNamedReader(Descriptors::ResultValue{ fd, os::STATUS_SUCCESS });
+	auto file = getFileDescriptor();
+	destroyNamedReader(Descriptors::ResultValue{ file, os::STATUS_SUCCESS });
 	setFileDescriptor(os::INVALID_DESCRIPTOR, false);
 }
 
@@ -49,12 +49,12 @@ SizeTraits::SsizeType NamedPipeReader::read(OutputCircularByteRange range) noexc
 os::Status NamedPipeReader::open(const char *name) noexcept
 {
 	setFileDescriptor(os::INVALID_DESCRIPTOR, false);
-	os::FileDescriptor fd = makeNamedReader(name).fd;
-	if (fd == os::INVALID_DESCRIPTOR)
+	os::FileDescriptor file = makeNamedReader(name).fd;
+	if (file == os::INVALID_DESCRIPTOR)
 	{
 		return GetLastError();
 	}
-	setFileDescriptor(fd, true);
+	setFileDescriptor(file, true);
 
 	return os::STATUS_SUCCESS;
 }

@@ -1,5 +1,8 @@
 #include "../CommonFuncitons.hpp"
-#include <FlameIDE/Threads/Thread.hpp>
+
+#include <FlameIDE/Os/Constants.hpp>
+
+#include <FlameIDE/Os/Threads/Thread.hpp>
 
 #include <iostream>
 
@@ -9,6 +12,11 @@ namespace flame_ide
 
 namespace
 {
+
+os::Status getLastError() noexcept
+{
+	return ::GetLastError();
+}
 
 Descriptors::ResultValue makeNamedPipeClient(const char *pipeName)
 {
@@ -24,7 +32,7 @@ Descriptors::ResultValue makeNamedPipeClient(const char *pipeName)
 
 	if (!pipe.handle || pipe == os::INVALID_DESCRIPTOR)
 	{
-		auto err = ::GetLastError();
+		os::Status err = ::GetLastError();
 		return { pipe, err };
 	}
 
@@ -46,13 +54,13 @@ Descriptors::ResultValue makeNamedPipeServer(const char *pipeName)
 
 	if (!pipe.handle || pipe == os::INVALID_DESCRIPTOR)
 	{
-		auto err = ::GetLastError();
+		os::Status err = ::GetLastError();
 		return { pipe, err };
 	}
 
 	if (!::ConnectNamedPipe(pipe, nullptr))
 	{
-		auto err = ::GetLastError();
+		os::Status err = ::GetLastError();
 		::CloseHandle(pipe);
 		return { os::INVALID_DESCRIPTOR, err };
 	}
@@ -78,12 +86,12 @@ os::Status destroyNamedReader(Descriptors::ResultValue descriptor) noexcept
 {
 	if (!::DisconnectNamedPipe(descriptor.fd))
 	{
-		return -::GetLastError();
+		return -getLastError();
 	}
 
 	if (!CloseHandle(descriptor.fd))
 	{
-		return -::GetLastError();
+		return -getLastError();
 	}
 
 	return os::STATUS_SUCCESS;
@@ -93,7 +101,7 @@ os::Status destroyNamedWriter(Descriptors::ResultValue descriptor) noexcept
 {
 	if (!CloseHandle(descriptor.fd))
 	{
-		return -::GetLastError();
+		return -getLastError();
 	}
 
 	return os::STATUS_SUCCESS;

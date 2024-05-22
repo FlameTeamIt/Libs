@@ -6,13 +6,15 @@ readonly SOURCE_MODULES_FILENAME=cmake/SourceModules.cmake
 readonly HEADER_MODULES_FILENAME=cmake/HeaderModules.cmake
 readonly TEST_MODULES_FILENAME=cmake/TestModules.cmake
 
+readonly SORT_METHOD=sort
+
 add_sources()
 {
 	local SRC_DIR=$1
 	local ADD_TO_MODULE_LIST=$2
 
 	local CMAKE_VARNAME="SOURCE_LIST"
-	local MODULE_LIST_FILE=$SOURCE_MODULES_FILENAME
+ 	local MODULE_LIST_FILE=$SOURCE_MODULES_FILENAME
 
 	if [[ "$ADD_TO_MODULE_LIST" == "true" ]]
 	then
@@ -25,7 +27,7 @@ add_sources()
 	for dir in ${directories[*]}; do
 
 		cd $dir &>/dev/null
-		local src_files=($(find -maxdepth 1 -type f -name "*.cpp" | sort))
+		local src_files=($(find -maxdepth 1 -type f -name "*.cpp" | LC_COLLATE=C ${SORT_METHOD}))
 		cd - &>/dev/null
 
 		if (( ${#src_files[*]} != 0 ))
@@ -84,7 +86,7 @@ add_headers()
 	for dir in ${directories[*]}; do
 
 		cd $dir &>/dev/null
-		local inc_files=($(find -maxdepth 1 -type f -name "*.hpp" | sort))
+		local inc_files=($(find -maxdepth 1 -type f -name "*.hpp" | LC_COLLATE=C ${SORT_METHOD}) $(find -maxdepth 1 -type f -name "*.h" | LC_COLLATE=C ${SORT_METHOD}))
 		cd - &>/dev/null
 
 		if (( ${#inc_files[*]} != 0 ))
@@ -140,7 +142,7 @@ add_tests()
 	for dir in ${directories[*]}; do
 
 		cd $dir &>/dev/null
-		local src_files=($(find -maxdepth 1 -type f -name "*.?pp" | sort))
+		local src_files=($(find -maxdepth 1 -type f -name "*.?pp" | LC_COLLATE=C ${SORT_METHOD}))
 		cd - &>/dev/null
 
 		if (( ${#src_files[*]} != 0 ))
@@ -180,10 +182,7 @@ add_tests()
 }
 
 
-add_sources src true
+add_sources src false
 add_headers src false
-add_headers include/FlameIDE true
-
-add_sources tests true
-add_headers tests true
+add_headers include/FlameIDE false
 add_tests src false

@@ -10,7 +10,7 @@ namespace flame_ide
 template<typename IntType, typename Meta = void>
 struct AsIntegralType
 {
-	static_assert(IsIntegralType<IntType>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType>::VALUE, "Type is not integral");
 
 	using Me = AsIntegralType<IntType, Meta>;
 
@@ -133,7 +133,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta>::AsIntegralType(IntType1 initValue) noexcept
 		: val(static_cast<IntType>(initValue))
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 }
 
 template<typename IntType, typename Meta>
@@ -141,7 +141,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta>&
 AsIntegralType<IntType, Meta>::operator=(IntType1 newValue) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	val = newValue;
 	return *this;
 }
@@ -204,7 +204,7 @@ template<typename IntType, typename Meta>
 template<typename IntType1>
 constexpr bool AsIntegralType<IntType, Meta>::operator==(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	return static_cast<IntType1>(this->val) == value;
 }
 
@@ -218,7 +218,7 @@ template<typename IntType, typename Meta>
 template<typename IntType1>
 constexpr bool AsIntegralType<IntType, Meta>::operator!=(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	return this->val != static_cast<IntType>(value);
 }
 
@@ -232,7 +232,7 @@ template<typename IntType, typename Meta>
 template<typename IntType1>
 constexpr bool AsIntegralType<IntType, Meta>::operator>(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	return this->val > static_cast<IntType>(value);
 }
 
@@ -246,7 +246,7 @@ template<typename IntType, typename Meta>
 template<typename IntType1>
 constexpr bool AsIntegralType<IntType, Meta>::operator<(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	return this->val < static_cast<IntType>(value);
 }
 
@@ -260,7 +260,7 @@ template<typename IntType, typename Meta>
 template<typename IntType1>
 constexpr bool AsIntegralType<IntType, Meta>::operator>=(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	return this->val > static_cast<IntType>(value);
 }
 
@@ -274,7 +274,7 @@ template<typename IntType, typename Meta>
 template<typename IntType1>
 constexpr bool AsIntegralType<IntType, Meta>::operator<=(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	return this->val < static_cast<IntType>(value);
 }
 
@@ -289,7 +289,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta> &
 AsIntegralType<IntType, Meta>::operator>>=(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	this->val >>= static_cast<IntType>(value);
 	return *this;
 }
@@ -307,7 +307,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta> &
 AsIntegralType<IntType, Meta>::operator<<=(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	this->val <<= static_cast<IntType>(value);
 	return *this;
 }
@@ -326,7 +326,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta> &
 AsIntegralType<IntType, Meta>::operator|=(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	this->val |= static_cast<IntType>(value);
 	return *this;
 }
@@ -346,7 +346,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta> &
 AsIntegralType<IntType, Meta>::operator+=(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	this->val += static_cast<IntType>(value);
 	return *this;
 }
@@ -364,7 +364,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta> &
 AsIntegralType<IntType, Meta>::operator-=(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	this->val -= static_cast<IntType>(value);
 	return *this;
 }
@@ -382,7 +382,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta> &
 AsIntegralType<IntType, Meta>::operator*=(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	this->val *= static_cast<IntType>(value);
 	return *this;
 }
@@ -400,7 +400,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta> &
 AsIntegralType<IntType, Meta>::operator/=(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 	this->val /= static_cast<IntType>(value);
 	return *this;
 }
@@ -418,7 +418,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta>
 AsIntegralType<IntType, Meta>::operator<<(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 
 	Me me = *this;
 	me.val <<= static_cast<IntType>(value);
@@ -439,7 +439,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta>
 AsIntegralType<IntType, Meta>::operator>>(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 
 	Me me = *this;
 	me.val >>= static_cast<IntType>(value);
@@ -460,7 +460,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta>
 AsIntegralType<IntType, Meta>::operator|(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 
 	Me me = *this;
 	me.val |= static_cast<IntType>(value);
@@ -481,7 +481,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta>
 AsIntegralType<IntType, Meta>::operator+(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 
 	Me me = *this;
 	me.val += static_cast<IntType>(value);
@@ -502,7 +502,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta>
 AsIntegralType<IntType, Meta>::operator-(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 
 	Me me = *this;
 	me.val -= static_cast<IntType>(value);
@@ -523,7 +523,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta>
 AsIntegralType<IntType, Meta>::operator*(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 
 	Me me = *this;
 	me.val *= static_cast<IntType>(value);
@@ -544,7 +544,7 @@ template<typename IntType1>
 constexpr AsIntegralType<IntType, Meta>
 AsIntegralType<IntType, Meta>::operator/(IntType1 value) noexcept
 {
-	static_assert(IsIntegralType<IntType1>::VALUE, "Type is not integral");
+	static_assert(IsIntegralTrait<IntType1>::VALUE, "Type is not integral");
 
 	Me me = *this;
 	me.val /= static_cast<IntType>(value);

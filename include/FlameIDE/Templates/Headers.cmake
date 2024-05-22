@@ -6,17 +6,21 @@ set (HEADER_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/AsIntegralType.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BitSet.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Bits.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Builder.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ByteOrder.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CircularArray.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CircularVector.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/CommandPattern.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CycleInteger.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Expected.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Function.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Future.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/HybridVector.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/InitializerList.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/IntegerIterator.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Iterator.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/List.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MaybeMonad.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Object.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ObjectViewer.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Optional.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Pointers.hpp
@@ -26,7 +30,9 @@ set (HEADER_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/SimpleAlgorithms.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/StaticAllocator.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/String.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StringConvertions.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Templates.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ThreadSafeObject.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Trees.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Tuple.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Variant.hpp

@@ -3,7 +3,10 @@
 
 #include <FlameIDE/Common/PrimitiveTypes.hpp>
 #include <FlameIDE/Common/Byte.hpp>
-#include <FlameIDE/Common/OsTypes.hpp>
+
+#include <FlameIDE/Os/Types.hpp>
+#include <FlameIDE/Os/Constants.hpp>
+
 #include <FlameIDE/Templates/Range.hpp>
 #include <FlameIDE/Templates/Iterator/Iterator.hpp>
 #include <FlameIDE/Templates/Iterator/CircularIterator.hpp>
@@ -168,6 +171,8 @@ class AbstractByteStream: public AbstractByteStreamReader
 		, public AbstractByteStreamWriter
 {
 public:
+	virtual ~AbstractByteStream() noexcept = default;
+
 	///
 	/// @brief getReader
 	/// @return

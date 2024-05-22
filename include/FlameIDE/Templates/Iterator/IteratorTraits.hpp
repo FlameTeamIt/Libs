@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_TEMPLATES_ITERATOR_ITERATORTRAITS_HPP
 #define FLAMEIDE_TEMPLATES_ITERATOR_ITERATORTRAITS_HPP
 
-#include <FlameIDE/Common/Traits/Fuctional.hpp>
+#include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Common/Traits/ContainerTraits.hpp>
 
 namespace flame_ide
@@ -59,6 +59,6 @@ struct IteratorTraits: public ContainerTraits<typename GetType<IteratorType>::Ty
 
 } // namespace iterator_utils
 
-}}
+}} // namespace flame_ide::templates
 
 #endif // FLAMEIDE_TEMPLATES_ITERATOR_ITERATORTRAITS_HPP

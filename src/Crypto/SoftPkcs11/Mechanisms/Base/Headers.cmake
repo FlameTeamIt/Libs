@@ -1,0 +1,8 @@
+set (HEADER_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/Decryptor.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Digister.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Encryptor.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Mechanism.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Signer.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Verifier.hpp
+)

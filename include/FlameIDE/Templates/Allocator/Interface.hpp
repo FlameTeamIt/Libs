@@ -9,12 +9,26 @@ namespace flame_ide
 {namespace allocator
 {
 
+template<typename Allocator>
+struct DefaultAllocator;
+
+template<typename SizeTraits>
+class BaseAllocator;
+
+}}}
+
+namespace flame_ide
+{namespace templates
+{namespace allocator
+{
+
 /// @brief Base interface for allocators
 /// @tparam Traits See flame_ide::templates::ContainerTraits
 template<typename SizeTraits = flame_ide::SizeTraits>
 class BaseAllocator
 {
 public:
+	using Traits = SizeTraits;
 	using SizeType = typename SizeTraits::SizeType;
 	using SsizeType = typename SizeTraits::SsizeType;
 	using VoidPointer = void *;
@@ -76,6 +90,25 @@ protected:
 	virtual SizeType vMaxAllocateSize() const noexcept = 0;
 };
 
-}}}
+///
+/// @brief The DefaultAllocator class
+///
+template<typename AllocatorImpl>
+struct DefaultAllocator: public NonCreational
+{
+	using Interface = BaseAllocator<typename AllocatorImpl::Traits>;
+
+	///
+	/// @brief get
+	/// @return
+	///
+	static inline Interface &get() noexcept
+	{
+		static AllocatorImpl allocator;
+		return allocator;
+	}
+};
+
+}}} //
 
 #endif // FLAMEIDE_TEMPLATES_ALLOCATOR_INTERFACE_HPP

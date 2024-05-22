@@ -7,7 +7,6 @@
 namespace flame_ide
 {namespace ubjson
 {
-
 }}
 
 #endif // FLAMEIDE_UBJSON_HUGENUMBER_HPP

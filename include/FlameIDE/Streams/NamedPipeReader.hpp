@@ -3,7 +3,9 @@
 
 #include <FlameIDE/Streams/StreamUtils.hpp>
 #include <FlameIDE/Streams/FileStreamReader.hpp>
-#include <FlameIDE/Common/OsTypes.hpp>
+
+#include <FlameIDE/Os/Types.hpp>
+
 #include <FlameIDE/Templates/String.hpp>
 
 namespace flame_ide

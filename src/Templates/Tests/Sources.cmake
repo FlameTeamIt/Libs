@@ -7,6 +7,8 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/AsIntegralTypeTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BitsTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BitsTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuilderTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/BuilderTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ByteOrderTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ByteOrderTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CircularArrayTest.cpp
@@ -17,16 +19,22 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/CircularVectorTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ExpectedTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ExpectedTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FutureTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FutureTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/HybridVectorTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/HybridVectorTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/IntegerIteratorTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/IntegerIteratorTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ListTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ListTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ObjectTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ObjectTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SerializationTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SerializationTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SharedPointerTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SharedPointerTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StringConvertionsTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StringConvertionsTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/StringTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/StringTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.cpp
@@ -43,4 +51,5 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/VectorTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/WideIntTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/WideIntTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )

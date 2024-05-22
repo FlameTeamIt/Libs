@@ -10,6 +10,9 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/PipeStreamTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/RamStreamTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/RamStreamTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SocketUtilsTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SocketUtilsTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )

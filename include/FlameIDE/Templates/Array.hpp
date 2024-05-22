@@ -73,333 +73,341 @@ public:
 		ConstIterator, IteratorCategory::RANDOM_ACCESS, Traits, Me
 	>;
 
-	/**
-	 * @brief Array
-	 */
+	///
+	/// @brief Array
+	///
 	Array();
 
-	/**
-	 * @brief Array
-	 * @param array
-	 */
+	///
+	/// @brief Array
+	/// @param array
+	///
 	TEMPLATE_DEFINE_1
 	Array(const ARRAY_TYPE_1 &objects) noexcept;
 
-	/**
-	 * @brief Array
-	 * @param objects
-	 */
+	///
+	/// @brief Array
+	/// @param objects
+	///
 	Array(const Me &objects) noexcept;
 
-	/**
-	 * @brief Array
-	 * @param array
-	 */
+	///
+	/// @brief Array
+	/// @param array
+	///
 	TEMPLATE_DEFINE_1
 	Array(ARRAY_TYPE_1 &&objects) noexcept;
 
-	/**
-	 * @brief Array
-	 * @param objects
-	 */
+	///
+	/// @brief Array
+	/// @param objects
+	///
 	Array(Me &&objects) noexcept;
 
-	/**
-	 * @brief Array
-	 * @param args
-	 */
-	Array(InitializerList<T, ARRAY_CAPACITY> list) noexcept;
+	///
+	/// @brief Array
+	/// @param list
+	///
+	template<typename U, Types::size_t ARRAY_SIZE>
+	Array(const U (&list)[ARRAY_SIZE]) noexcept;
+
+	///
+	/// @brief Array
+	/// @param list
+	///
+	template<typename U, Types::size_t ARRAY_SIZE>
+	Array(U (&&list)[ARRAY_SIZE]) noexcept;
 
 	~Array();
 
-	/**
-	 * @brief operator =
-	 * @param array
-	 * @return
-	 */
+	///
+	/// @brief operator =
+	/// @param array
+	/// @return
+	///
 	TEMPLATE_DEFINE_1
 	Me &operator=(const ARRAY_TYPE_1 &objects) noexcept;
 
-	/**
-	 * @brief operator =
-	 * @param objects
-	 * @return
-	 */
+	///
+	/// @brief operator =
+	/// @param objects
+	/// @return
+	///
 	Me &operator=(const Me &objects) noexcept;
 
-	/**
-	 * @brief operator =
-	 * @param array
-	 * @return
-	 */
+	///
+	/// @brief operator =
+	/// @param array
+	/// @return
+	///
 	TEMPLATE_DEFINE_1
 	Me &operator=(ARRAY_TYPE_1 &&objects) noexcept;
 
-	/**
-	 * @brief operator =
-	 * @param objects
-	 * @return
-	 */
+	///
+	/// @brief operator =
+	/// @param objects
+	/// @return
+	///
 	Me &operator=(Me &&objects) noexcept;
 
-	/**
-	 * @brief operator ==
-	 * @param array
-	 * @return
-	 */
+	///
+	/// @brief operator ==
+	/// @param array
+	/// @return
+	///
 	bool operator==(const Me &array) const noexcept;
 
-	/**
-	 * @brief operator !=
-	 * @param array
-	 * @return
-	 */
+	///
+	/// @brief operator !=
+	/// @param array
+	/// @return
+	///
 	bool operator!=(const Me &array) const;
 
-	/**
-	 * @brief operator[]
-	 * @param index
-	 * @return
-	 */
+	///
+	/// @brief operator[]
+	/// @param index
+	/// @return
+	///
 	template<typename IntType> inline
 	Reference operator[](IntType index) noexcept;
 
-	/**
-	 * @brief operator[]
-	 * @param index
-	 * @return
-	 */
+	///
+	/// @brief operator[]
+	/// @param index
+	/// @return
+	///
 	template<typename IntType> inline
 	ConstReference operator[](IntType index) const noexcept;
 
-	/**
-	 * @brief operator +=
-	 * @param object
-	 * @return
-	 */
+	///
+	/// @brief operator +=
+	/// @param object
+	/// @return
+	///
 	Me &operator+=(ConstReference object);
 
-	/**
-	 * @brief operator +=
-	 * @param object
-	 * @return
-	 */
+	///
+	/// @brief operator +=
+	/// @param object
+	/// @return
+	///
 	Me &operator+=(MoveReference object);
 
-	/**
-	 * @brief operator +=
-	 * @param range
-	 * @return
-	 */
+	///
+	/// @brief operator +=
+	/// @param range
+	/// @return
+	///
 	template<typename InputIterator>
 	Me &operator+=(Range<InputIterator> range);
 
-	/**
-	 * @brief operator -=
-	 * @param it
-	 * @return
-	 */
+	///
+	/// @brief operator -=
+	/// @param it
+	/// @return
+	///
 	Me &operator-=(Iterator it);
 
-	/**
-	 * @brief operator -=
-	 * @param it
-	 * @return
-	 */
+	///
+	/// @brief operator -=
+	/// @param it
+	/// @return
+	///
 	Me &operator-=(ReverseIterator it);
 
-	/**
-	 * @brief operator -=
-	 * @param range
-	 * @return
-	 */
+	///
+	/// @brief operator -=
+	/// @param range
+	/// @return
+	///
 	Me &operator-=(Range<Iterator> range);
 
-	/**
-	 * @brief operator -=
-	 * @param range
-	 * @return
-	 */
+	///
+	/// @brief operator -=
+	/// @param range
+	/// @return
+	///
 	Me &operator-=(Range<ReverseIterator> range);
 
-	/**
-	 * @brief data
-	 * @return
-	 */
+	///
+	/// @brief data
+	/// @return
+	///
 	Pointer data() noexcept;
 
-	/**
-	 * @brief data
-	 * @return
-	 */
+	///
+	/// @brief data
+	/// @return
+	///
 	PointerToConst data() const noexcept;
 
-	/**
-	 * @brief size
-	 * @return
-	 */
+	///
+	/// @brief size
+	/// @return
+	///
 	inline SizeType size() const noexcept;
 
-	/**
-	 * @brief capacity
-	 * @return
-	 */
+	///
+	/// @brief capacity
+	/// @return
+	///
 	inline constexpr SizeType capacity() const noexcept;
 
-	/**
-	 * @brief clean
-	 */
+	///
+	/// @brief clean
+	///
 	inline void clean();
 
-	/**
-	 * @brief clone
-	 * @return
-	 */
+	///
+	/// @brief clone
+	/// @return
+	///
 	Me clone() const;
 
-	/**
-	 * @brief begin
-	 * @return
-	 */
+	///
+	/// @brief begin
+	/// @return
+	///
 	inline Iterator begin() noexcept;
 
-	/**
-	 * @brief begin
-	 * @return
-	 */
+	///
+	/// @brief begin
+	/// @return
+	///
 	inline ConstIterator begin() const noexcept;
 
-	/**
-	 * @brief cbegin
-	 * @return
-	 */
+	///
+	/// @brief cbegin
+	/// @return
+	///
 	inline ConstIterator cbegin() const noexcept;
 
-	/**
-	 * @brief rbegin
-	 * @return
-	 */
+	///
+	/// @brief rbegin
+	/// @return
+	///
 	inline ReverseIterator rbegin() noexcept;
 
-	/**
-	 * @brief rbegin
-	 * @return
-	 */
+	///
+	/// @brief rbegin
+	/// @return
+	///
 	inline ConstReverseIterator rbegin() const noexcept;
 
-	/**
-	 * @brief crbegin
-	 * @return
-	 */
+	///
+	/// @brief crbegin
+	/// @return
+	///
 	inline ConstReverseIterator crbegin() const noexcept;
 
-	/**
-	 * @brief end
-	 * @return
-	 */
+	///
+	/// @brief end
+	/// @return
+	///
 	inline Iterator end() noexcept;
 
-	/**
-	 * @brief end
-	 * @return
-	 */
+	///
+	/// @brief end
+	/// @return
+	///
 	inline ConstIterator end() const noexcept;
 
-	/**
-	 * @brief rend
-	 * @return
-	 */
+	///
+	/// @brief rend
+	/// @return
+	///
 	inline ReverseIterator rend() noexcept;
 
-	/**
-	 * @brief rend
-	 * @return
-	 */
+	///
+	/// @brief rend
+	/// @return
+	///
 	inline ConstReverseIterator rend() const noexcept;
 
-	/**
-	 * @brief cend
-	 * @return
-	 */
+	///
+	/// @brief cend
+	/// @return
+	///
 	inline ConstIterator cend() const noexcept;
 
-	/**
-	 * @brief end
-	 * @return
-	 */
+	///
+	/// @brief end
+	/// @return
+	///
 	inline ConstReverseIterator crend() const noexcept;
 
-	/**
-	 * @brief pushBack
-	 * @param object
-	 */
+	///
+	/// @brief pushBack
+	/// @param object
+	///
 	void pushBack(ConstReference object);
 
-	/**
-	 * @brief pushBack
-	 * @param object
-	 */
+	///
+	/// @brief pushBack
+	/// @param object
+	///
 	void pushBack(MoveReference object);
 
-	/**
-	 * @brief emplaceBack
-	 * @param args
-	 */
+	///
+	/// @brief emplaceBack
+	/// @param args
+	///
 	template<typename ...Args>
 	void emplaceBack(Args &&...args);
 
-	/**
-	 * @brief popBack
-	 */
+	///
+	/// @brief popBack
+	///
 	void popBack();
 
-	/**
-	 * @brief insert
-	 * @param it
-	 * @param type
-	 */
+	///
+	/// @brief insert
+	/// @param it
+	/// @param type
+	///
 	void insert(Iterator it, ConstReference type);
 
-	/**
-	 * @brief insert
-	 * @param it
-	 * @param type
-	 */
+	///
+	/// @brief insert
+	/// @param it
+	/// @param type
+	///
 	void insert(Iterator it, MoveReference type);
 
-	/**
-	 * @brief insert
-	 * @param it
-	 * @param begin
-	 * @param end
-	 */
+	///
+	/// @brief insert
+	/// @param it
+	/// @param begin
+	/// @param end
+	///
 	template<typename InputIterator>
 	void insert(Iterator it, InputIterator begin, InputIterator end);
 
-	/**
-	 * @brief emplace
-	 * @param it
-	 * @param args
-	 */
+	///
+	/// @brief emplace
+	/// @param it
+	/// @param args
+	///
 	template<typename ...Args>
 	void emplace(Iterator it, Args &&...args);
 
-	/**
-	 * @brief erase
-	 * @param it
-	 */
+	///
+	/// @brief erase
+	/// @param it
+	///
 	void erase(Iterator it);
 
-	/**
-	 * @brief erase
-	 * @param itBegin
-	 * @param itEnd
-	 */
+	///
+	/// @brief erase
+	/// @param itBegin
+	/// @param itEnd
+	///
 	void erase(Iterator itBegin, Iterator itEnd);
 
-	/**
-	 * @brief reset
-	 */
+	///
+	/// @brief reset
+	///
 	void reset();
 
 private:
@@ -415,7 +423,7 @@ template <
 	, SizeTraits::SizeType ARRAY_CAPACITY
 	, typename Traits = ContainerTraits<T>
 >
-using StaticVector = Array<T, ARRAY_CAPACITY, true, Traits>;
+using StaticVector = Array<T, ARRAY_CAPACITY, false, Traits>;
 
 }}
 
@@ -464,11 +472,31 @@ ARRAY_TYPE::Array(ARRAY_TYPE &&array) noexcept
 }
 
 TEMPLATE_DEFINE
-ARRAY_TYPE::Array(InitializerList<T, ARRAY_CAPACITY> list) noexcept
+template<typename U, Types::size_t ARRAY_SIZE>
+ARRAY_TYPE::Array(const U (&list)[ARRAY_SIZE]) noexcept
 {
+	static_assert(
+			ARRAY_CAPACITY >= ARRAY_SIZE
+			, "Input array size more than this array capacity"
+	);
+
 	tail = head();
-	for (auto it : list)
-		pushBack(move(it));
+	for (auto i : list)
+		pushBack(i);
+}
+
+TEMPLATE_DEFINE
+template<typename U, Types::size_t ARRAY_SIZE>
+ARRAY_TYPE::Array(U (&&list)[ARRAY_SIZE]) noexcept
+{
+	static_assert(
+			ARRAY_CAPACITY >= ARRAY_SIZE
+			, "Input array size more than this array capacity"
+	);
+
+	tail = head();
+	for (auto i : list)
+		pushBack(move(i));
 }
 
 TEMPLATE_DEFINE
@@ -814,7 +842,7 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 		}
 		else
 		{
-			placementNew<Type>(tail);
+			emplaceNew<Type>(tail);
 
 			Range<ReverseIterator> viewOld(rbegin(), ReverseIterator(it - 1))
 					, viewNew(--viewOld.begin(), --viewOld.end());
@@ -843,7 +871,7 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 		Range<InputIterator> range(itBegin, itEnd);
 		if (it == end())
 		{
-			for (Reference itInsert : range)
+			for (auto &itInsert : range)
 			{
 				pushBack(itInsert);
 			}
@@ -851,8 +879,8 @@ void ARRAY_TYPE::insert(typename ARRAY_TYPE::Iterator it
 		else
 		{
 			Range<Iterator> initRange(end(), end() + rangeSize);
-			for (Reference it : initRange)
-				emplaceNew<Type>(&it);
+			for (Reference i : initRange)
+				emplaceNew<Type>(&i);
 
 			Range<ReverseIterator> rangeOld(rbegin(), ReverseIterator(it - 1))
 					, rangeNew(
@@ -979,9 +1007,9 @@ namespace flame_ide
 {namespace templates
 {
 
-/**
- * @brief Array
- */
+///
+/// @brief Array
+///
 template <typename T
 	, SizeTraits::SizeType ARRAY_CAPACITY
 	, typename Traits
@@ -1022,210 +1050,210 @@ public:
 		ConstIterator
 	>;
 
-	/**
-	 * @brief Array
-	 */
+	///
+	/// @brief Array
+	///
 	Array();
 
-	/**
-	 * @brief Array
-	 * @param array
-	 */
+	///
+	/// @brief Array
+	/// @param array
+	///
 	TEMPLATE_DEFINE_1
 	Array(const ARRAY_TYPE_1 &objects);
 
-	/**
-	 * @brief Array
-	 * @param objects
-	 */
+	///
+	/// @brief Array
+	/// @param objects
+	///
 	Array(const Me &objects);
 
-	/**
-	 * @brief Array
-	 * @param array
-	 */
+	///
+	/// @brief Array
+	/// @param array
+	///
 	TEMPLATE_DEFINE_1
 	Array(ARRAY_TYPE_1 &&objects) noexcept;
 
-	/**
-	 * @brief Array
-	 * @param objects
-	 */
+	///
+	/// @brief Array
+	/// @param objects
+	///
 	Array(Me &&objects) noexcept;
 
-	/**
-	 * @brief Array
-	 * @param args
-	 */
+	///
+	/// @brief Array
+	/// @param args
+	///
 	Array(InitializerList<T, ARRAY_CAPACITY> list);
 
 	~Array() = default;
 
-	/**
-	 * @brief operator =
-	 * @param array
-	 * @return
-	 */
+	///
+	/// @brief operator =
+	/// @param array
+	/// @return
+	///
 	TEMPLATE_DEFINE_1
 	Me &operator=(const ARRAY_TYPE_1 &objects);
 
-	/**
-	 * @brief operator =
-	 * @param objects
-	 * @return
-	 */
+	///
+	/// @brief operator =
+	/// @param objects
+	/// @return
+	///
 	Me &operator=(const Me &objects);
 
-	/**
-	 * @brief operator =
-	 * @param array
-	 * @return
-	 */
+	///
+	/// @brief operator =
+	/// @param array
+	/// @return
+	///
 	TEMPLATE_DEFINE_1
 	Me &operator=(ARRAY_TYPE_1 &&objects) noexcept;
 
-	/**
-	 * @brief operator =
-	 * @param objects
-	 * @return
-	 */
+	///
+	/// @brief operator =
+	/// @param objects
+	/// @return
+	///
 	Me &operator=(Me &&objects) noexcept;
 
-	/**
-	 * @brief operator ==
-	 * @param array
-	 * @return
-	 */
+	///
+	/// @brief operator ==
+	/// @param array
+	/// @return
+	///
 	bool operator==(const Me &array) const;
 
-	/**
-	 * @brief operator !=
-	 * @param array
-	 * @return
-	 */
+	///
+	/// @brief operator !=
+	/// @param array
+	/// @return
+	///
 	bool operator!=(const Me &array) const;
 
-	/**
-	 * @brief operator[]
-	 * @param index
-	 * @return
-	 */
+	///
+	/// @brief operator[]
+	/// @param index
+	/// @return
+	///
 	template<typename IntType> inline
 	Reference operator[](IntType index) noexcept;
 
-	/**
-	 * @brief operator[]
-	 * @param index
-	 * @return
-	 */
+	///
+	/// @brief operator[]
+	/// @param index
+	/// @return
+	///
 	template<typename IntType> inline
 	ConstReference operator[](IntType index) const noexcept;
 
-	/**
-	 * @brief data
-	 * @return
-	 */
+	///
+	/// @brief data
+	/// @return
+	///
 	Pointer data() noexcept;
 
-	/**
-	 * @brief data
-	 * @return
-	 */
+	///
+	/// @brief data
+	/// @return
+	///
 	PointerToConst data() const noexcept;
 
-	/**
-	 * @brief size
-	 * @return
-	 */
+	///
+	/// @brief size
+	/// @return
+	///
 	inline SizeType size() const noexcept;
 
-	/**
-	 * @brief capacity
-	 * @return
-	 */
+	///
+	/// @brief capacity
+	/// @return
+	///
 	inline constexpr SizeType capacity() const noexcept;
 
-	/**
-	 * @brief reset
-	 */
+	///
+	/// @brief reset
+	///
 	void reset();
 
-	/**
-	 * @brief clone
-	 * @return
-	 */
+	///
+	/// @brief clone
+	/// @return
+	///
 	Me clone() const;
 
-	/**
-	 * @brief begin
-	 * @return
-	 */
+	///
+	/// @brief begin
+	/// @return
+	///
 	inline Iterator begin() noexcept;
 
-	/**
-	 * @brief begin
-	 * @return
-	 */
+	///
+	/// @brief begin
+	/// @return
+	///
 	inline ConstIterator begin() const noexcept;
 
-	/**
-	 * @brief cbegin
-	 * @return
-	 */
+	///
+	/// @brief cbegin
+	/// @return
+	///
 	inline ConstIterator cbegin() const noexcept;
 
-	/**
-	 * @brief rbegin
-	 * @return
-	 */
+	///
+	/// @brief rbegin
+	/// @return
+	///
 	inline ReverseIterator rbegin() noexcept;
 
-	/**
-	 * @brief rbegin
-	 * @return
-	 */
+	///
+	/// @brief rbegin
+	/// @return
+	///
 	inline ConstReverseIterator rbegin() const noexcept;
 
-	/**
-	 * @brief crbegin
-	 * @return
-	 */
+	///
+	/// @brief crbegin
+	/// @return
+	///
 	inline ConstReverseIterator crbegin() const noexcept;
 
-	/**
-	 * @brief end
-	 * @return
-	 */
+	///
+	/// @brief end
+	/// @return
+	///
 	inline Iterator end() noexcept;
 
-	/**
-	 * @brief end
-	 * @return
-	 */
+	///
+	/// @brief end
+	/// @return
+	///
 	inline ConstIterator end() const noexcept;
 
-	/**
-	 * @brief rend
-	 * @return
-	 */
+	///
+	/// @brief rend
+	/// @return
+	///
 	inline ReverseIterator rend() noexcept;
 
-	/**
-	 * @brief rend
-	 * @return
-	 */
+	///
+	/// @brief rend
+	/// @return
+	///
 	inline ConstReverseIterator rend() const noexcept;
 
-	/**
-	 * @brief cend
-	 * @return
-	 */
+	///
+	/// @brief cend
+	/// @return
+	///
 	inline ConstIterator cend() const noexcept;
 
-	/**
-	 * @brief end
-	 * @return
-	 */
+	///
+	/// @brief end
+	/// @return
+	///
 	inline ConstReverseIterator crend() const noexcept;
 
 private:
