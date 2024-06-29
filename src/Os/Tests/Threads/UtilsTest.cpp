@@ -28,13 +28,13 @@ int check(LockPrimrtive &primitive)
 	{
 		UniqueLocker uniqueLocker{ primitive, UniqueLocker::LOCK };
 		IN_CASE_CHECK(uniqueLocker.getStatus() == os::STATUS_SUCCESS);
-		IN_CASE_CHECK(uniqueLocker.tryLock() == false);
+		IN_CASE_CHECK(uniqueLocker.tryLock() == true);
 	}
 	IN_CASE_CHECK(primitive.getStatus() == os::STATUS_SUCCESS);
 	{
 		UniqueLocker uniqueLocker{ primitive, UniqueLocker::TRY_LOCK };
 		IN_CASE_CHECK(uniqueLocker.getStatus() == os::STATUS_SUCCESS);
-		IN_CASE_CHECK(uniqueLocker.tryLock() == false);
+		IN_CASE_CHECK(uniqueLocker.tryLock() == true);
 	}
 	IN_CASE_CHECK(primitive.getStatus() == os::STATUS_SUCCESS);
 	{
@@ -49,7 +49,7 @@ int check(LockPrimrtive &primitive)
 	}
 	IN_CASE_CHECK(primitive.getStatus() == os::STATUS_SUCCESS);
 
-	return ::AbstractTest::SUCCESS;
+	return ResultType::SUCCESS;
 }
 
 }}}} // flame_ide::os::threads::tests
@@ -60,7 +60,7 @@ namespace flame_ide
 {namespace tests
 {
 
-UtilsTest::UtilsTest() : ::AbstractTest("Thread Utils")
+UtilsTest::UtilsTest() : ::AbstractTest("ThreadUtils")
 {}
 
 int UtilsTest::vStart()

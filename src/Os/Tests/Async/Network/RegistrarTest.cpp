@@ -28,48 +28,21 @@ namespace anonymous
 class NotificatorTest: public NotificatorBase
 {
 public:
-	threads::ConditionVariable &condition() noexcept
+	bool isNotified() const
 	{
-		return condvar;
+		os::threads::Locker{ mutex };
+		return notification;
 	}
-
 private:
 	virtual void operator()() const noexcept override
 	{
-		condvar.notify();
+		os::threads::Locker{ mutex };
+		notification = true;
 	}
 
 private:
+	mutable bool notification = false;
 	mutable threads::Mutex mutex;
-	mutable threads::ConditionVariable condvar{ mutex };
-};
-
-class NotificationTestThread: public threads::ThreadCrtp<NotificationTestThread>
-{
-public:
-	NotificationTestThread(threads::ConditionVariable &initCondvar) :
-			condvar{ &initCondvar }
-	{}
-
-	void body() noexcept
-	{
-		condvar->wait();
-		{
-			threads::Locker locker{ mutex };
-			notified = true;
-		}
-	}
-
-	bool isNotified() const
-	{
-		threads::Locker locker{ mutex };
-		return notified;
-	}
-
-private:
-	threads::ConditionVariable *condvar = nullptr;
-	mutable threads::Mutex mutex;
-	bool notified = false;
 };
 
 }} // namespace anonymous
@@ -154,7 +127,10 @@ int RegistrarTest::udpServer()
 
 		// Wait
 		os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
-		for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+		for (auto i = numberOfTries
+				; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor
+				; --i
+		)
 		{
 			resultDescriptor = registar.popUdpServer();
 		}
@@ -390,9 +366,6 @@ int RegistrarTest::udpNotify()
 
 	anonymous::NotificatorTest notificator;
 
-	anonymous::NotificationTestThread thread{ notificator.condition() };
-	thread.run();
-
 	Registrar registar;
 	registar.setNotificator(notificator);
 
@@ -409,7 +382,10 @@ int RegistrarTest::udpNotify()
 
 		// Wait
 		os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
-		for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+		for (auto i = numberOfTries
+				; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor
+				; --i
+		)
 		{
 			resultDescriptor = registar.popUdpServer();
 		}
@@ -437,8 +413,7 @@ int RegistrarTest::udpNotify()
 			}
 	);
 
-	thread.join();
-	IN_CASE_CHECK(thread.isNotified() == true);
+	IN_CASE_CHECK(notificator.isNotified() == true);
 
 	return RegistrarTest::SUCCESS;
 }
