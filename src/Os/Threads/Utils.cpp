@@ -192,7 +192,8 @@ os::Status UniqueLocker::lock() noexcept
 
 bool UniqueLocker::tryLock() noexcept
 {
-	locked = callbackTryLock(data);
+	if (!locked)
+		locked = callbackTryLock(data);
 	return locked;
 }
 
