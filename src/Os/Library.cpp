@@ -43,12 +43,12 @@ Library::Library(const char *name, const char *directory)
 
 Library::~Library() noexcept
 {
-	if (*this)
-	{
-		library::close(handleRef(handle));
-		ContainerTraits<LibraryHandle>::Pointer pointer = &handleRef(handle);
-		templates::allocator::ObjectAllocator<LibraryHandle>{}.destroy(pointer);
-	}
+	if (!*this)
+		return;
+
+	library::close(handleRef(handle));
+	ContainerTraits<LibraryHandle>::Pointer pointer = &handleRef(handle);
+	templates::allocator::ObjectAllocator<LibraryHandle>{}.destroy(pointer);
 }
 
 Library &Library::operator=(Library &&library) noexcept

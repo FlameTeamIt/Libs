@@ -11,6 +11,7 @@ namespace flame_ide
 {namespace windows
 {
 
+// INVALID_HANDLE_VALUE is '((HANDLE) (LONG_PTR)-1)' macro
 constexpr OsFileDescriptor OS_INVALID_DESCRIPTOR = OsFileDescriptor(flame_ide::ssize_t(-1));
 constexpr OsFileDescriptor OS_DESCRIPTOR_INITIALIZER = OsFileDescriptor(flame_ide::ssize_t{});
 

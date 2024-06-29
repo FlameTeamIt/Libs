@@ -26,6 +26,7 @@ set(HEADER_MODULES
 	${CMAKE_CURRENT_LIST_DIR}/Threads
 	${CMAKE_CURRENT_LIST_DIR}/Network
 	${CMAKE_CURRENT_LIST_DIR}/Async
+	${CMAKE_CURRENT_LIST_DIR}/InterProcess
 )
 foreach(module ${HEADER_MODULES})
 	add_subdirectory(${module})

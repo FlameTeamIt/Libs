@@ -51,8 +51,8 @@ private:
 	enum class State: Types::ichar_t
 	{
 		UNKNOWN = -1
-		, RESULT = 0
-		, ERROR = 1
+		, RESULT_VALUE = 0
+		, ERROR_VALUE = 1
 	};
 
 	union Data
@@ -160,7 +160,7 @@ Expected<ResultType, ErrorType>::operator=(const ResultType &result) noexcept
 {
 	destroy();
 	flame_ide::placementNew(&data.result.value, result);
-	data.state = State::RESULT;
+	data.state = State::RESULT_VALUE;
 	return *this;
 }
 
@@ -170,7 +170,7 @@ Expected<ResultType, ErrorType>::operator=(ResultType &&result) noexcept
 {
 	destroy();
 	flame_ide::placementNew(&data.result.value, move(result));
-	data.state = State::RESULT;
+	data.state = State::RESULT_VALUE;
 	return *this;
 }
 
@@ -180,7 +180,7 @@ Expected<ResultType, ErrorType>::operator=(const ErrorType &error) noexcept
 {
 	destroy();
 	flame_ide::placementNew(&data.error.value, error);
-	data.state = State::ERROR;
+	data.state = State::ERROR_VALUE;
 	return *this;
 }
 
@@ -190,7 +190,7 @@ Expected<ResultType, ErrorType>::operator=(ErrorType &&error) noexcept
 {
 	destroy();
 	flame_ide::placementNew(&data.error.value, move(error));
-	data.state = State::ERROR;
+	data.state = State::ERROR_VALUE;
 	return *this;
 }
 
@@ -199,7 +199,7 @@ template<typename Functor>
 Expected<ResultType, ErrorType> &
 Expected<ResultType, ErrorType>::ifResult(Functor &&functor) noexcept
 {
-	if (State::RESULT != data.state)
+	if (State::RESULT_VALUE != data.state)
 		return *this;
 
 	functor(move(data.result.value));
@@ -213,7 +213,7 @@ template<typename Functor>
 const Expected<ResultType, ErrorType> &
 Expected<ResultType, ErrorType>::ifResult(Functor &&functor) const noexcept
 {
-	if (State::RESULT != data.state)
+	if (State::RESULT_VALUE != data.state)
 		return *this;
 
 	functor(data.result.value);
@@ -226,7 +226,7 @@ template<typename Functor>
 Expected<ResultType, ErrorType> &
 Expected<ResultType, ErrorType>::ifError(Functor &&functor) noexcept
 {
-	if (State::ERROR != data.state)
+	if (State::ERROR_VALUE != data.state)
 		return *this;
 
 	functor(move(data.error.value));
@@ -240,7 +240,7 @@ template<typename Functor>
 const Expected<ResultType, ErrorType> &
 Expected<ResultType, ErrorType>::ifError(Functor &&functor) const noexcept
 {
-	if (State::ERROR != data.state)
+	if (State::ERROR_VALUE != data.state)
 		return *this;
 
 	functor(data.error.value);
@@ -263,11 +263,11 @@ void Expected<ResultType, ErrorType>::destroy() noexcept
 {
 	switch (data.state)
 	{
-		case State::RESULT:
+		case State::RESULT_VALUE:
 			data.result.value.~ResultType();
 			return;
 
-		case State::ERROR:
+		case State::ERROR_VALUE:
 			data.error.value.~ErrorType();
 			return;
 

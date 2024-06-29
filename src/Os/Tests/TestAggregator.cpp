@@ -1,6 +1,7 @@
 #include <FlameIDE/../../src/Os/Tests/TestAggregator.hpp>
 
 #include <FlameIDE/../../src/Os/Tests/LibraryTest.hpp>
+#include <FlameIDE/../../src/Os/Tests/FileFunctionsTest.hpp>
 
 #include <FlameIDE/../../src/Os/Tests/Network/Ipv4Test.hpp>
 #include <FlameIDE/../../src/Os/Tests/Network/UdpFunctionsTest.hpp>
@@ -29,6 +30,7 @@ namespace flame_ide
 TestAggregator::TestAggregator() : ::TestAggregator("Os")
 {
 	pushBackTest(std::make_shared<LibraryTest>());
+	pushBackTest(std::make_shared<FileFunctionsTest>());
 
 	pushBackTest(std::make_shared<threads::tests::MutexFunctionsTest>());
 	pushBackTest(std::make_shared<threads::tests::MutexTest>());

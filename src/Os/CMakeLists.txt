@@ -69,6 +69,7 @@ set(SOURCE_MODULES
 	${CMAKE_CURRENT_LIST_DIR}/Windows
 	${CMAKE_CURRENT_LIST_DIR}/Threads
 	${CMAKE_CURRENT_LIST_DIR}/Network
+	${CMAKE_CURRENT_LIST_DIR}/InterProcess
 )
 foreach(module ${SOURCE_MODULES})
 	add_subdirectory(${module})

@@ -4,6 +4,8 @@
 #include <FlameIDE/Os/Posix/Types.hpp>
 #include <FlameIDE/Os/Windows/Types.hpp>
 
+#include <FlameIDE/Common/Expected.hpp>
+
 namespace flame_ide
 {namespace os
 {
@@ -71,6 +73,9 @@ enum class StreamType
 	, FILE
 	, SOCKET
 };
+
+template<typename ResultType>
+using Expected = flame_ide::Expected<ResultType, Status>;
 
 }} // namespace flame_ide::os
 
