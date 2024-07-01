@@ -20,10 +20,10 @@ using templates::CompileTimeReverseBytes;
 
 int SerializationTest::vStart()
 {
-	CHECK_RESULT_SUCCESS(le());
-	CHECK_RESULT_SUCCESS(be());
-	CHECK_RESULT_SUCCESS(leSpec());
-	CHECK_RESULT_SUCCESS_END(beSpec());
+	IN_CASE_CHECK(ResultType::SUCCESS == le());
+	IN_CASE_CHECK(ResultType::SUCCESS == be());
+	IN_CASE_CHECK(ResultType::SUCCESS == leSpec());
+	IN_CASE_CHECK_END(ResultType::SUCCESS == beSpec());
 }
 
 // LITTLE_ENDIAN_ORDER
@@ -480,7 +480,8 @@ bool SerializationTest::beSpec64()
 			| (Types::ulong_t(BYTES[5]) << 16) | (Types::ulong_t(BYTES[6]) << 8)
 			| (Types::ulong_t(BYTES[7]));
 
-	templates::Vector<flame_ide::Types::uichar_t> vector(8);
+	templates::Vector<flame_ide::Types::uichar_t> vector;
+	vector.resize(8);
 
 	CHECK_RESULT_SUCCESS(doTestCase(
 		"be64 spec (LE numbers) serialize/deserialize"
@@ -517,18 +518,23 @@ bool SerializationTest::beSpec64()
 			auto serializer = templates::SerializerBe(&vector[0]);
 			serializer(specValue64Be);
 
-			IN_CASE_CHECK(vector[0] == BYTES[2]
-					&& vector[1] == BYTES[3]
-					&& vector[2] == BYTES[4]
-					&& vector[3] == BYTES[5]
-					&& vector[4] == BYTES[6]);
+			IN_CASE_CHECK(vector[0] == BYTES[2]);
+			IN_CASE_CHECK(vector[1] == BYTES[3]);
+			IN_CASE_CHECK(vector[2] == BYTES[4]);
+			IN_CASE_CHECK(vector[3] == BYTES[5]);
+			IN_CASE_CHECK(vector[4] == BYTES[6]);
 
 			auto deserializer = templates::DeserializerBe(&vector[0]);
 			deserializer(resultValue64Be);
 
 			auto range1 = templates::makeRange(specValue64Be.begin(), specValue64Be.end());
 			auto range2 = templates::makeRange(resultValue64Be.begin(), resultValue64Be.end());
-			IN_CASE_CHECK_END(ResultType::SUCCESS == compareContainers(range1, range2));
+
+			IN_CASE_CHECK(*(range1.begin() + 0) == *(range2.begin() + 0));
+			IN_CASE_CHECK(*(range1.begin() + 1) == *(range2.begin() + 1));
+			IN_CASE_CHECK(*(range1.begin() + 2) == *(range2.begin() + 2));
+			IN_CASE_CHECK(*(range1.begin() + 3) == *(range2.begin() + 3));
+			IN_CASE_CHECK_END(*(range1.begin() + 4) == *(range2.begin() + 4));
 		}
 	));
 

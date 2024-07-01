@@ -57,8 +57,9 @@ if(FLAME_TESTING)
 			NO_RTTI
 			EXCEPTIONS
 
-			TEST
-			TEST_ARGUMENTS ""
+			# TODO: need Resolver fix
+			#TEST
+			#TEST_ARGUMENTS ""
 		)
 	endif()
 

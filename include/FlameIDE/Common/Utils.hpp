@@ -159,18 +159,17 @@ template<typename Container> inline
 typename Container::ConstReverseIterator crend(const Container &container);
 
 template<typename T, typename Tt = T&&>
-Tt __implementation_decval__(int) noexcept;
+Tt declareValueImpl(int) noexcept;
 
 template<typename T>
-T __implementation_decval__(long) noexcept;
+T declareValueImpl(long) noexcept;
 
 ///
 /// @brief declareValue
 /// @tparam First param.
 ///
 template<typename Type>
-decltype(__implementation_decval__<Type>) declareValue() noexcept;
-
+decltype(declareValueImpl<Type>(0)) declareValue() noexcept;
 
 ///
 /// @brief alignedPointer
@@ -481,10 +480,9 @@ typename Container::SizeType size(const Container &container)
 }
 
 template<typename Type>
-decltype(__implementation_decval__<Type>) declareValue() noexcept
+decltype(declareValueImpl<Type>(0)) declareValue() noexcept
 {
-	static_assert(FalseType::VALUE, "It can't ba called");
-	return __implementation_decval__<Type>(0);
+	return declareValueImpl<Type>(0);
 }
 
 template<typename T, typename U>

@@ -41,7 +41,7 @@ namespace flame_ide
 namespace // anonymous
 {
 
-::SOCKET udpСreateSocket() noexcept
+::SOCKET udpCreateSocket() noexcept
 {
 	return ::WSASocketW(AF_INET, SOCK_DGRAM, IPPROTO_UDP, nullptr, 0, WSA_FLAG_OVERLAPPED);
 }
@@ -107,7 +107,7 @@ Socket createUdpServer(Ipv4::Port port) noexcept
 	if (!winsockInit())
 		return socket;
 
-	socket = Socket{ udpСreateSocket(), ipAddressServer(port) };
+	socket = Socket{ udpCreateSocket(), ipAddressServer(port) };
 	if (socket.descriptor == os::SOCKET_INVALID.descriptor)
 		return os::SOCKET_INVALID;
 
@@ -137,7 +137,7 @@ Socket createUdpClient(Ipv4 ipServer) noexcept
 	if (!winsockInit())
 		return socket;
 
-	socket = Socket{ udpСreateSocket(), ipAddressClient(ipServer) };
+	socket = Socket{ udpCreateSocket(), ipAddressClient(ipServer) };
 	if (socket.descriptor == os::SOCKET_INVALID.descriptor)
 		return os::SOCKET_INVALID;
 	return socket;

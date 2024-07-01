@@ -218,7 +218,7 @@ constexpr auto IsUnsignedValue = IsUnsignedTrait<T>::VALUE;
 ///
 template<typename T>
 struct IsIntegralTrait: public IntegralConstant<
-	bool, IsPrimitiveValue<T> && !IsFloatValue<T>
+	bool, IsPrimitiveTrait<T>::VALUE && !IsFloatTrait<T>::VALUE
 >
 {};
 
