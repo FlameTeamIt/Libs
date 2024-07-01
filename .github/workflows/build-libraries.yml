@@ -55,3 +55,7 @@ jobs:
       - name: Build project
         run: |
           cmake --build build --config ${{ matrix.config }}
+
+      - name: Run tests
+        run: |
+          cmake --build build --target test
