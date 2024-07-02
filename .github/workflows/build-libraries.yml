@@ -26,7 +26,7 @@ on:
 
 defaults:
   run:
-    shell: bash
+    shell: pwsh
 
 jobs:
   build-libraries:
@@ -34,19 +34,15 @@ jobs:
 
     strategy:
       matrix:
-        system:
-          - windows-latest
-          - ubuntu-latest
-        config:
-          - Debug
-          - Release
         include:
-          - system: windows-latest
-            compiler: [{ cc: cl, cpp: cl }]
-          - system: ubuntu-latest
-            compiler: [{ cc: gcc-13, cpp: g++-13 }]
-          - system: ubuntu-latest
-            compiler: [{ cc: clang-14, cpp: clang++-14 }]
+          - { system: windows-latest, config: Debug, cc: cl, cpp: cl }
+          - { system: windows-latest, config: Release, cc: cl, cpp: cl }
+          - { system: windows-latest, config: Debug, cc: gcc, cpp: g++ }
+          - { system: windows-latest, config: Release, cc: gcc, cpp: g++ }
+          - { system: ubuntu-latest, config: Debug, cc: gcc-11, cpp: g++-11 }
+          - { system: ubuntu-latest, config: Release, cc: gcc-11, cpp: g++-11}
+          - { system: ubuntu-latest, config: Debug, cc: clang-14, cpp: clang++-14 }
+          - { system: ubuntu-latest, config: Release, cc: clang-14, cpp: clang++-14 }
       fail-fast: false
 
     runs-on: ${{ matrix.system }}
@@ -57,28 +53,49 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Visual Studio Build Tools
+        uses: ilammy/msvc-dev-cmd@v1
+        if: ${{ runner.os == 'Windows' && matrix.cc == 'cl' }}
+
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        if: ${{ runner.os == 'Windows' && matrix.cc == 'gcc' }}
+        with:
+          msystem: UCRT64
+          update: true
+          install: mingw-w64-ucrt-x86_64-gcc
+
+      - name: Setup GCC and Clang
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          sudo apt update && `
+          sudo apt install -y `
+            gcc-11 `
+            g++-11 `
+            clang-14
+
       - name: Setup Ninja
-        uses: imesense/gha-setup-ninja@v0.1.1
+        uses: imesense/gha-setup-ninja@v0.2
 
       - name: Configure project
         run: |
-          cmake \
-            -S . \
-            -B build \
-            -G "Ninja" \
-            -DCMAKE_C_COMPILER=${{ matrix.compiler.cc }} \
-            -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }} \
-            -DFLAME_CONAN_SUPPORT=OFF \
+          cmake `
+            -S . `
+            -B build `
+            -G "Ninja" `
+            -DCMAKE_C_COMPILER=${{ matrix.cc }} `
+            -DCMAKE_CXX_COMPILER=${{ matrix.cpp }} `
+            -DFLAME_CONAN_SUPPORT=OFF `
             -DCMAKE_BUILD_TYPE=${{ matrix.config }}
 
       - name: Build project
         run: |
-          cmake \
-            --build build \
+          cmake `
+            --build build `
             --config ${{ matrix.config }}
 
       - name: Run tests
         run: |
-          cmake \
-            --build build \
+          cmake `
+            --build build `
             --target test
