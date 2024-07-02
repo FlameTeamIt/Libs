@@ -24,6 +24,10 @@ on:
       - '**/CMakeLists.txt'
       - '**/*.pro'
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build-libraries:
     name: 'Build libraries'
@@ -34,7 +38,15 @@ jobs:
           - windows-latest
           - ubuntu-latest
         config:
+          - Debug
           - Release
+        include:
+          - system: windows-latest
+            compiler: [{ cc: cl, cpp: cl }]
+          - system: ubuntu-latest
+            compiler: [{ cc: gcc-13, cpp: g++-13 }]
+          - system: ubuntu-latest
+            compiler: [{ cc: clang-14, cpp: clang++-14 }]
       fail-fast: false
 
     runs-on: ${{ matrix.system }}
@@ -50,12 +62,23 @@ jobs:
 
       - name: Configure project
         run: |
-          cmake -S . -B build -G "Ninja" -DFLAME_CONAN_SUPPORT=OFF -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+          cmake \
+            -S . \
+            -B build \
+            -G "Ninja" \
+            -DCMAKE_C_COMPILER=${{ matrix.compiler.cc }} \
+            -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }} \
+            -DFLAME_CONAN_SUPPORT=OFF \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config }}
 
       - name: Build project
         run: |
-          cmake --build build --config ${{ matrix.config }}
+          cmake \
+            --build build \
+            --config ${{ matrix.config }}
 
       - name: Run tests
         run: |
-          cmake --build build --target test
+          cmake \
+            --build build \
+            --target test
