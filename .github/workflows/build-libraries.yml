@@ -46,7 +46,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Ninja
-        uses: seanmiddleditch/gha-setup-ninja@v4
+        uses: imesense/gha-setup-ninja@v0.1.1
 
       - name: Configure project
         run: |
