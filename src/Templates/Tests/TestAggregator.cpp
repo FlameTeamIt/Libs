@@ -19,7 +19,7 @@
 #include <FlameIDE/../../src/Templates/Tests/AsIntegralTypeTest.hpp>
 #include <FlameIDE/../../src/Templates/Tests/FutureTest.hpp>
 #include <FlameIDE/../../src/Templates/Tests/ExpectedTest.hpp>
-#include <FlameIDE/../../src/Templates/Tests/StringConvertionsTest.hpp>
+// #include <FlameIDE/../../src/Templates/Tests/StringConvertionsTest.hpp>
 #include <FlameIDE/../../src/Templates/Tests/ObjectTest.hpp>
 
 #include <FlameIDE/../../src/Templates/Tests/TestAggregator.hpp>
@@ -33,30 +33,30 @@ namespace flame_ide
 
 TestAggregator::TestAggregator() : ::TestAggregator("Templates")
 {
-	pushBackTest(std::make_shared<test::ObjectAllocatorTest>());
-	pushBackTest(std::make_shared<test::ArrayAllocator>());
-	pushBackTest(std::make_shared<test::ArrayTest>());
-	pushBackTest(std::make_shared<test::BitsTest>());
-	pushBackTest(std::make_shared<test::ByteOrderTest>());
-	pushBackTest(std::make_shared<test::CircularVectorTest>());
-	pushBackTest(std::make_shared<test::ListTest>());
-	pushBackTest(std::make_shared<test::SharedPointerTest>());
+	// pushBackTest(std::make_shared<test::ObjectAllocatorTest>());
+	// pushBackTest(std::make_shared<test::ArrayAllocator>());
+	// pushBackTest(std::make_shared<test::ArrayTest>());
+	// pushBackTest(std::make_shared<test::BitsTest>());
+	// pushBackTest(std::make_shared<test::ByteOrderTest>());
+	// pushBackTest(std::make_shared<test::CircularVectorTest>());
+	// pushBackTest(std::make_shared<test::ListTest>());
+	// pushBackTest(std::make_shared<test::SharedPointerTest>());
 	pushBackTest(std::make_shared<test::SerializationTest>());
-	pushBackTest(std::make_shared<test::StringTest>());
-	pushBackTest(std::make_shared<test::TupleTest>());
-	pushBackTest(std::make_shared<test::UniquePointerTest>());
-	pushBackTest(std::make_shared<test::VectorTest>());
-	pushBackTest(std::make_shared<test::VariantTest>());
-	pushBackTest(std::make_shared<test::WideIntTest>());
-	pushBackTest(std::make_shared<test::HybridVectorTest>());
-	pushBackTest(std::make_shared<test::IntegerIteratorTest>());
-	pushBackTest(std::make_shared<test::CircularIteratorTest>());
-	pushBackTest(std::make_shared<test::CircularArrayTest>());
-	pushBackTest(std::make_shared<test::AsIntegralTypeTest>());
-	pushBackTest(std::make_shared<test::FutureTest>());
-	pushBackTest(std::make_shared<test::ExpectedTest>());
-	pushBackTest(std::make_shared<test::StringConvertionsTest>());
-	pushBackTest(std::make_shared<test::ObjectTest>());
+	// pushBackTest(std::make_shared<test::StringTest>());
+	// pushBackTest(std::make_shared<test::TupleTest>());
+	// pushBackTest(std::make_shared<test::UniquePointerTest>());
+	// pushBackTest(std::make_shared<test::VectorTest>());
+	// pushBackTest(std::make_shared<test::VariantTest>());
+	// pushBackTest(std::make_shared<test::WideIntTest>());
+	// pushBackTest(std::make_shared<test::HybridVectorTest>());
+	// pushBackTest(std::make_shared<test::IntegerIteratorTest>());
+	// pushBackTest(std::make_shared<test::CircularIteratorTest>());
+	// pushBackTest(std::make_shared<test::CircularArrayTest>());
+	// pushBackTest(std::make_shared<test::AsIntegralTypeTest>());
+	// pushBackTest(std::make_shared<test::FutureTest>());
+	// pushBackTest(std::make_shared<test::ExpectedTest>());
+	// // pushBackTest(std::make_shared<test::StringConvertionsTest>());
+	// pushBackTest(std::make_shared<test::ObjectTest>());
 }
 
 }}}

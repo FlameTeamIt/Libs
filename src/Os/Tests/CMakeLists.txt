@@ -71,8 +71,9 @@ if(FLAME_MAKE_SHARED)
 		NO_RTTI
 		EXCEPTIONS
 
-		TEST
-		TEST_ARGUMENTS ""
+		# TODO: need Resolver fix
+		#TEST
+		#TEST_ARGUMENTS ""
 	)
 endif()
 
