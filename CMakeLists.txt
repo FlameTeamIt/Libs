@@ -55,6 +55,10 @@ flame_resolver_settings(
 	PROJECT_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}
 	LOCAL_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install
 )
+if(FLAME_TESTING)
+	message(STATUS "Tests enabled")
+	enable_testing()
+endif()
 
 add_subdirectory(${FLAME_INCLUDE_SUBMODLUES_PATH})
 add_subdirectory(${FLAME_SOURCE_SUBMODLUES_PATH})
