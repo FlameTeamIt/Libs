@@ -34,7 +34,7 @@ struct Config: public flame_ide::NonCreational
 #	define SOMAXCONN1_STR(VALUE) #VALUE
 #	define SOMAXCONN_STR(VALUE) SOMAXCONN1_STR(VALUE)
 	static_assert(
-			TCP_SERVER_BACKLOG < flame_ide::os::SOCKET_TCP_MAX_CLIENTS
+			TCP_SERVER_BACKLOG <= flame_ide::os::SOCKET_TCP_MAX_CLIENTS
 			, "Generated server backlog more than SOMAXCONN = " SOMAXCONN_STR(SOMAXCONN)
 	);
 #	undef SOMAXCONN_STR
