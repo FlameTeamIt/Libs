@@ -291,6 +291,18 @@ using AddVolatileType = typename AddVolatileTrait<T>::Type;
 ///
 class Empty {};
 
+///
+/// Make VoidType
+///
+template<typename ...Args>
+struct VoidMaker
+{
+	using Type = void;
+};
+
+template<typename ...Args>
+using VoidType = typename VoidMaker<Args ...>::Type;
+
 }
 
 #endif // FLAMEIDE_COMMON_TRAITS_DEFAULTS_HPP

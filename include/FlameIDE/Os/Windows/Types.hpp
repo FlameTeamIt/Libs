@@ -229,7 +229,7 @@ struct OsThreadTaskTrait: public NonCreational
 {
 	using Return = DWORD;
 	using Argument = LPVOID;
-	using Task = Return(*)(Argument);
+	using Task = Return(WINAPI *)(Argument);
 };
 
 struct OsMutexContext

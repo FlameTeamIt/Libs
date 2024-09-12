@@ -422,7 +422,7 @@ template<typename T>
 typename ValueInfo<T>::Iterator
 SpecializedValue<ByteOrder::LITTLE_ENDIAN_ORDER, T>::begin()
 {
-	return  makeByteRange(getValue()).begin()
+	return makeByteRange(getValue()).begin()
 			+ sizeof(getValue()) - getSize() - getOffset();
 }
 

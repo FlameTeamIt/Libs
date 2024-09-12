@@ -8,21 +8,27 @@
 
 #include <FlameIDE/Templates/RaiiCaller.hpp>
 
+#ifdef WINAPI
+#define CALL WINAPI
+#else
+#define CALL
+#endif
+
 flame_ide::os::ThreadTaskTrait::Return
-taskJoin(flame_ide::os::ThreadTaskTrait::Argument)
+CALL taskJoin(flame_ide::os::ThreadTaskTrait::Argument)
 {
 	return {};
 }
 
 flame_ide::os::ThreadTaskTrait::Return
-taskDetach(flame_ide::os::threads::Semaphore *semaphore)
+CALL taskDetach(flame_ide::os::threads::Semaphore *semaphore)
 {
 	semaphore->wait();
 	return {};
 }
 
 flame_ide::os::ThreadTaskTrait::Return
-taskWorking(flame_ide::os::threads::Spin *spin)
+CALL taskWorking(flame_ide::os::threads::Spin *spin)
 {
 	while (true)
 	{
@@ -87,7 +93,7 @@ auto createDetach() noexcept
 
 	Semaphore semaphore;
 	os::Status status = thread::create(
-			context, (os::ThreadTaskTrait::Task)(taskDetach), &semaphore
+			context, reinterpret_cast<os::ThreadTaskTrait::Task>(taskDetach), &semaphore
 	);
 	IN_CASE_CHECK(os::STATUS_SUCCESS == status);
 

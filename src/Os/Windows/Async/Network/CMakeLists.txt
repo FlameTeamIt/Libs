@@ -9,6 +9,9 @@ set(NAME_ALIAS "Os::Async::Network::${FLAME_PLATFORM}")
 set(INCLUDE_PATHS ${FLAME_INCLUDE_PATH})
 
 set(DEPENDENCY_HEADER_TARGETS ${FLAME_NAMESPACE}::Os::Headers)
+set(DEFINES
+	_WINSOCK_DEPRECATED_NO_WARNINGS=1
+)
 
 get_sources(FILE_LIST)
 flame_compile_library(
@@ -20,6 +23,7 @@ flame_compile_library(
 		"${FLAME_NAMESPACE}::${NAME_ALIAS}::Object"
 	INDEPENDENT_OBJECT_ALIAS_NAME
 		"${FLAME_NAMESPACE}::${NAME_ALIAS}::Object::Independ"
+	DEFINES ${DEFINES}
 
 	NO_RTTI
 	NO_EXCEPTIONS

@@ -5,5 +5,7 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/UtilsTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/UtilsTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/VoidTypeTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/VoidTypeTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )

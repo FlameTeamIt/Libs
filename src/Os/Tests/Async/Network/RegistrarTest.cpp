@@ -28,48 +28,21 @@ namespace anonymous
 class NotificatorTest: public NotificatorBase
 {
 public:
-	threads::ConditionVariable &condition() noexcept
+	bool isNotified() const
 	{
-		return condvar;
+		os::threads::Locker{ mutex };
+		return notification;
 	}
-
 private:
 	virtual void operator()() const noexcept override
 	{
-		condvar.notify();
+		os::threads::Locker{ mutex };
+		notification = true;
 	}
 
 private:
+	mutable bool notification = false;
 	mutable threads::Mutex mutex;
-	mutable threads::ConditionVariable condvar{ mutex };
-};
-
-class NotificationTestThread: public threads::ThreadCrtp<NotificationTestThread>
-{
-public:
-	NotificationTestThread(threads::ConditionVariable &initCondvar) :
-			condvar{ &initCondvar }
-	{}
-
-	void body() noexcept
-	{
-		condvar->wait();
-		{
-			threads::Locker locker{ mutex };
-			notified = true;
-		}
-	}
-
-	bool isNotified() const
-	{
-		threads::Locker locker{ mutex };
-		return notified;
-	}
-
-private:
-	threads::ConditionVariable *condvar = nullptr;
-	mutable threads::Mutex mutex;
-	bool notified = false;
 };
 
 }} // namespace anonymous
@@ -154,7 +127,10 @@ int RegistrarTest::udpServer()
 
 		// Wait
 		os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
-		for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+		for (auto i = numberOfTries
+				; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor
+				; --i
+		)
 		{
 			resultDescriptor = registar.popUdpServer();
 		}
@@ -188,7 +164,7 @@ int RegistrarTest::udpClient()
 
 	// server
 	{
-		auto raii = templates::makeRaiiCaller(
+		auto raiiServer = templates::makeRaiiCaller(
 				[&server, &registar]() { registar.add(server); }
 				, [&server, &registar]() { registar.remove(server); }
 		);
@@ -337,7 +313,7 @@ int RegistrarTest::tcpServer()
 
 int RegistrarTest::tcpClient()
 {
-	auto nativeControl = os::network::NetworkBase::callbacks;
+	const auto &callbacks = os::network::NetworkBase::callbacks();
 
 	os::network::TcpServer server{ port };
 	os::network::TcpClient client{ ipv4 };
@@ -368,7 +344,7 @@ int RegistrarTest::tcpClient()
 		resultConnection = registar.popTcpServerAcception();
 	}
 	IN_CASE_CHECK(
-			nativeControl().destroy(resultConnection.client) == os::STATUS_SUCCESS
+			callbacks.destroy(resultConnection.client) == os::STATUS_SUCCESS
 	);
 
 	// Wait
@@ -390,9 +366,6 @@ int RegistrarTest::udpNotify()
 
 	anonymous::NotificatorTest notificator;
 
-	anonymous::NotificationTestThread thread{ notificator.condition() };
-	thread.run();
-
 	Registrar registar;
 	registar.setNotificator(notificator);
 
@@ -409,7 +382,10 @@ int RegistrarTest::udpNotify()
 
 		// Wait
 		os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
-		for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+		for (auto i = numberOfTries
+				; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor
+				; --i
+		)
 		{
 			resultDescriptor = registar.popUdpServer();
 		}
@@ -437,8 +413,7 @@ int RegistrarTest::udpNotify()
 			}
 	);
 
-	thread.join();
-	IN_CASE_CHECK(thread.isNotified() == true);
+	IN_CASE_CHECK(notificator.isNotified() == true);
 
 	return RegistrarTest::SUCCESS;
 }

@@ -8,6 +8,21 @@ namespace flame_ide
 {namespace os
 {namespace network
 {
+namespace // anonymous
+{
+
+NetworkBase::SocketType getSocketType(const Socket &socket) noexcept
+{
+	return static_cast<NetworkBase::SocketType>(socket::getType(socket));
+};
+
+} // namespace anonymous
+}}} // namespace flame_ide::os::network
+
+namespace flame_ide
+{namespace os
+{namespace network
+{
 
 // public
 
@@ -42,11 +57,11 @@ const NetworkBase::NativeCallbacks &NetworkBase::callbacks() noexcept
 		callbacks.destroy = socket::destroy;
 		callbacks.receivingBytesNumber = socket::receivingBytesNumber;
 		callbacks.getIpv4 = socket::getIpv4;
-		callbacks.type = reinterpret_cast<decltype(socketControl.type)>(socket::getType);
+		callbacks.type = getSocketType;
 		callbacks.error = socket::getError;
 		callbacks.isListener = socket::isListener;
 		callbacks.isServer = socket::isServer;
-		return socketControl;
+		return callbacks;
 	} ();
 	return socketControl;
 }
@@ -99,8 +114,8 @@ NetworkBase::SocketType NetworkBase::getType() const
 
 os::Status NetworkBase::getError() const
 {
-	os::Status status = socket::getError(socket);
-	return status;
+	os::Status localStatus = socket::getError(socket);
+	return localStatus;
 }
 
 bool NetworkBase::isServer() const

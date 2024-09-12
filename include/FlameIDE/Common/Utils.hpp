@@ -159,18 +159,17 @@ template<typename Container> inline
 typename Container::ConstReverseIterator crend(const Container &container);
 
 template<typename T, typename Tt = T&&>
-Tt __implementation_decval__(int) noexcept;
+Tt declareValueImpl(int) noexcept;
 
 template<typename T>
-T __implementation_decval__(long) noexcept;
+T declareValueImpl(long) noexcept;
 
 ///
 /// @brief declareValue
 /// @tparam First param.
 ///
 template<typename Type>
-decltype(__implementation_decval__<Type>) declareValue() noexcept;
-
+decltype(declareValueImpl<Type>(0)) declareValue() noexcept;
 
 ///
 /// @brief alignedPointer
@@ -236,19 +235,19 @@ void copy(T &src, const U &dest, Types::size_t size);
 template<typename T>
 Types::size_t length(const T *array);
 
-template<
-	typename T1, typename T2
-	, typename = typename EnableType<IsIntegralValue<T1>, T1>::Type
-	, typename = typename EnableType<IsIntegralValue<T2>, T2>::Type
->
-constexpr decltype(T1{} + T2{}) max(T1 value1, T2 value2) noexcept;
+// template<
+// 	typename T1, typename T2
+// 	, typename = typename EnableType<IsIntegralValue<T1>, T1>::Type
+// 	, typename = typename EnableType<IsIntegralValue<T2>, T2>::Type
+// >
+// constexpr auto max(T1 value1, T2 value2) noexcept -> decltype(operator+(declareValue<T1>() + declareValue<T2>()));
 
-template<
-	typename T1, typename T2
-	, typename = typename EnableType<IsIntegralValue<T1>, T1>::Type
-	, typename = typename EnableType<IsIntegralValue<T2>, T2>::Type
->
-constexpr decltype(T1{} + T2{}) min(T1 value1, T2 value2) noexcept;
+// template<
+// 	typename T1, typename T2
+// 	, typename = typename EnableType<IsIntegralValue<T1>, T1>::Type
+// 	, typename = typename EnableType<IsIntegralValue<T2>, T2>::Type
+// >
+// constexpr auto min(T1 value1, T2 value2) noexcept -> decltype(operator+(declareValue<T1>() + declareValue<T2>()));
 
 template<typename ...Args>
 void unused(Args &&...);
@@ -481,10 +480,9 @@ typename Container::SizeType size(const Container &container)
 }
 
 template<typename Type>
-decltype(__implementation_decval__<Type>) declareValue() noexcept
+decltype(declareValueImpl<Type>(0)) declareValue() noexcept
 {
-	static_assert(FalseType::VALUE, "It can't ba called");
-	return __implementation_decval__<Type>(0);
+	return declareValueImpl<Type>(0);
 }
 
 template<typename T, typename U>
@@ -561,16 +559,16 @@ Types::size_t length(const T *array)
 	return length;
 }
 
-template<typename T1, typename T2, typename, typename>
-constexpr decltype(T1{} + T2{}) max(T1 value1, T2 value2) noexcept
+template<typename T>
+T maximum(T value1, T value2) noexcept
 {
 	if (value1 > value2)
 		return value1;
 	return value2;
 }
 
-template<typename T1, typename T2, typename, typename>
-constexpr decltype(T1{} + T2{}) min(T1 value1, T2 value2) noexcept
+template<typename T>
+T minimum(T value1, T value2) noexcept
 {
 	if (value2 > value1)
 		return value1;
