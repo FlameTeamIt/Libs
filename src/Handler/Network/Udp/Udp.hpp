@@ -4,9 +4,9 @@
 #include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Os/Threads/Spin.hpp>
 
-#include <FlameIDE/../../src/Handler/Network/UdpConfig.hpp>
-#include <FlameIDE/../../src/Handler/Network/UdpServer.hpp>
-#include <FlameIDE/../../src/Handler/Network/UdpClient.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Config.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Server.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Client.hpp>
 
 namespace flame_ide
 {namespace handler

@@ -1,5 +1,5 @@
 #include <FlameIDE/../../src/Handler/Tests/Network/TcpTest.hpp>
-#include <FlameIDE/../../src/Handler/Network/Tcp.hpp>
+#include <FlameIDE/../../src/Handler/Network/Tcp/Tcp.hpp>
 
 namespace flame_ide
 {namespace handler

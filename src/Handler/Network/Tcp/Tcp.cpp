@@ -1,5 +1,5 @@
 #include <FlameIDE/../../src/Handler/Network/Functions.hpp>
-#include <FlameIDE/../../src/Handler/Network/Tcp.hpp>
+#include <FlameIDE/../../src/Handler/Network/Tcp/Tcp.hpp>
 
 #include <FlameIDE/Os/Threads/Utils.hpp>
 

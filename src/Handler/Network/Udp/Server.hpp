@@ -1,8 +1,8 @@
 #ifndef HANDLERINTERNALUDPSERVER_HPP
 #define HANDLERINTERNALUDPSERVER_HPP
 
-#include <FlameIDE/../../src/Handler/Network/UdpConfig.hpp>
-#include <FlameIDE/../../src/Handler/Network/UdpTypes.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Config.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Types.hpp>
 
 #include <FlameIDE/Templates/Optional.hpp>
 #include <FlameIDE/Os/Network/UdpServer.hpp>

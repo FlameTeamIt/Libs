@@ -1,14 +1,14 @@
 #ifndef HANDLERINTERNALTCPSERVER_HPP
 #define HANDLERINTERNALTCPSERVER_HPP
 
+#include <FlameIDE/Os/Network/TcpServer.hpp>
+
 #include <FlameIDE/Templates/CircularArray.hpp>
 #include <FlameIDE/Templates/Optional.hpp>
 #include <FlameIDE/Templates/Pointers.hpp>
 
-#include <FlameIDE/Os/Network/TcpServer.hpp>
-
-#include <FlameIDE/../../src/Handler/Network/TcpConfig.hpp>
-#include <FlameIDE/../../src/Handler/Network/TcpTypes.hpp>
+#include <FlameIDE/../../src/Handler/Network/Tcp/Config.hpp>
+#include <FlameIDE/../../src/Handler/Network/Tcp/Types.hpp>
 
 namespace flame_ide
 {namespace handler

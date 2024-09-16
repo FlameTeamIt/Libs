@@ -19,14 +19,16 @@ class Worker: public os::threads::ThreadCrtp<Worker>
 	using Parent = os::threads::ThreadCrtp<Worker>;
 	friend Parent;
 
-public: //
-	void init(os::threads::ConditionVariable &initCondvar) noexcept;
+public:
+	void notify();
 
-private: // os::threads::ThreadCrtp<Worker>
+private:
+	// os::threads::ThreadCrtp<Worker>
 	void body() noexcept;
 
 private:
-	os::threads::ConditionVariable *condvar = nullptr;
+	os::threads::Mutex mutex;
+	os::threads::ConditionVariable condvar{ mutex };
 };
 
 }}} // namespace flame_ide::handler::network
@@ -42,16 +44,13 @@ public:
 	Workers() noexcept;
 	~Workers() noexcept;
 
-	void start();
-	void stop();
+	os::Status start();
+	os::Status stop();
 
 private:
 	void join() noexcept;
 
 private:
-	os::threads::Mutex mutex;
-	os::threads::ConditionVariable condvar{ mutex };
-
 	templates::StaticArray<
 		Worker, generated::network::Config::HANDLER_NUMBER_OF_WORKERS
 	> workers;

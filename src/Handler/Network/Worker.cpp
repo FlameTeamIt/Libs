@@ -7,14 +7,14 @@ namespace flame_ide
 {namespace network
 {
 
-void Worker::init(os::threads::ConditionVariable &initCondvar) noexcept
+void Worker::notify()
 {
-	condvar = &initCondvar;
+	condvar.notify();
 }
 
 void Worker::body() noexcept
 {
-	while (!condvar->tryWait())
+	while (!condvar.tryWait())
 	{}
 }
 
@@ -26,33 +26,21 @@ namespace flame_ide
 {
 
 Workers::Workers() noexcept
-{
-	flame_ide::templates::foreachChangable(
-			workers
-			, [this](Worker &i) { i.init(condvar); }
-	);
-}
+{}
 
 Workers::~Workers() noexcept
 {
 	stop();
 }
 
-void Workers::start()
+os::Status Workers::start()
 {
-	flame_ide::templates::foreachChangable(
-			workers
-			, [](Worker &i) { i.run(); }
-	);
+	return os::STATUS_FAILED;
 }
 
-void Workers::stop()
+os::Status Workers::stop()
 {
-	condvar.notify();
-	flame_ide::templates::foreachChangable(
-			workers
-			, [](Worker &i) { i.join(); }
-	);
+	return os::STATUS_FAILED;
 }
 
 }}} // namespace flame_ide::handler::network

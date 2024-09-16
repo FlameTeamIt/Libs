@@ -4,9 +4,9 @@
 #include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Os/Threads/Spin.hpp>
 
-#include <FlameIDE/../../src/Handler/Network/TcpConfig.hpp>
-#include <FlameIDE/../../src/Handler/Network/TcpServer.hpp>
-#include <FlameIDE/../../src/Handler/Network/TcpClient.hpp>
+#include <FlameIDE/../../src/Handler/Network/Tcp/Config.hpp>
+#include <FlameIDE/../../src/Handler/Network/Tcp/Server.hpp>
+#include <FlameIDE/../../src/Handler/Network/Tcp/Client.hpp>
 
 namespace flame_ide
 {namespace handler

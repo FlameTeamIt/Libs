@@ -1,7 +1,7 @@
 #ifndef FLAMEIDE_OS_NETWORK_HANDLER_HPP
 #define FLAMEIDE_OS_NETWORK_HANDLER_HPP
 
-#include <FlameIDE/Common/Constants.hpp>
+#include <FlameIDE/Common/Expected.hpp>
 #include <FlameIDE/Common/Traits.hpp>
 
 #include <FlameIDE/Os/Types.hpp>
@@ -12,8 +12,6 @@ namespace flame_ide
 {namespace os
 {namespace network
 {
-
-class NetworkBase;
 
 class UdpServer;
 class UdpClient;
@@ -35,34 +33,78 @@ class Handler
 {
 public:
 	class Internal;
+	class Tcp;
+	class Udp;
 
 public:
 	class ServerHandle;
-	class CommunicationHandle;
+	class SessionHandle;
+
+	using ExpectedServerHandle = Expected<ServerHandle, os::Status>;
+	using ExpectedSessionHandle = Expected<SessionHandle, os::Status>;
+
+	using ExpectedUdpServer = Expected<os::network::UdpServer, os::Status>;
+	using ExpectedUdpClient = Expected<os::network::UdpClient, os::Status>;
+
+	using ExpectedTcpServer = Expected<os::network::TcpServer, os::Status>;
+	using ExpectedTcpClient = Expected<os::network::TcpClient, os::Status>;
 
 public:
 	Handler() noexcept;
 	Handler(const Handler &) noexcept = delete;
 	Handler(Handler &&handler) noexcept;
-
 	~Handler() noexcept;
 
 	Handler &operator=(const Handler &) noexcept = delete;
+
 	Handler &operator=(Handler &&handler) noexcept;
 
-	ServerHandle push(os::network::UdpServer &&server) noexcept;
-	CommunicationHandle push(os::network::UdpClient &&client) noexcept;
+	/// @brief pushUdp
+	/// @param server
+	/// @return
+	ExpectedServerHandle pushUdp(os::network::UdpServer &&server) noexcept;
 
-	ServerHandle push(os::network::TcpServer &&server) noexcept;
-	CommunicationHandle push(os::network::TcpClient &&client) noexcept;
+	/// @brief pushUdp
+	/// @param client
+	/// @return
+	ExpectedSessionHandle pushUdp(os::network::UdpClient &&client) noexcept;
 
-	os::Status pop(const ServerHandle &, os::network::UdpServer &server) noexcept;
-	os::Status pop(const CommunicationHandle &, os::network::UdpClient &client) noexcept;
+	/// @brief pushTcp
+	/// @param server
+	/// @return
+	ExpectedServerHandle pushTcp(os::network::TcpServer &&server) noexcept;
 
-	os::Status pop(const ServerHandle &, os::network::TcpServer &server) noexcept;
-	os::Status pop(const CommunicationHandle &, os::network::TcpClient &client) noexcept;
+	/// @brief pushTcp
+	/// @param client
+	/// @return
+	ExpectedSessionHandle pushTcp(os::network::TcpClient &&client) noexcept;
 
+	/// @brief pop
+	/// @param server
+	/// @return
+	ExpectedUdpServer popUdp(ServerHandle &handle) noexcept;
+
+	/// @brief pop
+	/// @param client
+	/// @return
+	ExpectedUdpClient popUdp(SessionHandle &handle) noexcept;
+
+	/// @brief pop
+	/// @param server
+	/// @return
+	ExpectedTcpServer popTcp(ServerHandle &handle) noexcept;
+
+	/// @brief pop
+	/// @param client
+	/// @return
+	ExpectedTcpClient popTcp(SessionHandle &handle) noexcept;
+
+	/// @brief start
+	/// @return
 	os::Status start() noexcept;
+
+	/// @brief stop
+	/// @return
 	os::Status stop() noexcept;
 
 private:
@@ -89,45 +131,65 @@ public:
 
 	operator bool() const noexcept;
 
-	Handler::CommunicationHandle getCommunicationHandle() noexcept;
+	///
+	/// @brief getSessionHandle
+	/// @return
+	///
+	Handler::SessionHandle getSessionHandle() noexcept;
 
 private:
 	friend class Handler::Internal;
+	friend class Handler::Udp;
+	friend class Handler::Tcp;
 
-private:
-	using CallbackGetCommunicationHandle = Handler::CommunicationHandle (*)(void *);
+	using CallbackGetSessionHandle = Handler::SessionHandle (*)(void *);
 
 private:
 	void *data = nullptr;
-	CallbackGetCommunicationHandle callbackGetCommunicationHandle = nullptr;
+	CallbackGetSessionHandle callbackGetSessionHandle = nullptr;
 };
 
 }}} // namespace flame_ide::handler::network
 
-// Handler::CommunicationHandle
+// Handler::SessionHandle
 namespace flame_ide
 {namespace handler
 {namespace network
 {
 
-class Handler::CommunicationHandle
+class Handler::SessionHandle
 {
 public:
-	CommunicationHandle() noexcept = default;
-	CommunicationHandle(CommunicationHandle &&) noexcept = default;
-	~CommunicationHandle() noexcept = default;
+	SessionHandle() noexcept = default;
+	SessionHandle(SessionHandle &&) noexcept = default;
+	~SessionHandle() noexcept = default;
 
-	CommunicationHandle &operator=(CommunicationHandle &&) noexcept = default;
+	SessionHandle &operator=(SessionHandle &&) noexcept = default;
 
 	operator bool() const noexcept;
 
+	///
+	/// @brief bytesToRead
+	/// @return
+	///
 	Types::ssize_t bytesToRead() const noexcept;
 
+	///
+	/// @brief receive
+	/// @return
+	///
 	Types::ssize_t receive(flame_ide::templates::Range<byte_t *>) noexcept;
+
+	///
+	/// @brief send
+	/// @return
+	///
 	Types::ssize_t send(flame_ide::templates::Range<const byte_t *>) noexcept;
 
 private:
 	friend class Handler::Internal;
+	friend class Handler::Udp;
+	friend class Handler::Tcp;
 	friend class Handler::ServerHandle;
 
 private:

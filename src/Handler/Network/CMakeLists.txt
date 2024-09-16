@@ -8,11 +8,22 @@ set(DEPENDENCY_HEADER_TARGETS
 	${FLAME_NAMESPACE}::Handler::Network::Headers
 )
 set(DEPENDENCY_TARGETS_FOR_STATIC
+	"${FLAME_NAMESPACE}::${NAME_ALIAS}::Udp::Object"
+	"${FLAME_NAMESPACE}::${NAME_ALIAS}::Tcp::Object"
 	"${FLAME_NAMESPACE}::Os::Static"
 )
 set(DEPENDENCY_TARGETS_FOR_SHARED
+	"${FLAME_NAMESPACE}::${NAME_ALIAS}::Udp::Object::Independ"
+	"${FLAME_NAMESPACE}::${NAME_ALIAS}::Tcp::Object::Independ"
 	"${FLAME_NAMESPACE}::Os::Shared"
 )
+
+if(FLAME_MAKE_STATIC)
+	set(MAKE_STATIC MAKE_STATIC)
+endif()
+if(FLAME_MAKE_SHARED)
+	set(MAKE_SHARED MAKE_SHARED)
+endif()
 
 get_sources(FILE_LIST)
 flame_compile_library(
@@ -26,7 +37,20 @@ flame_compile_library(
 		"${FLAME_NAMESPACE}::${NAME_ALIAS}::Object"
 	INDEPENDENT_OBJECT_ALIAS_NAME
 		"${FLAME_NAMESPACE}::${NAME_ALIAS}::Object::Independ"
+	STATIC_ALIAS_NAME "${FLAME_NAMESPACE}::${NAME_ALIAS}::Static"
+	SHARED_ALIAS_NAME "${FLAME_NAMESPACE}::${NAME_ALIAS}::Shared"
 
 	NO_RTTI
 	NO_EXCEPTIONS
+
+	${MAKE_STATIC}
+	${MAKE_SHARED}
 )
+
+set(SOURCE_MODULES
+	${CMAKE_CURRENT_LIST_DIR}/Udp
+	${CMAKE_CURRENT_LIST_DIR}/Tcp
+)
+foreach(module ${SOURCE_MODULES})
+	add_subdirectory(${module})
+endforeach()
