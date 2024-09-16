@@ -50,54 +50,54 @@ Handler &Handler::operator=(Handler &&handler) noexcept
 	return *this;
 }
 
-Handler::ServerHandle Handler::push(os::network::UdpServer &&server) noexcept
+Handler::ExpectedServerHandle Handler::pushUdp(os::network::UdpServer &&server) noexcept
 {
-	return internal->push(flame_ide::move(server));
+	return internal->udp().push(flame_ide::move(server));
 }
 
-Handler::CommunicationHandle Handler::push(os::network::UdpClient &&client) noexcept
+Handler::ExpectedSessionHandle Handler::pushUdp(os::network::UdpClient &&client) noexcept
 {
-	return internal->push(flame_ide::move(client));
+	return internal->udp().push(flame_ide::move(client));
 }
 
-Handler::ServerHandle Handler::push(os::network::TcpServer &&server) noexcept
+Handler::ExpectedServerHandle Handler::pushTcp(os::network::TcpServer &&server) noexcept
 {
-	return internal->push(flame_ide::move(server));
+	return internal->tcp().push(flame_ide::move(server));
 }
 
-Handler::CommunicationHandle Handler::push(os::network::TcpClient &&client) noexcept
+Handler::ExpectedSessionHandle Handler::pushTcp(os::network::TcpClient &&client) noexcept
 {
-	return internal->push(flame_ide::move(client));
+	return internal->tcp().push(flame_ide::move(client));
 }
 
-os::Status Handler::pop(const ServerHandle &, os::network::UdpServer &/*server*/) noexcept
+Handler::ExpectedUdpServer Handler::popUdp(ServerHandle &handle) noexcept
 {
-	return os::STATUS_FAILED;
+	return internal->udp().pop(handle);
 }
 
-os::Status Handler::pop(const CommunicationHandle &, os::network::UdpClient &/*client*/) noexcept
+Handler::ExpectedUdpClient Handler::popUdp(SessionHandle &handle) noexcept
 {
-	return os::STATUS_FAILED;
+	return internal->udp().pop(handle);
 }
 
-os::Status Handler::pop(const ServerHandle &, os::network::TcpServer &/*server*/) noexcept
+Handler::ExpectedTcpServer Handler::popTcp(ServerHandle &handle) noexcept
 {
-	return os::STATUS_FAILED;
+	return internal->tcp().pop(handle);
 }
 
-os::Status Handler::pop(const CommunicationHandle &, os::network::TcpClient &/*client*/) noexcept
+Handler::ExpectedTcpClient Handler::popTcp(SessionHandle &handle) noexcept
 {
-	return os::STATUS_FAILED;
+	return internal->tcp().pop(handle);
 }
 
 os::Status Handler::start() noexcept
 {
-	return os::STATUS_FAILED;
+	return internal->start();
 }
 
 os::Status Handler::stop() noexcept
 {
-	return os::STATUS_FAILED;
+	return internal->stop();
 }
 
 }}} // namespace flame_ide::handler::network

@@ -7,12 +7,12 @@ namespace flame_ide
 
 Handler::ServerHandle::operator bool() const noexcept
 {
-	return data && callbackGetCommunicationHandle;
+	return data && callbackGetSessionHandle;
 }
 
-Handler::CommunicationHandle Handler::ServerHandle::getCommunicationHandle() noexcept
+Handler::SessionHandle Handler::ServerHandle::getSessionHandle() noexcept
 {
-	return callbackGetCommunicationHandle(data);
+	return callbackGetSessionHandle(data);
 }
 
 }}} // namespace flame_ide::handler::network

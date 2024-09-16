@@ -71,14 +71,12 @@ if(FLAME_MAKE_SHARED)
 endif()
 
 set(DEPENDENCY_TARGETS_FOR_STATIC
-#	"${FLAME_NAMESPACE}::Handler::Static"
-	"${FLAME_NAMESPACE}::Handler::Network::Object"
+	"${FLAME_NAMESPACE}::Handler::Network::Static"
 	"${FLAME_NAMESPACE}::Os::Static"
 	"${DEPEND_OBJECTS}"
 )
 set(DEPENDENCY_TARGETS_FOR_SHARED
-#	"${FLAME_NAMESPACE}::Handler::Shared"
-	"${FLAME_NAMESPACE}::Handler::Network::Object::Independ"
+	"${FLAME_NAMESPACE}::Handler::Network::Shared"
 	"${FLAME_NAMESPACE}::Os::Shared"
 	"${INDEPEND_OBJECTS}"
 )
