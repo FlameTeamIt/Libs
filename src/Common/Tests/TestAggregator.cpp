@@ -1,6 +1,7 @@
 #include <FlameIDE/../../src/Common/Tests/UtilsTest.hpp>
 #include <FlameIDE/../../src/Common/Tests/ExpectedTest.hpp>
 #include <FlameIDE/../../src/Common/Tests/VoidTypeTest.hpp>
+#include <FlameIDE/../../src/Common/Tests/FunctionalTraitTest.hpp>
 
 #include <FlameIDE/../../src/Common/Tests/TestAggregator.hpp>
 
@@ -14,6 +15,7 @@ TestAggregator::TestAggregator() : ::TestAggregator("Common")
 	pushBackTest(std::make_shared<UtilsTest>());
 	pushBackTest(std::make_shared<ExpectedTest>());
 	pushBackTest(std::make_shared<VoidTypeTest>());
+	pushBackTest(std::make_shared<FunctionalTraitTest>());
 }
 
 }}} // namespace flame_ide::common::tests

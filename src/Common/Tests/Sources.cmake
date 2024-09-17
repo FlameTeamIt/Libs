@@ -1,6 +1,8 @@
 set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/ExpectedTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ExpectedTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FunctionalTraitTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FunctionalTraitTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/TestAggregator.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/UtilsTest.cpp
