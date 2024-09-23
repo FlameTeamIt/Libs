@@ -88,6 +88,10 @@ public:
 	/// @return
 	Tcp &tcp() noexcept;
 
+	/// @brief registrar
+	/// @return
+	os::async::network::Registrar &registrar() noexcept;
+
 	/// @brief start
 	/// @return
 	// TODO

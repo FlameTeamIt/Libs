@@ -1,5 +1,6 @@
 #include <FlameIDE/Handler/Network/Handler.hpp>
 
+#include <FlameIDE/Common/ReferenceWrapper.hpp>
 #include <FlameIDE/Templates/Allocator/ObjectAllocator.hpp>
 
 #include <FlameIDE/../../src/Handler/Network/Internal.hpp>
@@ -52,22 +53,62 @@ Handler &Handler::operator=(Handler &&handler) noexcept
 
 Handler::ExpectedServerHandle Handler::pushUdp(os::network::UdpServer &&server) noexcept
 {
-	return internal->udp().push(flame_ide::move(server));
+	const auto descriptor = server.native().descriptor;
+
+	auto result = internal->udp().push(flame_ide::move(server));
+	flame_ide::makeConstReferenceWrapper(result)->ifResult(
+			[descriptor, this](const auto &)
+			{
+				internal->registrar().pushUdpServer(descriptor);
+			}
+	);
+
+	return result;
 }
 
 Handler::ExpectedSessionHandle Handler::pushUdp(os::network::UdpClient &&client) noexcept
 {
-	return internal->udp().push(flame_ide::move(client));
+	const auto descriptor = client.native().descriptor;
+
+	auto result = internal->udp().push(flame_ide::move(client));
+	flame_ide::makeConstReferenceWrapper(result)->ifResult(
+			[descriptor, this](const auto &)
+			{
+				internal->registrar().pushUdpServer(descriptor);
+			}
+	);
+
+	return result;
 }
 
 Handler::ExpectedServerHandle Handler::pushTcp(os::network::TcpServer &&server) noexcept
 {
-	return internal->tcp().push(flame_ide::move(server));
+	const auto descriptor = server.native().descriptor;
+
+	auto result = internal->tcp().push(flame_ide::move(server));
+	flame_ide::makeConstReferenceWrapper(result)->ifResult(
+			[descriptor, this](const auto &)
+			{
+				internal->registrar().pushUdpServer(descriptor);
+			}
+	);
+
+	return result;
 }
 
 Handler::ExpectedSessionHandle Handler::pushTcp(os::network::TcpClient &&client) noexcept
 {
-	return internal->tcp().push(flame_ide::move(client));
+	const auto descriptor = client.native().descriptor;
+
+	auto result = internal->tcp().push(flame_ide::move(client));
+	flame_ide::makeConstReferenceWrapper(result)->ifResult(
+			[descriptor, this](const auto &)
+			{
+				internal->registrar().pushUdpServer(descriptor);
+			}
+	);
+
+	return result;
 }
 
 Handler::ExpectedUdpServer Handler::popUdp(ServerHandle &handle) noexcept

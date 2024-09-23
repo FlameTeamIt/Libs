@@ -13,14 +13,14 @@ namespace flame_ide
 struct ServerCommunicationData
 {
 	os::network::UdpServer::WithClient client;
-	Server::Message *message;
+	ServerMessage *message;
 	Server::ActualOutput *output;
 };
 
 struct ClientCommunicationData
 {
 	os::network::UdpClient *client;
-	Server::Message *message;
+	ServerMessage *message;
 	Server::ActualOutput *output;
 };
 
@@ -33,17 +33,6 @@ namespace flame_ide
 {namespace callbacks
 {
 
-// client
-
-// TODO
-Types::ssize_t clientBytesToRead(void *data) noexcept;
-
-// TODO
-Types::ssize_t clientReceive(void *data, templates::Range<byte_t *>) noexcept;
-
-// TODO
-Types::ssize_t clientSend(void *data, templates::Range<const byte_t *>) noexcept;
-
 // server
 
 Types::ssize_t serverBytesToRead(const udp::ServerCommunicationData *message) noexcept;
@@ -55,6 +44,17 @@ Types::ssize_t serverReceive(
 Types::ssize_t serverSend(
 		udp::ServerCommunicationData *data, templates::Range<const byte_t *>
 ) noexcept;
+
+// client
+
+// TODO
+Types::ssize_t clientBytesToRead(void *data) noexcept;
+
+// TODO
+Types::ssize_t clientReceive(void *data, templates::Range<byte_t *>) noexcept;
+
+// TODO
+Types::ssize_t clientSend(void *data, templates::Range<const byte_t *>) noexcept;
 
 }}}}} // namespace flame_ide::os::network::udp::callbacks
 

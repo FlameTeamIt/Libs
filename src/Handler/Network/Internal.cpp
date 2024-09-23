@@ -15,12 +15,18 @@ namespace flame_ide
 Handler::ExpectedServerHandle Handler::Udp::push(os::network::UdpServer &&server) noexcept
 {
 	flame_ide::unused(server);
+
+	udp::Server *udpServer = udp.push(move(server));
+	flame_ide::unused(udpServer);
 	return { os::STATUS_FAILED };
 }
 
 Handler::ExpectedSessionHandle Handler::Udp::push(os::network::UdpClient &&client) noexcept
 {
 	flame_ide::unused(client);
+
+	udp::Client *udpClient = udp.push(move(client));
+	flame_ide::unused(udpClient);
 	return { os::STATUS_FAILED };
 }
 
@@ -83,6 +89,11 @@ Handler::Udp &Handler::Internal::udp() noexcept
 Handler::Tcp &Handler::Internal::tcp() noexcept
 {
 	return tcpData;
+}
+
+os::async::network::Registrar &Handler::Internal::registrar() noexcept
+{
+	return registration;
 }
 
 os::Status Handler::Internal::start() noexcept
