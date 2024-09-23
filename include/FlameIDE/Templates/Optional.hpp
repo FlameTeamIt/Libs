@@ -45,6 +45,7 @@ public:
 
 	typename Me::Reference get();
 	typename Me::ConstReference get() const;
+	typename Me::MoveReference pull() noexcept;
 
 	typename Me::Pointer getPointer();
 	typename Me::PointerToConst getPointer() const;
@@ -241,6 +242,13 @@ template<typename T, typename Traits>
 typename Optional<T, Traits>::ConstReference Optional<T, Traits>::get() const
 {
 	return *toValue();
+}
+
+template<typename T, typename Traits>
+typename Optional<T, Traits>::MoveReference Optional<T, Traits>::pull() noexcept
+{
+	isFill = false;
+	return flame_ide::move(get());
 }
 
 template<typename T, typename Traits>
