@@ -64,10 +64,10 @@ serverSend(
 	auto &output = *data->output;
 	ServerMessage *message = nullptr;
 	{
-		os::threads::Locker locker{ output.spin };
+		os::threads::Locker outputLocker{ output.spin };
 		message = output.last->pointer();
 		{
-			os::threads::Locker locker{ message->spin };
+			os::threads::Locker messageLocker{ message->spin };
 			message->state = MessageState::PROCESSING;
 		}
 		++output.last;

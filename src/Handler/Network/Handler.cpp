@@ -1,6 +1,5 @@
 #include <FlameIDE/Handler/Network/Handler.hpp>
 
-#include <FlameIDE/Common/ReferenceWrapper.hpp>
 #include <FlameIDE/Templates/Allocator/ObjectAllocator.hpp>
 
 #include <FlameIDE/../../src/Handler/Network/Internal.hpp>
@@ -56,14 +55,15 @@ Handler::ExpectedServerHandle Handler::pushUdp(os::network::UdpServer &&server) 
 	const auto descriptor = server.native().descriptor;
 
 	auto result = internal->udp().push(flame_ide::move(server));
-	flame_ide::makeConstReferenceWrapper(result)->ifResult(
+	const decltype(result) &constResult = result;
+	constResult.ifResult(
 			[descriptor, this](const auto &)
 			{
 				internal->registrar().pushUdpServer(descriptor);
 			}
 	);
 
-	return result;
+	return flame_ide::move(result);
 }
 
 Handler::ExpectedSessionHandle Handler::pushUdp(os::network::UdpClient &&client) noexcept
@@ -71,14 +71,15 @@ Handler::ExpectedSessionHandle Handler::pushUdp(os::network::UdpClient &&client)
 	const auto descriptor = client.native().descriptor;
 
 	auto result = internal->udp().push(flame_ide::move(client));
-	flame_ide::makeConstReferenceWrapper(result)->ifResult(
+	const decltype(result) &constResult = result;
+	constResult.ifResult(
 			[descriptor, this](const auto &)
 			{
 				internal->registrar().pushUdpServer(descriptor);
 			}
 	);
 
-	return result;
+	return flame_ide::move(result);
 }
 
 Handler::ExpectedServerHandle Handler::pushTcp(os::network::TcpServer &&server) noexcept
@@ -86,14 +87,15 @@ Handler::ExpectedServerHandle Handler::pushTcp(os::network::TcpServer &&server) 
 	const auto descriptor = server.native().descriptor;
 
 	auto result = internal->tcp().push(flame_ide::move(server));
-	flame_ide::makeConstReferenceWrapper(result)->ifResult(
+	const decltype(result) &constResult = result;
+	constResult.ifResult(
 			[descriptor, this](const auto &)
 			{
 				internal->registrar().pushUdpServer(descriptor);
 			}
 	);
 
-	return result;
+	return flame_ide::move(result);
 }
 
 Handler::ExpectedSessionHandle Handler::pushTcp(os::network::TcpClient &&client) noexcept
@@ -101,7 +103,8 @@ Handler::ExpectedSessionHandle Handler::pushTcp(os::network::TcpClient &&client)
 	const auto descriptor = client.native().descriptor;
 
 	auto result = internal->tcp().push(flame_ide::move(client));
-	flame_ide::makeConstReferenceWrapper(result)->ifResult(
+	const decltype(result) &constResult = result;
+	constResult.ifResult(
 			[descriptor, this](const auto &)
 			{
 				internal->registrar().pushUdpServer(descriptor);
