@@ -1,10 +1,8 @@
 #ifndef HANDLERINTERNALUDPSERVER_HPP
 #define HANDLERINTERNALUDPSERVER_HPP
 
-#include <FlameIDE/../../src/Handler/Network/Udp/Config.hpp>
 #include <FlameIDE/../../src/Handler/Network/Udp/Types.hpp>
 
-#include <FlameIDE/Templates/Optional.hpp>
 #include <FlameIDE/Os/Network/UdpServer.hpp>
 
 namespace flame_ide
@@ -13,33 +11,27 @@ namespace flame_ide
 {namespace udp
 {
 
-class Server
+struct ServerMessage: public Message
+{
+	::flame_ide::os::network::UdpServer::WithClient client;
+};
+using ServerEndpoint = Endpoint<
+	::flame_ide::os::network::UdpServer, ServerMessage
+	, Constants::SERVER_INPUT_QUEUE_SIZE, Constants::SERVER_OUTPUT_QUEUE_SIZE
+>;
+
+class Server: public ServerEndpoint
 {
 public:
-	struct Message
+	inline ServerEndpoint::Optional &server() noexcept
 	{
-		mutable os::threads::Spin spin;
+		return this->osEndpoint;
+	}
 
-		Types::ssize_t size = 0;
-		flame_ide::os::network::UdpServer::WithClient client;
-		flame_ide::templates::StaticArray<
-			flame_ide::byte_t, Constants::MESSAGE_SIZE
-		> bytes;
-		MessageState state = MessageState::EMPTY;
-	};
-
-public:
-	using Optional = flame_ide::templates::Optional<
-		flame_ide::os::network::UdpServer
-	>;
-
-	using ActualInput = ActualData<Message, Constants::SERVER_INPUT_QUEUE_SIZE>;
-	using ActualOutput = ActualData<Message, Constants::SERVER_OUTPUT_QUEUE_SIZE>;
-
-public:
-	Optional server;
-	ActualInput input;
-	ActualOutput output;
+	inline const ServerEndpoint::Optional &server() const noexcept
+	{
+		return this->osEndpoint;
+	}
 };
 
 }}}} // namespace flame_ide::handler::network::udp

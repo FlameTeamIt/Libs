@@ -3,10 +3,9 @@
 
 #include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Os/Threads/Spin.hpp>
+#include <FlameIDE/Os/Threads/Utils.hpp>
 
-#include <FlameIDE/../../src/Handler/Network/Udp/Config.hpp>
-#include <FlameIDE/../../src/Handler/Network/Udp/Server.hpp>
-#include <FlameIDE/../../src/Handler/Network/Udp/Client.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Endpoint.hpp>
 
 namespace flame_ide
 {namespace handler
@@ -14,38 +13,123 @@ namespace flame_ide
 {namespace udp
 {
 
-// WARNING: using UniquePointer because malloc doen't work with big sizes
-using Servers = ::flame_ide::templates::StaticArray<
-	templates::UniquePointer<Server>, Constants::NUMBER_OF_SERVERS
->;
-
-// WARNING: using UniquePointer because malloc doen't work with big sizes
-using Clients = ::flame_ide::templates::StaticArray<
-	templates::UniquePointer<Client>, Constants::NUMBER_OF_CLIENTS
->;
-
-using SocketDescriptors = ::flame_ide::templates::StaticArray<
-	::flame_ide::os::SocketDescriptor
-	, Constants::NUMBER_OF_SERVERS + Constants::NUMBER_OF_CLIENTS
->;
-
 class Udp
 {
 public:
-	Server *push(os::network::UdpServer &&server) noexcept;
-	os::network::UdpServer pop(Server *server) noexcept;
+	template<typename OsEndpoint>
+	auto *push(OsEndpoint &&osEndpoint) noexcept
+	{
+		static_assert(
+			IsOsEndpoint<OsEndpoint>::VALUE
+			, "Input type is not flame_ide::os::network::UdpServer or"
+					" flame_ide::os::network::UdpClient"
+		);
 
-	Client *push(os::network::UdpClient &&client) noexcept;
-	os::network::UdpClient pop(Client *client) noexcept;
+		using HandlerEndpoint = typename EndpointTypeMapper<OsEndpoint>::Type;
+		using HandlerEndpointPointer =
+				typename ::flame_ide::DefaultTraits<HandlerEndpoint>::Pointer;
+		using HandlerEndpointData = typename HandlerEndpointDataMapper<
+			HandlerEndpoint
+		>::Type;
 
-public:
-	templates::UniquePointer<Servers> servers = decltype(servers)::makeEmpty();
-	templates::UniquePointer<Clients> clients/* = decltype(clients)::makeEmpty()*/;
-	SocketDescriptors socketDescriptors;
+		HandlerEndpointData &data = getData<HandlerEndpointData>();
+		// Init container if need
+		{
+			os::threads::Locker lock{ data.spin };
+			if (!data.container)
+				data.container = decltype(data.container){};
+			if (!data.container)
+				return HandlerEndpointPointer{ nullptr };
+		}
 
-	os::threads::Spin serversSpin;
-	os::threads::Spin clientsSpin;
+		// Push
+		HandlerEndpointPointer handlerEndpointPointer = nullptr;
+		{
+			os::threads::Locker lock{ data.spin };
+			for (auto &i : data.container.reference())
+			{
+				if (!i->empty())
+					continue;
+
+				handlerEndpointPointer = i.pointer();
+				break;
+			}
+			if (handlerEndpointPointer)
+				handlerEndpointPointer->attach(flame_ide::move(osEndpoint));
+		}
+		return handlerEndpointPointer;
+	}
+
+	template<typename HandlerEndpoint>
+	auto pop(HandlerEndpoint *handlerEndpoint) noexcept
+	{
+		static_assert(
+			IsHandlerEndpoint<HandlerEndpoint>::VALUE
+			, "Input type is not flame_ide::handler::udp::Server or"
+					" flame_ide::handler::udp::UdpClient"
+		);
+
+		using OsEndpoint = typename EndpointTypeMapper<HandlerEndpoint>::Type;
+		using HandlerEndpointData = typename HandlerEndpointDataMapper<
+			HandlerEndpoint
+		>::Type;
+
+		if (!handlerEndpoint || handlerEndpoint->empty())
+			return OsEndpoint{};
+
+		HandlerEndpointData &data = getData<HandlerEndpointData>();
+		const auto endpointDescriptor = handlerEndpoint->endpoint()->native().descriptor;
+
+		// Pop
+		{
+			os::threads::Locker lock{ data.spin };
+			for (auto &i : data.container.reference())
+			{
+				if (i->empty())
+					continue;
+
+				const auto internalDescriptor = i->endpoint()->native().descriptor;
+				if (endpointDescriptor != internalDescriptor)
+					continue;
+
+				OsEndpoint osEndpoint = flame_ide::move(i->detach());
+				return osEndpoint;
+			}
+		}
+		return OsEndpoint{};
+	}
+
+private:
+	template<typename T>
+	T &getData() noexcept;
+
+private:
+	HandlerEndpointUdpData<Servers> servers;
+	HandlerEndpointUdpData<Clients> clients;
+
 };
+
+}}}} // namespace flame_ide::handler::network::udp
+
+namespace flame_ide
+{namespace handler
+{namespace network
+{namespace udp
+{
+
+template<> inline
+HandlerEndpointUdpData<Servers> &
+Udp::getData<HandlerEndpointUdpData<Servers>>() noexcept
+{
+	return servers;
+}
+
+template<> inline
+HandlerEndpointUdpData<Clients> &
+Udp::getData<HandlerEndpointUdpData<Clients>>() noexcept
+{
+	return clients;
+}
 
 }}}} // namespace flame_ide::handler::network::udp
 

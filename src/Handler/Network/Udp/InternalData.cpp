@@ -9,26 +9,6 @@ namespace flame_ide
 {namespace callbacks
 {
 
-// client
-
-// TODO
-Types::ssize_t clientBytesToRead(void */*data*/) noexcept
-{
-	return os::STATUS_FAILED;
-}
-
-// TODO
-Types::ssize_t clientReceive(void */*data*/, templates::Range<byte_t *>) noexcept
-{
-	return os::STATUS_FAILED;
-}
-
-// TODO
-Types::ssize_t clientSend(void */*data*/, templates::Range<const byte_t *>) noexcept
-{
-	return os::STATUS_FAILED;
-}
-
 // server
 
 Types::ssize_t serverBytesToRead(const udp::ServerCommunicationData *data) noexcept
@@ -36,8 +16,7 @@ Types::ssize_t serverBytesToRead(const udp::ServerCommunicationData *data) noexc
 	if (!data || !data->message)
 		return os::STATUS_FAILED;
 
-	os::threads::Locker{ data->message->spin };
-
+	os::threads::Locker locker{ data->message->spin };
 	return data->message->size;
 }
 
@@ -83,7 +62,7 @@ serverSend(
 		return os::STATUS_FAILED;
 
 	auto &output = *data->output;
-	Server::Message *message = nullptr;
+	ServerMessage *message = nullptr;
 	{
 		os::threads::Locker locker{ output.spin };
 		message = output.last->pointer();
@@ -109,6 +88,26 @@ serverSend(
 		message->state = MessageState::READY;
 	}
 	return rangeSize;
+}
+
+// client
+
+// TODO
+Types::ssize_t clientBytesToRead(void */*data*/) noexcept
+{
+	return os::STATUS_FAILED;
+}
+
+// TODO
+Types::ssize_t clientReceive(void */*data*/, templates::Range<byte_t *>) noexcept
+{
+	return os::STATUS_FAILED;
+}
+
+// TODO
+Types::ssize_t clientSend(void */*data*/, templates::Range<const byte_t *>) noexcept
+{
+	return os::STATUS_FAILED;
 }
 
 }}}}} // namespace flame_ide::os::network::udp::callbacks

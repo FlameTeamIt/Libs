@@ -1,7 +1,6 @@
 #ifndef HANDLERINTERNALUDPCLIENT_HPP
 #define HANDLERINTERNALUDPCLIENT_HPP
 
-#include <FlameIDE/../../src/Handler/Network/Udp/Config.hpp>
 #include <FlameIDE/../../src/Handler/Network/Udp/Types.hpp>
 
 #include <FlameIDE/Templates/Optional.hpp>
@@ -13,31 +12,25 @@ namespace flame_ide
 {namespace udp
 {
 
-class Client
+struct ClientMessage: public Message
+{};
+using ClientEndpoint = Endpoint<
+	::flame_ide::os::network::UdpClient, ClientMessage
+	, Constants::CLIENT_INPUT_QUEUE_SIZE, Constants::CLIENT_OUTPUT_QUEUE_SIZE
+>;
+
+class Client: public ClientEndpoint
 {
 public:
-	struct Message
+	inline ClientEndpoint::Optional &client() noexcept
 	{
-		::flame_ide::templates::StaticArray<
-			::flame_ide::byte_t, Constants::MESSAGE_SIZE
-		> bytes;
-		Types::ssize_t size = 0;
-		MessageState state = MessageState::EMPTY;
-		mutable os::threads::Spin spin;
-	};
+		return this->osEndpoint;
+	}
 
-public:
-	using Optional = ::flame_ide::templates::Optional<
-		::flame_ide::os::network::UdpClient
-	>;
-
-	using ActualInput = ActualData<Message, Constants::CLIENT_INPUT_QUEUE_SIZE>;
-	using ActualOutput = ActualData<Message, Constants::CLIENT_OUTPUT_QUEUE_SIZE>;
-
-public:
-	Optional client;
-	ActualInput input;
-	ActualOutput output;
+	inline const ClientEndpoint::Optional &client() const noexcept
+	{
+		return this->osEndpoint;
+	}
 };
 
 }}}} // namespace flame_ide::handler::network::udp

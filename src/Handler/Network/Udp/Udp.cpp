@@ -9,21 +9,23 @@ namespace flame_ide
 {namespace udp
 {
 
+/*
+
 Server *Udp::push(os::network::UdpServer &&server) noexcept
 {
 	if (!initPointer(servers, serversSpin))
 		return nullptr;
 
-	return pushData(servers, serversSpin
-			, /* check = */ [](const Server &i) -> bool
-			{
-				return (i.server);
-			}
-			, /* assignTo = */ [&server](Server &handle)
-			{
-				handle.server = flame_ide::move(server);
-			}
-	);
+	auto check = [](const Server &i) -> bool
+	{
+		return !i.empty();
+	};
+	auto assignTo = [&server](Server &handle)
+	{
+		handle.attach(flame_ide::move(server));
+	};
+
+	return pushData(servers, serversSpin, check, assignTo);
 }
 
 os::network::UdpServer Udp::pop(Server *server) noexcept
@@ -31,38 +33,39 @@ os::network::UdpServer Udp::pop(Server *server) noexcept
 	if (!server)
 		return {};
 
-	return popData(servers, serversSpin, server
-			, /* check = */ [](const Server &input, const Server &internal) -> bool
-			{
-				if (!(input.server) || !(internal.server))
-					return false;
+	auto check = [](const Server &input, const Server &internal) -> bool
+	{
+		if (input.empty() || internal.empty())
+			return false;
 
-				return input.server->native().descriptor
-						== internal.server->native().descriptor;
-			}
-			, /* returnData = */ [](Server &internal) -> os::network::UdpServer
-			{
-				os::network::UdpServer server = flame_ide::move(*internal.server);
-				return server;
-			}
-	);
+		const auto inputDescriptor = input.server()->native().descriptor;
+		const auto internalDescriptor = internal.server()->native().descriptor;
+		return (inputDescriptor == internalDescriptor);
+	};
+	auto returnData = [](Server &internal) -> os::network::UdpServer
+	{
+		os::network::UdpServer server = flame_ide::move(internal.detach());
+		return server;
+	};
+
+	return popData(servers, serversSpin, server, check, returnData);
 }
 
-Client *Udp::push(os::network::UdpClient &&/*client*/) noexcept
+Client *Udp::push(os::network::UdpClient &&client) noexcept
 {
-//	if (!initPointer(clients, clientsSpin))
+	if (!initPointer(clients, clientsSpin))
 		return nullptr;
 
-//	return pushData(clients, clientsSpin
-//			, /* check = */ [](const Client &i) -> const auto &
-//			{
-//				return i.client;
-//			}
-//			, /* assignTo = */ [&client](Client &handle)
-//			{
-//				handle.client = flame_ide::move(client);
-//			}
-//	);
+	auto check = [](const Client &i) -> bool
+	{
+		return !i.empty();
+	};
+	auto assignTo = [&client](Client &handle)
+	{
+		handle.attach(flame_ide::move(client));
+	};
+
+	return pushData(clients, clientsSpin, check, assignTo);
 }
 
 os::network::UdpClient Udp::pop(Client *client) noexcept
@@ -70,9 +73,24 @@ os::network::UdpClient Udp::pop(Client *client) noexcept
 	if (!client)
 		return {};
 
-	return {};
+	auto check = [](const Client &input, const Client &internal) -> bool
+	{
+		if (!(input.client) || !(internal.client))
+			return false;
 
-//	flame_ide::unused(client);
+		const auto inputDescriptor = input.client->native().descriptor;
+		const auto internalDescriptor = internal.client->native().descriptor;
+		return (inputDescriptor == internalDescriptor);
+	};
+	auto returnData = [](Client &internal) -> os::network::UdpClient
+	{
+		os::network::UdpClient client = flame_ide::move(*internal.client);
+		return client;
+	};
+
+	return popData(clients, clientsSpin, client, check, returnData);
 }
+
+*/
 
 }}}} // namespace flame_ide::handler::network::udp
