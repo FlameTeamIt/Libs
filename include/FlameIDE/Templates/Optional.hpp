@@ -56,7 +56,7 @@ private:
 	typename Me::Pointer toValue();
 	typename Me::PointerToConst toValue() const;
 
-	AlignObject<T> value;
+	AlignObject<T> object;
 	bool isFill;
 };
 
@@ -67,7 +67,7 @@ namespace flame_ide
 {
 
 template<typename T, typename Traits>
-Optional<T, Traits>::Optional() noexcept : value(), isFill(false)
+Optional<T, Traits>::Optional() noexcept : object(), isFill(false)
 {}
 
 template<typename T, typename Traits>
@@ -277,7 +277,7 @@ template<typename T, typename Traits>
 typename Optional<T, Traits>::Pointer Optional<T, Traits>::toValue()
 {
 	return static_cast<typename Me::Pointer>(
-			static_cast<void *>(value.array)
+			static_cast<void *>(object.array)
 	);
 }
 
@@ -285,7 +285,7 @@ template<typename T, typename Traits>
 typename Optional<T, Traits>::PointerToConst Optional<T, Traits>::toValue() const
 {
 	return static_cast<typename Me::PointerToConst>(
-			static_cast<const void *>(value.array)
+			static_cast<const void *>(object.array)
 	);
 }
 
