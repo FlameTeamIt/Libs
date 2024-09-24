@@ -34,6 +34,12 @@ public:
 	}
 };
 
+struct ServerCommunicationData
+{
+	ServerMessage *message;
+	Server::ActualOutput *output;
+};
+
 }}}} // namespace flame_ide::handler::network::udp
 
 #endif // HANDLERINTERNALUDPSERVER_HPP

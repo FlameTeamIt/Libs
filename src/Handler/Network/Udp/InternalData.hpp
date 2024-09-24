@@ -8,28 +8,6 @@ namespace flame_ide
 {namespace handler
 {namespace network
 {namespace udp
-{
-
-struct ServerCommunicationData
-{
-	os::network::UdpServer::WithClient client;
-	ServerMessage *message;
-	Server::ActualOutput *output;
-};
-
-struct ClientCommunicationData
-{
-	os::network::UdpClient *client;
-	ServerMessage *message;
-	Server::ActualOutput *output;
-};
-
-}}}} // namespace flame_ide::os::network::udp
-
-namespace flame_ide
-{namespace handler
-{namespace network
-{namespace udp
 {namespace callbacks
 {
 

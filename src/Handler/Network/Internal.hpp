@@ -6,65 +6,14 @@
 #include <FlameIDE/Templates/Pointers.hpp>
 #include <FlameIDE/Os/Async/Network/Registrar.hpp>
 
-#include <FlameIDE/../../src/Handler/Network/Udp/Udp.hpp>
-#include <FlameIDE/../../src/Handler/Network/Tcp/Tcp.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp.hpp>
+#include <FlameIDE/../../src/Handler/Network/Tcp.hpp>
 #include <FlameIDE/../../src/Handler/Network/Worker.hpp>
 
 namespace flame_ide
 {namespace handler
 {namespace network
 {
-
-class Handler::Udp
-{
-public:
-	using CallbackGetSessionHandle = Handler::ServerHandle::CallbackGetSessionHandle;
-
-public:
-	// TODO
-	Handler::ExpectedServerHandle push(os::network::UdpServer &&server) noexcept;
-	// TODO
-	Handler::ExpectedSessionHandle push(os::network::UdpClient &&client) noexcept;
-
-	// TODO
-	Handler::ExpectedUdpServer pop(Handler::ServerHandle &handle);
-	// TODO
-	Handler::ExpectedUdpClient pop(Handler::SessionHandle &handle);
-
-	/// @brief serverHandleCallback
-	/// @return
-	// TODO
-	CallbackGetSessionHandle serverHandleCallback() const noexcept;
-
-private:
-	udp::Udp udp;
-};
-
-class Handler::Tcp
-{
-public:
-	using CallbackGetSessionHandle = Handler::ServerHandle::CallbackGetSessionHandle;
-
-public:
-	// TODO
-	Handler::ExpectedServerHandle push(os::network::TcpServer &&server) noexcept;
-	// TODO
-	Handler::ExpectedSessionHandle push(os::network::TcpClient &&client) noexcept;
-
-	// TODO
-	Handler::ExpectedTcpServer pop(Handler::ServerHandle &handle);
-	// TODO
-	Handler::ExpectedTcpClient pop(Handler::SessionHandle &handle);
-
-	/// @brief serverHandleCallback
-	/// @return
-	// TODO
-	CallbackGetSessionHandle serverHandleCallback() const noexcept;
-
-private:
-	tcp::Tcp tcp;
-};
-
 }}} // namespace flame_ide::handler::network
 
 namespace flame_ide
@@ -94,12 +43,10 @@ public:
 
 	/// @brief start
 	/// @return
-	// TODO
 	os::Status start() noexcept;
 
 	/// @brief stop
 	/// @return
-	// TODO
 	os::Status stop() noexcept;
 
 private:
