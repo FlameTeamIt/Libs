@@ -10,7 +10,7 @@ Handler::ServerHandle::operator bool() const noexcept
 	return data && callbackGetSessionHandle;
 }
 
-Handler::SessionHandle Handler::ServerHandle::getSessionHandle() noexcept
+Handler::ExpectedSessionHandle Handler::ServerHandle::getSessionHandle() noexcept
 {
 	return callbackGetSessionHandle(data);
 }
