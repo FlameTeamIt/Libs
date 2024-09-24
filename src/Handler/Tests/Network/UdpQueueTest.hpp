@@ -9,11 +9,11 @@ namespace flame_ide
 {namespace tests
 {
 
-class UdpTest: public ::AbstractTest
+class UdpQueueTest: public ::AbstractTest
 {
 public:
-	UdpTest();
-	virtual ~UdpTest();
+	UdpQueueTest();
+	virtual ~UdpQueueTest();
 
 private:
 	virtual int vStart();

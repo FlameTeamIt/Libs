@@ -1,5 +1,5 @@
-#include <FlameIDE/../../src/Handler/Tests/Network/TcpTest.hpp>
-#include <FlameIDE/../../src/Handler/Network/Tcp/Tcp.hpp>
+#include <FlameIDE/../../src/Handler/Tests/Network/UdpQueueTest.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Udp.hpp>
 
 namespace flame_ide
 {namespace handler
@@ -7,12 +7,12 @@ namespace flame_ide
 {namespace tests
 {
 
-TcpTest::TcpTest() : ::AbstractTest("Tcp")
+UdpQueueTest::UdpQueueTest() : ::AbstractTest("UdpQueue")
 {}
 
-TcpTest::~TcpTest() = default;
+UdpQueueTest::~UdpQueueTest() = default;
 
-int TcpTest::vStart()
+int UdpQueueTest::vStart()
 {
 	CHECK_RESULT_SUCCESS(doTestCase(
 			"initialization"
@@ -27,23 +27,23 @@ int TcpTest::vStart()
 	return ResultType::SUCCESS;
 }
 
-int TcpTest::init()
+int UdpQueueTest::init()
 {
-	tcp::Tcp tcp;
+	udp::Udp udp;
 	return ResultType::SUCCESS;
 }
 
-int TcpTest::serverPushPop()
+int UdpQueueTest::serverPushPop()
 {
-	tcp::Tcp tcp;
-	os::network::TcpServer server{ 65001 };
+	udp::Udp udp;
+	os::network::UdpServer server{ 65001 };
 
 	const os::Socket expectedSocket = server.native();
 
-	auto handle = tcp.push(flame_ide::move(server));
+	auto handle = udp.push(flame_ide::move(server));
 	IN_CASE_CHECK(handle != nullptr);
 
-	auto resultServer = tcp.pop(handle);
+	auto resultServer = udp.pop(handle);
 	IN_CASE_CHECK(expectedSocket.descriptor == resultServer.native().descriptor);
 
 	return ResultType::SUCCESS;
