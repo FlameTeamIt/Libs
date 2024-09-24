@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALUDP_HPP
-#define HANDLERINTERNALUDP_HPP
+#ifndef HANDLERINTERNALUDPUDP_HPP
+#define HANDLERINTERNALUDPUDP_HPP
 
 #include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Os/Threads/Spin.hpp>
@@ -133,4 +133,4 @@ Udp::getData<HandlerEndpointUdpData<Clients>>() noexcept
 
 }}}} // namespace flame_ide::handler::network::udp
 
-#endif // HANDLERINTERNALUDP_HPP
+#endif // HANDLERINTERNALUDPUDP_HPP

@@ -33,6 +33,13 @@ public:
 	}
 };
 
+struct ClientCommunicationData
+{
+	os::network::UdpClient *client;
+	ClientMessage *message;
+	Client::ActualOutput *output;
+};
+
 }}}} // namespace flame_ide::handler::network::udp
 
 #endif // HANDLERINTERNALUDPCLIENT_HPP

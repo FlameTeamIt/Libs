@@ -10,19 +10,19 @@ namespace flame_ide
 // client
 
 // TODO
-Types::ssize_t clientBytesToRead(void */*data*/) noexcept
+Types::ssize_t clientBytesToRead(void * /* data */) noexcept
 {
 	return os::STATUS_FAILED;
 }
 
 // TODO
-Types::ssize_t clientReceive(void */*data*/, templates::Range<byte_t *>) noexcept
+Types::ssize_t clientReceive(void * /* data */, templates::Range<byte_t *>) noexcept
 {
 	return os::STATUS_FAILED;
 }
 
 // TODO
-Types::ssize_t clientSend(void */*data*/, templates::Range<const byte_t *>) noexcept
+Types::ssize_t clientSend(void * /* data */, templates::Range<const byte_t *>) noexcept
 {
 	return os::STATUS_FAILED;
 }
@@ -30,19 +30,19 @@ Types::ssize_t clientSend(void */*data*/, templates::Range<const byte_t *>) noex
 // server
 
 // TODO
-Types::ssize_t serverBytesToRead(void */*data*/) noexcept
+Types::ssize_t serverBytesToRead(void * /* data */) noexcept
 {
 	return os::STATUS_FAILED;
 }
 
 // TODO
-Types::ssize_t serverReceive(void */*data*/, templates::Range<byte_t *>) noexcept
+Types::ssize_t serverReceive(void * /* data */, templates::Range<byte_t *>) noexcept
 {
 	return os::STATUS_FAILED;
 }
 
 // TODO
-Types::ssize_t serverSend(void */*data*/, templates::Range<const byte_t *>) noexcept
+Types::ssize_t serverSend(void * /* data */, templates::Range<const byte_t *>) noexcept
 {
 	return os::STATUS_FAILED;
 }
