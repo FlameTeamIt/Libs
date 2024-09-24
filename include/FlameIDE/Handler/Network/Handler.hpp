@@ -135,14 +135,14 @@ public:
 	/// @brief getSessionHandle
 	/// @return
 	///
-	Handler::SessionHandle getSessionHandle() noexcept;
+	Handler::ExpectedSessionHandle getSessionHandle() noexcept;
 
 private:
 	friend class Handler::Internal;
 	friend class Handler::Udp;
 	friend class Handler::Tcp;
 
-	using CallbackGetSessionHandle = Handler::SessionHandle (*)(void *);
+	using CallbackGetSessionHandle = Handler::ExpectedSessionHandle (*)(void *);
 
 private:
 	void *data = nullptr;
@@ -195,13 +195,13 @@ private:
 private:
 	static constexpr Types::size_t OBJECT_SIZE = 64;
 
-	using Object = templates::Object<OBJECT_SIZE>;
-	using CallbackBytesToRead = Types::ssize_t (*)(const Object *);
-	using CallbackReceive = Types::ssize_t (*)(
-			Object *, flame_ide::templates::Range<byte_t *>
+	using Object = ::flame_ide::templates::Object<OBJECT_SIZE>;
+	using CallbackBytesToRead = ::flame_ide::Types::ssize_t (*)(const Object *);
+	using CallbackReceive = ::flame_ide::Types::ssize_t (*)(
+			Object *, ::flame_ide::templates::Range<byte_t *>
 	);
-	using CallbackSend = Types::ssize_t (*)(
-			Object *, flame_ide::templates::Range<const byte_t *>
+	using CallbackSend = ::flame_ide::Types::ssize_t (*)(
+			Object *, ::flame_ide::templates::Range<const byte_t *>
 	);
 
 private:
