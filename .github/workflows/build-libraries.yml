@@ -11,7 +11,6 @@ on:
       - 'src/**'
       - 'tests/**'
       - '**/CMakeLists.txt'
-      - '**/*.pro'
   pull_request:
     branches:
       - '**'
@@ -22,7 +21,6 @@ on:
       - 'src/**'
       - 'tests/**'
       - '**/CMakeLists.txt'
-      - '**/*.pro'
 
 defaults:
   run:
@@ -96,6 +94,6 @@ jobs:
 
       - name: Run tests
         run: |
-          cmake `
-            --build build `
-            --target test
+          ctest `
+            --test-dir build `
+            --extra-verbose
