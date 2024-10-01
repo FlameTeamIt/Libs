@@ -1,0 +1,12 @@
+set (SOURCE_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/HandlerTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/HandlerTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/InternalTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/InternalTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TcpQueueTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TcpQueueTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UdpQueueTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UdpQueueTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WorkerTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WorkerTest.hpp
+)

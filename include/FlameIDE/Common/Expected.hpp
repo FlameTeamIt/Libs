@@ -146,10 +146,10 @@ Expected<ResultType, ErrorType>::operator=(Me &&expected) noexcept
 {
 	expected.ifResult([this](ResultType &&result)
 			{
-				operator=(move(result));
+				this->operator=(move(result));
 			}).ifError([this](ErrorType &&error)
 					{
-						operator=(move(error));
+						this->operator=(move(error));
 					}).done();
 	return *this;
 }

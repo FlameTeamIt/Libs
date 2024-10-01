@@ -342,6 +342,44 @@ struct DoSomeByIndex<T, SIZE, SIZE>
 	{}
 };
 
+///
+/// @brief The TypeMappingTrait class
+/// @tparam T1
+/// @tparam T2
+///
+template<typename T1, typename T2>
+struct TypeMappingTrait
+{
+	using Type1 = T1;
+	using Type2 = T2;
+};
+
+///
+/// @brief The TypeMapper class
+/// @tparam T
+/// @tparam TypeMappingTrait
+/// @tparam ENABLE_STATIC_ASSERT
+///
+template<typename T, typename TypeMappingTrait, bool ENABLE_STATIC_ASSERT = true>
+struct TypeMapper
+{
+	using Type = typename ChooseType<
+		ComparingTypes<T, typename TypeMappingTrait::Type1>::VALUE
+		, typename TypeMappingTrait::Type2
+		, typename ChooseType<
+			ComparingTypes<T, typename TypeMappingTrait::Type2>::VALUE
+			, typename TypeMappingTrait::Type1
+			, Empty
+		>::Type
+	>::Type;
+
+	static_assert(
+			!ENABLE_STATIC_ASSERT
+					|| ComparingTypes<Type, Empty>::VALUE == FalseType::VALUE
+			, "Type does not include in chosen TypeMatchingTrait"
+	);
+};
+
 }
 
 #endif // FLAMEIDE_COMMON_TRAITS_FUCTIONAL_HPP
