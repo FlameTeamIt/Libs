@@ -94,7 +94,6 @@ jobs:
 
       - name: Run tests
         run: |
-          cmake `
-            --build build `
-            --target test `
-            --verbose
+          ctest `
+            --test-dir build `
+            --extra-verbose
