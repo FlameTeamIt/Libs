@@ -33,9 +33,9 @@ int FunctionalTraitTest::typeMapper()
 	// using T3Result = TypeMapper<T3, TestTypeMatchingTrait>::Type; // static assert
 	using T3Result = TypeMapper<T3, TestTypeMatchingTrait, false>::Type;
 
-	const bool t1ComparationResult = ComparingTypes<T1, T1Result>::VALUE;
-	const bool t2ComparationResult = ComparingTypes<T2, T2Result>::VALUE;
-	const bool t3ComparationResult = ComparingTypes<Empty, T3Result>::VALUE;
+	bool t1ComparationResult = ComparingTypes<T1, T1Result>::VALUE;
+	bool t2ComparationResult = ComparingTypes<T2, T2Result>::VALUE;
+	bool t3ComparationResult = ComparingTypes<Empty, T3Result>::VALUE;
 
 	IN_CASE_CHECK(t1ComparationResult == true);
 	IN_CASE_CHECK(t2ComparationResult == true);
