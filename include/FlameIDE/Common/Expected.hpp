@@ -37,9 +37,15 @@ public:
 	const Me &ifResult(Functor &&functor) const noexcept;
 
 	template<typename Functor>
+	Me &ifResultGet(Functor &&functor) noexcept;
+
+	template<typename Functor>
 	Me &ifError(Functor &&functor) noexcept;
 	template<typename Functor>
 	const Me &ifError(Functor &&functor) const noexcept;
+
+	template<typename Functor>
+	Me &ifErrorGet(Functor &&functor) noexcept;
 
 	void done() noexcept;
 	void done() const noexcept;
@@ -224,6 +230,19 @@ Expected<ResultType, ErrorType>::ifResult(Functor &&functor) const noexcept
 template<typename ResultType, typename ErrorType>
 template<typename Functor>
 Expected<ResultType, ErrorType> &
+Expected<ResultType, ErrorType>::ifResultGet(Functor &&functor) noexcept
+{
+	if (State::RESULT != data.state)
+		return *this;
+
+	functor(data.result.value);
+
+	return *this;
+}
+
+template<typename ResultType, typename ErrorType>
+template<typename Functor>
+Expected<ResultType, ErrorType> &
 Expected<ResultType, ErrorType>::ifError(Functor &&functor) noexcept
 {
 	if (State::ERROR != data.state)
@@ -239,6 +258,19 @@ template<typename ResultType, typename ErrorType>
 template<typename Functor>
 const Expected<ResultType, ErrorType> &
 Expected<ResultType, ErrorType>::ifError(Functor &&functor) const noexcept
+{
+	if (State::ERROR != data.state)
+		return *this;
+
+	functor(data.error.value);
+
+	return *this;
+}
+
+template<typename ResultType, typename ErrorType>
+template<typename Functor>
+Expected<ResultType, ErrorType> &
+Expected<ResultType, ErrorType>::ifErrorGet(Functor &&functor) noexcept
 {
 	if (State::ERROR != data.state)
 		return *this;
