@@ -57,7 +57,7 @@ void foreachChangable(InputContainer &container, FuncObject &&func);
 template<typename InputIterator, typename FuncObject>
 void foreachChangable(Range<InputIterator> &range, FuncObject &&func);
 
-}}
+}} // namespace flame_ide::templates
 
 namespace flame_ide
 {namespace templates
@@ -115,7 +115,7 @@ void foreach(IteratorInput start, IteratorInput end, FuncObject &&func)
 }
 
 template<typename InputContainer, typename FuncObject>
-void foreach(const InputContainer& container, FuncObject func)
+void foreach(const InputContainer& container, FuncObject &&func)
 {
 	foreach(container.begin(), container.end(), func);
 }
@@ -138,6 +138,6 @@ void foreachChangable(Range<InputIterator> &range, FuncObject &&func)
 	foreach(range.begin(), range.end(), func);
 }
 
-}}
+}} // namespace flame_ide::templates
 
 #endif // SIMPLEALGORITHMS_HPP
