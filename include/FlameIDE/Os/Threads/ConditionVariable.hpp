@@ -41,16 +41,6 @@ public:
 	void wait(Functor &&functor) noexcept;
 
 	///
-	/// @brief Trying wait for signal
-	///
-	bool tryWait() noexcept;
-
-	///
-	/// @brief Disable waiting (decrement counter)
-	///
-	void unwait() noexcept;
-
-	///
 	/// @brief isWait
 	/// @return
 	///
@@ -62,7 +52,7 @@ public:
 	void notify() noexcept;
 
 private:
-	Counter<Spin, flame_ide::Types::uichar_t> counter;
+	Counter<Spin, flame_ide::Types::ssize_t> counter;
 	UniqueLocker locker;
 };
 
@@ -75,14 +65,14 @@ namespace flame_ide
 
 template<typename LockObject>
 ConditionVariable::ConditionVariable(LockObject &lock) noexcept :
-		locker{ lock, UniqueLocker::LOCK }
+		counter{ decltype(counter.current()){ 0 } }, locker{ lock, UniqueLocker::LOCK }
 {}
 
 template<typename Functor>
 void ConditionVariable::wait(Functor &&functor) noexcept
 {
 	static_assert(
-			CompareTypesResult<bool, decltype(functor())>
+			ComparingTypes<bool, decltype(functor())>::VALUE
 			, "Return type of input fuctior must be boolean"
 	);
 
