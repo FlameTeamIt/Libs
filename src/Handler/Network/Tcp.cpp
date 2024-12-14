@@ -4,6 +4,22 @@ namespace flame_ide
 {namespace handler
 {namespace network
 {
+namespace // anonymous
+{
+
+struct SeverHandleData
+{
+	tcp::Server *server;
+	Handler::Tcp *storage;
+};
+
+} // namespace anonymous
+}}} // namespace flame_ide::handler::network
+
+namespace flame_ide
+{namespace handler
+{namespace network
+{
 
 Handler::ExpectedServerHandle Handler::Tcp::push(os::network::TcpServer &&server) noexcept
 {

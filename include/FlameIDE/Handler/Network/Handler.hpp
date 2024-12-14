@@ -56,7 +56,6 @@ public:
 	~Handler() noexcept;
 
 	Handler &operator=(const Handler &) noexcept = delete;
-
 	Handler &operator=(Handler &&handler) noexcept;
 
 	/// @brief pushUdp
@@ -124,12 +123,11 @@ class Handler::ServerHandle
 public:
 	ServerHandle() noexcept = default;
 	ServerHandle(ServerHandle &&) noexcept = default;
-	~ServerHandle() noexcept = default;
+	~ServerHandle() noexcept;
 
-	ServerHandle &operator=(const ServerHandle &) noexcept = default;
 	ServerHandle &operator=(ServerHandle &&) noexcept = default;
 
-	operator bool() const noexcept;
+	explicit operator bool() const noexcept;
 
 	///
 	/// @brief getSessionHandle
@@ -138,15 +136,23 @@ public:
 	Handler::ExpectedSessionHandle getSessionHandle() noexcept;
 
 private:
-	friend class Handler::Internal;
+	friend class Handler;
 	friend class Handler::Udp;
 	friend class Handler::Tcp;
 
-	using CallbackGetSessionHandle = Handler::ExpectedSessionHandle (*)(void *);
+private:
+	static constexpr Types::size_t OBJECT_SIZE = 16;
+
+	using Object = ::flame_ide::templates::Object<OBJECT_SIZE>;
+	using CallbackGetSessionHandle = Handler::ExpectedSessionHandle (*)(Object &);
+	using CallbackDeregistrate = void (*)(Handler::ServerHandle *);
 
 private:
-	void *data = nullptr;
+	// void *data = nullptr;
+
+	Object object;
 	CallbackGetSessionHandle callbackGetSessionHandle = nullptr;
+	CallbackDeregistrate callbackDeregistrate = nullptr;
 };
 
 }}} // namespace flame_ide::handler::network
@@ -162,11 +168,11 @@ class Handler::SessionHandle
 public:
 	SessionHandle() noexcept = default;
 	SessionHandle(SessionHandle &&) noexcept = default;
-	~SessionHandle() noexcept = default;
+	~SessionHandle() noexcept;
 
 	SessionHandle &operator=(SessionHandle &&) noexcept = default;
 
-	operator bool() const noexcept;
+	explicit operator bool() const noexcept;
 
 	///
 	/// @brief bytesToRead
@@ -187,7 +193,7 @@ public:
 	Types::ssize_t send(flame_ide::templates::Range<const byte_t *>) noexcept;
 
 private:
-	friend class Handler::Internal;
+	friend class Handler;
 	friend class Handler::Udp;
 	friend class Handler::Tcp;
 	friend class Handler::ServerHandle;
@@ -196,19 +202,21 @@ private:
 	static constexpr Types::size_t OBJECT_SIZE = 64;
 
 	using Object = ::flame_ide::templates::Object<OBJECT_SIZE>;
-	using CallbackBytesToRead = ::flame_ide::Types::ssize_t (*)(const Object *);
+	using CallbackBytesToRead = ::flame_ide::Types::ssize_t (*)(const Object &);
 	using CallbackReceive = ::flame_ide::Types::ssize_t (*)(
-			Object *, ::flame_ide::templates::Range<byte_t *>
+			Object &, ::flame_ide::templates::Range<byte_t *>
 	);
 	using CallbackSend = ::flame_ide::Types::ssize_t (*)(
-			Object *, ::flame_ide::templates::Range<const byte_t *>
+			Object &, ::flame_ide::templates::Range<const byte_t *>
 	);
+	using CallbackDeregistrate = void (*)(Handler::SessionHandle *);
 
 private:
 	Object object;
 	CallbackBytesToRead callbackBytesToRead = nullptr;
 	CallbackReceive callbackReceive = nullptr;
 	CallbackSend callbackSend = nullptr;
+	CallbackDeregistrate callbackDeregistrate = nullptr;
 };
 
 }}} // namespace flame_ide::handler::network

@@ -1,17 +1,14 @@
 #include <FlameIDE/../../src/Handler/Network/Internal.hpp>
-#include <FlameIDE/../../src/Handler/Network/Tcp/InternalData.hpp>
-#include <FlameIDE/../../src/Handler/Network/Udp/InternalData.hpp>
-
-#include <FlameIDE/Os/Constants.hpp>
-#include <FlameIDE/Os/Threads/Utils.hpp>
 
 namespace flame_ide
 {namespace handler
 {namespace network
 {
 
-Handler::Internal::Internal() noexcept
-{}
+Handler::Internal::Internal() noexcept : notificator{ workers.getConditionVariables() }
+{
+	registration.setNotificator(notificator);
+}
 
 Handler::Internal::~Internal() noexcept = default;
 

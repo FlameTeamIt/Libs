@@ -14,30 +14,18 @@ namespace flame_ide
 
 struct ClientMessage: public Message
 {};
-using ClientEndpoint = Endpoint<
+using Client = Endpoint<
 	::flame_ide::os::network::UdpClient, ClientMessage
 	, Constants::CLIENT_INPUT_QUEUE_SIZE, Constants::CLIENT_OUTPUT_QUEUE_SIZE
 >;
 
-class Client: public ClientEndpoint
-{
-public:
-	inline ClientEndpoint::Optional &client() noexcept
-	{
-		return this->osEndpoint;
-	}
-
-	inline const ClientEndpoint::Optional &client() const noexcept
-	{
-		return this->osEndpoint;
-	}
-};
-
 struct ClientCommunicationData
 {
-	os::network::UdpClient *client;
-	ClientMessage *message;
-	Client::ActualOutput *output;
+	Client *client;
+
+	Types::ssize_t bytesToRead() const noexcept;
+	Types::ssize_t receive(templates::Range<byte_t *> range) noexcept;
+	Types::ssize_t send(templates::Range<const byte_t *> range) noexcept;
 };
 
 }}}} // namespace flame_ide::handler::network::udp

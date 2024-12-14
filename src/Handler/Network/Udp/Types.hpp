@@ -37,7 +37,7 @@ struct Message
 	mutable os::threads::Spin spin;
 };
 
-template<typename MessageType, Types::size_t SIZE>
+template<typename MessageType, ::flame_ide::Types::size_t SIZE>
 struct ActualData
 {
 public:
@@ -50,17 +50,20 @@ public:
 			>;
 
 	MessageType *getEmptyMessage() noexcept;
-
 	MessageType *getFilledMessage() noexcept;
+
+	::flame_ide::Types::ssize_t getFilledMessageSize() const noexcept;
 
 private:
 	::flame_ide::Types::size_t amount = 0;
+
 	Messages messages;
 	MessagesCircularIterator first = MessagesCircularIterator{
 			messages.begin()
 			, templates::makeRange(messages.begin(), messages.end())
 	};
 	MessagesCircularIterator last = first;
+
 	mutable os::threads::Spin spin;
 };
 
@@ -86,7 +89,10 @@ public:
 	const Optional &endpoint() const noexcept;
 
 	ActualInput &input() noexcept;
+	const ActualInput &input() const noexcept;
+
 	ActualOutput &output() noexcept;
+	const ActualOutput &output() const noexcept;
 
 protected:
 	Optional osEndpoint;
@@ -130,6 +136,24 @@ MessageType *ActualData<MessageType, SIZE>::getFilledMessage() noexcept
 	--amount;
 	++first;
 	return result->pointer();
+}
+
+template<typename MessageType, Types::size_t SIZE>
+::flame_ide::Types::ssize_t
+ActualData<MessageType, SIZE>::getFilledMessageSize() const noexcept
+{
+	os::threads::Locker lock{ spin };
+
+	if ((first == last) && (amount == 0))
+		return 0;
+
+	{
+		const auto &message = *first;
+		os::threads::Locker messageLocker{ message->spin };
+		if (message->state == MessageState::EMPTY)
+			return 0;
+		return message->size;
+	}
 }
 
 // Endpoint
@@ -214,13 +238,43 @@ Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::input() noexcept
 }
 
 template<
+		typename EndpointData
+		, typename MessageType
+		, ::flame_ide::Types::size_t INPUT_SIZE
+		, ::flame_ide::Types::size_t OUTPUT_SIZE
+		>
+const typename Endpoint<
+	EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE
+>::ActualInput &
+Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::input() const noexcept
+{
+	return actualInput;
+}
+
+template<
+		typename EndpointData
+		, typename MessageType
+		, ::flame_ide::Types::size_t INPUT_SIZE
+		, ::flame_ide::Types::size_t OUTPUT_SIZE
+		>
+typename Endpoint<
+EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE
+>::ActualOutput &
+Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::output() noexcept
+{
+	return actualOutput;
+}
+
+template<
 	typename EndpointData
 	, typename MessageType
 	, ::flame_ide::Types::size_t INPUT_SIZE
 	, ::flame_ide::Types::size_t OUTPUT_SIZE
 >
-typename Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::ActualOutput &
-Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::output() noexcept
+const typename Endpoint<
+	EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE
+>::ActualOutput &
+Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::output() const noexcept
 {
 	return actualOutput;
 }

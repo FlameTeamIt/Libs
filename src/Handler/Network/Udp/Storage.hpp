@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALUDPUDP_HPP
-#define HANDLERINTERNALUDPUDP_HPP
+#ifndef HANDLERINTERNALUDPSTORAGE_HPP
+#define HANDLERINTERNALUDPSTORAGE_HPP
 
 #include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Os/Threads/Spin.hpp>
@@ -13,7 +13,7 @@ namespace flame_ide
 {namespace udp
 {
 
-class Udp
+class Storage
 {
 public:
 	template<typename OsEndpoint>
@@ -27,7 +27,7 @@ public:
 
 		using HandlerEndpoint = typename EndpointTypeMapper<OsEndpoint>::Type;
 		using HandlerEndpointPointer =
-				typename ::flame_ide::DefaultTraits<HandlerEndpoint>::Pointer;
+				typename flame_ide::DefaultTraits<HandlerEndpoint>::Pointer;
 		using HandlerEndpointData = typename HandlerEndpointDataMapper<
 			HandlerEndpoint
 		>::Type;
@@ -119,18 +119,18 @@ namespace flame_ide
 
 template<> inline
 HandlerEndpointUdpData<Servers> &
-Udp::getData<HandlerEndpointUdpData<Servers>>() noexcept
+Storage::getData<HandlerEndpointUdpData<Servers>>() noexcept
 {
 	return servers;
 }
 
 template<> inline
 HandlerEndpointUdpData<Clients> &
-Udp::getData<HandlerEndpointUdpData<Clients>>() noexcept
+Storage::getData<HandlerEndpointUdpData<Clients>>() noexcept
 {
 	return clients;
 }
 
 }}}} // namespace flame_ide::handler::network::udp
 
-#endif // HANDLERINTERNALUDPUDP_HPP
+#endif // HANDLERINTERNALUDPSTORAGE_HPP

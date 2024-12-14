@@ -3,7 +3,9 @@
 
 #include <FlameIDE/Handler/Network/Handler.hpp>
 
-#include <FlameIDE/../../src/Handler/Network/Udp/Udp.hpp>
+#include <FlameIDE/Common/ReferenceWrapper.hpp>
+
+#include <FlameIDE/../../src/Handler/Network/Udp/Storage.hpp>
 
 namespace flame_ide
 {namespace handler
@@ -14,18 +16,31 @@ class Handler::Udp
 {
 public:
 	using CallbackGetSessionHandle = Handler::ServerHandle::CallbackGetSessionHandle;
+	using CallbackServerDeregistrate = Handler::ServerHandle::CallbackDeregistrate;
+	using CallbackSessionDeregistrate = Handler::SessionHandle::CallbackDeregistrate;
 
 	using CallbackBytesToRead = Handler::SessionHandle::CallbackBytesToRead;
 	using CallbackReceive = Handler::SessionHandle::CallbackReceive;
 	using CallbackSend = Handler::SessionHandle::CallbackSend;
 
 public:
-	// TODO
+	struct ServerHandleData
+	{
+		Handler *handler;
+		udp::Server *server;
+	};
+
+	struct SessionHandleData
+	{
+		Handler *handler;
+		udp::ClientCommunicationData data;
+	};
+
+public:
 	Handler::ExpectedServerHandle push(os::network::UdpServer &&server) noexcept;
 	// TODO
 	Handler::ExpectedSessionHandle push(os::network::UdpClient &&client) noexcept;
 
-	// TODO
 	Handler::ExpectedUdpServer pop(Handler::ServerHandle &handle);
 	// TODO
 	Handler::ExpectedUdpClient pop(Handler::SessionHandle &handle);
@@ -34,46 +49,88 @@ public:
 	/// @return
 	CallbackGetSessionHandle serverHandleCallback() const noexcept;
 
+	///
+	/// @brief serverCallbackDeregistrate
+	/// @return
+	///
+	static CallbackServerDeregistrate serverCallbackDeregistrate() noexcept;
+
+	///
+	/// @brief serverCallbackDeregistrate
+	/// @return
+	///
+	static CallbackSessionDeregistrate clientCallbackDeregistrate() noexcept;
+
 private:
-	///
-	/// \brief serverToCommunicationData
-	/// \param object
-	/// \return
-	///
+	/// @brief serverToCommunicationData
+	/// @param object
+	/// @return
 	static udp::ServerCommunicationData *serverToCommunicationData(
 			Handler::SessionHandle::Object &object
 	) noexcept;
 
-	///
-	/// \brief serverToConstCommunicationData
-	/// \param object
-	/// \return
-	///
+	/// @brief serverToConstCommunicationData
+	/// @param object
+	/// @return
 	static const udp::ServerCommunicationData *serverToConstCommunicationData(
 			const Handler::SessionHandle::Object &object
 	) noexcept;
 
-	///
-	/// \brief serverCallbackBytesToRead
-	/// \return
+	/// @brief serverCallbackBytesToRead
+	/// @return
 	///
 	static CallbackBytesToRead serverCallbackBytesToRead() noexcept;
 
 	///
-	/// \brief serverCallbackReceive
-	/// \return
+	/// @brief serverCallbackReceive
+	/// @return
 	///
 	static CallbackReceive serverCallbackReceive() noexcept;
 
 	///
-	/// \brief serverCallbackSend
-	/// \return
+	/// @brief serverCallbackSend
+	/// @return
 	///
-	// TODO
 	static CallbackSend serverCallbackSend() noexcept;
 
+	///
+	/// @brief clientToCommunicationData
+	/// @param object
+	/// @return
+	///
+	static udp::ClientCommunicationData *clientToCommunicationData(
+			Handler::SessionHandle::Object &object
+	) noexcept;
+
+	///
+	/// @brief clientToConstCommunicationData
+	/// @param object
+	/// @return
+	///
+	static const udp::ClientCommunicationData *clientToConstCommunicationData(
+			const Handler::SessionHandle::Object &object
+	) noexcept;
+
+	///
+	/// @brief clientCallbackBytesToRead
+	/// @return
+	///
+	static CallbackBytesToRead clientCallbackBytesToRead() noexcept;
+
+	///
+	/// @brief clientCallbackReceive
+	/// @return
+	///
+	static CallbackReceive clientCallbackReceive() noexcept;
+
+	///
+	/// @brief clientCallbackSend
+	/// @return
+	///
+	static CallbackSend clientCallbackSend() noexcept;
+
 private:
-	udp::Udp udp;
+	udp::Storage storage;
 };
 
 }}} // namespace flame_ide::handler::network

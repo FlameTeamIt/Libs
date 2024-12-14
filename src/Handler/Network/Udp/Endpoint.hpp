@@ -99,14 +99,6 @@ using EndpointTypeMapper = ::flame_ide::TypeMapper<
 	>::Type
 >;
 
-template<typename EndpointType>
-using EndpointTypeMapper = ::flame_ide::TypeMapper<
-	EndpointType
-	, typename ::flame_ide::ChooseType<
-		IsServer<EndpointType>::VALUE, ServerMatchingTrait, ClientMatchingTrait
-	>::Type
->;
-
 template<
 	typename HandlerEndpoint
 	, typename = typename ::flame_ide::EnableType<

@@ -5,14 +5,20 @@ namespace flame_ide
 {namespace network
 {
 
+Handler::ServerHandle::~ServerHandle()
+{
+	if (operator bool())
+		callbackDeregistrate(this);
+}
+
 Handler::ServerHandle::operator bool() const noexcept
 {
-	return data && callbackGetSessionHandle;
+	return object && callbackGetSessionHandle && callbackDeregistrate;
 }
 
 Handler::ExpectedSessionHandle Handler::ServerHandle::getSessionHandle() noexcept
 {
-	return callbackGetSessionHandle(data);
+	return callbackGetSessionHandle(object);
 }
 
 }}} // namespace flame_ide::handler::network

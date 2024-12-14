@@ -6,6 +6,7 @@
 #include <FlameIDE/Templates/Pointers.hpp>
 #include <FlameIDE/Os/Async/Network/Registrar.hpp>
 
+#include <FlameIDE/../../src/Handler/Network/Notificator.hpp>
 #include <FlameIDE/../../src/Handler/Network/Udp.hpp>
 #include <FlameIDE/../../src/Handler/Network/Tcp.hpp>
 #include <FlameIDE/../../src/Handler/Network/Worker.hpp>
@@ -27,13 +28,11 @@ public:
 	Internal() noexcept;
 	~Internal() noexcept;
 
-	/// @brief pushUdp
-	/// @param server
+	/// @brief udp
 	/// @return
 	Udp &udp() noexcept;
 
-	/// @brief pushUdp
-	/// @param server
+	/// @brief tcp
 	/// @return
 	Tcp &tcp() noexcept;
 
@@ -53,6 +52,7 @@ private:
 	Handler::Udp udpData; ///<
 	Handler::Tcp tcpData; ///<
 	Workers workers; ///<
+	Notificator notificator; ///<
 
 	os::async::network::Registrar registration; ///<
 };

@@ -5,26 +5,33 @@ namespace flame_ide
 {namespace network
 {
 
+Handler::SessionHandle::~SessionHandle()
+{
+	if (operator bool())
+		callbackDeregistrate(this);
+}
+
 Handler::SessionHandle::operator bool() const noexcept
 {
-	return object && callbackBytesToRead && callbackReceive && callbackSend;
+	return object && callbackBytesToRead && callbackReceive && callbackSend
+			&& callbackDeregistrate;
 }
 
 Types::ssize_t Handler::SessionHandle::bytesToRead() const noexcept
 {
-	return callbackBytesToRead(&object);
+	return callbackBytesToRead(object);
 }
 
 Types::ssize_t
 Handler::SessionHandle::receive(templates::Range<byte_t *> bytes) noexcept
 {
-	return callbackReceive(&object, bytes);
+	return callbackReceive(object, bytes);
 }
 
 Types::ssize_t
 Handler::SessionHandle::send(templates::Range<const byte_t *> bytes) noexcept
 {
-	return callbackSend(&object, bytes);
+	return callbackSend(object, bytes);
 }
 
 }}} // namespace flame_ide::handler::network
