@@ -1,18 +1,19 @@
-#include <FlameIDE/../../src/Handler/Tests/Network/UdpQueueTest.hpp>
-#include <FlameIDE/../../src/Handler/Network/Udp/Udp.hpp>
+#include <FlameIDE/../../src/Handler/Tests/Network/Udp/StorageTest.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Storage.hpp>
 
 namespace flame_ide
 {namespace handler
 {namespace network
+{namespace udp
 {namespace tests
 {
 
-UdpQueueTest::UdpQueueTest() : ::AbstractTest("UdpQueue")
+StorageTest::StorageTest() : ::AbstractTest("udp::Storage")
 {}
 
-UdpQueueTest::~UdpQueueTest() = default;
+StorageTest::~StorageTest() = default;
 
-int UdpQueueTest::vStart()
+int StorageTest::vStart()
 {
 	CHECK_RESULT_SUCCESS(doTestCase(
 			"initialization"
@@ -27,26 +28,26 @@ int UdpQueueTest::vStart()
 	return ResultType::SUCCESS;
 }
 
-int UdpQueueTest::init()
+int StorageTest::init()
 {
-	udp::Udp udp;
+	udp::Storage storage;
 	return ResultType::SUCCESS;
 }
 
-int UdpQueueTest::serverPushPop()
+int StorageTest::serverPushPop()
 {
-	udp::Udp udp;
+	udp::Storage storage;
 	os::network::UdpServer server{ 65001 };
 
 	const os::Socket expectedSocket = server.native();
 
-	auto handle = udp.push(flame_ide::move(server));
+	auto handle = storage.push(flame_ide::move(server));
 	IN_CASE_CHECK(handle != nullptr);
 
-	auto resultServer = udp.pop(handle);
+	auto resultServer = storage.pop(handle);
 	IN_CASE_CHECK(expectedSocket.descriptor == resultServer.native().descriptor);
 
 	return ResultType::SUCCESS;
 }
 
-}}}} // namespace flame_ide::handler::network::tests
+}}}}} // namespace flame_ide::handler::network::udp::tests

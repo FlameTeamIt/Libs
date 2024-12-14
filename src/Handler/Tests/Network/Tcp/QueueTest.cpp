@@ -1,18 +1,19 @@
-#include <FlameIDE/../../src/Handler/Tests/Network/TcpQueueTest.hpp>
+#include <FlameIDE/../../src/Handler/Tests/Network/Tcp/QueueTest.hpp>
 #include <FlameIDE/../../src/Handler/Network/Tcp/Tcp.hpp>
 
 namespace flame_ide
 {namespace handler
 {namespace network
+{namespace tcp
 {namespace tests
 {
 
-TcpQueueTest::TcpQueueTest() : ::AbstractTest("TcpQueue")
+QueueTest::QueueTest() : ::AbstractTest("tcp::Queue")
 {}
 
-TcpQueueTest::~TcpQueueTest() = default;
+QueueTest::~QueueTest() = default;
 
-int TcpQueueTest::vStart()
+int QueueTest::vStart()
 {
 	CHECK_RESULT_SUCCESS(doTestCase(
 			"initialization"
@@ -27,13 +28,13 @@ int TcpQueueTest::vStart()
 	return ResultType::SUCCESS;
 }
 
-int TcpQueueTest::init()
+int QueueTest::init()
 {
 	tcp::Tcp tcp;
 	return ResultType::SUCCESS;
 }
 
-int TcpQueueTest::serverPushPop()
+int QueueTest::serverPushPop()
 {
 	tcp::Tcp tcp;
 	os::network::TcpServer server{ 65001 };
@@ -49,4 +50,4 @@ int TcpQueueTest::serverPushPop()
 	return ResultType::SUCCESS;
 }
 
-}}}} // namespace flame_ide::handler::network::tests
+}}}}} // namespace flame_ide::handler::network::tcp::tests

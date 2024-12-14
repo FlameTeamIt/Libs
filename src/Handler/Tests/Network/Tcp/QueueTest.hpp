@@ -6,14 +6,15 @@
 namespace flame_ide
 {namespace handler
 {namespace network
+{namespace tcp
 {namespace tests
 {
 
-class TcpQueueTest: public ::AbstractTest
+class QueueTest: public ::AbstractTest
 {
 public:
-	TcpQueueTest();
-	virtual ~TcpQueueTest();
+	QueueTest();
+	virtual ~QueueTest();
 
 private:
 	virtual int vStart();
@@ -23,6 +24,6 @@ private:
 	int serverPushPop();
 };
 
-}}}} // namespace flame_ide::handler::network::tests
+}}}}} // namespace flame_ide::handler::network::tcp::tests
 
 #endif // FLAMEIDE_SRC_HANDLER_NETWORK_TCPTEST_HPP

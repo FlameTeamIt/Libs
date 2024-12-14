@@ -23,9 +23,13 @@ set(SHARED_ALIAS_NAME "${FLAME_NAMESPACE}::${NAME_ALIAS}::Shared")
 
 set(DEPEND_OBJECTS
 	"${FLAME_NAMESPACE}::Handler::Network::Test::Object"
+	"${FLAME_NAMESPACE}::Handler::Network::Udp::Test::Object"
+	"${FLAME_NAMESPACE}::Handler::Network::Tcp::Test::Object"
 )
 set(INDEPEND_OBJECTS
 	"${FLAME_NAMESPACE}::Handler::Network::Test::Object::Independ"
+	"${FLAME_NAMESPACE}::Handler::Network::Udp::Test::Object::Independ"
+	"${FLAME_NAMESPACE}::Handler::Network::Tcp::Test::Object::Independ"
 )
 
 set(MAIN_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
