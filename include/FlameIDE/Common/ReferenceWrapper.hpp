@@ -13,8 +13,12 @@ template<typename T, typename Traits = ContainerTraits<T>>
 class ReferenceWrapper
 {
 public:
+	using Me = ReferenceWrapper<T, Traits>;
 	using Pointer = typename Traits::Pointer;
 	using Reference = typename Traits::Reference;
+
+	ReferenceWrapper(const Me &) noexcept = default;
+	ReferenceWrapper(Me &&) noexcept = default;
 
 	///
 	/// @brief ReferenceWrapper
@@ -27,6 +31,9 @@ public:
 	/// @param initValue
 	///
 	ReferenceWrapper(Reference initValue) noexcept;
+
+	Me &operator=(const Me &) noexcept = default;
+	Me &operator=(Me &&) noexcept = default;
 
 	///
 	/// @brief get
