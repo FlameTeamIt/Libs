@@ -18,12 +18,10 @@ int StorageTest::vStart()
 	CHECK_RESULT_SUCCESS(doTestCase(
 			"initialization"
 			, [this]() { return init(); }
-
 	));
 	CHECK_RESULT_SUCCESS(doTestCase(
 			"server push-pop"
 			, [this]() { return serverPushPop(); }
-
 	));
 	return ResultType::SUCCESS;
 }
