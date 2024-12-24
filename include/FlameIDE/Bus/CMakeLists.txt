@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 set(NAME Bus)
+set(MODULE_NAME ${NAME})
 set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::Bus::Headers)
 set(DEPENDENCY_LIST
 	${FLAME_NAMESPACE}::Templates::Headers
@@ -11,6 +12,7 @@ flame_header_library(
 	NAME                   "${NAME}"
 	HEADER_LIST            "${FILE_LIST}"
 	INCLUDE_PATHS          "${FLAME_INCLUDE_PATH}"
+	FOLDER                 "${MODULE_NAME}"
 	DEPENDENCY_TARGET_LIST "${DEPENDENCY_LIST}"
 	LIBRARY_ALIAS_NAME     "${LIBRARY_ALIAS_NAME}"
 	INSTALL_SUBDIR         "${FLAME_NAMESPACE}/${NAME}"

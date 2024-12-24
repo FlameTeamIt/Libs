@@ -14,6 +14,7 @@ get_sources(FILE_LIST)
 flame_header_library(
 	NAME                   "${NAME}"
 	LIBRARY_ALIAS_NAME     "${LIBRARY_ALIAS_NAME}"
+	FOLDER                 "${MODULE_NAME}"
 	HEADER_LIST            "${FILE_LIST}"
 	DEPENDENCY_TARGET_LIST "${DEPENDENCY_LIST}"
 	INCLUDE_PATHS          "${FLAME_INCLUDE_PATH}"

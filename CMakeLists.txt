@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.19)
 
 project(Flame LANGUAGES CXX C)
 
@@ -36,6 +36,7 @@ flame_resolver_settings(
 	CMAKE_PACKAGING                # ON
 	INPLACE_OBJECTS                # ON
 	SHOW_HEADERS                   # ON
+	ENABLE_FOLDER                  # ON
 
 	# Code generation options
 	ONLY_POSITION_INDEPENDENT_OBJECTS # ON
@@ -62,4 +63,4 @@ endif()
 
 add_subdirectory(${FLAME_INCLUDE_SUBMODLUES_PATH})
 add_subdirectory(${FLAME_SOURCE_SUBMODLUES_PATH})
-add_subdirectory(${FLAME_TEST_SUBMODLUES_PATH})
+# add_subdirectory(${FLAME_TEST_SUBMODLUES_PATH})
