@@ -43,7 +43,7 @@ Handler::Udp::push(os::network::UdpClient &&client) noexcept
 
 Handler::ExpectedUdpServer Handler::Udp::pop(Handler::ServerHandle &handle)
 {
-	if (!handle)
+	if (!(handle.object && handle.callbackGetSessionHandle))
 		return { os::STATUS_FAILED };
 
 	auto data = handle.object.move<ServerHandleData>();
@@ -58,10 +58,20 @@ Handler::ExpectedUdpServer Handler::Udp::pop(Handler::ServerHandle &handle)
 
 Handler::ExpectedUdpClient Handler::Udp::pop(Handler::SessionHandle &handle)
 {
-	flame_ide::unused(handle);
+	if(!(handle.object && handle.callbackBytesToRead && handle.callbackReceive
+			&& handle.callbackSend))
+		return { os::STATUS_FAILED };
 
-	// TODO
-	return { os::STATUS_FAILED };
+	auto data = handle.object.move<SessionHandleData>();
+	auto client = storage.pop(data.data.client);
+	if (!client)
+		return { os::STATUS_FAILED };
+
+	handle.callbackBytesToRead = nullptr;
+	handle.callbackReceive = nullptr;
+	handle.callbackSend = nullptr;
+	handle.callbackDeregistrate = nullptr;
+	return { flame_ide::move(client) };
 }
 
 // server
