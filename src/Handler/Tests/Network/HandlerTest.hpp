@@ -17,6 +17,20 @@ public:
 
 private:
 	virtual int vStart();
+
+	int init();
+
+	int udpServerPushPop();
+	int udpServerCommunicate();
+
+	int udpClientPushPop();
+	int udpClientCommunicate();
+
+	int tcpServerPushPop();
+	int tcpServerCommunicate();
+
+	int tcpClientPushPop();
+	int tcpClientCommunicate();
 };
 
 }}}} // namespace flame_ide::handler::network::tests
