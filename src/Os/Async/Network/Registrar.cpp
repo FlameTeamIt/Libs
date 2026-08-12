@@ -177,14 +177,30 @@ bool Registrar::pushTcpClient(os::SocketDescriptor socket) noexcept
 
 // notificator
 
-void Registrar::setNotificator(const NotificatorBase &notificator) noexcept
+void Registrar::setNotificator(const UdpServerNotificatorBase &notificator) noexcept
+{
+	EventCatcherBase::get().setNotificator(notificator);
+}
+void Registrar::setNotificator(const UdpClientNotificatorBase &notificator) noexcept
+{
+	EventCatcherBase::get().setNotificator(notificator);
+}
+void Registrar::setNotificator(const TcpServerNotificatorBase &notificator) noexcept
+{
+	EventCatcherBase::get().setNotificator(notificator);
+}
+void Registrar::setNotificator(const TcpAcceptedConnectionNotificatorBase &notificator) noexcept
+{
+	EventCatcherBase::get().setNotificator(notificator);
+}
+void Registrar::setNotificator(const TcpClientNotificatorBase &notificator) noexcept
 {
 	EventCatcherBase::get().setNotificator(notificator);
 }
 
-void Registrar::unsetNotificator() noexcept
+void Registrar::unsetNotificators() noexcept
 {
-	EventCatcherBase::get().unsetNotificator();
+	EventCatcherBase::get().unsetNotificators();
 }
 
 // other

@@ -90,7 +90,7 @@ using IsOsEndpoint = ::flame_ide::IntegralConstant<
 
 // Mappers
 
-// Gets os::network::{ UdpServer, UdpCinet } <-> { Server, Client }
+// Gets os::network::{ UdpServer, UdpClient } <-> { Server, Client }
 template<typename EndpointType>
 using EndpointTypeMapper = ::flame_ide::TypeMapper<
 	EndpointType

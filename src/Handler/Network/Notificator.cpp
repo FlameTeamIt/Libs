@@ -3,19 +3,30 @@
 namespace flame_ide
 {namespace handler
 {namespace network
+{namespace udp
 {
 
-Notificator::Notificator(
-		templates::StaticArray<
-			ReferenceWrapper<os::threads::ConditionVariable>
-			, generated::network::Config::HANDLER_NUMBER_OF_WORKERS
-		> &&initCondvars
-) : condvars{ move(initCondvars) }
+void ServerNotificator::operator()() const noexcept
 {}
 
-Notificator::~Notificator() = default;
-
-void Notificator::operator()() const noexcept
+void ClientNotificator::operator()() const noexcept
 {}
 
-}}} // namespace flame_ide::handler::network
+}}}} // namespace flame_ide::handler::network::udp
+
+namespace flame_ide
+{namespace handler
+{namespace network
+{namespace tcp
+{
+
+void ServerNotificator::operator()() const noexcept
+{}
+
+void AcceptedConnectonNotificator::operator()() const noexcept
+{}
+
+void ClientNotificator::operator()() const noexcept
+{}
+
+}}}} // namespace flame_ide::handler::network::tcp

@@ -77,8 +77,12 @@ public:
 	bool pushTcpServer(os::SocketDescriptor socket) noexcept;
 	bool pushTcpClient(os::SocketDescriptor socket) noexcept;
 
-	void setNotificator(const NotificatorBase &notificator) noexcept;
-	void unsetNotificator() noexcept;
+	void setNotificator(const UdpServerNotificatorBase &notificator) noexcept;
+	void setNotificator(const UdpClientNotificatorBase &notificator) noexcept;
+	void setNotificator(const TcpServerNotificatorBase &notificator) noexcept;
+	void setNotificator(const TcpAcceptedConnectionNotificatorBase &notificator) noexcept;
+	void setNotificator(const TcpClientNotificatorBase &notificator) noexcept;
+	void unsetNotificators() noexcept;
 
 	void clear() noexcept;
 };

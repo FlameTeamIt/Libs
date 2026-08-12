@@ -119,23 +119,25 @@ Handler::Udp::CallbackGetSessionHandle Handler::Udp::serverHandleCallback() cons
 Handler::Udp::CallbackServerDeregistrate
 Handler::Udp::serverCallbackDeregistrate() noexcept
 {
-	static const auto deregistrate = [](ServerHandle *handle) -> void
+	static const auto callback = [](ServerHandle *handle) -> void
 	{
 		auto handleData = handle->object.get<Udp::ServerHandleData>();
 		const auto server = handleData.handler->popUdp(*handle);
+		flame_ide::unused(server);
 	};
-	return (+deregistrate);
+	return (+callback);
 }
 
 Handler::Udp::CallbackSessionDeregistrate
 Handler::Udp::clientCallbackDeregistrate() noexcept
 {
-	static const auto deregistrate = [](SessionHandle *handle) -> void
+	static const auto callback = [](SessionHandle *handle) -> void
 	{
 		auto handleData = handle->object.get<Udp::SessionHandleData>();
-		const auto server = handleData.handler->popUdp(*handle);
+		const auto client = handleData.handler->popUdp(*handle);
+		flame_ide::unused(client);
 	};
-	return (+deregistrate);
+	return (+callback);
 }
 
 udp::ServerCommunicationData *Handler::Udp::serverToCommunicationData(

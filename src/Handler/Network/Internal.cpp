@@ -5,10 +5,8 @@ namespace flame_ide
 {namespace network
 {
 
-Handler::Internal::Internal() noexcept : notificator{ workers.getConditionVariables() }
-{
-	registration.setNotificator(notificator);
-}
+Handler::Internal::Internal() noexcept
+{}
 
 Handler::Internal::~Internal() noexcept = default;
 

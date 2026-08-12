@@ -9,7 +9,25 @@ namespace flame_ide
 {namespace network
 {
 
-using NotificatorBase = flame_ide::FunctorConstBase<void>;
+namespace tag
+{
+
+struct UdpServer {};
+struct UdpClient {};
+struct TcpServer {};
+struct TcpAcceptedConnection {};
+struct TcpClient {};
+
+} // namespace tag
+
+template<typename Tag>
+class NotificatorBase: public flame_ide::DefaultFunctorConstBase {};
+
+using UdpServerNotificatorBase = NotificatorBase<tag::UdpServer>;
+using UdpClientNotificatorBase = NotificatorBase<tag::UdpClient>;
+using TcpServerNotificatorBase = NotificatorBase<tag::TcpServer>;
+using TcpAcceptedConnectionNotificatorBase = NotificatorBase<tag::TcpAcceptedConnection>;
+using TcpClientNotificatorBase = NotificatorBase<tag::TcpClient>;
 
 }}}} // namespace flame_ide::os::async::network
 

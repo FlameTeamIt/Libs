@@ -38,11 +38,9 @@ public:
 
 public:
 	Handler::ExpectedServerHandle push(os::network::UdpServer &&server) noexcept;
-	// TODO
 	Handler::ExpectedSessionHandle push(os::network::UdpClient &&client) noexcept;
 
 	Handler::ExpectedUdpServer pop(Handler::ServerHandle &handle);
-	// TODO
 	Handler::ExpectedUdpClient pop(Handler::SessionHandle &handle);
 
 	/// @brief serverHandleCallback

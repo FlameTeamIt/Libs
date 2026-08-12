@@ -25,7 +25,8 @@ namespace anonymous
 {namespace
 {
 
-class NotificatorTest: public NotificatorBase
+template<typename NotificatorBaseType>
+class NotificatorTest: public NotificatorBaseType
 {
 public:
 	bool isNotified() const
@@ -364,7 +365,7 @@ int RegistrarTest::udpNotify()
 	os::network::UdpServer server{ port };
 	os::network::UdpClient client{ ipv4 };
 
-	anonymous::NotificatorTest notificator;
+	anonymous::NotificatorTest<UdpServerNotificatorBase> notificator;
 
 	Registrar registar;
 	registar.setNotificator(notificator);
@@ -409,7 +410,7 @@ int RegistrarTest::udpNotify()
 			[&registar]()
 			{
 				registar.clear();
-				registar.unsetNotificator();
+				registar.unsetNotificators();
 			}
 	);
 

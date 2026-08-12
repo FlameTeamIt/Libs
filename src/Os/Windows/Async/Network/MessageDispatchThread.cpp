@@ -183,7 +183,6 @@ os::windows::OsResult MessageDispatchThread::action(
 		default:
 			break;
 	}
-	os::async::network::EventCatcherBase::get().notify();
 
 	return ::DefWindowProcA(
 			window, static_cast<MessageValue>(message), descriptor, param
@@ -202,9 +201,19 @@ void MessageDispatchThread::handleUdp(
 		case Event::WRITE:
 		{
 			if (os::network::NetworkBase::callbacks().isServer(Socket{ descriptor }))
+			{
 				queues.udpServers().push(descriptor);
+				os::async::network::EventCatcherBase::get().notify(
+						os::async::network::EventCatcherBase::UdpServerTag{}
+				);
+			}
 			else
+			{
 				queues.udpClients().push(descriptor);
+				os::async::network::EventCatcherBase::get().notify(
+						os::async::network::EventCatcherBase::UdpClientTag{}
+				);
+			}
 			return;
 		}
 		default:
@@ -229,16 +238,31 @@ void MessageDispatchThread::handleTcp(
 					Socket{ descriptor }, &status
 			);
 			if (os::STATUS_SUCCESS == status)
+			{
 				queues.tcpAcceptedConnections().push({ descriptor, client });
+				os::async::network::EventCatcherBase::get().notify(
+						os::async::network::EventCatcherBase::TcpAcceptedConnectionTag{}
+				);
+			}
 			return;
 		}
 		case Event::READ:
 		case Event::WRITE:
 		{
 			if (os::network::NetworkBase::callbacks().isServer(Socket{ descriptor }))
+			{
 				queues.tcpServers().push(descriptor);
+				os::async::network::EventCatcherBase::get().notify(
+						os::async::network::EventCatcherBase::TcpServerTag{}
+				);
+			}
 			else
+			{
 				queues.tcpClients().push(descriptor);
+				os::async::network::EventCatcherBase::get().notify(
+						os::async::network::EventCatcherBase::TcpClientTag{}
+				);
+			}
 			return;
 		}
 		default:

@@ -52,7 +52,16 @@ private:
 	Handler::Udp udpData; ///<
 	Handler::Tcp tcpData; ///<
 	Workers workers; ///<
-	Notificator notificator; ///<
+
+	struct
+	{
+		udp::ServerNotificator udpServerNotificator;
+		udp::ClientNotificator udpClientNotificator;
+
+		tcp::ServerNotificator tcpServerNotificator;
+		tcp::AcceptedConnectonNotificator tcpAcceptedConnectonNotificator;
+		tcp::ClientNotificator tcpClientNotificator;
+	} notificators; ///<
 
 	os::async::network::Registrar registration; ///<
 };
