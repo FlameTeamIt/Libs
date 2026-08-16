@@ -90,12 +90,6 @@ public:
 	AsyncEvent popTcpServer() noexcept;
 	AsyncEvent popTcpClient() noexcept;
 
-	bool pushUdpServer(os::SocketDescriptor socket) noexcept;
-	bool pushUdpClient(os::SocketDescriptor socket) noexcept;
-	bool pushTcpServerAcception(AcceptedConnection connection) noexcept;
-	bool pushTcpServer(os::SocketDescriptor socket) noexcept;
-	bool pushTcpClient(os::SocketDescriptor socket) noexcept;
-
 	void setNotificator(const UdpServerNotificatorBase &notificator) noexcept;
 	void setNotificator(const UdpClientNotificatorBase &notificator) noexcept;
 	void setNotificator(const TcpServerNotificatorBase &notificator) noexcept;
