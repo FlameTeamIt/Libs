@@ -1,10 +1,12 @@
 #include <FlameIDE/../../src/Os/Posix/Async/Network/EventCatcher.hpp>
 
 #include <FlameIDE/Os/Async/Network/NotificatorBase.hpp>
+#include <FlameIDE/Os/Async/Network/Registrar.hpp>
 #include <FlameIDE/Os/Network/NetworkBase.hpp>
 #include <FlameIDE/Os/Network/TcpServer.hpp>
 
 #include <fcntl.h>
+#include <poll.h>
 
 namespace flame_ide
 {namespace os
@@ -15,6 +17,45 @@ namespace flame_ide
 namespace anonymous{namespace{
 
 static constexpr decltype(SIGPOLL) SIGNAL_POLLING = os::posix::Signal::POLL;
+
+using BandEvent = decltype(siginfo_t{}.si_band);
+
+enum PollingFlags: BandEvent
+{
+	INPUT = POLLIN
+	, PRIORITY = POLLPRI
+	, OUTPUT = POLLOUT
+	, ERROR = POLLERR
+	, HANG_UP = POLLHUP
+	, INVALID_REQUEST = POLLNVAL
+	, READ_NORMAL = POLLRDNORM
+	, READ_PRIORITY = POLLRDBAND
+	, WRITE_NORMAL = POLLWRNORM
+	, WRITE_PRIORITY = POLLWRBAND
+};
+
+::flame_ide::os::async::network::EventType
+convertBandEventsToAsyncEvent(BandEvent events)
+{
+	using ::flame_ide::os::async::network::EventType;
+
+	if ((events & PollingFlags::ERROR) || (events & PollingFlags::INVALID_REQUEST))
+		return EventType::ERROR;
+
+	auto eventType = EventType::INIT;
+
+	if ((events & PollingFlags::INPUT) || (events & PollingFlags::READ_NORMAL))
+		eventType = EventType::READ;
+
+	if ((events & PollingFlags::OUTPUT) || (events & PollingFlags::WRITE_NORMAL))
+	{
+		eventType = (eventType == EventType::READ)
+				? EventType::READ_WRITE
+				: EventType::WRITE;
+	}
+
+	return eventType;
+}
 
 }} // namespace anonymous
 }}}}} // namespace flame_ide::os::posix::async::network
@@ -89,7 +130,9 @@ EventCatcher::SigAction EventCatcher::makeSigAction() noexcept
 	return action;
 }
 
-void EventCatcher::signalHandler(int signal, const siginfo_t *info, ucontext_t *) noexcept
+void EventCatcher::signalHandler(
+		int signal, const siginfo_t *info, ucontext_t *
+) noexcept
 {
 	using os::network::NetworkBase;
 
@@ -99,102 +142,34 @@ void EventCatcher::signalHandler(int signal, const siginfo_t *info, ucontext_t *
 	const auto descriptor = info->si_fd;
 
 	/*
-	https://man7.org/linux/man-pages/man2/sigaction.2.html
+	POLLIN     = (bin)              1 // 0x001 // There is data to read
+	POLLPRI    = (bin)             10 // 0x002 // There is urgent data to read
+	POLLOUT    = (bin)            100 // 0x004 // Writing now will not block
+	POLLERR    = (bin)           1000 // 0x008 // Error condition
+	POLLHUP    = (bin)          10000 // 0x010 // Hung up
+	POLLNVAL   = (bin)         100000 // 0x020 // Invalid polling request
 
-	The following values can be placed in si_code for a SIGIO/SIGPOLL
-	signal:
+	// defined __USE_XOPEN || defined __USE_XOPEN2K8
+	POLLRDNORM = (bin)        1000000 // 0x040 // Normal data may be read
+	POLLRDBAND = (bin)       10000000 // 0x080 // Priority data may be read
+	POLLWRNORM = (bin)      100000000 // 0x100 // Writing now will not block
+	POLLWRBAND = (bin)     1000000000 // 0x200 // Priority data may be written
 
-		POLL_IN
-			Data input available.
-
-		POLL_OUT
-			Output buffers available.
-
-		POLL_MSG
-			Input message available.
-
-		POLL_ERR
-			I/O error.
-
-		POLL_PRI
-			High priority input available.
-
-		POLL_HUP
-			Device disconnected.
-	*/
-	const auto code = info->si_code;
-
-	/*
-	https://man7.org/linux/man-pages/man2/poll.2.html
-
-	The bits that may be set/returned in events and revents are defined in <poll.h>:
-
-		POLLIN There is data to read.
-
-		POLLPRI
-			There is some exceptional condition on the file descriptor.
-			Possibilities include:
-			•  There is out-of-band data on a TCP socket (see tcp(7)).
-			•  A pseudoterminal master in packet mode has seen a state
-			change on the slave (see ioctl_tty(2)).
-			•  A cgroup.events file has been modified (see cgroups(7)).
-
-		POLLOUT
-			Writing is now possible, though a write larger than the
-			available space in a socket or pipe will still block
-			(unless O_NONBLOCK is set).
-
-		POLLRDHUP (since Linux 2.6.17)
-			Stream socket peer closed connection, or shut down writing
-			half of connection.  The _GNU_SOURCE feature test macro
-			must be defined (before including any header files) in
-			order to obtain this definition.
-
-		POLLERR
-			Error condition (only returned in revents; ignored in
-			events).  This bit is also set for a file descriptor
-			referring to the write end of a pipe when the read end has
-			been closed.
-
-		POLLHUP
-			Hang up (only returned in revents; ignored in events).
-			Note that when reading from a channel such as a pipe or a
-			stream socket, this event merely indicates that the peer
-			closed its end of the channel.  Subsequent reads from the
-			channel will return 0 (end of file) only after all
-			outstanding data in the channel has been consumed.
-
-		POLLNVAL
-			Invalid request: fd not open (only returned in revents;
-			ignored in events).
-
-	When compiling with _XOPEN_SOURCE defined, one also has the
-	following, which convey no further information beyond the bits
-	listed above:
-
-		POLLRDNORM
-			Equivalent to POLLIN.
-
-		POLLRDBAND
-			Priority band data can be read (generally unused on Linux).
-
-		POLLWRNORM
-			Equivalent to POLLOUT.
-
-		POLLWRBAND
-			Priority data may be written.
+	// __USE_GNU
+	POLLMSG    = (bin)    10000000000 // 0x400
+	POLLREMOVE = (bin)  1000000000000 // 0x1000
+	POLLRDHUP  = (bin) 10000000000000 // 0x2000
 	*/
 	const auto events = info->si_band;
-	flame_ide::unused(code, events);
 
 	switch (NetworkBase::callbacks().type(Socket{ {}, descriptor }))
 	{
 		case NetworkBase::SocketType::STREAM:
-			handleTcp(descriptor);
+			handleTcp(descriptor, events);
 			break;
 
 		case NetworkBase::SocketType::DATAGRAM:
-			handleUdp(descriptor);
+			handleUdp(descriptor, events);
 			break;
 
 		case NetworkBase::SocketType::UNKNOWN:
@@ -203,7 +178,7 @@ void EventCatcher::signalHandler(int signal, const siginfo_t *info, ucontext_t *
 	}
 }
 
-void EventCatcher::handleTcp(SocketDescriptor descriptor) noexcept
+void EventCatcher::handleTcp(SocketDescriptor descriptor, SigEvents events) noexcept
 {
 	using os::network::TcpServer;
 
@@ -212,14 +187,24 @@ void EventCatcher::handleTcp(SocketDescriptor descriptor) noexcept
 	if (!serverControl().isServer(socket))
 	{
 		// Signal has been received from client's socket
-		EventCatcher::get().queues().tcpClients().push(descriptor);
+		EventCatcher::get().queues().tcpClients().push(
+				flame_ide::os::async::network::AsyncEvent {
+						descriptor
+						, anonymous::convertBandEventsToAsyncEvent(events)
+				}
+		);
 		EventCatcher::get().notify(EventCatcher::TcpClientTag{});
 		return;
 	}
 	if (!serverControl().isListener(socket))
 	{
 		// Signal has been received from accepted server's socket
-		EventCatcher::get().queues().tcpServers().push(descriptor);
+		EventCatcher::get().queues().tcpServers().push(
+				flame_ide::os::async::network::AsyncEvent {
+						descriptor
+						, anonymous::convertBandEventsToAsyncEvent(events)
+				}
+		);
 		EventCatcher::get().notify(EventCatcher::TcpServerTag{});
 		return;
 	}
@@ -235,17 +220,27 @@ void EventCatcher::handleTcp(SocketDescriptor descriptor) noexcept
 	return;
 }
 
-void EventCatcher::handleUdp(SocketDescriptor descriptor) noexcept
+void EventCatcher::handleUdp(SocketDescriptor descriptor, SigEvents events) noexcept
 {
 	using os::network::NetworkBase;
 	if(NetworkBase::callbacks().isServer(Socket{ {}, descriptor }))
 	{
-		EventCatcher::get().queues().udpServers().push(descriptor);
+		EventCatcher::get().queues().udpServers().push(
+				flame_ide::os::async::network::AsyncEvent {
+						descriptor
+						, anonymous::convertBandEventsToAsyncEvent(events)
+				}
+		);
 		EventCatcher::get().notify(EventCatcher::UdpServerTag{});
 	}
 	else
 	{
-		EventCatcher::get().queues().udpClients().push(descriptor);
+		EventCatcher::get().queues().udpClients().push(
+				flame_ide::os::async::network::AsyncEvent {
+						descriptor
+						, anonymous::convertBandEventsToAsyncEvent(events)
+				}
+		);
 		EventCatcher::get().notify(EventCatcher::UdpClientTag{});
 	}
 }

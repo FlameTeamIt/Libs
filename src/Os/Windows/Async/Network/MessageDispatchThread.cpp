@@ -15,6 +15,24 @@ namespace flame_ide
 
 constexpr char WINDOW_CLASS_NAME[] = "AsyncSelect";
 
+flame_ide::os::async::network::EventType convertFromWinEventToAsyncEvent(Event event)
+{
+	using AsyncEventType = flame_ide::os::async::network::EventType;
+	switch (event) {
+	case Event::READ:
+		return AsyncEventType::READ;
+	case Event::WRITE:
+		return AsyncEventType::WRITE;
+	case Event::CLOSE:
+		return AsyncEventType::CLOSE;
+
+	case Event::UNKNOWN:
+	case Event::CONNECT:
+	default:
+		return AsyncEventType::INIT;
+	}
+}
+
 }} // namespace anonymous
 }}}}} // namespace flame_ide::os::windows::async::network
 
@@ -202,14 +220,20 @@ void MessageDispatchThread::handleUdp(
 		{
 			if (os::network::NetworkBase::callbacks().isServer(Socket{ descriptor }))
 			{
-				queues.udpServers().push(descriptor);
+				queues.udpServers().push({
+						descriptor
+						, anonymous::convertFromWinEventToAsyncEvent(eventValue)
+				});
 				os::async::network::EventCatcherBase::get().notify(
 						os::async::network::EventCatcherBase::UdpServerTag{}
 				);
 			}
 			else
 			{
-				queues.udpClients().push(descriptor);
+				queues.udpClients().push({
+						descriptor
+						, anonymous::convertFromWinEventToAsyncEvent(eventValue)
+				});
 				os::async::network::EventCatcherBase::get().notify(
 						os::async::network::EventCatcherBase::UdpClientTag{}
 				);
@@ -251,14 +275,20 @@ void MessageDispatchThread::handleTcp(
 		{
 			if (os::network::NetworkBase::callbacks().isServer(Socket{ descriptor }))
 			{
-				queues.tcpServers().push(descriptor);
+				queues.tcpServers().push({
+						descriptor
+						, anonymous::convertFromWinEventToAsyncEvent(eventValue)
+				});
 				os::async::network::EventCatcherBase::get().notify(
 						os::async::network::EventCatcherBase::TcpServerTag{}
 				);
 			}
 			else
 			{
-				queues.tcpClients().push(descriptor);
+				queues.tcpClients().push({
+						descriptor
+						, anonymous::convertFromWinEventToAsyncEvent(eventValue)
+				});
 				os::async::network::EventCatcherBase::get().notify(
 						os::async::network::EventCatcherBase::TcpClientTag{}
 				);

@@ -7,6 +7,38 @@
 #include <FlameIDE/Os/Network/UdpClient.hpp>
 #include <FlameIDE/Os/Network/UdpServer.hpp>
 
+#include <Generated/Network/Config.hpp>
+
+namespace flame_ide
+{namespace os
+{namespace async
+{namespace network
+{
+namespace anonymous { namespace {
+
+static constexpr auto ASYNC_EVENT_INIT_VALUE = AsyncEvent{};
+
+}} // namespace anonymous
+}}}} // namespace flame_ide::os::async::network
+
+namespace flame_ide
+{namespace os
+{namespace async
+{namespace network
+{
+
+bool operator==(const AsyncEvent &ae1, const AsyncEvent &ae2) noexcept
+{
+	return ((ae1.descriptor == ae2.descriptor) && (ae1.event == ae2.event));
+}
+
+bool operator!=(const AsyncEvent &ae1, const AsyncEvent &ae2) noexcept
+{
+	return !(ae1 == ae2);
+}
+
+}}}} // namespace flame_ide::os::async::network
+
 namespace flame_ide
 {namespace os
 {namespace async
@@ -17,13 +49,30 @@ Registrar::Registrar() noexcept = default;
 
 Registrar::~Registrar() noexcept = default;
 
+SocketsInfo Registrar::getInfo() const noexcept
+{
+	static constexpr SocketsInfo::Info MAX_INFO = SocketsInfo::Info {
+			generated::network::Config::UDP_SERVERS
+			, generated::network::Config::UDP_CLIENTS
+			, generated::network::Config::TCP_SERVERS
+			, generated::network::Config::TCP_CLIENTS
+	};
+
+	auto &queues = EventCatcherBase::get().queues();
+	SocketsInfo config = { MAX_INFO, SocketsInfo::Info {
+			queues.udpServers().getSize(), queues.udpClients().getSize()
+			, queues.tcpServers().getSize(), queues.tcpClients().getSize()
+	} };
+	return config;
+}
+
 // Registrar::add
 
 os::Status Registrar::add(const os::network::UdpServer &socket) noexcept
 {
 	auto &queue = EventCatcherBase::get().queues().udpServers();
 	if (!queue)
-		queue.init(os::SOCKET_INVALID.descriptor);
+		queue.init(anonymous::ASYNC_EVENT_INIT_VALUE);
 	return EventCatcherBase::get().enable(socket.native().descriptor);
 }
 
@@ -31,7 +80,7 @@ os::Status Registrar::add(const os::network::UdpClient &socket) noexcept
 {
 	auto &queue = EventCatcherBase::get().queues().udpClients();
 	if (!queue)
-		queue.init(os::SOCKET_INVALID.descriptor);
+		queue.init(anonymous::ASYNC_EVENT_INIT_VALUE);
 	return EventCatcherBase::get().enable(socket.native().descriptor);
 }
 
@@ -47,7 +96,7 @@ os::Status Registrar::add(const os::network::TcpServer::WithClient &socket) noex
 {
 	auto &queue = EventCatcherBase::get().queues().tcpServers();
 	if (!queue)
-		queue.init(os::SOCKET_INVALID.descriptor);
+		queue.init(anonymous::ASYNC_EVENT_INIT_VALUE);
 	return EventCatcherBase::get().enable(socket.native().descriptor);
 }
 
@@ -55,7 +104,7 @@ os::Status Registrar::add(const os::network::TcpClient &socket) noexcept
 {
 	auto &queue = EventCatcherBase::get().queues().tcpClients();
 	if (!queue)
-		queue.init(os::SOCKET_INVALID.descriptor);
+		queue.init(anonymous::ASYNC_EVENT_INIT_VALUE);
 	return EventCatcherBase::get().enable(socket.native().descriptor);
 }
 
@@ -88,10 +137,10 @@ os::Status Registrar::remove(const os::network::TcpClient &socket) noexcept
 
 // Registrar::pop*
 
-os::SocketDescriptor Registrar::popUdpServer() noexcept
+AsyncEvent Registrar::popUdpServer() noexcept
 {
-	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
-	EventCatcherBase::get().queues().udpServers().pop(os::SOCKET_INVALID.descriptor)
+	AsyncEvent descriptor = anonymous::ASYNC_EVENT_INIT_VALUE;
+	EventCatcherBase::get().queues().udpServers().pop(anonymous::ASYNC_EVENT_INIT_VALUE)
 			.ifResult([&descriptor](auto &&actualDescriptor)
 					{
 						descriptor = actualDescriptor;
@@ -100,10 +149,10 @@ os::SocketDescriptor Registrar::popUdpServer() noexcept
 	return descriptor;
 }
 
-os::SocketDescriptor Registrar::popUdpClient() noexcept
+AsyncEvent Registrar::popUdpClient() noexcept
 {
-	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
-	EventCatcherBase::get().queues().udpClients().pop(os::SOCKET_INVALID.descriptor)
+	AsyncEvent descriptor = anonymous::ASYNC_EVENT_INIT_VALUE;
+	EventCatcherBase::get().queues().udpClients().pop(anonymous::ASYNC_EVENT_INIT_VALUE)
 			.ifResult([&descriptor](auto &&actualDescriptor)
 					{
 						descriptor = actualDescriptor;
@@ -124,10 +173,10 @@ AcceptedConnection Registrar::popTcpServerAcception() noexcept
 	return connection;
 }
 
-os::SocketDescriptor Registrar::popTcpServer() noexcept
+AsyncEvent Registrar::popTcpServer() noexcept
 {
-	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
-	EventCatcherBase::get().queues().tcpServers().pop(os::SOCKET_INVALID.descriptor)
+	AsyncEvent descriptor = anonymous::ASYNC_EVENT_INIT_VALUE;
+	EventCatcherBase::get().queues().tcpServers().pop(anonymous::ASYNC_EVENT_INIT_VALUE)
 			.ifResult([&descriptor](auto &&actualDescriptor)
 					{
 						descriptor = actualDescriptor;
@@ -136,10 +185,10 @@ os::SocketDescriptor Registrar::popTcpServer() noexcept
 	return descriptor;
 }
 
-os::SocketDescriptor Registrar::popTcpClient() noexcept
+AsyncEvent Registrar::popTcpClient() noexcept
 {
-	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
-	EventCatcherBase::get().queues().tcpClients().pop(os::SOCKET_INVALID.descriptor)
+	AsyncEvent descriptor = anonymous::ASYNC_EVENT_INIT_VALUE;
+	EventCatcherBase::get().queues().tcpClients().pop(anonymous::ASYNC_EVENT_INIT_VALUE)
 			.ifResult([&descriptor](auto &&actualDescriptor)
 					{
 						descriptor = actualDescriptor;
@@ -207,11 +256,11 @@ void Registrar::unsetNotificators() noexcept
 
 void Registrar::clear() noexcept
 {
-	while (popUdpServer() != os::SOCKET_INVALID.descriptor);
-	while (popUdpClient() != os::SOCKET_INVALID.descriptor);
+	while (popUdpServer() != anonymous::ASYNC_EVENT_INIT_VALUE);
+	while (popUdpClient() != anonymous::ASYNC_EVENT_INIT_VALUE);
 	while (popTcpServerAcception());
-	while (popTcpServer() != os::SOCKET_INVALID.descriptor);
-	while (popTcpClient() != os::SOCKET_INVALID.descriptor);
+	while (popTcpServer() != anonymous::ASYNC_EVENT_INIT_VALUE);
+	while (popTcpClient() != anonymous::ASYNC_EVENT_INIT_VALUE);
 }
 
 }}}} // namespace flame_ide::os::async::network

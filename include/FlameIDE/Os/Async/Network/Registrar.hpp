@@ -23,7 +23,18 @@ namespace flame_ide
 {namespace network
 {
 
-struct Config
+enum class EventType: Types::int_t
+{
+	ERROR = -1
+	, INIT = 0
+	, READ
+	, WRITE
+	, READ_WRITE
+	, CLOSE
+};
+
+
+struct SocketsInfo
 {
 	struct Info
 	{
@@ -34,9 +45,17 @@ struct Config
 		Types::size_t tcpClients;
 	};
 
-	Info max;
-	Info current;
+	const Info max;
+	const Info current;
 };
+
+struct AsyncEvent
+{
+	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
+	EventType event = EventType::ERROR;
+};
+bool operator==(const AsyncEvent &ae1, const AsyncEvent &ae2) noexcept;
+bool operator!=(const AsyncEvent &ae1, const AsyncEvent &ae2) noexcept;
 
 class Registrar
 {
@@ -50,7 +69,7 @@ public:
 	Registrar &operator=(Registrar &&) noexcept = default;
 
 public:
-	const Config &getConfig() const noexcept;
+	SocketsInfo getInfo() const noexcept;
 
 public:
 	os::Status add(const os::network::UdpServer &socket) noexcept;
@@ -65,11 +84,11 @@ public:
 	os::Status remove(const os::network::TcpServer::WithClient &socket) noexcept;
 	os::Status remove(const os::network::TcpClient &socket) noexcept;
 
-	os::SocketDescriptor popUdpServer() noexcept;
-	os::SocketDescriptor popUdpClient() noexcept;
+	AsyncEvent popUdpServer() noexcept;
+	AsyncEvent popUdpClient() noexcept;
 	AcceptedConnection popTcpServerAcception() noexcept;
-	os::SocketDescriptor popTcpServer() noexcept;
-	os::SocketDescriptor popTcpClient() noexcept;
+	AsyncEvent popTcpServer() noexcept;
+	AsyncEvent popTcpClient() noexcept;
 
 	bool pushUdpServer(os::SocketDescriptor socket) noexcept;
 	bool pushUdpClient(os::SocketDescriptor socket) noexcept;
@@ -82,6 +101,7 @@ public:
 	void setNotificator(const TcpServerNotificatorBase &notificator) noexcept;
 	void setNotificator(const TcpAcceptedConnectionNotificatorBase &notificator) noexcept;
 	void setNotificator(const TcpClientNotificatorBase &notificator) noexcept;
+
 	void unsetNotificators() noexcept;
 
 	void clear() noexcept;
