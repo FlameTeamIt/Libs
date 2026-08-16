@@ -220,7 +220,7 @@ void MessageDispatchThread::handleUdp(
 		{
 			if (os::network::NetworkBase::callbacks().isServer(Socket{ descriptor }))
 			{
-				queues.udpServers().push({
+				queues.udpServers().push(os::async::network::AsyncEvent{
 						descriptor
 						, anonymous::convertFromWinEventToAsyncEvent(eventValue)
 				});
@@ -230,7 +230,7 @@ void MessageDispatchThread::handleUdp(
 			}
 			else
 			{
-				queues.udpClients().push({
+				queues.udpClients().push(os::async::network::AsyncEvent{
 						descriptor
 						, anonymous::convertFromWinEventToAsyncEvent(eventValue)
 				});
@@ -275,7 +275,7 @@ void MessageDispatchThread::handleTcp(
 		{
 			if (os::network::NetworkBase::callbacks().isServer(Socket{ descriptor }))
 			{
-				queues.tcpServers().push({
+				queues.tcpServers().push(os::async::network::AsyncEvent{
 						descriptor
 						, anonymous::convertFromWinEventToAsyncEvent(eventValue)
 				});
@@ -285,7 +285,7 @@ void MessageDispatchThread::handleTcp(
 			}
 			else
 			{
-				queues.tcpClients().push({
+				queues.tcpClients().push(os::async::network::AsyncEvent{
 						descriptor
 						, anonymous::convertFromWinEventToAsyncEvent(eventValue)
 				});

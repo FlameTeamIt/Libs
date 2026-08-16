@@ -25,7 +25,7 @@ namespace flame_ide
 
 enum class EventType: Types::int_t
 {
-	ERROR = -1
+	INVALID = -1
 	, INIT = 0
 	, READ
 	, WRITE
@@ -52,7 +52,7 @@ struct SocketsInfo
 struct AsyncEvent
 {
 	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
-	EventType event = EventType::ERROR;
+	EventType event = EventType::INVALID;
 };
 bool operator==(const AsyncEvent &ae1, const AsyncEvent &ae2) noexcept;
 bool operator!=(const AsyncEvent &ae1, const AsyncEvent &ae2) noexcept;

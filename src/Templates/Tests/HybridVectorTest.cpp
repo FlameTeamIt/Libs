@@ -3,6 +3,8 @@
 #include <FlameIDE/Common/Macros/DetectCompiler.hpp>
 #include <FlameIDE/Templates/Range.hpp>
 
+#include "TestClass.hpp"
+
 namespace flame_ide
 {namespace templates
 {namespace test

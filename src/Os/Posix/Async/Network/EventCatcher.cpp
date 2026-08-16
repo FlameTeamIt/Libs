@@ -40,7 +40,7 @@ convertBandEventsToAsyncEvent(BandEvent events)
 	using ::flame_ide::os::async::network::EventType;
 
 	if ((events & PollingFlags::ERROR) || (events & PollingFlags::INVALID_REQUEST))
-		return EventType::ERROR;
+		return EventType::INVALID;
 
 	auto eventType = EventType::INIT;
 
