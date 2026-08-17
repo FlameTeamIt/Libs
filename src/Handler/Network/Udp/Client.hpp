@@ -14,7 +14,9 @@ namespace flame_ide
 {
 
 struct ClientMessage: public Message
-{};
+{
+	void fill(flame_ide::os::network::UdpClient &endpoint) noexcept;
+};
 
 class Client: public Endpoint<
 	::flame_ide::os::network::UdpClient, ClientMessage
@@ -24,7 +26,7 @@ class Client: public Endpoint<
 
 struct ClientCommunicationData
 {
-	Client *client;
+	::flame_ide::ReferenceWrapper<Client> client;
 
 	Types::ssize_t bytesToRead() const noexcept;
 	Types::ssize_t receive(templates::Range<byte_t *> range) noexcept;

@@ -26,8 +26,8 @@ public:
 public:
 	struct ServerHandleData
 	{
-		Handler *handler;
-		udp::Server *server;
+		::flame_ide::ReferenceWrapper<Handler> handler;
+		::flame_ide::ReferenceWrapper<udp::Server> server;
 	};
 
 	struct SessionHandleData

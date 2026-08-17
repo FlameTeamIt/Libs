@@ -40,7 +40,7 @@ int StorageTest::serverPushPop()
 	const os::Socket expectedSocket = server.native();
 
 	auto handle = storage.push(flame_ide::move(server));
-	IN_CASE_CHECK(handle != nullptr);
+	IN_CASE_CHECK(handle.operator->() != nullptr);
 
 	auto resultServer = storage.pop(handle);
 	IN_CASE_CHECK(expectedSocket.descriptor == resultServer.native().descriptor);

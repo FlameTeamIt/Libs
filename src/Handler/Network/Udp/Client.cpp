@@ -9,6 +9,18 @@ namespace flame_ide
 {namespace udp
 {
 
+void ClientMessage::fill(flame_ide::os::network::UdpClient &endpoint)
+{
+	os::threads::Locker locker{ spin };
+
+	auto waitResult = endpoint.wait();
+	if (waitResult < 0)
+		return;
+
+	this->size = endpoint.receive(this->range());
+	this->state = MessageState::READY;
+}
+
 Types::ssize_t ClientCommunicationData::bytesToRead() const noexcept
 {
 	if (!client)
@@ -23,7 +35,7 @@ ClientCommunicationData::receive(templates::Range<byte_t *> range) noexcept
 	if (!client)
 		return os::STATUS_FAILED;
 
-	ClientMessage *message = client->input().getFilledMessage();
+	ReferenceWrapper<ClientMessage> message = client->input().getFilledMessage();
 	if (!message)
 		return os::STATUS_FAILED;
 
@@ -61,7 +73,7 @@ ClientCommunicationData::send(templates::Range<const byte_t *> range) noexcept
 	if (!client)
 		return os::STATUS_FAILED;
 
-	ClientMessage *message = client->output().getEmptyMessage();
+	ReferenceWrapper<ClientMessage> message = client->output().getEmptyMessage();
 	if (!message)
 		return os::STATUS_FAILED;
 

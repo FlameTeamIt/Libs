@@ -28,7 +28,7 @@ class Client;
 class Clients;
 
 template<typename Container>
-class HandlerEndpointUdpData;
+struct HandlerEndpointUdpData;
 
 }}}} // / namespace flame_ide::handler::network::udp
 

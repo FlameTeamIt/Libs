@@ -19,7 +19,7 @@ class Storage
 {
 public:
 	template<typename OsEndpoint>
-	auto *push(OsEndpoint &&osEndpoint) noexcept
+	auto push(OsEndpoint &&osEndpoint) noexcept
 	{
 		static_assert(
 			IsOsEndpoint<OsEndpoint>::VALUE
@@ -28,8 +28,6 @@ public:
 		);
 
 		using HandlerEndpoint = typename EndpointTypeMapper<OsEndpoint>::Type;
-		using HandlerEndpointPointer =
-				typename flame_ide::DefaultTraits<HandlerEndpoint>::Pointer;
 		using HandlerEndpointData = typename HandlerEndpointDataMapper<
 			HandlerEndpoint
 		>::Type;
@@ -41,11 +39,11 @@ public:
 			if (!data.container)
 				data.container = decltype(data.container){};
 			if (!data.container)
-				return HandlerEndpointPointer{ nullptr };
+				return ::flame_ide::ReferenceWrapper<HandlerEndpoint>{ nullptr };
 		}
 
 		// Push
-		HandlerEndpointPointer handlerEndpointPointer = nullptr;
+		::flame_ide::ReferenceWrapper<HandlerEndpoint> handlerEndpointPointer = nullptr;
 		{
 			os::threads::Locker lock{ data.spin };
 			for (auto &i : data.container.reference())
@@ -63,7 +61,7 @@ public:
 	}
 
 	template<typename HandlerEndpoint>
-	auto pop(HandlerEndpoint *handlerEndpoint) noexcept
+	auto pop(ReferenceWrapper<HandlerEndpoint> handlerEndpoint) noexcept
 	{
 		static_assert(
 			IsHandlerEndpoint<HandlerEndpoint>::VALUE

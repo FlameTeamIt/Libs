@@ -10,7 +10,7 @@ namespace flame_ide
 Handler::ExpectedServerHandle
 Handler::Udp::push(os::network::UdpServer &&server) noexcept
 {
-	udp::Server *udpServer = storage.push(move(server));
+	::flame_ide::ReferenceWrapper<udp::Server> udpServer = storage.push(move(server));
 	if (!udpServer)
 		return { os::STATUS_FAILED };
 
@@ -26,7 +26,7 @@ Handler::Udp::push(os::network::UdpServer &&server) noexcept
 Handler::ExpectedSessionHandle
 Handler::Udp::push(os::network::UdpClient &&client) noexcept
 {
-	udp::Client *udpClient = storage.push(move(client));
+	::flame_ide::ReferenceWrapper<udp::Client> udpClient = storage.push(move(client));
 	if (!udpClient)
 		return { os::STATUS_FAILED };
 
@@ -86,10 +86,10 @@ Handler::Udp::CallbackGetSessionHandle Handler::Udp::serverHandleCallback() cons
 		if (!object)
 			return { os::STATUS_FAILED };
 
-		auto *server = object.get<ServerHandleData>().server;
+		auto server = object.get<ServerHandleData>().server;
 
 		// В очередь приходят сообщения
-		auto *message = server->input().getFilledMessage();
+		auto message = server->input().getFilledMessage();
 		if (!message)
 			return { os::STATUS_FAILED };
 

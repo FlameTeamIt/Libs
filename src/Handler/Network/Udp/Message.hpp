@@ -22,6 +22,9 @@ struct Message
 	MessageState state = MessageState::EMPTY;
 
 	mutable os::threads::Spin spin;
+
+protected:
+	::flame_ide::templates::Range<::flame_ide::byte_t *> range() noexcept;
 };
 
 }}}} // namespace flame_ide::handler::network::udp

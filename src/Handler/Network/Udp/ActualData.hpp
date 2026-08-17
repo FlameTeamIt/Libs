@@ -1,6 +1,7 @@
 #ifndef HANDLER_INTERNAL_UDP_ACTUAL_DATA_HPP
 #define HANDLER_INTERNAL_UDP_ACTUAL_DATA_HPP
 
+#include <FlameIDE/Common/ReferenceWrapper.hpp>
 #include <FlameIDE/Templates/Array.hpp>
 #include <FlameIDE/Templates/Pointers.hpp>
 
@@ -27,8 +28,8 @@ public:
 				typename Messages::Iterator
 			>;
 
-	MessageType *getEmptyMessage() noexcept;
-	MessageType *getFilledMessage() noexcept;
+	::flame_ide::ReferenceWrapper<MessageType> getEmptyMessage() noexcept;
+	::flame_ide::ReferenceWrapper<MessageType> getFilledMessage() noexcept;
 
 	::flame_ide::Types::ssize_t getFilledMessageSize() const noexcept;
 
@@ -54,7 +55,8 @@ namespace flame_ide
 {
 
 template<typename MessageType, Types::size_t SIZE>
-MessageType *ActualData<MessageType, SIZE>::getEmptyMessage() noexcept
+::flame_ide::ReferenceWrapper<MessageType>
+ActualData<MessageType, SIZE>::getEmptyMessage() noexcept
 {
 	os::threads::Locker lock{ spin };
 
@@ -68,7 +70,8 @@ MessageType *ActualData<MessageType, SIZE>::getEmptyMessage() noexcept
 }
 
 template<typename MessageType, Types::size_t SIZE>
-MessageType *ActualData<MessageType, SIZE>::getFilledMessage() noexcept
+::flame_ide::ReferenceWrapper<MessageType>
+ActualData<MessageType, SIZE>::getFilledMessage() noexcept
 {
 	os::threads::Locker lock{ spin };
 
