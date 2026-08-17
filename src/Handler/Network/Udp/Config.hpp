@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALUDPCONFIG_HPP
-#define HANDLERINTERNALUDPCONFIG_HPP
+#ifndef HANDLER_INTERNAL_UDPCONFIG_HPP
+#define HANDLER_INTERNAL_UDPCONFIG_HPP
 
 #include <Generated/Network/Config.hpp>
 #include <FlameIDE/Common/Constants.hpp>
@@ -39,4 +39,4 @@ private:
 
 }}}} // namespace flame_ide::handler::network::udp
 
-#endif // HANDLERINTERNALUDPCONFIG_HPP
+#endif // HANDLER_INTERNAL_UDPCONFIG_HPP

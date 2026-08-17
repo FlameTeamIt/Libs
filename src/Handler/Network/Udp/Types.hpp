@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALUDPTYPES_HPP
-#define HANDLERINTERNALUDPTYPES_HPP
+#ifndef HANDLER_INTERNAL_UDP_TYPES_HPP
+#define HANDLER_INTERNAL_UDP_TYPES_HPP
 
 #include <FlameIDE/Os/Threads/Spin.hpp>
 
@@ -34,4 +34,4 @@ namespace flame_ide
 {
 }}}} // namespace flame_ide::handler::network::udp
 
-#endif // HANDLERINTERNALUDPTYPES_HPP
+#endif // HANDLER_INTERNAL_UDP_TYPES_HPP

@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALUDPSTORAGE_HPP
-#define HANDLERINTERNALUDPSTORAGE_HPP
+#ifndef HANDLER_INTERNAL_UDPSTORAGE_HPP
+#define HANDLER_INTERNAL_UDPSTORAGE_HPP
 
 #include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Os/Async/Network/Registrar.hpp>
@@ -133,4 +133,4 @@ Storage::getData<HandlerEndpointUdpData<Clients>>() noexcept
 
 }}}} // namespace flame_ide::handler::network::udp
 
-#endif // HANDLERINTERNALUDPSTORAGE_HPP
+#endif // HANDLER_INTERNAL_UDPSTORAGE_HPP

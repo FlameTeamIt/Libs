@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALUDPCLIENT_HPP
-#define HANDLERINTERNALUDPCLIENT_HPP
+#ifndef HANDLER_INTERNAL_UDPCLIENT_HPP
+#define HANDLER_INTERNAL_UDPCLIENT_HPP
 
 #include <FlameIDE/../../src/Handler/Network/Udp/Endpoint.hpp>
 #include <FlameIDE/../../src/Handler/Network/Udp/Message.hpp>
@@ -35,4 +35,4 @@ struct ClientCommunicationData
 
 }}}} // namespace flame_ide::handler::network::udp
 
-#endif // HANDLERINTERNALUDPCLIENT_HPP
+#endif // HANDLER_INTERNAL_UDPCLIENT_HPP

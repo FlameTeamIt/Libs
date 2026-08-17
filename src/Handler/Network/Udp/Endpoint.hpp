@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALUDPENDPOINT_HPP
-#define HANDLERINTERNALUDPENDPOINT_HPP
+#ifndef HANDLER_INTERNAL_UDP_ENDPOINT_HPP
+#define HANDLER_INTERNAL_UDP_ENDPOINT_HPP
 
 #include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Templates/Optional.hpp>
@@ -177,4 +177,4 @@ Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::output() const noe
 
 }}}} // namespace flame_ide::handler::network::udp
 
-#endif // HANDLERINTERNALUDPENDPOINT_HPP
+#endif // HANDLER_INTERNAL_UDP_ENDPOINT_HPP

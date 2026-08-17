@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALTCPSERVER_HPP
-#define HANDLERINTERNALTCPSERVER_HPP
+#ifndef HANDLER_INTERNAL_TCPSERVER_HPP
+#define HANDLER_INTERNAL_TCPSERVER_HPP
 
 #include <FlameIDE/Os/Network/TcpServer.hpp>
 
@@ -64,4 +64,4 @@ public:
 
 }}}} // namespace flame_ide::handler::network::tcp
 
-#endif // HANDLERINTERNALTCPSERVER_HPP
+#endif // HANDLER_INTERNAL_TCPSERVER_HPP

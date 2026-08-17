@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALTCPDATA_HPP
-#define HANDLERINTERNALTCPDATA_HPP
+#ifndef HANDLER_INTERNAL_TCPDATA_HPP
+#define HANDLER_INTERNAL_TCPDATA_HPP
 
 #include <FlameIDE/../../src/Handler/Network/Tcp/Client.hpp>
 #include <FlameIDE/../../src/Handler/Network/Tcp/Server.hpp>
@@ -35,4 +35,4 @@ Types::ssize_t serverSend(void *data, templates::Range<const byte_t *>) noexcept
 
 }}}}} // namespace flame_ide::os::network::udp::callbacks
 
-#endif // HANDLERINTERNALTCPDATA_HPP
+#endif // HANDLER_INTERNAL_TCPDATA_HPP

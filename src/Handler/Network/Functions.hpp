@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALFUNCTIONS_HPP
-#define HANDLERINTERNALFUNCTIONS_HPP
+#ifndef HANDLER_INTERNAL_FUNCTIONS_HPP
+#define HANDLER_INTERNAL_FUNCTIONS_HPP
 
 #include <FlameIDE/Os/Threads/Spin.hpp>
 #include <FlameIDE/Os/Threads/Utils.hpp>
@@ -62,4 +62,4 @@ inline auto popData(Pointer &pointer, os::threads::Spin &spin, Data &data
 
 }}} // namespace flame_ide::handler::network
 
-#endif // HANDLERINTERNALFUNCTIONS_HPP
+#endif // HANDLER_INTERNAL_FUNCTIONS_HPP

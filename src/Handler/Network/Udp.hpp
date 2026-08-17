@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALUDP_HPP
-#define HANDLERINTERNALUDP_HPP
+#ifndef HANDLER_INTERNAL_UDP_HPP
+#define HANDLER_INTERNAL_UDP_HPP
 
 #include <FlameIDE/Handler/Network/Handler.hpp>
 
@@ -133,4 +133,4 @@ private:
 
 }}} // namespace flame_ide::handler::network
 
-#endif // HANDLERINTERNALUDP_HPP
+#endif // HANDLER_INTERNAL_UDP_HPP

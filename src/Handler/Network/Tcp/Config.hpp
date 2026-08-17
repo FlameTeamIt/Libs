@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALTCPCONFIG_HPP
-#define HANDLERINTERNALTCPCONFIG_HPP
+#ifndef HANDLER_INTERNAL_TCPCONFIG_HPP
+#define HANDLER_INTERNAL_TCPCONFIG_HPP
 
 #include <Generated/Network/Config.hpp>
 #include <FlameIDE/Common/Constants.hpp>
@@ -39,4 +39,4 @@ struct Constants: ::flame_ide::NonCreational
 
 }}}} // namespace flame_ide::handler::network::tcp
 
-#endif // HANDLERINTERNALTCPCONFIG_HPP
+#endif // HANDLER_INTERNAL_TCPCONFIG_HPP

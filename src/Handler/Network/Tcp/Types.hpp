@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALTCPTYPES_HPP
-#define HANDLERINTERNALTCPTYPES_HPP
+#ifndef HANDLER_INTERNAL_TCPTYPES_HPP
+#define HANDLER_INTERNAL_TCPTYPES_HPP
 
 #include <FlameIDE/Common/Byte.hpp>
 #include <FlameIDE/Common/Traits/Functional.hpp>
@@ -45,4 +45,4 @@ struct AcceptedConnection
 
 }}}} // namespace flame_ide::handler::network::tcp
 
-#endif // HANDLERINTERNALTCPTYPES_HPP
+#endif // HANDLER_INTERNAL_TCPTYPES_HPP

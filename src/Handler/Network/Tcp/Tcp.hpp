@@ -1,5 +1,5 @@
-#ifndef HANDLERINTERNALTCPTCP_HPP
-#define HANDLERINTERNALTCPTCP_HPP
+#ifndef HANDLER_INTERNAL_TCPTCP_HPP
+#define HANDLER_INTERNAL_TCPTCP_HPP
 
 #include <FlameIDE/Common/Traits/Functional.hpp>
 #include <FlameIDE/Os/Threads/Spin.hpp>
@@ -70,4 +70,4 @@ public:
 
 }}}} // namespace flame_ide::handler::network::tcp
 
-#endif // HANDLERINTERNALTCPTCP_HPP
+#endif // HANDLER_INTERNAL_TCPTCP_HPP
