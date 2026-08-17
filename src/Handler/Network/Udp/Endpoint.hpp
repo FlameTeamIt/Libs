@@ -2,10 +2,10 @@
 #define HANDLERINTERNALUDPENDPOINT_HPP
 
 #include <FlameIDE/Common/Traits/Functional.hpp>
+#include <FlameIDE/Templates/Optional.hpp>
 #include <FlameIDE/Os/Threads/Spin.hpp>
 
-#include <FlameIDE/../../src/Handler/Network/Udp/Server.hpp>
-#include <FlameIDE/../../src/Handler/Network/Udp/Client.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/ActualData.hpp>
 
 namespace flame_ide
 {namespace handler
@@ -13,106 +13,167 @@ namespace flame_ide
 {namespace udp
 {
 
-// Container data
-
-// WARNING: using UniquePointer because malloc doen't work with big sizes
-using Servers = ::flame_ide::templates::StaticArray<
-	templates::UniquePointer<Server>, Constants::NUMBER_OF_SERVERS
->;
-
-// WARNING: using UniquePointer because malloc doen't work with big sizes
-using Clients = ::flame_ide::templates::StaticArray<
-	templates::UniquePointer<Client>, Constants::NUMBER_OF_CLIENTS
->;
-
-using SocketDescriptors = ::flame_ide::templates::StaticArray<
-	::flame_ide::os::SocketDescriptor
-	, Constants::NUMBER_OF_SERVERS + Constants::NUMBER_OF_CLIENTS
->;
-
-template<typename Container>
-struct HandlerEndpointUdpData
+template<
+	typename EndpointData
+	, typename MessageType
+	, ::flame_ide::Types::size_t INPUT_SIZE
+	, ::flame_ide::Types::size_t OUTPUT_SIZE
+>
+class Endpoint
 {
-	templates::UniquePointer<Container> container = decltype(container)::makeEmpty();
-	os::threads::Spin spin;
+public:
+	using Data = EndpointData;
+	using Optional = flame_ide::templates::Optional<Data>;
+	using ActualInput = ActualData<MessageType, INPUT_SIZE>;
+	using ActualOutput = ActualData<MessageType, OUTPUT_SIZE>;
+
+	bool empty() const noexcept;
+	void attach(EndpointData &&data) noexcept;
+	EndpointData detach() noexcept;
+
+	Optional &endpoint() noexcept;
+	const Optional &endpoint() const noexcept;
+
+	ActualInput &input() noexcept;
+	const ActualInput &input() const noexcept;
+
+	ActualOutput &output() noexcept;
+	const ActualOutput &output() const noexcept;
+
+protected:
+	Optional osEndpoint;
+	ActualInput actualInput;
+	ActualOutput actualOutput;
 };
 
-// Matching traits
+}}}} // namespace flame_ide::handler::network::udp
 
-using ServerMatchingTrait = ::flame_ide::TypeMappingTrait<
-	os::network::UdpServer, Server
->;
-using ClientMatchingTrait = ::flame_ide::TypeMappingTrait<
-	os::network::UdpClient, Client
->;
-
-using ServerDataMatchingTrait = ::flame_ide::TypeMappingTrait<
-	Server, HandlerEndpointUdpData<Servers>
->;
-using ClientDataMatchingTrait = ::flame_ide::TypeMappingTrait<
-	Client, HandlerEndpointUdpData<Clients>
->;
-
-// Integral constants
-
-template<typename EndpointType>
-using IsServer = ::flame_ide::IntegralConstant<
-	bool
-	, ::flame_ide::ComparingTypes<
-		EndpointType, ::flame_ide::os::network::UdpServer
-	>::VALUE || ::flame_ide::ComparingTypes<EndpointType, Server>::VALUE
->;
-
-template<typename EndpointType>
-using IsClient = ::flame_ide::IntegralConstant<
-	bool
-	, ::flame_ide::ComparingTypes<
-		EndpointType, ::flame_ide::os::network::UdpClient
-	>::VALUE || ::flame_ide::ComparingTypes<EndpointType, Client>::VALUE
->;
-
-template<typename T>
-using IsCommonEndpoint = ::flame_ide::IntegralConstant<
-	bool, IsServer<T>::VALUE || IsClient<T>::VALUE
->;
-
-template<typename T>
-using IsHandlerEndpoint = ::flame_ide::IntegralConstant<
-	bool, ::flame_ide::ComparingTypes<T, Server>::VALUE
-			|| ::flame_ide::ComparingTypes<T, Client>::VALUE
->;
-template<typename T>
-using IsOsEndpoint = ::flame_ide::IntegralConstant<
-	bool
-	, ::flame_ide::ComparingTypes<T, ::flame_ide::os::network::UdpServer>::VALUE
-			|| ::flame_ide::ComparingTypes<T, ::flame_ide::os::network::UdpClient>::VALUE
->;
-
-// Mappers
-
-// Gets os::network::{ UdpServer, UdpClient } <-> { Server, Client }
-template<typename EndpointType>
-using EndpointTypeMapper = ::flame_ide::TypeMapper<
-	EndpointType
-	, typename ::flame_ide::ChooseType<
-		IsServer<EndpointType>::VALUE, ServerMatchingTrait, ClientMatchingTrait
-	>::Type
->;
+namespace flame_ide
+{namespace handler
+{namespace network
+{namespace udp
+{
 
 template<
-	typename HandlerEndpoint
-	, typename = typename ::flame_ide::EnableType<
-		IsHandlerEndpoint<HandlerEndpoint>::VALUE, HandlerEndpoint
-	>::Type
+	typename EndpointData
+	, typename MessageType
+	, ::flame_ide::Types::size_t INPUT_SIZE
+	, ::flame_ide::Types::size_t OUTPUT_SIZE
 >
-using HandlerEndpointDataMapper = ::flame_ide::TypeMapper<
-	HandlerEndpoint
-	, typename ::flame_ide::ChooseType<
-		IsServer<HandlerEndpoint>::VALUE
-		, ServerDataMatchingTrait
-		, ClientDataMatchingTrait
-	>::Type
->;
+bool Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::empty() const noexcept
+{
+	return !(osEndpoint);
+}
+
+template<
+	typename EndpointData
+	, typename MessageType
+	, ::flame_ide::Types::size_t INPUT_SIZE
+	, ::flame_ide::Types::size_t OUTPUT_SIZE
+>
+void Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::attach(
+		EndpointData &&data
+) noexcept
+{
+	if (!empty())
+		return;
+
+	osEndpoint.set(flame_ide::move(data));
+}
+
+template<
+	typename EndpointData
+	, typename MessageType
+	, ::flame_ide::Types::size_t INPUT_SIZE
+	, ::flame_ide::Types::size_t OUTPUT_SIZE
+>
+EndpointData
+Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::detach() noexcept
+{
+	if (empty())
+		return {};
+
+	Data data = flame_ide::move(osEndpoint.pull());
+	return data;
+}
+
+template<
+	typename EndpointData
+	, typename MessageType
+	, ::flame_ide::Types::size_t INPUT_SIZE
+	, ::flame_ide::Types::size_t OUTPUT_SIZE
+>
+typename Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::Optional &
+Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::endpoint() noexcept
+{
+	return osEndpoint;
+}
+
+template<
+	typename EndpointData
+	, typename MessageType
+	, ::flame_ide::Types::size_t INPUT_SIZE
+	, ::flame_ide::Types::size_t OUTPUT_SIZE
+>
+const typename Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::Optional &
+Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::endpoint() const noexcept
+{
+	return osEndpoint;
+}
+
+template<
+	typename EndpointData
+	, typename MessageType
+	, ::flame_ide::Types::size_t INPUT_SIZE
+	, ::flame_ide::Types::size_t OUTPUT_SIZE
+>
+typename Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::ActualInput &
+Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::input() noexcept
+{
+	return actualInput;
+}
+
+template<
+		typename EndpointData
+		, typename MessageType
+		, ::flame_ide::Types::size_t INPUT_SIZE
+		, ::flame_ide::Types::size_t OUTPUT_SIZE
+		>
+const typename Endpoint<
+	EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE
+>::ActualInput &
+Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::input() const noexcept
+{
+	return actualInput;
+}
+
+template<
+		typename EndpointData
+		, typename MessageType
+		, ::flame_ide::Types::size_t INPUT_SIZE
+		, ::flame_ide::Types::size_t OUTPUT_SIZE
+		>
+typename Endpoint<
+EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE
+>::ActualOutput &
+Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::output() noexcept
+{
+	return actualOutput;
+}
+
+template<
+	typename EndpointData
+	, typename MessageType
+	, ::flame_ide::Types::size_t INPUT_SIZE
+	, ::flame_ide::Types::size_t OUTPUT_SIZE
+>
+const typename Endpoint<
+	EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE
+>::ActualOutput &
+Endpoint<EndpointData, MessageType, INPUT_SIZE, OUTPUT_SIZE>::output() const noexcept
+{
+	return actualOutput;
+}
 
 }}}} // namespace flame_ide::handler::network::udp
 

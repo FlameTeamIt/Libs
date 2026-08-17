@@ -2,10 +2,12 @@
 #define HANDLERINTERNALUDPSTORAGE_HPP
 
 #include <FlameIDE/Common/Traits/Functional.hpp>
+#include <FlameIDE/Os/Async/Network/Registrar.hpp>
 #include <FlameIDE/Os/Threads/Spin.hpp>
 #include <FlameIDE/Os/Threads/Utils.hpp>
 
-#include <FlameIDE/../../src/Handler/Network/Udp/Endpoint.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/ContainerTypes.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/TypeMapping.hpp>
 
 namespace flame_ide
 {namespace handler

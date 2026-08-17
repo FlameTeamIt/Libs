@@ -1,7 +1,8 @@
 #ifndef HANDLERINTERNALUDPSERVER_HPP
 #define HANDLERINTERNALUDPSERVER_HPP
 
-#include <FlameIDE/../../src/Handler/Network/Udp/Types.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Message.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Endpoint.hpp>
 
 #include <FlameIDE/Os/Network/UdpServer.hpp>
 
@@ -15,10 +16,12 @@ struct ServerMessage: public Message
 {
 	::flame_ide::os::network::UdpServer::WithClient client;
 };
-using Server = Endpoint<
+
+class Server: public Endpoint<
 	::flame_ide::os::network::UdpServer, ServerMessage
 	, Constants::SERVER_INPUT_QUEUE_SIZE, Constants::SERVER_OUTPUT_QUEUE_SIZE
->;
+>
+{};
 
 struct ServerCommunicationData
 {
