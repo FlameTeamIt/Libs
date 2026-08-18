@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
+set(MODULE_NAME Crypto)
 set(HEADER_MODULES
 	${CMAKE_CURRENT_LIST_DIR}/Oasis
 	${CMAKE_CURRENT_LIST_DIR}/Pkcs11

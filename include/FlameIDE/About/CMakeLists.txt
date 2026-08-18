@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 set(NAME About)
+set(MODULE_NAME ${NAME})
 set(LIBRARY_ALIAS_NAME ${FLAME_NAMESPACE}::About::Headers)
 
 get_sources(FILE_LIST)
@@ -9,5 +10,6 @@ flame_header_library(
 	HEADER_LIST        "${FILE_LIST}"
 	LIBRARY_ALIAS_NAME "${LIBRARY_ALIAS_NAME}"
 	INCLUDE_PATHS      "${FLAME_INCLUDE_PATH}"
+	FOLDER             "${MODULE_NAME}"
 	INSTALL_SUBDIR     "${FLAME_NAMESPACE}/${NAME}"
 )
