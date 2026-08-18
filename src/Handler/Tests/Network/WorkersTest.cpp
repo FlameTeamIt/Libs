@@ -1,4 +1,4 @@
-#include <FlameIDE/../../src/Handler/Tests/Network/WorkerTest.hpp>
+#include <FlameIDE/../../src/Handler/Tests/Network/WorkersTest.hpp>
 #include <FlameIDE/../../src/Handler/Network/Workers.hpp>
 
 namespace flame_ide
@@ -7,12 +7,12 @@ namespace flame_ide
 {namespace tests
 {
 
-WorkerTest::WorkerTest() : ::AbstractTest("Worker")
+WorkersTest::WorkersTest() : ::AbstractTest("Workers")
 {}
 
-WorkerTest::~WorkerTest() = default;
+WorkersTest::~WorkersTest() = default;
 
-int WorkerTest::vStart()
+int WorkersTest::vStart()
 {
 	return ResultType::SUCCESS;
 }

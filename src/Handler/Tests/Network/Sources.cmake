@@ -3,6 +3,18 @@ set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/HandlerTest.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/InternalTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/InternalTest.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/WorkerTest.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/WorkerTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/NotificatorsTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/NotificatorsTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ServerHandleTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ServerHandleTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SessionHandleTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SessionHandleTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TcpTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TcpTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UdpTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UdpTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WorkerBaseTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WorkerBaseTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WorkersTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WorkersTest.hpp
 )
