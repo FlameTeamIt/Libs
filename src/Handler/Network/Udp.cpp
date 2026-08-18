@@ -74,6 +74,20 @@ Handler::ExpectedUdpClient Handler::Udp::pop(Handler::SessionHandle &handle)
 	return { flame_ide::move(client) };
 }
 
+void Handler::Udp::process(
+		udp::ServerProcessor &serverProcessor, os::async::network::AsyncEvent event
+)
+{
+	storage.process(serverProcessor, event);
+}
+
+void Handler::Udp::process(
+		udp::ClientProcessor &clientProcessor, os::async::network::AsyncEvent event
+)
+{
+	storage.process(clientProcessor, event);
+}
+
 // server
 
 Handler::Udp::CallbackGetSessionHandle Handler::Udp::serverHandleCallback() const noexcept

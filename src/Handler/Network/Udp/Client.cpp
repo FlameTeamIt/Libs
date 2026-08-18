@@ -9,7 +9,7 @@ namespace flame_ide
 {namespace udp
 {
 
-void ClientMessage::fill(flame_ide::os::network::UdpClient &endpoint)
+void ClientMessage::fill(flame_ide::os::network::UdpClient &endpoint) noexcept
 {
 	os::threads::Locker locker{ spin };
 

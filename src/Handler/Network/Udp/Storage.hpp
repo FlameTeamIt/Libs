@@ -99,6 +99,15 @@ public:
 		return OsEndpoint{};
 	}
 
+	template<typename EndpointProcessor>
+	void process(EndpointProcessor &processor, os::async::network::AsyncEvent event)
+	{
+		using HandlerEndpointData = typename HandlerEndpointDataMapper<
+			EndpointProcessor
+		>::Type;
+		processor(getData<HandlerEndpointData>(), event);
+	}
+
 private:
 	template<typename T>
 	T &getData() noexcept;

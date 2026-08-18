@@ -58,7 +58,8 @@ Handler::ExpectedServerHandle Handler::pushUdp(os::network::UdpServer &&server) 
 			{
 				auto &handleData = result.object.get<Udp::ServerHandleData>();
 				const auto &endpoint = handleData.server->endpoint().get();
-				internal->registrar().add(endpoint);
+				const auto status = os::async::network::Registrar{}.add(endpoint);
+				flame_ide::unused(status);
 
 				handleData.handler = this;
 				result.callbackDeregistrate =
@@ -76,7 +77,8 @@ Handler::ExpectedSessionHandle Handler::pushUdp(os::network::UdpClient &&client)
 			{
 				auto &handleData = result.object.get<Udp::SessionHandleData>();
 				const auto &endpoint = handleData.data.client->endpoint().get();
-				internal->registrar().add(endpoint);
+				const auto status = os::async::network::Registrar{}.add(endpoint);
+				flame_ide::unused(status);
 
 				handleData.handler = this;
 				result.callbackDeregistrate =

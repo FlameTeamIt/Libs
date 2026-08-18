@@ -14,7 +14,7 @@ namespace flame_ide
 
 struct ServerMessage: public Message
 {
-	void fill(flame_ide::os::network::UdpServer &endpoint) noexcept;
+	bool fill(flame_ide::os::network::UdpServer &endpoint) noexcept;
 
 	::flame_ide::os::network::UdpServer::WithClient client;
 };

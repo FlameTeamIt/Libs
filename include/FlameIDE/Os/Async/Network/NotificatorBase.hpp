@@ -21,7 +21,7 @@ struct TcpClient {};
 } // namespace tag
 
 template<typename Tag>
-class NotificatorBase: public flame_ide::DefaultFunctorConstBase {};
+class NotificatorBase: public flame_ide::DefaultFunctorBase {};
 
 using UdpServerNotificatorBase = NotificatorBase<tag::UdpServer>;
 using UdpClientNotificatorBase = NotificatorBase<tag::UdpClient>;

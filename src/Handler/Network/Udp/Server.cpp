@@ -6,17 +6,18 @@ namespace flame_ide
 {namespace udp
 {
 
-void ServerMessage::fill(flame_ide::os::network::UdpServer &endpoint) noexcept
+bool ServerMessage::fill(flame_ide::os::network::UdpServer &endpoint) noexcept
 {
 	os::threads::Locker lock{ this->spin };
 
 	auto waitResult = endpoint.wait();
 	if (waitResult.getStatus() < 0)
-		return;
+		return false;
 
 	this->client = waitResult;
 	this->size = this->client.receive(this->range());
 	this->state = MessageState::READY;
+	return true;
 }
 
 Types::ssize_t ServerCommunicationData::bytesToRead() const noexcept

@@ -35,7 +35,7 @@ public:
 		return notification;
 	}
 private:
-	virtual void operator()() const noexcept override
+	virtual void operator()() noexcept override
 	{
 		os::threads::Locker{ mutex };
 		notification = true;

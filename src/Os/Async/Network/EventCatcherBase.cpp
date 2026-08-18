@@ -11,30 +11,36 @@ SocketQueues &EventCatcherBase::queues() noexcept
 	return socketQueues;
 }
 
-void EventCatcherBase::setNotificator(const UdpServerNotificatorBase &notificator) noexcept
+void EventCatcherBase::setNotificator(UdpServerNotificatorBase &notificator) noexcept
 {
-	notificationObjects.udpServer = decltype(notificationObjects.udpServer){ notificator };
+	notificationObjects.udpServer
+			= decltype(notificationObjects.udpServer){ notificator };
 }
 
-void EventCatcherBase::setNotificator(const UdpClientNotificatorBase &notificator) noexcept
+void EventCatcherBase::setNotificator(UdpClientNotificatorBase &notificator) noexcept
 {
-	notificationObjects.udpClient = decltype(notificationObjects.udpClient){ notificator };
+	notificationObjects.udpClient
+			= decltype(notificationObjects.udpClient){ notificator };
 }
 
-void EventCatcherBase::setNotificator(const TcpServerNotificatorBase &notificator) noexcept
+void EventCatcherBase::setNotificator(TcpServerNotificatorBase &notificator) noexcept
 {
-	notificationObjects.tcpServer = decltype(notificationObjects.tcpServer){ notificator };
+	notificationObjects.tcpServer
+			= decltype(notificationObjects.tcpServer){ notificator };
 }
 
-void EventCatcherBase::setNotificator(const TcpAcceptedConnectionNotificatorBase &notificator) noexcept
+void EventCatcherBase::setNotificator(
+		TcpAcceptedConnectionNotificatorBase &notificator
+) noexcept
 {
-	notificationObjects.tcpAcceptedConnection =
-			decltype(notificationObjects.tcpAcceptedConnection){ notificator };
+	notificationObjects.tcpAcceptedConnection
+			= decltype(notificationObjects.tcpAcceptedConnection){ notificator };
 }
 
-void EventCatcherBase::setNotificator(const TcpClientNotificatorBase &notificator) noexcept
+void EventCatcherBase::setNotificator(TcpClientNotificatorBase &notificator) noexcept
 {
-	notificationObjects.tcpClient = decltype(notificationObjects.tcpClient){ notificator };
+	notificationObjects.tcpClient
+			= decltype(notificationObjects.tcpClient){ notificator };
 }
 
 void EventCatcherBase::unsetNotificator(tag::UdpServer) noexcept

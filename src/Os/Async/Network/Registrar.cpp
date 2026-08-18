@@ -199,23 +199,23 @@ AsyncEvent Registrar::popTcpClient() noexcept
 
 // notificator
 
-void Registrar::setNotificator(const UdpServerNotificatorBase &notificator) noexcept
+void Registrar::setNotificator(UdpServerNotificatorBase &notificator) noexcept
 {
 	EventCatcherBase::get().setNotificator(notificator);
 }
-void Registrar::setNotificator(const UdpClientNotificatorBase &notificator) noexcept
+void Registrar::setNotificator(UdpClientNotificatorBase &notificator) noexcept
 {
 	EventCatcherBase::get().setNotificator(notificator);
 }
-void Registrar::setNotificator(const TcpServerNotificatorBase &notificator) noexcept
+void Registrar::setNotificator(TcpServerNotificatorBase &notificator) noexcept
 {
 	EventCatcherBase::get().setNotificator(notificator);
 }
-void Registrar::setNotificator(const TcpAcceptedConnectionNotificatorBase &notificator) noexcept
+void Registrar::setNotificator(TcpAcceptedConnectionNotificatorBase &notificator) noexcept
 {
 	EventCatcherBase::get().setNotificator(notificator);
 }
-void Registrar::setNotificator(const TcpClientNotificatorBase &notificator) noexcept
+void Registrar::setNotificator(TcpClientNotificatorBase &notificator) noexcept
 {
 	EventCatcherBase::get().setNotificator(notificator);
 }

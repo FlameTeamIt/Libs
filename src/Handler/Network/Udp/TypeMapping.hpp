@@ -23,9 +23,11 @@ namespace flame_ide
 
 class Server;
 class Servers;
+class ServerProcessor;
 
 class Client;
 class Clients;
+class ClientProcessor;
 
 template<typename Container>
 struct HandlerEndpointUdpData;
@@ -54,6 +56,14 @@ using ClientDataMatchingTrait = ::flame_ide::TypeMappingTrait<
 	Client, HandlerEndpointUdpData<Clients>
 >;
 
+using ServerProcessorMatchingTrait = ::flame_ide::TypeMappingTrait<
+	ServerProcessor, HandlerEndpointUdpData<Servers>
+>;
+
+using ClientProcessorMatchingTrait = ::flame_ide::TypeMappingTrait<
+	ClientProcessor, HandlerEndpointUdpData<Clients>
+>;
+
 // Integral constants
 
 template<typename EndpointType>
@@ -62,6 +72,7 @@ using IsServer = ::flame_ide::IntegralConstant<
 	, ::flame_ide::ComparingTypes<
 		EndpointType, ::flame_ide::os::network::UdpServer
 	>::VALUE || ::flame_ide::ComparingTypes<EndpointType, Server>::VALUE
+			|| ::flame_ide::ComparingTypes<EndpointType, ServerProcessor>::VALUE
 >;
 
 template<typename EndpointType>
@@ -70,11 +81,19 @@ using IsClient = ::flame_ide::IntegralConstant<
 	, ::flame_ide::ComparingTypes<
 		EndpointType, ::flame_ide::os::network::UdpClient
 	>::VALUE || ::flame_ide::ComparingTypes<EndpointType, Client>::VALUE
+			|| ::flame_ide::ComparingTypes<EndpointType, ClientProcessor>::VALUE
 >;
 
 template<typename T>
 using IsCommonEndpoint = ::flame_ide::IntegralConstant<
 	bool, IsServer<T>::VALUE || IsClient<T>::VALUE
+>;
+
+template<typename T>
+using IsEndpointProcessor = ::flame_ide::IntegralConstant<
+	bool
+	, ::flame_ide::ComparingTypes<T, ServerProcessor>::VALUE
+			|| ::flame_ide::ComparingTypes<T, ClientProcessor>::VALUE
 >;
 
 template<typename T>
@@ -103,15 +122,23 @@ using EndpointTypeMapper = ::flame_ide::TypeMapper<
 template<
 	typename HandlerEndpoint
 	, typename = typename ::flame_ide::EnableType<
-		IsHandlerEndpoint<HandlerEndpoint>::VALUE, HandlerEndpoint
+		IsHandlerEndpoint<HandlerEndpoint>::VALUE || IsEndpointProcessor<HandlerEndpoint>::VALUE, HandlerEndpoint
 	>::Type
 >
 using HandlerEndpointDataMapper = ::flame_ide::TypeMapper<
 	HandlerEndpoint
 	, typename ::flame_ide::ChooseType<
 		IsServer<HandlerEndpoint>::VALUE
-		, ServerDataMatchingTrait
-		, ClientDataMatchingTrait
+		, typename ::flame_ide::ChooseType<
+			IsHandlerEndpoint<HandlerEndpoint>::VALUE
+			, ServerDataMatchingTrait
+			, ServerProcessorMatchingTrait
+		>::Type
+		, typename ::flame_ide::ChooseType<
+			IsHandlerEndpoint<HandlerEndpoint>::VALUE
+			, ClientDataMatchingTrait
+			, ClientProcessorMatchingTrait
+		>::Type
 	>::Type
 >;
 

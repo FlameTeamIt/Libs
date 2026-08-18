@@ -21,7 +21,15 @@ private:
 
 private:
 	int init();
+
 	int serverPushPop();
+	int clientPushPop();
+
+	int maxServersPushPop();
+	int maxClientsPushPop();
+
+	int processServer();
+	int processClient();
 };
 
 }}}}} // namespace flame_ide::handler::network::udp::tests

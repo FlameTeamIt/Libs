@@ -25,11 +25,6 @@ class Clients: public ::flame_ide::templates::StaticArray<
 >
 {};
 
-using SocketDescriptors = ::flame_ide::templates::StaticArray<
-	::flame_ide::os::SocketDescriptor
-	, Constants::NUMBER_OF_SERVERS + Constants::NUMBER_OF_CLIENTS
->;
-
 }}}} // namespace flame_ide::handler::network::udp
 
 #endif // HANDLER_INTERNAL_UDP_CONTAINER_TYPES_HPP

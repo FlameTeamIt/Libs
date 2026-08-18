@@ -90,11 +90,11 @@ public:
 	AsyncEvent popTcpServer() noexcept;
 	AsyncEvent popTcpClient() noexcept;
 
-	void setNotificator(const UdpServerNotificatorBase &notificator) noexcept;
-	void setNotificator(const UdpClientNotificatorBase &notificator) noexcept;
-	void setNotificator(const TcpServerNotificatorBase &notificator) noexcept;
-	void setNotificator(const TcpAcceptedConnectionNotificatorBase &notificator) noexcept;
-	void setNotificator(const TcpClientNotificatorBase &notificator) noexcept;
+	void setNotificator(UdpServerNotificatorBase &notificator) noexcept;
+	void setNotificator(UdpClientNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpServerNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpAcceptedConnectionNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpClientNotificatorBase &notificator) noexcept;
 
 	void unsetNotificators() noexcept;
 

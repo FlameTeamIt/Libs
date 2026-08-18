@@ -6,6 +6,7 @@
 #include <FlameIDE/Common/ReferenceWrapper.hpp>
 
 #include <FlameIDE/../../src/Handler/Network/Udp/Storage.hpp>
+#include <FlameIDE/../../src/Handler/Network/Udp/Workers.hpp>
 
 namespace flame_ide
 {namespace handler
@@ -43,6 +44,15 @@ public:
 	Handler::ExpectedUdpServer pop(Handler::ServerHandle &handle);
 	Handler::ExpectedUdpClient pop(Handler::SessionHandle &handle);
 
+public: // For Workers
+	void process(
+			udp::ServerProcessor &serverProcessor, os::async::network::AsyncEvent event
+	);
+	void process(
+			udp::ClientProcessor &clientProcessor, os::async::network::AsyncEvent event
+	);
+
+public: // Callbacks
 	/// @brief serverHandleCallback
 	/// @return
 	CallbackGetSessionHandle serverHandleCallback() const noexcept;

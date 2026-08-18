@@ -3,30 +3,32 @@
 namespace flame_ide
 {namespace handler
 {namespace network
-{namespace udp
+{namespace tcp
 {
 
-void ServerNotificator::operator()() const noexcept
+void ServerNotificator::operator()() noexcept
 {}
 
-void ClientNotificator::operator()() const noexcept
+void AcceptedConnectonNotificator::operator()() noexcept
 {}
 
-}}}} // namespace flame_ide::handler::network::udp
+void ClientNotificator::operator()() noexcept
+{}
+
+}}}} // namespace flame_ide::handler::network::tcp
 
 namespace flame_ide
 {namespace handler
 {namespace network
-{namespace tcp
 {
 
-void ServerNotificator::operator()() const noexcept
+Notificators::Notificators(
+		WorkerBase::Notifier udpServerNotifier
+		, WorkerBase::Notifier udpClientNotifier
+) noexcept
+		: udpServer{ udpServerNotifier }
+		, udpClient{ udpClientNotifier }
 {}
 
-void AcceptedConnectonNotificator::operator()() const noexcept
-{}
+}}} // namespace flame_ide::handler::network
 
-void ClientNotificator::operator()() const noexcept
-{}
-
-}}}} // namespace flame_ide::handler::network::tcp

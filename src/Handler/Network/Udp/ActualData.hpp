@@ -24,7 +24,7 @@ public:
 		flame_ide::templates::UniquePointer<MessageType>, SIZE
 	>;
 	using MessagesCircularIterator =
-			flame_ide::templates::defaults::CircularForwardIterator<
+			::flame_ide::templates::defaults::CircularForwardIterator<
 				typename Messages::Iterator
 			>;
 
@@ -38,8 +38,7 @@ private:
 
 	Messages messages;
 	MessagesCircularIterator first = MessagesCircularIterator{
-			messages.begin()
-			, templates::makeRange(messages.begin(), messages.end())
+			messages.begin(), templates::makeRange(messages.begin(), messages.end())
 	};
 	MessagesCircularIterator last = first;
 
@@ -66,6 +65,12 @@ ActualData<MessageType, SIZE>::getEmptyMessage() noexcept
 	auto result = last;
 	++amount;
 	++last;
+
+	{
+		os::threads::Locker lockMessage{ result->pointer()->spin };
+		result->pointer()->state = MessageState::PROCESSING;
+	}
+
 	return result->pointer();
 }
 
@@ -81,6 +86,12 @@ ActualData<MessageType, SIZE>::getFilledMessage() noexcept
 	auto result = first;
 	--amount;
 	++first;
+
+	{
+		os::threads::Locker lockMessage{ result->pointer()->spin };
+		result->pointer()->state = MessageState::PROCESSING;
+	}
+
 	return result->pointer();
 }
 

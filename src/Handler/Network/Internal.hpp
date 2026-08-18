@@ -9,7 +9,7 @@
 #include <FlameIDE/../../src/Handler/Network/Notificator.hpp>
 #include <FlameIDE/../../src/Handler/Network/Udp.hpp>
 #include <FlameIDE/../../src/Handler/Network/Tcp.hpp>
-#include <FlameIDE/../../src/Handler/Network/Worker.hpp>
+#include <FlameIDE/../../src/Handler/Network/Workers.hpp>
 
 namespace flame_ide
 {namespace handler
@@ -36,10 +36,6 @@ public:
 	/// @return
 	Tcp &tcp() noexcept;
 
-	/// @brief registrar
-	/// @return
-	os::async::network::Registrar &registrar() noexcept;
-
 	/// @brief start
 	/// @return
 	os::Status start() noexcept;
@@ -52,18 +48,7 @@ private:
 	Handler::Udp udpData; ///<
 	Handler::Tcp tcpData; ///<
 	Workers workers; ///<
-
-	struct
-	{
-		udp::ServerNotificator udpServerNotificator;
-		udp::ClientNotificator udpClientNotificator;
-
-		tcp::ServerNotificator tcpServerNotificator;
-		tcp::AcceptedConnectonNotificator tcpAcceptedConnectonNotificator;
-		tcp::ClientNotificator tcpClientNotificator;
-	} notificators; ///<
-
-	os::async::network::Registrar registration; ///<
+	Notificators notificators; ///< TODO: Need workers
 };
 
 }}} // namespace flame_ide::handler::network

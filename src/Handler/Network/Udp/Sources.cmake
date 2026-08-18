@@ -1,5 +1,8 @@
 set (SOURCE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/Client.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Message.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Notificators.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Processing.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Server.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Workers.cpp
 )

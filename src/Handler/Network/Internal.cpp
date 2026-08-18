@@ -6,9 +6,27 @@ namespace flame_ide
 {
 
 Handler::Internal::Internal() noexcept
-{}
+		: workers{ udpData }
+		, notificators{
+				workers.udp().serverNotifier()
+				, workers.udp().clientNotifier()
+		}
+{
+	os::async::network::Registrar registration;
 
-Handler::Internal::~Internal() noexcept = default;
+	registration.setNotificator(notificators.udpServer);
+	registration.setNotificator(notificators.udpClient);
+
+	// TODO
+	registration.setNotificator(notificators.tcpServer);
+	registration.setNotificator(notificators.tcpAcceptedConnecton);
+	registration.setNotificator(notificators.tcpClient);
+}
+
+Handler::Internal::~Internal() noexcept
+{
+	os::async::network::Registrar{}.unsetNotificators();
+}
 
 Handler::Udp &Handler::Internal::udp() noexcept
 {
@@ -20,19 +38,14 @@ Handler::Tcp &Handler::Internal::tcp() noexcept
 	return tcpData;
 }
 
-os::async::network::Registrar &Handler::Internal::registrar() noexcept
-{
-	return registration;
-}
-
 os::Status Handler::Internal::start() noexcept
 {
-	return workers.start();
+	return workers.start(), os::STATUS_SUCCESS;
 }
 
 os::Status Handler::Internal::stop() noexcept
 {
-	return workers.stop();
+	return workers.stop(), os::STATUS_SUCCESS;
 }
 
 }}} // namespace flame_ide::os::network

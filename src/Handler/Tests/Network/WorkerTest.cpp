@@ -1,5 +1,5 @@
 #include <FlameIDE/../../src/Handler/Tests/Network/WorkerTest.hpp>
-#include <FlameIDE/../../src/Handler/Network/Worker.hpp>
+#include <FlameIDE/../../src/Handler/Network/Workers.hpp>
 
 namespace flame_ide
 {namespace handler

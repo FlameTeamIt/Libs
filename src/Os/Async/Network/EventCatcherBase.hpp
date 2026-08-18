@@ -54,11 +54,11 @@ public:
 	/// @param notificator
 	/// @note Implementation of NotificatorBase needs thread and signal safe
 	///
-	void setNotificator(const UdpServerNotificatorBase &notificator) noexcept;
-	void setNotificator(const UdpClientNotificatorBase &notificator) noexcept;
-	void setNotificator(const TcpServerNotificatorBase &notificator) noexcept;
-	void setNotificator(const TcpAcceptedConnectionNotificatorBase &notificator) noexcept;
-	void setNotificator(const TcpClientNotificatorBase &notificator) noexcept;
+	void setNotificator(UdpServerNotificatorBase &notificator) noexcept;
+	void setNotificator(UdpClientNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpServerNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpAcceptedConnectionNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpClientNotificatorBase &notificator) noexcept;
 
 	///
 	/// @brief unsetNotifcator
@@ -93,12 +93,12 @@ private:
 	SocketQueues socketQueues;
 	struct
 	{
-		ConstReferenceWrapper<UdpServerNotificatorBase> udpServer = nullptr;
-		ConstReferenceWrapper<UdpClientNotificatorBase> udpClient = nullptr;
-		ConstReferenceWrapper<TcpServerNotificatorBase> tcpServer = nullptr;
-		ConstReferenceWrapper<TcpAcceptedConnectionNotificatorBase>
+		ReferenceWrapper<UdpServerNotificatorBase> udpServer = nullptr;
+		ReferenceWrapper<UdpClientNotificatorBase> udpClient = nullptr;
+		ReferenceWrapper<TcpServerNotificatorBase> tcpServer = nullptr;
+		ReferenceWrapper<TcpAcceptedConnectionNotificatorBase>
 				tcpAcceptedConnection = nullptr;
-		ConstReferenceWrapper<TcpClientNotificatorBase> tcpClient = nullptr;
+		ReferenceWrapper<TcpClientNotificatorBase> tcpClient = nullptr;
 	} notificationObjects;
 };
 
