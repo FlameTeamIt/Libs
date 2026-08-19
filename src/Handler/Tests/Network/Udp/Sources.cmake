@@ -1,0 +1,22 @@
+set (SOURCE_LIST
+	${CMAKE_CURRENT_SOURCE_DIR}/ActualDataTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ActualDataTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ClientTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ClientTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/EndpointTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/EndpointTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/NotificatorsTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/NotificatorsTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ProcessingTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ProcessingTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ServerTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ServerTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StorageTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StorageTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TypeMappingTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TypeMappingTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UdpTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UdpTest.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WorkersTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WorkersTest.hpp
+)

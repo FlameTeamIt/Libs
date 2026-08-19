@@ -45,6 +45,7 @@ public:
 
 	typename Me::Reference get();
 	typename Me::ConstReference get() const;
+	typename Me::MoveReference pull() noexcept;
 
 	typename Me::Pointer getPointer();
 	typename Me::PointerToConst getPointer() const;
@@ -55,7 +56,7 @@ private:
 	typename Me::Pointer toValue();
 	typename Me::PointerToConst toValue() const;
 
-	AlignObject<T> value;
+	AlignObject<T> object;
 	bool isFill;
 };
 
@@ -66,7 +67,7 @@ namespace flame_ide
 {
 
 template<typename T, typename Traits>
-Optional<T, Traits>::Optional() noexcept : value(), isFill(false)
+Optional<T, Traits>::Optional() noexcept : object(), isFill(false)
 {}
 
 template<typename T, typename Traits>
@@ -244,6 +245,13 @@ typename Optional<T, Traits>::ConstReference Optional<T, Traits>::get() const
 }
 
 template<typename T, typename Traits>
+typename Optional<T, Traits>::MoveReference Optional<T, Traits>::pull() noexcept
+{
+	isFill = false;
+	return flame_ide::move(get());
+}
+
+template<typename T, typename Traits>
 typename Optional<T, Traits>::Pointer Optional<T, Traits>::getPointer()
 {
 	return toValue();
@@ -269,7 +277,7 @@ template<typename T, typename Traits>
 typename Optional<T, Traits>::Pointer Optional<T, Traits>::toValue()
 {
 	return static_cast<typename Me::Pointer>(
-			static_cast<void *>(value.array)
+			static_cast<void *>(object.array)
 	);
 }
 
@@ -277,7 +285,7 @@ template<typename T, typename Traits>
 typename Optional<T, Traits>::PointerToConst Optional<T, Traits>::toValue() const
 {
 	return static_cast<typename Me::PointerToConst>(
-			static_cast<const void *>(value.array)
+			static_cast<const void *>(object.array)
 	);
 }
 

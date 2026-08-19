@@ -4,7 +4,6 @@
 #include <FlameIDE/Os/Async/Network/AcceptedConnection.hpp>
 #include <FlameIDE/Os/Async/Network/NotificatorBase.hpp>
 #include <FlameIDE/Os/Network/TcpServer.hpp>
-#include <FlameIDE/Templates/Variant.hpp>
 
 namespace flame_ide
 {namespace os
@@ -24,7 +23,18 @@ namespace flame_ide
 {namespace network
 {
 
-struct Config
+enum class EventType: Types::int_t
+{
+	INVALID = -1
+	, INIT = 0
+	, READ
+	, WRITE
+	, READ_WRITE
+	, CLOSE
+};
+
+
+struct SocketsInfo
 {
 	struct Info
 	{
@@ -35,9 +45,17 @@ struct Config
 		Types::size_t tcpClients;
 	};
 
-	Info max;
-	Info current;
+	const Info max;
+	const Info current;
 };
+
+struct AsyncEvent
+{
+	os::SocketDescriptor descriptor = os::SOCKET_INVALID.descriptor;
+	EventType event = EventType::INVALID;
+};
+bool operator==(const AsyncEvent &ae1, const AsyncEvent &ae2) noexcept;
+bool operator!=(const AsyncEvent &ae1, const AsyncEvent &ae2) noexcept;
 
 class Registrar
 {
@@ -51,7 +69,7 @@ public:
 	Registrar &operator=(Registrar &&) noexcept = default;
 
 public:
-	const Config &getConfig() const noexcept;
+	SocketsInfo getInfo() const noexcept;
 
 public:
 	os::Status add(const os::network::UdpServer &socket) noexcept;
@@ -66,20 +84,19 @@ public:
 	os::Status remove(const os::network::TcpServer::WithClient &socket) noexcept;
 	os::Status remove(const os::network::TcpClient &socket) noexcept;
 
-	os::SocketDescriptor popUdpServer() noexcept;
-	os::SocketDescriptor popUdpClient() noexcept;
+	AsyncEvent popUdpServer() noexcept;
+	AsyncEvent popUdpClient() noexcept;
 	AcceptedConnection popTcpServerAcception() noexcept;
-	os::SocketDescriptor popTcpServer() noexcept;
-	os::SocketDescriptor popTcpClient() noexcept;
+	AsyncEvent popTcpServer() noexcept;
+	AsyncEvent popTcpClient() noexcept;
 
-	bool pushUdpServer(os::SocketDescriptor socket) noexcept;
-	bool pushUdpClient(os::SocketDescriptor socket) noexcept;
-	bool pushTcpServerAcception(AcceptedConnection connection) noexcept;
-	bool pushTcpServer(os::SocketDescriptor socket) noexcept;
-	bool pushTcpClient(os::SocketDescriptor socket) noexcept;
+	void setNotificator(UdpServerNotificatorBase &notificator) noexcept;
+	void setNotificator(UdpClientNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpServerNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpAcceptedConnectionNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpClientNotificatorBase &notificator) noexcept;
 
-	void setNotificator(const NotificatorBase &notificator) noexcept;
-	void unsetNotificator() noexcept;
+	void unsetNotificators() noexcept;
 
 	void clear() noexcept;
 };

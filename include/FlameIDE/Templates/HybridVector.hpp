@@ -827,8 +827,8 @@ bool ITERATOR_TYPE::operator!=(const Me &iterator) const
 ITERATOR_TEMPLATE
 bool ITERATOR_TYPE::operator<(const Me &iterator) const
 {
-	if (wrappedIterator.template getCurrentIndex() ==
-			iterator.wrappedIterator.template getCurrentIndex())
+	if (wrappedIterator.getCurrentIndex() ==
+			iterator.wrappedIterator.getCurrentIndex())
 	{
 		if (isArrayIterator())
 		{
@@ -853,8 +853,8 @@ bool ITERATOR_TYPE::operator<(const Me &iterator) const
 ITERATOR_TEMPLATE
 bool ITERATOR_TYPE::operator>(const Me &iterator) const
 {
-	if (wrappedIterator.template getCurrentIndex() ==
-			iterator.wrappedIterator.template getCurrentIndex())
+	if (wrappedIterator.getCurrentIndex() ==
+			iterator.wrappedIterator.getCurrentIndex())
 	{
 		if (isArrayIterator())
 		{
@@ -879,8 +879,8 @@ bool ITERATOR_TYPE::operator>(const Me &iterator) const
 ITERATOR_TEMPLATE
 bool ITERATOR_TYPE::operator<=(const Me &iterator) const
 {
-	if (wrappedIterator.template getCurrentIndex() ==
-			iterator.wrappedIterator.template getCurrentIndex())
+	if (wrappedIterator.getCurrentIndex() ==
+			iterator.wrappedIterator.getCurrentIndex())
 	{
 		if (isArrayIterator())
 		{
@@ -905,8 +905,8 @@ bool ITERATOR_TYPE::operator<=(const Me &iterator) const
 ITERATOR_TEMPLATE
 bool ITERATOR_TYPE::operator>=(const Me &iterator) const
 {
-	if (wrappedIterator.template getCurrentIndex() ==
-			iterator.wrappedIterator.template getCurrentIndex())
+	if (wrappedIterator.getCurrentIndex() ==
+			iterator.wrappedIterator.getCurrentIndex())
 	{
 		if (isArrayIterator())
 		{
@@ -1167,8 +1167,8 @@ bool ITERATOR_TYPE::operator!=(const Me &iterator) const
 ITERATOR_TEMPLATE
 bool ITERATOR_TYPE::operator<(const Me &iterator) const
 {
-	if (wrappedIterator.template getCurrentIndex() ==
-			iterator.wrappedIterator.template getCurrentIndex())
+	if (wrappedIterator.getCurrentIndex() ==
+			iterator.wrappedIterator.getCurrentIndex())
 	{
 		if (isArrayIterator())
 		{
@@ -1196,8 +1196,8 @@ bool ITERATOR_TYPE::operator<(const Me &iterator) const
 ITERATOR_TEMPLATE
 bool ITERATOR_TYPE::operator>(const Me &iterator) const
 {
-	if (wrappedIterator.template getCurrentIndex() ==
-			iterator.wrappedIterator.template getCurrentIndex())
+	if (wrappedIterator.getCurrentIndex() ==
+			iterator.wrappedIterator.getCurrentIndex())
 	{
 		if (isArrayIterator())
 		{
@@ -1226,8 +1226,8 @@ bool ITERATOR_TYPE::operator>(const Me &iterator) const
 ITERATOR_TEMPLATE
 bool ITERATOR_TYPE::operator<=(const Me &iterator) const
 {
-	if (wrappedIterator.template getCurrentIndex() ==
-			iterator.wrappedIterator.template getCurrentIndex())
+	if (wrappedIterator.getCurrentIndex() ==
+			iterator.wrappedIterator.getCurrentIndex())
 	{
 		if (isArrayIterator())
 		{
@@ -1256,8 +1256,8 @@ bool ITERATOR_TYPE::operator<=(const Me &iterator) const
 ITERATOR_TEMPLATE
 bool ITERATOR_TYPE::operator>=(const Me &iterator) const
 {
-	if (wrappedIterator.template getCurrentIndex() ==
-			iterator.wrappedIterator.template getCurrentIndex())
+	if (wrappedIterator.getCurrentIndex() ==
+			iterator.wrappedIterator.getCurrentIndex())
 	{
 		if (isArrayIterator())
 		{

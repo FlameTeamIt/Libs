@@ -20,6 +20,13 @@ namespace flame_ide
 class EventCatcherBase
 {
 public:
+	using UdpServerTag = tag::UdpServer;
+	using UdpClientTag = tag::UdpClient;
+	using TcpServerTag = tag::TcpServer;
+	using TcpAcceptedConnectionTag = tag::TcpAcceptedConnection;
+	using TcpClientTag = tag::TcpServer;
+
+public:
 	virtual ~EventCatcherBase() noexcept = default;
 
 	///
@@ -47,17 +54,34 @@ public:
 	/// @param notificator
 	/// @note Implementation of NotificatorBase needs thread and signal safe
 	///
-	void setNotificator(const NotificatorBase &notificator) noexcept;
+	void setNotificator(UdpServerNotificatorBase &notificator) noexcept;
+	void setNotificator(UdpClientNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpServerNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpAcceptedConnectionNotificatorBase &notificator) noexcept;
+	void setNotificator(TcpClientNotificatorBase &notificator) noexcept;
 
 	///
 	/// @brief unsetNotifcator
 	///
-	void unsetNotificator() noexcept;
+	void unsetNotificator(tag::UdpServer) noexcept;
+	void unsetNotificator(tag::UdpClient) noexcept;
+	void unsetNotificator(tag::TcpServer) noexcept;
+	void unsetNotificator(tag::TcpAcceptedConnection) noexcept;
+	void unsetNotificator(tag::TcpClient) noexcept;
+
+	///
+	/// @brief unsetNotifcators
+	///
+	void unsetNotificators() noexcept;
 
 	///
 	/// @brief notify
 	///
-	void notify() const noexcept;
+	void notify(tag::UdpServer) const noexcept;
+	void notify(tag::UdpClient) const noexcept;
+	void notify(tag::TcpServer) const noexcept;
+	void notify(tag::TcpAcceptedConnection) const noexcept;
+	void notify(tag::TcpClient) const noexcept;
 
 public:
 	static EventCatcherBase &get() noexcept; // platform impl
@@ -67,7 +91,15 @@ protected:
 
 private:
 	SocketQueues socketQueues;
-	ConstReferenceWrapper<NotificatorBase> notificationObject = nullptr;
+	struct
+	{
+		ReferenceWrapper<UdpServerNotificatorBase> udpServer = nullptr;
+		ReferenceWrapper<UdpClientNotificatorBase> udpClient = nullptr;
+		ReferenceWrapper<TcpServerNotificatorBase> tcpServer = nullptr;
+		ReferenceWrapper<TcpAcceptedConnectionNotificatorBase>
+				tcpAcceptedConnection = nullptr;
+		ReferenceWrapper<TcpClientNotificatorBase> tcpClient = nullptr;
+	} notificationObjects;
 };
 
 }}}} // namespace flame_ide::os::async::network

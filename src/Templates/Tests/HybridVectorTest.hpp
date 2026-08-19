@@ -3,7 +3,6 @@
 
 #include <tests/Test.hpp>
 #include <FlameIDE/Templates/HybridVector.hpp>
-#include "TestClass.hpp"
 
 #include <array>
 #include <vector>

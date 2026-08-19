@@ -21,7 +21,7 @@ public:
 	struct NativeCallbacks;
 
 public:
-	TcpServer() noexcept = delete;
+	TcpServer() noexcept : NetworkBase() {}
 	TcpServer(const TcpServer &tcpServer) noexcept = delete;
 
 	TcpServer(TcpServer &&tcpServer) noexcept;

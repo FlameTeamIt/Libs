@@ -23,6 +23,8 @@ public:
 	bool push(Type value) noexcept;
 	templates::Expected<Type, bool> pop(Type initValue = {}) noexcept;
 
+	Types::size_t getSize() const noexcept;
+
 private:
 	using Array = templates::StaticArray<Type, SIZE>;
 	using Pointer = templates::UniquePointer<Array>;
@@ -102,6 +104,13 @@ QueuedArray<Type, SIZE>::pop(Type initValue) noexcept
 	--count;
 
 	return templates::Expected<Type, bool>{ value };
+}
+
+template<typename Type, Types::size_t SIZE>
+Types::size_t QueuedArray<Type, SIZE>::getSize() const noexcept
+{
+	os::threads::Locker locker{ spin };
+	return count;
 }
 
 }}}} // namespace flame_ide::os::async::network

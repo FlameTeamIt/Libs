@@ -25,7 +25,8 @@ namespace anonymous
 {namespace
 {
 
-class NotificatorTest: public NotificatorBase
+template<typename NotificatorBaseType>
+class NotificatorTest: public NotificatorBaseType
 {
 public:
 	bool isNotified() const
@@ -34,7 +35,7 @@ public:
 		return notification;
 	}
 private:
-	virtual void operator()() const noexcept override
+	virtual void operator()() noexcept override
 	{
 		os::threads::Locker{ mutex };
 		notification = true;
@@ -102,7 +103,7 @@ int RegistrarTest::vStart()
 			"UdpServer notify"
 			, [this]
 			{
-				return udpNotify();
+				return udpServerNotify();
 			}
 	));
 	return RegistrarTest::SUCCESS;
@@ -126,16 +127,16 @@ int RegistrarTest::udpServer()
 		}
 
 		// Wait
-		os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
+		AsyncEvent resultEvent{};
 		for (auto i = numberOfTries
-				; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor
+				; i != 0 && os::SOCKET_INVALID.descriptor == resultEvent.descriptor
 				; --i
 		)
 		{
-			resultDescriptor = registar.popUdpServer();
+			resultEvent = registar.popUdpServer();
 		}
-		IN_CASE_CHECK(resultDescriptor != os::SOCKET_INVALID.descriptor);
-		IN_CASE_CHECK(resultDescriptor == server.native().descriptor);
+		IN_CASE_CHECK(resultEvent.descriptor != os::SOCKET_INVALID.descriptor);
+		IN_CASE_CHECK(resultEvent.descriptor == server.native().descriptor);
 
 		auto fromServer = server.wait();
 		IN_CASE_CHECK(fromServer.getStatus() == sizeof(MESSAGE_PING));
@@ -177,10 +178,10 @@ int RegistrarTest::udpClient()
 		IN_CASE_CHECK(result == sizeof(MESSAGE_PING));
 
 		// Wait
-		os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
-		for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+		AsyncEvent resultEvent{};
+		for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultEvent.descriptor; --i)
 		{
-			resultDescriptor = registar.popUdpServer();
+			resultEvent = registar.popUdpServer();
 		}
 	}
 
@@ -217,12 +218,12 @@ int RegistrarTest::udpClient()
 			);
 
 			// Wait
-			os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
-			for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+			AsyncEvent resultEvent{};
+			for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultEvent.descriptor; --i)
 			{
-				resultDescriptor = registar.popUdpClient();
+				resultEvent = registar.popUdpClient();
 			}
-			IN_CASE_CHECK(resultDescriptor == client.native().descriptor);
+			IN_CASE_CHECK(resultEvent.descriptor == client.native().descriptor);
 		}
 		IN_CASE_CHECK(registar.remove(client) == os::STATUS_SUCCESS);
 	}
@@ -298,13 +299,13 @@ int RegistrarTest::tcpServer()
 	IN_CASE_CHECK(client.disconnect() == os::STATUS_SUCCESS);
 
 	// Wait
-	os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
-	for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+	AsyncEvent resultEvent{};
+	for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultEvent.descriptor; --i)
 	{
-		resultDescriptor = registar.popTcpServer();
+		resultEvent = registar.popTcpServer();
 	}
-	IN_CASE_CHECK(resultDescriptor != os::SOCKET_INVALID.descriptor);
-	IN_CASE_CHECK(resultDescriptor == serverConnection.native().descriptor);
+	IN_CASE_CHECK(resultEvent.descriptor != os::SOCKET_INVALID.descriptor);
+	IN_CASE_CHECK(resultEvent.descriptor == serverConnection.native().descriptor);
 
 	IN_CASE_CHECK(registar.remove(serverConnection) == os::STATUS_SUCCESS);
 
@@ -348,23 +349,23 @@ int RegistrarTest::tcpClient()
 	);
 
 	// Wait
-	os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
-	for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor; --i)
+	AsyncEvent resultEvent{};
+	for (auto i = numberOfTries; i != 0 && os::SOCKET_INVALID.descriptor == resultEvent.descriptor; --i)
 	{
-		resultDescriptor = registar.popTcpClient();
+		resultEvent = registar.popTcpClient();
 	}
-	IN_CASE_CHECK(resultDescriptor != os::SOCKET_INVALID.descriptor);
-	IN_CASE_CHECK(resultDescriptor == client.native().descriptor);
+	IN_CASE_CHECK(resultEvent.descriptor != os::SOCKET_INVALID.descriptor);
+	IN_CASE_CHECK(resultEvent.descriptor == client.native().descriptor);
 
 	return RegistrarTest::SUCCESS;
 }
 
-int RegistrarTest::udpNotify()
+int RegistrarTest::udpServerNotify()
 {
 	os::network::UdpServer server{ port };
 	os::network::UdpClient client{ ipv4 };
 
-	anonymous::NotificatorTest notificator;
+	anonymous::NotificatorTest<UdpServerNotificatorBase> notificator;
 
 	Registrar registar;
 	registar.setNotificator(notificator);
@@ -381,16 +382,18 @@ int RegistrarTest::udpNotify()
 		}
 
 		// Wait
-		os::SocketDescriptor resultDescriptor = os::SOCKET_INVALID.descriptor;
+		AsyncEvent resultEvent{};
 		for (auto i = numberOfTries
-				; i != 0 && os::SOCKET_INVALID.descriptor == resultDescriptor
+				; i != 0 && os::SOCKET_INVALID.descriptor == resultEvent.descriptor
 				; --i
 		)
 		{
-			resultDescriptor = registar.popUdpServer();
+			resultEvent = registar.popUdpServer();
 		}
-		IN_CASE_CHECK(resultDescriptor != os::SOCKET_INVALID.descriptor);
-		IN_CASE_CHECK(resultDescriptor == server.native().descriptor);
+
+		IN_CASE_CHECK(notificator.isNotified() == true);
+		IN_CASE_CHECK(resultEvent.descriptor != os::SOCKET_INVALID.descriptor);
+		IN_CASE_CHECK(resultEvent.descriptor == server.native().descriptor);
 
 		auto fromServer = server.wait();
 		IN_CASE_CHECK(fromServer.getStatus() == sizeof(MESSAGE_PING));
@@ -409,11 +412,9 @@ int RegistrarTest::udpNotify()
 			[&registar]()
 			{
 				registar.clear();
-				registar.unsetNotificator();
+				registar.unsetNotificators();
 			}
 	);
-
-	IN_CASE_CHECK(notificator.isNotified() == true);
 
 	return RegistrarTest::SUCCESS;
 }

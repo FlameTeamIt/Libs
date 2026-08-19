@@ -25,11 +25,12 @@ private:
 private:
 	using SigAction = struct ::sigaction;
 	using SigActionHandler = decltype(SigAction{}.sa_sigaction);
+	using SigEvents = decltype(siginfo_t{}.si_band);
 
 	static SigAction makeSigAction() noexcept;
 	static void signalHandler(int signal, const siginfo_t *info, ucontext_t *) noexcept;
-	static void handleTcp(SocketDescriptor descriptor) noexcept;
-	static void handleUdp(SocketDescriptor descriptor) noexcept;
+	static void handleTcp(SocketDescriptor descriptor, SigEvents events) noexcept;
+	static void handleUdp(SocketDescriptor descriptor, SigEvents events) noexcept;
 
 	static os::Status enableSignal(SocketDescriptor descriptor) noexcept;
 	static os::Status disableSignal(SocketDescriptor descriptor) noexcept;
