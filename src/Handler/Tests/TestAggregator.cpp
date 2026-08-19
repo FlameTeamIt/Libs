@@ -1,14 +1,14 @@
 #include <FlameIDE/../../src/Handler/Tests/TestAggregator.hpp>
 
+#include <FlameIDE/../../src/Handler/Tests/Network/Udp/TypeMappingTest.hpp>
 #include <FlameIDE/../../src/Handler/Tests/Network/Udp/ActualDataTest.hpp>
 #include <FlameIDE/../../src/Handler/Tests/Network/Udp/EndpointTest.hpp>
+#include <FlameIDE/../../src/Handler/Tests/Network/Udp/StorageTest.hpp>
+#include <FlameIDE/../../src/Handler/Tests/Network/Udp/ServerTest.hpp>
+#include <FlameIDE/../../src/Handler/Tests/Network/Udp/ClientTest.hpp>
 #include <FlameIDE/../../src/Handler/Tests/Network/Udp/ProcessingTest.hpp>
 #include <FlameIDE/../../src/Handler/Tests/Network/Udp/WorkersTest.hpp>
 #include <FlameIDE/../../src/Handler/Tests/Network/Udp/NotificatorsTest.hpp>
-#include <FlameIDE/../../src/Handler/Tests/Network/Udp/TypeMappingTest.hpp>
-#include <FlameIDE/../../src/Handler/Tests/Network/Udp/ServerTest.hpp>
-#include <FlameIDE/../../src/Handler/Tests/Network/Udp/ClientTest.hpp>
-#include <FlameIDE/../../src/Handler/Tests/Network/Udp/StorageTest.hpp>
 #include <FlameIDE/../../src/Handler/Tests/Network/Udp/UdpTest.hpp>
 
 #include <FlameIDE/../../src/Handler/Tests/Network/Tcp/QueueTest.hpp>
@@ -31,15 +31,15 @@ namespace flame_ide
 TestAggregator::TestAggregator() : ::TestAggregator("Handler")
 {
 	// UDP
+	pushBackTest(std::make_shared<network::udp::tests::TypeMappingTest>());
 	pushBackTest(std::make_shared<network::udp::tests::ActualDataTest>());
 	pushBackTest(std::make_shared<network::udp::tests::EndpointTest>());
+	pushBackTest(std::make_shared<network::udp::tests::StorageTest>());
+	pushBackTest(std::make_shared<network::udp::tests::ServerTest>());
+	pushBackTest(std::make_shared<network::udp::tests::ClientTest>());
 	pushBackTest(std::make_shared<network::udp::tests::ProcessingTest>());
 	pushBackTest(std::make_shared<network::udp::tests::WorkersTest>());
 	pushBackTest(std::make_shared<network::udp::tests::NotificatorsTest>());
-	pushBackTest(std::make_shared<network::udp::tests::TypeMappingTest>());
-	pushBackTest(std::make_shared<network::udp::tests::ServerTest>());
-	pushBackTest(std::make_shared<network::udp::tests::ClientTest>());
-	pushBackTest(std::make_shared<network::udp::tests::StorageTest>());
 	pushBackTest(std::make_shared<network::udp::tests::UdpTest>());
 
 	// TCP
