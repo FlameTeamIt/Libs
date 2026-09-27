@@ -158,6 +158,15 @@ typename Container::ReverseIterator rend(Container &container);
 template<typename Container> inline
 typename Container::ConstReverseIterator crend(const Container &container);
 
+template<typename Container> inline
+typename Container::SizeType capacity(const Container &container);
+
+template<typename Container> inline
+typename Container::SizeType size(const Container &container);
+
+template<typename T, flame_ide::SizeTraits::SizeType N> constexpr inline
+flame_ide::SizeTraits::SizeType size(const T (&container)[N]) noexcept;
+
 template<typename T, typename Tt = T&&>
 Tt declareValueImpl(int) noexcept;
 
@@ -419,6 +428,24 @@ bool isEqual(const T &value1, const T &value2)
 	return result;
 }
 
+template<typename T, typename U>
+bool isEqual(const T *src1, const U *src2, Types::size_t size) noexcept
+{
+	if (src1 == nullptr || src2 == nullptr)
+		return false;
+	if (src1 == src2)
+		return true;
+
+	volatile const auto *in1 = reinterpret_cast<volatile const Types::uichar_t *>(&src1);
+	volatile const auto *in2 = reinterpret_cast<volatile const Types::uichar_t *>(&src2);
+	for (decltype(size) i = {}; i < size; ++i)
+	{
+		if (in1[i] != in2[i])
+			return false;
+	}
+	return true;
+}
+
 template<typename Container> inline
 typename Container::Iterator begin(Container &container)
 {
@@ -477,6 +504,12 @@ template<typename Container> inline
 typename Container::SizeType size(const Container &container)
 {
 	return container.size();
+}
+
+template<typename T, flame_ide::SizeTraits::SizeType N> constexpr inline
+flame_ide::SizeTraits::SizeType size(const T (&)[N]) noexcept
+{
+	return N;
 }
 
 template<typename Type>
@@ -541,6 +574,18 @@ void copy(T &dst, const U &src, Types::size_t size)
 {
 	volatile auto *out = reinterpret_cast<volatile Types::uichar_t *>(&dst);
 	volatile const auto *in = reinterpret_cast<volatile const Types::uichar_t *>(&src);
+
+	for (Types::size_t i = 0; i < size; ++i)
+	{
+		out[i] = in[i];
+	}
+}
+
+template<typename T, typename U>
+void copy(T *dst, const U *src, Types::size_t size) noexcept
+{
+	volatile auto *out = reinterpret_cast<volatile Types::uichar_t *>(dst);
+	volatile const auto *in = reinterpret_cast<volatile const Types::uichar_t *>(src);
 
 	for (Types::size_t i = 0; i < size; ++i)
 	{

@@ -8,15 +8,19 @@ namespace flame_ide
 {namespace threads
 {
 
-template<typename Lock, typename Value>
+template<typename LockType, typename ValueType>
 class Counter
 {
 public:
-	using Me = Counter<Lock, Value>;
+	using Me = Counter<LockType, ValueType>;
+	using Lock = LockType;
+	using Value = ValueType;
 
 	Counter() noexcept = default;
 	Counter(const Me &) noexcept = delete;
 	Counter(Me &&) noexcept = default;
+
+	Counter(Value initValue) noexcept;
 
 	~Counter() noexcept = default;
 
@@ -40,24 +44,31 @@ namespace flame_ide
 {namespace threads
 {
 
-template<typename Lock, typename Value>
-Counter<Lock, Value> &Counter<Lock, Value>::operator++() noexcept
+template<typename LockType, typename ValueType>
+Counter<LockType, ValueType>::Counter(
+		Counter<LockType, ValueType>::Value initValue
+) noexcept : value{ initValue }
+{}
+
+template<typename LockType, typename ValueType>
+Counter<LockType, ValueType> &Counter<LockType, ValueType>::operator++() noexcept
 {
 	Locker locker{ lock };
 	++value;
 	return *this;
 }
 
-template<typename Lock, typename Value>
-Counter<Lock, Value> &Counter<Lock, Value>::operator--() noexcept
+template<typename LockType, typename ValueType>
+Counter<LockType, ValueType> &Counter<LockType, ValueType>::operator--() noexcept
 {
 	Locker locker{ lock };
 	--value;
 	return *this;
 }
 
-template<typename Lock, typename Value>
-Value Counter<Lock, Value>::current() const noexcept
+template<typename LockType, typename ValueType>
+typename Counter<LockType, ValueType>::Value
+Counter<LockType, ValueType>::current() const noexcept
 {
 	Locker locker{ lock };
 	return value;

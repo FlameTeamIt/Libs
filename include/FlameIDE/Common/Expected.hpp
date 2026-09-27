@@ -37,9 +37,15 @@ public:
 	const Me &ifResult(Functor &&functor) const noexcept;
 
 	template<typename Functor>
+	Me &ifResultGet(Functor &&functor) noexcept;
+
+	template<typename Functor>
 	Me &ifError(Functor &&functor) noexcept;
 	template<typename Functor>
 	const Me &ifError(Functor &&functor) const noexcept;
+
+	template<typename Functor>
+	Me &ifErrorGet(Functor &&functor) noexcept;
 
 	void done() noexcept;
 	void done() const noexcept;
@@ -52,7 +58,7 @@ private:
 	{
 		UNKNOWN = -1
 		, RESULT = 0
-		, ERROR = 1
+		, INVALID = 1
 	};
 
 	union Data
@@ -146,10 +152,10 @@ Expected<ResultType, ErrorType>::operator=(Me &&expected) noexcept
 {
 	expected.ifResult([this](ResultType &&result)
 			{
-				operator=(move(result));
+				this->operator=(move(result));
 			}).ifError([this](ErrorType &&error)
 					{
-						operator=(move(error));
+						this->operator=(move(error));
 					}).done();
 	return *this;
 }
@@ -180,7 +186,7 @@ Expected<ResultType, ErrorType>::operator=(const ErrorType &error) noexcept
 {
 	destroy();
 	flame_ide::placementNew(&data.error.value, error);
-	data.state = State::ERROR;
+	data.state = State::INVALID;
 	return *this;
 }
 
@@ -190,7 +196,7 @@ Expected<ResultType, ErrorType>::operator=(ErrorType &&error) noexcept
 {
 	destroy();
 	flame_ide::placementNew(&data.error.value, move(error));
-	data.state = State::ERROR;
+	data.state = State::INVALID;
 	return *this;
 }
 
@@ -224,9 +230,22 @@ Expected<ResultType, ErrorType>::ifResult(Functor &&functor) const noexcept
 template<typename ResultType, typename ErrorType>
 template<typename Functor>
 Expected<ResultType, ErrorType> &
+Expected<ResultType, ErrorType>::ifResultGet(Functor &&functor) noexcept
+{
+	if (State::RESULT != data.state)
+		return *this;
+
+	functor(data.result.value);
+
+	return *this;
+}
+
+template<typename ResultType, typename ErrorType>
+template<typename Functor>
+Expected<ResultType, ErrorType> &
 Expected<ResultType, ErrorType>::ifError(Functor &&functor) noexcept
 {
-	if (State::ERROR != data.state)
+	if (State::INVALID != data.state)
 		return *this;
 
 	functor(move(data.error.value));
@@ -240,7 +259,20 @@ template<typename Functor>
 const Expected<ResultType, ErrorType> &
 Expected<ResultType, ErrorType>::ifError(Functor &&functor) const noexcept
 {
-	if (State::ERROR != data.state)
+	if (State::INVALID != data.state)
+		return *this;
+
+	functor(data.error.value);
+
+	return *this;
+}
+
+template<typename ResultType, typename ErrorType>
+template<typename Functor>
+Expected<ResultType, ErrorType> &
+Expected<ResultType, ErrorType>::ifErrorGet(Functor &&functor) noexcept
+{
+	if (State::INVALID != data.state)
 		return *this;
 
 	functor(data.error.value);
@@ -267,7 +299,7 @@ void Expected<ResultType, ErrorType>::destroy() noexcept
 			data.result.value.~ResultType();
 			return;
 
-		case State::ERROR:
+		case State::INVALID:
 			data.error.value.~ErrorType();
 			return;
 

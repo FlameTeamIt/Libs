@@ -1323,7 +1323,7 @@ TEMPLATE_DEFINE
 ARRAY_TYPE::Array(ARRAY_TYPE &&array) noexcept
 {
 	auto it = this->begin();
-	for (MoveReference i : array)
+	for (auto &&i : array)
 	{
 		*it = move(i);
 		++it;

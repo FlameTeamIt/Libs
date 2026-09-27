@@ -23,19 +23,6 @@ void ConditionVariable::wait() noexcept
 	--counter;
 }
 
-bool ConditionVariable::tryWait() noexcept
-{
-	bool lockStatus = locker.tryLock();
-	if (lockStatus)
-		locker.unlock();
-	return lockStatus;
-}
-
-void ConditionVariable::unwait() noexcept
-{
-	--counter;
-}
-
 bool ConditionVariable::isWait() const noexcept
 {
 	return counter.current();
@@ -43,7 +30,7 @@ bool ConditionVariable::isWait() const noexcept
 
 void ConditionVariable::notify() noexcept
 {
-	volatile auto counterValue = counter.current();
+	const volatile auto counterValue = counter.current();
 	if (!counterValue)
 		return;
 
