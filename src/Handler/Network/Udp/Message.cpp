@@ -8,20 +8,18 @@ namespace flame_ide
 {namespace udp
 {
 
-void Message::write(
-		::flame_ide::VoidTraits::PointerToConst data
-		, ::flame_ide::Types::size_t dataSize
-) noexcept
+void Message::onWrite(MessageWriter &writer) noexcept
 {
-	if (!data)
-		return;
-	if (decltype(bytes)::CAPACITY <= dataSize)
-		return;
-
-	flame_ide::os::threads::Locker lock{ spin };
-	flame_ide::copy(bytes.begin().operator->(), data, dataSize);
-	size = dataSize;
+	os::threads::Locker lock{ spin };
+	writer(*this);
 	state = MessageState::READY;
+}
+
+void Message::onRead(MessageReader &reader) noexcept
+{
+	os::threads::Locker lock{ spin };
+	reader(*this);
+	state = MessageState::EMPTY;
 }
 
 ::flame_ide::templates::Range<::flame_ide::byte_t *> Message::range() noexcept

@@ -20,38 +20,30 @@ struct MessageData
 		::flame_ide::byte_t, Constants::MESSAGE_SIZE
 	> bytes;
 	::flame_ide::Types::ssize_t size = 0;
-	MessageState state = MessageState::EMPTY;
 };
 
-class MessageVisitor:
-		public ::flame_ide::FunctorBase<void, MessageData &>
-		, public ::flame_ide::FunctorConstBase<void, const MessageData &>
+struct MessageReader: public ::flame_ide::FunctorBase<void, const MessageData &>
 {
-public:
-	virtual ~MessageVisitor() override = default;
-	virtual void operator()(MessageData &) noexcept override = 0;
-	virtual void operator()(const MessageData &) const noexcept override = 0;
+	virtual ~MessageReader() noexcept override = default;
+	virtual void operator()(const MessageData &) noexcept override = 0;
+};
+
+struct MessageWriter: public ::flame_ide::FunctorConstBase<void, MessageData &>
+{
+	virtual ~MessageWriter() noexcept override = default;
+	virtual void operator()(MessageData &) const noexcept override = 0;
 };
 
 struct Message: public MessageData
 {
 	using MessageData::bytes;
 	using MessageData::size;
-	using MessageData::state;
 
+	mutable MessageState state = MessageState::EMPTY;
 	mutable os::threads::Spin spin;
 
-	void modify(MessageVisitor &visitor) noexcept;
-
-	void write(
-			::flame_ide::VoidTraits::PointerToConst data
-			, ::flame_ide::Types::size_t size
-	) noexcept;
-
-	void read(
-			::flame_ide::VoidTraits::Pointer data
-			, ::flame_ide::Types::size_t size
-	) noexcept;
+	void onWrite(MessageWriter &writer) noexcept;
+	void onRead(MessageReader &reader) noexcept;
 
 protected:
 	::flame_ide::templates::Range<flame_ide::byte_t *> range() noexcept;
