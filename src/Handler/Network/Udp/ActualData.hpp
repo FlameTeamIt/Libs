@@ -16,29 +16,43 @@ namespace flame_ide
 {namespace udp
 {
 
-template<typename MessageType, ::flame_ide::Types::size_t SIZE>
+///
+/// @brief The ActualData class
+///
+template<typename MessageType, ::flame_ide::Types::size_t ACTUAL_DATA_CAPACITY>
 struct ActualData
 {
 public:
+	static constexpr ::flame_ide::Types::size_t CAPACITY = ACTUAL_DATA_CAPACITY;
+
 	using Messages = flame_ide::templates::StaticArray<
-		flame_ide::templates::UniquePointer<MessageType>, SIZE
+		flame_ide::templates::UniquePointer<MessageType>, ACTUAL_DATA_CAPACITY
 	>;
 	using MessagesCircularIterator =
 			::flame_ide::templates::defaults::CircularForwardIterator<
 				typename Messages::Iterator
 			>;
 
+	/// @brief Get empty message
+	/// @note Message object has "PROCESSING" state
 	::flame_ide::ReferenceWrapper<MessageType> getEmptyMessage() noexcept;
+
+	/// @brief
+	/// @note Message object has "PROCESSING" state
 	::flame_ide::ReferenceWrapper<MessageType> getFilledMessage() noexcept;
 
+	/// @brief
 	::flame_ide::Types::ssize_t getFilledMessageSize() const noexcept;
+
+	/// @brief
+	::flame_ide::Types::size_t amountOfMessages() const noexcept;
 
 private:
 	::flame_ide::Types::size_t amount = 0;
 
 	Messages messages;
 	MessagesCircularIterator first = MessagesCircularIterator{
-			messages.begin(), templates::makeRange(messages.begin(), messages.end())
+			messages.begin(), templates::makeRange(messages)
 	};
 	MessagesCircularIterator last = first;
 
@@ -62,6 +76,12 @@ ActualData<MessageType, SIZE>::getEmptyMessage() noexcept
 	if (amount == SIZE)
 		return nullptr;
 
+	{
+		os::threads::Locker lockMessage{ first->pointer()->spin };
+		if (last->pointer()->state == MessageState::PROCESSING)
+			return nullptr;
+	}
+
 	auto result = last;
 	++amount;
 	++last;
@@ -82,6 +102,15 @@ ActualData<MessageType, SIZE>::getFilledMessage() noexcept
 
 	if ((first == last) && (amount == 0))
 		return nullptr;
+
+	{
+		os::threads::Locker lockMessage{ first->pointer()->spin };
+		if (
+				first->pointer()->state == MessageState::PROCESSING
+				|| first->pointer()->state == MessageState::EMPTY
+		)
+			return nullptr;
+	}
 
 	auto result = first;
 	--amount;
@@ -111,6 +140,15 @@ ActualData<MessageType, SIZE>::getFilledMessageSize() const noexcept
 			return 0;
 		return message->size;
 	}
+}
+
+template<typename MessageType, Types::size_t SIZE>
+::flame_ide::Types::size_t
+ActualData<MessageType, SIZE>::amountOfMessages() const noexcept
+{
+	os::threads::Locker lock{ spin };
+
+	return amount;
 }
 
 }}}} // namespace flame_ide::handler::network::udp

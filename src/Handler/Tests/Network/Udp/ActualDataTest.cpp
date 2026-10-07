@@ -5,6 +5,7 @@
 #include <FlameIDE/../../src/Handler/Network/Udp/Message.hpp>
 
 #include <FlameIDE/Os/Threads/Thread.hpp>
+#include <FlameIDE/Templates/Expected.hpp>
 
 namespace flame_ide
 {namespace handler
@@ -18,6 +19,233 @@ using ResultType = ::AbstractTest::ResultType;
 //
 
 using TestActualData = ActualData<Message, 3>;
+using RealActualData = ActualData<Message, Constants::CLIENT_INPUT_QUEUE_SIZE>;
+
+//
+
+struct MessageIo: MessageWriter, MessageReader
+{
+	template<Types::size_t TEST_DATA_SIZE>
+	MessageIo(const char (&inputTestData)[TEST_DATA_SIZE]) :
+			MessageIo(inputTestData, TEST_DATA_SIZE)
+	{}
+
+	MessageIo(const char *inputTestData, Types::size_t inputTestDataSize) :
+			testData{ inputTestData }
+			, testDataSize{ inputTestDataSize }
+	{}
+
+	// MessageWriter
+	void operator()(MessageData &messageData) const noexcept override
+	{
+		::flame_ide::copy(
+				messageData.bytes.data(), testData, testDataSize
+		);
+		messageData.size = testDataSize;
+	}
+
+	// MessageReader
+	virtual void operator()(const MessageData &messageData) noexcept override
+	{
+		if (messageData.size != static_cast<decltype(messageData.size)>(testDataSize))
+			result = decltype(result)::FAILED;
+
+		auto testDataRange = templates::makeRange(
+				reinterpret_cast<const byte_t *const>(testData), testDataSize
+		);
+		auto messageRange = templates::makeRange(
+				reinterpret_cast<const byte_t *const>(messageData.bytes.data())
+				, messageData.size
+		);
+
+		for (auto testDataIt = testDataRange.begin(), messageIt = messageRange.begin();
+				testDataIt != testDataRange.end() && messageIt != messageRange.end();
+				++testDataIt, ++messageIt
+		)
+		{
+			if (*testDataIt == *messageIt)
+				continue;
+
+			result = decltype(result)::FAILED;
+			break;
+		}
+	}
+
+	ResultType result = ResultType::SUCCESS;
+	const char *const testData;
+	const Types::size_t testDataSize;
+};
+
+//
+
+class PingPongBase: public flame_ide::os::threads::ThreadBase
+{
+public:
+	using flame_ide::os::threads::ThreadBase::ThreadBase;
+
+	struct ErrorData
+	{
+		const char string[128];
+		const Types::size_t iteratrion;
+		const Types::size_t actualDataSize;
+	};
+
+	PingPongBase(
+			SizeTraits::SizeType amountOfIterations
+			, SizeTraits::SizeType amountOfTries
+			, RealActualData &sharedActualData
+			, MessageIo &messageIo
+	) noexcept :
+			flame_ide::os::threads::ThreadBase()
+			, internalActualData{ sharedActualData }
+			, internalIterations{ amountOfIterations }
+			, internalTries{ amountOfTries }
+			, internalMessageIo{ messageIo }
+	{}
+
+	const templates::Expected<bool, ErrorData> &result() noexcept
+	{
+		return internalResult;
+	}
+
+protected:
+	virtual void ping(SizeTraits::SizeType iteration) noexcept
+	{ flame_ide::unused(iteration); };
+	virtual void pong(SizeTraits::SizeType iteration) noexcept
+	{ flame_ide::unused(iteration); };
+
+	SizeTraits::SizeType amountOfTries() const noexcept
+	{
+		return internalTries;
+	}
+
+	SizeTraits::SizeType amountOfIterations() const noexcept
+	{
+		return internalIterations;
+	}
+
+	RealActualData &actualData() noexcept
+	{
+		return internalActualData;
+	}
+
+	MessageIo &messageIo() noexcept
+	{
+		return internalMessageIo;
+	}
+
+private:
+	virtual void vRun() noexcept override
+	{
+		for (decltype(amountOfIterations()) i = 0; i < amountOfIterations(); ++i)
+		{
+			ping(i);
+			pong(i);
+
+			const auto &result = internalResult;
+			result.ifError(
+					[&i, this](const auto &)
+					{
+						i = amountOfIterations();
+					}
+			);
+		}
+	}
+
+protected:
+	templates::Expected<bool, ErrorData> internalResult;
+
+private:
+	RealActualData &internalActualData;
+	const SizeTraits::SizeType internalIterations = 0;
+	const SizeTraits::SizeType internalTries = 0;
+	MessageIo &internalMessageIo;
+};
+
+struct Ping: public PingPongBase
+{
+	using PingPongBase::PingPongBase;
+
+private:
+	virtual void ping(SizeTraits::SizeType iteration) noexcept override
+	{
+		std::cout << "Ping: " << iteration << std::endl;
+		// заполняем пустое сообщение
+
+		RemoveAllType<decltype(actualData().getEmptyMessage())> messageRef{ nullptr };
+		// decltype(amountOfTries()) tries = {};
+		Types::size_t amountOfMessages = {};
+		while (!messageRef /*&& tries < amountOfTries()*/)
+		{
+			amountOfMessages = actualData().amountOfMessages();
+			if (amountOfMessages < actualData().CAPACITY)
+			{
+				messageRef = actualData().getEmptyMessage();
+			}
+			// ++tries;
+		}
+
+		if (!messageRef)
+		{
+			internalResult = ErrorData{
+					"Ping thread: Can't get empty message"
+					, iteration
+					, amountOfMessages
+			};
+			return;
+		}
+
+		messageRef->onWrite(messageIo());
+
+		internalResult = true;
+	}
+};
+
+struct Pong: public PingPongBase
+{
+	using PingPongBase::PingPongBase;
+
+private:
+	virtual void pong(SizeTraits::SizeType iteration) noexcept override
+	{
+		//std::cout << "Pong: " << iteration << std::endl;
+		// читаем заполненное сообщение
+
+		RemoveAllType<decltype(actualData().getFilledMessage())> messageRef{ nullptr };
+		// decltype(amountOfTries()) tries = {};
+		Types::size_t amountOfMessages = {};
+		while (!messageRef /*&& tries < amountOfTries()*/)
+		{
+			amountOfMessages = actualData().amountOfMessages();
+			if (amountOfMessages)
+			{
+				messageRef = actualData().getFilledMessage();
+			}
+			// ++tries;
+		}
+
+		if (!messageRef)
+		{
+			internalResult = ErrorData{
+					"Pong thread: Can't get filled message"
+					, iteration
+					, amountOfMessages
+			};
+			return;
+		}
+
+		messageRef->onRead(messageIo());
+		if (messageIo().result == ResultType::FAILED)
+		{
+			internalResult = ErrorData{
+					"Pong thread: Invalid message read"
+					, iteration
+					, amountOfMessages
+			};
+			return;
+		}
+	}
+};
 
 //
 
@@ -106,14 +334,30 @@ static ::AbstractTest::ResultType getFilledMessage_OneMessage()
 	using ResultType = ::AbstractTest::ResultType;
 
 	const char TEST_DATA[] = "some test data";
+	using TestDataTraits = decltype(makeArrayTraits(TEST_DATA));
 
 	TestActualData actualData;
 	// Fill message
 	{
+		struct Writer: MessageWriter
+		{
+			Writer(TestDataTraits::ConstReference inputTestData) :
+					testData{ inputTestData }
+			{}
+
+			void operator()(MessageData &messageData) const noexcept override
+			{
+				::flame_ide::copy(
+						messageData.bytes.data(), testData, TestDataTraits::SIZE
+				);
+				messageData.size = TestDataTraits::SIZE;
+			}
+
+			TestDataTraits::ConstReference testData;
+		} writer{ TEST_DATA };
 
 		flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
-		emptyMessage->write(TEST_DATA, sizeof(TEST_DATA));
-		flame_ide::unused(emptyMessage);
+		emptyMessage->onWrite(writer);
 	}
 	flame_ide::ReferenceWrapper<Message> filledMessage = actualData.getFilledMessage();
 	IN_CASE_CHECK(filledMessage.operator->() != nullptr);
@@ -133,7 +377,9 @@ static ::AbstractTest::ResultType getFilledMessage_AllMessages()
 	const char TEST_DATA2[] = "some test data 2";
 	constexpr flame_ide::SizeTraits::SizeType TEST_DATA_SIZE = size(TEST_DATA0);
 
-	const char *const TEST_DATA[] = { TEST_DATA0, TEST_DATA1, TEST_DATA2 };
+	const char *TEST_DATA[] = {
+		TEST_DATA0, TEST_DATA1, TEST_DATA2
+	};
 	static_assert(
 			flame_ide::size(TEST_DATA) == TestActualData::Messages::CAPACITY
 			, "Invalid size"
@@ -144,8 +390,9 @@ static ::AbstractTest::ResultType getFilledMessage_AllMessages()
 	{
 		for (auto i = flame_ide::size(TEST_DATA); i != 0; --i)
 		{
+			auto writer = MessageIo{ TEST_DATA[i - 1], TEST_DATA_SIZE };
 			flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
-			emptyMessage->write(TEST_DATA[i - 1], TEST_DATA_SIZE);
+			emptyMessage->onWrite(writer);
 			flame_ide::unused(emptyMessage);
 		}
 	}
@@ -185,7 +432,8 @@ static ::AbstractTest::ResultType getFilledMessageSize()
 		constexpr SizeTraits::SizeType EXPECTED_SIZE = flame_ide::size(TEST_DATA0);
 
 		flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
-		emptyMessage->write(TEST_DATA0, flame_ide::size(TEST_DATA0));
+		auto writer = MessageIo{ TEST_DATA0 };
+		emptyMessage->onWrite(writer);
 		emptyMessage->state = MessageState::READY;
 
 		IN_CASE_CHECK(EXPECTED_SIZE == actualData.getFilledMessageSize());
@@ -199,9 +447,53 @@ static ::AbstractTest::ResultType pingPong()
 	// TODO: Два потока: читающий и пишущий; нужна консистентность на множестве циклов
 
 	using ResultType = ::AbstractTest::ResultType;
+	constexpr auto AMOUNT_OF_ITERATIONS = (SizeTraits::SizeType{1} << 16) - 1u;
+	constexpr auto AMOUNT_OF_TRIES = (SizeTraits::SizeType{1} << 10) - 1u;
 
-	TestActualData actualData;
-	::flame_ide::unused(actualData);
+	const char TEST_DATA[] = "some ping & pong test data";
+	MessageIo messageIo{ TEST_DATA };
+
+	RealActualData actualData;
+	Ping ping{ AMOUNT_OF_ITERATIONS, AMOUNT_OF_TRIES, actualData, messageIo };
+	Pong pong{ AMOUNT_OF_ITERATIONS, AMOUNT_OF_TRIES, actualData, messageIo };
+
+	ping.run();
+	pong.run();
+
+	ping.join();
+	pong.join();
+
+	auto pingResult = ResultType::SUCCESS;
+	ping.result().ifResult(
+			[](auto) {}
+	).ifError(
+			[&pingResult](const Ping::ErrorData &internalErrorData)
+			{
+				pingResult = ResultType::FAILED;
+				std::cout << "Error: " << internalErrorData.string
+						<< "; iteration = " << internalErrorData.iteratrion
+						<< "; amount of messages = " << internalErrorData.actualDataSize
+						<< std::endl;
+			}
+	).done();
+
+	auto pongResult = ResultType::SUCCESS;
+	pong.result().ifResult(
+			[](auto) {}
+	).ifError(
+			[&pongResult](const Pong::ErrorData &internalErrorData)
+			{
+				pongResult = ResultType::FAILED;
+				std::cout << "Error: " << internalErrorData.string
+						<< "; iteration = " << internalErrorData.iteratrion
+						<< "; amount of messages = " << internalErrorData.actualDataSize
+						<< std::endl;
+			}
+	).done();
+
+	IN_CASE_CHECK(
+			pingResult == ResultType::SUCCESS && pongResult == ResultType::SUCCESS
+	);
 
 	return ResultType::SUCCESS;
 }
