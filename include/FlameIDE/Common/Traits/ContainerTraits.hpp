@@ -56,9 +56,11 @@ struct SerializationTraits<true>
 /// @tparam T Array cell type
 /// @tparam SIZE Elements count
 ///
-template<typename T, Types::size_t SIZE>
+template<typename T, Types::size_t ARRAY_SIZE>
 struct ArrayTraits: public NonCreational
 {
+	static constexpr decltype(ARRAY_SIZE) SIZE = ARRAY_SIZE;
+
 	using Type = T[SIZE];
 	using Reference = Type &;
 	using MoveReference = Type &&;
@@ -69,6 +71,9 @@ struct ArrayTraits: public NonCreational
 	using PointerToConst = const Type *;
 	using ConstPointerToConst = const PointerToConst;
 };
+
+template<typename T, Types::size_t ARRAY_SIZE>
+ArrayTraits<T, ARRAY_SIZE> makeArrayTraits(const T (&array)[ARRAY_SIZE]);
 
 }
 

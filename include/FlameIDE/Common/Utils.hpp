@@ -1,6 +1,7 @@
 #ifndef FLAMEIDE_COMMON_UTILS_HPP
 #define FLAMEIDE_COMMON_UTILS_HPP
 
+#include <FlameIDE/Common/Byte.hpp>
 #include <FlameIDE/Common/Traits.hpp>
 
 namespace flame_ide
@@ -268,6 +269,20 @@ template<typename T>
 void unused(T &&);
 
 void unused();
+
+template<typename T>
+typename ArrayTraits<byte_t, sizeof(T{})>::ConstReference toConstByteArray(const T &value);
+
+template<typename T, Types::size_t N>
+typename ArrayTraits<byte_t, sizeof(T{}) * N>::ConstReference
+toConstByteArray(const T (&value)[N]);
+
+template<typename T>
+typename ArrayTraits<byte_t, sizeof(T{})>::Reference toByteArray(T &value);
+
+template<typename T, Types::size_t N>
+typename ArrayTraits<byte_t, sizeof(T{}) * N>::Reference
+	toByteArray(T (&value)[N]);
 
 } // namespace flame_ide
 
@@ -634,6 +649,39 @@ void unused(T &&)
 
 inline void unused()
 {}
+
+template<typename T>
+typename ArrayTraits<byte_t, sizeof(T{})>::ConstReference toConstByteArray(const T &value)
+{
+	using Traits = ArrayTraits<byte_t, sizeof(T{})>;
+
+	return reinterpret_cast<typename Traits::PointerToConst>(value);
+}
+
+template<typename T, Types::size_t N>
+typename ArrayTraits<byte_t, sizeof(T{}) * N>::ConstReference
+toConstByteArray(const T (&value)[N])
+{
+	using Traits = ArrayTraits<byte_t, sizeof(T{}) * N>;
+	return *reinterpret_cast<typename Traits::PointerToConst>(value);
+}
+
+template<typename T>
+typename ArrayTraits<byte_t, sizeof(T{})>::Reference toByteArray(T &value)
+{
+	using Traits = ArrayTraits<byte_t, sizeof(T{})>;
+
+	return *reinterpret_cast<typename Traits::Pointer>(value);
+}
+
+template<typename T, Types::size_t N>
+typename ArrayTraits<byte_t, sizeof(T{}) * N>::Reference
+toByteArray(T (&value)[N])
+{
+	using Traits = ArrayTraits<byte_t, sizeof(T{})>;
+
+	return *reinterpret_cast<typename Traits::Pointer>(value);
+}
 
 } // namespace flame_ide
 
