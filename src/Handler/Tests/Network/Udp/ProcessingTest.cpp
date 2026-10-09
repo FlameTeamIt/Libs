@@ -7,7 +7,7 @@ namespace flame_ide
 {namespace tests
 {
 
-ProcessingTest::ProcessingTest() : ::AbstractTest("udp::Processing")
+ProcessingTest::ProcessingTest() : ::AbstractTest("NOT_IMPLEMENTED udp::Processing")
 {}
 
 ProcessingTest::~ProcessingTest() = default;

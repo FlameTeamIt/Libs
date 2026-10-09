@@ -6,7 +6,7 @@ namespace flame_ide
 {namespace tests
 {
 
-TcpTest::TcpTest() : ::AbstractTest("Tcp")
+TcpTest::TcpTest() : ::AbstractTest("NOT_IMPLEMENTED Tcp")
 {}
 
 TcpTest::~TcpTest() = default;

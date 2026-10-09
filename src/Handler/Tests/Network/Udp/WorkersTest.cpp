@@ -7,7 +7,7 @@ namespace flame_ide
 {namespace tests
 {
 
-WorkersTest::WorkersTest() : ::AbstractTest("udp::Workers")
+WorkersTest::WorkersTest() : ::AbstractTest("NOT_IMPLEMENTED udp::Workers")
 {}
 
 WorkersTest::~WorkersTest() = default;

@@ -8,7 +8,7 @@ namespace flame_ide
 {namespace tests
 {
 
-StorageTest::StorageTest() : ::AbstractTest("udp::Storage")
+StorageTest::StorageTest() : ::AbstractTest("NOT_IMPLEMENTED udp::Storage")
 {}
 
 StorageTest::~StorageTest() = default;

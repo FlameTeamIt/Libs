@@ -6,7 +6,7 @@ namespace flame_ide
 {namespace tests
 {
 
-NotificatorsTest::NotificatorsTest() : ::AbstractTest("Notificators")
+NotificatorsTest::NotificatorsTest() : ::AbstractTest("NOT_IMPLEMENTED Notificators")
 {}
 
 NotificatorsTest::~NotificatorsTest() = default;

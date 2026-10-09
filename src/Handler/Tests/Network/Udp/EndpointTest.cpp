@@ -7,7 +7,7 @@ namespace flame_ide
 {namespace tests
 {
 
-EndpointTest::EndpointTest() : ::AbstractTest("udp::Endpoint")
+EndpointTest::EndpointTest() : ::AbstractTest("NOT_IMPLEMENTED udp::Endpoint")
 {}
 
 EndpointTest::~EndpointTest() = default;

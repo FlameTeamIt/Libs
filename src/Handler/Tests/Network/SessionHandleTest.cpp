@@ -6,7 +6,7 @@ namespace flame_ide
 {namespace tests
 {
 
-SessionHandleTest::SessionHandleTest() : ::AbstractTest("SessionHandle")
+SessionHandleTest::SessionHandleTest() : ::AbstractTest("NOT_IMPLEMENTED SessionHandle")
 {}
 
 SessionHandleTest::~SessionHandleTest() = default;

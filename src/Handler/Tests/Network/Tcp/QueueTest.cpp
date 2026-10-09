@@ -8,7 +8,7 @@ namespace flame_ide
 {namespace tests
 {
 
-QueueTest::QueueTest() : ::AbstractTest("tcp::Queue")
+QueueTest::QueueTest() : ::AbstractTest("NOT_IMPLEMENTED tcp::Queue")
 {}
 
 QueueTest::~QueueTest() = default;

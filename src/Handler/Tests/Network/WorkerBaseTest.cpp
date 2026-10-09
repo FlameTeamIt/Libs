@@ -6,7 +6,7 @@ namespace flame_ide
 {namespace tests
 {
 
-WorkerBaseTest::WorkerBaseTest() : ::AbstractTest("WorkerBase")
+WorkerBaseTest::WorkerBaseTest() : ::AbstractTest("NOT_IMPLEMENTED WorkerBase")
 {}
 
 WorkerBaseTest::~WorkerBaseTest() = default;

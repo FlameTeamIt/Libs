@@ -7,7 +7,7 @@ namespace flame_ide
 {namespace tests
 {
 
-InternalTest::InternalTest() : ::AbstractTest("Internal")
+InternalTest::InternalTest() : ::AbstractTest("NOT_IMPLEMENTED Internal")
 {}
 
 InternalTest::~InternalTest() = default;

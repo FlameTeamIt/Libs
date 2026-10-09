@@ -6,7 +6,7 @@ namespace flame_ide
 {namespace tests
 {
 
-ServerHandleTest::ServerHandleTest() : ::AbstractTest("ServerHandle")
+ServerHandleTest::ServerHandleTest() : ::AbstractTest("NOT_IMPLEMENTED ServerHandle")
 {}
 
 ServerHandleTest::~ServerHandleTest() = default;

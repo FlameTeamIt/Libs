@@ -7,7 +7,7 @@ namespace flame_ide
 {namespace tests
 {
 
-ClientTest::ClientTest() : ::AbstractTest("udp::Client")
+ClientTest::ClientTest() : ::AbstractTest("NOT_IMPLEMENTED udp::Client")
 {}
 
 ClientTest::~ClientTest() = default;

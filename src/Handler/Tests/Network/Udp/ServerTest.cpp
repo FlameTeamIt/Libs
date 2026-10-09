@@ -9,7 +9,7 @@ namespace flame_ide
 {namespace tests
 {
 
-ServerTest::ServerTest() : ::AbstractTest("udp::Server")
+ServerTest::ServerTest() : ::AbstractTest("NOT_IMPLEMENTED udp::Server")
 {}
 
 ServerTest::~ServerTest() = default;

@@ -10,7 +10,7 @@ namespace flame_ide
 {namespace tests
 {
 
-HandlerTest::HandlerTest() : ::AbstractTest("Handler")
+HandlerTest::HandlerTest() : ::AbstractTest("NOT_IMPLEMENTED Handler")
 {}
 
 HandlerTest::~HandlerTest() = default;

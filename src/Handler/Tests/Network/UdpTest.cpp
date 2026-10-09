@@ -6,7 +6,7 @@ namespace flame_ide
 {namespace tests
 {
 
-UdpTest::UdpTest() : ::AbstractTest("Udp")
+UdpTest::UdpTest() : ::AbstractTest("NOT_IMPLEMENTED Udp")
 {}
 
 UdpTest::~UdpTest() = default;
