@@ -19,8 +19,7 @@ UdpServer::UdpServer(Ipv4::Port port) noexcept : NetworkBase(socket::createUdpSe
 
 UdpServer &UdpServer::operator=(UdpServer &&server) noexcept
 {
-	NetworkBase &&base = static_cast<NetworkBase &&>(server);
-	operator=(move(base));
+	operator=(move(static_cast<NetworkBase &&>(server)));
 	return *this;
 }
 

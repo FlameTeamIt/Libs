@@ -26,7 +26,7 @@ private:
 	int tcpServer();
 	int tcpClient();
 
-	int udpNotify();
+	int udpServerNotify();
 
 private:
 	const Types::size_t numberOfTries = NumberLimitValueMax<Types::uint_t>;

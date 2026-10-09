@@ -1,9 +1,12 @@
 #include <FlameIDE/../../src/Os/Posix/Async/Network/EventCatcher.hpp>
 
+#include <FlameIDE/Os/Async/Network/NotificatorBase.hpp>
+#include <FlameIDE/Os/Async/Network/Registrar.hpp>
 #include <FlameIDE/Os/Network/NetworkBase.hpp>
 #include <FlameIDE/Os/Network/TcpServer.hpp>
 
 #include <fcntl.h>
+#include <poll.h>
 
 namespace flame_ide
 {namespace os
@@ -14,6 +17,45 @@ namespace flame_ide
 namespace anonymous{namespace{
 
 static constexpr decltype(SIGPOLL) SIGNAL_POLLING = os::posix::Signal::POLL;
+
+using BandEvent = decltype(siginfo_t{}.si_band);
+
+enum PollingFlags: BandEvent
+{
+	INPUT = POLLIN
+	, PRIORITY = POLLPRI
+	, OUTPUT = POLLOUT
+	, ERROR = POLLERR
+	, HANG_UP = POLLHUP
+	, INVALID_REQUEST = POLLNVAL
+	, READ_NORMAL = POLLRDNORM
+	, READ_PRIORITY = POLLRDBAND
+	, WRITE_NORMAL = POLLWRNORM
+	, WRITE_PRIORITY = POLLWRBAND
+};
+
+::flame_ide::os::async::network::EventType
+convertBandEventsToAsyncEvent(BandEvent events)
+{
+	using ::flame_ide::os::async::network::EventType;
+
+	if ((events & PollingFlags::ERROR) || (events & PollingFlags::INVALID_REQUEST))
+		return EventType::INVALID;
+
+	auto eventType = EventType::INIT;
+
+	if ((events & PollingFlags::INPUT) || (events & PollingFlags::READ_NORMAL))
+		eventType = EventType::READ;
+
+	if ((events & PollingFlags::OUTPUT) || (events & PollingFlags::WRITE_NORMAL))
+	{
+		eventType = (eventType == EventType::READ)
+				? EventType::READ_WRITE
+				: EventType::WRITE;
+	}
+
+	return eventType;
+}
 
 }} // namespace anonymous
 }}}}} // namespace flame_ide::os::posix::async::network
@@ -88,7 +130,9 @@ EventCatcher::SigAction EventCatcher::makeSigAction() noexcept
 	return action;
 }
 
-void EventCatcher::signalHandler(int signal, const siginfo_t *info, ucontext_t *) noexcept
+void EventCatcher::signalHandler(
+		int signal, const siginfo_t *info, ucontext_t *
+) noexcept
 {
 	using os::network::NetworkBase;
 
@@ -96,25 +140,45 @@ void EventCatcher::signalHandler(int signal, const siginfo_t *info, ucontext_t *
 		return;
 
 	const auto descriptor = info->si_fd;
+
+	/*
+	POLLIN     = (bin)              1 // 0x001 // There is data to read
+	POLLPRI    = (bin)             10 // 0x002 // There is urgent data to read
+	POLLOUT    = (bin)            100 // 0x004 // Writing now will not block
+	POLLERR    = (bin)           1000 // 0x008 // Error condition
+	POLLHUP    = (bin)          10000 // 0x010 // Hung up
+	POLLNVAL   = (bin)         100000 // 0x020 // Invalid polling request
+
+	// defined __USE_XOPEN || defined __USE_XOPEN2K8
+	POLLRDNORM = (bin)        1000000 // 0x040 // Normal data may be read
+	POLLRDBAND = (bin)       10000000 // 0x080 // Priority data may be read
+	POLLWRNORM = (bin)      100000000 // 0x100 // Writing now will not block
+	POLLWRBAND = (bin)     1000000000 // 0x200 // Priority data may be written
+
+	// __USE_GNU
+	POLLMSG    = (bin)    10000000000 // 0x400
+	POLLREMOVE = (bin)  1000000000000 // 0x1000
+	POLLRDHUP  = (bin) 10000000000000 // 0x2000
+	*/
+	const auto events = info->si_band;
+
 	switch (NetworkBase::callbacks().type(Socket{ {}, descriptor }))
 	{
 		case NetworkBase::SocketType::STREAM:
-			handleTcp(descriptor);
+			handleTcp(descriptor, events);
 			break;
 
 		case NetworkBase::SocketType::DATAGRAM:
-			handleUdp(descriptor);
+			handleUdp(descriptor, events);
 			break;
 
 		case NetworkBase::SocketType::UNKNOWN:
 		default:
 			return;
 	}
-
-	EventCatcher::get().notify();
 }
 
-void EventCatcher::handleTcp(SocketDescriptor descriptor) noexcept
+void EventCatcher::handleTcp(SocketDescriptor descriptor, SigEvents events) noexcept
 {
 	using os::network::TcpServer;
 
@@ -123,13 +187,25 @@ void EventCatcher::handleTcp(SocketDescriptor descriptor) noexcept
 	if (!serverControl().isServer(socket))
 	{
 		// Signal has been received from client's socket
-		EventCatcher::get().queues().tcpClients().push(descriptor);
+		EventCatcher::get().queues().tcpClients().push(
+				flame_ide::os::async::network::AsyncEvent {
+						descriptor
+						, anonymous::convertBandEventsToAsyncEvent(events)
+				}
+		);
+		EventCatcher::get().notify(EventCatcher::TcpClientTag{});
 		return;
 	}
 	if (!serverControl().isListener(socket))
 	{
 		// Signal has been received from accepted server's socket
-		EventCatcher::get().queues().tcpServers().push(descriptor);
+		EventCatcher::get().queues().tcpServers().push(
+				flame_ide::os::async::network::AsyncEvent {
+						descriptor
+						, anonymous::convertBandEventsToAsyncEvent(events)
+				}
+		);
+		EventCatcher::get().notify(EventCatcher::TcpServerTag{});
 		return;
 	}
 
@@ -140,15 +216,33 @@ void EventCatcher::handleTcp(SocketDescriptor descriptor) noexcept
 		return;
 	EventCatcher::get().queues().tcpAcceptedConnections()
 			.push({ socket.descriptor, client });
+	EventCatcher::get().notify(EventCatcher::TcpAcceptedConnectionTag{});
 	return;
 }
 
-void EventCatcher::handleUdp(SocketDescriptor descriptor) noexcept
+void EventCatcher::handleUdp(SocketDescriptor descriptor, SigEvents events) noexcept
 {
 	using os::network::NetworkBase;
-	(NetworkBase::callbacks().isServer(Socket{ {}, descriptor }))
-			? EventCatcher::get().queues().udpServers().push(descriptor)
-			: EventCatcher::get().queues().udpClients().push(descriptor);
+	if(NetworkBase::callbacks().isServer(Socket{ {}, descriptor }))
+	{
+		EventCatcher::get().queues().udpServers().push(
+				flame_ide::os::async::network::AsyncEvent {
+						descriptor
+						, anonymous::convertBandEventsToAsyncEvent(events)
+				}
+		);
+		EventCatcher::get().notify(EventCatcher::UdpServerTag{});
+	}
+	else
+	{
+		EventCatcher::get().queues().udpClients().push(
+				flame_ide::os::async::network::AsyncEvent {
+						descriptor
+						, anonymous::convertBandEventsToAsyncEvent(events)
+				}
+		);
+		EventCatcher::get().notify(EventCatcher::UdpClientTag{});
+	}
 }
 
 os::Status EventCatcher::enableSignal(SocketDescriptor descriptor) noexcept

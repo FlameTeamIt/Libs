@@ -28,8 +28,14 @@ VoidTypeTest::~VoidTypeTest() = default;
 
 int VoidTypeTest::vStart()
 {
-	IN_CASE_CHECK(HasMemember<ExistMember>::VALUE == TrueType::VALUE);
-	IN_CASE_CHECK_END(HasMemember<NotExistMember>::VALUE == FalseType::VALUE);
+	bool isExistMemberStructContainMember = (
+			HasMemember<ExistMember>::VALUE == true
+	);
+	bool isNotExistMemberStructContainMember = (
+			HasMemember<NotExistMember>::VALUE == false
+	);
+	IN_CASE_CHECK(isExistMemberStructContainMember);
+	IN_CASE_CHECK_END(isNotExistMemberStructContainMember);
 }
 
 }}} // flame_ide::common::tests

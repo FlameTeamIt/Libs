@@ -206,7 +206,7 @@ template<typename T>
 flame_ide::AddMoveReferenceType<T> Object<SIZE_IN_BYTES, AlignedAsType>::move() noexcept
 {
 	callbackDestroy = nullptr;
-	return flame_ide::move(get());
+	return flame_ide::move(get<T>());
 }
 
 template<Types::size_t SIZE_IN_BYTES, typename AlignedAsType>
