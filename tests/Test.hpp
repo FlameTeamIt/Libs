@@ -37,18 +37,18 @@
 	if (!(condition)) \
 	{ \
 		log << #condition << std::endl; \
-		return ResultType::FAILED; \
+		return ::AbstractTest::ResultType::FAILED; \
 	}
 
 #define IN_CASE_CHECK_END(condition) \
 	if (condition) \
 	{ \
-		return ResultType::SUCCESS; \
+		return ::AbstractTest::ResultType::SUCCESS; \
 	} \
 	else \
 	{ \
 		log << #condition << std::endl; \
-		return ResultType::FAILED; \
+		return ::AbstractTest::ResultType::FAILED; \
 	}
 
 #define IN_TEST_CHECK(condition) \

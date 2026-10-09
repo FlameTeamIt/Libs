@@ -3,6 +3,7 @@
 
 #include <FlameIDE/Common/Utils.hpp>
 #include <FlameIDE/Os/Constants.hpp>
+#include <FlameIDE/Os/Threads/Thread.hpp>
 
 #include <FlameIDE/Templates/RaiiCaller.hpp>
 
@@ -16,8 +17,6 @@ namespace // anonymous
 
 auto initDestroy() noexcept
 {
-	using ResultType = ::AbstractTest::ResultType;
-
 	os::Status status = os::STATUS_SUCCESS;
 	os::SpinContext context;
 
@@ -33,10 +32,6 @@ auto initDestroy() noexcept
 
 auto lock() noexcept
 {
-	using ResultType = ::AbstractTest::ResultType;
-
-	using ResultType = ::AbstractTest::ResultType;
-
 	os::Status status = os::STATUS_SUCCESS;
 	os::SpinContext context;
 
@@ -54,8 +49,6 @@ auto lock() noexcept
 
 auto unlock() noexcept
 {
-	using ResultType = ::AbstractTest::ResultType;
-
 	os::Status status = os::STATUS_SUCCESS;
 	os::SpinContext context;
 
@@ -73,6 +66,99 @@ auto unlock() noexcept
 
 	auto tryLockStatus = spin::tryLock(context);
 	IN_CASE_CHECK_END(threads::TryLockStatus::TRY_LOCK_OK == tryLockStatus);
+}
+
+//
+
+struct Ping: ThreadCrtp<Ping>
+{
+	Ping(
+			Types::size_t initAmountOfIterations
+			, os::SpinContext &initContext
+			, Types::long_t &initCounter
+	) :
+			amountOfIterations{ initAmountOfIterations }
+			, context{ initContext }
+			, counter{ initCounter }
+	{}
+
+	const Types::size_t amountOfIterations;
+	os::SpinContext &context;
+	Types::long_t &counter;
+
+	void body() noexcept
+	{
+		for (RemoveAllType<decltype(amountOfIterations)> i = 0
+				; i < amountOfIterations; ++i)
+		{
+			spin::lock(context);
+			++counter;
+			spin::unlock(context);
+		}
+	}
+};
+
+struct Pong: ThreadCrtp<Pong>
+{
+	Pong(
+			Types::size_t initAmountOfIterations
+			, os::SpinContext &initContext
+			, Types::long_t &initCounter
+	) :
+			amountOfIterations{ initAmountOfIterations }
+			, context{ initContext }
+			, counter{ initCounter }
+	{}
+
+	const Types::size_t amountOfIterations;
+	os::SpinContext &context;
+	Types::long_t &counter;
+
+	void body() noexcept
+	{
+		for (RemoveAllType<decltype(amountOfIterations)> i = 0
+				; i < amountOfIterations; ++i)
+		{
+			spin::lock(context);
+			// std::cout << "Ping: " << i << std::endl;
+			--counter;
+			spin::unlock(context);
+		}
+	}
+};
+
+auto pingPong() noexcept
+{
+	constexpr Types::size_t AMOUNT_OF_ITERATIONS = 65535;
+	constexpr Types::size_t AMOUNT_OF_TRIES = 1;
+
+	const Types::long_t expected = 0;
+	Types::long_t counter = expected;
+
+	os::SpinContext context;
+	auto raii = templates::makeRaiiCaller(
+			[&context]() { spin::init(context); }
+			, [&context]() { spin::destroy(context); }
+	);
+
+	for (RemoveAllType<decltype(AMOUNT_OF_TRIES)> i = 0; i < AMOUNT_OF_TRIES; ++i)
+	{
+		Ping ping{ AMOUNT_OF_ITERATIONS, context, counter };
+		Pong pong{ AMOUNT_OF_ITERATIONS, context, counter };
+
+		ping.run();
+		pong.run();
+
+		ping.join();
+		pong.join();
+
+		if (counter != expected)
+		{
+			std::cout << "Failed: iteration = " << i << std::endl;
+		}
+		IN_CASE_CHECK(counter == expected);
+	}
+	return ::AbstractTest::ResultType::SUCCESS;
 }
 
 } // namespace anonymous
@@ -97,8 +183,12 @@ int SpinFunctionsTest::vStart()
 			"lock/tryLock", [] { return lock(); }
 	));
 
-	CHECK_RESULT_SUCCESS_END(doTestCase(
+	CHECK_RESULT_SUCCESS(doTestCase(
 			"unlock/tryLock", [] { return unlock(); }
+	));
+
+	CHECK_RESULT_SUCCESS_END(doTestCase(
+			"ping/pong", [] { return pingPong(); }
 	));
 }
 

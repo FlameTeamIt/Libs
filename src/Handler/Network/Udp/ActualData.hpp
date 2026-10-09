@@ -103,25 +103,23 @@ ActualData<MessageType, SIZE>::getFilledMessage() noexcept
 	if ((first == last) && (amount == 0))
 		return nullptr;
 
+	auto result = first->pointer();
 	{
-		os::threads::Locker lockMessage{ first->pointer()->spin };
-		if (
-				first->pointer()->state == MessageState::PROCESSING
-				|| first->pointer()->state == MessageState::EMPTY
-		)
+		os::threads::Locker lockMessage{ result->spin };
+		if (result->state == MessageState::PROCESSING
+				|| result->state == MessageState::EMPTY)
 			return nullptr;
 	}
 
-	auto result = first;
 	--amount;
 	++first;
 
 	{
-		os::threads::Locker lockMessage{ result->pointer()->spin };
-		result->pointer()->state = MessageState::PROCESSING;
+		os::threads::Locker lockMessage{ result->spin };
+		result->state = MessageState::PROCESSING;
 	}
 
-	return result->pointer();
+	return result;
 }
 
 template<typename MessageType, Types::size_t SIZE>

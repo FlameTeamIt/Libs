@@ -14,12 +14,66 @@ namespace flame_ide
 {namespace tests
 {
 
+ActualDataTest::ActualDataTest() : ::AbstractTest("udp::ActualData")
+{}
+
+ActualDataTest::~ActualDataTest() = default;
+
+int ActualDataTest::vStart()
+{
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"Initialization"
+			, [this]() { return init(); }
+	));
+
+	// udp::ActualData::getEmptyMessage()
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"getEmptyMessage(): get one message"
+			, [this]() { return getEmptyMessage_One(); }
+	));
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"getEmptyMessage(): get all messages"
+			, [this]() { return getEmptyMessage_All(); }
+	));
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"getEmptyMessage(): get all messages and one"
+			, [this]() { return getEmptyMessage_AllOne(); }
+	));
+
+	// udp::ActualData::getFilledMessage()
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"getFilledMessage(): no messages"
+			, [this]() { return getFilledMessage_NoMessages(); }
+	));
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"getFilledMessage(): get one message"
+			, [this]() { return getFilledMessage_OneMessage(); }
+	));
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"getFilledMessage(): get all filled messages"
+			, [this]() { return getFilledMessage_AllMessages(); }
+	));
+
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"getFilledMessageSize()"
+			, [this]() { return getFilledMessageSize(); }
+	));
+
+	//
+	CHECK_RESULT_SUCCESS(doTestCase(
+			"Multithread ping & pong"
+			, [this]() { return pingPong(); }
+	));
+	return ResultType::SUCCESS;
+}
+
+// Types
+
 using ResultType = ::AbstractTest::ResultType;
 
 //
 
 using TestActualData = ActualData<Message, 3>;
-using RealActualData = ActualData<Message, Constants::CLIENT_INPUT_QUEUE_SIZE>;
 
 //
 
@@ -75,6 +129,204 @@ struct MessageIo: MessageWriter, MessageReader
 	const char *const testData;
 	const Types::size_t testDataSize;
 };
+
+//
+
+ActualDataTest::ResultType ActualDataTest::init()
+{
+	TestActualData actualData;
+	::flame_ide::unused(actualData);
+
+	return ResultType::SUCCESS;
+}
+
+// getEmptyMessage() test cases
+
+ActualDataTest::ResultType ActualDataTest::getEmptyMessage_One()
+{
+	TestActualData actualData;
+
+	flame_ide::ReferenceWrapper<Message> emptyOneMessage = actualData.getEmptyMessage();
+	IN_CASE_CHECK(emptyOneMessage.operator->() != nullptr);
+	IN_CASE_CHECK(emptyOneMessage->spin.tryLock() == true);
+	IN_CASE_CHECK(emptyOneMessage->state == MessageState::PROCESSING);
+	IN_CASE_CHECK(emptyOneMessage->size == 0);
+
+	return ResultType::SUCCESS;
+}
+
+ActualDataTest::ResultType ActualDataTest::getEmptyMessage_All()
+{
+	TestActualData actualData;
+
+	flame_ide::ReferenceWrapper<Message> firstEmptyMessage = actualData.getEmptyMessage();
+	flame_ide::unused(firstEmptyMessage);
+
+	for (
+			RemoveAllTrait<decltype(TestActualData::Messages::CAPACITY)>::Type i = 1;
+			i < TestActualData::Messages::CAPACITY;
+			++i
+	)
+	{
+		flame_ide::ReferenceWrapper<Message> nextEmptyMessage
+				= actualData.getEmptyMessage();
+		IN_CASE_CHECK(nextEmptyMessage.operator->() != nullptr);
+		IN_CASE_CHECK(nextEmptyMessage->spin.tryLock() == true);
+		IN_CASE_CHECK(nextEmptyMessage->state == MessageState::PROCESSING);
+		IN_CASE_CHECK(nextEmptyMessage->size == 0);
+	}
+
+	return ResultType::SUCCESS;
+}
+
+ActualDataTest::ResultType ActualDataTest::getEmptyMessage_AllOne()
+{
+	TestActualData actualData;
+	for (
+			RemoveAllTrait<decltype(TestActualData::Messages::CAPACITY)>::Type i = 0;
+			i < TestActualData::Messages::CAPACITY;
+			++i
+	)
+	{
+		flame_ide::ReferenceWrapper<Message> emptyMessage
+				= actualData.getEmptyMessage();
+		flame_ide::unused(emptyMessage);
+	}
+
+	flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
+	IN_CASE_CHECK(emptyMessage.operator->() == nullptr);
+
+	return ResultType::SUCCESS;
+}
+
+// getFilledMessage()
+
+ActualDataTest::ResultType ActualDataTest::getFilledMessage_NoMessages()
+{
+	using ResultType = ::AbstractTest::ResultType;
+
+	TestActualData actualData;
+	flame_ide::ReferenceWrapper<Message> filledMessage = actualData.getFilledMessage();
+	IN_CASE_CHECK(filledMessage.operator->() == nullptr);
+
+	return ResultType::SUCCESS;
+}
+
+ActualDataTest::ResultType ActualDataTest::getFilledMessage_OneMessage()
+{
+	using ResultType = ::AbstractTest::ResultType;
+
+	const char TEST_DATA[] = "some test data";
+	using TestDataTraits = decltype(makeArrayTraits(TEST_DATA));
+
+	TestActualData actualData;
+	// Fill message
+	{
+		struct Writer: MessageWriter
+		{
+			Writer(TestDataTraits::ConstReference inputTestData) :
+					testData{ inputTestData }
+			{}
+
+			void operator()(MessageData &messageData) const noexcept override
+			{
+				::flame_ide::copy(
+						messageData.bytes.data(), testData, TestDataTraits::SIZE
+				);
+				messageData.size = TestDataTraits::SIZE;
+			}
+
+			TestDataTraits::ConstReference testData;
+		} writer{ TEST_DATA };
+
+		flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
+		emptyMessage->onWrite(writer);
+	}
+	flame_ide::ReferenceWrapper<Message> filledMessage = actualData.getFilledMessage();
+	IN_CASE_CHECK(filledMessage.operator->() != nullptr);
+	IN_CASE_CHECK(filledMessage->size == sizeof(TEST_DATA));
+	IN_CASE_CHECK(filledMessage->state == MessageState::PROCESSING);
+	IN_CASE_CHECK(filledMessage->spin.tryLock());
+
+	return ResultType::SUCCESS;
+}
+
+ActualDataTest::ResultType ActualDataTest::getFilledMessage_AllMessages()
+{
+	using ResultType = ::AbstractTest::ResultType;
+
+	const char TEST_DATA0[] = "some test data 0";
+	const char TEST_DATA1[] = "some test data 1";
+	const char TEST_DATA2[] = "some test data 2";
+	constexpr flame_ide::SizeTraits::SizeType TEST_DATA_SIZE = size(TEST_DATA0);
+
+	const char *TEST_DATA[] = {
+		TEST_DATA0, TEST_DATA1, TEST_DATA2
+	};
+	static_assert(
+			flame_ide::size(TEST_DATA) == TestActualData::Messages::CAPACITY
+			, "Invalid size"
+	);
+
+	TestActualData actualData;
+	// Fill messages
+	{
+		for (auto i = flame_ide::size(TEST_DATA); i != 0; --i)
+		{
+			auto writer = MessageIo{ TEST_DATA[i - 1], TEST_DATA_SIZE };
+			flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
+			emptyMessage->onWrite(writer);
+			flame_ide::unused(emptyMessage);
+		}
+	}
+
+	for (
+			RemoveAllTrait<decltype(TestActualData::Messages::CAPACITY)>::Type i = 0;
+			i < TestActualData::Messages::CAPACITY;
+			++i
+	)
+	{
+		flame_ide::ReferenceWrapper<Message> filledMessage = actualData.getFilledMessage();
+		IN_CASE_CHECK(filledMessage.operator->() != nullptr);
+		IN_CASE_CHECK(filledMessage->size == TEST_DATA_SIZE);
+		IN_CASE_CHECK(filledMessage->state == MessageState::PROCESSING);
+		IN_CASE_CHECK(filledMessage->spin.tryLock());
+	}
+
+	return ResultType::SUCCESS;
+}
+
+// getFilledMessageSize()
+
+ActualDataTest::ResultType ActualDataTest::getFilledMessageSize()
+{
+	using ResultType = ::AbstractTest::ResultType;
+
+	TestActualData actualData;
+	// no messages
+	{
+		constexpr SizeTraits::SizeType EXPECTED_SIZE = 0;
+		IN_CASE_CHECK(EXPECTED_SIZE == actualData.getFilledMessageSize());
+	}
+	// 1 message
+	{
+		const char TEST_DATA0[] = "some test data 0";
+		constexpr SizeTraits::SizeType EXPECTED_SIZE = flame_ide::size(TEST_DATA0);
+
+		flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
+		auto writer = MessageIo{ TEST_DATA0 };
+		emptyMessage->onWrite(writer);
+		emptyMessage->state = MessageState::READY;
+
+		IN_CASE_CHECK(EXPECTED_SIZE == actualData.getFilledMessageSize());
+	}
+
+	return ResultType::SUCCESS;
+}
+
+//
+
+using RealActualData = ActualData<Message, Constants::CLIENT_INPUT_QUEUE_SIZE>;
 
 //
 
@@ -169,7 +421,7 @@ struct Ping: public PingPongBase
 private:
 	virtual void ping(SizeTraits::SizeType iteration) noexcept override
 	{
-		std::cout << "Ping: " << iteration << std::endl;
+		//std::cout << "Ping: " << iteration << std::endl;
 		// заполняем пустое сообщение
 
 		RemoveAllType<decltype(actualData().getEmptyMessage())> messageRef{ nullptr };
@@ -178,6 +430,7 @@ private:
 		while (!messageRef /*&& tries < amountOfTries()*/)
 		{
 			amountOfMessages = actualData().amountOfMessages();
+			// std::cout << "\tamountOfMessages = " << amountOfMessages << std::endl;
 			if (amountOfMessages < actualData().CAPACITY)
 			{
 				messageRef = actualData().getEmptyMessage();
@@ -248,201 +501,7 @@ private:
 };
 
 //
-
-static ::AbstractTest::ResultType init()
-{
-	TestActualData actualData;
-	::flame_ide::unused(actualData);
-
-	return ResultType::SUCCESS;
-}
-
-// getEmptyMessage() test cases
-
-static ::AbstractTest::ResultType getEmptyMessage_One()
-{
-	TestActualData actualData;
-
-	flame_ide::ReferenceWrapper<Message> emptyOneMessage = actualData.getEmptyMessage();
-	IN_CASE_CHECK(emptyOneMessage.operator->() != nullptr);
-	IN_CASE_CHECK(emptyOneMessage->spin.tryLock() == true);
-	IN_CASE_CHECK(emptyOneMessage->state == MessageState::PROCESSING);
-	IN_CASE_CHECK(emptyOneMessage->size == 0);
-
-	return ResultType::SUCCESS;
-}
-
-static ::AbstractTest::ResultType getEmptyMessage_All()
-{
-	TestActualData actualData;
-
-	flame_ide::ReferenceWrapper<Message> firstEmptyMessage = actualData.getEmptyMessage();
-	flame_ide::unused(firstEmptyMessage);
-
-	for (
-			RemoveAllTrait<decltype(TestActualData::Messages::CAPACITY)>::Type i = 1;
-			i < TestActualData::Messages::CAPACITY;
-			++i
-	)
-	{
-		flame_ide::ReferenceWrapper<Message> nextEmptyMessage
-				= actualData.getEmptyMessage();
-		IN_CASE_CHECK(nextEmptyMessage.operator->() != nullptr);
-		IN_CASE_CHECK(nextEmptyMessage->spin.tryLock() == true);
-		IN_CASE_CHECK(nextEmptyMessage->state == MessageState::PROCESSING);
-		IN_CASE_CHECK(nextEmptyMessage->size == 0);
-	}
-
-	return ResultType::SUCCESS;
-}
-
-static ::AbstractTest::ResultType getEmptyMessage_AllOne()
-{
-	TestActualData actualData;
-	for (
-			RemoveAllTrait<decltype(TestActualData::Messages::CAPACITY)>::Type i = 0;
-			i < TestActualData::Messages::CAPACITY;
-			++i
-	)
-	{
-		flame_ide::ReferenceWrapper<Message> emptyMessage
-				= actualData.getEmptyMessage();
-		flame_ide::unused(emptyMessage);
-	}
-
-	flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
-	IN_CASE_CHECK(emptyMessage.operator->() == nullptr);
-
-	return ResultType::SUCCESS;
-}
-
-// getFilledMessage()
-
-static ::AbstractTest::ResultType getFilledMessage_NoMessages()
-{
-	using ResultType = ::AbstractTest::ResultType;
-
-	TestActualData actualData;
-	flame_ide::ReferenceWrapper<Message> filledMessage = actualData.getFilledMessage();
-	IN_CASE_CHECK(filledMessage.operator->() == nullptr);
-
-	return ResultType::SUCCESS;
-}
-
-static ::AbstractTest::ResultType getFilledMessage_OneMessage()
-{
-	using ResultType = ::AbstractTest::ResultType;
-
-	const char TEST_DATA[] = "some test data";
-	using TestDataTraits = decltype(makeArrayTraits(TEST_DATA));
-
-	TestActualData actualData;
-	// Fill message
-	{
-		struct Writer: MessageWriter
-		{
-			Writer(TestDataTraits::ConstReference inputTestData) :
-					testData{ inputTestData }
-			{}
-
-			void operator()(MessageData &messageData) const noexcept override
-			{
-				::flame_ide::copy(
-						messageData.bytes.data(), testData, TestDataTraits::SIZE
-				);
-				messageData.size = TestDataTraits::SIZE;
-			}
-
-			TestDataTraits::ConstReference testData;
-		} writer{ TEST_DATA };
-
-		flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
-		emptyMessage->onWrite(writer);
-	}
-	flame_ide::ReferenceWrapper<Message> filledMessage = actualData.getFilledMessage();
-	IN_CASE_CHECK(filledMessage.operator->() != nullptr);
-	IN_CASE_CHECK(filledMessage->size == sizeof(TEST_DATA));
-	IN_CASE_CHECK(filledMessage->state == MessageState::PROCESSING);
-	IN_CASE_CHECK(filledMessage->spin.tryLock());
-
-	return ResultType::SUCCESS;
-}
-
-static ::AbstractTest::ResultType getFilledMessage_AllMessages()
-{
-	using ResultType = ::AbstractTest::ResultType;
-
-	const char TEST_DATA0[] = "some test data 0";
-	const char TEST_DATA1[] = "some test data 1";
-	const char TEST_DATA2[] = "some test data 2";
-	constexpr flame_ide::SizeTraits::SizeType TEST_DATA_SIZE = size(TEST_DATA0);
-
-	const char *TEST_DATA[] = {
-		TEST_DATA0, TEST_DATA1, TEST_DATA2
-	};
-	static_assert(
-			flame_ide::size(TEST_DATA) == TestActualData::Messages::CAPACITY
-			, "Invalid size"
-	);
-
-	TestActualData actualData;
-	// Fill messages
-	{
-		for (auto i = flame_ide::size(TEST_DATA); i != 0; --i)
-		{
-			auto writer = MessageIo{ TEST_DATA[i - 1], TEST_DATA_SIZE };
-			flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
-			emptyMessage->onWrite(writer);
-			flame_ide::unused(emptyMessage);
-		}
-	}
-
-	for (
-			RemoveAllTrait<decltype(TestActualData::Messages::CAPACITY)>::Type i = 0;
-			i < TestActualData::Messages::CAPACITY;
-			++i
-	)
-	{
-		flame_ide::ReferenceWrapper<Message> filledMessage = actualData.getFilledMessage();
-		IN_CASE_CHECK(filledMessage.operator->() != nullptr);
-		IN_CASE_CHECK(filledMessage->size == TEST_DATA_SIZE);
-		IN_CASE_CHECK(filledMessage->state == MessageState::PROCESSING);
-		IN_CASE_CHECK(filledMessage->spin.tryLock());
-	}
-
-	return ResultType::SUCCESS;
-}
-
-
-// getFilledMessageSize()
-
-static ::AbstractTest::ResultType getFilledMessageSize()
-{
-	using ResultType = ::AbstractTest::ResultType;
-
-	TestActualData actualData;
-	// no messages
-	{
-		constexpr SizeTraits::SizeType EXPECTED_SIZE = 0;
-		IN_CASE_CHECK(EXPECTED_SIZE == actualData.getFilledMessageSize());
-	}
-	// 1 message
-	{
-		const char TEST_DATA0[] = "some test data 0";
-		constexpr SizeTraits::SizeType EXPECTED_SIZE = flame_ide::size(TEST_DATA0);
-
-		flame_ide::ReferenceWrapper<Message> emptyMessage = actualData.getEmptyMessage();
-		auto writer = MessageIo{ TEST_DATA0 };
-		emptyMessage->onWrite(writer);
-		emptyMessage->state = MessageState::READY;
-
-		IN_CASE_CHECK(EXPECTED_SIZE == actualData.getFilledMessageSize());
-	}
-
-	return ResultType::SUCCESS;
-}
-
-static ::AbstractTest::ResultType pingPong()
+ActualDataTest::ResultType ActualDataTest::pingPong()
 {
 	// TODO: Два потока: читающий и пишущий; нужна консистентность на множестве циклов
 
@@ -499,58 +558,5 @@ static ::AbstractTest::ResultType pingPong()
 }
 
 //
-
-ActualDataTest::ActualDataTest() : ::AbstractTest("udp::ActualData")
-{}
-
-ActualDataTest::~ActualDataTest() = default;
-
-int ActualDataTest::vStart()
-{
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"Initialization"
-			, []() { return init(); }
-	));
-
-	// udp::ActualData::getEmptyMessage()
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"getEmptyMessage(): get one message"
-			, []() { return getEmptyMessage_One(); }
-	));
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"getEmptyMessage(): get all messages"
-			, []() { return getEmptyMessage_All(); }
-	));
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"getEmptyMessage(): get all messages and one"
-			, []() { return getEmptyMessage_AllOne(); }
-	));
-
-	// udp::ActualData::getFilledMessage()
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"getFilledMessage(): no messages"
-			, []() { return getFilledMessage_NoMessages(); }
-	));
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"getFilledMessage(): get one message"
-			, []() { return getFilledMessage_OneMessage(); }
-	));
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"getFilledMessage(): get all filled messages"
-			, []() { return getFilledMessage_AllMessages(); }
-	));
-
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"getFilledMessageSize()"
-			, []() { return getFilledMessageSize(); }
-	));
-
-	//
-	CHECK_RESULT_SUCCESS(doTestCase(
-			"Multithread ping & pong"
-			, []() { return pingPong(); }
-	));
-	return ResultType::SUCCESS;
-}
 
 }}}}} // namespace flame_ide::handler::network::udp::tests

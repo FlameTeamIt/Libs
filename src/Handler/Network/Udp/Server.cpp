@@ -59,23 +59,23 @@ ServerCommunicationData::send(templates::Range<const byte_t *> range) noexcept
 	if (!output)
 		return os::STATUS_FAILED;
 
-	auto message = output->getEmptyMessage();
-	if (!message)
+	auto outMessage = output->getEmptyMessage();
+	if (!outMessage)
 		return os::STATUS_FAILED;
 	{
-		flame_ide::os::threads::Locker lock{ message->spin };
+		flame_ide::os::threads::Locker lock{ outMessage->spin };
 
 		const auto min = ::flame_ide::minimum<::flame_ide::Types::ssize_t>(
-				(range.end() - range.begin()), message->bytes.capacity()
+				(range.end() - range.begin()), outMessage->bytes.capacity()
 		);
 		::flame_ide::templates::copy(
-				range.begin(), range.begin() + min, message->bytes.begin()
+				range.begin(), range.begin() + min, outMessage->bytes.begin()
 		);
 
-		message->state = udp::MessageState::READY;
-		message->size = min;
+		outMessage->state = udp::MessageState::READY;
+		outMessage->size = min;
 	}
-	return message->size;
+	return outMessage->size;
 }
 
 }}}} // namespace flame_ide::handler::network::udp

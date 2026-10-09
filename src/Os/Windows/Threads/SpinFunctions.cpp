@@ -24,7 +24,10 @@ os::Status destroy(os::SpinContext &context) noexcept
 
 os::Status lock(os::SpinContext &context) noexcept
 {
-	while (tryLock(context) != TryLockStatus::TRY_LOCK_BUSY);
+	while (tryLock(context) == TryLockStatus::TRY_LOCK_BUSY)
+	{
+		::YieldProcessor();
+	}
 	return os::STATUS_SUCCESS;
 }
 
@@ -32,14 +35,15 @@ TryLockStatus tryLock(os::SpinContext &context) noexcept
 {
 	auto status = TryLockStatus::TRY_LOCK_OK;
 	volatile windows::OsSpinlockValue *value = &context.value;
-	if (::InterlockedAnd(value, windows::OS_SPINLOCK_VALUE_LOCKED)
-			== windows::OS_SPINLOCK_VALUE_LOCKED)
+
+	windows::OsSpinlockValue result = ::InterlockedCompareExchange(
+			value
+			, windows::OS_SPINLOCK_VALUE_LOCKED
+			, windows::OS_SPINLOCK_VALUE_UNLOCKED
+	);
+	if(result == windows::OS_SPINLOCK_VALUE_LOCKED)
 	{
 		status = TryLockStatus::TRY_LOCK_BUSY;
-	}
-	else
-	{
-		::InterlockedExchange(value, windows::OS_SPINLOCK_VALUE_LOCKED);
 	}
 	return status;
 }
@@ -47,7 +51,17 @@ TryLockStatus tryLock(os::SpinContext &context) noexcept
 os::Status unlock(os::SpinContext &context) noexcept
 {
 	volatile windows::OsSpinlockValue *value = &context.value;
-	::InterlockedExchange(value, windows::OS_SPINLOCK_VALUE_UNLOCKED);
+	windows::OsSpinlockValue result = {};
+	do
+	{
+		result = ::InterlockedCompareExchange(
+				value
+				, windows::OS_SPINLOCK_VALUE_UNLOCKED
+				, windows::OS_SPINLOCK_VALUE_LOCKED
+		);
+	}
+	while (result != windows::OS_SPINLOCK_VALUE_LOCKED);
+
 	return os::STATUS_SUCCESS;
 }
 
