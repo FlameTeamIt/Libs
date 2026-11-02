@@ -73,7 +73,7 @@ jobs:
             clang-14
 
       - name: Setup Ninja
-        uses: imesense/gha-setup-ninja@v0.2
+        uses: imesense/gha-setup-ninja@v0.4
 
       - name: Configure project
         run: |
